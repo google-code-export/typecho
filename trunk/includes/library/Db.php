@@ -15,6 +15,15 @@
 define('__TYPECHO_DB_ADAPTER__', 'Mysql');
 
 /**
+ * 定义数据库查询读写状态
+ * true表示读状态
+ * false表示写状态
+ *
+ */
+define('__TYPECHO_DB_READ__',true);
+define('__TYPECHO_DB_WRITE__',false);
+
+/**
  * 数据库异常
  */
 require_once 'Db/DbException.php';
@@ -94,5 +103,62 @@ class TypechoDb
         }
         
         return self::$_instance;
+    }
+    
+    /**
+     * 执行查询语句
+     * 
+     * @param mixed $query 查询语句或者查询对象
+     * @param boolean $op 数据库读写状态
+     * @return mixied
+     */
+    public function query($query, $op = __TYPECHO_DB_READ__)
+    {
+        //在适配器中执行查询
+        $resource = $this->_adapter->query((string) $query, $op);
+        
+        if($query instanceof TypechoDbQuery)
+        {
+            //根据查询动作返回相应资源
+            switch($query->action())
+            {
+                case 'UPDATE':
+                case 'DELETE':
+                    return $this->_adapter->affectedRows($resource);
+                case 'INSERT':
+                    return $this->_adapter->affectedRows($resource);
+                case 'SELECT':
+                default:
+                    return $resource;
+            }
+        }
+        else
+        {
+            //如果直接执行查询语句则返回资源
+            return $resource;
+        }
+    }
+    
+    /**
+     * 一次取出所有行
+     * 
+     * @param TypechoDbQuery $query 查询对象
+     * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+     */
+    public function fetchRows(TypechoDbQuery $query, array $filter = NULL)
+    {
+        //执行查询
+        $resource = $this->query($query, __TYPECHO_DB_READ__);
+        $result = array();
+        list($object, $method) = $filter;
+        
+        //取出每一行
+        while($rows = $this->adapter->fetch($resource))
+        {
+            //判断是否有过滤器
+            $result[] = $filter ? call_user_func(array(&$object, $method), $rows) : $rows;
+        }
+        
+        return $result;
     }
 }

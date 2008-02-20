@@ -8,5 +8,3 @@
  * @version    $Id$
  */
 
-class TypechoDbException extends TypechoException
-{}
