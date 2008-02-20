@@ -8,7 +8,3 @@
  * @version    $Id$
  */
 
-/**
- * 载入项目配置文件
- */
-require './inlucdes/config.php';
