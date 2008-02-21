@@ -11,4 +11,4 @@
 /**
  * 载入项目配置文件
  */
-require './inlucdes/config.php';
+require 'inlucdes/config.php';

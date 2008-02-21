@@ -8,10 +8,7 @@
  * @version    $Id$
  */
 
-/**
- * 定义数据库适配器
- *
- */
+/** 定义数据库适配器 **/
 define('__TYPECHO_DB_ADAPTER__', 'Mysql');
 
 /**
@@ -20,31 +17,25 @@ define('__TYPECHO_DB_ADAPTER__', 'Mysql');
  * false表示写状态
  *
  */
-define('__TYPECHO_DB_READ__',true);
-define('__TYPECHO_DB_WRITE__',false);
+define('__TYPECHO_DB_READ__', true);
+define('__TYPECHO_DB_WRITE__', false);
 
-/**
- * 数据库异常
- */
+/** 数据库异常 **/
 require_once 'Db/DbException.php';
 
-/**
- * 数据库适配器接口
- */
+/** 数据库适配器接口 **/
 require_once 'Db/DbAdapter.php';
 
-/**
- * 数据库适配器
- */
+/** 数据库适配器 **/
 require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__;
 
-/**
- * sql构建器
- */
+/** sql构建器 **/
 require_once 'Db/DbQuery.php';
 
 /**
  * 包含获取数据支持方法的类
+ * 必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,
+ * __TYPECHO_DB_USER__, __TYPECHO_DB_PASS__, __TYPECHO_DB_CHAR__
  *
  * @package TypechoDb
  */
@@ -73,15 +64,27 @@ class TypechoDb
      * 
      * @param string $adapter 数据库适配器名称
      * @return void
+     * @throws TypechoDbException
      */
     public function __construct($adapter = __TYPECHO_DB_ADAPTER__)
     {
+        //检测常量是否已经被定义
+        if(!defined($const = '__TYPECHO_DB_HOST__') || 
+        !defined($const = '__TYPECHO_DB_PORT__') || 
+        !defined($const = '__TYPECHO_DB_NAME__') || 
+        !defined($const = '__TYPECHO_DB_USER__') || 
+        !defined($const = '__TYPECHO_DB_PASS__') ||
+        !defined($const = '__TYPECHO_DB_CHAR__'))
+        {
+            throw new TypechoDbException('Undefined DB Const ' . $const);
+        }
+        
         //实例化适配器对象
         $this->_adapter = new $adapter();
         
         //连接数据库
-        $this->adapter->connect(__TYPECHO_DB_HOST__,
-                                __TYPECHO_DB_PORT__,
+        $this->adapter->connect(__TYPECHO_DB_HOST__, 
+                                __TYPECHO_DB_PORT__, 
                                 __TYPECHO_DB_NAME__, 
                                 __TYPECHO_DB_USER__, 
                                 __TYPECHO_DB_PASS__, 
@@ -144,6 +147,7 @@ class TypechoDb
      * 
      * @param TypechoDbQuery $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+     * @return array
      */
     public function fetchRows(TypechoDbQuery $query, array $filter = NULL)
     {
@@ -160,5 +164,22 @@ class TypechoDb
         }
         
         return $result;
+    }
+    
+    /**
+     * 一次取出一行
+     * 
+     * @param TypechoDbQuery $query 查询对象
+     * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+     * @return array
+     */
+    public function fetch(TypechoDbQuery $query, array $filter = NULL)
+    {
+        $resource = $this->query($query, DB_READ);
+        list($object, $method) = $filter;
+        
+        return ($rows = $this->adapter->fetch($resource)) ?
+        ($filter ? call_user_func(array(&$object, $method), $rows) : $rows) :
+        array();
     }
 }

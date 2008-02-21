@@ -8,5 +8,10 @@
  * @version    $Id$
  */
 
+/**
+ * 数据库异常类
+ *
+ * @package TypechoDb
+ */
 class TypechoDbException extends TypechoException
 {}
