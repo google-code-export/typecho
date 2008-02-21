@@ -11,6 +11,7 @@
 /**
  * Typecho数据库构建类
  *
+ * @package TypechoDb
  */
 class TypechoDbQuery
 {
@@ -43,11 +44,22 @@ class TypechoDbQuery
         $this->_adapter = &$adapter;
     }
     
+    /**
+     * 过滤表前缀,表前缀由table.构成
+     * 
+     * @param string $string 需要解析的字符串
+     * @return string
+     */
     private function filterPrefix($string)
     {
         return substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([0-9a-zA-Z-]+)/i", "\\1" . __DBPREFIX__ . "\\2", ' ' . $string), 1);
     }
     
+    /**
+     * 初始化参数
+     * 
+     * @return void
+     */
     public function init()
     {
         $this->_sql = NULL;
@@ -65,6 +77,12 @@ class TypechoDbQuery
         );
     }
     
+    /**
+     * 获取当前SQL操作方式
+     * 返回的值有INSERT,DELETE,SELECT,UPDATE
+     * 
+     * @return string
+     */
     public function action()
     {
         return $this->_sqlPreBuild['action'];
