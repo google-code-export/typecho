@@ -8,3 +8,7 @@
  * @version    $Id$
  */
 
+abstract class TypechoController
+{
+    
+}
