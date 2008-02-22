@@ -8,3 +8,7 @@
  * @version    $Id$
  */
 
+interface TypechoComponent
+{    
+    public function render();
+}
