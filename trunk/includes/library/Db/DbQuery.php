@@ -10,6 +10,16 @@
 
 /**
  * Typecho数据库查询语句构建类
+ * 使用方法:
+ * $query = new TypechoDbQuery();	//或者使用DB积累的sql方法返回实例化对象
+ * $query->select('posts', 'post_id, post_title')
+ * ->where('post_id = %d', 1)
+ * ->limit(1);
+ * 
+ * echo $query;
+ * 打印的结果将是
+ * SELECT post_id, post_title FROM posts WHERE 1=1 AND post_id = 1 LIMIT 1
+ * 
  *
  * @package TypechoDb
  */
@@ -127,6 +137,10 @@ class TypechoDbQuery
     
     /**
      * OR条件查询语句
+     * 
+     * @param string $condition 查询条件
+     * @param mixed $param 条件值
+     * @return TypechoDbQuery
      */
     public function orWhere()
     {
@@ -144,42 +158,88 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * 查询行数限制
+     * 
+     * @param integer $limit 需要查询的行数
+     * @return TypechoDbQuery
+     */
     public function limit($limit)
     {
         $this->_sqlPreBuild['limit'] = ' LIMIT ' . intval($limit);
         return $this;
     }
     
-    public function offset($limit)
+    /**
+     * 查询行数偏移量
+     * 
+     * @param integer $offset 需要偏移的行数
+     * @return TypechoDbQuery
+     */
+    public function offset($offset)
     {
-        $this->_sqlPreBuild['offset'] = ' OFFSET ' . intval($limit);
+        $this->_sqlPreBuild['offset'] = ' OFFSET ' . intval($offset);
         return $this;
     }
     
-    public function rows($rows)
+    /**
+     * 指定需要写入的栏目及其值
+     * 
+     * @param array $rows
+     * @return TypechoDbQuery
+     */
+    public function rows(array $rows)
     {
         $this->_sqlPreBuild['rows'] = array_map(array($this->_adapter, 'quotes'), $rows);
         return $this;
     }
     
+    /**
+     * 指定需要写入栏目及其值
+     * 单行且不会转义引号
+     * 
+     * @param string $key 栏目名称
+     * @param mixed $value 指定的值
+     * @return TypechoDbQuery
+     */
     public function row($key,$value)
     {
         $this->_sqlPreBuild['rows'][$key] = $value;
         return $this;
     }
     
+    /**
+     * 排序顺序(ORDER BY)
+     * 
+     * @param string $orderby 排序的索引
+     * @param string $sort 排序的方式(ASC, DESC)
+     * @return TypechoDbQuery
+     */
     public function order($orderby, $sort = NULL)
     {
         $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterPrefix($orderby) . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
     }
     
+    /**
+     * 集合聚集(GROUP BY)
+     * 
+     * @param string $key 聚集的键值
+     * @return TypechoDbQuery
+     */
     public function group($key)
     {
         $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterPrefix($key);
         return $this;
     }
     
+    /**
+     * 查询记录操作(SELECT)
+     * 
+     * @param string $table 查询的表
+     * @param string $fields 需要查询的栏目
+     * @return TypechoDbQuery
+     */
     public function select($table,$fields = '*')
     {
         $this->_sqlPreBuild['action'] = 'SELECT';
@@ -188,6 +248,12 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * 更新记录操作(UPDATE)
+     * 
+     * @param string $table 需要更新记录的表
+     * @return TypechoDbQuery
+     */
     public function update($table)
     {
         $this->_sqlPreBuild['action'] = 'UPDATE';
@@ -195,6 +261,12 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * 删除记录操作(DELETE)
+     * 
+     * @param string $table 需要删除记录的表
+     * @return TypechoDbQuery
+     */
     public function delete($table)
     {
         $this->_sqlPreBuild['action'] = 'DELETE';
@@ -202,6 +274,12 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * 插入记录操作(INSERT)
+     * 
+     * @param string $table 需要插入记录的表
+     * @return TypechoDbQuery
+     */
     public function insert($table)
     {
         $this->_sqlPreBuild['action'] = 'INSERT';
@@ -209,6 +287,11 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * 构造最终查询语句
+     * 
+     * @return string
+     */
     public function __toString()
     {
         if(!(empty($this->_sql)))
