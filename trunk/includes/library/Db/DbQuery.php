@@ -9,7 +9,7 @@
  */
 
 /**
- * Typecho数据库构建类
+ * Typecho数据库查询语句构建类
  *
  * @package TypechoDb
  */
@@ -88,12 +88,27 @@ class TypechoDbQuery
         return $this->_sqlPreBuild['action'];
     }
     
+    /**
+     * 连接表
+     * 
+     * @param string $table 需要连接的表
+     * @param string $condition 连接条件
+     * @param string $po 连接方法(LEFT, RIGHT, INNER)
+     * @return TypechoDbQuery
+     */
     public function join($table, $condition, $op = 'INNER')
     {
         $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterPrefix($condition), $op);
         return $this;
     }
     
+    /**
+     * AND条件查询语句
+     * 
+     * @param string $condition 查询条件
+     * @param mixed $param 条件值
+     * @return TypechoDbQuery
+     */
     public function where()
     {
         if(func_num_args() <= 1)
@@ -110,6 +125,9 @@ class TypechoDbQuery
         return $this;
     }
     
+    /**
+     * OR条件查询语句
+     */
     public function orWhere()
     {
         if(func_num_args() <= 1)

@@ -8,7 +8,3 @@
  * @version    $Id$
  */
 
-abstract class TypechoComponent
-{   
-    public function render();
-}
