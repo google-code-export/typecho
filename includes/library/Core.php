@@ -8,8 +8,10 @@
  * @version    $Id$
  */
 
+define('__TYPECHO_DEBUG__', true);
 
-function typechoStripslashesDeep($value)
-{
-    return is_array($value) ? array_map('typechoStripslashesDeep', $value) : stripslashes($value);
-}
+/** 载入控制器支持 **/
+require_once 'Core/Controller.php';
+
+/** 载入组件支持 **/
+require_once 'Core/Component.php';

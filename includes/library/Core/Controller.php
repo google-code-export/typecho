@@ -8,18 +8,31 @@
  * @version    $Id$
  */
 
+/**
+ * Typecho控制器基类
+ * 
+ * @package TypechoCore
+ */
 abstract class TypechoController
 {    
     public function __construct()
     {
-        try
+        if(!__TYPECHO_DEBUG__)
         {
-            $this->processValidation();
-            $this->renderResponse();
+            try
+            {
+                $this->processValidation();
+                $this->renderResponse();
+            }
+            catch(TypechoException $exception)
+            {
+                $this->renderExceptionResponse($exception);
+            }
         }
-        catch(TypechoException $exception)
+        else
         {
-            $this->renderExceptionResponse($exception);
+                $this->processValidation();
+                $this->renderResponse();
         }
     }
     
@@ -27,9 +40,9 @@ abstract class TypechoController
     {
         if(get_magic_quotes_gpc())
         {
-            $_GET = ltStripslashesDeep($_GET);
-            $_POST = ltStripslashesDeep($_POST);
-            $_COOKIE = ltStripslashesDeep($_COOKIE);
+            $_GET = typechoStripslashesDeep($_GET);
+            $_POST = typechoStripslashesDeep($_POST);
+            $_COOKIE = typechoStripslashesDeep($_COOKIE);
         
             reset($_GET);
             reset($_POST);

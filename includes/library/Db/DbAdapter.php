@@ -44,7 +44,7 @@ interface TypechoDbAdapter
      * @param resource $resource 查询的资源数据
      * @return array
      */
-    public function fetch(resource $resource);
+    public function fetch($resource);
     
     /**
      * 引号转义函数
@@ -60,7 +60,7 @@ interface TypechoDbAdapter
      * @param resource $resource 查询的资源数据
      * @return integer
      */
-    public function affectedRows(resource $resource);
+    public function affectedRows($resource);
     
     /**
      * 取出最后一次插入返回的主键值
@@ -68,5 +68,5 @@ interface TypechoDbAdapter
      * @param resource $resource 查询的资源数据
      * @return integer
      */
-    public function lastInsertId(resource $resource);
+    public function lastInsertId($resource);
 }

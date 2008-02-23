@@ -27,7 +27,7 @@ require_once 'Db/DbException.php';
 require_once 'Db/DbAdapter.php';
 
 /** 数据库适配器 **/
-require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__;
+require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
 
 /** sql构建器 **/
 require_once 'Db/DbQuery.php';
@@ -68,6 +68,8 @@ class TypechoDb
      */
     public function __construct($adapter = __TYPECHO_DB_ADAPTER__)
     {
+        $adapter = 'Typecho' . __TYPECHO_DB_ADAPTER__;
+        
         //检测常量是否已经被定义
         if(!defined($const = '__TYPECHO_DB_HOST__') || 
         !defined($const = '__TYPECHO_DB_PORT__') || 
@@ -83,19 +85,35 @@ class TypechoDb
         $this->_adapter = new $adapter();
         
         //连接数据库
-        $this->adapter->connect(__TYPECHO_DB_HOST__, 
-                                __TYPECHO_DB_PORT__, 
-                                __TYPECHO_DB_NAME__, 
-                                __TYPECHO_DB_USER__, 
-                                __TYPECHO_DB_PASS__, 
-                                __TYPECHO_DB_CHAR__);
+        $this->_adapter->connect(__TYPECHO_DB_HOST__, 
+                                 __TYPECHO_DB_PORT__, 
+                                 __TYPECHO_DB_NAME__, 
+                                 __TYPECHO_DB_USER__, 
+                                 __TYPECHO_DB_PASS__, 
+                                 __TYPECHO_DB_CHAR__);
+    }
+    
+    /**
+     * 获取SQL词法构建器实例化对象
+     * 
+     * @return TypechoDbQuery
+     */
+    public function sql()
+    {
+        if(empty($this->_query))
+        {
+            $this->_query = new TypechoDbQuery($this->_adapter);
+        }
+     
+        $this->_query->init();
+        return $this->_query;
     }
     
     /**
      * 获取数据库实例化对象
      * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
      * 
-     * @return void
+     * @return TypechoDb
      */
     public function get()
     {
@@ -157,7 +175,7 @@ class TypechoDb
         list($object, $method) = $filter;
         
         //取出每一行
-        while($rows = $this->adapter->fetch($resource))
+        while($rows = $this->_adapter->fetch($resource))
         {
             //判断是否有过滤器
             $result[] = $filter ? call_user_func(array(&$object, $method), $rows) : $rows;
@@ -178,7 +196,7 @@ class TypechoDb
         $resource = $this->query($query, DB_READ);
         list($object, $method) = $filter;
         
-        return ($rows = $this->adapter->fetch($resource)) ?
+        return ($rows = $this->_adapter->fetch($resource)) ?
         ($filter ? call_user_func(array(&$object, $method), $rows) : $rows) :
         array();
     }

@@ -8,8 +8,3 @@
  * @version    $Id$
  */
 
-
-function typechoStripslashesDeep($value)
-{
-    return is_array($value) ? array_map('typechoStripslashesDeep', $value) : stripslashes($value);
-}
