@@ -15,7 +15,6 @@
  * $query->select('posts', 'post_id, post_title')
  * ->where('post_id = %d', 1)
  * ->limit(1);
- * 
  * echo $query;
  * 打印的结果将是
  * SELECT post_id, post_title FROM posts WHERE 1=1 AND post_id = 1 LIMIT 1
@@ -62,7 +61,7 @@ class TypechoDbQuery
      */
     private function filterPrefix($string)
     {
-        return substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([0-9a-zA-Z-]+)/i", "\\1" . __DBPREFIX__ . "\\2", ' ' . $string), 1);
+        return substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([0-9a-zA-Z-]+)/i", "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
     }
     
     /**

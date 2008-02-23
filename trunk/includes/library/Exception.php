@@ -104,6 +104,7 @@ set_exception_handler('exceptionHandler');
 function exceptionHandler($exception)
 {
     header('content-type: text/html;charset=UTF-8');
+    
     if($exception instanceof TypechoException)
     {
         die((string) $exception);
