@@ -37,7 +37,7 @@ require_once 'Db/DbQuery.php';
  * 必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,
  * __TYPECHO_DB_USER__, __TYPECHO_DB_PASS__, __TYPECHO_DB_CHAR__
  *
- * @package TypechoDb
+ * @package Db
  */
 class TypechoDb
 {
@@ -78,7 +78,7 @@ class TypechoDb
         !defined($const = '__TYPECHO_DB_PASS__') ||
         !defined($const = '__TYPECHO_DB_CHAR__'))
         {
-            throw new TypechoDbException('Undefined DB Const ' . $const);
+            throw new TypechoDbException('Undefined DB Const ' . $const, __TYPECHO_EXCEPTION_500__);
         }
         
         //实例化适配器对象

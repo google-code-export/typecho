@@ -11,31 +11,25 @@
 /**
  * Typecho控制器基类
  * 
- * @package TypechoCore
+ * @package Core
  */
 abstract class TypechoController
 {    
+    /**
+     * 构造函数,定义执行步骤
+     *
+     */
     public function __construct()
     {
-        if(!__TYPECHO_DEBUG__)
-        {
-            try
-            {
-                $this->processValidation();
-                $this->renderResponse();
-            }
-            catch(TypechoException $exception)
-            {
-                $this->renderExceptionResponse($exception);
-            }
-        }
-        else
-        {
-                $this->processValidation();
-                $this->renderResponse();
-        }
+        $this->processValidation();
+        $this->renderResponse();
     }
     
+    /**
+     * 数据验证(包括数据过滤,身份验证,和数据合法化验证)
+     * 
+     * @return void
+     */
     protected function processValidation()
     {
         if(get_magic_quotes_gpc())
@@ -55,10 +49,8 @@ abstract class TypechoController
         }
     }
     
-    abstract protected function renderResponse();
-    
-    protected function renderExceptionResponse(TypechoException $exception)
+    protected function renderResponse()
     {
-        
+        header('content-Type: text/html;charset= UTF-8');
     }
 }

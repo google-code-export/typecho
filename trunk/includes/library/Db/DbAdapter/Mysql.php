@@ -8,10 +8,15 @@
  * @version    $Id$
  */
 
+/**
+ * 数据库Mysql适配器
+ *
+ * @package Db
+ */
 class TypechoMysql implements TypechoDbAdapter
 {
     /**
-     * connect to database
+     * 数据库连接函数
      *
      * @param string $host
      * @param string $port
@@ -35,11 +40,11 @@ class TypechoMysql implements TypechoDbAdapter
             }
         }
 
-        throw new TypechoDbException(mysql_error());
+        throw new TypechoDbException(mysql_error(), __TYPECHO_EXCEPTION_503__);
     }
     
     /**
-     * SQL query
+     * 执行数据库查询
      *
      * @param string $sql
      * @param boolean $op
@@ -53,11 +58,11 @@ class TypechoMysql implements TypechoDbAdapter
             return $resource;
         }
         
-        throw new TypechoDbException(mysql_error());
+        throw new TypechoDbException(mysql_error(), __TYPECHO_EXCEPTION_500__);
     }
     
     /**
-     * fetch rows
+     * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
      *
      * @param resource $resource
      * @throws LtException
@@ -69,7 +74,7 @@ class TypechoMysql implements TypechoDbAdapter
     }
     
     /**
-     * quotes string
+     * 引号转义函数
      *
      * @param string $string
      * @return string
@@ -80,7 +85,7 @@ class TypechoMysql implements TypechoDbAdapter
     }
 
     /**
-     * get affected rows of last query
+     * 取出最后一次查询影响的行数
      *
      * @param resource $resource
      * @return integer
@@ -91,7 +96,7 @@ class TypechoMysql implements TypechoDbAdapter
     }
     
     /**
-     * get last insert id of last query
+     * 取出最后一次插入返回的主键值
      *
      * @param resource $resource
      * @return integer

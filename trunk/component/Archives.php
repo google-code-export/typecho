@@ -8,3 +8,12 @@
  * @version    $Id$
  */
 
+class ArchivesComponent extends TypechoComponent
+{
+    public function __construct(OptionsComponent $options)
+    {
+        require_once 'Archives/IndexArchives.php';
+        $index = new IndexArchivesComponent($options);
+        $this->proxy($index);
+    }
+}

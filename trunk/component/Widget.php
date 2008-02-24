@@ -8,10 +8,13 @@
  * @version    $Id$
  */
 
-define('__TYPECHO_DEBUG__', false);
-
-/** 载入控制器支持 **/
-require_once 'Core/Controller.php';
-
-/** 载入组件支持 **/
-require_once 'Core/Component.php';
+/**
+ * 控件控制
+ *
+ * @package Component
+ */
+class WidgetComponent extends TypechoComponent
+{
+    
+}
+ 

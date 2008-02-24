@@ -20,7 +20,7 @@
  * SELECT post_id, post_title FROM posts WHERE 1=1 AND post_id = 1 LIMIT 1
  * 
  *
- * @package TypechoDb
+ * @package Db
  */
 class TypechoDbQuery
 {
