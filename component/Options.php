@@ -54,4 +54,16 @@ class OptionsComponent extends TypechoComponent
     {
         return $this->_options[$name];
     }
+    
+    /**
+     * 魔术函数打印变量值
+     * 
+     * @param string $name 变量名
+     * @param array $args 参数
+     * @return void
+     */
+    public function __call($name, array $args)
+    {
+        echo $this->_options[$name];
+    }
 }

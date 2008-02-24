@@ -8,6 +8,15 @@
  * @version    $Id$
  */
 
+/** 定义异常代码 **/
+define('__TYPECHO_EXCEPTION_403__', 403);     //403权限错误
+define('__TYPECHO_EXCEPTION_404__', 404);     //404页面不存在
+define('__TYPECHO_EXCEPTION_500__', 500);     //500服务器内部错误,用于标记未知的系统错误
+define('__TYPECHO_EXCEPTION_503__', 503);     //503服务器不可用,用于标记数据连接错误
+
+/** 定义异常截获页面地址 **/
+define('__TYPECHO_EXCEPTION_DIR__', dirname(__FILE__) . '/../../var/error/');
+
 /**
  * Typecho异常基类
  * 主要重载异常打印函数
@@ -105,12 +114,36 @@ function exceptionHandler($exception)
 {
     header('content-type: text/html;charset=UTF-8');
     
-    if($exception instanceof TypechoException)
+    if(__TYPECHO_DEBUG__)
     {
-        die((string) $exception);
+        if($exception instanceof TypechoException)
+        {
+            die((string) $exception);
+        }
+        else
+        {
+            die(TypechoException::parse((string) $exception));
+        }
     }
     else
     {
-        die(TypechoException::parse((string) $exception));
+        switch($exception->getCode())
+        {
+            case __TYPECHO_EXCEPTION_403__:
+            case __TYPECHO_EXCEPTION_404__:
+            case __TYPECHO_EXCEPTION_500__:
+            case __TYPECHO_EXCEPTION_503__:
+            {
+                require_once __TYPECHO_EXCEPTION_DIR__ . $exception->getCode() . '.php';
+                break;
+            }
+            default:
+            {
+                require_once __TYPECHO_EXCEPTION_DIR__ . '500.php';
+                break;
+            }
+        }
+        
+        die();
     }
 }

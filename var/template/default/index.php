@@ -1,21 +1,9 @@
-<?php include 'header.php' ?>
-
-<div id="menu">
-	<?php $widget->pages(); ?>
-</div>
-
-<?php $archives->get('index'); ?>
-
 <div>
-	<?php while($archives->has()): ?>
-		<h2><?php $archives->title(); ?></h2>
+	<?php while($archives->get()): ?>
+		<h2><?php $archives->post_title(); ?></h2>
+              <cite><?php $archives->time('Y年m月'); ?></cite>
 	<?php endwhile; ?>
 </div>
 
 <div><?php $archives->pageNav(); ?></div>
 
-<div>
-	<?php include 'sidebar.php' ?>
-</div>
-
-<?php include 'footer.php' ?>

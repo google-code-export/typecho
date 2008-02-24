@@ -11,7 +11,7 @@
 /**
  * Typecho组件基类
  * 
- * @package TypechoCore
+ * @package Core
  */
 abstract class TypechoComponent
 {

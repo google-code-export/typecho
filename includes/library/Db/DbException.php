@@ -11,7 +11,7 @@
 /**
  * 数据库异常类
  *
- * @package TypechoDb
+ * @package Db
  */
 class TypechoDbException extends TypechoException
 {}

@@ -12,7 +12,7 @@
 require 'includes/config.php';
 
 /** 载入组件库 **/
-//require 'component/Archives.php';
+require 'component/Archives.php';
 //require 'component/Content.php';
 //require 'component/Widget.php';
 require 'component/Options.php';
@@ -20,13 +20,16 @@ require 'component/Options.php';
 
 class IndexController extends TypechoController
 {   
-    public function renderResponse()
+    protected function renderResponse()
     {
+        parent::renderResponse();
         $options = new OptionsComponent();
         //$widget = new WidgetComponent($options);
-        //$archives = new ArchivesComponent($options);
+        $archives = new ArchivesComponent($options);
         //$user = new UserComponent($options);
         //$content = new ContentComponent($options);
+        
+        require 'var/template/default/index.php';
     }
 }
 
