@@ -1,3 +1,4 @@
+#labels Phase-Design
 =Typecho库文件命名及存放规范=
 
 ==存放位置==
@@ -27,3 +28,6 @@ define('__TYPECHO_DB_HOST__', 'localhost');
 require_once 'Db/DbException.php';
 }}}
 库文件的所有载入都使用*require_once*，且使用相对路径载入，这样不需要定义根目录路径。
+
+==异常文件==
+每个库都有一个以其库名命名的异常类，这个异常类继承自TypechoException异常基类。
