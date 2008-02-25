@@ -1,4 +1,5 @@
 <?php
+// vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8
 /**
  * Typecho Blog Platform
  *
@@ -13,7 +14,7 @@
  * @version    $Id$
  */
 
-class Validation
+class TypechoValidation
 {
     /**
      * 错误信息
@@ -48,7 +49,7 @@ class Validation
      * @param	string
      * @return	void
      */
-    public function set_rules($data, $rules = '')
+    public function setRules($data, $rules = '')
     {
         if ( ! is_array($data))
         {
@@ -470,5 +471,3 @@ class Validation
         }
     }
 }
-// vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8
-?>
