@@ -5,9 +5,13 @@
  *
  * 验证类
  *
- * @usage
+ * @usage 
+ * $test = "hello";
+ * $Validation  = new TypechoValidation();
+ * $Validation->form($test, array("alpha" => "不是字符");
+ * var_dump($Validation->getErrorMsg());
  *
- * @todo       错误信息控制需要重写
+ * @todo       需要批量的处理规则
  * @author     feelinglucky
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
@@ -19,56 +23,30 @@ class TypechoValidation
     /**
      * 错误信息
      */
-    protected $_error_array;
+    protected $_error;
 
     /**
-     * 需要验证的变量
+     * 需要验证规则
+     *
+     * @type array
      */
     protected $_rules;
 
     /**
-     * 验证规则
+     * 错误变量
+     *
+     * @type array
      */
-    protected $_rules_key;
-
-
-    function __construct()
-    {
-        // ...
-    }
-
+    protected $_error_array;
 
     /**
-     * Set Rules
      *
-     * This function takes an array of field names and validation
-     * rules as input ad simply stores is for use later.
      *
-     * @access	public
-     * @param	mixed
-     * @param	string
-     * @return	void
      */
-    public function setRules($data, $rules = '')
+    function __construct()
     {
-        if ( ! is_array($data))
-        {
-            if ($rules == '') {
-                return;
-            }
-
-            $data[$data] = $rules;
-        }
-
-        foreach ($data as $key => $val)
-        {
-            if (is_array($val)) {
-                $this->_rules[$key]     = $val[0];
-                $this->_rules_key[$key] = $val[1];
-            } else {
-                $this->_rules[$key] = $val;
-            }
-        }
+        // 重设错误信息
+        $this->reSet();
     }
 
 
@@ -80,180 +58,83 @@ class TypechoValidation
      * @access	public
      * @return	bool
      */		
-    public function run()
+    public function run($data)
     {
-        // Do we even have any data to process?  Mm?
-        if (count($_POST) == 0 OR count($this->_rules) == 0)
-        {
+        /**
+         * 如果规则为空，则直接放弃
+         */
+        if (empty($this->_rules)) {
             return false;
         }
 
+
         // Cycle through the rules and test for errors
-        foreach ($this->_rules as $field => $rules)
+        foreach ($this->_rules as $rule)
         {
-            //Explode out the rules!
-            $ex = explode('|', $rules);
-
-            // Is the field required?  If not, if the field is blank  we'll move on to the next test
-            if ( ! in_array('required', $ex, true) AND strpos($rules, 'callback_') === false)
-            {
-                if ( ! isset($_POST[$field]) OR $_POST[$field] == '')
-                {
-                    continue;
-                }
-            }
-
-            /*
-             * Are we dealing with an "isset" rule?
-             *
-             * Before going further, we'll see if one of the rules
-             * is to check whether the item is set (typically this
-             * applies only to checkboxes).  If so, we'll
-             * test for it here since there's not reason to go
-             * further
-             */
-            if ( ! isset($_POST[$field]))
-            {			
-                if (in_array('isset', $ex, true) OR in_array('required', $ex))
-                {
-                    if ( ! isset($this->_error_messages['isset']))
-                    {
-                        if (false === ($line = $this->CI->lang->line('isset')))
-                        {
-                            $line = 'The field was not set';
-                        }							
-                    }
-                    else
-                    {
-                        $line = $this->_error_messages['isset'];
-                    }
-
-                    $field = ( ! isset($this->_rules_key[$field])) ? $field : $this->_rules_key[$field];
-
-                    $this->_error_array[] = sprintf($line, $field);	
-                }
-
+            // 没有这个测试项目则直接跳过
+            if ( ! method_exists($this, $rule)) {
                 continue;
             }
 
-            /*
-             * Set the current field
-             *
-             * The various prepping functions need to know the
-             * current field name so they can do this:
-             *
-             * $_POST[$this->_current_field] == 'bla bla';
-             */
-            $this->_current_field = $field;
-
-            // Cycle through the rules!
-            foreach ($ex As $rule)
-            {
-                // Is the rule a callback?			
-                $callback = false;
-                if (substr($rule, 0, 9) == 'callback_')
-                {
-                    $rule = substr($rule, 9);
-                    $callback = true;
-                }
-
-                // Strip the parameter (if exists) from the rule
-                // Rules can contain a parameter: max_length[5]
-                $param = false;
-
-                if (preg_match("/(.*?)\[(.*?)\]/", $rule, $match))
-                {
-                    $rule	= $match[1];
-                    $param	= $match[2];
-                }
-
-                // Call the function that corresponds to the rule
-                if ($callback === true)
-                {
-                    if ( ! method_exists($this->CI, $rule))
-                    {
-                        continue;
-                    }
-
-                    $result = $this->CI->$rule($_POST[$field], $param);	
-
-                    // If the field isn't required and we just processed a callback we'll move on...
-                    if ( ! in_array('required', $ex, true) AND $result !== false)
-                    {
-                        continue 2;
-                    }
-
-                }
-                else
-                {				
-                    if ( ! method_exists($this, $rule))
-                    {
-                        /*
-                         * Run the native PHP function if called for
-                         *
-                         * If our own wrapper function doesn't exist we see
-                         * if a native PHP function does. Users can use
-                         * any native PHP function call that has one param.
-                         */
-                        if (function_exists($rule))
-                        {
-                            $_POST[$field] = $rule($_POST[$field]);
-                            $this->$field = $_POST[$field];
-                        }
-
-                        continue;
-                    }
-
-                    $result = $this->$rule($_POST[$field], $param);
-                }
-
-                // Did the rule test negatively?  If so, grab the error.
-                if ($result === false)
-                {
-                    $line = $this->_error_messages[$rule];;
-
-                    // Build the error message
-                    //$mfield = ( ! isset($this->_fields[$field])) ? $field : $this->_fields[$field];
-                    //$mparam = ( ! isset($this->_fields[$param])) ? $param : $this->_fields[$param];
-                    $mfield = ( ! isset($this->_rules_key[$field])) ? $field : $this->_rules_key[$field];
-                    $mparam = ( ! isset($this->_rules_key[$param])) ? $param : $this->_rules_key[$param];
-
-                    $message = sprintf($line, $mfield, $mparam);
-
-                    // Set the error variable.  Example: $this->username_error
-                    $error = $field.'_error';
-                    $this->$error = $this->_error_prefix.$message.$this->_error_suffix;
-
-                    // Add the error to the error array
-                    $this->_error_array[] = $message;				
-                    continue 2;
-                }
+            if (!$this->$rule($data)) {
+                $this->_error = $this->_error_messages[$rule];
+                return false;
             }
-
-        }
-        $total_errors = count($this->_error_array);
-
-        /*
-         * Recompile the class variables
-         *
-         * If any prepping functions were called the $_POST data
-         * might now be different then the corresponding class
-         * variables so we'll set them anew.
-         */	
-        if ($total_errors > 0)
-        {
-            $this->_safe_form_data = true;
         }
 
-        // Did we end up with any errors?
-        if ($total_errors == 0)
-        {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
+
+    /**
+     * 验证字符串
+     *
+     * @usage 
+     * <code>
+     * TypechoValidation::form('name', array('alpha' => '对不起,您的输入必须为纯字符', 
+     *              'mail' => '对不起,您必须输入一个合法的email地址'));
+     * </code>
+     * @param $data  string
+     * @param $rules array
+     *
+     */
+    public function form($data, $rules)
+    {
+        if (!is_array) {
+            return ;
+        }
+
+        foreach ($rules as $rule => $error_message) {
+            $this->_rules[] = $rule;
+            $this->_error_messages[$rule] = $error_message;
+        }
+
+        return $data ? $this->run($data) : false;
+    }
+
+
+    /**
+     * 重设状态信息
+     *
+     * @return void
+     */
+    public function reSet()
+    {
+        $this->_error_messages = array();
+        $this->_rules = array();
+        $this->_error = "";
+    }
+
+
+    /**
+     * 获取错误信息
+     *
+     * @return string
+     */
+    public function getErrorMsg()
+    {
+        return $this->_error;
+    }
 
     /**
      * Required
@@ -264,7 +145,7 @@ class TypechoValidation
      */
     function required($str)
     {
-        if ( ! is_array($str))
+        if (!is_array($str))
         {
             return (trim($str) == '') ? false : true;
         }
@@ -352,12 +233,12 @@ class TypechoValidation
      */	
     function valid_email($str)
     {
-        return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str)) ? false : true;
+        return (!preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str)) ? false : true;
     }
 
 
     /**
-     * Validate IP Address
+     * 验证 IP 地址
      *
      * @access	public
      * @param	string
@@ -471,3 +352,4 @@ class TypechoValidation
         }
     }
 }
+
