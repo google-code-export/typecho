@@ -6,10 +6,12 @@
  * 验证类
  *
  * @usage 
+ * <code>
  * $test = "hello";
  * $Validation  = new TypechoValidation();
  * $Validation->form($test, array("alpha" => "不是字符");
  * var_dump($Validation->getErrorMsg());
+ * </code>
  *
  * @todo       需要批量的处理规则
  * @author     feelinglucky
