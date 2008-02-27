@@ -51,7 +51,6 @@ class TypechoValidation
         $this->reSet();
     }
 
-
    /**
      * Run the Validator
      *
