@@ -39,6 +39,14 @@ abstract class AbstractArchivesComponent extends TypechoComponent
     
     public function __call($name, $args)
     {
-        echo isset($this->rows[$name]) ? $this->rows[$name] : NULL;
+        if(function_exists($name))
+        {
+            array_unshift($args, $this->rows);
+            call_user_func_array($name, $args);
+        }
+        else
+        {
+            echo isset($this->rows[$name]) ? $this->rows[$name] : NULL;
+        }
     }
 }

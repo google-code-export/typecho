@@ -163,11 +163,11 @@ class TypechoDb
     /**
      * 一次取出所有行
      * 
-     * @param TypechoDbQuery $query 查询对象
+     * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      * @return array
      */
-    public function fetchRows(TypechoDbQuery $query, array $filter = NULL)
+    public function fetchRows($query, array $filter = NULL)
     {
         //执行查询
         $resource = $this->query($query, __TYPECHO_DB_READ__);
@@ -187,11 +187,11 @@ class TypechoDb
     /**
      * 一次取出一行
      * 
-     * @param TypechoDbQuery $query 查询对象
+     * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      * @return array
      */
-    public function fetch(TypechoDbQuery $query, array $filter = NULL)
+    public function fetch($query, array $filter = NULL)
     {
         $resource = $this->query($query, DB_READ);
         list($object, $method) = $filter;

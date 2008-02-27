@@ -21,17 +21,7 @@ abstract class TypechoController
      */
     public function __construct()
     {
-        $this->processValidation();
-        $this->renderResponse();
-    }
-    
-    /**
-     * 数据验证(包括数据过滤,身份验证,和数据合法化验证)
-     * 
-     * @return void
-     */
-    protected function processValidation()
-    {
+        //关闭魔术引号功能
         if(get_magic_quotes_gpc())
         {
             $_GET = typechoStripslashesDeep($_GET);
@@ -43,14 +33,21 @@ abstract class TypechoController
             reset($_COOKIE);
         }
         
+        //设置默认时区
         if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
         {
             @date_default_timezone_set('UTC');
         }
+        
+        header('content-Type: text/html;charset= UTF-8');
+        
+        $this->renderResponse();
     }
     
-    protected function renderResponse()
-    {
-        header('content-Type: text/html;charset= UTF-8');
-    }
+    /**
+     * 回执函数
+     *
+     * @return void
+     */
+    protected abstract function renderResponse();
 }
