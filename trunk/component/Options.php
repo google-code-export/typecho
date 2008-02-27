@@ -31,6 +31,9 @@ class OptionsComponent extends TypechoComponent
         
         $db->fetchRows($db->sql()->select('table.statics', 'static_name, static_value'),
         array($this, 'push'));
+        
+        //设置一些默认数据
+        $this->_options['title'] = $this->_options['blog_name'];
     }
     
     /**
@@ -42,6 +45,24 @@ class OptionsComponent extends TypechoComponent
     public function push(array $rows)
     {
         $this->_options[$rows['static_name']] = $rows['static_value'];
+    }
+    
+    /**
+     * 显示或设置网页标题
+     * 
+     * @param string $title 将要设置的网页标题值
+     * @return void
+     */
+    public function title($title = NULL)
+    {
+        if(empty($title))
+        {
+            echo $this->_options['title'];
+        }
+        else
+        {
+            $this->_options['title'] = $title;
+        }
     }
     
     /**

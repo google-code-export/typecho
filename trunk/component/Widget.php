@@ -15,6 +15,17 @@
  */
 class WidgetComponent extends TypechoComponent
 {
-    
+    public function __call($name, $args)
+    {
+        $name = str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
+        $className = $name . 'WidgetComponent';
+        
+        if(!class_exists($className))
+        {
+            require 'Widget/' . $name . 'Widget.php';
+        }
+        
+        $widget = new $className();
+        call_user_func_array(array($widget, 'render'), $args);
+    }
 }
- 

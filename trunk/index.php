@@ -22,14 +22,14 @@ class IndexController extends TypechoController
 {   
     protected function renderResponse()
     {
-        parent::renderResponse();
         $options = new OptionsComponent();
         //$widget = new WidgetComponent($options);
         $archives = new ArchivesComponent($options);
         //$user = new UserComponent($options);
         //$content = new ContentComponent($options);
-        
-        require 'var/template/default/index.php';
+
+        //输出模板
+        require 'var/template/' . $options->template . '/index.php';
     }
 }
 

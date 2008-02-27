@@ -1,3 +1,8 @@
+<html>
+<head>
+<title><?php $options->title(); ?></title>
+</head>
+<body>
 <div>
 	<?php while($archives->get()): ?>
 		<h2><?php $archives->post_title(); ?></h2>
@@ -6,4 +11,5 @@
 </div>
 
 <div><?php $archives->pageNav(); ?></div>
-
+</body>
+</html>
