@@ -11,26 +11,4 @@
 /** 载入项目配置文件 **/
 require 'includes/config.php';
 
-/** 载入组件库 **/
-require 'component/Archives.php';
-//require 'component/Content.php';
-//require 'component/Widget.php';
-require 'component/Options.php';
-//require 'component/Users.php';
-
-class IndexController extends TypechoController
-{   
-    protected function renderResponse()
-    {
-        $options = new OptionsComponent();
-        //$widget = new WidgetComponent($options);
-        $archives = new ArchivesComponent($options);
-        //$user = new UserComponent($options);
-        //$content = new ContentComponent($options);
-
-        //输出模板
-        require 'var/template/' . $options->template . '/index.php';
-    }
-}
-
-new IndexController();
+require 'var/template/default/index.php';

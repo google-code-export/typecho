@@ -1,15 +1,13 @@
 <html>
 <head>
-<title><?php $options->title(); ?></title>
+<title>test</title>
 </head>
 <body>
+<?php widget('Test')->to($archives); ?>
 <div>
-	<?php while($archives->get()): ?>
-		<h2><?php $archives->post_title(); ?></h2>
-              <cite><?php $archives->time('Y年m月'); ?></cite>
-	<?php endwhile; ?>
+<select>
+	<?php $archives->parse('<option value="{post_id}">{post_title}</option>');  ?>
+</select>
 </div>
-
-<div><?php $archives->pageNav(); ?></div>
 </body>
 </html>

@@ -11,11 +11,34 @@
 /** 载入函数库支持 **/
 require_once 'functions.php';
 
+//关闭魔术引号功能
+if(get_magic_quotes_gpc())
+{
+    $_GET = typechoStripslashesDeep($_GET);
+    $_POST = typechoStripslashesDeep($_POST);
+    $_COOKIE = typechoStripslashesDeep($_COOKIE);
+
+    reset($_GET);
+    reset($_POST);
+    reset($_COOKIE);
+}
+
+//设置默认时区
+if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
+{
+    @date_default_timezone_set('UTC');
+}
+
+header('content-Type: text/html;charset= UTF-8');
+
+/** 定义调试开关 **/
+define('__TYPECHO_DEBUG__', false);
+
 /** 载入异常支持 **/
 require_once 'library/Exception.php';
 
-/** 载入核心支持 **/
-require_once 'library/Core.php';
+/** 载入组件支持 **/
+require_once 'library/Widget.php';
 
 /** 载入数据库配置 **/
 require_once './config/Db.php';
