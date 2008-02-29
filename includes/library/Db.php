@@ -167,7 +167,7 @@ class TypechoDb
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      * @return array
      */
-    public function fetchRows($query, array $filter = NULL)
+    public function fetchAll($query, array $filter = NULL)
     {
         //执行查询
         $resource = $this->query($query, __TYPECHO_DB_READ__);
@@ -191,7 +191,7 @@ class TypechoDb
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      * @return array
      */
-    public function fetch($query, array $filter = NULL)
+    public function fetchRow($query, array $filter = NULL)
     {
         $resource = $this->query($query, DB_READ);
         list($object, $method) = $filter;
