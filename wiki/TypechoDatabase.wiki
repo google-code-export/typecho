@@ -1,9 +1,23 @@
 #labels Phase-Design
 =Typecho数据库设计=
 
+==主体结构==
+
+===个人博客数据量如何===
+Typecho的定位是单用户blog系统,
+
 ==数据字典==
 
 ===post表===
 
 || *键名* || *类型* || *属性* || *解释* ||
 || post_id || int(10) || 主键,非负,自增 || post表主键 ||
+|| post_title || varchar(200) || 可为空 || 内容标题 ||
+|| post_slug || varchar(128) || 索引,可为空 || 内容缩略名 ||
+|| post_uri || varchar(200) || 可为空 || 内容链接 ||
+|| post_time || int(11) || 非负,可为空 || 内容生成时的unix时间戳 ||
+|| post_modify_time || int(11) || 非负,可为空 || 内容更改时的unix时间戳 ||
+|| post_password || varchar(20) || 可为空 || 内容密码保护 ||
+|| post_text || text || 可为空 || 内容文字 ||
+|| user_id || int(10) || 索引,非负,可为空 || 内容所属用户id ||
+|| post_template || varchar(32) || 可为空 || 内容使用的模板 ||
