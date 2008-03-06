@@ -45,7 +45,7 @@ class TypechoException extends Exception
     static public function parse($exceptionString)
     {
         $exceptionString = trim($exceptionString);
-        $rows = explode("\n",$exceptionString);
+        $rows = explode("\n", $exceptionString);
         $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:10pt;font-family:verdana,Helvetica,sans-serif">';
         $i = 0;
         
@@ -53,22 +53,22 @@ class TypechoException extends Exception
         {
             if(0 == $i)
             {
-                $items = explode(' ',$row);
+                $items = explode(' ', $row);
                 array_shift($items);
-                $message = implode(' ',$items);
+                $message = implode(' ', $items);
                 
-                $str .= '<tr><td width=5% style="background:#777;color:#FFF">&nbsp</td><td style="background:#777;color:#FFF">'.$row.'</td></tr>';
+                $str .= '<tr><td width=5% style="background:#777;color:#FFF">&nbsp</td><td style="background:#777;color:#FFF">' . $row . '</td></tr>';
             }
             else if(1 == $i)
             {
-                $str .= '<tr><td style="background:#FFFFAA"><strong>Trace</strong></td><td align="center" style="background:#FFFFAA">Message</td></tr>';
+                $str .= '<tr><td style="background:#FFFFAA"><strong>' . _t('回溯') . '</strong></td><td align="center" style="background:#FFFFAA">' . _t('消息') . '</td></tr>';
             }
             else
             {
-                $items = explode(' ',$row);
+                $items = explode(' ', $row);
                 $num = $items[0];
                 array_shift($items);
-                $message = implode(' ',$items);
+                $message = implode(' ', $items);
                 
                 $str .= "<tr><td style=\"background:#FFF\"><strong>{$num}</strong></td><td style=\"background:#FFF\">{$message}</td></tr>";
             }
@@ -90,11 +90,11 @@ class TypechoException extends Exception
             echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<title>Exception</title>
+<title>' . _t('系统截获异常') . '</title>
 </head><body>
             <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:20px;background:#AA0000;padding:10px;color:#FFF">'
             . $this->message . '</h1>';
-            return self::parse(parent::__toString()).'</body></html>';
+            return self::parse(parent::__toString()) . '</body></html>';
     }
 }
 
@@ -112,7 +112,7 @@ set_exception_handler('exceptionHandler');
  */
 function exceptionHandler($exception)
 {
-    header('content-type: text/html;charset=UTF-8');
+    @ob_clean();
     
     if(__TYPECHO_DEBUG__)
     {

@@ -127,7 +127,7 @@ class TypechoDbQuery
         else
         {
             $args = func_get_args();
-            $string = $this->filterPrefix(str_replace(array('%s', '%d'), array("'%s'", '%s'), array_shift($args)));
+            $string = $this->filterPrefix(str_replace('?', "'%s'", array_shift($args)));
             $this->_sqlPreBuild['where'] .= ' AND (' . vsprintf($string, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         
@@ -150,7 +150,7 @@ class TypechoDbQuery
         else
         {
             $args = func_get_args();
-            $string = $this->filterPrefix(str_replace(array('%s', '%d'), array("'%s'", '%s'), array_shift($args)));
+            $string = $this->filterPrefix(str_replace('?', "'%s'", array_shift($args)));
             $this->_sqlPreBuild['where'] .= ' OR (' . vsprintf($string, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         

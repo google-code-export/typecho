@@ -78,7 +78,7 @@ class TypechoDb
         !defined($const = '__TYPECHO_DB_PASS__') ||
         !defined($const = '__TYPECHO_DB_CHAR__'))
         {
-            throw new TypechoDbException('Undefined DB Const ' . $const, __TYPECHO_EXCEPTION_500__);
+            throw new TypechoDbException(_t('未定义的数据常量 %s', $const), __TYPECHO_EXCEPTION_500__);
         }
         
         //实例化适配器对象
