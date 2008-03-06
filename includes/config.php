@@ -32,7 +32,7 @@ if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 header('content-Type: text/html;charset= UTF-8');
 
 /** 定义调试开关 **/
-define('__TYPECHO_DEBUG__', false);
+define('__TYPECHO_DEBUG__', true);
 
 /** 载入异常支持 **/
 require_once 'library/Exception.php';
@@ -46,5 +46,14 @@ require_once './config/Db.php';
 /** 载入数据库支持 **/
 require_once 'library/Db.php';
 
+/** 载入路由配置 **/
+require_once './config/Route.php';
+
 /** 载入路由支持 **/
 require_once 'library/Route.php';
+
+/** 载入国际化配置 **/
+require_once './config/I18n.php';
+
+/** 载入国际化支持 **/
+require_once 'library/I18n.php';

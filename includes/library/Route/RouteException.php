@@ -8,10 +8,10 @@
  * @version    $Id$
  */
 
-/** 载入项目配置文件 **/
-require 'includes/config.php';
-
-widget('Options')->to($options);
-widget('Access')->to($access);
-
-require TypechoRoute::target('./var/template/' . $options->template);
+/**
+ * 组件异常类
+ *
+ * @package Widget
+ */
+class TypechoRouteException extends TypechoException
+{}

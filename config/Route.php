@@ -8,11 +8,14 @@
  * @version    $Id$
  */
 
-/** 定义需要用到的变量 **/
-$template = Options::get('template');
-
 /** 定义路由结构 **/
+global $route;
+
 $route = array(
-    '/'	=> '/var/template/' . $template . 'index.php',
-    '/archives/[post_id]' => '/var/template/' . $template . 'post.php',
+    'index'         =>  array('/', 'index.php'),
+    'article'       =>  array('/archives/[cid]', 'article.php'),
+    'page'          =>  array('/[slug]', 'page.php'),
+    'category'      =>  array('/category/[slug]', 'archive.php'),
+    'category_page' =>  array('/category/[slug]/[page]', 'archive.php'),
+    'tag'           =>  array('/tags/[tag_name]', 'archive.php')
 );

@@ -40,7 +40,8 @@ class TypechoMysql implements TypechoDbAdapter
             }
         }
 
-        throw new TypechoDbException(mysql_error(), __TYPECHO_EXCEPTION_503__);
+        throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
+        mysql_error() : _t('数据库连接错误'), __TYPECHO_EXCEPTION_503__);
     }
     
     /**
@@ -58,7 +59,8 @@ class TypechoMysql implements TypechoDbAdapter
             return $resource;
         }
         
-        throw new TypechoDbException(mysql_error(), __TYPECHO_EXCEPTION_500__);
+        throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
+        mysql_error() : _t('数据库查询错误'), __TYPECHO_EXCEPTION_500__);
     }
     
     /**

@@ -14,4 +14,4 @@ require 'includes/config.php';
 widget('Options')->to($options);
 widget('Access')->to($access);
 
-require TypechoRoute::target('./var/template/' . $options->template);
+require TypechoRoute::handle('./var/admin', 'mod', 'panel');

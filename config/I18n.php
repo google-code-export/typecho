@@ -8,10 +8,5 @@
  * @version    $Id$
  */
 
-/** 载入项目配置文件 **/
-require 'includes/config.php';
-
-widget('Options')->to($options);
-widget('Access')->to($access);
-
-require TypechoRoute::target('./var/template/' . $options->template);
+/** 定义mo文件 **/
+define('__TYPECHO_I18N_LANGUAGE__', false);
