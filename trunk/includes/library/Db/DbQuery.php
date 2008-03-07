@@ -182,6 +182,21 @@ class TypechoDbQuery
     }
     
     /**
+     * 分页查询
+     * 
+     * @param integer $page 页数
+     * @param integer $pageSize 每页行数
+     * @return TypechoDbQuery
+     */
+    public function page($page, $pageSize)
+    {
+        $pageSize = intval($pageSize);
+        $this->_sqlPreBuild['limit'] = ' LIMIT ' . $pageSize;
+        $this->_sqlPreBuild['offset'] = ' OFFSET ' . (intval($page) - 1) * $pageSize;
+        return $this;
+    }
+    
+    /**
      * 指定需要写入的栏目及其值
      * 
      * @param array $rows
@@ -242,7 +257,7 @@ class TypechoDbQuery
     public function select($table,$fields = '*')
     {
         $this->_sqlPreBuild['action'] = 'SELECT';
-        $this->_sqlPreBuild['fields'] = $fields;
+        $this->_sqlPreBuild['fields'] = $this->filterPrefix($fields);
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }

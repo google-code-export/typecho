@@ -61,7 +61,7 @@ abstract class TypechoWidget
      * 数据堆栈每一行
      * @var array
      */
-    protected $_rows = array();
+    protected $_row = array();
     
     public function __construct()
     {
@@ -105,7 +105,7 @@ abstract class TypechoWidget
         $_rowsKey = array();
         
         //将数据格式化
-        foreach($this->_rows as $key => $val)
+        foreach($this->_row as $key => $val)
         {
             $_rowsKey[] = '{' . $key . '}';
         }
@@ -135,9 +135,9 @@ abstract class TypechoWidget
     public function push(array $value)
     {
         //将行数据按顺序置位
-        if(empty($this->_rows))
+        if(empty($this->_row))
         {
-            $this->_rows = $value;
+            $this->_row = $value;
         }
     
         $this->_stack[] = $value;
@@ -161,9 +161,9 @@ abstract class TypechoWidget
      */
     public function get()
     {
-        $this->_rows = current($this->_stack);
+        $this->_row = current($this->_stack);
         next($this->_stack);
-        return $this->_rows;
+        return $this->_row;
     }
     
     /**
@@ -175,25 +175,25 @@ abstract class TypechoWidget
      */
     public function set($name, $value)
     {
-        $this->_rows[$name] = $value;
+        $this->_row[$name] = $value;
     }
     
     public function __call($name, $args)
     {
         if(function_exists($name))
         {
-            array_unshift($args, $this->_rows);
+            array_unshift($args, $this->_row);
             call_user_func_array($name, $args);
         }
         else
         {
-            echo isset($this->_rows[$name]) ? $this->_rows[$name] : NULL;
+            echo isset($this->_row[$name]) ? $this->_row[$name] : NULL;
         }
     }
     
     public function __get($name)
     {
-        return isset($this->_rows[$name]) ? $this->_rows[$name] : NULL;
+        return isset($this->_row[$name]) ? $this->_row[$name] : NULL;
     }
     
     /**
