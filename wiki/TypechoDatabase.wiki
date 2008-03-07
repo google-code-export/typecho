@@ -98,7 +98,8 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
 || created || int(11) || 索引,非负,可为空 || 内容生成时的GMT unix时间戳 ||
 || modified || int(11) || 非负,可为空 || 内容更改时的GMT unix时间戳 ||
 || text || text || 可为空 || 内容文字 ||
-|| author || int(10) || 非负,可为空 || 内容所属用户id ||
+|| meta || int(10) || 索引,非负,可为空 || 首选项id,冗余字段 ||
+|| author || int(10) || 索引,非负,可为空 || 内容所属用户id ||
 || template || varchar(32) || 可为空 || 内容使用的模板 ||
 || type || varchar(32) || 索引 || 内容类别 ||
 || protected || varchar(32) || 可为空 || 受保护内容,此字段对应内容保护密码 ||
