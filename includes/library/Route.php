@@ -18,9 +18,6 @@ require_once 'Route/RouteException.php';
  */
 class TypechoRoute
 {
-    private static $_get = array();
-    private static $_value = array();
-
     /**
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
      * 
@@ -35,29 +32,21 @@ class TypechoRoute
         $pathInfo = typechoGetPathInfo();
         foreach($route as $key => $val)
         {
-            list($format, $file) = $val;
-            $format = preg_replace_callback('/\[([_a-zA-Z0-9-]+)\]/is', array('TypechoRoute', 'callback'), $format);
-            $values = sscanf($pathInfo, $format);
+            list($format, $file, $values) = $val;
             
-            if(NULL !== $values && NULL !== implode(NULL, $values) 
-            && file_exists($fileName = $path . '/' . $file))
+            if(preg_match('|^' . $format . '$|', $pathInfo, $matches))
             {
-                foreach($values as $inkey => $inval)
+                if(1 < count($matches[0]))
                 {
-                    $_GET[self::$_get[$inkey]] = $inval;
+                    unset($matches[0]);
+                    $_GET = array_merge($_GET, array_combine($values, $matches));
+                    reset($_GET);
                 }
-                
-                return $fileName;
+                return $path . '/' . $file;
             }
         }
         
-        throw new TypechoRouteException(_t('没有找到'), __TYPECHO_EXCEPTION_404__);
-    }
-    
-    private static function callback($matches)
-    {
-        self::$_get[] = $matches[1];
-        return '%s';
+        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), __TYPECHO_EXCEPTION_404__);
     }
     
     /**
@@ -66,11 +55,13 @@ class TypechoRoute
      * @param string $path 目的文件所在目录
      * @param string $get 获取目的文件的GET值
      * @param string $default 当目的不存在时默认的文件
+     * @param array  $deny 禁止访问的handle
      * @return string
      */
-    public static function handle($path, $get = 'mod', $default = 'index')
+    public static function handle($path, $get = 'mod', $default = 'index', array $deny = array())
     {
         if(!empty($_GET[$get]) && preg_match('|^[_a-zA-Z-]+$|', $_GET[$get]) 
+        && !in_array($_GET[$get], $deny)
         && file_exists($fileName = $path . '/' . $_GET[$get] . '.php'))
         {
             return $fileName;
@@ -93,12 +84,13 @@ class TypechoRoute
     {
         global $route;
         
-        self::$_value = $value;
-        return $prefix . preg_replace_callback('/\[([_a-zA-Z0-9-]+)\]/is', array('TypechoRoute', 'callback'), $route[$name][0]);
-    }
-    
-    private static function parseCallback($matches)
-    {
-        return self::$_value[$matches[1]];
+        //交换数组键值
+        $pattern = array();
+        foreach($route[$name][2] as $row)
+        {
+            $pattern[$row] = $value[$row];
+        }
+        
+        return $prefix . vsprintf($route[$name][3], $pattern);
     }
 }

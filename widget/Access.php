@@ -19,7 +19,18 @@ class Access extends TypechoWidget
 
     public function render()
     {
-        return;
+        if($this->hasLogin())
+        {
+            $db = TypechoDb::get();
+            $rows = $db->fetchAll($db->sql()
+            ->select('table.options')
+            ->where('user = ?', $_SESSION['uid']), array($this, 'push'));
+            
+            foreach($rows as $row)
+            {
+                $this->registry('Options')->set($row['name'], $row['value']);
+            }
+        }
     }
     
     public function user($name)

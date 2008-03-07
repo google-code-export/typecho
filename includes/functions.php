@@ -8,10 +8,72 @@
  * @version    $Id$
  */
 
-
 function typechoStripslashesDeep($value)
 {
     return is_array($value) ? array_map('typechoStripslashesDeep', $value) : stripslashes($value);
+}
+
+/**
+ * 适用于utf8的字符串函数
+ */
+if(function_exists('mb_get_info'))
+{
+	/**
+	 * UTF-8截字函数
+	 *
+	 * @param string $str
+	 * @param integer $start
+	 * @param integer $length
+	 * @param string $trim
+	 * @return string
+	 */
+	function typechoSubStr($str,$start,$length,$trim = "...")
+	{
+		$iLength = mb_strlen($str);
+		$str = mb_substr($str,$start,$length);
+		return ($length < $iLength - $start) ? $str.$trim : $str;
+	}
+	
+	/**
+	 * UTF-8字符串长度函数
+	 *
+	 * @param string $str
+	 * @return integer
+	 */
+	function typechoStrLen($str)
+	{
+		return mb_strlen($str);
+	}
+}
+else
+{
+	/**
+	 * UTF-8截字函数
+	 *
+	 * @param string $str
+	 * @param integer $start
+	 * @param integer $length
+	 * @param string $trim
+	 * @return string
+	 */
+	function typechoSubStr($str,$start,$length,$trim = "...")
+	{
+		preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
+		$str = join("",array_slice($info[0],$start,$length));
+		return ($length < (sizeof($info[0]) - $start)) ? $str.$trim : $str;
+	}
+
+	/**
+	 * UTF-8字符串长度函数
+	 *
+	 * @param string $str
+	 * @return integer
+	 */
+	function typechoStrLen($str)
+	{
+		preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
+		return sizeof($info[0]);
+	}
 }
 
 /**
