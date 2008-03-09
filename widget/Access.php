@@ -19,6 +19,8 @@ class Access extends TypechoWidget
 
     public function render()
     {
+        session_start();
+        
         if($this->hasLogin())
         {
             $db = TypechoDb::get();
@@ -30,6 +32,12 @@ class Access extends TypechoWidget
             {
                 $this->registry('Options')->set($row['name'], $row['value']);
             }
+            
+            //更新最后活动时间
+            $db-query($db->sql()
+            ->update('table.user')
+            ->rows(array('activated' => $this->registry('Options')->gmt_time))
+            ->where('uid = ?', $uid));
         }
     }
     
@@ -65,13 +73,19 @@ class Access extends TypechoWidget
         $_SESSION['uid'] = $uid;
         $_SESSION['name'] = $name;
         $_SESSION['group'] = $group;
+        
+        $db = TypechoDb::get();
+        
+        //更新最后登录时间
+        $db-query($db->sql()
+        ->update('table.user')
+        ->row('logged', 'activated')
+        ->where('uid = ?', $uid));
     }
     
     public function logout()
     {
-        session_unregister('id');
-        session_unregister('name');
-        session_unregister('group');
+        session_unset();
     }
     
     public function hasLogin()

@@ -117,16 +117,6 @@ abstract class TypechoWidget
     }
     
     /**
-     * 格式化为序列化数据
-     *
-     * @return void
-     */
-    public function serialize()
-    {        
-        echo serialize($this->_stack);
-    }
-    
-    /**
      * 将每一行的值压入堆栈
      *
      * @param array $value 每一行的值
@@ -182,7 +172,7 @@ abstract class TypechoWidget
     {
         if(function_exists($name))
         {
-            array_unshift($args, $this->_row);
+            array_unshift($args, $this, $this->_row);
             call_user_func_array($name, $args);
         }
         else

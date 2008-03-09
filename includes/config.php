@@ -29,10 +29,11 @@ if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
     @date_default_timezone_set('UTC');
 }
 
-header('content-Type: text/html;charset= UTF-8');
-
 /** 定义调试开关 **/
 define('__TYPECHO_DEBUG__', true);
+
+/** 定义库目录 **/
+define('__TYPECHO_LIB_DIR__', dirname(__FILE__) . '/library');
 
 /** 载入异常支持 **/
 require_once 'library/Exception.php';

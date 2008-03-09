@@ -14,6 +14,133 @@ function typechoStripslashesDeep($value)
 }
 
 /**
+ * 自闭合html修复函数
+ *
+ * @param string $string
+ * @return string
+ */
+function typechoFixHtml($string)
+{
+    //关闭自闭合标签
+    $startPos = strrpos($string, "<");
+    $trimString = substr($string, $startPos);
+    
+    if(false === strpos($trimString, ">"))
+    {
+        $string = substr($string, 0, $startPos);
+    }
+    
+    //非自闭合html标签列表
+    preg_match_all("/<([_0-9a-zA-Z-\:]+)\s*([^>]*)>/is", $string, $startTags);
+    preg_match_all("/<\/([_0-9a-zA-Z-\:]+)>/is", $string, $closeTags);
+
+    if(!empty($startTags[1]) && is_array($startTags[1]))
+    {
+        krsort($startTags[1]);
+        $closeTagsIsArray = is_array($closeTags[1]);
+        foreach($startTags[1] as $key => $tag)
+        {
+        	$attrLength = strlen($startTags[2][$key]);
+            if($attrLength > 0 && "/" == $startTags[2][$key][$attrLength - 1])
+            {
+                continue;
+            }
+            if(!empty($closeTags[1]) && $closeTagsIsArray)
+            {
+                if(in_array($tag, $closeTags[1]))
+                {
+                    continue;
+                }
+            }
+            $string .= "</{$tag}>";
+        }
+    }
+    
+    return $string;
+}
+
+/**
+ * 去掉字符串中的特殊字符
+ *
+ * @param string $string
+ * @return string
+ */
+function typechoStripTags($string, $except = NULL)
+{
+    $string = str_replace('<!DOC', '<DOC', $string);
+    
+    if(NULL === $except)
+    {
+		$string = preg_replace( "/<\/(div|h1|h2|h3|h4|h5|h6|p|th|td|li|ol|dt|dd|pre|caption|input|textarea|blockquote|code|pre|button|body)[^>]*>/", "\n\n", $string);
+    }
+    
+	$string = preg_replace("/\s*<br\s*\/>\s*/is", "\n", $string);
+	$string = strip_tags($string, $except);
+	$string = str_replace("\r\n", "\n", $string);
+	$string = str_replace("\r", "", $string);
+	
+	return trim($string);
+}
+
+/**
+ * feed头部生成函数
+ *
+ * @param string $type feed类型
+ * @param string $charset feed字符集
+ * @param array $modules feed使用模块
+ * @return void
+ */
+function typechoFeedHeader($type, $charset, array $modules = NULL)
+{
+    $supportModules = array(
+        'content'   =>  'xmlns:content="http://purl.org/rss/1.0/modules/content/"',
+        'wfw'       =>  'xmlns:wfw="http://wellformedweb.org/CommentAPI/"',
+        'dc'        =>  'xmlns:dc="http://purl.org/dc/elements/1.1/"',
+        'atom'      =>  'xmlns="http://www.w3.org/2005/Atom"',
+        'thr'       =>  'xmlns:thr="http://purl.org/syndication/thread/1.0"',
+        'lang'      =>  'xml:lang="en"'
+    );
+    
+    switch  (strtoupper($type))
+    {
+        case 'RSS2.0':
+        {
+            header('content-Type: application/rss+xml;charset= ' . $charset, true);
+            echo '<?xml version="1.0" encoding="' . $charset . '"?>';
+            echo '<rss version="2.0"';
+            break;
+        }
+        case 'RSS0.92':
+        {
+            header('content-Type: text/xml;charset= ' . $charset, true);
+            echo '<?xml version="1.0" encoding="' . $charset . '"?>';
+            echo '<rss version="0.92"';
+        }
+        case 'ATOM':
+        {
+            header('content-Type: application/atom+xml;charset= ' . $charset, true);
+            echo '<?xml version="1.0" encoding="' . $charset . '"?>';
+            echo '<feed';
+        }
+        default:
+            break;
+    }
+    
+    if($modules)
+    {
+        foreach($modules as $module)
+        {
+            if(isset($supportModules[$module]))
+            {
+                echo "\r\n" . $supportModules[$module];
+            }
+        }
+    }
+    
+    echo '>';
+}
+
+/**
  * 适用于utf8的字符串函数
  */
 if(function_exists('mb_get_info'))
@@ -27,11 +154,11 @@ if(function_exists('mb_get_info'))
 	 * @param string $trim
 	 * @return string
 	 */
-	function typechoSubStr($str,$start,$length,$trim = "...")
+	function typechoSubStr($str, $start, $length, $trim = "...")
 	{
 		$iLength = mb_strlen($str);
-		$str = mb_substr($str,$start,$length);
-		return ($length < $iLength - $start) ? $str.$trim : $str;
+		$str = mb_substr($str, $start, $length);
+		return ($length < $iLength - $start) ? $str . $trim : $str;
 	}
 	
 	/**
@@ -56,11 +183,11 @@ else
 	 * @param string $trim
 	 * @return string
 	 */
-	function typechoSubStr($str,$start,$length,$trim = "...")
+	function typechoSubStr($str, $start, $length, $trim = "...")
 	{
 		preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
-		$str = join("",array_slice($info[0],$start,$length));
-		return ($length < (sizeof($info[0]) - $start)) ? $str.$trim : $str;
+		$str = join("", array_slice($info[0], $start, $length));
+		return ($length < (sizeof($info[0]) - $start)) ? $str . $trim : $str;
 	}
 
 	/**
@@ -85,8 +212,8 @@ else
  */
 function typechoSlugName($str, $default)
 {
-    $str = str_replace(array("'",":","\\","/"),"",$str);
-    $str = str_replace(array("+",","," ",".","?","=","&","!","<",">","(",")","[","]","{","}"),"-",$str);
+    $str = str_replace(array("'", ":", "\\", "/"), "", $str);
+    $str = str_replace(array("+", ",", " ", ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
 
     //cut string
     //from end
@@ -109,7 +236,7 @@ function typechoSlugName($str, $default)
 
     if($cutOff)
     {
-        $str = substr($str,0,- $cutOff);
+        $str = substr($str, 0, - $cutOff);
     }
 
     //from start
@@ -132,7 +259,7 @@ function typechoSlugName($str, $default)
 
     if($cutOff)
     {
-        $str = substr($str,$cutOff);
+        $str = substr($str, $cutOff);
     }
 
     $str = urlencode($str);
