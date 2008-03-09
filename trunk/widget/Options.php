@@ -2,6 +2,8 @@
 
 class Options extends TypechoWidget
 {
+    private $headers;
+
     private function getSiteUrl()
     {
         return 'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
@@ -25,5 +27,9 @@ class Options extends TypechoWidget
 
         $this->_row['site_url'] = $this->getSiteUrl();
         $this->_row['template_url'] = $this->_row['site_url'] . '/var/template/' . $this->_row['template'];
+        $this->_row['gmt_time'] = gmmktime();
+        $this->_row['rss_url'] = TypechoRoute::parse('rss', NULL, $this->_rows['site_url']);
+        
+        header('content-Type: text/html;charset= ' . $this->_row['charset']);
     }
 }

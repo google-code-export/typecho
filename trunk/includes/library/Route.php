@@ -58,7 +58,7 @@ class TypechoRoute
      * @param array  $deny 禁止访问的handle
      * @return string
      */
-    public static function handle($path, $get = 'mod', $default = 'index', array $deny = array())
+    public static function handle($path, $get = 'mod', $default = NULL, array $deny = array())
     {
         if(!empty($_GET[$get]) && preg_match('|^[_a-zA-Z-]+$|', $_GET[$get]) 
         && !in_array($_GET[$get], $deny)
@@ -68,7 +68,12 @@ class TypechoRoute
         }
         else
         {
-            return $path . '/' . $default . '.php';
+            if(!empty($default))
+            {
+                return $path . '/' . $default . '.php';
+            }
+            
+            throw new TypechoRouteException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
         }
     }
     
@@ -80,17 +85,24 @@ class TypechoRoute
      * @param string $prefix 最终合成路径的前缀
      * @return string
      */
-    public static function parse($name, $value, $prefix = NULL)
+    public static function parse($name, array $value = NULL, $prefix = NULL)
     {
         global $route;
         
-        //交换数组键值
-        $pattern = array();
-        foreach($route[$name][2] as $row)
+        if($value)
         {
-            $pattern[$row] = $value[$row];
+            //交换数组键值
+            $pattern = array();
+            foreach($route[$name][2] as $row)
+            {
+                $pattern[$row] = $value[$row];
+            }
+            
+            return $prefix . vsprintf($route[$name][3], $pattern);
         }
-        
-        return $prefix . vsprintf($route[$name][3], $pattern);
+        else
+        {
+            return $prefix . $route[$name][3];
+        }
     }
 }
