@@ -95,8 +95,8 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
 || title || varchar(200) || 可为空 || 内容标题 ||
 || slug || varchar(128) || 索引,可为空 || 内容缩略名 ||
 || uri || varchar(200) || 可为空 || 资源描述符 ||
-|| created || int(11) || 索引,非负,可为空 || 内容生成时的GMT unix时间戳 ||
-|| modified || int(11) || 非负,可为空 || 内容更改时的GMT unix时间戳 ||
+|| created || int(10) || 索引,非负,可为空 || 内容生成时的GMT unix时间戳 ||
+|| modified || int(10) || 非负,可为空 || 内容更改时的GMT unix时间戳 ||
 || text || text || 可为空 || 内容文字 ||
 || meta || int(10) || 索引,非负,可为空 || 首选项id,冗余字段 ||
 || author || int(10) || 索引,非负,可为空 || 内容所属用户id ||
@@ -131,7 +131,7 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
 || *键名* || *类型* || *属性* || *解释* ||
 || coid || int(10) || 主键,非负,自增 || comment表主键 ||
 || cid || int(10) || 索引,非负 || post表主键,关联字段 ||
-|| created || int(11) || 非负,可为空 || 评论生成时的GMT unix时间戳 ||
+|| created || int(10) || 非负,可为空 || 评论生成时的GMT unix时间戳 ||
 || author || varchar(200) || 可为空 || 评论作者 ||
 || mail || varchar(200) || 可为空 || 评论者邮件 ||
 || url || varchar(200) || 可为空 || 评论者网址 ||
@@ -150,6 +150,7 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
 || value || text || 可为空 || 配置值 ||
 
 ===users表===
+
 || *键名* || *类型* || *属性* || *解释* ||
 || uid || int(10) || 主键,非负,自增 || user表主键 ||
 || name || varchar(32) || 唯一 || 用户名称 ||
@@ -157,5 +158,7 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
 || mail || varchar(200) || 唯一 || 用户的邮箱 ||
 || url || varchar(200) || 可为空 || 用户的主页 ||
 || screen_name || varchar(32) || 可为空 || 用户显示的名称 ||
-|| created || int(11) || 非负,可为空 || 用户注册时的GMT unix时间戳 ||
+|| created || int(10) || 非负,可为空 || 用户注册时的GMT unix时间戳 ||
+|| activated || int(10) || 非负,可为空 || 最后活动时间 ||
+|| logged || int(10) || 非负,可为空 || 上次登录最后活跃时间 ||
 || group || tinyint(4) || _N/A_ || 用户组 ||
