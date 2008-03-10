@@ -125,7 +125,7 @@ class TypechoGetText
     * @author     Michael Wallner <mike@php.net>
     * @copyright  2004-2005 Michael Wallner
     * @license    BSD, revised
-    * @version    CVS: $Id: MO.php,v 1.7 2005/11/08 18:57:06 mike Exp $
+    * @version    CVS: $Id$
     * @link       http://pear.php.net/package/File_Gettext
     */
     static public function load($file)
