@@ -31,7 +31,7 @@ class Posts extends TypechoWidget
         $value['day'] = date('j', $value['created'] + $this->registry('Options')->timezone);
         
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse('post', $value, $this->registry('Options')->site_url);
+        $value['permalink'] = TypechoRoute::parse('post', $value, $this->registry('Options')->index);
         return parent::push($value);
     }
     
@@ -54,17 +54,17 @@ class Posts extends TypechoWidget
     
     public function feedUrl()
     {
-        echo TypechoRoute::parse('post_rss', $this->_row, $this->registry('Options')->site_url);
+        echo TypechoRoute::parse('post_rss', $this->_row, $this->registry('Options')->index);
     }
     
     public function commentsPostUrl()
     {
-        printf($this->registry('Options')->site_url . '/do.php?mod=CommentsPost&cid=%d', $this->cid);
+        printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->registry('Options')->index) . '?%d', $this->cid);
     }
     
     public function trackbackUrl()
     {
-        printf($this->registry('Options')->site_url . '/do.php?mod=Trackback&cid=%d', $this->cid);
+        printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->registry('Options')->index) . '?%d', $this->cid);
     }
     
     public function content($more = NULL)
@@ -116,7 +116,7 @@ class Posts extends TypechoWidget
         $result = array();
         foreach($categories as $row)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->registry('Options')->site_url) . '">'
+            $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->registry('Options')->index) . '">'
             . $row['name'] . '</a>' : $row['name'];
         }
         

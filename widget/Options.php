@@ -26,9 +26,10 @@ class Options extends TypechoWidget
         ->where('user = 0'), array($this, 'push'));
 
         $this->_row['site_url'] = $this->getSiteUrl();
+        $this->_row['index']    = $this->_row['rewrite'] ? $this->_row['site_url'] : $this->_row['site_url'] . '/index.php';
         $this->_row['template_url'] = $this->_row['site_url'] . '/var/template/' . $this->_row['template'];
         $this->_row['gmt_time'] = gmmktime();
-        $this->_row['rss_url'] = TypechoRoute::parse('rss', NULL, $this->_rows['site_url']);
+        $this->_row['rss_url'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
         
         header('content-Type: text/html;charset= ' . $this->_row['charset']);
     }
