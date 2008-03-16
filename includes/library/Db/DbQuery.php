@@ -26,18 +26,21 @@ class TypechoDbQuery
 {
     /**
      * 数据库适配器
+     * 
      * @var TypechoDbAdapter
      */
     private $_adapter;
     
     /**
      * 数据库SQL查询语句
+     *
      * @var string
      */
     private $_sql;
     
     /**
      * 查询语句预结构,由数组构成,方便组合为SQL查询字符串
+     *
      * @var array
      */
     private $_sqlPreBuild;

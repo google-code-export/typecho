@@ -47,18 +47,24 @@ abstract class TypechoWidget
 {
     /**
      * 保存所有实例化的widget对象
+     * 
+     * @access private
      * @var array
      */
     private static $_registry = array();
     
     /**
      * 内部数据堆栈
+     * 
+     * @access protected
      * @var array
      */
     protected $_stack = array();
     
     /**
      * 数据堆栈每一行
+     * 
+     * @access protected
      * @var array
      */
     protected $_row = array();
@@ -168,6 +174,14 @@ abstract class TypechoWidget
         $this->_row[$name] = $value;
     }
     
+    /**
+     * 魔术函数,用于挂接其它函数
+     * 
+     * @access public
+     * @param string $name
+     * @param array $args
+     * @return void
+     */
     public function __call($name, $args)
     {
         if(function_exists($name))
@@ -181,6 +195,13 @@ abstract class TypechoWidget
         }
     }
     
+    /**
+     * 魔术函数,用于获取内部变量
+     * 
+     * @access public
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return isset($this->_row[$name]) ? $this->_row[$name] : NULL;
