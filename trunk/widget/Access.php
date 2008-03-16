@@ -1,10 +1,42 @@
 <?php
+/**
+ * Typecho Blog Platform
+ *
+ * @author     qining
+ * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license    GNU General Public License 2.0
+ * @version    $Id$
+ */
 
+/**
+ * 用户权限管理
+ * 
+ * @package Access
+ */
 class Access extends TypechoWidget
 {
+    /**
+     * 用户组
+     * 
+     * @access private
+     * @var array
+     */
     private $_group;
+    
+    /**
+     * 用户
+     * 
+     * @access private
+     * @var array
+     */
     private $_user;
 
+    /**
+     * 重载父类构造函数,初始化用户组
+     * 
+     * @access public
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -17,6 +49,12 @@ class Access extends TypechoWidget
         );
     }
 
+    /**
+     * 入口函数,初始化session
+     * 
+     * @access public
+     * @return void
+     */
     public function render()
     {
         session_start();
@@ -41,13 +79,21 @@ class Access extends TypechoWidget
         }
     }
     
-    public function user($name)
+    /**
+     * 获取用户各字段值
+     * 
+     * @access public
+     * @param string $name 字段名
+     * @param string $return 是否返回,如果为true此函数将返回字段值,反之则直接输出,默认为false
+     * @return string
+     */
+    public function user($name, $return = false)
     {
         if($this->hasLogin())
         {
             if(in_array($name, array('uid', 'group', 'name')))
             {
-                return $_SESSION[$name];
+                $return = $_SESSION[$name];
             }
             else
             {
@@ -59,15 +105,31 @@ class Access extends TypechoWidget
                     ->where('uid = ?', $_SESSION['uid']));
                 }
                 
-                return isset($this->_user[$name]) ? $this->_user[$name] : NULL;
+                $return = isset($this->_user[$name]) ? $this->_user[$name] : NULL;
             }
         }
         else
         {
-            return NULL;
+            $return = NULL;
         }
+        
+        if($return)
+        {
+            return $return;
+        }
+        
+        echo $return;
     }
     
+    /**
+     * 用户登录函数,用于初始化session状态
+     * 
+     * @access public
+     * @param string $uid 用户id
+     * @param string $name 用户名
+     * @param string $group 用户组
+     * @return void
+     */
     public function login($uid, $name, $group)
     {
         $_SESSION['uid'] = $uid;
@@ -83,24 +145,51 @@ class Access extends TypechoWidget
         ->where('uid = ?', $uid));
     }
     
+    /**
+     * 登出函数,销毁session
+     * 
+     * @access public
+     * @return void
+     */
     public function logout()
     {
         session_unset();
     }
     
+    /**
+     * 判断用户是否已经登录
+     * 
+     * @access public
+     * @return void
+     */
     public function hasLogin()
     {
         return isset($_SESSION['uid']);
     }
     
+    /**
+     * 判断用户权限
+     * 
+     * @access public
+     * @param string $group 用户组
+     * @return boolean
+     * @throws TypechoWidgetException
+     */
     public function pass($group)
     {
-        if($this->hasLogin() && array_key_exists($group, $this->_group)
-        && $this->_group[$_SESSION['group']] <= $this->_group[$group])
+        if($this->hasLogin())
         {
-            return true;
+            if(array_key_exists($group, $this->_group) && $this->_group[$_SESSION['group']] <= $this->_group[$group])
+            {
+                return true;
+            }
+            
+            throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
         }
-        
-        throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
+        else
+        {
+            typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
+            . '&referer=' . urlencode($_SERVER['REQUEST_URI']), false);
+        }
     }
 }
