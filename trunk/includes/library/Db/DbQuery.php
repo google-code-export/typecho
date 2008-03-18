@@ -123,15 +123,18 @@ class TypechoDbQuery
      */
     public function where()
     {
+        $condition = func_get_arg(0);
+        $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
+    
         if(func_num_args() <= 1)
         {
-            $this->_sqlPreBuild['where'] .= ' AND (' . func_get_arg(0) . ')';
+            $this->_sqlPreBuild['where'] .= ' AND (' . $condition . ')';
         }
         else
         {
             $args = func_get_args();
-            $string = $this->filterPrefix(str_replace('?', "'%s'", array_shift($args)));
-            $this->_sqlPreBuild['where'] .= ' AND (' . vsprintf($string, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            array_shift($args);
+            $this->_sqlPreBuild['where'] .= ' AND (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         
         return $this;
@@ -146,15 +149,18 @@ class TypechoDbQuery
      */
     public function orWhere()
     {
+        $condition = func_get_arg(0);
+        $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
+    
         if(func_num_args() <= 1)
         {
-            $this->_sqlPreBuild['where'] .= ' OR (' . func_get_arg(0) . ')';
+            $this->_sqlPreBuild['where'] .= ' OR (' . $condition . ')';
         }
         else
         {
             $args = func_get_args();
-            $string = $this->filterPrefix(str_replace('?', "'%s'", array_shift($args)));
-            $this->_sqlPreBuild['where'] .= ' OR (' . vsprintf($string, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            array_shift($args);
+            $this->_sqlPreBuild['where'] .= ' OR (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         
         return $this;
@@ -195,7 +201,7 @@ class TypechoDbQuery
     {
         $pageSize = intval($pageSize);
         $this->_sqlPreBuild['limit'] = ' LIMIT ' . $pageSize;
-        $this->_sqlPreBuild['offset'] = ' OFFSET ' . (intval($page) - 1) * $pageSize;
+        $this->_sqlPreBuild['offset'] = ' OFFSET ' . (max(intval($page), 1) - 1) * $pageSize;
         return $this;
     }
     
