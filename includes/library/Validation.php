@@ -20,158 +20,146 @@
  * @version    $Id$
  */
 
+/** 载入验证错误 **/
+require_once 'Validation/ValidationError.php';
+
+/**
+ * 验证类
+ * 
+ * @package Validation
+ */
 class TypechoValidation
 {
     /**
-     * 错误信息
+     * 默认对象
+     * 
+     * @access private
+     * @var object
      */
-    protected $_error;
-
+    private $_object;
+    
     /**
-     * 需要验证规则
-     *
-     * @type array
+     * 内部数据
+     * 
+     * @access private
+     * @var array
      */
-    protected $_rules;
-
-    /**
-     * 错误变量
-     *
-     * @type array
-     */
-    protected $_error_array;
+    private $_data;
 
     /**
      *
      *
      */
-    function __construct()
+    public function __construct($object = NULL)
     {
-        // 重设错误信息
-        $this->reSet();
+        //载入对象
+        $this->_object = $object;
     }
-
+    
    /**
      * Run the Validator
      *
      * This function does all the work.
      *
      * @access	public
-     * @return	bool
+     * @param   array $data
+     * @param   array $rules
+     * @return	TypechoValidationError
      */		
-    public function run($data)
+    public function run(array $data, array $rules)
     {
-        /**
-         * 如果规则为空，则直接放弃
-         */
-        if (empty($this->_rules)) {
-            return false;
-        }
-
-
+        $result = array();
+        $this->_data = $data;
+    
         // Cycle through the rules and test for errors
-        foreach ($this->_rules as $rule)
+        foreach ($rules as $key => $rule)
         {
-            // 没有这个测试项目则直接跳过
-            if ( ! method_exists($this, $rule)) {
-                continue;
+            if(empty($data[$key]))
+            {
+                if(isset($rule['required']))
+                {
+                    $message = is_array($rule['required']) ? $rule['required'][0] : $rule['required'];
+                    $result[$key] = $message;
+                }
             }
-
-            if (!$this->$rule($data)) {
-                $this->_error = $this->_error_messages[$rule];
-                return false;
+            else
+            {
+                foreach($rule as $method => $params)
+                {
+                    if(is_array($params))
+                    {
+                        $message = $params[0];
+                        $params[0] = $data[$key];
+                    }
+                    else
+                    {
+                        $message = $params;
+                        $params = array($data[$key]);
+                    }
+                    
+                    if(method_exists($this, $method))
+                    {
+                        $method = array(&$this, $method);
+                    }
+                    else if(!empty($this->_object) && method_exists($this->_object, $method))
+                    {
+                        $method = array(&$this->_object, $method);
+                    }
+                    else if(function_exists($method))
+                    {
+                        $method = $method;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    
+                    if(!call_user_func_array($method, $params))
+                    {
+                        $result[$key] = $message;
+                    }
+                }
             }
         }
 
-        return true;
+        return new TypechoValidationError($result);
     }
-
-
-    /**
-     * 验证字符串
-     *
-     * @usage 
-     * <code>
-     * TypechoValidation::form('name', array('alpha' => '对不起,您的输入必须为纯字符', 
-     *              'mail' => '对不起,您必须输入一个合法的email地址'));
-     * </code>
-     * @param $data  string
-     * @param $rules array
-     *
-     */
-    public function form($data, $rules)
-    {
-        if (!is_array) {
-            return ;
-        }
-
-        foreach ($rules as $rule => $error_message) {
-            $this->_rules[] = $rule;
-            $this->_error_messages[$rule] = $error_message;
-        }
-
-        return $data ? $this->run($data) : false;
-    }
-
-
-    /**
-     * 重设状态信息
-     *
-     * @return void
-     */
-    public function reSet()
-    {
-        $this->_error_messages = array();
-        $this->_rules = array();
-        $this->_error = "";
-    }
-
-
-    /**
-     * 获取错误信息
-     *
-     * @return string
-     */
-    public function getErrorMsg()
-    {
-        return $this->_error;
-    }
-
-    /**
-     * Required
-     *
-     * @access	public
-     * @param	string
-     * @return	bool
-     */
-    function required($str)
-    {
-        if (!is_array($str))
-        {
-            return (trim($str) == '') ? false : true;
-        }
-        else
-        {
-            return ( ! empty($str));
-        }
-    }
-
 
     /**
      * Minimum Length
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function min_length($str, $val)
+    public function minLength($str, $length)
     {
-        if (preg_match("/[^0-9]/", $val))
-        {
-            return false;
-        }
-
-        return (strlen($str) < $val) ? false : true;
+        return (typechoStrLen($str) > $length);
+    }
+    
+    /**
+     * 验证输入是否一致
+     * 
+     * @access public
+     * @param string $str
+     * @param string $key
+     * @return boolean
+     */
+    public function confirm($str, $key)
+    {
+        return !empty($this->_data[$key]) && ($str == $this->_data[$key]);
+    }
+    
+    /**
+     * 虚函数
+     * 
+     * @access public
+     * @param string $str
+     * @return boolean
+     */
+    public function required($str)
+    {
+        return true;
     }
 
 
@@ -180,48 +168,11 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function max_length($str, $val)
+    function maxLength($str, $length)
     {
-        if (preg_match("/[^0-9]/", $val))
-        {
-            return false;
-        }
-
-        // 验证中文长度，仅使用 utf-8 编码
-        if (function_exists('mb_strlen')) {
-            $strlen = mb_strlen($str, 'utf-8');
-        } else {
-            $strlen = strlen($str);
-        }
-
-        return ($strlen > $val) ? false : true;
-    }
-
-
-    /**
-     * Exact Length
-     *
-     * @access	public
-     * @param	string
-     * @return	bool
-     */	
-    function exact_length($str, $val)
-    {
-        if (preg_match("/[^0-9]/", $val))
-        {
-            return false;
-        }
-
-        // 验证中文长度，仅使用 utf-8 编码
-        if (function_exists('mb_strlen')) {
-            $strlen = mb_strlen($str, 'utf-8');
-        } else {
-            $strlen = strlen($str);
-        }
-
-        return ($strlen != $val) ? false : true;
+        return (typechoStrLen($str) < $length);
     }
 
 
@@ -230,24 +181,23 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function valid_email($str)
+    public function email($str)
     {
-        return (!preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str)) ? false : true;
+        return preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str);
     }
-
-
+    
     /**
-     * 验证 IP 地址
-     *
-     * @access	public
-     * @param	string
-     * @return	string
+     * 验证是否为网址
+     * 
+     * @access public
+     * @param string $str
+     * @return boolean
      */
-    function valid_ip($ip)
+    public function url($str)
     {
-        // ...
+        return preg_match("|^http://[_=&///?\.a-zA-Z0-9-]+$|i", $str);
     }
 
 
@@ -256,9 +206,9 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */		
-    function alpha($str)
+    public function alpha($str)
     {
         return preg_match("/^([a-z])+$/i", $str) ? true : false;
     }
@@ -269,11 +219,11 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function alpha_numeric($str)
+    public function alphaNumeric($str)
     {
-        return ( ! preg_match("/^([a-z0-9])+$/i", $str)) ? false : true;
+        return preg_match("/^([a-z0-9])+$/i", $str);
     }
 
 
@@ -282,9 +232,9 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function alpha_dash($str)
+    public function alphaDash($str)
     {
         return preg_match("/^([-a-z0-9_-])+$/i", $str) ? true : false;
     }
@@ -294,12 +244,12 @@ class TypechoValidation
      * Numeric
      *
      * @access	public
-     * @param	int
-     * @return	bool
+     * @param	integer
+     * @return	boolean
      */	
-    function numeric($str)
+    public function isFloat($str)
     {
-        return ( ! ereg("^[0-9\.]+$", $str)) ? false : true;
+        return ereg("^[0-9\.]+$", $str);
     }
 
 
@@ -308,49 +258,11 @@ class TypechoValidation
      *
      * @access	public
      * @param	string
-     * @return	bool
+     * @return	boolean
      */	
-    function is_numeric($str)
+    public function isInteger($str)
     {
-        return ( ! is_numeric($str)) ? false : true;
-    }
-
-
-    /**
-     * 验证中文 utf-8 字符
-     *
-     * @access	public
-     * @param	string
-     * @return	boolean
-     */
-    function zh_alpha($str)
-    {
-        if (preg_match("/^([\xE4-\xE9][\x80-\xBF][\x80-\xBF]|[\x81-\xfe]|[a-z])+$/i", $str)) {
-            return true;
-        }
-        else
-        {
-            return preg_match("/^([a-z])+$/i", $str) ? true : false;
-        }
-    }
-
-
-    /**
-     * 验证中文全角数字
-     *
-     * @access	public
-     * @param	string
-     * @return	boolean
-     */
-    function zh_alpha_numeric($str)
-    {
-        if (preg_match("/^([\xE4-\xE9][\x80-\xBF][\x80-\xBF]|[\x81-\xfe]|[a-z0-9])+$/i", $str)) {
-            return true;
-        }
-        else
-        {
-            return preg_match("/^([a-z0-9])+$/i", $str) ? true : false;
-        }
+        return is_numeric($str);
     }
 }
 
