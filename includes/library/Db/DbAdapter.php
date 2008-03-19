@@ -50,7 +50,7 @@ interface TypechoDbAdapter
      * 引号转义函数
      * 
      * @param string $string 需要转义的字符串
-     * @return string 转义完毕的字符串
+     * @return string
      */
     public function quotes($string);
     

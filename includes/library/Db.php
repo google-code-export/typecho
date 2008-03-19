@@ -115,7 +115,7 @@ class TypechoDb
      * 
      * @return TypechoDb
      */
-    public function get()
+    public static function get()
     {
         if(empty(self::$_instance))
         {
@@ -147,7 +147,7 @@ class TypechoDb
                 case 'DELETE':
                     return $this->_adapter->affectedRows($resource);
                 case 'INSERT':
-                    return $this->_adapter->affectedRows($resource);
+                    return $this->_adapter->lastInsertId($resource);
                 case 'SELECT':
                 default:
                     return $resource;
