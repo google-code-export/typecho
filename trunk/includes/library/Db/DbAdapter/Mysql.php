@@ -18,12 +18,12 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 数据库连接函数
      *
-     * @param string $host
-     * @param string $port
-     * @param string $user
-     * @param string $password
-     * @param string $charset
-     * @throws LtException
+     * @param string $host 数据库服务器地址
+     * @param string $port 数据库端口
+     * @param string $user 数据库用户名
+     * @param string $password 数据库密码
+     * @param string $charset 数据库字符集
+     * @throws TypechoDbException
      * @return resource
      */
     public function connect($host, $port, $db, $user, $password, $charset = NULL)
@@ -47,9 +47,9 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 执行数据库查询
      *
-     * @param string $sql
-     * @param boolean $op
-     * @throws LtException
+     * @param string $sql 查询字符串
+     * @param boolean $op 查询读写开关
+     * @throws TypechoDbException
      * @return resource
      */
     public function query($sql, $op = __TYPECHO_DB_READ__)
@@ -66,8 +66,7 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
      *
-     * @param resource $resource
-     * @throws LtException
+     * @param resource $resource 查询返回资源标识
      * @return array
      */
     public function fetch($resource)
@@ -78,7 +77,7 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 引号转义函数
      *
-     * @param string $string
+     * @param string $string 需要转义的字符串
      * @return string
      */
     public function quotes($string)
@@ -89,7 +88,7 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 取出最后一次查询影响的行数
      *
-     * @param resource $resource
+     * @param resource $resource 查询返回资源标识
      * @return integer
      */
     public function affectedRows($resource)
@@ -100,7 +99,7 @@ class TypechoMysql implements TypechoDbAdapter
     /**
      * 取出最后一次插入返回的主键值
      *
-     * @param resource $resource
+     * @param resource $resource 查询返回资源标识
      * @return integer
      */
     public function lastInsertId($resource)
