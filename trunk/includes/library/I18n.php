@@ -17,16 +17,16 @@ require_once 'I18n/GetText.php';
  * @param string $string
  * @return string
  */
-function _t()
+function _t($string)
 {
     if(func_num_args() <= 1)
     {
-        return TypechoI18n::translate(func_get_arg(0));
+        return TypechoI18n::translate($string);
     }
     else
     {
         $args = func_get_args();
-        $string = array_shift($args);
+        array_shift($args);
         return vsprintf(TypechoI18n::translate($string), $args);
     }
 }
