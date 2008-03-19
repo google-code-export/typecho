@@ -46,7 +46,7 @@ class TypechoException extends Exception
     {
         $exceptionString = trim($exceptionString);
         $rows = explode("\n", $exceptionString);
-        $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:10pt;font-family:verdana,Helvetica,sans-serif">';
+        $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:8pt;font-family:verdana,Helvetica,sans-serif">';
         $i = 0;
         
         foreach($rows as $row)
@@ -61,7 +61,7 @@ class TypechoException extends Exception
             }
             else if(1 == $i)
             {
-                $str .= '<tr><td style="background:#FFFFAA"><strong>' . _t('回溯') . '</strong></td><td align="center" style="background:#FFFFAA">' . _t('消息') . '</td></tr>';
+                $str .= '<tr><td style="background:#FFFFAA"><strong>Trace</strong></td><td align="center" style="background:#FFFFAA">Message</td></tr>';
             }
             else
             {
@@ -90,11 +90,11 @@ class TypechoException extends Exception
             echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<title>' . _t('系统截获异常') . '</title>
+<title>Exception</title>
 </head><body>
-            <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:20px;background:#AA0000;padding:10px;color:#FFF">'
+            <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:12px;background:#AA0000;padding:10px;color:#FFF">'
             . $this->message . '</h1>';
-            return self::parse(parent::__toString()) . '</body></html>';
+            return self::parse(parent::__toString()) . errorHandler() . '</body></html>';
     }
 }
 
@@ -103,6 +103,12 @@ class TypechoException extends Exception
  * 
  */
 set_exception_handler('exceptionHandler');
+
+/**
+ * 设置错误截获函数
+ * 
+ */
+set_error_handler('errorHandler');
 
 /**
  * 异常截获函数
@@ -130,20 +136,108 @@ function exceptionHandler($exception)
         switch($exception->getCode())
         {
             case __TYPECHO_EXCEPTION_403__:
+            {
+                header('HTTP/1.1 403 Forbidden');
+                require_once __TYPECHO_EXCEPTION_DIR__ . $exception->getCode() . '.php';
+                break;
+            }
             case __TYPECHO_EXCEPTION_404__:
+            {
+                header('HTTP/1.1 404 Not Found');
+                header('Status: 404 Not Found');
+                require_once __TYPECHO_EXCEPTION_DIR__ . $exception->getCode() . '.php';
+                break;
+            }
             case __TYPECHO_EXCEPTION_500__:
+            {
+                header('HTTP/1.1 500 Internal Server Error');
+                require_once __TYPECHO_EXCEPTION_DIR__ . $exception->getCode() . '.php';
+                break;
+            }
             case __TYPECHO_EXCEPTION_503__:
             {
+                header('HTTP/1.1 503 Service Unvailable');
                 require_once __TYPECHO_EXCEPTION_DIR__ . $exception->getCode() . '.php';
                 break;
             }
             default:
             {
-                require_once __TYPECHO_EXCEPTION_DIR__ . '500.php';
+                require_once __TYPECHO_EXCEPTION_DIR__ . 'error.php';
                 break;
             }
         }
         
         die();
+    }
+}
+
+function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline = NULL)
+{
+    static $errors;
+    
+    if(empty($errors))
+    {
+        $errors = array();
+    }
+
+    if(__TYPECHO_DEBUG__)
+    {
+        $errorWord = array (
+            E_ERROR              => 'Error',
+            E_WARNING            => 'Warning',
+            E_PARSE              => 'Parsing Error',
+            E_NOTICE             => 'Notice',
+            E_CORE_ERROR         => 'Core Error',
+            E_CORE_WARNING       => 'Core Warning',
+            E_COMPILE_ERROR      => 'Compile Error',
+            E_COMPILE_WARNING    => 'Compile Warning',
+            E_USER_ERROR         => 'User Error',
+            E_USER_WARNING       => 'User Warning',
+            E_USER_NOTICE        => 'User Notice',
+            E_STRICT             => 'Runtime Notice',
+            E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
+            );
+        
+        if(empty($errno))
+        {
+            if(!empty($errors))
+            {
+                $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:8pt;font-family:verdana,Helvetica,sans-serif;margin-bottom:20px;">';
+                $str .= '<tr><td style="background:#777;color:#FFF" align="center" colspan="4">System caught error</td></tr>';
+                $str .= '<tr><td align="center" style="background:#FFFFAA">Error</td>
+                <td align="center" style="background:#FFFFAA">File</td>
+                <td align="center" style="background:#FFFFAA">Line</td>
+                <td align="center" style="background:#FFFFAA">Message</td>
+                </tr>';
+                
+                foreach($errors as $error)
+                {
+                    list($errorWord, $errno, $errfile, $errline, $errstr) = $error;
+                    $str .= '<tr><td style="background:#FFF">' . $errorWord . '</td>
+                    <td style="background:#FFF">' . $errfile . '</td>
+                    <td style="background:#FFF">' . $errline . '</td>
+                    <td style="background:#FFF">' . $errstr . '</td>
+                    </tr>';
+                }
+                
+                $str .= '</table>';
+                
+                echo $str;
+            }
+        }
+        else
+        {
+            if(array_key_exists($errno, $errorWord))
+            {
+                $errorWord = $errorWord[$errno];
+            }
+            else
+            {
+                $errorWord = 'Unkown Error';
+            }
+            
+            $errors[] = array($errorWord, $errno, $errfile, $errline, $errstr);
+            echo $errorWord . "[$errno]: [file:$errfile][line:$errline] $errstr<br />\n";
+        }
     }
 }
