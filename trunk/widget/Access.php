@@ -168,6 +168,22 @@ class Access extends TypechoWidget
     }
     
     /**
+     * 获取验证码
+     * 
+     * @access public
+     * @return string
+     */
+    public function authCode()
+    {
+        $db = TypechoDb::get();
+        $user = $db->fetchRow($db->sql()
+        ->select('table.user')
+        ->where('uid = 1'));
+        
+        return md5($user['name'] . $user['password']);
+    }
+    
+    /**
      * 判断用户权限
      * 
      * @access public
@@ -177,19 +193,30 @@ class Access extends TypechoWidget
      */
     public function pass($group)
     {
-        if($this->hasLogin())
+        if('system' == $group)
         {
-            if(array_key_exists($group, $this->_group) && $this->_group[$_SESSION['group']] <= $this->_group[$group])
+            if(!empty($_POST['auth']) && 
+            $this->authCode() == $_POST['auth'])
             {
                 return true;
             }
-            
-            throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
         }
         else
         {
-            typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
-            . '&referer=' . urlencode($_SERVER['REQUEST_URI']), false);
+            if($this->hasLogin())
+            {
+                if(array_key_exists($group, $this->_group) && $this->_group[$_SESSION['group']] <= $this->_group[$group])
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
+                . '&referer=' . urlencode($_SERVER['REQUEST_URI']), false);
+            }
         }
+        
+        throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
     }
 }

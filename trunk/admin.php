@@ -13,5 +13,6 @@ require 'includes/config.php';
 
 widget('Options')->to($options);
 widget('Access')->to($access);
+widget('Notice')->to($notice);
 
 require TypechoRoute::handle('./var/admin', 'mod', 'index', array('header', 'menu', 'footer', 'do'));

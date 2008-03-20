@@ -14,6 +14,12 @@ define('__TYPECHO_WIDGET_DIR__', './widget');
 /** 载入异常支持 **/
 require_once 'Widget/WidgetException.php';
 
+/** 载入过滤器支持 **/
+require_once 'Widget/WidgetHook.php';
+
+/** 载入导航页支持 **/
+require_once 'Widget/WidgetNavigator.php';
+
 /**
  * Typecho组件基类
  * 
@@ -21,9 +27,8 @@ require_once 'Widget/WidgetException.php';
  * @param mixed $param 参数
  * @return TypechoWidget
  */
-function widget()
+function widget($widget)
 {
-    $widget = func_get_arg(0);
     $widget_rows = explode('.', $widget);
     $className = array_pop($widget_rows);
 
@@ -36,6 +41,17 @@ function widget()
     call_user_func_array(array(&$object, 'render'), $args);
 
     return $object;
+}
+
+/**
+ * 直接输出cookie信息
+ * 
+ * @param string $name cookie名称
+ * @return void
+ */
+function _cookie($name)
+{
+    echo empty($_COOKIE[$name]) ? NULL : $_COOKIE[$name];
 }
 
 /**
@@ -69,9 +85,15 @@ abstract class TypechoWidget
      */
     protected $_row = array();
     
+    /**
+     * 构造函数,将实例化对象放入全局堆栈
+     * 
+     * @access public
+     * @return void
+     */
     public function __construct()
     {
-        self::$_registry[get_class($this)] = $this;
+        self::$_registry[get_class($this)] = &$this;
     }
 
     /**
@@ -178,8 +200,8 @@ abstract class TypechoWidget
      * 魔术函数,用于挂接其它函数
      * 
      * @access public
-     * @param string $name
-     * @param array $args
+     * @param string $name 函数名
+     * @param array $args 函数参数
      * @return void
      */
     public function __call($name, $args)
@@ -199,7 +221,7 @@ abstract class TypechoWidget
      * 魔术函数,用于获取内部变量
      * 
      * @access public
-     * @param string $name
+     * @param string $name 变量名
      * @return mixed
      */
     public function __get($name)
@@ -208,9 +230,12 @@ abstract class TypechoWidget
     }
     
     /**
-     * 必须实现的执行虚函数
+     * 必须实现的执行函数
      *
      * @return void
      */
-    abstract public function render();
+    public function render()
+    {
+        return;
+    }
 }

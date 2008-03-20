@@ -33,6 +33,7 @@ class TypechoException extends Exception
      */
     public function __construct($message, $code = 0)
     {
+        $message = is_array($message) ? implode(',', $message) : $message;
         parent::__construct($message, $code);
     }
     
@@ -171,6 +172,15 @@ function exceptionHandler($exception)
     }
 }
 
+/**
+ * 错误截获函数
+ * 
+ * @param integer $errno 错误代码
+ * @param string $errstr 错误描述
+ * @param string $errfile 错误文件
+ * @param integer $errline 错误代码行
+ * @return void
+ */
 function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline = NULL)
 {
     static $errors;

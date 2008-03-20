@@ -8,6 +8,12 @@
  * @version    $Id$
  */
 
+/**
+ * 递归去掉数组反斜线
+ * 
+ * @param mixed $value
+ * @return mixed
+ */
 function typechoStripslashesDeep($value)
 {
     return is_array($value) ? array_map('typechoStripslashesDeep', $value) : stripslashes($value);
@@ -392,7 +398,8 @@ function typechoGetClientIp()
 
 /**
  * 分析response参数
- *
+ * 
+ * @param string $response 回执字符串
  * @return array
  */
 function typechoGetHttpResponse($response)
@@ -461,6 +468,8 @@ function typechoHttpSender($url,
                            $postData = NULL,
                            $fileData = NULL,
                            $timeOut = 5,
+                           $host = NULL,
+                           $ip = NULL,
                            $locationTimes = 0)
 {
     //check locationTimes
@@ -506,7 +515,7 @@ function typechoHttpSender($url,
         $request .= " HTTP/1.1\r\n";
         $request .= "Accept: */*\r\n";
         $request .= "User-Agent: " . $agent . "\r\n";
-        $request .= "Host: " . $parsedUrl['host'] . (isset($parsedUrl['port']) ? ':'. $port : NULL) . "\r\n";
+        $request .= "Host: " . (empty($host) ? $parsedUrl['host'] : $host) . (isset($parsedUrl['port']) ? ':'. $port : NULL) . "\r\n";
         $request .= "Connection: Keep-Alive\r\n";
         $request .= "Keep-Alive: 300\r\n";
         $request .= "Cache-Control: no-cache\r\n";
@@ -559,7 +568,7 @@ function typechoHttpSender($url,
             $request .= "\r\n";
         }
         
-        $socket = @fsockopen($parsedUrl['host'], $port, $errno, $errstr,$timeOut);
+        $socket = @fsockopen(empty($ip) ? $parsedUrl['host'] : $ip, $port, $errno, $errstr,$timeOut);
         if(!$socket)
         {
             return false;
@@ -592,7 +601,15 @@ function typechoHttpSender($url,
                 {
                     $response['location'] = 'http://'.$parsedUrl['host'].$response['location'];
                 }
-                return mgHttpSender($response['location'],$agent,$getData,$postData,$fileData,$timeOut,$locationTimes+1);
+                return typechoHttpSender($response['location'],
+                                         $agent,
+                                         $getData,
+                                         $postData,
+                                         $fileData,
+                                         $timeOut,
+                                         $host,
+                                         $ip,
+                                         $locationTimes + 1);
             }
             else
             {
@@ -609,4 +626,14 @@ function typechoHttpSender($url,
     {
         return NULL;
     }
+}
+
+/**
+ * 动态获取网站根目录
+ * 
+ * @return string
+ */
+function typechoGetSiteRoot()
+{
+    return substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')) . '/';
 }
