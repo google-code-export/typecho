@@ -20,9 +20,6 @@
  * @version    $Id$
  */
 
-/** 载入验证错误 **/
-require_once 'Validation/ValidationError.php';
-
 /**
  * 验证类
  * 
@@ -64,7 +61,7 @@ class TypechoValidation
      * @access	public
      * @param   array $data
      * @param   array $rules
-     * @return	TypechoValidationError
+     * @return	array
      */		
     public function run(array $data, array $rules)
     {
@@ -122,7 +119,7 @@ class TypechoValidation
             }
         }
 
-        return new TypechoValidationError($result);
+        return $result;
     }
 
     /**

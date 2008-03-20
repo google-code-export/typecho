@@ -58,7 +58,7 @@ class Options extends TypechoWidget
         $this->_row['siteUrl'] = $this->getSiteUrl();
         $this->_row['index']    = $this->_row['rewrite'] ? $this->_row['siteUrl'] : $this->_row['siteUrl'] . '/index.php';
         $this->_row['templateUrl'] = $this->_row['siteUrl'] . '/var/template/' . $this->_row['template'];
-        $this->_row['gmtTime'] = gmmktime();
+        $this->_row['gmtTime'] = time() + intval(date('Z'));
         $this->_row['rssUrl'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
         $this->_row['adminUrl'] = $this->_row['siteUrl'] . '/admin.php';
         

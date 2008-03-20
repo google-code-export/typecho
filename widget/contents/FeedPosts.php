@@ -32,10 +32,11 @@ class FeedPosts extends Posts
         $rows = $this->db->fetchAll($this->db->sql()
         ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.created,
         table.contents.text, table.contents.commentsNum, table.metas.slug AS category, table.users.screenName as author')
-        ->join('table.metas', 'table.contents.meta = table.metas.mid')
-        ->join('table.users', 'table.contents.author = table.users.uid')
+        ->join('table.metas', 'table.contents.meta = table.metas.mid', 'LEFT')
+        ->join('table.users', 'table.contents.author = table.users.uid', 'LEFT')
         ->where('table.contents.type = ?', 'post')
         ->where('table.metas.type = ?', 'category')
+        ->where('table.contents.protected = NULL')
         ->where('table.contents.allowFeed = ?', 'enable')
         ->where('table.contents.created < ?', $this->registry('Options')->gmt_time)
         ->group('table.contents.cid')

@@ -10,11 +10,29 @@
 
 /**
  * 内容的文章基类
+ * 定义的css类
+ * p.more:阅读全文链接所属段落
  * 
  * @package Widget
  */
 class Posts extends TypechoWidget
 {
+    /**
+     * 分页数目
+     * 
+     * @access protected
+     * @var integer
+     */
+    protected $_pageSize;
+    
+    /**
+     * 当前页
+     * 
+     * @access protected
+     * @var integer
+     */
+    protected $_currentPage;
+
     /**
      * 数据库对象
      * 
@@ -34,6 +52,34 @@ class Posts extends TypechoWidget
         parent::__construct();
         $this->db = TypechoDb::get();
     }
+    
+    /**
+     * 输出内容分页
+     * 
+     * @access public
+     * @param string $class 分页类型
+     * @return void
+     */
+    public function pageNav($class)
+    {
+        $args = func_get_args();
+        
+        $row = $this->db->fetchRow($this->db->sql()
+        ->select('table.contents', 'COUNT(table.contents.cid) as num')
+        ->where('table.contents.type = ?', 'post')
+        ->where('table.contents.protected = NULL')
+        ->where('table.contents.created < ?', $this->registry('Options')->gmtTime)
+        ->group('table.contents.cid')
+        ->order('table.contents.created', 'DESC'));
+        
+        $nav = new TypechoWidgetNavigator($row['num'],
+                                          $this->_currentPage,
+                                          $this->_pageSize,
+                                          TypechoRoute::parse('index_page', array('page' => -65536),
+                                          $this->registry('Options')->index));
+    
+        call_user_func_array(array(&$nav, 'make'), $args);
+    }
 
     /**
      * 将每行的值压入堆栈
@@ -50,14 +96,7 @@ class Posts extends TypechoWidget
         $value['day'] = date('j', $value['created'] + $this->registry('Options')->timezone);
         
         //生成静态链接
-        if('post' == $value['type'])
-        {
-            $value['permalink'] = TypechoRoute::parse('post', $value, $this->registry('Options')->index);
-        }
-        else if('page' == $value['type'])
-        {
-            $value['permalink'] = TypechoRoute::parse('page', $value, $this->registry('Options')->index);
-        }
+        $value['permalink'] = TypechoRoute::parse('post', $value, $this->registry('Options')->index);
         
         return parent::push($value);
     }
@@ -144,7 +183,7 @@ class Posts extends TypechoWidget
     {
         $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
         list($abstract) = explode('<!--more-->', $content);
-        echo typechoFixHtml($abstract) . ($more ? '<p class="typecho-more"><a href="' 
+        echo typechoFixHtml($abstract) . ($more ? '<p class="more"><a href="' 
         . $this->permalink . '">' . $more . '</a></p>' : NULL);
     }
     
@@ -168,9 +207,9 @@ class Posts extends TypechoWidget
      * @param string $tag 评论链接锚点
      * @return void
      */
-    public function commentsNum($string = 'Comments %d', $tag = '#comments')
+    public function commentsNum($string = 'Comments %d', $anchor = '#comments')
     {
-        echo '<a href="' . $this->permalink . $tag . '">' . sprintf($string, $this->commentsNum) . '</a>';
+        echo '<a href="' . $this->permalink . $anchor . '">' . sprintf($string, $this->commentsNum) . '</a>';
     }
     
     /**
@@ -197,12 +236,12 @@ class Posts extends TypechoWidget
      * 输出文章静态地址
      * 
      * @access public
-     * @param string $tag 文章锚点
+     * @param string $anchor 文章锚点
      * @return void
      */
-    public function permalink($tag = NULL)
+    public function permalink($anchor = NULL)
     {
-        echo $this->permalink . $tag;
+        echo $this->permalink . $anchor;
     }
     
     /**
@@ -233,6 +272,28 @@ class Posts extends TypechoWidget
         
         echo implode($split, $result);
     }
+    
+    /**
+     * 输出文章标签
+     * 
+     * @access public
+     * @param string $split 多个标签之间分隔符
+     * @param boolean $link 是否输出链接
+     * @return void
+     */
+    public function tags($split = ',', $link = true)
+    {
+        $tags = explode(',', $this->tags);
+        
+        $result = array();
+        foreach($tags as $tag)
+        {
+            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', array('tag' => $tag), $this->registry('Options')->index) . '">'
+            . $tag . '</a>' : $tag;
+        }
+        
+        echo implode($split, $result);
+    }
 
     /**
      * 入口函数
@@ -243,18 +304,20 @@ class Posts extends TypechoWidget
      */
     public function render($pageSize = NULL)
     {
-        $pageSize = empty($pageSize) ? $this->registry('Options')->page_size : $pageSize;
+        $this->_pageSize = empty($pageSize) ? $this->registry('Options')->page_size : $pageSize;
+        $this->_currentPage = empty($_GET['page']) ? 1 : $_GET['page'];
         
         $rows = $this->db->fetchAll($this->db->sql()
-        ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.created,
+        ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.created, table.contents.tags,
         table.contents.text, table.contents.commentsNum, table.metas.slug AS category, table.users.screenName as author')
-        ->join('table.metas', 'table.contents.meta = table.metas.mid')
-        ->join('table.users', 'table.contents.author = table.users.uid')
+        ->join('table.metas', 'table.contents.meta = table.metas.mid', 'LEFT')
+        ->join('table.users', 'table.contents.author = table.users.uid', 'LEFT')
         ->where('table.contents.type = ?', 'post')
         ->where('table.metas.type = ?', 'category')
+        ->where('table.contents.protected = NULL')
         ->where('table.contents.created < ?', $this->registry('Options')->gmtTime)
         ->group('table.contents.cid')
         ->order('table.contents.created', 'DESC')
-        ->page(empty($_GET['page']) ? 1 : $_GET['page'], $pageSize), array($this, 'push'));
+        ->page($this->_currentPage, $this->_pageSize), array($this, 'push'));
     }
 }

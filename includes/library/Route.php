@@ -36,9 +36,10 @@ class TypechoRoute
             
             if(preg_match('|^' . $format . '$|', $pathInfo, $matches))
             {
-                if(1 < count($matches[0]))
+                if(1 < count($matches))
                 {
                     unset($matches[0]);
+                    
                     $_GET = array_merge($_GET, array_combine($values, $matches));
                     reset($_GET);
                 }

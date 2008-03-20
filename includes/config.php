@@ -23,6 +23,9 @@ if(get_magic_quotes_gpc())
     reset($_COOKIE);
 }
 
+//开始监视输出区
+ob_start();
+
 //设置默认时区
 if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 {
