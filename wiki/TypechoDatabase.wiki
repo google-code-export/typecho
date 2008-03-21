@@ -68,7 +68,7 @@ Typecho的定位是单用户blog系统,在我们设计它的数据库之前有�
  * draft(草稿)
  * page(页面)
  * link(链接)
- * file(文件)
+ * attachment(文件)
  
 然后再来看看项目表里的类型
 
