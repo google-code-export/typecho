@@ -21,20 +21,15 @@ require_once 'Post.php';
  * @todo 增加邮件和个人主页格式判断
  */
 class CommentsPost extends Post
-{
+{    
     /**
-     * 构造函数,初始化数据库
+     * 插入评论
      * 
      * @access public
+     * @param integer $cid
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->db = TypechoDb::get();
-    }
-    
-    public function insertComment($cid, $referer)
+    public function insertComment($cid)
     {
         $comment = array();
         $comment['cid'] = $cid;
@@ -115,7 +110,7 @@ class CommentsPost extends Post
         //判断父节点
         if(!empty($_POST['parent']))
         {
-            if($parent = $this->db->fetchRow($this->db->sql->select('table.comments', 'coid')
+            if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', 'coid')
             ->where('coid = ?', intval($_POST['parent']))))
             {
                 if($cid == $parent['cid'])
@@ -155,7 +150,7 @@ class CommentsPost extends Post
         ->rows($comment));
         
         setCookie('text', '', 0, typechoGetSiteRoot());
-        typechoRedirect($referer . '#comment-' . $commentId, false);
+        $this->goBack('#comment-' . $commentId);
     }
     
     public function render()
@@ -171,14 +166,13 @@ class CommentsPost extends Post
         {
             list($cid, $created) = $query;
             
-            $this->db = TypechoDb::get();
-            
-            if($post = $this->db->fetchRow($this->db->sql->select('table.posts', 'created')
-            ->where('cid = ?', intval($cid))))
+            if($post = $this->db->fetchRow($this->db->sql()->select('table.contents', 'created')
+            ->where('cid = ?', intval($cid))
+            ->limit(1)))
             {
                 if($created == $post['created'])
                 {
-                    $this->insertComment(intval($cid), $_SERVER['HTTP_REFERER']);
+                    $this->insertComment(intval($cid));
                     return;
                 }
             }

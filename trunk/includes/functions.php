@@ -20,6 +20,35 @@ function typechoStripslashesDeep($value)
 }
 
 /**
+ * 将一个数组变为扁平
+ * 
+ * @param array $value 被处理的数组
+ * @param string $key 需要抽取的键值
+ * @return array
+ */
+function typechoArrayFlatten(array $value, $key)
+{
+    $result = array();
+    
+    if($value)
+    {
+        foreach($value as $inval)
+        {
+            if(is_array($inval) && isset($inval[$key]))
+            {
+                $result[] = $inval[$key];
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    
+    return $result;
+}
+
+/**
  * 自闭合html修复函数
  *
  * @param string $string

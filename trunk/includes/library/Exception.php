@@ -27,7 +27,7 @@ class TypechoException extends Exception
     /**
      * 异常基类构造函数,重载以增加$code的默认参数
      * 
-     * @param string $message 异常消息
+     * @param mixed $message 异常消息
      * @param integer $code 异常代码
      * @return void
      */
