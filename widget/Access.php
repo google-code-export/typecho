@@ -188,10 +188,11 @@ class Access extends TypechoWidget
      * 
      * @access public
      * @param string $group 用户组
+     * @param boolean $test 是否为测试模式
      * @return boolean
      * @throws TypechoWidgetException
      */
-    public function pass($group)
+    public function pass($group, $test = false)
     {
         if('system' == $group)
         {
@@ -212,11 +213,25 @@ class Access extends TypechoWidget
             }
             else
             {
-                typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
-                . '&referer=' . urlencode($_SERVER['REQUEST_URI']), false);
+                if($test)
+                {
+                    return false;
+                }
+                else
+                {
+                    typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
+                    . '&referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
+                }
             }
         }
         
-        throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
+        if($test)
+        {
+            return false;
+        }
+        else
+        {
+            throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
+        }
     }
 }
