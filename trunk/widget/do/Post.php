@@ -64,7 +64,7 @@ class Post extends TypechoWidget
         {
             return is_array($_POST[$key]) ? array_unique($_POST[$key]) : array($_POST[$key]);
         }
-        else(!empty($_GET[$key]))
+        else if(!empty($_GET[$key]))
         {
             return is_array($_GET[$key]) ? array_unique($_GET[$key]) : array($_GET[$key]);
         }

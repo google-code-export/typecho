@@ -18,7 +18,7 @@ require_once 'Post.php';
  */
 class ContentsPost extends Post
 {
-    private function setTags($cid, $tags, $oldTags = NULL)
+    protected function setTags($cid, $tags, $oldTags = NULL)
     {
         $tags = str_replace(' ', ',', $tags);
         $oldTags = array_unique(array_map('trim', explode(',', $oldTags)));
@@ -85,5 +85,10 @@ class ContentsPost extends Post
         }
         
         return implode(',', $tags);
+    }
+    
+    protected function setCategories($cid, $categories, $oldCategories = array())
+    {
+        
     }
 }
