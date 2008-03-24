@@ -219,7 +219,7 @@ class Access extends TypechoWidget
                 }
                 else
                 {
-                    typechoRedirect($this->registry('Options')->siteUrl . '/admin.php?mod=login'
+                    typechoRedirect($this->registry('Options')->siteURL . '/admin.php?mod=login'
                     . '&referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
                 }
             }

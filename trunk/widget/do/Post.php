@@ -41,6 +41,7 @@ class Post extends TypechoWidget
      * @access protected
      * @param string $anchor 锚点地址
      * @return void
+     * @throws TypechoWidgetException
      */
     protected function goBack($anchor = NULL)
     {
@@ -53,11 +54,25 @@ class Post extends TypechoWidget
         typechoRedirect($_SERVER['HTTP_REFERER'] . $anchor, false);
     }
     
+    /**
+     * 直接跳向地址
+     * 
+     * @access protected
+     * @param string $url 跳入的地址
+     * @return void
+     */
     protected function goForward($url)
     {
-        typechoRedirect($this->registry('Options')->siteUrl . $url, false);
+        typechoRedirect($this->registry('Options')->siteURL . $url, false);
     }
     
+    /**
+     * 获取表单数据,并将其格式化为一个数组
+     * 
+     * @access protected
+     * @param 表单数据键值 $key
+     * @return array
+     */
     protected function formDataList($key)
     {
         if(!empty($_POST[$key]))
@@ -73,7 +88,38 @@ class Post extends TypechoWidget
             return array();
         }
     }
+    
+    /**
+     * 执行异步任务
+     * 
+     * @access protected
+     * @param string $jobName
+     * @return void
+     */
+    protected function doJob($jobName)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        
+        typechoHttpSender(TypechoRoute::parse('do', array('do' => $jobName), $this->registry('Options')->index),
+        $this->registry('Options')->generator,
+        array('isJob' => 1),
+        array('args' => $args),
+        NULL,
+        2,
+        NULL,
+        $_SERVER['SERVER_ADDR']);
+    }
 
+    /**
+     * 提交表单触发函数
+     * 
+     * @access protected
+     * @param string $postData 表单触发值
+     * @param string $functionName 触发的函数名
+     * @param string $method 触发方法
+     * @return void
+     */
     protected function onSubmit($postData, $functionName, $method = 'GET')
     {
         $data = ('POST' == strtoupper($method)) ? $_POST : $_GET;
@@ -97,6 +143,27 @@ class Post extends TypechoWidget
         else if(!empty($data[$postData]))
         {
             $this->$functionName();
+        }
+    }
+    
+    /**
+     * 获取递增字段值
+     * 
+     * @access protected
+     * @param unknown $table
+     * @return unknown
+     */
+    protected function getAutoIncrement($table)
+    {
+        $table = __TYPECHO_DB_PREFIX__ . $table;
+        $row = $this->fetchRow("SHOW TABLE STATUS LIKE '{$table}'");
+        if($row)
+        {
+            return empty($row['Auto_increment']) ? 1 : $row['Auto_increment'];
+        }
+        else
+        {
+            return 1;
         }
     }
 }
