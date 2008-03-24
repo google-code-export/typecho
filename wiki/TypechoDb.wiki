@@ -9,56 +9,64 @@
  * 描述 - 包含获取数据支持方法的类.必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,__TYPECHO_DB_USER__, __TYPECHO_DB_PASS__, __TYPECHO_DB_CHAR__
  * 包 - Db
 
-===^TypechoDbAdapter^ $_adapter===
+===private ^TypechoDbAdapter^ `$_adapter`===
  * 位置: 文件 */includes/library/Db.php* 第 *48* 行
  * 说明: 数据库适配器
 
-===^TypechoDbQuery^ $_query===
+===private ^TypechoDbQuery^ `$_query`===
  * 位置: 文件 */includes/library/Db.php* 第 *54* 行
  * 说明: sql词法构建器
 
-===^TypechoDb^ $_instance===
+===private static ^TypechoDb^ `$_instance`===
  * 位置: 文件 */includes/library/Db.php* 第 *60* 行
  * 说明: 实例化的数据库对象
 
-===公开方法 __construct(string $adapter)===
- * 参数列表
-   # string *$adapter* - 数据库适配器名称
+===public `__construct`(string $adapter)===
+*参数列表*
+||*名称*||*类型*||*说明*||
+||$adapter||string||数据库适配器名称||
+
  * 返回: *void*
  * 抛出异常: *TypechoDbException*
  * 位置: 文件 */includes/library/Db.php* 第 *69* 行
  * 说明: 数据库类构造函数
 
-===公开方法 sql()===
+===public `sql`()===
  * 返回: *TypechoDbQuery*
  * 位置: 文件 */includes/library/Db.php* 第 *101* 行
  * 说明: 获取SQL词法构建器实例化对象
 
-===公开静态方法 get()===
+===public static `get`()===
  * 返回: *TypechoDb*
  * 位置: 文件 */includes/library/Db.php* 第 *118* 行
  * 说明: 获取数据库实例化对象用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
 
-===公开方法 query(mixed $query, boolean $op)===
- * 参数列表
-   # mixed *$query* - 查询语句或者查询对象
-   # boolean *$op* - 数据库读写状态
+===public `query`(mixed $query, boolean $op)===
+*参数列表*
+||*名称*||*类型*||*说明*||
+||$query||mixed||查询语句或者查询对象||
+||$op||boolean||数据库读写状态||
+
  * 返回: *mixed*
  * 位置: 文件 */includes/library/Db.php* 第 *136* 行
  * 说明: 执行查询语句
 
-===公开方法 fetchAll(mixed $query, array $filter)===
- * 参数列表
-   # mixed *$query* - 查询对象
-   # array *$filter* - 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+===public `fetchAll`(mixed $query, array $filter)===
+*参数列表*
+||*名称*||*类型*||*说明*||
+||$query||mixed||查询对象||
+||$filter||array||行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中||
+
  * 返回: *array*
  * 位置: 文件 */includes/library/Db.php* 第 *170* 行
  * 说明: 一次取出所有行
 
-===公开方法 fetchRow(mixed $query, array $filter)===
- * 参数列表
-   # mixed *$query* - 查询对象
-   # array *$filter* - 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+===public `fetchRow`(mixed $query, array $filter)===
+*参数列表*
+||*名称*||*类型*||*说明*||
+||$query||mixed||查询对象||
+||$filter||array||行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中||
+
  * 返回: *array*
  * 位置: 文件 */includes/library/Db.php* 第 *194* 行
  * 说明: 一次取出一行
