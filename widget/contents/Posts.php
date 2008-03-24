@@ -96,7 +96,7 @@ class Posts extends TypechoWidget
         $value['day'] = date('j', $value['created'] + $this->registry('Options')->timezone);
         
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse('post', $value, $this->registry('Options')->index);
+        $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->registry('Options')->index);
         
         return parent::push($value);
     }
@@ -143,7 +143,7 @@ class Posts extends TypechoWidget
      * @access public
      * @return void
      */
-    public function feedUrl()
+    public function feedURL()
     {
         echo TypechoRoute::parse('post_rss', $this->_row, $this->registry('Options')->index);
     }
@@ -154,7 +154,7 @@ class Posts extends TypechoWidget
      * @access public
      * @return void
      */
-    public function commentsPostUrl()
+    public function commentsPostURL()
     {
         printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->registry('Options')->index) . '?%d.%d',
         $this->cid, $this->created);
@@ -166,7 +166,7 @@ class Posts extends TypechoWidget
      * @access public
      * @return void
      */
-    public function trackbackUrl()
+    public function trackbackURL()
     {
         printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->registry('Options')->index) . '?%d.%d',
         $this->cid, $this->created);
@@ -308,13 +308,13 @@ class Posts extends TypechoWidget
         $this->_currentPage = empty($_GET['page']) ? 1 : $_GET['page'];
         
         $rows = $this->db->fetchAll($this->db->sql()
-        ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.created, table.contents.tags,
+        ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.slug, table.contents.created, table.contents.tags,
         table.contents.text, table.contents.commentsNum, table.metas.slug AS category, table.users.screenName as author')
         ->join('table.metas', 'table.contents.meta = table.metas.mid', 'LEFT')
         ->join('table.users', 'table.contents.author = table.users.uid', 'LEFT')
         ->where('table.contents.type = ?', 'post')
         ->where('table.metas.type = ?', 'category')
-        ->where('table.contents.protected = NULL')
+        ->where('table.contents.password = NULL')
         ->where('table.contents.created < ?', $this->registry('Options')->gmtTime)
         ->group('table.contents.cid')
         ->order('table.contents.created', 'DESC')

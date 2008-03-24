@@ -55,12 +55,13 @@ class Options extends TypechoWidget
         ->select('table.options')
         ->where('user = 0'), array($this, 'push'));
 
-        $this->_row['siteUrl'] = $this->getSiteUrl();
-        $this->_row['index']    = $this->_row['rewrite'] ? $this->_row['siteUrl'] : $this->_row['siteUrl'] . '/index.php';
-        $this->_row['templateUrl'] = $this->_row['siteUrl'] . '/var/template/' . $this->_row['template'];
+        $this->_row['siteURL'] = $this->getSiteUrl();
+        $this->_row['index'] = $this->_row['rewrite'] ? $this->_row['siteURL'] : $this->_row['siteURL'] . '/index.php';
+        $this->_row['templateURL'] = $this->_row['siteURL'] . '/var/template/' . $this->_row['template'];
         $this->_row['gmtTime'] = time() + intval(date('Z'));
-        $this->_row['rssUrl'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
-        $this->_row['adminUrl'] = $this->_row['siteUrl'] . '/admin.php';
+        $this->_row['xmlrpcURL'] = $this->_row['index'] . '/XMLPRC.do';
+        $this->_row['rssURL'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
+        $this->_row['adminURL'] = $this->_row['siteURL'] . '/admin.php';
         
         header('content-Type: text/html;charset= ' . $this->_row['charset']);
     }

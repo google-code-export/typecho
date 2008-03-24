@@ -349,7 +349,7 @@ EOD;
 			return new IXR_Error(-32601, 'server error. requested class method "'.$method.'" does not exist.');
 		    }
 		    
-		    $result = call_user_func(array($method[0], $method[1]),$args);
+		    $result = call_user_func_array(array(&$method[0], $method[1]),$args);
 	    }
 	    else
 	    {

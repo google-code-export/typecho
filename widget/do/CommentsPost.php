@@ -83,7 +83,7 @@ class CommentsPost extends Post
             //判断个人主页
             if(empty($_POST['url']))
             {
-                if($this->registry('Options')->commentsRequireUrl)
+                if($this->registry('Options')->commentsRequireURL)
                 {
                     throw new TypechoWidgetException(_t('必须填写电子邮箱地址'));
                 }
