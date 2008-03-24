@@ -5,7 +5,7 @@
  * 协议:GNU General Public License 2.0
  * 版本:$Id: Widget.php 57 2008-03-20 08:06:57Z magike.net $
 
-==函数`widget`(`string $widget, mixed $param`)==
+==函数:`widget`(`string $widget, mixed $param`)==
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
 ||$widget||string||_N/A_||组件名称||
@@ -16,7 +16,7 @@
  * 说明: Typecho组件调用
 
 
-==函数`_cookie`(`string $name`)==
+==函数:`_cookie`(`string $name`)==
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
 ||$name||string||_N/A_||cookie名称||
