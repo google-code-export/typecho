@@ -1,0 +1,83 @@
+#labels Phase-Implementation
+=/includes/library/I18n/GetText.php=
+ * 作者:Michael Wallner <mike@php.net>
+ * 版权:2004-2005 Michael Wallner
+ * 协议:BSD, revised
+ * 版本:$Id: GetText.php 46 2008-03-10 13:59:36Z magike.net $
+
+==类:TypechoGetText==
+ * 描述 - `File Gettext`
+
+===private static ^^ `$loaded`===
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *18* 行
+
+===private static ^^ `$_handle`===
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *19* 行
+
+===private static ^^ `$_files`===
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *20* 行
+
+===public static ^^ `$strings`===
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *21* 行
+
+===public static ^^ `$meta`===
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *22* 行
+
+===public static `init`()===
+ * 返回: *void*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *29* 行
+ * 说明: initialize i18n
+
+===private static `_read`(^int^ `$bytes`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$bytes||int||_N/A_||||
+
+ * 返回: *mixed*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *47* 行
+ * 说明: _read
+
+===private static `_readInt`(^bool^ `$bigendian`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$bigendian||bool||_N/A_||||
+
+ * 返回: *int*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *63* 行
+ * 说明: _readInt
+
+===private static `_readStr`(^array^ `$params`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$params||array||_N/A_||associative||
+
+ * 返回: *string*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *76* 行
+ * 说明: _readStr                             of the string
+
+===private static `meta2array`(^string^ `$meta`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$meta||string||_N/A_||||
+
+ * 返回: *array*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *90* 行
+ * 说明: meta2array
+
+===public static `get`(^string^ `$string`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$string||string||_N/A_||||
+
+ * 返回: *string*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *109* 行
+ * 说明: I18n function
+
+===public static `load`(^string^ `$file`)===
+*参数列表*
+||*名称*||*类型*||*默认*||*说明*||
+||$file||string||_N/A_||文件名||
+
+ * 返回: *boolean*
+ * 位置: 文件 */includes/library/I18n/GetText.php* 第 *122* 行
+ * 说明: 载入mo文件
