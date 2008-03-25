@@ -32,7 +32,7 @@
 ===private static `_read`(^int^ `$bytes`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
-||$bytes||int||_N/A_||||
+||$bytes||int||_N/A_||_N/A_||
 
  * 返回: *mixed*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *72* 行
@@ -41,7 +41,7 @@
 ===private static `_readInt`(^bool^ `$bigendian`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
-||$bigendian||bool||_N/A_||||
+||$bigendian||bool||_N/A_||_N/A_||
 
  * 返回: *int*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *88* 行
@@ -59,7 +59,7 @@
 ===private static `meta2array`(^string^ `$meta`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
-||$meta||string||_N/A_||||
+||$meta||string||_N/A_||_N/A_||
 
  * 返回: *array*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *115* 行
