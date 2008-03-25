@@ -9,7 +9,7 @@
  * 描述 - `Typecho组件基类`
  * 包 - `Route`
 
-===public static `target`(`string $path`)===
+===public static `target`(^string^ `$path`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
 ||$path||string||_N/A_||目的文件所在目录||
@@ -19,7 +19,7 @@
  * 位置: 文件 */includes/library/Route.php* 第 *28* 行
  * 说明: 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
 
-===public static `handle`(`string $path, string $get, string $default, array $deny`)===
+===public static `handle`(^string^ `$path`, ^string^ `$get`, ^string^ `$default`, ^array^ `$deny`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
 ||$path||string||_N/A_||目的文件所在目录||
@@ -31,7 +31,7 @@
  * 位置: 文件 */includes/library/Route.php* 第 *62* 行
  * 说明: 路由指向函数,返回根据GET配置的目的文件名
 
-===public static `parse`(`string $name, string $value, string $prefix`)===
+===public static `parse`(^string^ `$name`, ^string^ `$value`, ^string^ `$prefix`)===
 *参数列表*
 ||*名称*||*类型*||*默认*||*说明*||
 ||$name||string||_N/A_||路由配置表名称||
