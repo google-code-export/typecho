@@ -10,24 +10,24 @@
 
 ===private static ^resource^ `$_handle`===
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *24* 行
- * 说明: 当前mo文件句柄
+ * 说明: `当前mo文件句柄`
 
 ===private static ^array^ `$_files`===
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *32* 行
- * 说明: 已经载入的文件列表
+ * 说明: `已经载入的文件列表`
 
 ===public static ^array^ `$strings`===
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *40* 行
- * 说明: 翻译字符串列表
+ * 说明: `翻译字符串列表`
 
 ===public static ^array^ `$meta`===
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *48* 行
- * 说明: mo文件头部信息
+ * 说明: `mo文件头部信息`
 
 ===public static `init`()===
  * 返回: *void*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *55* 行
- * 说明: initialize i18n
+ * 说明: `initialize i18n`
 
 ===private static `_read`(^int^ `$bytes`)===
 *参数列表*
@@ -36,7 +36,7 @@
 
  * 返回: *mixed*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *72* 行
- * 说明: _read
+ * 说明: `_read`
 
 ===private static `_readInt`(^bool^ `$bigendian`)===
 *参数列表*
@@ -45,7 +45,7 @@
 
  * 返回: *int*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *88* 行
- * 说明: _readInt
+ * 说明: `_readInt`
 
 ===private static `_readStr`(^array^ `$params`)===
 *参数列表*
@@ -54,7 +54,7 @@
 
  * 返回: *string*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *101* 行
- * 说明: _readStr                             of the string
+ * 说明: `_readStr                             of the string`
 
 ===private static `meta2array`(^string^ `$meta`)===
 *参数列表*
@@ -63,7 +63,7 @@
 
  * 返回: *array*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *115* 行
- * 说明: meta2array
+ * 说明: `meta2array`
 
 ===public static `load`(^string^ `$file`)===
 *参数列表*
@@ -72,4 +72,4 @@
 
  * 返回: *boolean*
  * 位置: 文件 */includes/library/I18n/GetText.php* 第 *135* 行
- * 说明: 载入mo文件
+ * 说明: `载入mo文件`
