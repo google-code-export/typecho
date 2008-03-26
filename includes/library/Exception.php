@@ -20,7 +20,8 @@ define('__TYPECHO_EXCEPTION_DIR__', dirname(__FILE__) . '/../../var/error/');
 /**
  * Typecho异常基类
  * 主要重载异常打印函数
- *
+ * 
+ * @package Exception
  */
 class TypechoException extends Exception
 {

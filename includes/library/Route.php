@@ -19,6 +19,14 @@ require_once 'Route/RouteException.php';
 class TypechoRoute
 {
     /**
+     * 当前路由名称
+     * 
+     * @access private
+     * @var string
+     */
+    public static $name;
+
+    /**
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
      * 
      * @param string $path 目的文件所在目录
@@ -32,18 +40,55 @@ class TypechoRoute
         $pathInfo = typechoGetPathInfo();
         foreach($route as $key => $val)
         {
-            list($format, $file, $values) = $val;
-            
-            if(preg_match('|^' . $format . '$|', $pathInfo, $matches))
+            if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
             {
-                if(1 < count($matches))
+                $count = count($val);
+                if(5 == $count)
+                {
+                    list($pattern, $file, $values, $format, $widgets) = $val;
+                }
+                else if(4 == $count)
+                {
+                    list($pattern, $widgets, $values, $format) = $val;
+                }
+                else if(2 == $count)
+                {
+                    list($pattern, $address) = $val;
+                }
+                else
+                {
+                    throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), __TYPECHO_EXCEPTION_404__);
+                }
+                
+                if(!empty($address))
+                {
+                    typechoRedirect($address);
+                }
+                
+                if(1 < count($matches) && !empty($values))
                 {
                     unset($matches[0]);
                     
                     $_GET = array_merge($_GET, array_combine($values, $matches));
                     reset($_GET);
                 }
-                return $path . '/' . $file;
+                
+                if(!empty($widgets))
+                {
+                    foreach($widgets as $widget)
+                    {
+                        widget($widget);
+                    }
+                }
+                
+                if(!empty($file))
+                {
+                    return $path . '/' . $file;
+                }
+                else
+                {
+                    exit;
+                }
             }
         }
         
@@ -105,5 +150,31 @@ class TypechoRoute
         {
             return $prefix . $route[$name][3];
         }
+    }
+    
+    /**
+     * 动态设置路由
+     * 
+     * @access public
+     * @param string $key 路由名称
+     * @param array $value 路由解析值
+     * @return void
+     */
+    public static function set($key, array $value)
+    {
+        global $route;
+        $route[$key] = $value;
+    }
+    
+    /**
+     * 获取路由值
+     * 
+     * @access public
+     * @return string
+     */
+    public static function get($key)
+    {
+        global $route;
+        return $route[$key];
     }
 }

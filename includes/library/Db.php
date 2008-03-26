@@ -33,7 +33,7 @@ require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
 require_once 'Db/DbQuery.php';
 
 /**
- * 包含获取数据支持方法的类
+ * 包含获取数据支持方法的类.
  * 必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,
  * __TYPECHO_DB_USER__, __TYPECHO_DB_PASS__, __TYPECHO_DB_CHAR__
  *
@@ -131,7 +131,7 @@ class TypechoDb
      * 
      * @param mixed $query 查询语句或者查询对象
      * @param boolean $op 数据库读写状态
-     * @return mixied
+     * @return mixed
      */
     public function query($query, $op = __TYPECHO_DB_READ__)
     {

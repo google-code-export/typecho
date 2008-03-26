@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>test</title>
+<title><?php $options->title(); ?></title>
 </head>
 <body>
 
