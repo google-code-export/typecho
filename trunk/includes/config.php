@@ -11,6 +11,9 @@
 /** 载入函数库支持 **/
 require_once 'functions.php';
 
+/** 载入配置支持 **/
+require_once './config.php';
+
 //关闭魔术引号功能
 if(get_magic_quotes_gpc())
 {
@@ -24,7 +27,16 @@ if(get_magic_quotes_gpc())
 }
 
 //开始监视输出区
-ob_start();
+if(__TYPECHO_GZIP_ENABLE__ 
+   && empty($_SERVER['HTTP_ACCEPT_ENCODING']) 
+   && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
+{
+    ob_start("ob_gzhandler");
+}
+else
+{
+    ob_start();
+}
 
 //设置默认时区
 if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
@@ -38,26 +50,20 @@ define('__TYPECHO_DEBUG__', true);
 /** 定义库目录 **/
 define('__TYPECHO_LIB_DIR__', dirname(__FILE__) . '/library');
 
+/** 定义缓存目录 **/
+define('__TYPECHO_CACHE_DIR__', './var/cache');
+
 /** 载入异常支持 **/
 require_once 'library/Exception.php';
+
+/** 载入国际化支持 **/
+require_once 'library/I18n.php';
 
 /** 载入组件支持 **/
 require_once 'library/Widget.php';
 
-/** 载入数据库配置 **/
-require_once './config/Db.php';
-
 /** 载入数据库支持 **/
 require_once 'library/Db.php';
 
-/** 载入路由配置 **/
-require_once './config/Route.php';
-
 /** 载入路由支持 **/
 require_once 'library/Route.php';
-
-/** 载入国际化配置 **/
-require_once './config/I18n.php';
-
-/** 载入国际化支持 **/
-require_once 'library/I18n.php';

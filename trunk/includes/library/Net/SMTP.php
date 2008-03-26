@@ -1,17 +1,12 @@
 <?php
-////////////////////////////////////////////////////
-// SMTP - PHP SMTP class
-//
-// Version 1.02
-//
-// Define an SMTP class that can be used to connect
-// and communicate with any SMTP server. It implements
-// all the SMTP functions defined in RFC821 except TURN.
-//
-// Author: Chris Ryan
-//
-// License: LGPL, see LICENSE
-////////////////////////////////////////////////////
+/**
+ * SMTP - PHP SMTP class
+ *
+ * @author     Chris Ryan
+ * @copyright  Chris Ryan
+ * @license    LGPL
+ * @version    1.02
+ */
 
 /**
  * SMTP is rfc 821 compliant and implements all the rfc 821 SMTP

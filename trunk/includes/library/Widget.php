@@ -21,7 +21,7 @@ require_once 'Widget/WidgetHook.php';
 require_once 'Widget/WidgetNavigator.php';
 
 /**
- * Typecho组件基类
+ * Typecho组件调用
  * 
  * @param string $widget 组件名称
  * @param mixed $param 参数
@@ -29,18 +29,25 @@ require_once 'Widget/WidgetNavigator.php';
  */
 function widget($widget)
 {
-    $widget_rows = explode('.', $widget);
-    $className = array_pop($widget_rows);
+    //已经载入的widget
+    static $_widgets;
 
-    require_once(__TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php');
-    $object = new $className();
-    
-    $args = func_get_args();
-    array_shift($args);
+    if(empty($_widgets[$widget]))
+    {
+        $widget_rows = explode('.', $widget);
+        $className = array_pop($widget_rows);
 
-    call_user_func_array(array(&$object, 'render'), $args);
+        require_once(__TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php');
+        $object = new $className();
+        
+        $args = func_get_args();
+        array_shift($args);
 
-    return $object;
+        call_user_func_array(array(&$object, 'render'), $args);
+        $_widgets[$widget] = &$object;
+    }
+
+    return $_widgets[$widget];
 }
 
 /**

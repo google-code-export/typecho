@@ -23,20 +23,7 @@ class DoWidget extends TypechoWidget
      */
     public function render()
     {
-        if(!empty($_GET['isJob']) && 1 == $_GET['isJob'])
-        {
-            $this->registry('Access')->pass('system');
-            TypechoRoute::handle('./widget/job', 'do');
-            
-            $args = empty($_POST['args']) ? array() : unserialize($_POST['args']);
-            array_unshift($args, 'job.' . $_GET['do']);
-            
-            call_user_func_array('widget', $args);
-        }
-        else
-        {
-            TypechoRoute::handle('./widget/do', 'do');
-            widget('do.' . $_GET['do']);
-        }
+        TypechoRoute::handle('./widget/do', 'do');
+        widget('do.' . $_GET['do']);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 /**
- * Typecho Blog Platform
+ * File Gettext
  *
- * @author     qining
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
+ * @author     Michael Wallner <mike@php.net>
+ * @copyright  2004-2005 Michael Wallner
+ * @license    BSD, revised
  * @version    $Id$
  */
 
@@ -15,10 +15,36 @@
  */
 class TypechoGetText
 {
-    static private $loaded = false;
+    /**
+     * 当前mo文件句柄
+     * 
+     * @access private
+     * @var resource
+     */
     static private $_handle;
+    
+    /**
+     * 已经载入的文件列表
+     * 
+     * @access private
+     * @var array
+     */
     static private $_files;
+    
+    /**
+     * 翻译字符串列表
+     * 
+     * @access public
+     * @var array
+     */
     static public $strings;
+    
+    /**
+     * mo文件头部信息
+     * 
+     * @access public
+     * @var array
+     */
     static public $meta;
 
     /**
@@ -28,7 +54,6 @@ class TypechoGetText
      */
     static public function init($lang)
     {
-        self::$loaded = true;
         self::$_handle = NULL;
         self::$strings = array();
         self::$meta = array();
@@ -99,35 +124,14 @@ class TypechoGetText
         }
         return $array;
     }
-    
-    /**
-     * I18n function
-     * Example:
-     * #output '你好' in chinese
-     * Lt18n::get('Hello');
-     *
-     * @param string $string
-     * @return string
-     */
-    static public function get($key)
-    {
-        if(!self::$loaded) self::init();
-        return isset(self::$strings[$key]) ? self::$strings[$key] : $key;
-    }
 
     /**
-    * File::Gettext
-    * 
-    * PHP versions 4 and 5
-    *
-    * @category   FileFormats
-    * @package    File_Gettext
-    * @author     Michael Wallner <mike@php.net>
-    * @copyright  2004-2005 Michael Wallner
-    * @license    BSD, revised
-    * @version    CVS: $Id$
-    * @link       http://pear.php.net/package/File_Gettext
-    */
+     * 载入mo文件
+     * 
+     * @access public
+     * @param string $file 文件名
+     * @return boolean
+     */
     static public function load($file)
     {
         if(!isset(self::$_files[$file]))
