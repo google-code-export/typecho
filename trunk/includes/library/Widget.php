@@ -102,6 +102,18 @@ abstract class TypechoWidget
     {
         self::$_registry[get_class($this)] = &$this;
     }
+    
+    
+    /**
+     * 获取静态缓存中的实例化对象
+     *
+     * @param string $name 对象名
+     * @return TypechoWidget
+     */
+    protected function registry($name)
+    {
+        return self::$_registry[$name];
+    }
 
     /**
      * 将类本身赋值
@@ -116,17 +128,6 @@ abstract class TypechoWidget
         {
             $variable = $this;
         }
-    }
-    
-    /**
-     * 获取静态缓存中的实例化对象
-     *
-     * @param string $name 对象名
-     * @return TypechoWidget
-     */
-    public function registry($name)
-    {
-        return self::$_registry[$name];
     }
     
     /**
