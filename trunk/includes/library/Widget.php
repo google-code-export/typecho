@@ -254,6 +254,6 @@ abstract class TypechoWidget
      */
     public function render()
     {
-        return;
+        trigger_error('Method render must be implement.', E_WARNING);
     }
 }
