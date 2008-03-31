@@ -11,7 +11,7 @@
 /**
  * 用户权限管理
  * 
- * @package Access
+ * @package Widget
  */
 class Access extends TypechoWidget
 {

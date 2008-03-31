@@ -11,7 +11,7 @@
 /**
  * 执行模块
  * 
- * @package DoWidget
+ * @package Widget
  */
 class DoWidget extends TypechoWidget
 {

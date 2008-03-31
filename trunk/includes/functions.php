@@ -491,6 +491,20 @@ function typechoGetHttpResponse($response)
 	return $result;
 }
 
+/**
+ * 模拟浏览器HTTP请求
+ * 
+ * @param string $url 请求的URL地址
+ * @param string $agent 客户端代号
+ * @param array $getData HTTP的GET值
+ * @param array $postData HTTP的POST值
+ * @param array $fileData HTTP的FILE值,用于传输文件
+ * @param integer $timeOut 超时设置
+ * @param string $host 指定对方主机名
+ * @param string $ip 指定对方ip
+ * @param integer $locationTimes 转向次数,内部使用
+ * @return unknown
+ */
 function typechoHttpSender($url,
                            $agent = NULL,
                            $getData = NULL,

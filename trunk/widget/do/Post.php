@@ -11,7 +11,7 @@
 /**
  * 数据提交基础类库
  * 
- * @package Post
+ * @package Widget
  */
 class Post extends TypechoWidget
 {

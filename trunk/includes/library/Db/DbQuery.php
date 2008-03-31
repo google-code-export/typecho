@@ -125,16 +125,17 @@ class TypechoDbQuery
     {
         $condition = func_get_arg(0);
         $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
+        $operator = empty($this->_sqlPreBuild['where']) ? '' : ' AND';
     
         if(func_num_args() <= 1)
         {
-            $this->_sqlPreBuild['where'] .= ' AND (' . $condition . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
         }
         else
         {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= ' AND (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         
         return $this;
@@ -151,16 +152,17 @@ class TypechoDbQuery
     {
         $condition = func_get_arg(0);
         $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
+        $operator = empty($this->_sqlPreBuild['where']) ? '' : ' OR';
     
         if(func_num_args() <= 1)
         {
-            $this->_sqlPreBuild['where'] .= ' OR (' . $condition . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
         }
         else
         {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= ' OR (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
         }
         
         return $this;

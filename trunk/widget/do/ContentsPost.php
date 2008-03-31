@@ -14,7 +14,7 @@ require_once 'Post.php';
 /**
  * 内容处理类
  * 
- * @package ContentsPost
+ * @package Widget
  */
 class ContentsPost extends Post
 {

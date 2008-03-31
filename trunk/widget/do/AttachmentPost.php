@@ -14,7 +14,7 @@ require_once 'Post.php';
 /**
  * 附件处理类
  * 
- * @package AttachmentPost
+ * @package Widget
  */
 class AttachmentPost extends Post
 {

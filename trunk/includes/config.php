@@ -8,11 +8,26 @@
  * @version    $Id$
  */
 
+/** 定义调试开关 **/
+define('__TYPECHO_DEBUG__', true);
+
+/** 定义当前目录 **/
+if(!defined('__DIR__'))
+{
+    define('__DIR__', dirname(__FILE__));
+}
+
+/** 定义根目录 **/
+define('__TYPECHO_ROOT_DIR__', __DIR__ . '/..');
+
+/** 定义库目录 **/
+define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
+
 /** 载入函数库支持 **/
 require_once 'functions.php';
 
 /** 载入配置支持 **/
-require_once './config.php';
+require_once __TYPECHO_ROOT_DIR__ . '/config.php';
 
 //关闭魔术引号功能
 if(get_magic_quotes_gpc())
@@ -43,15 +58,6 @@ if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 {
     @date_default_timezone_set('UTC');
 }
-
-/** 定义调试开关 **/
-define('__TYPECHO_DEBUG__', true);
-
-/** 定义库目录 **/
-define('__TYPECHO_LIB_DIR__', dirname(__FILE__) . '/library');
-
-/** 定义缓存目录 **/
-define('__TYPECHO_CACHE_DIR__', './var/cache');
 
 /** 载入异常支持 **/
 require_once 'library/Exception.php';
