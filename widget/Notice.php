@@ -11,7 +11,7 @@
 /**
  * 提示框组件
  * 
- * @package Notice
+ * @package Widget
  */
 class Notice extends TypechoWidget
 {

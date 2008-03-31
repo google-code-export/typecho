@@ -11,7 +11,7 @@
 /**
  * 强大的Query组件
  * 
- * @package Query
+ * @package Widget
  */
 class Query extends TypechoWidget
 {

@@ -24,7 +24,7 @@ class TypechoRoute
      * @access private
      * @var string
      */
-    public static $name;
+    public static $current;
 
     /**
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
@@ -42,7 +42,9 @@ class TypechoRoute
         {
             if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
             {
+                self::$current = $key;
                 $count = count($val);
+                
                 if(5 == $count)
                 {
                     list($pattern, $file, $values, $format, $widgets) = $val;

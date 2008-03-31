@@ -11,7 +11,7 @@
 /**
  * 组件异常类
  *
- * @package Widget
+ * @package Route
  */
 class TypechoRouteException extends TypechoException
 {}

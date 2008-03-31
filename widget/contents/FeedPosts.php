@@ -17,7 +17,7 @@ require_once 'Posts.php';
 /**
  * 输出文章聚合
  * 
- * @package FeedPosts
+ * @package Widget
  */
 class FeedPosts extends Posts
 {

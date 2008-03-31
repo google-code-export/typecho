@@ -11,7 +11,7 @@
 /**
  * 全局变量管理
  * 
- * @package Options
+ * @package Widget
  */
 class Options extends TypechoWidget
 {

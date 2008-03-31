@@ -9,7 +9,7 @@
  */
 
 /** 定义组建路径 **/
-define('__TYPECHO_WIDGET_DIR__', './widget');
+define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
 
 /** 载入异常支持 **/
 require_once 'Widget/WidgetException.php';
@@ -196,7 +196,7 @@ abstract class TypechoWidget
      * 设定堆栈每一行的值
      *
      * @param string $name 值对应的键值
-     * @param mixed $name 相应的值
+     * @param mixed $value 相应的值
      * @return array
      */
     public function set($name, $value)

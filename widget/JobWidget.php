@@ -11,7 +11,7 @@
 /**
  * 异步执行模块
  * 
- * @package DoWidget
+ * @package Widget
  */
 class JobWidget extends TypechoWidget
 {

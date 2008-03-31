@@ -14,6 +14,11 @@ require_once 'ContentsPost.php';
 /** 载入xmlrpc支持库 **/
 require_once __TYPECHO_LIB_DIR__ . '/Net/IXR.php';
 
+/**
+ * XMLRPC接口支持
+ * 
+ * @package Widget
+ */
 class XMLRPC extends ContentsPost
 {
     private function checkAccess($userName, $password, $group = NULL)

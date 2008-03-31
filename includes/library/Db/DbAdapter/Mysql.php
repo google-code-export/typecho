@@ -20,6 +20,7 @@ class TypechoMysql implements TypechoDbAdapter
      *
      * @param string $host 数据库服务器地址
      * @param string $port 数据库端口
+     * @param string $db 数据库名称
      * @param string $user 数据库用户名
      * @param string $password 数据库密码
      * @param string $charset 数据库字符集
