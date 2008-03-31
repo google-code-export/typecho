@@ -101,9 +101,9 @@ class Post extends TypechoWidget
         $args = func_get_args();
         array_shift($args);
         
-        typechoHttpSender(TypechoRoute::parse('do', array('do' => $jobName), $this->registry('Options')->index),
+        typechoHttpSender(TypechoRoute::parse('job', array('job' => $jobName), $this->registry('Options')->index),
         $this->registry('Options')->generator,
-        array('isJob' => 1),
+        NULL,
         array('args' => $args),
         NULL,
         2,

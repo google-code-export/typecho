@@ -8,9 +8,6 @@
  * @version    $Id$
  */
 
-/** 定义调试开关 **/
-define('__TYPECHO_DEBUG__', true);
-
 /** 定义当前目录 **/
 if(!defined('__DIR__'))
 {
@@ -22,6 +19,9 @@ define('__TYPECHO_ROOT_DIR__', __DIR__ . '/..');
 
 /** 定义库目录 **/
 define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
+
+/** 定义插件目录 **/
+define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
 
 /** 载入函数库支持 **/
 require_once 'functions.php';

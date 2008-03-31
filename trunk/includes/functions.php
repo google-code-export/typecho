@@ -20,7 +20,16 @@ function typechoStripslashesDeep($value)
 }
 
 /**
- * 将一个数组变为扁平
+ * 抽取多维数组的某个元素,组成一个新数组,使这个数组变成一个扁平数组
+ * 使用方法:
+ * <code>
+ * <?php
+ * $fruit = array(array('apple' => 2, 'banana' => 3), array('apple' => 10, 'banana' => 12));
+ * $banana = typechoArrayFlatten($fruit, 'banana');
+ * print_r($banana);
+ * //outputs: array(0 => 3, 1 => 12);
+ * ?>
+ * </code>
  * 
  * @param array $value 被处理的数组
  * @param string $key 需要抽取的键值
@@ -51,7 +60,7 @@ function typechoArrayFlatten(array $value, $key)
 /**
  * 自闭合html修复函数
  *
- * @param string $string
+ * @param string $string 需要修复处理的字符串
  * @return string
  */
 function typechoFixHtml($string)
@@ -95,9 +104,10 @@ function typechoFixHtml($string)
 }
 
 /**
- * 去掉字符串中的特殊字符
+ * 去掉字符串中的html标签
  *
- * @param string $string
+ * @param string $string 需要处理的字符串
+ * @param string $except 需要忽略的html标签
  * @return string
  */
 function typechoStripTags($string, $except = NULL)
@@ -181,12 +191,12 @@ function typechoFeedHeader($type, $charset, array $modules = NULL)
 if(function_exists('mb_get_info'))
 {
 	/**
-	 * UTF-8截字函数
+	 * 宽字符串截字函数
 	 *
-	 * @param string $str
-	 * @param integer $start
-	 * @param integer $length
-	 * @param string $trim
+	 * @param string $str 需要截取的字符串
+	 * @param integer $start 开始截取的位置
+	 * @param integer $length 需要截取的长度
+	 * @param string $trim 截取后的截断标示符
 	 * @return string
 	 */
 	function typechoSubStr($str, $start, $length, $trim = "...")
@@ -197,9 +207,9 @@ if(function_exists('mb_get_info'))
 	}
 	
 	/**
-	 * UTF-8字符串长度函数
+	 * 获取宽字符串长度函数
 	 *
-	 * @param string $str
+	 * @param string $str 需要获取长度的字符串
 	 * @return integer
 	 */
 	function typechoStrLen($str)
@@ -210,12 +220,12 @@ if(function_exists('mb_get_info'))
 else
 {
 	/**
-	 * UTF-8截字函数
+	 * 宽字符串截字函数
 	 *
-	 * @param string $str
-	 * @param integer $start
-	 * @param integer $length
-	 * @param string $trim
+	 * @param string $str 需要截取的字符串
+	 * @param integer $start 开始截取的位置
+	 * @param integer $length 需要截取的长度
+	 * @param string $trim 截取后的截断标示符
 	 * @return string
 	 */
 	function typechoSubStr($str, $start, $length, $trim = "...")
@@ -226,9 +236,9 @@ else
 	}
 
 	/**
-	 * UTF-8字符串长度函数
+	 * 获取宽字符串长度函数
 	 *
-	 * @param string $str
+	 * @param string $str 需要获取长度的字符串
 	 * @return integer
 	 */
 	function typechoStrLen($str)
@@ -492,7 +502,7 @@ function typechoGetHttpResponse($response)
 }
 
 /**
- * 模拟浏览器HTTP请求
+ * 发送HTTP请求
  * 
  * @param string $url 请求的URL地址
  * @param string $agent 客户端代号
@@ -503,7 +513,7 @@ function typechoGetHttpResponse($response)
  * @param string $host 指定对方主机名
  * @param string $ip 指定对方ip
  * @param integer $locationTimes 转向次数,内部使用
- * @return unknown
+ * @return array
  */
 function typechoHttpSender($url,
                            $agent = NULL,
