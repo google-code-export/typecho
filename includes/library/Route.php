@@ -172,6 +172,7 @@ class TypechoRoute
      * 获取路由值
      * 
      * @access public
+     * @param string $key 路由名称
      * @return string
      */
     public static function get($key)

@@ -124,13 +124,7 @@ class CommentsPost extends Post
         
         //添加钩子
         $hookName = TypechoWidgetHook::name(__FILE__);
-        $commentRows = TypechoWidgetHook::call($hookName, $comment);
-        
-        if($commentRows)
-        {
-            array_unshift($commentRows, $comment);
-            $comment = call_user_func_array('array_merge', $commentRows);
-        }
+        TypechoWidgetHook::call($hookName, &$comment);
         
         //检验格式
         if($rules)
@@ -153,6 +147,13 @@ class CommentsPost extends Post
         $this->goBack('#comment-' . $commentId);
     }
     
+    /**
+     * 评论提交入口
+     * 
+     * @access public
+     * @return void
+     * @throws TypechoWidgetException
+     */
     public function render()
     {
         //判断来源

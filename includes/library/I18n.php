@@ -14,7 +14,7 @@ require_once 'I18n/GetText.php';
 /**
  * I18n function
  *
- * @param string $string
+ * @param string $string 需要翻译的文字
  * @return string
  */
 function _t($string)
@@ -34,7 +34,7 @@ function _t($string)
 /**
  * I18n function, translate and echo
  *
- * @param string $string
+ * @param string $string 需要翻译并输出的文字
  * @return string
  */
 function _e()

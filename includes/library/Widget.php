@@ -8,8 +8,11 @@
  * @version    $Id$
  */
 
-/** 定义组建路径 **/
+/** 定义组件路径 **/
 define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
+
+/** 定义组件路径别名 **/
+define('__TYPECHO_WIDGET_ALIAS_DIR__', __TYPECHO_PLUGIN_DIR__);
 
 /** 载入异常支持 **/
 require_once 'Widget/WidgetException.php';
@@ -37,9 +40,16 @@ function widget($widget)
         $widget_rows = explode('.', $widget);
         $className = array_pop($widget_rows);
 
-        require_once(__TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php');
-        $object = new $className();
+        if(file_exists($fileName = __TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php'))
+        {
+            require_once($fileName);
+        }
+        else
+        {
+            require_once(__TYPECHO_PLUGIN_DIR__ . '/' . str_replace('.', '/', $widget) . '.php');
+        }
         
+        $object = new $className();
         $args = func_get_args();
         array_shift($args);
 
@@ -110,7 +120,7 @@ abstract class TypechoWidget
      * @param string $name 对象名
      * @return TypechoWidget
      */
-    protected function registry($name)
+    public static function registry($name)
     {
         return self::$_registry[$name];
     }

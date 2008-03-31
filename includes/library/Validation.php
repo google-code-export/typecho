@@ -4,8 +4,6 @@
  * Typecho Blog Platform
  *
  * 验证类
- *
- * @usage 
  * <code>
  * $test = "hello";
  * $Validation  = new TypechoValidation();
@@ -44,8 +42,11 @@ class TypechoValidation
     private $_data;
 
     /**
-     *
-     *
+     * 初始化函数
+     * 
+     * @access public
+     * @param string $object 默认对象
+     * @return void
      */
     public function __construct($object = NULL)
     {
@@ -55,12 +56,11 @@ class TypechoValidation
     
    /**
      * Run the Validator
-     *
      * This function does all the work.
      *
      * @access	public
-     * @param   array $data
-     * @param   array $rules
+     * @param   array $data 需要验证的数据
+     * @param   array $rules 验证数据遵循的规则
      * @return	array
      */		
     public function run(array $data, array $rules)
@@ -126,7 +126,8 @@ class TypechoValidation
      * Minimum Length
      *
      * @access	public
-     * @param	string
+     * @param	string $str 待处理的字符串
+     * @param   integer $length 最小长度
      * @return	boolean
      */	
     public function minLength($str, $length)
@@ -138,8 +139,8 @@ class TypechoValidation
      * 验证输入是否一致
      * 
      * @access public
-     * @param string $str
-     * @param string $key
+     * @param string $str 待处理的字符串
+     * @param string $key 需要一致性检查的键值
      * @return boolean
      */
     public function confirm($str, $key)
@@ -151,7 +152,7 @@ class TypechoValidation
      * 虚函数
      * 
      * @access public
-     * @param string $str
+     * @param string $str 待处理的字符串
      * @return boolean
      */
     public function required($str)
