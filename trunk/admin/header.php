@@ -1,11 +1,11 @@
 <?php
-/** è½½å…¥é…ç½®æ–‡ä»¶ **/
+/** ÔØÈëÅäÖÃÎÄ¼þ **/
 require_once '../includes/config.php';
 
-/** å®šä¹‰æ ¹ç›®å½• **/
+/** ¶¨Òå¸ùÄ¿Â¼ **/
 define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
-/** è¿è¡Œé»˜è®¤ç»„ä»¶ **/
+/** ÔËÐÐÄ¬ÈÏ×é¼þ **/
 widget('Options')->to($options);
 widget('Access')->to($access);
 widget('Menu')->to($menu);
