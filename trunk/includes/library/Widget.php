@@ -79,14 +79,6 @@ function _cookie($name)
 abstract class TypechoWidget
 {
     /**
-     * 保存所有实例化的widget对象
-     * 
-     * @access private
-     * @var array
-     */
-    private static $_registry = array();
-    
-    /**
      * 内部数据堆栈
      * 
      * @access protected
@@ -101,29 +93,6 @@ abstract class TypechoWidget
      * @var array
      */
     protected $_row = array();
-    
-    /**
-     * 构造函数,将实例化对象放入全局堆栈
-     * 
-     * @access public
-     * @return void
-     */
-    public function __construct()
-    {
-        self::$_registry[get_class($this)] = &$this;
-    }
-    
-    
-    /**
-     * 获取静态缓存中的实例化对象
-     *
-     * @param string $name 对象名
-     * @return TypechoWidget
-     */
-    public static function registry($name)
-    {
-        return self::$_registry[$name];
-    }
 
     /**
      * 将类本身赋值

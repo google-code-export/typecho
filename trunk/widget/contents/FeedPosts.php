@@ -38,7 +38,7 @@ class FeedPosts extends Posts
         ->where('table.metas.type = ?', 'category')
         ->where('table.contents.password = NULL')
         ->where('table.contents.allowFeed = ?', 'enable')
-        ->where('table.contents.created < ?', $this->registry('Options')->gmt_time)
+        ->where('table.contents.created < ?', widget('Options')->gmt_time)
         ->group('table.contents.cid')
         ->order('table.contents.created', 'DESC')
         ->limit(10), array($this, 'push'));
