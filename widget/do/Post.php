@@ -31,7 +31,6 @@ class Post extends TypechoWidget
      */
     public function __construct()
     {
-        parent::__construct();
         $this->db = TypechoDb::get();
     }
 
@@ -46,7 +45,7 @@ class Post extends TypechoWidget
     protected function goBack($anchor = NULL)
     {
         //判断来源
-        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], $this->registry('Options')->index))
+        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], widget('Options')->index))
         {
             throw new TypechoWidgetException(_t('无法返回原网页'));
         }
@@ -63,7 +62,7 @@ class Post extends TypechoWidget
      */
     protected function goForward($url)
     {
-        typechoRedirect($this->registry('Options')->siteURL . $url, false);
+        typechoRedirect(widget('Options')->siteURL . $url, false);
     }
     
     /**
@@ -101,8 +100,8 @@ class Post extends TypechoWidget
         $args = func_get_args();
         array_shift($args);
         
-        typechoHttpSender(TypechoRoute::parse('job', array('job' => $jobName), $this->registry('Options')->index),
-        $this->registry('Options')->generator,
+        typechoHttpSender(TypechoRoute::parse('job', array('job' => $jobName), widget('Options')->index),
+        widget('Options')->generator,
         NULL,
         array('args' => $args),
         NULL,

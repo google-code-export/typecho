@@ -33,7 +33,7 @@ class CommentsPost extends Post
     {
         $comment = array();
         $comment['cid'] = $cid;
-        $comment['created'] = $this->registry('Options')->gmtTime;
+        $comment['created'] = widget('Options')->gmtTime;
         $comment['agent'] = $_SERVER["HTTP_USER_AGENT"];
         $comment['ip'] = typechoGetClientIp();
         $comment['type'] = 'comment';
@@ -42,11 +42,11 @@ class CommentsPost extends Post
         $rules = array();
         
         //判断用户
-        if($this->registry('Access')->hasLogin())
+        if(widget('Access')->hasLogin())
         {
-            $comment['author'] = $this->registry('Access')->user('screenName');
-            $comment['mail'] = $this->registry('Access')->user('mail');
-            $comment['url'] = $this->registry('Access')->user('url');
+            $comment['author'] = widget('Access')->user('screenName');
+            $comment['mail'] = widget('Access')->user('mail');
+            $comment['url'] = widget('Access')->user('url');
             
             setCookie('author', $comment['author'], 0, typechoGetSiteRoot());
             setCookie('mail', $comment['mail'], 0, typechoGetSiteRoot());
@@ -68,7 +68,7 @@ class CommentsPost extends Post
             //判断电子邮箱
             if(empty($_POST['mail']))
             {
-                if($this->registry('Options')->commentsRequireMail)
+                if(widget('Options')->commentsRequireMail)
                 {
                     throw new TypechoWidgetException(_t('必须填写电子邮箱地址'));
                 }
@@ -83,7 +83,7 @@ class CommentsPost extends Post
             //判断个人主页
             if(empty($_POST['url']))
             {
-                if($this->registry('Options')->commentsRequireURL)
+                if(widget('Options')->commentsRequireURL)
                 {
                     throw new TypechoWidgetException(_t('必须填写电子邮箱地址'));
                 }
@@ -157,7 +157,7 @@ class CommentsPost extends Post
     public function render()
     {
         //判断来源
-        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], $this->registry('Options')->index))
+        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], widget('Options')->index))
         {
             throw new TypechoWidgetException(_t('来源页不合法'));
         }

@@ -202,9 +202,9 @@ class ContentsPost extends Post
     
     protected function havePostPermission($userId)
     {
-        if(!$this->registry('Access')->pass('editor', true))
+        if(!widget('Access')->pass('editor', true))
         {
-            if($userId != $this->registry('Access')->user('uid'))
+            if($userId != widget('Access')->user('uid'))
             {
                 return false;
             }
