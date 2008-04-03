@@ -64,7 +64,7 @@ class TypechoDbQuery
      */
     private function filterPrefix($string, $type = NULL)
     {
-        $string = substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([_0-9a-zA-Z-]+)/i", 
+        $string = substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i", 
         "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
         
         if($type)
@@ -96,7 +96,11 @@ class TypechoDbQuery
             }
             case 'condition':
             {
-                return preg_replace_callback("/([_0-9a-zA-Z-]+)\s*(LIKE|=|\>|\<|\>=|\<=|\<\>|=|\!=)/i", array($this, 'filterColumnQuote'), $string);
+                return preg_replace_callback("/([_0-9a-zA-Z\.]+)\s*(LIKE|=|\>|\<|\>=|\<=|\<\>|=|\!=)/i", array($this, 'filterColumnQuote'), $string);
+            }
+            case 'operate':
+            {
+                return preg_replace_callback("/[^']?([_0-9a-zA-Z\.]+)[^']?/i", array($this, 'filterColumnQuote'), ' ' . $string . ' ');
             }
             case 'equal':
             {
@@ -118,30 +122,45 @@ class TypechoDbQuery
     {
         if(is_array($match))
         {
-            $field = $match[1];
-            $matches = explode('.', $field);
-            $last = count($matches) - 1;
-            $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
-            
-            return implode('.', $matches) . ' ' . $match[2];
+            if(is_numeric($match[1]))
+            {
+                return ' ' . $match[1] . (isset($match[2]) ? ' ' . $match[2] : ' ');
+            }
+            else
+            {
+                $field = $match[1];
+                $matches = explode('.', $field);
+                $last = count($matches) - 1;
+                $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
+                return implode('.', $matches) . (isset($match[2]) ? ' ' . $match[2] : ' ');
+            }
         }
-        else if(preg_match("/([_0-9a-zA-Z-]+)\((.*)\)/", $match, $out))
+        else if(preg_match("/([_0-9a-zA-Z]+)\((.*)\)/", $match, $out))
         {
             return $out[1] . '(' . $this->_adapter->quoteColumn($this->clearQuote($out[2])) . ')';
         }
         else
         {
-            $matches = array_map(array($this, 'clearQuote'), explode('.', $match));
+            if(is_numeric($match))
+            {
+                return $match;
+            }
+
+            $parts = preg_split("/\s+/", $match);
+            $lastPart = count($parts) - 1;
+            
+            $matches = array_map(array($this, 'clearQuote'), explode('.', $parts[$lastPart]));
             $last = count($matches) - 1;
             $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
             
-            return implode('.', $matches);
+            $parts[$lastPart] = implode('.', $matches);
+            return implode(' ', $parts);
         }
     }
     
     public function clearQuote($field)
     {
-        return preg_replace("/[`|'|\"]?([_a-zA-Z0-9-]+)[`|'|\"]?/i", "\\1", $field);
+        return preg_replace("/[`|'|\"]?([_a-zA-Z0-9]+)[`|'|\"]?/i", "\\1", $field);
     }
     
     /**
@@ -309,7 +328,7 @@ class TypechoDbQuery
      */
     public function row($key, $value)
     {
-        $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->filterPrefix($row);
+        $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->filterPrefix($value, 'operate');
         return $this;
     }
     
