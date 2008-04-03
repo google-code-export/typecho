@@ -5,16 +5,24 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: Mysql.php 89 2008-03-31 00:10:57Z magike.net $
  */
 
 /**
- * 数据库Mysql适配器
+ * 数据库PDOMysql适配器
  *
  * @package Db
  */
-class TypechoMysql implements TypechoDbAdapter
+class TypechoPDOMysql implements TypechoDbAdapter
 {
+    /**
+     * 数据库对象
+     * 
+     * @access private
+     * @var PDO
+     */
+    private $_object;
+
     /**
      * 数据库连接函数
      *
@@ -29,20 +37,17 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function connect($host, $port, $db, $user, $password, $charset = NULL)
     {
-        if($dbLink = @mysql_connect($host . ':' . $port, $user, $password))
+        try
         {
-            if(@mysql_select_db($db, $dbLink))
-            {
-                if($charset)
-                {
-                    $this->query("SET NAMES '{$charset}'");
-                }
-                return $dbLink;
-            }
+            $this->_object = new PDO("mysql:dbname={$db};host={$host};port={$port}", $user, $password);
+            $this->_object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->_object->exec("SET NAMES '{$charset}'");
         }
-
-        throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
-        mysql_error() : _t('数据库连接错误'), __TYPECHO_EXCEPTION_503__);
+        catch(PDOException $e)
+        {
+            throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
+            $e->getMessage() : _t('数据库连接错误'), __TYPECHO_EXCEPTION_503__);
+        }
     }
     
     /**
@@ -55,13 +60,18 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function query($sql, $op = __TYPECHO_DB_READ__)
     {
-        if($resource = @mysql_query($sql))
+        try
         {
-            return $resource;
+            $resource = $this->_object->prepare($sql);
+            $resource->execute();
+        }
+        catch(PDOException $e)
+        {
+            throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
+            $e->getMessage() : _t('数据库查询错误'), __TYPECHO_EXCEPTION_500__);
         }
         
-        throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
-        mysql_error() : _t('数据库查询错误'), __TYPECHO_EXCEPTION_500__);
+        return $resource;
     }
     
     /**
@@ -72,7 +82,7 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function fetch($resource)
     {
-        return mysql_fetch_assoc($resource);
+        return $resource->fetch(PDO::FETCH_ASSOC);
     }
     
     /**
@@ -83,7 +93,7 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function quotes($string)
     {
-        return '\'' . str_replace(array('\'', '\\'), array('\'\'', '\\\\'), $string) . '\'';
+        return $this->_object->quote($string);
     }
     
     /**
@@ -106,7 +116,7 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function affectedRows($resource)
     {
-        return mysql_affected_rows($resource);
+        return $resource->rowCount();
     }
     
     /**
@@ -117,6 +127,6 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function lastInsertId($resource)
     {
-        return mysql_insert_id($resource);
+        return $this->_object->lastInsertId();
     }
 }

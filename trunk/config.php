@@ -16,6 +16,7 @@ define('__TYPECHO_DB_PASS__', '');
 define('__TYPECHO_DB_NAME__', 'typecho');
 define('__TYPECHO_DB_PREFIX__', 'typecho_');
 define('__TYPECHO_DB_CHAR__', 'utf8');
+define('__TYPECHO_DB_ADAPTER__', 'Mysql');
 
 /** 定义调试开关 **/
 define('__TYPECHO_DEBUG__', true);

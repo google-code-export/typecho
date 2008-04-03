@@ -55,6 +55,15 @@ interface TypechoDbAdapter
     public function quotes($string);
     
     /**
+     * 对象引号过滤
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
+    public function quoteColumn($string);
+    
+    /**
      * 取出最后一次查询影响的行数
      * 
      * @param resource $resource 查询的资源数据
