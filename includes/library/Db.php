@@ -8,9 +8,6 @@
  * @version    $Id$
  */
 
-/** 定义数据库适配器 **/
-define('__TYPECHO_DB_ADAPTER__', 'Mysql');
-
 /**
  * 定义数据库查询读写状态
  * true表示读状态
@@ -22,6 +19,12 @@ define('__TYPECHO_DB_WRITE__', false);
 
 /** 数据库异常 **/
 require_once 'Db/DbException.php';
+
+/** 定义数据库适配器 **/
+if(!defined('__TYPECHO_DB_ADAPTER__'))
+{
+    throw new TypechoDbException(_t('未定义数据库驱动'), __TYPECHO_EXCEPTION_500__);
+}
 
 /** 数据库适配器接口 **/
 require_once 'Db/DbAdapter.php';

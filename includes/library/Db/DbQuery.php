@@ -62,9 +62,86 @@ class TypechoDbQuery
      * @param string $string 需要解析的字符串
      * @return string
      */
-    private function filterPrefix($string)
+    private function filterPrefix($string, $type = NULL)
     {
-        return substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([0-9a-zA-Z-]+)/i", "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
+        $string = substr(preg_replace("/([^_a-zA-Z0-9-]+)table\.([_0-9a-zA-Z-]+)/i", 
+        "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
+        
+        if($type)
+        {
+            $string  = $this->filterColumn($string, $type);
+        }
+        
+        return $string;
+    }
+    
+    private function filterColumn($string, $type)
+    {
+        switch($type)
+        {
+            case 'fields':
+            {
+                if('*' == $string)
+                {
+                    return $string;
+                }
+                
+                $columns = preg_split("/\s*,\s*/", $string);
+                foreach($columns as $key => $column)
+                {
+                    $fields = preg_split("/\s+AS\s+/i", $column);
+                    $columns[$key] = implode(' AS ', array_map(array($this, 'filterColumnQuote'), $fields));
+                }
+                return implode(' , ', $columns);
+            }
+            case 'condition':
+            {
+                return preg_replace_callback("/([_0-9a-zA-Z-]+)\s*(LIKE|=|\>|\<|\>=|\<=|\<\>|=|\!=)/i", array($this, 'filterColumnQuote'), $string);
+            }
+            case 'equal':
+            {
+                $fields = preg_split("/\s*=\s*/i", $string);
+                return implode(' = ', array_map(array($this, 'filterColumnQuote'), $fields));
+            }
+            case 'column':
+            {
+                return $this->filterColumnQuote($string);
+            }
+            default:
+            {
+                return $string;
+            }
+        }
+    }
+    
+    public function filterColumnQuote($match)
+    {
+        if(is_array($match))
+        {
+            $field = $match[1];
+            $matches = explode('.', $field);
+            $last = count($matches) - 1;
+            $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
+            
+            return implode('.', $matches) . ' ' . $match[2];
+        }
+        else if(preg_match("/([_0-9a-zA-Z-]+)\((.*)\)/", $match, $out))
+        {
+            return $out[1] . '(' . $this->_adapter->quoteColumn($this->clearQuote($out[2])) . ')';
+        }
+        else
+        {
+            $matches = array_map(array($this, 'clearQuote'), explode('.', $match));
+            $last = count($matches) - 1;
+            $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
+            
+            return implode('.', $matches);
+        }
+    }
+    
+    public function clearQuote($field)
+    {
+        return preg_replace("/[`|'|\"]?([_a-zA-Z0-9-]+)[`|'|\"]?/i", "\\1", $field);
     }
     
     /**
@@ -80,7 +157,7 @@ class TypechoDbQuery
             'table'  => NULL,
             'fields' => NULL,
             'join'   => array(),
-            'where'  => '1 = 1',
+            'where'  => NULL,
             'limit'  => NULL,
             'offset' => NULL,
             'order'  => NULL,
@@ -110,7 +187,7 @@ class TypechoDbQuery
      */
     public function join($table, $condition, $op = 'INNER')
     {
-        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterPrefix($condition), $op);
+        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterPrefix($condition, 'equal'), $op);
         return $this;
     }
     
@@ -124,8 +201,8 @@ class TypechoDbQuery
     public function where()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
-        $operator = empty($this->_sqlPreBuild['where']) ? '' : ' AND';
+        $condition = $this->filterPrefix(str_replace('?', "%s", $condition), 'condition');
+        $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
     
         if(func_num_args() <= 1)
         {
@@ -151,8 +228,8 @@ class TypechoDbQuery
     public function orWhere()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterPrefix(str_replace('?', "'%s'", $condition));
-        $operator = empty($this->_sqlPreBuild['where']) ? '' : ' OR';
+        $condition = $this->filterPrefix(str_replace('?', "%s", $condition), 'condition');
+        $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
     
         if(func_num_args() <= 1)
         {
@@ -215,7 +292,10 @@ class TypechoDbQuery
      */
     public function rows(array $rows)
     {
-        $this->_sqlPreBuild['rows'] = array_map(array($this->_adapter, 'quotes'), $rows);
+        foreach($rows as $key => $row)
+        {
+            $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->_adapter->quotes($row);
+        }
         return $this;
     }
     
@@ -227,9 +307,9 @@ class TypechoDbQuery
      * @param mixed $value 指定的值
      * @return TypechoDbQuery
      */
-    public function row($key,$value)
+    public function row($key, $value)
     {
-        $this->_sqlPreBuild['rows'][$key] = $value;
+        $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->filterPrefix($row);
         return $this;
     }
     
@@ -242,7 +322,7 @@ class TypechoDbQuery
      */
     public function order($orderby, $sort = NULL)
     {
-        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterPrefix($orderby) . (empty($sort) ? NULL : ' ' . $sort);
+        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterPrefix($orderby, 'column') . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
     }
     
@@ -254,7 +334,7 @@ class TypechoDbQuery
      */
     public function group($key)
     {
-        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterPrefix($key);
+        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterPrefix($key, 'column');
         return $this;
     }
     
@@ -265,10 +345,10 @@ class TypechoDbQuery
      * @param string $fields 需要查询的栏目
      * @return TypechoDbQuery
      */
-    public function select($table,$fields = '*')
+    public function select($table, $fields = '*')
     {
         $this->_sqlPreBuild['action'] = 'SELECT';
-        $this->_sqlPreBuild['fields'] = $this->filterPrefix($fields);
+        $this->_sqlPreBuild['fields'] = $this->filterPrefix($fields, 'fields');
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }
@@ -332,7 +412,7 @@ class TypechoDbQuery
                 {
                     foreach($this->_sqlPreBuild['join'] as $val)
                     {
-                        list($table, $condition,$op) = $val;
+                        list($table, $condition, $op) = $val;
                         $this->_sqlPreBuild['table'] = "({$this->_sqlPreBuild['table']} {$op} JOIN {$table} ON {$condition})";
                     }
                 }
@@ -340,7 +420,7 @@ class TypechoDbQuery
                 $this->_sql = 'SELECT ' 
                 . $this->_sqlPreBuild['fields'] . ' FROM ' 
                 . $this->_sqlPreBuild['table'] 
-                . ' WHERE ' . $this->_sqlPreBuild['where'] 
+                . $this->_sqlPreBuild['where'] 
                 . $this->_sqlPreBuild['group'] 
                 . $this->_sqlPreBuild['order'] 
                 . $this->_sqlPreBuild['limit']
@@ -351,9 +431,9 @@ class TypechoDbQuery
             {
                 return 'INSERT INTO '
                 . $this->_sqlPreBuild['table'] 
-                . '(`' . implode('` , `', array_keys($this->_sqlPreBuild['rows'])) . '`)'
+                . '(' . implode(' , ', array_keys($this->_sqlPreBuild['rows'])) . ')'
                 . ' VALUES '
-                . "('" . implode("' , '", array_values($this->_sqlPreBuild['rows'])) . "')"
+                . '(' . implode(' , ', array_values($this->_sqlPreBuild['rows'])) . ')'
                 . $this->_sqlPreBuild['limit'];
                 break;
             }
@@ -361,7 +441,7 @@ class TypechoDbQuery
             {
                 return 'DELETE FROM '
                 . $this->_sqlPreBuild['table'] 
-                . ' WHERE ' . $this->_sqlPreBuild['where'] 
+                . $this->_sqlPreBuild['where'] 
                 . $this->_sqlPreBuild['limit'];
                 break;
             }
@@ -372,14 +452,14 @@ class TypechoDbQuery
                 {
                     foreach($this->_sqlPreBuild['rows'] as $key => $val)
                     {
-                        $columns[] = "`$key` = $val";
+                        $columns[] = "$key = $val";
                     }
                 }
-                
+
                 return 'UPDATE '
                 . $this->_sqlPreBuild['table'] 
-                . ' SET ' . implode(' , ',$columns)
-                . ' WHERE ' . $this->_sqlPreBuild['where']
+                . ' SET ' . implode(' , ', $columns)
+                . $this->_sqlPreBuild['where']
                 . $this->_sqlPreBuild['limit'];
                 break;
             }
