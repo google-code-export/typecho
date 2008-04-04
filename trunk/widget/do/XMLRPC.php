@@ -38,11 +38,11 @@ class XMLRPC extends ContentsPost
             return new IXR_Error(403, _t('密码错误'));
         }
         
-        widget('Access')->login($user['uid'], $user['name'], $user['group']);
+        $this->registry('Access')->login($user['uid'], $user['name'], $user['group']);
         
         if($group)
         {
-            if(widget('Access')->pass($group, true))
+            if($this->registry('Access')->pass($group, true))
             {
                 return new IXR_Error(403, _t('无法获得权限'));
             }
@@ -75,12 +75,12 @@ class XMLRPC extends ContentsPost
     public function push($value)
     {
         //生成日期
-        $value['year'] = date('Y', $value['created'] + widget('Options')->timezone);
-        $value['month'] = date('n', $value['created'] + widget('Options')->timezone);
-        $value['day'] = date('j', $value['created'] + widget('Options')->timezone);
+        $value['year'] = date('Y', $value['created'] + $this->registry('Options')->timezone);
+        $value['month'] = date('n', $value['created'] + $this->registry('Options')->timezone);
+        $value['day'] = date('j', $value['created'] + $this->registry('Options')->timezone);
         
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse($value['type'], $value, widget('Options')->index);
+        $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->registry('Options')->index);
         
         $content = str_replace('<p><!--more--></p>', '<!--more-->', $value['text']);
         list($value['abstract'], $value['more']) = explode('<!--more-->', $content);
@@ -110,7 +110,7 @@ class XMLRPC extends ContentsPost
         }
         
         $pageStruct = array(
-        'dateCreated'			=> new IXR_Date($page['created'] + widget('Options')->timezone),
+        'dateCreated'			=> new IXR_Date($page['created'] + $this->registry('Options')->timezone),
         'userid'				=> $page['userId'],
         'page_id'				=> $page['cid'],
         'page_status'			=> 'public',
@@ -155,7 +155,7 @@ class XMLRPC extends ContentsPost
         foreach($pages as $page)
         {
             $pagesStruct = array(
-            'dateCreated'			=> new IXR_Date($page['created'] + widget('Options')->timezone),
+            'dateCreated'			=> new IXR_Date($page['created'] + $this->registry('Options')->timezone),
             'userid'				=> $page['userId'],
             'page_id'				=> $page['cid'],
             'page_status'			=> 'public',
@@ -235,7 +235,7 @@ class XMLRPC extends ContentsPost
         foreach($pages as $page)
         {
             $pagesStruct[] = array(
-                "dateCreated"	    => new IXR_Date($page['created'] + widget('Options')->timezone),
+                "dateCreated"	    => new IXR_Date($page['created'] + $this->registry('Options')->timezone),
                 "page_id"		    => $page["cid"],
                 "page_title"		=> $page["title"],
                 "page_parent_id"	=> 0
@@ -252,10 +252,10 @@ class XMLRPC extends ContentsPost
             return $check;
         }
         
-        $struct = array('user_id'      => widget('Access')->user('uid'),
-                        'user_login'   => widget('Access')->user('name'),
-                        'display_name' => widget('Access')->user('screenName'),
-                        'user_email'   => widget('Access')->user('mail'),
+        $struct = array('user_id'      => $this->registry('Access')->user('uid'),
+                        'user_login'   => $this->registry('Access')->user('name'),
+                        'display_name' => $this->registry('Access')->user('screenName'),
+                        'user_email'   => $this->registry('Access')->user('mail'),
                         'meta_value'   => '');
         
         return array($struct);
@@ -318,9 +318,9 @@ class XMLRPC extends ContentsPost
         
         $struct = array(
             'isAdmin' => true,
-            'url'	  => widget('Options')->siteURL,
-            'blogid'  => widget('Access')->user('uid'),
-            'blogName'=> widget('Options')->title
+            'url'	  => $this->registry('Options')->siteURL,
+            'blogid'  => $this->registry('Access')->user('uid'),
+            'blogName'=> $this->registry('Options')->title
         );
         
         return array($struct);
@@ -333,12 +333,12 @@ class XMLRPC extends ContentsPost
             return $check;
         }
         
-        return array('nickname'  => widget('Access')->user('screenName'),
-                     'userid'    => widget('Access')->user('uid'),
-                     'url'       => widget('Access')->user('url'),
-                     'email'     => widget('Access')->user('mail'),
-                     'lastname'  => widget('Access')->user('name'),
-                     'firstname' => widget('Access')->user('name'));
+        return array('nickname'  => $this->registry('Access')->user('screenName'),
+                     'userid'    => $this->registry('Access')->user('uid'),
+                     'url'       => $this->registry('Access')->user('url'),
+                     'email'     => $this->registry('Access')->user('mail'),
+                     'lastname'  => $this->registry('Access')->user('name'),
+                     'firstname' => $this->registry('Access')->user('name'));
     }
     
     public function bloggerGetPost($blogId, $postId, $userName, $password)
@@ -378,7 +378,7 @@ class XMLRPC extends ContentsPost
         $content .= stripslashes($post['text']);
 
         $struct = array('userid'      => $post['userId'],
-                        'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + widget('Options')->timezone)),
+                        'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + $this->registry('Options')->timezone)),
                         'content'     => $content,
                         'postid'      => $post['cid']);
 
@@ -401,9 +401,9 @@ class XMLRPC extends ContentsPost
         ->order('table.contents.created', 'DESC')
         ->limit(1);
         
-        if(!widget('Access')->pass('editor', true))
+        if(!$this->registry('Access')->pass('editor', true))
         {
-            $sql->where('table.contents.author = ?', widget('Access')->user('uid'));
+            $sql->where('table.contents.author = ?', $this->registry('Access')->user('uid'));
         }
         
         $posts = $this->db->fetchAll($sql, array($this, 'push'));
@@ -427,7 +427,7 @@ class XMLRPC extends ContentsPost
             $content .= stripslashes($post['text']);
 
             $structs[] = array('userid'      => $post['userId'],
-                               'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + widget('Options')->timezone)),
+                               'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + $this->registry('Options')->timezone)),
                                'content'     => $content,
                                'postid'      => $post['cid']);
         }
@@ -519,17 +519,17 @@ class XMLRPC extends ContentsPost
         
         if(isset($_GET['rsd']))
         {
-            echo '<?xml version="1.0" encoding="'. widget('Options')->charset .'"?'.'>
+            echo '<?xml version="1.0" encoding="'. $this->registry('Options')->charset .'"?'.'>
             <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
             <service>
             <engineName>Typecho</engineName>
             <engineLink>http://www.typecho.ort/</engineLink>
-            <homePageLink>' . widget('Options')->siteURL . '</homePageLink>
+            <homePageLink>' . $this->registry('Options')->siteURL . '</homePageLink>
             <apis>
-            <api name="WordPress" blogID="1" preferred="true" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="Movable Type" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="Blogger" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
+            <api name="WordPress" blogID="1" preferred="true" apiLink="' . $this->registry('Options')->xmlrpcURL . '" />
+            <api name="Movable Type" blogID="1" preferred="false" apiLink="' . $this->registry('Options')->xmlrpcURL . '" />
+            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="' . $this->registry('Options')->xmlrpcURL . '" />
+            <api name="Blogger" blogID="1" preferred="false" apiLink="' . $this->registry('Options')->xmlrpcURL . '" />
             </apis>
             </service>
             </rsd>';
