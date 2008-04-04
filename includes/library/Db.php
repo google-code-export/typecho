@@ -139,12 +139,13 @@ class TypechoDb
     public function query($query, $op = __TYPECHO_DB_READ__)
     {
         //在适配器中执行查询
-        $resource = $this->_adapter->query((string) $query, $op);
+        $action = ($query instanceof TypechoDbQuery) ? $query->getAttribute('action') : NULL;
+        $resource = $this->_adapter->query($query, $op, $action);
         
-        if($query instanceof TypechoDbQuery)
+        if($action)
         {
             //根据查询动作返回相应资源
-            switch($query->action())
+            switch($action)
             {
                 case 'UPDATE':
                 case 'DELETE':

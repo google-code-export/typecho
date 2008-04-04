@@ -36,7 +36,7 @@ interface TypechoDbAdapter
      * @param boolean $op 数据库读写状态
      * @return resource
      */
-    public function query($query, $op = __TYPECHO_DB_READ__);
+    public function query($query, $op = __TYPECHO_DB_READ__, $action = NULL);
     
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
@@ -62,6 +62,15 @@ interface TypechoDbAdapter
      * @return string
      */
     public function quoteColumn($string);
+    
+    /**
+     * 合成查询语句
+     * 
+     * @access public
+     * @param array $sql 查询对象词法数组
+     * @return string
+     */
+    public function parseSelect(array $sql);
     
     /**
      * 取出最后一次查询影响的行数

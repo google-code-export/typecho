@@ -53,9 +53,9 @@ class TypechoMysql implements TypechoDbAdapter
      * @throws TypechoDbException
      * @return resource
      */
-    public function query($sql, $op = __TYPECHO_DB_READ__)
+    public function query($query, $op = __TYPECHO_DB_READ__, $action = NULL)
     {
-        if($resource = @mysql_query($sql))
+        if($resource = @mysql_query((string) $query))
         {
             return $resource;
         }
@@ -96,6 +96,22 @@ class TypechoMysql implements TypechoDbAdapter
     public function quoteColumn($string)
     {
         return '`' . $string . '`';
+    }
+    
+    /**
+     * 合成查询语句
+     * 
+     * @access public
+     * @param array $sql 查询对象词法数组
+     * @return string
+     */
+    public function parseSelect(array $sql)
+    {
+        $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
+        
+        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] . 
+        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 
     /**

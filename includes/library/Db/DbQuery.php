@@ -186,14 +186,15 @@ class TypechoDbQuery
     }
     
     /**
-     * 获取当前SQL操作方式
-     * 返回的值有INSERT,DELETE,SELECT,UPDATE
+     * 获取查询字串属性值 
      * 
+     * @access public
+     * @param string $attributeName 属性名称
      * @return string
      */
-    public function action()
+    public function getAttribute($attributeName)
     {
-        return $this->_sqlPreBuild['action'];
+        return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
     }
     
     /**
@@ -272,7 +273,7 @@ class TypechoDbQuery
      */
     public function limit($limit)
     {
-        $this->_sqlPreBuild['limit'] = ' LIMIT ' . intval($limit);
+        $this->_sqlPreBuild['limit'] = intval($limit);
         return $this;
     }
     
@@ -284,7 +285,7 @@ class TypechoDbQuery
      */
     public function offset($offset)
     {
-        $this->_sqlPreBuild['offset'] = ' OFFSET ' . intval($offset);
+        $this->_sqlPreBuild['offset'] = intval($offset);
         return $this;
     }
     
@@ -298,8 +299,8 @@ class TypechoDbQuery
     public function page($page, $pageSize)
     {
         $pageSize = intval($pageSize);
-        $this->_sqlPreBuild['limit'] = ' LIMIT ' . $pageSize;
-        $this->_sqlPreBuild['offset'] = ' OFFSET ' . (max(intval($page), 1) - 1) * $pageSize;
+        $this->_sqlPreBuild['limit'] = $pageSize;
+        $this->_sqlPreBuild['offset'] = (max(intval($page), 1) - 1) * $pageSize;
         return $this;
     }
     
@@ -436,14 +437,7 @@ class TypechoDbQuery
                     }
                 }
                 
-                $this->_sql = 'SELECT ' 
-                . $this->_sqlPreBuild['fields'] . ' FROM ' 
-                . $this->_sqlPreBuild['table'] 
-                . $this->_sqlPreBuild['where'] 
-                . $this->_sqlPreBuild['group'] 
-                . $this->_sqlPreBuild['order'] 
-                . $this->_sqlPreBuild['limit']
-                . $this->_sqlPreBuild['offset'];
+                $this->_sql = $this->_adapter->parseSelect($this->_sqlPreBuild);
                 break;
             }
             case 'INSERT':
@@ -460,8 +454,7 @@ class TypechoDbQuery
             {
                 return 'DELETE FROM '
                 . $this->_sqlPreBuild['table'] 
-                . $this->_sqlPreBuild['where'] 
-                . $this->_sqlPreBuild['limit'];
+                . $this->_sqlPreBuild['where'];
                 break;
             }
             case 'UPDATE':
@@ -478,8 +471,7 @@ class TypechoDbQuery
                 return 'UPDATE '
                 . $this->_sqlPreBuild['table'] 
                 . ' SET ' . implode(' , ', $columns)
-                . $this->_sqlPreBuild['where']
-                . $this->_sqlPreBuild['limit'];
+                . $this->_sqlPreBuild['where'];
                 break;
             }
             default:
