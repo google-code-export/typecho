@@ -58,11 +58,12 @@ class TypechoPDOPgsql implements TypechoDbAdapter
      * @throws TypechoDbException
      * @return resource
      */
-    public function query($sql, $op = __TYPECHO_DB_READ__)
+    public function query($query, $op = __TYPECHO_DB_READ__, $action = NULL)
     {
         try
         {
-            $resource = $this->_object->prepare($sql);
+            $this->_lastInsertTable = (!empty($action) && 'INSERT' == $action) ? $query->getAttribute('table') : NULL;
+            $resource = $this->_object->prepare((string) $query);
             $resource->execute();
         }
         catch(PDOException $e)
@@ -107,6 +108,22 @@ class TypechoPDOPgsql implements TypechoDbAdapter
     {
         return '"' . $string . '"';
     }
+    
+    /**
+     * 合成查询语句
+     * 
+     * @access public
+     * @param array $sql 查询对象词法数组
+     * @return string
+     */
+    public function parseSelect(array $sql)
+    {
+        $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
+        
+        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] . 
+        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+    }
 
     /**
      * 取出最后一次查询影响的行数
@@ -127,6 +144,6 @@ class TypechoPDOPgsql implements TypechoDbAdapter
      */
     public function lastInsertId($resource)
     {
-        return $this->_object->lastInsertId();
+        return $this->_object->lastInsertId($this->_lastInsertTable);
     }
 }
