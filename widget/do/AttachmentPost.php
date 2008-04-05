@@ -57,7 +57,7 @@ class AttachmentPost extends Post
     private function checkFileExtension($extension)
     {
         $extension = empty($extension) ? '?' : $extension;
-        return in_array($extension, explode('|', $this->registry('Options')->attachmentExtensions));
+        return in_array($extension, explode('|', widget('Options')->attachmentExtensions));
     }
     
     /**
@@ -68,9 +68,9 @@ class AttachmentPost extends Post
      */
     private function getStoragePath($date = NULL)
     {
-        $date = empty($date) ? $this->registry('Options')->gmtTime : $date;
+        $date = empty($date) ? widget('Options')->gmtTime : $date;
     
-        return $this->registry('Options')->attachmentDirectory . '/'
+        return widget('Options')->attachmentDirectory . '/'
         . date('Y', $date) . '/'
         . date('n', $date) . '/'
         . date('j', $date);
@@ -86,7 +86,7 @@ class AttachmentPost extends Post
     {
         if(empty($_FILES['attachment']))
         {
-            $this->registry('Notice')->set(_t('没有文件被上传'));
+            widget('Notice')->set(_t('没有文件被上传'));
             return;
         }
         
@@ -119,9 +119,9 @@ class AttachmentPost extends Post
                         'title'     =>  empty($_POST['title'][$key]) ? $_FILES['attachment']['name'][$key] : $_POST['title'][$key],
                         'text'      =>  empty($_POST['text'][$key]) ? NULL : $_POST['text'][$key],
                         'uri'       =>  $fileName,
-                        'created'   =>  $this->registry('Options')->gmtTime,
-                        'modified'  =>  $this->registry('Options')->gmtTime,
-                        'author'    =>  $this->registry('Access')->user('uid'),
+                        'created'   =>  widget('Options')->gmtTime,
+                        'modified'  =>  widget('Options')->gmtTime,
+                        'author'    =>  widget('Access')->user('uid'),
                         'type'      =>  'attachment'
                     );
                     
@@ -139,7 +139,7 @@ class AttachmentPost extends Post
             }
         }
         
-        $this->registry('Notice')->set(_t('%s 已经被上传'), implode(',', $uploadedAttachments));
+        widget('Notice')->set(_t('%s 已经被上传'), implode(',', $uploadedAttachments));
         $this->goBack();
     }
     
@@ -153,7 +153,7 @@ class AttachmentPost extends Post
     {
         if(empty($_POST['cid']))
         {
-            $this->registry('Notice')->set(_t('没有文件被更新'));
+            widget('Notice')->set(_t('没有文件被更新'));
             return;
         }
         
@@ -164,14 +164,14 @@ class AttachmentPost extends Post
                                           ->limit(1));
         if(!$attachment)
         {
-            $this->registry('Notice')->set(_t('没有文件被更新'));
+            widget('Notice')->set(_t('没有文件被更新'));
             return;
         }
         
         //验证用户身份
-        if($attachment['author'] != $this->registry('Access')->user('uid'))
+        if($attachment['author'] != widget('Access')->user('uid'))
         {
-            $this->registry('Access')->pass('editor');
+            widget('Access')->pass('editor');
         }
         
         //添加钩子
@@ -195,7 +195,7 @@ class AttachmentPost extends Post
         $attachmentModify = array(
             'title'     =>  empty($_POST['title']) ? NULL : $_POST['title'],
             'text'      =>  empty($_POST['text']) ? NULL : $_POST['text'],
-            'modified'  =>  $this->registry('Options')->gmtTime
+            'modified'  =>  widget('Options')->gmtTime
         );
         
         $this->db->query($this->db->sql()
@@ -204,7 +204,7 @@ class AttachmentPost extends Post
         ->where('cid = ?', $attachmentId));
         
         TypechoWidgetHook::call($hookName, $attachmentId, $attachmentPath . '/' . $fileName);
-        $this->registry('Notice')->set(_t('附件已经被更新'));
+        widget('Notice')->set(_t('附件已经被更新'));
         $this->goBack();
     }
     
@@ -218,7 +218,7 @@ class AttachmentPost extends Post
     {
         if(!($formData = $this->formDataList('cid')))
         {
-            $this->registry('Notice')->set(_t('没有文件被删除'));
+            widget('Notice')->set(_t('没有文件被删除'));
             return;
         }
         
@@ -237,9 +237,9 @@ class AttachmentPost extends Post
             if($attachment)
             {
                 //验证用户身份
-                if($attachment['author'] != $this->registry('Access')->user('uid'))
+                if($attachment['author'] != widget('Access')->user('uid'))
                 {
-                    $this->registry('Access')->pass('editor');
+                    widget('Access')->pass('editor');
                 }
             
                 $this->db->query($this->db->sql()
@@ -256,14 +256,14 @@ class AttachmentPost extends Post
             }
         }
         
-        $this->registry('Notice')->set(_t('%d个附件已经被删除', $deleteCount));
+        widget('Notice')->set(_t('%d个附件已经被删除', $deleteCount));
         $this->goBack();
     }
 
     public function render()
     {
         //贡献者以上有提交文件权限
-        $this->registry('Access')->pass('contributor');
+        widget('Access')->pass('contributor');
         $this->onSubmit(array('act' => 'upload'), 'uploadAttachment');
         $this->onSubmit(array('act' => 'modify'), 'modifyAttachment');
         $this->onSubmit(array('act' => 'delete'), 'deleteAttachment');
