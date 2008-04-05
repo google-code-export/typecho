@@ -42,6 +42,22 @@ class Posts extends TypechoWidget
     protected $db;
     
     /**
+     * 实例化的配置对象
+     * 
+     * @access protected
+     * @var TypechoWidget
+     */
+    protected $options;
+    
+    /**
+     * 实例化的权限对象
+     * 
+     * @access protected
+     * @var TypechoWidget
+     */
+    protected $access;
+    
+    /**
      * 构造函数,初始化数据库
      * 
      * @access public
@@ -49,8 +65,9 @@ class Posts extends TypechoWidget
      */
     public function __construct()
     {
-        parent::__construct();
         $this->db = TypechoDb::get();
+        $this->options = widget('Options');
+        $this->access = widget('Access');
     }
     
     /**
@@ -68,7 +85,7 @@ class Posts extends TypechoWidget
         ->select('table.contents', 'COUNT(table.contents.cid) as num')
         ->where('table.contents.type = ?', 'post')
         ->where('table.contents.protected = NULL')
-        ->where('table.contents.created < ?', $this->registry('Options')->gmtTime)
+        ->where('table.contents.created < ?', $this->options->gmtTime)
         ->group('table.contents.cid')
         ->order('table.contents.created', 'DESC'));
         
@@ -76,7 +93,7 @@ class Posts extends TypechoWidget
                                           $this->_currentPage,
                                           $this->_pageSize,
                                           TypechoRoute::parse('index_page', array('page' => -65536),
-                                          $this->registry('Options')->index));
+                                          $this->options->index));
     
         call_user_func_array(array(&$nav, 'make'), $args);
     }
@@ -91,12 +108,12 @@ class Posts extends TypechoWidget
     public function push($value)
     {
         //生成日期
-        $value['year'] = date('Y', $value['created'] + $this->registry('Options')->timezone);
-        $value['month'] = date('n', $value['created'] + $this->registry('Options')->timezone);
-        $value['day'] = date('j', $value['created'] + $this->registry('Options')->timezone);
+        $value['year'] = date('Y', $value['created'] + $this->options->timezone);
+        $value['month'] = date('n', $value['created'] + $this->options->timezone);
+        $value['day'] = date('j', $value['created'] + $this->options->timezone);
         
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->registry('Options')->index);
+        $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->options->index);
         
         return parent::push($value);
     }
@@ -145,7 +162,7 @@ class Posts extends TypechoWidget
      */
     public function feedURL()
     {
-        echo TypechoRoute::parse('post_rss', $this->_row, $this->registry('Options')->index);
+        echo TypechoRoute::parse('post_rss', $this->_row, $this->options->index);
     }
     
     /**
@@ -156,7 +173,7 @@ class Posts extends TypechoWidget
      */
     public function commentsPostURL()
     {
-        printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->registry('Options')->index) . '?%d.%d',
+        printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->options->index) . '?%d.%d',
         $this->cid, $this->created);
     }
     
@@ -168,7 +185,7 @@ class Posts extends TypechoWidget
      */
     public function trackbackURL()
     {
-        printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->registry('Options')->index) . '?%d.%d',
+        printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->options->index) . '?%d.%d',
         $this->cid, $this->created);
     }
     
@@ -266,7 +283,7 @@ class Posts extends TypechoWidget
         $result = array();
         foreach($categories as $row)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->registry('Options')->index) . '">'
+            $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->options->index) . '">'
             . $row['name'] . '</a>' : $row['name'];
         }
         
@@ -288,7 +305,7 @@ class Posts extends TypechoWidget
         $result = array();
         foreach($tags as $tag)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', array('tag' => $tag), $this->registry('Options')->index) . '">'
+            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', array('tag' => $tag), $this->options->index) . '">'
             . $tag . '</a>' : $tag;
         }
         
@@ -304,7 +321,7 @@ class Posts extends TypechoWidget
      */
     public function render($pageSize = NULL)
     {
-        $this->_pageSize = empty($pageSize) ? $this->registry('Options')->page_size : $pageSize;
+        $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
         $this->_currentPage = empty($_GET['page']) ? 1 : $_GET['page'];
         
         $rows = $this->db->fetchAll($this->db->sql()
@@ -315,7 +332,7 @@ class Posts extends TypechoWidget
         ->where('table.contents.type = ?', 'post')
         ->where('table.metas.type = ?', 'category')
         ->where('table.contents.password = NULL')
-        ->where('table.contents.created < ?', $this->registry('Options')->gmtTime)
+        ->where('table.contents.created < ?', $this->options->gmtTime)
         ->group('table.contents.cid')
         ->order('table.contents.created', 'DESC')
         ->page($this->_currentPage, $this->_pageSize), array($this, 'push'));

@@ -23,7 +23,7 @@ class JobWidget extends TypechoWidget
      */
     public function render()
     {
-        $this->registry('Access')->pass('system');
+        widget('Access')->pass('system');
         TypechoRoute::handle('./widget/job', 'do');
         
         $args = empty($_POST['args']) ? array() : unserialize($_POST['args']);

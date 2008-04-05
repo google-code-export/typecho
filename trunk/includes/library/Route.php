@@ -79,8 +79,7 @@ class TypechoRoute
                 {
                     foreach($widgets as $widget)
                     {
-                        //仅仅初始化
-                        widget('@' . $widget);
+                        widget($widget);
                     }
                 }
                 

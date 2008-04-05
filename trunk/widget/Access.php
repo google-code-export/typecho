@@ -39,7 +39,6 @@ class Access extends TypechoWidget
      */
     public function __construct()
     {
-        parent::__construct();
         $this->_group = array(
             'administrator' => 0,
             'editor'		=> 1,
@@ -68,13 +67,13 @@ class Access extends TypechoWidget
             
             foreach($rows as $row)
             {
-                $this->registry('Options')->set($row['name'], $row['value']);
+                widget('Options')->set($row['name'], $row['value']);
             }
             
             //更新最后活动时间
             $db-query($db->sql()
             ->update('table.user')
-            ->rows(array('activated' => $this->registry('Options')->gmt_time))
+            ->rows(array('activated' => widget('Options')->gmt_time))
             ->where('uid = ?', $uid));
         }
     }
@@ -219,7 +218,7 @@ class Access extends TypechoWidget
                 }
                 else
                 {
-                    typechoRedirect($this->registry('Options')->siteURL . '/admin/login.php'
+                    typechoRedirect(widget('Options')->siteURL . '/admin/login.php'
                     . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
                 }
             }

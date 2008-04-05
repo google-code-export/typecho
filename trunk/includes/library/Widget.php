@@ -34,14 +34,6 @@ function widget($widget)
 {
     //已经载入的widget
     static $_widgets;
-    //初始化开关
-    $justLoad = false;
-    
-    if('@' == $widget[0])
-    {
-        $justLoad = true;
-        $widget = substr($widget, 1);
-    }
 
     if(empty($_widgets[$widget]))
     {
@@ -59,10 +51,7 @@ function widget($widget)
         
         $object = new $className();
         $_widgets[$widget] = &$object;
-    }
-
-    if(!$justLoad)
-    {
+        
         $args = func_get_args();
         array_shift($args);
         call_user_func_array(array($_widgets[$widget], 'render'), $args);
@@ -104,19 +93,6 @@ abstract class TypechoWidget
      * @var array
      */
     protected $_row = array();
-    
-    /**
-     * 已经实例化的组件对象
-     * 
-     * @access private
-     * @var array
-     */
-    private static $_registry = array();
-
-    public function __construct()
-    {
-        self::$_registry[get_class($this)] = &$this;
-    }
 
     /**
      * 将类本身赋值
@@ -131,18 +107,6 @@ abstract class TypechoWidget
         {
             $variable = $this;
         }
-    }
-    
-    /**
-     * 获取实例化的组件对象
-     * 
-     * @access public
-     * @param string $name
-     * @return TypechoWidget
-     */
-    public static function registry($name)
-    {
-        return empty(self::$_registry[$name]) ? NULL : self::$_registry[$name];
     }
     
     /**
