@@ -85,11 +85,7 @@ class TypechoRoute
                 
                 if(!empty($file))
                 {
-                    return $path . '/' . $file;
-                }
-                else
-                {
-                    exit;
+                    require $path . '/' . $file;
                 }
             }
         }

@@ -56,8 +56,6 @@ class Access extends TypechoWidget
      */
     public function render()
     {
-        session_start();
-        
         if($this->hasLogin())
         {
             $db = TypechoDb::get();

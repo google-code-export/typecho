@@ -20,14 +20,17 @@ define('__TYPECHO_ROOT_DIR__', __DIR__ . '/..');
 /** 定义库目录 **/
 define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
 
-/** 定义插件目录 **/
-define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
+/** 定义后台目录 **/
+define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
 /** 载入函数库支持 **/
 require_once 'functions.php';
 
 /** 载入配置支持 **/
 require_once __TYPECHO_ROOT_DIR__ . '/config.php';
+
+//初始化会话
+session_start();
 
 //关闭魔术引号功能
 if(get_magic_quotes_gpc())
