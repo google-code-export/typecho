@@ -122,10 +122,6 @@ class CommentsPost extends Post
             throw new TypechoWidgetException(_t('父级评论不存在'));
         }
         
-        //添加钩子
-        $hookName = TypechoWidgetHook::name(__FILE__);
-        TypechoWidgetHook::call($hookName, &$comment);
-        
         //检验格式
         if($rules)
         {
@@ -136,6 +132,10 @@ class CommentsPost extends Post
                 throw new TypechoWidgetException($error);
             }
         }
+        
+        //添加钩子
+        $hookName = TypechoWidgetHook::name(__FILE__);
+        TypechoWidgetHook::call($hookName, &$comment);
 
         //添加评论
         $commentId = $this->query($this->db

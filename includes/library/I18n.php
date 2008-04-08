@@ -9,7 +9,7 @@
  */
 
 /** GetText支持 **/
-require_once 'I18n/GetText.php';
+require 'I18n/GetText.php';
 
 /**
  * I18n function

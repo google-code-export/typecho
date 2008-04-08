@@ -9,7 +9,7 @@
  */
  
 /** 载入路由异常支持 **/
-require_once 'Route/RouteException.php';
+require 'Route/RouteException.php';
 
 /**
  * Typecho组件基类

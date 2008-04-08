@@ -18,7 +18,7 @@ define('__TYPECHO_DB_READ__', true);
 define('__TYPECHO_DB_WRITE__', false);
 
 /** 数据库异常 **/
-require_once 'Db/DbException.php';
+require 'Db/DbException.php';
 
 /** 定义数据库适配器 **/
 if(!defined('__TYPECHO_DB_ADAPTER__'))
@@ -27,13 +27,13 @@ if(!defined('__TYPECHO_DB_ADAPTER__'))
 }
 
 /** 数据库适配器接口 **/
-require_once 'Db/DbAdapter.php';
+require 'Db/DbAdapter.php';
 
 /** 数据库适配器 **/
-require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
+require 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
 
 /** sql构建器 **/
-require_once 'Db/DbQuery.php';
+require 'Db/DbQuery.php';
 
 /**
  * 包含获取数据支持方法的类.

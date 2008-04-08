@@ -8,6 +8,10 @@
  * @version    $Id$
  */
 
+/** 载入配置支持 **/
+require 'config.php';
+
 /** 载入项目配置文件 **/
 require 'includes/config.php';
+
 TypechoRoute::target('./var/template/' . widget('Options')->template);
