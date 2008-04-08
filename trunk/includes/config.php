@@ -24,10 +24,7 @@ define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
 define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
 /** 载入函数库支持 **/
-require_once 'functions.php';
-
-/** 载入配置支持 **/
-require_once __TYPECHO_ROOT_DIR__ . '/config.php';
+require 'functions.php';
 
 //初始化会话
 session_start();
@@ -63,16 +60,16 @@ if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 }
 
 /** 载入异常支持 **/
-require_once 'library/Exception.php';
+require 'library/Exception.php';
 
 /** 载入国际化支持 **/
-require_once 'library/I18n.php';
+require 'library/I18n.php';
 
 /** 载入组件支持 **/
-require_once 'library/Widget.php';
+require 'library/Widget.php';
 
 /** 载入数据库支持 **/
-require_once 'library/Db.php';
+require 'library/Db.php';
 
 /** 载入路由支持 **/
-require_once 'library/Route.php';
+require 'library/Route.php';

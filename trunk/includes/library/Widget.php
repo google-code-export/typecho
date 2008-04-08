@@ -12,13 +12,13 @@
 define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
 
 /** 载入异常支持 **/
-require_once 'Widget/WidgetException.php';
+require 'Widget/WidgetException.php';
 
 /** 载入过滤器支持 **/
-require_once 'Widget/WidgetHook.php';
+require 'Widget/WidgetHook.php';
 
 /** 载入导航页支持 **/
-require_once 'Widget/WidgetNavigator.php';
+require 'Widget/WidgetNavigator.php';
 
 /**
  * Typecho组件调用
