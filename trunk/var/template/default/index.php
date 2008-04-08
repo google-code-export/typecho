@@ -1,6 +1,6 @@
 <html>
 <head>
-<title><?php $options->title(); ?></title>
+<title><?php widget('Options')->title(); ?></title>
 </head>
 <body>
 

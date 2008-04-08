@@ -10,8 +10,4 @@
 
 /** 载入项目配置文件 **/
 require 'includes/config.php';
-
-widget('Options')->to($options);    //初始化配置组件
-widget('Access')->to($access);      //初始化权限组件
-
-require TypechoRoute::target('./var/template/' . $options->template);
+TypechoRoute::target('./var/template/' . widget('Options')->template);
