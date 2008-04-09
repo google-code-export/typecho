@@ -88,7 +88,7 @@ class TypechoWidgetNavigator
         //如果页面超出范围,则抛出404异常
         if($currentPage > $this->_totalPage || 1 > $currentPage)
         {
-            throw new TypechoWidgetException(_t('没有找到'), __TYPECHO_EXCEPTION_404__);
+            throw new TypechoWidgetException(_t('没有找到'), 404);
         }
     }
 

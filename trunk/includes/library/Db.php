@@ -23,7 +23,7 @@ require 'Db/DbException.php';
 /** 定义数据库适配器 **/
 if(!defined('__TYPECHO_DB_ADAPTER__'))
 {
-    throw new TypechoDbException(_t('未定义数据库驱动'), __TYPECHO_EXCEPTION_500__);
+    throw new TypechoDbException(_t('未定义数据库驱动'), 500);
 }
 
 /** 数据库适配器接口 **/
@@ -81,7 +81,7 @@ class TypechoDb
         !defined($const = '__TYPECHO_DB_PASS__') ||
         !defined($const = '__TYPECHO_DB_CHAR__'))
         {
-            throw new TypechoDbException(_t('未定义的数据常量 %s', $const), __TYPECHO_EXCEPTION_500__);
+            throw new TypechoDbException(_t('未定义的数据常量 %s', $const), 500);
         }
         
         //实例化适配器对象

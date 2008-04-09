@@ -54,7 +54,7 @@ class TypechoPDOMysql implements TypechoDbAdapter
         catch(PDOException $e)
         {
             throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
-            $e->getMessage() : _t('数据库连接错误'), __TYPECHO_EXCEPTION_503__);
+            $e->getMessage() : _t('数据库连接错误'), 503);
         }
     }
     
@@ -76,7 +76,7 @@ class TypechoPDOMysql implements TypechoDbAdapter
         catch(PDOException $e)
         {
             throw new TypechoDbException(__TYPECHO_DEBUG__ ? 
-            $e->getMessage() : _t('数据库查询错误'), __TYPECHO_EXCEPTION_500__);
+            $e->getMessage() : _t('数据库查询错误'), 500);
         }
         
         return $resource;

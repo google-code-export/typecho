@@ -8,15 +8,6 @@
  * @version    $Id$
  */
 
-/** 定义异常代码 **/
-define('__TYPECHO_EXCEPTION_403__', 403);     //403权限错误
-define('__TYPECHO_EXCEPTION_404__', 404);     //404页面不存在
-define('__TYPECHO_EXCEPTION_500__', 500);     //500服务器内部错误,用于标记未知的系统错误
-define('__TYPECHO_EXCEPTION_503__', 503);     //503服务器不可用,用于标记数据连接错误
-
-/** 定义异常截获页面地址 **/
-define('__TYPECHO_EXCEPTION_DIR__', __TYPECHO_ROOT_DIR__ . '/var/error');
-
 /**
  * Typecho异常基类
  * 主要重载异常打印函数
@@ -137,26 +128,26 @@ function exceptionHandler($exception)
     {
         switch($exception->getCode())
         {
-            case __TYPECHO_EXCEPTION_403__:
+            case 403:
             {
                 header('HTTP/1.1 403 Forbidden');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/403.php';
                 break;
             }
-            case __TYPECHO_EXCEPTION_404__:
+            case 404:
             {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/404.php';
                 break;
             }
-            case __TYPECHO_EXCEPTION_500__:
+            case 500:
             {
                 header('HTTP/1.1 500 Internal Server Error');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/500.php';
                 break;
             }
-            case __TYPECHO_EXCEPTION_503__:
+            case 503:
             {
                 header('HTTP/1.1 503 Service Unvailable');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/503.php';
