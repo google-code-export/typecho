@@ -23,6 +23,9 @@ define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
 /** 定义后台目录 **/
 define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
+/** 定义插件目录 **/
+define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
+
 /** 载入函数库支持 **/
 require 'functions.php';
 

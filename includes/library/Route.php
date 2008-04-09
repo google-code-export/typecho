@@ -87,6 +87,8 @@ class TypechoRoute
                 {
                     require $path . '/' . $file;
                 }
+                
+                exit;
             }
         }
         

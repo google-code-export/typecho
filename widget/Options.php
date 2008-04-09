@@ -40,6 +40,20 @@ class Options extends TypechoWidget
         $this->_stack[] = $value;
         return $value;
     }
+    
+    /**
+     * 按命名空间获取插件列表
+     * 
+     * @access public
+     * @param string $namespace 命名空间
+     * @return array
+     */
+    public function plugins($namespace)
+    {
+        $plugins = unserialize($this->plugins);
+        return array_merge(empty($plugins[$namespace]) ? array() : $plugins[$namespace],
+        empty($plugins['*']) ? array() : $plugins['*']);
+    }
 
     /**
      * 运行入口函数
