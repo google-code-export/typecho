@@ -20,6 +20,28 @@ function typechoStripslashesDeep($value)
 }
 
 /**
+ * 载入文件列表
+ * 
+ * @param array $files 文件名称数组
+ * @param string $path 文件目录
+ * @return void
+ */
+function typechoRequireFilesList(array $files, $path)
+{
+    foreach($files as $file)
+    {
+        if(file_exists($fileName = $path . '/' . $file . '.php'))
+        {
+            require $fileName;
+        }
+        else
+        {
+            require $path . '/' . $file . '/' . $file . '.php';
+        }
+    }
+}
+
+/**
  * 抽取多维数组的某个元素,组成一个新数组,使这个数组变成一个扁平数组
  * 使用方法:
  * <code>

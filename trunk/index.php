@@ -14,4 +14,8 @@ require 'config.php';
 /** 载入项目配置文件 **/
 require 'includes/config.php';
 
+/** 载入插件 **/
+typechoRequireFilesList(widget('Options')->plugins('index'), __TYPECHO_PLUGIN_DIR__);
+
+/** 载入页面 **/
 TypechoRoute::target('./var/template/' . widget('Options')->template);
