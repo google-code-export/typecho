@@ -209,7 +209,7 @@ if(!function_exists('json_encode'))
                 return '{' . join(',', $properties) . '}';
 
             default:
-                throw new MagikeException(E_JSONTYPE,gettype($var));
+                throw new TypechoException(E_JSONTYPE);
         }
 	}
 

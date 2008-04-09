@@ -59,7 +59,7 @@ class TypechoRoute
                 }
                 else
                 {
-                    throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), __TYPECHO_EXCEPTION_404__);
+                    throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), 404);
                 }
                 
                 if(!empty($address))
@@ -92,7 +92,7 @@ class TypechoRoute
             }
         }
         
-        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), __TYPECHO_EXCEPTION_404__);
+        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), 404);
     }
     
     /**
@@ -119,7 +119,7 @@ class TypechoRoute
                 return $path . '/' . $default . '.php';
             }
             
-            throw new TypechoRouteException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
+            throw new TypechoRouteException(_t('禁止访问'), 403);
         }
     }
     
