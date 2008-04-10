@@ -79,3 +79,6 @@ require 'library/Db.php';
 
 /** 载入路由支持 **/
 require 'library/Route.php';
+
+/** 载入请求处理支持 **/
+require 'library/Request.php';

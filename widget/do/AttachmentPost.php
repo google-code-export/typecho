@@ -216,7 +216,7 @@ class AttachmentPost extends Post
      */
     public function deleteAttachment()
     {
-        if(!($formData = $this->formDataList('cid')))
+        if(!($formData = TypechoRequest::getParameterList('cid')))
         {
             widget('Notice')->set(_t('没有文件被删除'));
             return;

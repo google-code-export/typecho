@@ -66,29 +66,6 @@ class Post extends TypechoWidget
     }
     
     /**
-     * 获取表单数据,并将其格式化为一个数组
-     * 
-     * @access protected
-     * @param 表单数据键值 $key
-     * @return array
-     */
-    protected function formDataList($key)
-    {
-        if(!empty($_POST[$key]))
-        {
-            return is_array($_POST[$key]) ? array_unique($_POST[$key]) : array($_POST[$key]);
-        }
-        else if(!empty($_GET[$key]))
-        {
-            return is_array($_GET[$key]) ? array_unique($_GET[$key]) : array($_GET[$key]);
-        }
-        else
-        {
-            return array();
-        }
-    }
-    
-    /**
      * 执行异步任务
      * 
      * @access protected
