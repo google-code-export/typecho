@@ -54,17 +54,6 @@ function widget($widget)
 }
 
 /**
- * 直接输出cookie信息
- * 
- * @param string $name cookie名称
- * @return void
- */
-function _cookie($name)
-{
-    echo empty($_COOKIE[$name]) ? NULL : $_COOKIE[$name];
-}
-
-/**
  * Typecho组件基类
  * 
  * @package Widget

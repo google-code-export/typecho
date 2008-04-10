@@ -40,6 +40,14 @@ class TypechoValidation
      * @var array
      */
     private $_data;
+    
+    /**
+     * 验证规则数组
+     * 
+     * @access private
+     * @var array
+     */
+    private $_rules = array();
 
     /**
      * 初始化函数
@@ -54,6 +62,11 @@ class TypechoValidation
         $this->_object = $object;
     }
     
+    public function addRule($key, $rule, $message)
+    {
+        $this->_rules[$key][$rule] = $message;
+    }
+    
    /**
      * Run the Validator
      * This function does all the work.
@@ -63,13 +76,14 @@ class TypechoValidation
      * @param   array $rules 验证数据遵循的规则
      * @return	array
      */		
-    public function run(array $data, array $rules)
+    public function run(array $data, $rules = NULL)
     {
         $result = array();
         $this->_data = $data;
+        $rules = empty($rules) ? $this->_rules : $rules;
     
         // Cycle through the rules and test for errors
-        foreach ($rules as $key => $rule)
+        foreach($rules as $key => $rule)
         {
             if(empty($data[$key]))
             {
