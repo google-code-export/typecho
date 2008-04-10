@@ -31,21 +31,63 @@ class TypechoRequest
         }
     }
     
-    static public function getParameterList($key)
+    static public function getIntParameter($key)
+    {
+        $parameter = self::getParameter($key);
+        return empty($parameter) ? NULL : intval($parameter);
+    }
+    
+    static public function getListParameter($key)
     {
         $parameter = self::getParameter($key);
         return is_array($parameter) ? array_unique($parameter) : array($parameter);
     }
     
-    static public function getCookie($key)
+    static public function getParameters()
     {
-        return empty($_COOKIES[$key]) ? $_COOKIES[$key] : NULL;
+        $args = func_get_args();
+        $parameters = array();
+        
+        foreach($args as $arg)
+        {
+            $parameters[$arg] = self::getParameter($arg);
+        }
+        
+        return $parameters;
     }
     
-    static public function setCookie($key, $value, $ttl)
-    static public function deleteCookie($key, $value, $ttl)
+    static public function getCookie($key)
+    {
+        return empty($_COOKIE[$key]) ? $_COOKIE[$key] : NULL;
+    }
+    
+    static public function setCookie($key, $value, $ttl = 0)
+    {
+        setcookie($key, $value, $ttl, typechoGetSiteRoot());
+    }
+    
+    static public function deleteCookie($key)
+    {
+        setcookie($name, '', 0, typechoGetSiteRoot());
+    }
+    
     static public function getSession($key)
+    {
+        return empty($_SESSION[$key]) ? $_SESSION[$key] : NULL;
+    }
+    
     static public function setSession($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+    
     static public function deleteSession($key)
-    static public function destorySession($key)
+    {
+        session_unregister($key);
+    }
+    
+    static public function destorySession()
+    {
+        session_unset();
+    }
 }

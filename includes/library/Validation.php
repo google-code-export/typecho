@@ -19,6 +19,12 @@
  */
 
 /**
+ * 验证异常支持
+ * 
+ */
+require 'Validation/ValidationException.php';
+
+/**
  * 验证类
  * 
  * @package Validation
@@ -64,7 +70,16 @@ class TypechoValidation
     
     public function addRule($key, $rule, $message)
     {
-        $this->_rules[$key][$rule] = $message;
+        if(func_num_args() > 3)
+        {
+            $this->_rules[$key][$rule] = $message;
+        }
+        else
+        {
+            $params = func_get_args();
+            $params = array_splice($params, 0, 3);
+            $this->_rules[$key][$rule] = array_merge(array($message), $params);
+        }
     }
     
    /**
@@ -133,7 +148,10 @@ class TypechoValidation
             }
         }
 
-        return $result;
+        if($result)
+        {
+            throw new TypechoValidationException($result);
+        }
     }
 
     /**
