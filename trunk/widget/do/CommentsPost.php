@@ -38,84 +38,15 @@ class CommentsPost extends Post
         $comment['ip'] = typechoGetClientIp();
         $comment['type'] = 'comment';
         
-        //初始化验证规则
-        $rules = array();
-        
-        //判断用户
-        if(widget('Access')->hasLogin())
-        {
-            $comment['author'] = widget('Access')->user('screenName');
-            $comment['mail'] = widget('Access')->user('mail');
-            $comment['url'] = widget('Access')->user('url');
-            
-            setCookie('author', $comment['author'], 0, typechoGetSiteRoot());
-            setCookie('mail', $comment['mail'], 0, typechoGetSiteRoot());
-            setCookie('url', $comment['url'], 0, typechoGetSiteRoot());
-        }
-        else
-        {
-            //判断作者
-            if(empty($_POST['author']))
-            {
-                throw new TypechoWidgetException(_t('必须填写用户名'));
-            }
-            else
-            {
-                $comment['author'] = $_POST['author'];
-                setCookie('author', $comment['author'], 0, typechoGetSiteRoot());
-            }
-            
-            //判断电子邮箱
-            if(empty($_POST['mail']))
-            {
-                if(widget('Options')->commentsRequireMail)
-                {
-                    throw new TypechoWidgetException(_t('必须填写电子邮箱地址'));
-                }
-            }
-            else
-            {
-                $comment['mail'] = $_POST['mail'];
-                setCookie('mail', $comment['mail'], 0, typechoGetSiteRoot());
-                $rules['mail'] = array('email' => _t('邮箱地址不合法'));
-            }
-            
-            //判断个人主页
-            if(empty($_POST['url']))
-            {
-                if(widget('Options')->commentsRequireURL)
-                {
-                    throw new TypechoWidgetException(_t('必须填写电子邮箱地址'));
-                }
-            }
-            else
-            {
-                $comment['url'] = $_POST['url'];
-                setCookie('url', $comment['url'], 0, typechoGetSiteRoot());
-                $rules['url'] = array('url' => _t('个人主页地址不合法'));
-            }
-        }
-        
-        //判断内容
-        if(empty($_POST['text']))
-        {
-            throw new TypechoWidgetException(_t('必须填写评论内容'));
-        }
-        else
-        {
-            $comment['text'] = $_POST['text'];
-            setCookie('text', $comment['text'], 0, typechoGetSiteRoot());
-        }
-        
         //判断父节点
-        if(!empty($_POST['parent']))
+        if(!empty($parentId = TypechoRequest::getIntParameter('parent')))
         {
             if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', 'coid')
-            ->where('coid = ?', intval($_POST['parent']))))
+            ->where('coid = ?', $parentId)))
             {
                 if($cid == $parent['cid'])
                 {
-                    $comment['parent'] = intval($_POST['parent']);
+                    $comment['parent'] = $parentId;
                 }
             }
 
@@ -123,15 +54,35 @@ class CommentsPost extends Post
         }
         
         //检验格式
-        if($rules)
+        $validator = new TypechoValidation();
+        $validator->addRule('author', 'required', _t('必须填写用户名'));
+        
+        if(widget('Options')->commentsRequireMail)
         {
-            $validator = new TypechoValidation();
-            $error = $validator->run($comment, $rules);
-            if($error)
-            {
-                throw new TypechoWidgetException($error);
-            }
+            $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
+        
+        $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
+        
+        if(widget('Options')->commentsRequireURL)
+        {
+            $validator->addRule('url', 'required', _t('必须填写个人主页'));
+        }
+        
+        $validator->addRule('url', 'url', _t('个人主页地址不合法'));
+        $validator->addRule('text', 'required', _t('必须填写评论内容'));
+        
+        $message = $validator->run(TyepchoRequest::getParameters('author', 'mail', 'url', 'text'));
+        
+        $comment['author'] = TypechoRequest::getParameter('author');
+        $comment['mail'] = TypechoRequest::getParameter('mail');
+        $comment['url'] = TypechoRequest::getParameter('url');
+        $comment['text'] = TypechoRequest::getParameter('text');
+        
+        TypechoRequest::setCookie('author', $comment['author']);
+        TypechoRequest::setCookie('mail', $comment['mail']);
+        TypechoRequest::setCookie('url', $comment['url']);
+        TypechoRequest::setCookie('text', $comment['text']);
         
         //添加钩子
         $hookName = TypechoWidgetHook::name(__FILE__);

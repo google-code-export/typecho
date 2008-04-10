@@ -228,7 +228,7 @@ class Access extends TypechoWidget
         }
         else
         {
-            throw new TypechoWidgetException(_t('禁止访问'), __TYPECHO_EXCEPTION_403__);
+            throw new TypechoWidgetException(_t('禁止访问'), 403);
         }
     }
 }
