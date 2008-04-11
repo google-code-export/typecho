@@ -8,16 +8,16 @@
  * @version    $Id$
  */
 
-/** 定义组件路径 **/
+/** 定义组件路径 */
 define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
 
-/** 载入异常支持 **/
+/** 载入异常支持 */
 require 'Widget/WidgetException.php';
 
-/** 载入过滤器支持 **/
+/** 载入过滤器支持 */
 require 'Widget/WidgetHook.php';
 
-/** 载入导航页支持 **/
+/** 载入导航页支持 */
 require 'Widget/WidgetNavigator.php';
 
 /**

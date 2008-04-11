@@ -17,22 +17,22 @@
 define('__TYPECHO_DB_READ__', true);
 define('__TYPECHO_DB_WRITE__', false);
 
-/** 数据库异常 **/
+/** 数据库异常 */
 require 'Db/DbException.php';
 
-/** 定义数据库适配器 **/
+/** 定义数据库适配器 */
 if(!defined('__TYPECHO_DB_ADAPTER__'))
 {
     throw new TypechoDbException(_t('未定义数据库驱动'), 500);
 }
 
-/** 数据库适配器接口 **/
+/** 数据库适配器接口 */
 require 'Db/DbAdapter.php';
 
-/** 数据库适配器 **/
+/** 数据库适配器 */
 require 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
 
-/** sql构建器 **/
+/** sql构建器 */
 require 'Db/DbQuery.php';
 
 /**

@@ -61,7 +61,7 @@ class Access extends TypechoWidget
             $db = TypechoDb::get();
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
-            ->where('user = ?', $_SESSION['uid']), array($this, 'push'));
+            ->where('user = ?', TypechoRequest::getSession('uid')), array($this, 'push'));
             
             foreach($rows as $row)
             {
@@ -90,7 +90,7 @@ class Access extends TypechoWidget
         {
             if(in_array($name, array('uid', 'group', 'name')))
             {
-                $return = $_SESSION[$name];
+                $return = TypechoRequest::getSession('name');
             }
             else
             {
@@ -99,7 +99,7 @@ class Access extends TypechoWidget
                     $db = TypechoDb::get();
                     $this->_user = $db->fetchRow($db->sql()
                     ->select('table.user')
-                    ->where('uid = ?', $_SESSION['uid']));
+                    ->where('uid = ?', TypechoRequest::getSession('uid')));
                 }
                 
                 $return = isset($this->_user[$name]) ? $this->_user[$name] : NULL;
@@ -129,10 +129,9 @@ class Access extends TypechoWidget
      */
     public function login($uid, $name, $group)
     {
-        $_SESSION['uid'] = $uid;
-        $_SESSION['name'] = $name;
-        $_SESSION['group'] = $group;
-        
+        TypechoRequest::setSession('uid', $uid);
+        TypechoRequest::setSession('name', $name);
+        TypechoRequest::setSession('group', $group);
         $db = TypechoDb::get();
         
         //更新最后登录时间
@@ -161,7 +160,8 @@ class Access extends TypechoWidget
      */
     public function hasLogin()
     {
-        return isset($_SESSION['uid']);
+        $uid = TypechoRequest::getSession('uid');
+        return !empty($uid);
     }
     
     /**
@@ -193,8 +193,7 @@ class Access extends TypechoWidget
     {
         if('system' == $group)
         {
-            if(!empty($_POST['auth']) && 
-            $this->authCode() == $_POST['auth'])
+            if($this->authCode() == TypechoRequest::getParameter('auth'))
             {
                 return true;
             }
@@ -203,7 +202,7 @@ class Access extends TypechoWidget
         {
             if($this->hasLogin())
             {
-                if(array_key_exists($group, $this->_group) && $this->_group[$_SESSION['group']] <= $this->_group[$group])
+                if(array_key_exists($group, $this->_group) && $this->_group[TypechoRequest::getSession('group')] <= $this->_group[$group])
                 {
                     return true;
                 }

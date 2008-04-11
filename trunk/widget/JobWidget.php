@@ -26,8 +26,8 @@ class JobWidget extends TypechoWidget
         widget('Access')->pass('system');
         TypechoRoute::handle('./widget/job', 'do');
         
-        $args = empty($_POST['args']) ? array() : unserialize($_POST['args']);
-        array_unshift($args, 'job.' . $_GET['do']);
+        $args = empty(TypechoRequest::getParameter('args')) ? array() : unserialize(TypechoRequest::getParameter('args'));
+        array_unshift($args, 'job.' . TypechoRoute::getParameter('do'));
         
         call_user_func_array('widget', $args);
     }

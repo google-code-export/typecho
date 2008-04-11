@@ -24,6 +24,6 @@ class DoWidget extends TypechoWidget
     public function render()
     {
         TypechoRoute::handle('./widget/do', 'do');
-        widget('do.' . $_GET['do']);
+        widget('do.' . TypechoRoute::getParameter('do'));
     }
 }
