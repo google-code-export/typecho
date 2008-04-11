@@ -102,34 +102,6 @@ class TypechoRoute
     }
     
     /**
-     * 路由指向函数,返回根据GET配置的目的文件名
-     * 
-     * @param string $path 目的文件所在目录
-     * @param string $get 获取目的文件的GET值
-     * @param string $default 当目的不存在时默认的文件
-     * @param array  $deny 禁止访问的handle
-     * @return string
-     */
-    public static function handle($path, $get = 'mod', $default = NULL, array $deny = array())
-    {
-        if(!empty($_GET[$get]) && preg_match('|^[_a-zA-Z-]+$|', $_GET[$get]) 
-        && !in_array($_GET[$get], $deny)
-        && file_exists($fileName = $path . '/' . $_GET[$get] . '.php'))
-        {
-            return $fileName;
-        }
-        else
-        {
-            if(!empty($default))
-            {
-                return $path . '/' . $default . '.php';
-            }
-            
-            throw new TypechoRouteException(_t('禁止访问'), 403);
-        }
-    }
-    
-    /**
      * 获取路径解析值
      * 
      * @access public

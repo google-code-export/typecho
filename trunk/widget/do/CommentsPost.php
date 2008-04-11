@@ -73,7 +73,7 @@ class CommentsPost extends Post
         $validator->addRule('url', 'url', _t('个人主页地址不合法'));
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
         
-        $message = $validator->run(TyepchoRequest::getParameters('author', 'mail', 'url', 'text'));
+        $message = $validator->run(TyepchoRequest::getParametersFrom('author', 'mail', 'url', 'text'));
         
         $comment['author'] = TypechoRequest::getParameter('author');
         $comment['mail'] = TypechoRequest::getParameter('mail');
@@ -87,7 +87,7 @@ class CommentsPost extends Post
         
         //添加钩子
         $hookName = TypechoWidgetHook::name(__FILE__);
-        TypechoWidgetHook::call($hookName, &$comment);
+        TypechoWidgetHook::call($hookName, $comment);
 
         //添加评论
         $commentId = $this->query($this->db
