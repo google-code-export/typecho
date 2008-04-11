@@ -21,7 +21,7 @@ class TypechoWidgetHook
      * @access private
      * @var array
      */
-    static private $_hooks = array();
+    private static $_hooks = array();
     
     /**
      * 注册钩子

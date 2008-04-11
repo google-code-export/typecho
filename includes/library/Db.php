@@ -60,7 +60,7 @@ class TypechoDb
      * 实例化的数据库对象
      * @var TypechoDb
      */
-    static private $_instance;
+    private static $_instance;
     
     /**
      * 数据库类构造函数

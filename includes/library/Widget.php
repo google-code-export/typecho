@@ -26,6 +26,7 @@ require 'Widget/WidgetNavigator.php';
  * @param string $widget 组件名称
  * @param mixed $param 参数
  * @return TypechoWidget
+ * @throws TypechoWidgetException
  */
 function widget($widget)
 {
@@ -39,7 +40,15 @@ function widget($widget)
 
         if(!class_exists($className))
         {
-            require_once __TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php';
+            $fileName = __TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php';
+            if(file_exists($fileName))
+            {
+                require_once $fileName;
+            }
+            else
+            {
+                throw new TypechoWidgetException(_t('组件%s不存在', $widget), 404);
+            }
         }
         
         $object = new $className();

@@ -31,7 +31,7 @@ class TypechoRequest
         }
     }
     
-    static public function getParameters()
+    static public function getParametersFrom()
     {
         $args = func_get_args();
         $parameters = array();
@@ -46,7 +46,7 @@ class TypechoRequest
     
     static public function getCookie($key)
     {
-        return empty($_COOKIE[$key]) ? $_COOKIE[$key] : NULL;
+        return empty($_COOKIE[$key]) ? NULL : $_COOKIE[$key];
     }
     
     static public function setCookie($key, $value, $ttl = 0)
@@ -61,7 +61,7 @@ class TypechoRequest
     
     static public function getSession($key)
     {
-        return empty($_SESSION[$key]) ? $_SESSION[$key] : NULL;
+        return empty($_SESSION[$key]) ?  NULL : $_SESSION[$key];
     }
     
     static public function setSession($key, $value)
