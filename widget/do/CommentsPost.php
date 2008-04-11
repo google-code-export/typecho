@@ -39,8 +39,9 @@ class CommentsPost extends Post
         $comment['type'] = 'comment';
         
         //判断父节点
-        if(!empty($parentId = TypechoRequest::getIntParameter('parent')))
+        if($parentId = TypechoRequest::getParameter('parent'))
         {
+            $parentId = intval($parentId);
             if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', 'coid')
             ->where('coid = ?', $parentId)))
             {
@@ -94,7 +95,7 @@ class CommentsPost extends Post
         ->insert('table.comments')
         ->rows($comment));
         
-        setCookie('text', '', 0, typechoGetSiteRoot());
+        TypechoRequest::deleteCookie('text');
         $this->goBack('#comment-' . $commentId);
     }
     

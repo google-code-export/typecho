@@ -17,6 +17,14 @@
 class TypechoException extends Exception
 {
     /**
+     * 内部消息对象,支持数组类型
+     * 
+     * @access private
+     * @var array
+     */
+    private $_message;
+
+    /**
      * 异常基类构造函数,重载以增加$code的默认参数
      * 
      * @param mixed $message 异常消息
@@ -26,6 +34,7 @@ class TypechoException extends Exception
     public function __construct($message, $code = 0)
     {
         $message = is_array($message) ? implode(',', $message) : $message;
+        $this->_message = is_array($message) ? $message : array($message);
         parent::__construct($message, $code);
     }
     
@@ -71,6 +80,18 @@ class TypechoException extends Exception
         $str .= '</table>';
         
         return $str;
+    }
+    
+    /**
+     * 重载获取消息方法,支持多列输出
+     * 
+     * @access public
+     * @param string $split
+     * @return string
+     */
+    public function getMessages($split = NULL)
+    {
+        return implode($split, $this->_message);
     }
     
     /**

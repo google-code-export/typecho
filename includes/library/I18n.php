@@ -8,7 +8,7 @@
  * @version    $Id$
  */
 
-/** GetText支持 **/
+/** GetText支持 */
 require 'I18n/GetText.php';
 
 /**

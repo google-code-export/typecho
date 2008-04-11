@@ -31,18 +31,6 @@ class TypechoRequest
         }
     }
     
-    static public function getIntParameter($key)
-    {
-        $parameter = self::getParameter($key);
-        return empty($parameter) ? NULL : intval($parameter);
-    }
-    
-    static public function getListParameter($key)
-    {
-        $parameter = self::getParameter($key);
-        return is_array($parameter) ? array_unique($parameter) : array($parameter);
-    }
-    
     static public function getParameters()
     {
         $args = func_get_args();

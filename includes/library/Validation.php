@@ -18,10 +18,7 @@
  * @version    $Id$
  */
 
-/**
- * 验证异常支持
- * 
- */
+/** 验证异常支持 */
 require 'Validation/ValidationException.php';
 
 /**

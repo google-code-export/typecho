@@ -8,29 +8,47 @@
  * @version    $Id$
  */
 
-/** 定义当前目录 **/
+/** 定义当前目录 */
 if(!defined('__DIR__'))
 {
     define('__DIR__', dirname(__FILE__));
 }
 
-/** 定义根目录 **/
+/** 定义根目录 */
 define('__TYPECHO_ROOT_DIR__', __DIR__ . '/..');
 
-/** 定义库目录 **/
+/** 定义库目录 */
 define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes/library');
 
-/** 定义后台目录 **/
+/** 定义后台目录 */
 define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
-/** 定义插件目录 **/
+/** 定义插件目录 */
 define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
 
-/** 定义异常截获页面地址 **/
+/** 定义异常截获页面地址 */
 define('__TYPECHO_EXCEPTION_DIR__', __TYPECHO_ROOT_DIR__ . '/var/error');
 
-/** 载入函数库支持 **/
+/** 载入函数库支持 */
 require 'functions.php';
+
+/** 载入异常支持 */
+require 'library/Exception.php';
+
+/** 载入国际化支持 */
+require 'library/I18n.php';
+
+/** 载入组件支持 */
+require 'library/Widget.php';
+
+/** 载入数据库支持 */
+require 'library/Db.php';
+
+/** 载入路由支持 */
+require 'library/Route.php';
+
+/** 载入请求处理支持 */
+require 'library/Request.php';
 
 //初始化会话
 session_start();
@@ -64,21 +82,3 @@ if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 {
     @date_default_timezone_set('UTC');
 }
-
-/** 载入异常支持 **/
-require 'library/Exception.php';
-
-/** 载入国际化支持 **/
-require 'library/I18n.php';
-
-/** 载入组件支持 **/
-require 'library/Widget.php';
-
-/** 载入数据库支持 **/
-require 'library/Db.php';
-
-/** 载入路由支持 **/
-require 'library/Route.php';
-
-/** 载入请求处理支持 **/
-require 'library/Request.php';

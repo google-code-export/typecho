@@ -8,7 +8,7 @@
  * @version    $Id$
  */
  
-/** 载入路由异常支持 **/
+/** 载入路由异常支持 */
 require 'Route/RouteException.php';
 
 /**
@@ -21,10 +21,18 @@ class TypechoRoute
     /**
      * 当前路由名称
      * 
-     * @access private
+     * @access public
      * @var string
      */
     public static $current;
+    
+    /**
+     * 路径解析值列表
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_parameters = array();
 
     /**
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
@@ -70,9 +78,7 @@ class TypechoRoute
                 if(1 < count($matches) && !empty($values))
                 {
                     unset($matches[0]);
-                    
-                    $_GET = array_merge($_GET, array_combine($values, $matches));
-                    reset($_GET);
+                    self::$_parameters = array_combine($values, $matches);
                 }
                 
                 if(!empty($widgets))
@@ -121,6 +127,18 @@ class TypechoRoute
             
             throw new TypechoRouteException(_t('禁止访问'), 403);
         }
+    }
+    
+    /**
+     * 获取路径解析值
+     * 
+     * @access public
+     * @param string $key
+     * @return mixed
+     */
+    static public function getParameter($key)
+    {
+        return empty(self::$_parameters[$key]) ? NULL : self::$_parameters[$key];
     }
     
     /**
