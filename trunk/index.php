@@ -12,7 +12,7 @@
 require 'config.php';
 
 /** 载入项目配置文件 */
-require 'Typecho/config.php';
+require 'includes/config.php';
 
 /** 载入插件 */
 TypechoPlugin::init(widget('Options')->plugins('index'));
