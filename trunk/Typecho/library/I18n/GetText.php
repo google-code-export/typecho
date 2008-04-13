@@ -5,7 +5,7 @@
  * @author     Michael Wallner <mike@php.net>
  * @copyright  2004-2005 Michael Wallner
  * @license    BSD, revised
- * @version    $Id$
+ * @version    $Id: GetText.php 86 2008-03-26 11:51:05Z magike.net $
  */
 
 /**

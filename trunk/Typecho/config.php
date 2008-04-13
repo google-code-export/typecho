@@ -5,7 +5,7 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: config.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
 /** 定义当前目录 */
@@ -49,6 +49,9 @@ require 'library/Route.php';
 
 /** 载入请求处理支持 */
 require 'library/Request.php';
+
+/** 载入插件支持 */
+require 'library/Plugin.php';
 
 //初始化会话
 session_start();

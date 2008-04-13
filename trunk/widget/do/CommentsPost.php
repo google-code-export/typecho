@@ -85,9 +85,9 @@ class CommentsPost extends Post
         TypechoRequest::setCookie('url', $comment['url']);
         TypechoRequest::setCookie('text', $comment['text']);
         
-        //添加钩子
-        $hookName = TypechoWidgetHook::name(__FILE__);
-        TypechoWidgetHook::call($hookName, $comment);
+        //添加过滤器
+        $filterName = TypechoPlugin::name(__FILE__);
+        TypechoPlugin::callFilter($filterName, $comment);
 
         //添加评论
         $commentId = $this->query($this->db

@@ -5,7 +5,7 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
 /** 定义组件路径 */
@@ -13,9 +13,6 @@ define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
 
 /** 载入异常支持 */
 require 'Widget/WidgetException.php';
-
-/** 载入过滤器支持 */
-require 'Widget/WidgetHook.php';
 
 /** 载入导航页支持 */
 require 'Widget/WidgetNavigator.php';

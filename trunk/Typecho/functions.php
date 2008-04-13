@@ -5,7 +5,7 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: functions.php 102 2008-04-09 15:44:39Z magike.net $
  */
 
 /**
