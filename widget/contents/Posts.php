@@ -58,6 +58,14 @@ class Posts extends TypechoWidget
     protected $access;
     
     /**
+     * 过滤器名称
+     * 
+     * @access private
+     * @var string
+     */
+    private $_filterName;
+    
+    /**
      * 构造函数,初始化数据库
      * 
      * @access public
@@ -68,6 +76,7 @@ class Posts extends TypechoWidget
         $this->db = TypechoDb::get();
         $this->options = widget('Options');
         $this->access = widget('Access');
+        $this->_filterName = TypechoPlugin::name(__FILE__);
     }
     
     /**
@@ -115,6 +124,7 @@ class Posts extends TypechoWidget
         //生成静态链接
         $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->options->index);
         
+        TypechoPlugin::callFilter($this->_filterName, $value);
         return parent::push($value);
     }
 
