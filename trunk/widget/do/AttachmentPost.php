@@ -264,8 +264,8 @@ class AttachmentPost extends Post
     {
         //贡献者以上有提交文件权限
         widget('Access')->pass('contributor');
-        $this->onSubmit(array('act' => 'upload'), 'uploadAttachment');
-        $this->onSubmit(array('act' => 'modify'), 'modifyAttachment');
-        $this->onSubmit(array('act' => 'delete'), 'deleteAttachment');
+        TypechoRequest::bindParameter(array('act' => 'upload'), 'uploadAttachment');
+        TypechoRequest::bindParameter(array('act' => 'modify'), 'modifyAttachment');
+        TypechoRequest::bindParameter(array('act' => 'delete'), 'deleteAttachment');
     }
 }

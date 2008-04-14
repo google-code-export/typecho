@@ -86,41 +86,6 @@ class Post extends TypechoWidget
         NULL,
         $_SERVER['SERVER_ADDR']);
     }
-
-    /**
-     * 提交表单触发函数
-     * 
-     * @access protected
-     * @param string $postData 表单触发值
-     * @param string $functionName 触发的函数名
-     * @param string $method 触发方法
-     * @return void
-     */
-    protected function onSubmit($postData, $functionName, $method = 'GET')
-    {
-        $data = ('POST' == strtoupper($method)) ? $_POST : $_GET;
-    
-        if(is_array($postData))
-        {
-            $doPost = true;
-            foreach($postData as $key => $val)
-            {
-                if(empty($data[$key]) || $data[$key] != $val)
-                {
-                    $doPost = false;
-                }
-            }
-            
-            if($doPost)
-            {
-                $this->$functionName();
-            }
-        }
-        else if(!empty($data[$postData]))
-        {
-            $this->$functionName();
-        }
-    }
     
     /**
      * 获取递增字段值
