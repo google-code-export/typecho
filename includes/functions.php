@@ -378,7 +378,7 @@ function typechoGetPathInfo()
     if(!empty($_SERVER['PATH_INFO']) || NULL != getenv('PATH_INFO'))
 	{
 		$pathInfo = empty($_SERVER['PATH_INFO']) ? getenv('PATH_INFO') : $_SERVER['PATH_INFO'];
-		if(0 === strpos($pathInfo,$_SERVER['SCRIPT_NAME']) && 0 === strpos($pathInfo, $_SERVER['SCRIPT_NAME']))
+		if(0 === strpos($pathInfo,$_SERVER['SCRIPT_NAME']))
 		{
 			$path = substr($pathInfo, strlen($_SERVER['SCRIPT_NAME']));
 		}
