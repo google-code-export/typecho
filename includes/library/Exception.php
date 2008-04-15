@@ -185,6 +185,12 @@ function exceptionHandler($exception)
     }
 }
 
+/** 兼容PHP5.2以前的错误级别,E_RECOVERABLE_ERROR为PHP5.2的新增错误类型 */
+if(!defined('E_RECOVERABLE_ERROR'))
+{
+	define('E_RECOVERABLE_ERROR', 4096);
+}
+
 /**
  * 错误截获函数
  * 

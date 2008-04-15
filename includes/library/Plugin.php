@@ -8,6 +8,18 @@
  * @version    $Id$
  */
 
+/** 载入异常支持 */
+require_once 'Plugin/PluginException.php'
+
+/**
+ * 插件处理类
+ * 
+ * @author qining
+ * @category typecho
+ * @package Plugin
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ */
 class TypechoPlugin
 {
     /**
