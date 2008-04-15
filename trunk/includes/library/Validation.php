@@ -19,7 +19,7 @@
  */
 
 /** 验证异常支持 */
-require 'Validation/ValidationException.php';
+require_once 'Validation/ValidationException.php';
 
 /**
  * 验证类
