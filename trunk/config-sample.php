@@ -32,8 +32,8 @@ global $route;
 
 $route = array(
     'index'         =>  array('/', 'index.php', NULL, NULL, array('contents.Posts')),
-    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%d', array('contents.Posts')),
-    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%d', array('contents.Post')),
+    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s', array('contents.Posts')),
+    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s', array('contents.Post')),
     'rss'           =>  array('/feed[/]?', '../../xml/rss.php', NULL, '/rss', NULL),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('DoWidget'), array('do'), '/%s.do'),
     'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('JobWidget'), array('job'), '/%s.job'),

@@ -131,7 +131,7 @@ class TypechoRoute
             $pattern = array();
             foreach($route[$name][2] as $row)
             {
-                $pattern[$row] = $value[$row];
+                $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
             }
             
             return $prefix . vsprintf($route[$name][3], $pattern);
@@ -163,9 +163,38 @@ class TypechoRoute
      * @param string $key 路由名称
      * @return string
      */
-    public static function get($key)
+    public static function get($key, $type = NULL)
     {
         global $route;
-        return $route[$key];
+		
+		$count = count($route[$key]);
+		if(5 == $count)
+		{
+			list($pattern, $file, $values, $format, $widgets) = $val;
+		}
+		else if(4 == $count)
+		{
+			list($pattern, $widgets, $values, $format) = $val;
+		}
+		else if(2 == $count)
+		{
+			list($pattern, $address) = $val;
+		}
+		
+		switch($type)
+		{
+			case 'pattern':
+				return isset($pattern) ? $pattern : NULL;
+			case 'file':
+				return isset($file) ? $file : NULL;
+			case 'values':
+				return isset($values) ? $values : NULL;
+			case 'format':
+				return isset($format) ? $format : NULL;
+			case 'widgets':
+				return isset($widgets) ? $widgets : NULL;
+			default;
+				return $route[$key];
+		}
     }
 }

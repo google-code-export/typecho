@@ -105,14 +105,14 @@ class TypechoWidgetNavigator
         //输出下一页
         if($this->_currentPage < $this->_totalPage)
         {
-            echo '<a class="next" href="' . str_replace('-65536', $this->_currentPage + 1, $this->_pageTemplate) . '">'
+            echo '<a class="next" href="' . str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) . '">'
             . $nextWord . '</a>';
         }
         
         //输出上一页
         if($this->_currentPage > 1)
         {
-            echo '<a class="prev" href="' . str_replace('-65536', $this->_currentPage - 1, $this->_pageTemplate) . '">'
+            echo '<a class="prev" href="' . str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) . '">'
             .$prevWord . '</a>';
         }
     }
@@ -135,15 +135,14 @@ class TypechoWidgetNavigator
         //输出上一页
         if($this->_currentPage > 1)
         {
-            echo '<a class="prev" href="' . str_replace('-65536', $this->_currentPage - 1, $this->_pageTemplate) . '">'
+            echo '<a class="prev" href="' . str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) . '">'
             .$prevWord . '</a>';
         }
         
         //输出第一页
         if($from > 1)
         {
-            echo '<a href="' . str_replace('-65536', 1, $this->_pageTemplate) . '">'
-            . 1 . '</a>';
+            echo '<a href="' . str_replace('{page}', 1, $this->_pageTemplate) . '">1</a>';
             //输出省略号
             echo '<span>' . $splitWord . '</span>';
         }
@@ -153,8 +152,8 @@ class TypechoWidgetNavigator
         {
             if($i != $this->_currentPage)
             {
-                echo '<a href="' . str_replace('-65536', $i, $this->_pageTemplate) . '">'
-                . 1 . '</a>';
+                echo '<a href="' . str_replace('{page}', $i, $this->_pageTemplate) . '">'
+                . $i . '</a>';
             }
             else
             {
@@ -167,14 +166,14 @@ class TypechoWidgetNavigator
         if($to < $this->_totalPage)
         {
             echo '<span>' . $splitWord . '</span>';
-            echo '<a href="' . str_replace('-65536', $this->_totalPage, $this->_pageTemplate) . '">'
+            echo '<a href="' . str_replace('{page}', $this->_totalPage, $this->_pageTemplate) . '">'
             . $this->_totalPage . '</a>';
         }
         
         //输出下一页
         if($this->_currentPage < $this->_totalPage)
         {
-            echo '<a class="next" href="' . str_replace('-65536', $this->_currentPage + 1, $this->_pageTemplate) . '">'
+            echo '<a class="next" href="' . str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) . '">'
             . $nextWord . '</a>';
         }
     }
