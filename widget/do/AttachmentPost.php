@@ -231,7 +231,7 @@ class AttachmentPost extends Post
         foreach($formData as $attachmentId)
         {
             $attachment = $this->db->fetchRow($this->db->sql()->select('table.contents')
-                                              ->where('cid = ?', $attachmentId)
+                                              ->where('`cid` = ?', $attachmentId)
                                               ->limit(1));
             
             if($attachment)

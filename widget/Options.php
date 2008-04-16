@@ -67,7 +67,7 @@ class Options extends TypechoWidget
 
         $db->fetchAll($db->sql()
         ->select('table.options')
-        ->where('user = 0'), array($this, 'push'));
+        ->where('`user` = 0'), array($this, 'push'));
 
         $this->_row['siteURL'] = $this->getSiteUrl();
         $this->_row['index'] = $this->_row['rewrite'] ? $this->_row['siteURL'] : $this->_row['siteURL'] . '/index.php';

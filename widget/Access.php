@@ -61,7 +61,7 @@ class Access extends TypechoWidget
             $db = TypechoDb::get();
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
-            ->where('user = ?', TypechoRequest::getSession('uid')), array($this, 'push'));
+            ->where('`user` = ?', TypechoRequest::getSession('uid')), array($this, 'push'));
             
             foreach($rows as $row)
             {
@@ -72,7 +72,7 @@ class Access extends TypechoWidget
             $db-query($db->sql()
             ->update('table.user')
             ->rows(array('activated' => widget('Options')->gmt_time))
-            ->where('uid = ?', $uid));
+            ->where('`uid` = ?', $uid));
         }
     }
     
@@ -99,7 +99,7 @@ class Access extends TypechoWidget
                     $db = TypechoDb::get();
                     $this->_user = $db->fetchRow($db->sql()
                     ->select('table.user')
-                    ->where('uid = ?', TypechoRequest::getSession('uid')));
+                    ->where('`uid` = ?', TypechoRequest::getSession('uid')));
                 }
                 
                 $return = isset($this->_user[$name]) ? $this->_user[$name] : NULL;
@@ -138,7 +138,7 @@ class Access extends TypechoWidget
         $db-query($db->sql()
         ->update('table.user')
         ->row('logged', 'activated')
-        ->where('uid = ?', $uid));
+        ->where('`uid` = ?', $uid));
     }
     
     /**
@@ -175,7 +175,7 @@ class Access extends TypechoWidget
         $db = TypechoDb::get();
         $user = $db->fetchRow($db->sql()
         ->select('table.user')
-        ->where('uid = 1'));
+        ->where('`uid` = 1'));
         
         return md5($user['name'] . $user['password']);
     }

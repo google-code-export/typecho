@@ -59,13 +59,13 @@ class Query extends TypechoWidget
         {
             if(is_array($val))
             {
-                $cond = implode(' OR ', array_fill(0, count($val), $key . ' = ?'));
+                $cond = implode(' OR ', array_fill(0, count($val), '`' . $key . '` = ?'));
                 array_unshift($val, $cond);
                 call_user_func_array(array(&$sql, 'where'), $val);
             }
             else
             {
-                $sql->where($key . ' = ?', $val);
+                $sql->where('`' . $key . '` = ?', $val);
             }
         }
         

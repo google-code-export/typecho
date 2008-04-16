@@ -37,27 +37,27 @@ class ContentsPost extends Post
             {
                 //获取tag索引
                 $existTag = $this->db->fetchRow($this->db->sql()
-                ->select('table.metas', 'mid')
-                ->where('type = ?', 'tag')
-                ->where('slug = ?', urlencode($tag))
+                ->select('table.metas', '`mid`')
+                ->where('`type` = ?', 'tag')
+                ->where('`slug` = ?', urlencode($tag))
                 ->limit(1));
                 
                 //删除关系
                 $this->db->query($this->db->sql()
                 ->delete('table.relationships')
-                ->where('cid = ?', $cid)
-                ->where('mid = ?', $existTag['mid']));
+                ->where('`cid` = ?', $cid)
+                ->where('`mid` = ?', $existTag['mid']));
                 
                 //获取关系数目
                 $count = $this->db->fetchRow($this->db->sql()
-                ->select('table.relationships', 'COUNT(cid) as num')
-                ->where('mid = ?', $existTag['mid']));
+                ->select('table.relationships', 'COUNT(`cid`) AS `num`')
+                ->where('`mid` = ?', $existTag['mid']));
                 
                 //更新冗余字段
                 $this->db->query($this->db->sql()
                 ->update('table.metas')
                 ->rows(array('count' => $count['num']))
-                ->where('mid = ?', $existTag['mid']));
+                ->where('`mid` = ?', $existTag['mid']));
             }
         }
         
@@ -68,9 +68,9 @@ class ContentsPost extends Post
             {
                 //获取tag索引
                 $existTag = $this->db->fetchRow($this->db->sql()
-                ->select('table.metas', 'mid')
-                ->where('type = ?', 'tag')
-                ->where('slug = ?', urlencode($tag))
+                ->select('table.metas', '`mid`')
+                ->where('`type` = ?', 'tag')
+                ->where('`slug` = ?', urlencode($tag))
                 ->limit(1));
 
                 if($existTag)
@@ -118,27 +118,27 @@ class ContentsPost extends Post
             {
                 //获取category索引
                 $existCategory = $this->db->fetchRow($this->db->sql()
-                ->select('table.metas', 'mid')
-                ->where('type = ?', 'category')
-                ->where('name = ?', $category)
+                ->select('table.metas', '`mid`')
+                ->where('`type` = ?', 'category')
+                ->where('`name` = ?', $category)
                 ->limit(1));
                 
                 //删除关系
                 $this->db->query($this->db->sql()
                 ->delete('table.relationships')
-                ->where('cid = ?', $cid)
-                ->where('mid = ?', $existCategory['mid']));
+                ->where('`cid` = ?', $cid)
+                ->where('`mid` = ?', $existCategory['mid']));
                 
                 //获取关系数目
                 $count = $this->db->fetchRow($this->db->sql()
-                ->select('table.relationships', 'COUNT(cid) as num')
-                ->where('mid = ?', $existCategory['mid']));
+                ->select('table.relationships', 'COUNT(`cid`) AS `num`')
+                ->where('`mid` = ?', $existCategory['mid']));
                 
                 //更新冗余字段
                 $this->db->query($this->db->sql()
                 ->update('table.metas')
                 ->rows(array('count' => $count['num']))
-                ->where('mid = ?', $existCategory['mid']));
+                ->where('`mid` = ?', $existCategory['mid']));
             }
         }
         
@@ -146,8 +146,8 @@ class ContentsPost extends Post
         if($insertCategories)
         {
             $maxCategory = $this->db->fetchRow($this->db->sql()
-            ->select('table.metas', 'max(sort) AS maxSort')
-            ->where('type = ?', 'category'));
+            ->select('table.metas', 'max(`sort`) AS `maxSort`')
+            ->where('`type` = ?', 'category'));
             
             $maxCategory = empty($maxCategory['maxSort']) ? 0 : $maxCategory['maxSort'];
         
@@ -157,9 +157,9 @@ class ContentsPost extends Post
                 
                 //获取category索引
                 $existCategory = $this->db->fetchRow($this->db->sql()
-                ->select('table.metas', 'mid')
-                ->where('type = ?', 'category')
-                ->where('name = ?', $category)
+                ->select('table.metas', '`mid`')
+                ->where('`type` = ?', 'category')
+                ->where('`name` = ?', $category)
                 ->limit(1));
                 
                 if($existCategory)
@@ -189,12 +189,12 @@ class ContentsPost extends Post
         
         //获取优先分类
         $headCategory = $this->db->fetchRow($this->db->sql()
-        ->select('table.relationships', 'table.relationships.mid')
-        ->join('table.metas', 'table.relationships.mid = table.metas.mid')
-        ->where('cid = ?', $cid)
-        ->where('type = ?', 'category')
-        ->group('table.relationships.mid')
-        ->order('table.metas.sort')
+        ->select('table.relationships', 'table.relationships.`mid`')
+        ->join('table.metas', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('`cid` = ?', $cid)
+        ->where('`type` = ?', 'category')
+        ->group('table.relationships.`mid`')
+        ->order('table.metas.`sort`')
         ->limit(1));
         
         return $headCategory ? $headCategory['mid'] : 0;
