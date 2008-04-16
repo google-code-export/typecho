@@ -27,8 +27,16 @@ require_once 'Widget/WidgetNavigator.php';
  */
 function widget($widget)
 {
-    //已经载入的widget
+    /** 已经载入的widget */
     static $_widgets;
+	
+	/** 判断是否为plugin */
+	$widgetRoot = __TYPECHO_WIDGET_DIR__;
+	if(0 === strpos($widget, 'plugin:'))
+	{
+		$widgetRoot = __TYPECHO_PLUGIN_DIR__;
+		$widget = substr($widget, 7);
+	}
 
     if(empty($_widgets[$widget]))
     {
