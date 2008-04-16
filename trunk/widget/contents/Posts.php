@@ -283,11 +283,11 @@ class Posts extends TypechoWidget
     {
         $categories = 
         $this->db->fetchAll($this->db->sql()
-        ->select('table.metas', 'name, slug')
-        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $this->cid)
-        ->where('table.metas.type = ?', 'category')
-        ->group('table.metas.mid')
+        ->select('table.metas', '`name`, `slug`')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $this->cid)
+        ->where('table.metas.`type` = ?', 'category')
+        ->group('table.metas.`mid`')
         ->order('sort', 'ASC'));
         
         $result = array();
@@ -335,16 +335,16 @@ class Posts extends TypechoWidget
         $this->_currentPage = empty($_GET['page']) ? 1 : $_GET['page'];
         
         $rows = $this->db->fetchAll($this->db->sql()
-        ->select('table.contents', 'table.contents.cid, table.contents.title, table.contents.slug, table.contents.created, table.contents.tags,
-        table.contents.text, table.contents.commentsNum, table.metas.slug AS category, table.users.screenName AS author')
-        ->join('table.metas', 'table.contents.meta = table.metas.mid', 'LEFT')
-        ->join('table.users', 'table.contents.author = table.users.uid', 'LEFT')
-        ->where('table.contents.type = ?', 'post')
-        ->where('table.metas.type = ?', 'category')
-        ->where('table.contents.password = NULL')
-        ->where('table.contents.created < ?', $this->options->gmtTime)
-        ->group('table.contents.cid')
-        ->order('table.contents.created', 'DESC')
+        ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`tags`,
+        table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
+        ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', 'LEFT')
+        ->join('table.users', 'table.contents.`author` = table.users.`uid`', 'LEFT')
+        ->where('table.contents.`type` = ?', 'post')
+        ->where('table.metas.`type` = ?', 'category')
+        ->where('table.contents.`password` = NULL')
+        ->where('table.contents.`created` < ?', $this->options->gmtTime)
+        ->group('table.contents.`cid`')
+        ->order('table.contents.`created`', 'DESC')
         ->page($this->_currentPage, $this->_pageSize), array($this, 'push'));
     }
 }

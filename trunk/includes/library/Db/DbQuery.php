@@ -62,106 +62,43 @@ class TypechoDbQuery
      * @param string $string 需要解析的字符串
      * @return string
      */
-    private function filterPrefix($string, $type = NULL)
+    private function filterPrefix($string)
     {
-        $string = substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i", 
+        return substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i", 
         "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
-        
-        if($type)
-        {
-            $string  = $this->filterColumn($string, $type);
-        }
-        
-        return $string;
     }
     
-    private function filterColumn($string, $type)
+	/**
+	 * 过滤数组键值
+	 * 
+	 * @access private
+	 * @param mixed $string
+	 * @param string $type
+	 * @return string
+	 */
+    private function filterColumn($string, $force = false)
     {
-        switch($type)
-        {
-            case 'fields':
-            {
-                if('*' == $string)
-                {
-                    return $string;
-                }
-                
-                $columns = preg_split("/\s*,\s*/", $string);
-                foreach($columns as $key => $column)
-                {
-                    $fields = preg_split("/\s+AS\s+/i", $column);
-                    $columns[$key] = implode(' AS ', array_map(array($this, 'filterColumnQuote'), $fields));
-                }
-                return implode(' , ', $columns);
-            }
-            case 'condition':
-            {
-                return preg_replace_callback("/([_0-9a-zA-Z\.]+)\s*(LIKE|=|\>|\<|\>=|\<=|\<\>|=|\!=)/i", array($this, 'filterColumnQuote'), $string);
-            }
-            case 'operate':
-            {
-                return preg_replace_callback("/[^']?([_0-9a-zA-Z\.]+)[^']?/i", array($this, 'filterColumnQuote'), ' ' . $string . ' ');
-            }
-            case 'equal':
-            {
-                $fields = preg_split("/\s*=\s*/i", $string);
-                return implode(' = ', array_map(array($this, 'filterColumnQuote'), $fields));
-            }
-            case 'column':
-            {
-                return $this->filterColumnQuote($string);
-            }
-            default:
-            {
-                return $string;
-            }
-        }
+        if($force)
+		{
+			if(false === strpos($string, '`'))
+			{
+				return $this->_adapter->quoteColumn(preg_replace("/^[`|'|\"]?([^`]*)[`|'|\"]?$/i", "\\1", $string));
+			}
+			else
+			{
+				return preg_replace_callback("/`([^`]*)`/", array($this, 'filterColumnCallback'), $string);
+			}
+		}
+		else
+		{
+			return preg_replace_callback("/`([^`]*)`/", array($this, 'filterColumnCallback'), $string);
+		}
     }
-    
-    public function filterColumnQuote($match)
-    {
-        if(is_array($match))
-        {
-            if(is_numeric($match[1]))
-            {
-                return ' ' . $match[1] . (isset($match[2]) ? ' ' . $match[2] : ' ');
-            }
-            else
-            {
-                $field = $match[1];
-                $matches = explode('.', $field);
-                $last = count($matches) - 1;
-                $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
-                return implode('.', $matches) . (isset($match[2]) ? ' ' . $match[2] : ' ');
-            }
-        }
-        else if(preg_match("/([_0-9a-zA-Z]+)\((.*)\)/", $match, $out))
-        {
-            return $out[1] . '(' . $this->_adapter->quoteColumn($this->clearQuote($out[2])) . ')';
-        }
-        else
-        {
-            if(is_numeric($match))
-            {
-                return $match;
-            }
-
-            $parts = preg_split("/\s+/", $match);
-            $lastPart = count($parts) - 1;
-            
-            $matches = array_map(array($this, 'clearQuote'), explode('.', $parts[$lastPart]));
-            $last = count($matches) - 1;
-            $matches[$last] = $this->_adapter->quoteColumn($matches[$last]);
-            
-            $parts[$lastPart] = implode('.', $matches);
-            return implode(' ', $parts);
-        }
-    }
-    
-    public function clearQuote($field)
-    {
-        return preg_replace("/[`|'|\"]?([_a-zA-Z0-9]+)[`|'|\"]?/i", "\\1", $field);
-    }
+	
+	public function filterColumnCallback($matches)
+	{
+		return $this->_adapter->quoteColumn($matches[1]);
+	}
     
     /**
      * 初始化参数
@@ -207,7 +144,7 @@ class TypechoDbQuery
      */
     public function join($table, $condition, $op = 'INNER')
     {
-        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterPrefix($condition, 'equal'), $op);
+        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterColumn($this->filterPrefix($condition)), $op);
         return $this;
     }
     
@@ -221,7 +158,7 @@ class TypechoDbQuery
     public function where()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterPrefix(str_replace('?', "%s", $condition), 'condition');
+        $condition = $this->filterColumn($this->filterPrefix(str_replace('?', "%s", $condition)));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
     
         if(func_num_args() <= 1)
@@ -248,7 +185,7 @@ class TypechoDbQuery
     public function orWhere()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterPrefix(str_replace('?', "%s", $condition), 'condition');
+        $condition = $this->filterColumn($this->filterPrefix(str_replace('?', "%s", $condition), 'condition'));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
     
         if(func_num_args() <= 1)
@@ -314,7 +251,7 @@ class TypechoDbQuery
     {
         foreach($rows as $key => $row)
         {
-            $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->_adapter->quotes($row);
+            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->_adapter->quotes($row);
         }
         return $this;
     }
@@ -329,7 +266,7 @@ class TypechoDbQuery
      */
     public function row($key, $value)
     {
-        $this->_sqlPreBuild['rows'][$this->filterPrefix($key, 'column')] = $this->filterPrefix($value, 'operate');
+        $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->filterColumn($value);
         return $this;
     }
     
@@ -342,7 +279,7 @@ class TypechoDbQuery
      */
     public function order($orderby, $sort = NULL)
     {
-        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterPrefix($orderby, 'column') . (empty($sort) ? NULL : ' ' . $sort);
+        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterColumn($this->filterPrefix($orderby), true) . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
     }
     
@@ -354,7 +291,7 @@ class TypechoDbQuery
      */
     public function group($key)
     {
-        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterPrefix($key, 'column');
+        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($this->filterPrefix($key), true);
         return $this;
     }
     
@@ -368,7 +305,7 @@ class TypechoDbQuery
     public function select($table, $fields = '*')
     {
         $this->_sqlPreBuild['action'] = 'SELECT';
-        $this->_sqlPreBuild['fields'] = $this->filterPrefix($fields, 'fields');
+        $this->_sqlPreBuild['fields'] = $this->filterColumn($this->filterPrefix($fields));
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }

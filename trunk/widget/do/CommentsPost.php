@@ -42,8 +42,8 @@ class CommentsPost extends Post
         if($parentId = TypechoRequest::getParameter('parent'))
         {
             $parentId = intval($parentId);
-            if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', 'coid')
-            ->where('coid = ?', $parentId)))
+            if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', '`coid`')
+            ->where('`coid` = ?', $parentId)))
             {
                 if($cid == $parent['cid'])
                 {
