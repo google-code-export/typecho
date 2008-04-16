@@ -101,10 +101,9 @@ class Posts extends TypechoWidget
         $nav = new TypechoWidgetNavigator($row['num'],
                                           $this->_currentPage,
                                           $this->_pageSize,
-                                          TypechoRoute::parse('index_page', array('page' => -65536),
-                                          $this->options->index));
+                                          TypechoRoute::parse('index_page', $this->_row, $this->options->index));
     
-        call_user_func_array(array(&$nav, 'make'), $args);
+        call_user_func_array(array($nav, 'make'), $args);
     }
 
     /**
