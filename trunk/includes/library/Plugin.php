@@ -9,7 +9,7 @@
  */
 
 /** 载入异常支持 */
-require_once 'Plugin/PluginException.php'
+require_once 'Plugin/PluginException.php';
 
 /**
  * 插件处理类
