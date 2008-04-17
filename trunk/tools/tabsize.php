@@ -83,6 +83,8 @@ function tabsize($dir = ROOT_DIR)
                     {
                         $line = str_replace("\t", '    ', $out[1]) . $out[2];
                     }
+                    
+                    preg_match("/^(.*)(\s+)$/", $line, $out);
                     $result[] = $line;
                 }
                 

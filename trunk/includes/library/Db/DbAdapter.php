@@ -4,7 +4,7 @@
 /**
  * Typecho数据库适配器 * 定义通用的数据库适配接口 *  * @package Db */interface TypechoDbAdapter
 {
-    /**     * 数据库连接函数     *      * @param string $host 数据库服务器地址     * @param string $port 数据库服务器端口     * @param string $db 数据库名称     * @param string $user 数据库用户名     * @param string $password 数据库密码     * @param string $charset 数据库字符集     * @return resource     */    public function connect($host, $port, $db, $user, $password, $charset = NULL);    
+    /**     * 数据库连接函数     *     * @param TypechoConfig $config 数据库配置     * @return resource     */    public function connect(TypechoConfig $config);    
     /**     * 执行数据库查询     *      * @param string $query 数据库查询SQL字符串     * @param boolean $op 数据库读写状态     * @return resource     */    public function query($query, $op = TypechoDb::READ, $action = NULL);    
     /**     * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值     *      * @param resource $resource 查询的资源数据     * @return array     */    public function fetch($resource);    
     /**     * 引号转义函数     *      * @param string $string 需要转义的字符串     * @return string     */    public function quotes($string);    
