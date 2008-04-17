@@ -1,10 +1,18 @@
 <?php
 /**
- * Typecho Blog Platform * * @author     qining * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org) * @license    GNU General Public License 2.0 * @version    $Id: config.php 106 2008-04-11 02:23:54Z magike.net $ */
+ * Typecho Blog Platform
+ *
+ * @author     qining
+ * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license    GNU General Public License 2.0
+ * @version    $Id: config.php 106 2008-04-11 02:23:54Z magike.net $
+ */
+
 /** 定义当前目录 */
 if(!defined('__DIR__'))
 {
-    define('__DIR__', dirname(__FILE__));}
+    define('__DIR__', dirname(__FILE__));
+}
 
 /** 定义根目录 */
 define('__TYPECHO_ROOT_DIR__', __DIR__ . '/..');
@@ -51,18 +59,29 @@ session_start();
 //关闭魔术引号功能
 if(get_magic_quotes_gpc())
 {
-    $_GET = Typecho::stripslashesDeep($_GET);    $_POST = Typecho::stripslashesDeep($_POST);    $_COOKIE = Typecho::stripslashesDeep($_COOKIE);
-    reset($_GET);    reset($_POST);    reset($_COOKIE);}
+    $_GET = Typecho::stripslashesDeep($_GET);
+    $_POST = Typecho::stripslashesDeep($_POST);
+    $_COOKIE = Typecho::stripslashesDeep($_COOKIE);
+
+    reset($_GET);
+    reset($_POST);
+    reset($_COOKIE);
+}
 
 //开始监视输出区
-if(__TYPECHO_GZIP_ENABLE__ 
-   && empty($_SERVER['HTTP_ACCEPT_ENCODING'])    && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')){
-    ob_start("ob_gzhandler");}
+if(__TYPECHO_GZIP_ENABLE__
+   && empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+   && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
+{
+    ob_start("ob_gzhandler");
+}
 else
 {
-    ob_start();}
+    ob_start();
+}
 
 //设置默认时区
 if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
 {
-    @date_default_timezone_set('UTC');}
+    @date_default_timezone_set('UTC');
+}

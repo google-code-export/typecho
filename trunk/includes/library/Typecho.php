@@ -1,7 +1,7 @@
 <?php
 /**
  * API方法,Typecho命名空间
- * 
+ *
  * @author qining
  * @category typecho
  * @package default
@@ -12,7 +12,7 @@
 
 /**
  * Typecho公用方法
- * 
+ *
  * @author qining
  * @category typecho
  * @package default
@@ -23,7 +23,7 @@ class Typecho
 {
     /**
      * 递归去掉数组反斜线
-     * 
+     *
      * @access public
      * @param mixed $value
      * @return mixed
@@ -44,7 +44,7 @@ class Typecho
      * //outputs: array(0 => 3, 1 => 12);
      * ?>
      * </code>
-     * 
+     *
      * @access public
      * @param array $value 被处理的数组
      * @param string $key 需要抽取的键值
@@ -53,7 +53,7 @@ class Typecho
     public static function arrayFlatten(array $value, $key)
     {
         $result = array();
-        
+
         if($value)
         {
             foreach($value as $inval)
@@ -68,7 +68,7 @@ class Typecho
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -84,12 +84,12 @@ class Typecho
         //关闭自闭合标签
         $startPos = strrpos($string, "<");
         $trimString = substr($string, $startPos);
-        
+
         if(false === strpos($trimString, ">"))
         {
             $string = substr($string, 0, $startPos);
         }
-        
+
         //非自闭合html标签列表
         preg_match_all("/<([_0-9a-zA-Z-\:]+)\s*([^>]*)>/is", $string, $startTags);
         preg_match_all("/<\/([_0-9a-zA-Z-\:]+)>/is", $string, $closeTags);
@@ -115,7 +115,7 @@ class Typecho
                 $string .= "</{$tag}>";
             }
         }
-        
+
         return $string;
     }
 
@@ -130,17 +130,17 @@ class Typecho
     public static function stripTags($string, $except = NULL)
     {
         $string = str_replace('<!DOC', '<DOC', $string);
-        
+
         if(NULL === $except)
         {
             $string = preg_replace( "/<\/(div|h1|h2|h3|h4|h5|h6|p|th|td|li|ol|dt|dd|pre|caption|input|textarea|blockquote|code|pre|button|body)[^>]*>/", "\n\n", $string);
         }
-        
+
         $string = preg_replace("/\s*<br\s*\/>\s*/is", "\n", $string);
         $string = strip_tags($string, $except);
         $string = str_replace("\r\n", "\n", $string);
         $string = str_replace("\r", "", $string);
-        
+
         return trim($string);
     }
 
@@ -163,7 +163,7 @@ class Typecho
             'thr'       =>  'xmlns:thr="http://purl.org/syndication/thread/1.0"',
             'lang'      =>  'xml:lang="en"'
         );
-        
+
         switch  (strtoupper($type))
         {
             case 'RSS2.0':
@@ -188,7 +188,7 @@ class Typecho
             default:
                 break;
         }
-        
+
         if($modules)
         {
             foreach($modules as $module)
@@ -199,10 +199,10 @@ class Typecho
                 }
             }
         }
-        
+
         echo '>';
     }
-    
+
     /**
      * 宽字符串截字函数
      *
@@ -228,7 +228,7 @@ class Typecho
             return ($length < (sizeof($info[0]) - $start)) ? $str . $trim : $str;
         }
     }
-    
+
     /**
      * 获取宽字符串长度函数
      *
@@ -251,7 +251,7 @@ class Typecho
 
     /**
      * 生成缩略名
-     * 
+     *
      * @access public
      * @param string $str 需要生成缩略名的字符串
      * @param string $default 默认的缩略名
@@ -393,18 +393,18 @@ class Typecho
                     $_SERVER['QUERY_STRING'] = $parsedUrl['query'];
                     parse_str($parsedUrl['query'], $GET);
                     $_GET = array_merge($_GET, $GET);
-                    
+
                     reset($_GET);
                 }
                 else
                 {
                     unset($_SERVER['QUERY_STRING']);
                 }
-                
+
                 reset($_SERVER);
             }
         }
-        
+
         return empty($path) ? '/' : $path;
     }
 
@@ -436,13 +436,13 @@ class Typecho
         {
             $ip = "unknown";
         }
-        
+
         return addslashes($ip);
     }
 
     /**
      * 分析response参数
-     * 
+     *
      * @access public
      * @param string $response 回执字符串
      * @return array
@@ -453,7 +453,7 @@ class Typecho
         {
             return NULL;
         }
-        
+
         str_replace("\r", "", $response);
         $rows = explode("\n", $response);
 
@@ -461,7 +461,7 @@ class Typecho
         $foundInfo = false;
         $result = array();
         $lines = array();
-        
+
         foreach($rows as $key => $line)
         {
             if(!$foundStatus)
@@ -502,14 +502,14 @@ class Typecho
                 }
             }
         }
-        
+
         $result['body'] = implode("\n", $lines);
         return $result;
     }
 
     /**
      * 发送HTTP请求
-     * 
+     *
      * @access public
      * @param string $url 请求的URL地址
      * @param string $agent 客户端代号
@@ -540,7 +540,7 @@ class Typecho
 
         //get user agent
         $agent = (NULL === $agent) ? $_SERVER['HTTP_USER_AGENT'] : $agent;
-        
+
         if($url)
         {
             $url = $url.(NULL === $getData ? NULL : ((false != strpos($url,"?") ? "&" : "?").http_build_query($getData)));
@@ -550,14 +550,14 @@ class Typecho
                 $parsedUrl['path'] = '/';
             }
             $path = $parsedUrl['path'].(!empty($parsedUrl['query']) ? '?'.$parsedUrl['query'] : NULL);
-            
+
             if (empty($parsedUrl['host']))
             {
                 return false;
             }
-            
+
             $port = isset($parsedUrl['port']) ? $parsedUrl['port'] : 80;
-            
+
             if(NULL != $postData || NULL != $fileData)
             {
                 $request  = 'POST ' . $path;
@@ -566,12 +566,12 @@ class Typecho
             {
                 $request  = 'GET ' . $path;
             }
-            
-            if (isset($parsedUrl['query']))	
+
+            if (isset($parsedUrl['query']))
             {
                 $request .= '?' . $parsedUrl['query'];
             }
-            
+
             $request .= " HTTP/1.1\r\n";
             $request .= "Accept: */*\r\n";
             $request .= "User-Agent: " . $agent . "\r\n";
@@ -580,7 +580,7 @@ class Typecho
             $request .= "Keep-Alive: 300\r\n";
             $request .= "Cache-Control: no-cache\r\n";
             $request .= "Connection: Close\r\n";
-            
+
             if(NULL != $postData || NULL != $fileData)
             {
                 if(NULL == $fileData)
@@ -595,7 +595,7 @@ class Typecho
                 {
                     $boundary = "---------------------------" . md5(uniqid(time()));
                     $content = "\r\n".$boundary;
-                    
+
                     if(NULL != $postData)
                     {
                         foreach($postData as $key => $val)
@@ -605,7 +605,7 @@ class Typecho
                             $content .= $boundary;
                         }
                     }
-                    
+
                     foreach($fileData as $key => $val)
                     {
                         $content .= "\r\nContent-Disposition: form-data; name=\"{$key}\"; filename=\"{$val}\"\r\n";
@@ -613,13 +613,13 @@ class Typecho
                         $content .= file_get_contents($val)."\r\n";
                         $content .= $boundary;
                     }
-                    
+
                     $content .= "--\r\n";
-                    
+
                     $request .= "Content-Length: " . strlen($content) . "\r\n";
                     $request .= "Content-Type: multipart/form-data; boundary={$boundary}";
                     $request .= "\r\n";
-                    
+
                     $request .= $content;
                 }
             }
@@ -627,19 +627,19 @@ class Typecho
             {
                 $request .= "\r\n";
             }
-            
+
             $socket = @fsockopen(empty($ip) ? $parsedUrl['host'] : $ip, $port, $errno, $errstr,$timeOut);
             if(!$socket)
             {
                 return false;
             }
-            
+
             //sending it
             fputs( $socket, $request);
             stream_set_timeout($socket, $timeOut);
             stream_set_blocking($socket,0);
             $info = stream_get_meta_data($socket);
-            
+
             $data = "";
 
             //get response
@@ -647,7 +647,7 @@ class Typecho
             {
                 $data .= fgets( $socket, 4096 );
             }
-            
+
             fclose($socket);
             $response = self::getHttpResponse($data);
 
@@ -690,7 +690,7 @@ class Typecho
 
     /**
      * 动态获取网站根目录
-     * 
+     *
      * @access public
      * @return string
      */
