@@ -11,6 +11,9 @@
 /** 定义组件路径 */
 define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
 
+/** 异常基类 */
+require_once 'Exception.php';
+
 /** 载入异常支持 */
 require_once 'Widget/WidgetException.php';
 

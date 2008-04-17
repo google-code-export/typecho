@@ -8,14 +8,8 @@
  * @version    $Id: Db.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/**
- * 定义数据库查询读写状态
- * true表示读状态
- * false表示写状态
- *
- */
-define('__TYPECHO_DB_READ__', true);
-define('__TYPECHO_DB_WRITE__', false);
+/** 异常基类 */
+require_once 'Exception.php';
 
 /** 数据库异常 */
 require_once 'Db/DbException.php';
@@ -44,6 +38,10 @@ require_once 'Db/DbQuery.php';
  */
 class TypechoDb
 {
+	/** 定义数据库操作 */
+	const READ = true;
+	const WRITE = false;
+
     /**
      * 数据库适配器
      * @var TypechoDbAdapter
@@ -134,12 +132,18 @@ class TypechoDb
      * 
      * @param mixed $query 查询语句或者查询对象
      * @param boolean $op 数据库读写状态
+     * @param string $action 操作动作
      * @return mixed
      */
-    public function query($query, $op = __TYPECHO_DB_READ__)
+    public function query($query, $op = TypechoDb::READ, $action = NULL)
     {
         //在适配器中执行查询
-        $action = ($query instanceof TypechoDbQuery) ? $query->getAttribute('action') : NULL;
+		if($query instanceof TypechoDbQuery)
+		{
+			$action = $query->getAttribute('action');
+			$op = ('UPDATE' == $action || 'DELETE' == $action || 'INSERT' == $action) ? TypechoDb::WRITE : TypechoDb::READ;
+		}
+		
         $resource = $this->_adapter->query($query, $op, $action);
         
         if($action)
@@ -174,7 +178,7 @@ class TypechoDb
     public function fetchAll($query, array $filter = NULL)
     {
         //执行查询
-        $resource = $this->query($query, __TYPECHO_DB_READ__);
+        $resource = $this->query($query, TypechoDb::READ);
         $result = array();
         list($object, $method) = $filter;
         
@@ -197,7 +201,7 @@ class TypechoDb
      */
     public function fetchRow($query, array $filter = NULL)
     {
-        $resource = $this->query($query, DB_READ);
+        $resource = $this->query($query, TypechoDb::READ);
         list($object, $method) = $filter;
         
         return ($rows = $this->_adapter->fetch($resource)) ?

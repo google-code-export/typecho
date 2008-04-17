@@ -8,6 +8,9 @@
  * @version    $Id$
  */
 
+/** 异常基类 */
+require_once 'Exception.php';
+
 /** 载入异常支持 */
 require_once 'Plugin/PluginException.php';
 

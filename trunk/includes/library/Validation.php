@@ -18,6 +18,9 @@
  * @version    $Id: Validation.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
+/** 异常基类 */
+require_once 'Exception.php';
+
 /** 验证异常支持 */
 require_once 'Validation/ValidationException.php';
 
