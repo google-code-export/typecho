@@ -2,15 +2,10 @@
 /**
  * Typecho Blog Platform * * @author     qining * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org) * @license    GNU General Public License 2.0 * @version    $Id: Db.php 107 2008-04-11 07:14:43Z magike.net $ */
 /** 异常基类 */
-require_once 'Exception.php';
+require_once 'Exception.php';/** 配置管理 */require_once 'Config.php';
 
 /** 数据库异常 */
 require_once 'Db/DbException.php';
-
-/** 定义数据库适配器 */
-if(!defined('__TYPECHO_DB_ADAPTER__'))
-{
-    throw new TypechoDbException(_t('未定义数据库驱动'), 500);}
 
 /** 数据库适配器接口 */
 require_once 'Db/DbAdapter.php';
@@ -28,10 +23,9 @@ require_once 'Db/DbQuery.php';
     /**     * 数据库适配器     * @var TypechoDbAdapter     */    private $_adapter;    
     /**     * sql词法构建器     * @var TypechoDbQuery     */    private $_query;    
     /**     * 实例化的数据库对象     * @var TypechoDb     */    private static $_instance;    
-    /**     * 数据库类构造函数     *      * @param string $adapter 数据库适配器名称     * @return void     * @throws TypechoDbException     */    public function __construct($adapter = __TYPECHO_DB_ADAPTER__)    {        $adapter = 'Typecho' . __TYPECHO_DB_ADAPTER__;        
-        //检测常量是否已经被定义        if(!defined($const = '__TYPECHO_DB_HOST__') ||         !defined($const = '__TYPECHO_DB_PORT__') ||         !defined($const = '__TYPECHO_DB_NAME__') ||         !defined($const = '__TYPECHO_DB_USER__') ||         !defined($const = '__TYPECHO_DB_PASS__') ||        !defined($const = '__TYPECHO_DB_CHAR__'))        {            throw new TypechoDbException(_t('未定义的数据常量 %s', $const), 500);        }        
+    /**     * 数据库类构造函数     *      * @return void     * @throws TypechoDbException     */    public function __construct()    {        $adapter = 'Typecho' . TypechoConfig::get('Db')->adapter;        
         //实例化适配器对象        $this->_adapter = new $adapter();        
-        //连接数据库        $this->_adapter->connect(__TYPECHO_DB_HOST__,                                  __TYPECHO_DB_PORT__,                                  __TYPECHO_DB_NAME__,                                  __TYPECHO_DB_USER__,                                  __TYPECHO_DB_PASS__,                                  __TYPECHO_DB_CHAR__);    }    
+        //连接数据库        $this->_adapter->connect(TypechoConfig::get('Db'));    }    
     /**     * 获取SQL词法构建器实例化对象     *      * @return TypechoDbQuery     */    public function sql()    {        if(empty($this->_query))        {            $this->_query = new TypechoDbQuery($this->_adapter);        }     
         $this->_query->init();        return $this->_query;    }    
     /**     * 获取数据库实例化对象     * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次     *      * @return TypechoDb     */    public static function get()    {        if(empty(self::$_instance))        {            //实例化数据库对象            self::$_instance = new TypechoDb();        }        

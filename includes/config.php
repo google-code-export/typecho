@@ -51,7 +51,7 @@ session_start();
 //关闭魔术引号功能
 if(get_magic_quotes_gpc())
 {
-    $_GET = typechoStripslashesDeep($_GET);    $_POST = typechoStripslashesDeep($_POST);    $_COOKIE = typechoStripslashesDeep($_COOKIE);
+    $_GET = Typecho::stripslashesDeep($_GET);    $_POST = Typecho::stripslashesDeep($_POST);    $_COOKIE = Typecho::stripslashesDeep($_COOKIE);
     reset($_GET);    reset($_POST);    reset($_COOKIE);}
 
 //开始监视输出区

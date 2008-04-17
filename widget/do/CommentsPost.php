@@ -10,7 +10,7 @@ require_once 'Post.php';
 /**
  * 评论提交 *  * @package Widget * @todo 增加邮件和个人主页格式判断 */class CommentsPost extends Post
 {    
-    /**     * 插入评论     *      * @access public     * @param integer $cid     * @return void     */    public function insertComment($cid)    {        $comment = array();        $comment['cid'] = $cid;        $comment['created'] = widget('Options')->gmtTime;        $comment['agent'] = $_SERVER["HTTP_USER_AGENT"];        $comment['ip'] = typechoGetClientIp();        $comment['type'] = 'comment';        
+    /**     * 插入评论     *      * @access public     * @param integer $cid     * @return void     */    public function insertComment($cid)    {        $comment = array();        $comment['cid'] = $cid;        $comment['created'] = widget('Options')->gmtTime;        $comment['agent'] = $_SERVER["HTTP_USER_AGENT"];        $comment['ip'] = Typecho::getClientIp();        $comment['type'] = 'comment';        
         //判断父节点        if($parentId = TypechoRequest::getParameter('parent'))        {            $parentId = intval($parentId);            if($parent = $this->db->fetchRow($this->db->sql()->select('table.comments', '`coid`')            ->where('`coid` = ?', $parentId)))            {                if($cid == $parent['cid'])                {                    $comment['parent'] = $parentId;                }            }
             throw new TypechoWidgetException(_t('父级评论不存在'));        }        
         //检验格式        $validator = new TypechoValidation();        $validator->addRule('author', 'required', _t('必须填写用户名'));        
