@@ -73,8 +73,9 @@ function tabsize($dir = ROOT_DIR)
     {
         foreach($files as $file)
         {
-            if($lines = file($dir . '/' . $file))
+            if($contents = file_get_contents($dir . '/' . $file))
             {
+                $lines = preg_split("(\r\n|\r|\n)", $contents);
                 $result = array();
                 foreach($lines as $line)
                 {
@@ -84,11 +85,10 @@ function tabsize($dir = ROOT_DIR)
                         $line = str_replace("\t", '    ', $out[1]) . $out[2];
                     }
                     
-                    preg_match("/^(.*)(\s+)$/", $line, $out);
-                    $result[] = $line;
+                    $result[] = rtrim($line) . "\r\n";
                 }
                 
-                file_put_contents($dir . '/' . $file, implode('', $result));
+                file_put_contents($dir . '/' . $file, substr(implode('', $result), 0, -2));
             }
         }
     }
