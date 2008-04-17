@@ -36,7 +36,7 @@ interface TypechoDbAdapter
      * @param boolean $op 数据库读写状态
      * @return resource
      */
-    public function query($query, $op = __TYPECHO_DB_READ__, $action = NULL);
+    public function query($query, $op = TypechoDb::READ, $action = NULL);
     
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值

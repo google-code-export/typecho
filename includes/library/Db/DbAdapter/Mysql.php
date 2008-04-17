@@ -53,7 +53,7 @@ class TypechoMysql implements TypechoDbAdapter
      * @throws TypechoDbException
      * @return resource
      */
-    public function query($query, $op = __TYPECHO_DB_READ__, $action = NULL)
+    public function query($query, $op = TypechoDb::READ, $action = NULL)
     {
         if($resource = @mysql_query((string) $query))
         {

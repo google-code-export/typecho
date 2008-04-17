@@ -7,7 +7,10 @@
  * @license    GNU General Public License 2.0
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
- 
+
+/** 异常基类 */
+require_once 'Exception.php';
+
 /** 载入路由异常支持 */
 require_once 'Route/RouteException.php';
 
