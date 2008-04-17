@@ -65,7 +65,7 @@ class TypechoDbQuery
     private function filterPrefix($string)
     {
         return substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i",
-        "\\1" . __TYPECHO_DB_PREFIX__ . "\\2", ' ' . $string), 1);
+        "\\1" . TypechoConfig::get('Db')->prefix . "\\2", ' ' . $string), 1);
     }
 
     /**

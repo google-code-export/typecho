@@ -20,9 +20,6 @@ require_once 'Db/DbException.php';
 /** 数据库适配器接口 */
 require_once 'Db/DbAdapter.php';
 
-/** 数据库适配器 */
-require_once 'Db/DbAdapter/' . __TYPECHO_DB_ADAPTER__ . '.php';
-
 /** sql构建器 */
 require_once 'Db/DbQuery.php';
 
@@ -65,6 +62,8 @@ class TypechoDb
      */
     public function __construct()
     {
+        /** 数据库适配器 */
+        require_once 'Db/DbAdapter/' . TypechoConfig::get('Db')->adapter . '.php';
         $adapter = 'Typecho' . TypechoConfig::get('Db')->adapter;
 
         //实例化适配器对象

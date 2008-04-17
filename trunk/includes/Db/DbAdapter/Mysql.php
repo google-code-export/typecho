@@ -30,7 +30,7 @@ class TypechoMysql implements TypechoDbAdapter
             {
                 if($config->charset)
                 {
-                    $this->query("SET NAMES '{$charset}'");
+                    $this->query("SET NAMES '{$config->charset}'");
                 }
                 return $dbLink;
             }

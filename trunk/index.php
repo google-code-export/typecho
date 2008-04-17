@@ -9,10 +9,10 @@
  */
 
 /** 载入配置支持 */
-require 'config.php';
+require_once 'config.php';
 
-/** 载入项目配置文件 */
-require 'includes/config.php';
+/** 系统启动 */
+Typecho::start();
 
 /** 载入插件 */
 TypechoPlugin::init(widget('Options')->plugins('index'));
