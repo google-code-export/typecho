@@ -132,22 +132,22 @@ class TypechoRoute
      */
     public static function parse($name, array $value = NULL, $prefix = NULL)
     {
-        $route = TypechoConfig::get('Route');
+        $route = TypechoConfig::get('Route')->$name;
 
         if($value)
         {
             //交换数组键值
             $pattern = array();
-            foreach($route->$name[2] as $row)
+            foreach($route[2] as $row)
             {
                 $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
             }
 
-            return $prefix . vsprintf($route->$name[3], $pattern);
+            return $prefix . vsprintf($route[3], $pattern);
         }
         else
         {
-            return $prefix . $route->$name[3];
+            return $prefix . $route[3];
         }
     }
 }

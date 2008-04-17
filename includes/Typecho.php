@@ -22,6 +22,48 @@
 class Typecho
 {
     /**
+     * 系统启动函数
+     * 
+     * @access public
+     * @return void
+     */
+    public static function start()
+    {
+        //初始化会话
+        session_start();
+
+        //关闭魔术引号功能
+        if(get_magic_quotes_gpc())
+        {
+            $_GET = self::stripslashesDeep($_GET);
+            $_POST = self::stripslashesDeep($_POST);
+            $_COOKIE = self::stripslashesDeep($_COOKIE);
+
+            reset($_GET);
+            reset($_POST);
+            reset($_COOKIE);
+        }
+
+        //开始监视输出区
+        if(__TYPECHO_GZIP_ENABLE__
+           && empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+           && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
+        {
+            ob_start("ob_gzhandler");
+        }
+        else
+        {
+            ob_start();
+        }
+
+        //设置默认时区
+        if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
+        {
+            @date_default_timezone_set('UTC');
+        }
+    }
+
+    /**
      * 递归去掉数组反斜线
      *
      * @access public
@@ -30,7 +72,7 @@ class Typecho
      */
     public static function stripslashesDeep($value)
     {
-        return is_array($value) ? array_map('typechoStripslashesDeep', $value) : stripslashes($value);
+        return is_array($value) ? array_map(array('Typecho', 'stripslashesDeep'), $value) : stripslashes($value);
     }
 
     /**

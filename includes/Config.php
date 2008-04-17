@@ -109,6 +109,17 @@ class TypechoConfig implements Iterator
     {
         next($this->_currentConfig);
     }
+    
+    /**
+     * 获取当前指针
+     * 
+     * @access public
+     * @return void
+     */
+    public function key()
+    {
+        key($this->_currentConfig);
+    }
 
     /**
      * 验证当前值是否到达最后
@@ -130,7 +141,7 @@ class TypechoConfig implements Iterator
      */
     public function __get($name)
     {
-        return $this->__currentConfig[$name];
+        return $this->_currentConfig[$name];
     }
 
     /**
@@ -143,7 +154,7 @@ class TypechoConfig implements Iterator
      */
     public function __set($name, $value)
     {
-        $this->__currentConfig[$name] = $value;
+        $this->_currentConfig[$name] = $value;
     }
 
     /**
@@ -155,6 +166,6 @@ class TypechoConfig implements Iterator
      */
     public function __isset($name)
     {
-        return isset($this->__currentConfig[$name]);
+        return isset($this->_currentConfig[$name]);
     }
 }
