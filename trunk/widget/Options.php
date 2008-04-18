@@ -76,7 +76,5 @@ class Options extends TypechoWidget
         $this->_row['xmlrpcURL'] = $this->_row['index'] . '/XMLPRC.do';
         $this->_row['rssURL'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
         $this->_row['adminURL'] = $this->_row['siteURL'] . '/admin/index.php';
-
-        header('content-Type: text/html;charset= ' . $this->_row['charset']);
     }
 }
