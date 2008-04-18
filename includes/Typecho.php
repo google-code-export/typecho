@@ -25,9 +25,10 @@ class Typecho
      * 系统启动函数
      * 
      * @access public
+     * @param 字符集
      * @return void
      */
-    public static function start()
+    public static function start($charset = 'UTF-8')
     {
         //初始化会话
         session_start();
@@ -61,6 +62,9 @@ class Typecho
         {
             @date_default_timezone_set('UTC');
         }
+        
+        //设置文件头
+        header('content-Type: text/html;charset= ' . $charset);
     }
 
     /**
@@ -81,7 +85,7 @@ class Typecho
      * <code>
      * <?php
      * $fruit = array(array('apple' => 2, 'banana' => 3), array('apple' => 10, 'banana' => 12));
-     * $banana = typechoArrayFlatten($fruit, 'banana');
+     * $banana = Typecho::arrayFlatten($fruit, 'banana');
      * print_r($banana);
      * //outputs: array(0 => 3, 1 => 12);
      * ?>
