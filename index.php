@@ -12,10 +12,10 @@
 require_once 'config.php';
 
 /** 系统启动 */
-Typecho::start(widget('Options')->charset);
+Typecho::start(__TYPECHO_CHARSET__);
 
 /** 载入插件 */
 TypechoPlugin::init(widget('Options')->plugins('index'));
 
 /** 载入页面 */
-TypechoRoute::target('./var/template/' . widget('Options')->template);
+TypechoRoute::target(widget('Options')->templateDirectory . '/' . widget('Options')->template);

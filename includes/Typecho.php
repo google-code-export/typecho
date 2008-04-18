@@ -56,7 +56,7 @@ class Typecho
         {
             ob_start();
         }
-
+        
         //设置默认时区
         if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
         {
@@ -743,5 +743,22 @@ class Typecho
     public static function getSiteRoot()
     {
         return substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')) . '/';
+    }
+    
+    /**
+     * 将路径转化为链接
+     * 
+     * @access public
+     * @param string $path 路径
+     * @param string $prefix 前缀
+     * @return string
+     */
+    public static function pathToUrl($path, $prefix)
+    {
+        $prefixLength = strLen($prefix);
+        $prefix = ($prefixLength == strrpos($prefix, '/')) ? $prefix : $prefix . '/';
+        $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
+        $path = (0 === strpos($path, '/')) ? substr($path, 1) : $path;
+        return $prefix . str_replace('//', '/', $path);
     }
 }

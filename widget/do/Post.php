@@ -86,25 +86,4 @@ class Post extends TypechoWidget
         NULL,
         $_SERVER['SERVER_ADDR']);
     }
-
-    /**
-     * 获取递增字段值
-     *
-     * @access protected
-     * @param unknown $table
-     * @return unknown
-     */
-    protected function getAutoIncrement($table)
-    {
-        $table = __TYPECHO_DB_PREFIX__ . $table;
-        $row = $this->fetchRow("SHOW TABLE STATUS LIKE '{$table}'");
-        if($row)
-        {
-            return empty($row['Auto_increment']) ? 1 : $row['Auto_increment'];
-        }
-        else
-        {
-            return 1;
-        }
-    }
 }

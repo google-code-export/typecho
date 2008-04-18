@@ -94,7 +94,7 @@ class TypechoPDOMysql implements TypechoDbAdapter
      * @param string $string 需要转义的字符串
      * @return string
      */
-    public function quotes($string)
+    public function quoteValue($string)
     {
         return $this->_object->quote($string);
     }
@@ -136,6 +136,19 @@ class TypechoPDOMysql implements TypechoDbAdapter
     public function affectedRows($resource)
     {
         return $resource->rowCount();
+    }
+    
+    /**
+     * 获取数据库版本
+     * 
+     * @access public
+     * @return unknown
+     */
+    public function version()
+    {
+        $resource = $this->query('SELECT VERSION() AS version');
+        $rows = $this->fetch($resource);
+        return 'Mysql ' . $rows['version'];
     }
 
     /**

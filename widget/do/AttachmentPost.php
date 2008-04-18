@@ -70,7 +70,7 @@ class AttachmentPost extends Post
     {
         $date = empty($date) ? widget('Options')->gmtTime : $date;
 
-        return widget('Options')->attachmentDirectory . '/'
+        return __TYPECHO_ROOT_DIR__ . '/' . widget('Options')->attachmentDirectory . '/'
         . date('Y', $date) . '/'
         . date('n', $date) . '/'
         . date('j', $date);

@@ -47,7 +47,7 @@ interface TypechoDbAdapter
      * @param string $string 需要转义的字符串
      * @return string
      */
-    public function quotes($string);
+    public function quoteValue($string);
 
     /**
      * 对象引号过滤
@@ -74,6 +74,14 @@ interface TypechoDbAdapter
      * @return integer
      */
     public function affectedRows($resource);
+    
+    /**
+     * 获取数据库版本
+     * 
+     * @access public
+     * @return string
+     */
+    public function version();
 
     /**
      * 取出最后一次插入返回的主键值
