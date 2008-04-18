@@ -169,7 +169,7 @@ class TypechoDbQuery
         {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
         }
 
         return $this;
@@ -196,7 +196,7 @@ class TypechoDbQuery
         {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quotes'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
         }
 
         return $this;
@@ -251,7 +251,7 @@ class TypechoDbQuery
     {
         foreach($rows as $key => $row)
         {
-            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->_adapter->quotes($row);
+            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->_adapter->quoteValue($row);
         }
         return $this;
     }

@@ -37,7 +37,6 @@ class Options extends TypechoWidget
     {
         //将行数据按顺序置位
         $this->_row[$value['name']] = $value['value'];
-        $this->_stack[] = $value;
         return $value;
     }
 
@@ -68,13 +67,16 @@ class Options extends TypechoWidget
         $db->fetchAll($db->sql()
         ->select('table.options')
         ->where('`user` = 0'), array($this, 'push'));
+        $this->_stack[] = $this->_row;
 
-        $this->_row['siteURL'] = $this->getSiteUrl();
-        $this->_row['index'] = $this->_row['rewrite'] ? $this->_row['siteURL'] : $this->_row['siteURL'] . '/index.php';
-        $this->_row['templateURL'] = $this->_row['siteURL'] . '/var/template/' . $this->_row['template'];
-        $this->_row['gmtTime'] = time() - intval(date('Z'));
-        $this->_row['xmlrpcURL'] = $this->_row['index'] . '/XMLPRC.do';
-        $this->_row['rssURL'] = TypechoRoute::parse('rss', NULL, $this->_rows['index']);
-        $this->_row['adminURL'] = $this->_row['siteURL'] . '/admin/index.php';
+        $this->charset = __TYPECHO_CHARSET__;
+        $this->siteURL = $this->getSiteUrl();
+        $this->index = $this->rewrite ? $this->siteURL : $this->siteURL . '/index.php';
+        $this->templateURL = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteURL);
+        $this->templateURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
+        $this->gmtTime = time() - intval(date('Z'));
+        $this->xmlrpcURL = $this->index . '/XMLPRC.do';
+        $this->rssURL = TypechoRoute::parse('rss', NULL, $this->index);
+        $this->adminURL = $this->siteURL . '/admin/index.php';
     }
 }

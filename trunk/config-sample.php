@@ -14,6 +14,9 @@ define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 /** 定义库目录 */
 define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes');
 
+/** 定义组件路径 */
+define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
+
 /** 定义后台目录 */
 define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 
@@ -28,6 +31,9 @@ define('__TYPECHO_DEBUG__', true);
 
 /** 定义mo文件 **/
 define('__TYPECHO_I18N_LANGUAGE__', false);
+
+/** 定义网页输出编码 **/
+define('__TYPECHO_CHARSET__', 'UTF-8');
 
 /** 定义gzip支持 **/
 define('__TYPECHO_GZIP_ENABLE__', false);

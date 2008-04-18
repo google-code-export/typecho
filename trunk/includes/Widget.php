@@ -8,9 +8,6 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 定义组件路径 */
-define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
-
 /** 异常基类 */
 require_once 'Exception.php';
 
@@ -169,17 +166,15 @@ abstract class TypechoWidget
         next($this->_stack);
         return $this->_row;
     }
-
+    
     /**
-     * 设定堆栈每一行的值
+     * 重置堆栈
      *
-     * @param string $name 值对应的键值
-     * @param mixed $value 相应的值
-     * @return array
+     * @return void
      */
-    public function set($name, $value)
+    public function reset()
     {
-        $this->_row[$name] = $value;
+        reset($this->_stack);
     }
 
     /**
@@ -213,6 +208,18 @@ abstract class TypechoWidget
     public function __get($name)
     {
         return isset($this->_row[$name]) ? $this->_row[$name] : NULL;
+    }
+    
+    /**
+     * 设定堆栈每一行的值
+     *
+     * @param string $name 值对应的键值
+     * @param mixed $value 相应的值
+     * @return array
+     */
+    public function __set($name, $value)
+    {
+        $this->_row[$name] = $value;
     }
 
     /**
