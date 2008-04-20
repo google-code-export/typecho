@@ -1,13 +1,19 @@
-<?php include( 'header.php' ); ?>
-
+<?php
+require_once 'common.php';
+require_once 'header.php';
+widget('Menu')->setCurrentParent('/admin/index.php');
+widget('Menu')->setCurrentChild('/admin/index.php');
+require_once 'menu.php';
+?>
 	<div id="main">
-		<h2>Welcome to Typecho</h2>
+		<h2><?php _e('欢迎回到Typecho'); ?></h2>
 		<div id="content">
-			<a class="botton right" href="#">Write a New Post</a><a class="botton right" href="#">Write a New Page</a><h3>Most Recent Weblog Entries</h3>
+			<a class="botton right" href="#"><?php _e('撰写一篇新文章'); ?></a><a class="botton right" href="#"><?php _e('创建一个新页面'); ?></a>
+            <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="20%">author</th>
-					<th width="80%">entries</th>
+					<th width="20%"><?php _e('信息'); ?></th>
+					<th width="80%"><?php _e('内容'); ?></th>
 				</tr>
 				<tr>
 					<td><strong>Author_1</strong><br />2008-03-26 16:00</td>
@@ -20,11 +26,12 @@
 			</table>
 			<hr class="space" style="height: 2em;" />
 
-			<a class="botton right" href="#">2 comments awaiting moderation</a><h3>Most Recent Comments/TB</h3>
+			<a class="botton right" href="#">2 comments awaiting moderation</a>
+            <h3><?php _e('最新评论/引用'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="20%">author</th>
-					<th width="80%">comments</th>
+					<th width="20%"><?php _e('作者'); ?></th>
+					<th width="80%"><?php _e('评论'); ?></th>
 				</tr>
 				<tr>
 					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
@@ -45,22 +52,21 @@
 				<p>You have <a href="#">6 posts</a>, <a href="#">1 page</a>, contained within <a href="#">4 categories</a> and <a href="#">14 tags</a>.</p>
 			</div><!-- end #userInfo -->
 
-			<h3>Quick start</h3>
+			<h3><?php _e('快速链接'); ?></h3>
 			<ul id="quick-links">
-				<li><a href="#">Update your profile</a></li>
-				<li><a href="#">Add a link to your blogroll</a></li>
-				<li><a href="#">Change your site's look or theme</a></li>
-				<li><a href="#">Setting Preferences</a></li>
+				<li><a href="#"><?php _e('更改我的资料'); ?></a></li>
+				<li><a href="#"><?php _e('增加一个链接'); ?></a></li>
+				<li><a href="#"><?php _e('更换站点外观'); ?></a></li>
+				<li><a href="#"><?php _e('站点设置'); ?></a></li>
 			</ul>
 			
-			<h3>Toolbox</h3>
+			<h3><?php _e('工具箱'); ?></h3>
 			<ul id="toolbox">
-				<li><a href="#">Clear Cache</a></li>
-				<li><a href="#">Optimize Database</a></li>
-				<li><a href="#">Check for Update</a></li>
+				<li><a href="#"><?php _e('优化数据库'); ?></a></li>
+				<li><a href="#"><?php _e('检查更新'); ?></a></li>
 			</ul>
 		</div><!-- end #sidebar -->
 		<div class="clear"></div>
 	</div><!-- end #main -->
 	
-<?php include( 'footer.php' ); ?>
+<?php require_once 'footer.php'; ?>

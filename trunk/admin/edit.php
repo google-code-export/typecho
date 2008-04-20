@@ -1,6 +1,12 @@
-<?php include( 'header.php' ); ?>
+<?php 
+require_once 'common.php';
+require_once 'header.php';
+widget('Menu')->setCurrentParent('/admin/edit.php');
+widget('Menu')->setCurrentChild('/admin/edit.php');
+require_once 'menu.php';
+?>
 
-	<div id="main">
+	<div id="main" class="clearfix">
 	<form method="post" action="*.php" id="test" name="test">
 
 		<h2>Write New Post</h2>
@@ -61,5 +67,5 @@
 
 	</form>
 	</div><!-- end #main -->
-	
+
 <?php include( 'footer.php' ); ?>
