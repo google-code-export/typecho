@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Access extends TypechoWidget
+class AccessWidget extends TypechoWidget
 {
     /**
      * 用户组

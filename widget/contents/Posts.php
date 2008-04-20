@@ -15,7 +15,7 @@
  *
  * @package Widget
  */
-class Posts extends TypechoWidget
+class PostsWidget extends TypechoWidget
 {
     /**
      * 分页数目

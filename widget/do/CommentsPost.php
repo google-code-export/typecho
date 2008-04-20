@@ -20,7 +20,7 @@ require_once 'Post.php';
  * @package Widget
  * @todo 增加邮件和个人主页格式判断
  */
-class CommentsPost extends Post
+class CommentsPostWidget extends PostWidget
 {
     /**
      * 插入评论

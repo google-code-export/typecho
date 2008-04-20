@@ -16,7 +16,7 @@ require_once 'Post.php';
  *
  * @package Widget
  */
-class AttachmentPost extends Post
+class AttachmentPostWidget extends PostWidget
 {
     /**
      * 创建目录树

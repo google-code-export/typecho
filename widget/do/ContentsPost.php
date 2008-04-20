@@ -16,7 +16,7 @@ require_once 'Post.php';
  *
  * @package Widget
  */
-class ContentsPost extends Post
+class ContentsPostWidget extends PostWidget
 {
     protected function setTags($cid, $tags, $oldTags = NULL)
     {

@@ -19,7 +19,7 @@ require_once __TYPECHO_LIB_DIR__ . '/Net/IXR.php';
  *
  * @package Widget
  */
-class XMLRPC extends ContentsPost
+class XmpRpcWidget extends ContentsPostWidget
 {
     private function checkAccess($userName, $password, $group = NULL)
     {

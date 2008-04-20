@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Menu extends TypechoWidget
+class MenuWidget extends TypechoWidget
 {
     public function render()
     {

@@ -1,0 +1,121 @@
+* {
+margin: 0;
+padding: 0;
+}
+
+body {
+color: #333;
+background: #fff url(../images/bg.png) repeat-x;
+font-family: "Lucida Grande", Tahoma, Arial, sans-serif;
+font-size: 75%;
+line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+/*font-family: Georgia,"Times New Roman",Times,serif;*/
+font-weight: normal;
+}
+
+h1 {
+font-size: 3em;
+position: relative;
+top: 20px;
+}
+
+h1 a {
+background: url(../images/logo.png);text-indent: -9999px;
+display: block;
+width: 140px;
+height: 40px;
+overflow: hidden;
+}
+
+h2 {
+font-size: 1.7em;
+margin-bottom: 1em;
+}
+
+h3 {
+color: #E37400;
+font-size: 1.2em;
+margin-bottom: 1em;
+font-weight: bold;
+text-transform: capitalize;
+}
+
+h4 {
+background: #E6EEF7;
+font-size: 1.2em;
+font-weight: bold;
+line-height: 1.25;
+margin-bottom: 1.25em;
+padding: .2em .5em;
+}
+
+h5 {
+font-size: 1em;
+font-weight: 700;
+margin-bottom: .5em;
+}
+
+h6 {
+font-size: 1em;
+font-weight: 700;
+}
+
+p {
+font-size: 1.1em;
+margin: 0 0 1.5em;
+}
+
+em {
+font-style: italic;
+background: #efefe9;
+}
+
+strong {
+font-weight: 700;
+}
+
+code, .code {
+font-family: "Courier New", Courier, Monospace;
+font-size: 1.1em;
+}
+
+img {
+border: none;
+}
+
+a {
+color: #036;
+text-decoration: none;
+outline: none;
+}
+
+a:active, a:hover {
+color: #09c;
+text-decoration: underline;
+}
+
+ul, ol {
+}
+
+ul li, ol li {
+margin-bottom: .5em;
+}
+
+ul {
+list-style-type: circle;
+}
+
+ol {
+list-style-type: decimal;
+}
+
+table {
+border-collapse: collapse;
+}
+
+label {
+cursor: pointer;
+}

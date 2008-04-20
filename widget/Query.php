@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Query extends TypechoWidget
+class QueryWidget extends TypechoWidget
 {
     /**
      * 入口函数,执行查询
