@@ -226,4 +226,3 @@ class TypechoGetText
         return true;
     }
 }
-?>

@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Options extends TypechoWidget
+class OptionsWidget extends TypechoWidget
 {
     /**
      * 动态获取网站地址
@@ -73,9 +73,9 @@ class Options extends TypechoWidget
         $this->siteURL = $this->getSiteUrl();
         $this->index = $this->rewrite ? $this->siteURL : $this->siteURL . '/index.php';
         $this->templateURL = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteURL);
-        $this->templateURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
+        $this->attachmentURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
         $this->gmtTime = time() - intval(date('Z'));
-        $this->xmlrpcURL = $this->index . '/XMLPRC.do';
+        $this->xmlrpcURL = $this->index . '/XmlRpc.do';
         $this->rssURL = TypechoRoute::parse('rss', NULL, $this->index);
         $this->adminURL = $this->siteURL . '/admin/index.php';
     }

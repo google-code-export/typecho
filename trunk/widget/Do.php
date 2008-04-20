@@ -5,7 +5,7 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: DoWidget.php 122 2008-04-17 10:04:27Z magike.net $
  */
 
 /**

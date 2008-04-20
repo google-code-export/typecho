@@ -19,7 +19,7 @@ require_once 'Posts.php';
  *
  * @package Widget
  */
-class FeedPosts extends Posts
+class FeedPostsWidget extends PostsWidget
 {
     /**
      * 重载父类入口函数

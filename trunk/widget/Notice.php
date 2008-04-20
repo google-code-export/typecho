@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Notice extends TypechoWidget
+class NoticeWidget extends TypechoWidget
 {
     /**
      * 列表显示所有提示内容

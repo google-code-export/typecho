@@ -60,7 +60,7 @@ require_once 'includes/Route.php';
 require_once 'includes/Request.php';
 
 /** 载入插件支持 */
-require 'includes/Plugin.php';
+require_once 'includes/Plugin.php';
 
 /** 定义数据库参数 */
 TypechoConfig::set('Db', array(
@@ -80,8 +80,8 @@ TypechoConfig::set('Route', array(
     'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s', array('contents.Posts')),
     'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s', array('contents.Post')),
     'rss'           =>  array('/feed[/]?', '../../xml/rss.php', NULL, '/rss', NULL),
-    'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('DoWidget'), array('do'), '/%s.do'),
-    'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('JobWidget'), array('job'), '/%s.job'),
+    'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),
+    'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('Job'), array('job'), '/%s.job'),
     'login'         =>  array('/login[/]?', 'admin/login.php'),
     'admin'         =>  array('/admin[/]?', 'admin/index.php'),
     'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s', array('contents.Post')),

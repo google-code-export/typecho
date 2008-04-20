@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class Post extends TypechoWidget
+class PostWidget extends TypechoWidget
 {
     /**
      * 数据库对象

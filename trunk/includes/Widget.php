@@ -41,7 +41,7 @@ function widget($widget)
     if(empty($_widgets[$widget]))
     {
         $widget_rows = explode('.', $widget);
-        $className = array_pop($widget_rows);
+        $className = array_pop($widget_rows) . 'Widget';
 
         if(!class_exists($className))
         {
