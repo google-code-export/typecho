@@ -187,4 +187,15 @@ class TypechoDb
         ($filter ? call_user_func(array(&$object, $method), $rows) : $rows) :
         array();
     }
+    
+    /**
+     * 获取数据库版本
+     * 
+     * @access public
+     * @return string
+     */
+    public function version()
+    {
+        return $this->_adapter->version();
+    }
 }

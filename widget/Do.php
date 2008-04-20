@@ -23,6 +23,6 @@ class DoWidget extends TypechoWidget
      */
     public function render()
     {
-        widget('do.' . TypechoRoute::getParameter('do'));
+        widget('do.' . str_replace('.', '', TypechoRoute::getParameter('do')));
     }
 }

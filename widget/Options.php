@@ -16,17 +16,6 @@
 class OptionsWidget extends TypechoWidget
 {
     /**
-     * 动态获取网站地址
-     *
-     * @access private
-     * @return string
-     */
-    private function getSiteUrl()
-    {
-        return 'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
-    }
-
-    /**
      * 重载父类push函数,将所有变量值压入堆栈
      *
      * @access public
@@ -70,13 +59,12 @@ class OptionsWidget extends TypechoWidget
         $this->_stack[] = $this->_row;
 
         $this->charset = __TYPECHO_CHARSET__;
-        $this->siteURL = $this->getSiteUrl();
         $this->index = $this->rewrite ? $this->siteURL : $this->siteURL . '/index.php';
         $this->templateURL = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteURL);
         $this->attachmentURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
         $this->gmtTime = time() - intval(date('Z'));
         $this->xmlrpcURL = $this->index . '/XmlRpc.do';
         $this->rssURL = TypechoRoute::parse('rss', NULL, $this->index);
-        $this->adminURL = $this->siteURL . '/admin/index.php';
+        $this->adminURL = $this->siteURL . '/admin/';
     }
 }

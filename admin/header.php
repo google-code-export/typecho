@@ -4,7 +4,7 @@
 	<title>Typecho: Dashboard</title>
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php widget('Options')->charset(); ?>" />
 	<link href="css/default.css" rel="stylesheet" type="text/css" />
 	<link href="css/style.css" rel="stylesheet" type="text/css" />
 	<link href="css/hack.css" rel="stylesheet" type="text/css" />
@@ -14,26 +14,3 @@
  </head>
 
 <body>
-<div class="container">
-	<div id="header">
-			<div id="nav-bar" class="right">Hello, <a href="#">admin</a> | <a title="Log Out" href="#">Log Out</a> | <a href="#">Support</a> | <a href="#">Bug Report</a></div>
-			<h1><a href="#">Typecho: Dashboard</a></h1>
-			<div id="nav-menu">
-				<a class="current" href="#"><span>Dashboard</span></a>
-				<a href="#"><span>Create</span></a>
-				<a href="#"><span>Management</span></a>
-				<a href="#"><span>Preferences</span></a>
-				<a href="#" style="float: right;"><span>Visit Site</span></a>
-				<div class="clear"></div>
-				<ul class="level-2">
-					<li><a class="current-2" href="#">General</a></li>
-					<li><a href="#">Writing</a></li>
-					<li><a href="#">Reading</a></li>
-					<li><a href="#">Disscuss</a></li>
-					<li><a href="#">Permalink</a></li>
-					<li><a href="#">Plugin</a></li>
-					<li><a href="#">Presentation</a></li>
-					<li><a href="#">User</a></li>
-				</ul>
-			</div><!-- end #nav-menu -->
-	</div><!-- end #header -->
