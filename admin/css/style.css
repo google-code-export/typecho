@@ -96,14 +96,15 @@ width: 100%;
 #content {
 margin-right: 270px;
 padding-right: 30px;
+width:auto;
+overflow:hidden;
 }
 
 #sidebar {
 background: #fff;
 width: 270px;
-position: absolute;
-top: 0px;
-right: 0px; 
+float:right;
+margin-left:-270px;
 }
 
 #page {}
@@ -162,7 +163,7 @@ background-position: 0% 40%;
 text-decoration: none;
 }
 
-table.latest { width: 100%; }
+table.latest { width: 100%; margin-bottom:3em }
 table.latest tr {}
 table.latest tr.alt { background: #F3F6F9; }
 table.latest tr.over { background: #EBEFF5; }
