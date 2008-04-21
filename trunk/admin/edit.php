@@ -8,24 +8,8 @@ require_once 'menu.php';
 
 	<div id="main" class="clearfix">
 	<form method="post" action="*.php" id="test" name="test">
-
-		<h2>Write New Post</h2>
-		<div id="content">
-			<div id="msg" class="notice">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
-			<!-- <div id="msg" class="success">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
-			<div id="msg" class="error">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div> -->
-			<h4>Title</h4>
-			<p><input id="title" type="text" name="" value="" /></p>
-			<h4>Post</h4>
-			<p><textarea id="post_content" name="" rows="15" cols="40"></textarea></p>
-			<p style="text-align: right;"><input type="submit" value="Save" /> <input type="submit" value="Save and Continue Edit" /> <input type="submit" value="Publish" /></p>
-			<h4>Tags</h4>
-			<p><input id="tag" type="text" name="" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
-			<h4>URL Title</h4>
-			<p><input id="url_title" type="text" name="" value="" /></p>
-		</div><!-- end #content -->
-		
-		<div id="sidebar">
+        
+        <div id="sidebar">
 			<h3>Publishing</h3>
 			<div id="publishing">
 				<p><label>Post Status</label>
@@ -63,7 +47,22 @@ require_once 'menu.php';
 			<p><textarea id="" rows="5" cols="" style="width: 225px;"></textarea></p>
 			<p style="margin: -1em 1.5em 1.5em 0;"><small>Separate multiple URLs with spaces</small></p>
 		</div><!-- end #sidebar -->
-		<div class="clear"></div>
+        
+		<div id="content">
+            <h2>Write New Post</h2>
+			<div id="msg" class="notice">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
+			<!-- <div id="msg" class="success">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
+			<div id="msg" class="error">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div> -->
+			<h4>Title</h4>
+			<p><input id="title" type="text" name="" value="" /></p>
+			<h4>Post</h4>
+			<p><textarea id="post_content" name="" rows="15" cols="40"></textarea></p>
+			<p style="text-align: right;"><input type="submit" value="Save" /> <input type="submit" value="Save and Continue Edit" /> <input type="submit" value="Publish" /></p>
+			<h4>Tags</h4>
+			<p><input id="tag" type="text" name="" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
+			<h4>URL Title</h4>
+			<p><input id="url_title" type="text" name="" value="" /></p>
+		</div><!-- end #content -->
 
 	</form>
 	</div><!-- end #main -->

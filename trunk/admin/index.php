@@ -5,46 +5,7 @@ widget('Menu')->setCurrentParent('/admin/index.php');
 widget('Menu')->setCurrentChild('/admin/index.php');
 require_once 'menu.php';
 ?>
-	<div id="main">
-		<h2><?php _e('欢迎回到Typecho'); ?></h2>
-		<div id="content">
-			<a class="botton right" href="#"><?php _e('撰写一篇新文章'); ?></a><a class="botton right" href="#"><?php _e('创建一个新页面'); ?></a>
-            <h3><?php _e('最新发布的文章'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="20%"><?php _e('信息'); ?></th>
-					<th width="80%"><?php _e('内容'); ?></th>
-				</tr>
-				<tr>
-					<td><strong>Author_1</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
-				</tr>
-				<tr>
-					<td><strong>Author_2</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
-				</tr>
-			</table>
-			<hr class="space" style="height: 2em;" />
-
-			<a class="botton right" href="#">2 comments awaiting moderation</a>
-            <h3><?php _e('最新评论/引用'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="20%"><?php _e('作者'); ?></th>
-					<th width="80%"><?php _e('评论'); ?></th>
-				</tr>
-				<tr>
-					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
-				</tr>
-				<tr>
-					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
-				</tr>
-			</table>
-			<hr class="space" style="height: 2em;" />
-		</div><!-- end #content -->
-		
+	<div id="main" class="clearfix">
 		<div id="sidebar">
 			<div id="userInfo">
 				<img src="images/default-userpic.jpg" alt="" class="left" />
@@ -66,7 +27,44 @@ require_once 'menu.php';
 				<li><a href="#"><?php _e('检查更新'); ?></a></li>
 			</ul>
 		</div><!-- end #sidebar -->
-		<div class="clear"></div>
+        
+		<div id="content">
+            <h2><?php _e('欢迎回到Typecho'); ?></h2>
+			<a class="botton right" href="#"><?php _e('撰写一篇新文章'); ?></a><a class="botton right" href="#"><?php _e('创建一个新页面'); ?></a>
+            <h3><?php _e('最新发布的文章'); ?></h3>
+			<table class="latest">
+				<tr>
+					<th width="20%"><?php _e('信息'); ?></th>
+					<th width="80%"><?php _e('内容'); ?></th>
+				</tr>
+				<tr>
+					<td><strong>Author_1</strong><br />2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+				</tr>
+				<tr>
+					<td><strong>Author_2</strong><br />2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+				</tr>
+			</table>
+
+			<a class="botton right" href="#">2 comments awaiting moderation</a>
+            <h3><?php _e('最新评论/引用'); ?></h3>
+			<table class="latest">
+				<tr>
+					<th width="20%"><?php _e('作者'); ?></th>
+					<th width="80%"><?php _e('评论'); ?></th>
+				</tr>
+				<tr>
+					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+				</tr>
+				<tr>
+					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+				</tr>
+			</table>
+
+		</div><!-- end #content -->
 	</div><!-- end #main -->
 	
 <?php require_once 'footer.php'; ?>
