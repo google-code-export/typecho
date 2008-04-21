@@ -755,7 +755,7 @@ class Typecho
      */
     public static function pathToUrl($path, $prefix)
     {
-        $prefixLength = strLen($prefix);
+        $prefixLength = strLen($prefix) - 1;
         $prefix = ($prefixLength == strrpos($prefix, '/')) ? $prefix : $prefix . '/';
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
         $path = (0 === strpos($path, '/')) ? substr($path, 1) : $path;

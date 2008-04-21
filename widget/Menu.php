@@ -134,7 +134,7 @@ class MenuWidget extends TypechoWidget
                                    array(_t('设置'), '/admin/general.php'));
                                    
         $hookName = TypechoPlugin::name(__FILE__, 'parent');
-        TypechoPlugin::callFilter($hookName, &$this->_parentMenu);
+        TypechoPlugin::callFilter($hookName, $this->_parentMenu);
         
         $this->_childMenu =  array(array(
             array(_t('概要'), '/admin/index.php'),
@@ -147,6 +147,6 @@ class MenuWidget extends TypechoWidget
         ));
                                    
         $hookName = TypechoPlugin::name(__FILE__, 'child');
-        TypechoPlugin::callFilter($hookName, &$this->_childMenu);
+        TypechoPlugin::callFilter($hookName, $this->_childMenu);
     }
 }
