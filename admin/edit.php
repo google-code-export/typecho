@@ -66,5 +66,12 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
+<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/nicConfig.js'); ?>"></script>
+<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/bkLib.js'); ?>"></script>
+<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/nicEdit.js'); ?>"></script>
+<script type="text/javascript">
+    new nicEditor({iconsPath : '<?php widget('Options')->adminURL('/js/nicEditor/src/nicEditorIcons.gif'); ?>',
+    buttonList : ['fontSize','bold','italic','underline','strikeThrough','subscript','superscript','html','image']}).panelInstance('post_content');
+</script>
 
 <?php include( 'footer.php' ); ?>

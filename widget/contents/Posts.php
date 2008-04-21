@@ -335,7 +335,7 @@ class PostsWidget extends TypechoWidget
 
         $rows = $this->db->fetchAll($this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`tags`,
-        table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
+        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
         ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', 'LEFT')
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', 'LEFT')
         ->where('table.contents.`type` = ?', 'post')

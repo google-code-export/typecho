@@ -37,14 +37,13 @@ require_once 'menu.php';
 					<th width="20%"><?php _e('信息'); ?></th>
 					<th width="80%"><?php _e('内容'); ?></th>
 				</tr>
+                <?php widget('contents.AuthorsRecentPost', 1)->to($post); ?>
+                <?php while($post->get()): ?>
 				<tr>
-					<td><strong>Author_1</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date('Y-m-d H:i'); ?></td>
+					<td><a href="#"><?php $post->title(); ?></a><br /><?php $post->excerpt(100); ?></td>
 				</tr>
-				<tr>
-					<td><strong>Author_2</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
-				</tr>
+                <?php endwhile; ?>
 			</table>
 
 			<a class="botton right" href="#">2 comments awaiting moderation</a>
