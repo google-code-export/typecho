@@ -143,11 +143,11 @@ class TypechoRoute
                 $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
             }
 
-            return $prefix . vsprintf($route[3], $pattern);
+            return Typecho::pathToUrl(vsprintf($route[3], $pattern), $prefix);
         }
         else
         {
-            return $prefix . $route[3];
+            return Typecho::pathToUrl($route[3], $prefix);
         }
     }
 }

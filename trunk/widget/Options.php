@@ -42,6 +42,54 @@ class OptionsWidget extends TypechoWidget
         return array_merge(empty($plugins[$namespace]) ? array() : $plugins[$namespace],
         empty($plugins['*']) ? array() : $plugins['*']);
     }
+    
+    /**
+     * 输出网站路径
+     * 
+     * @access public
+     * @param string $path 子路径
+     * @return void
+     */
+    public function siteURL($path = NULL)
+    {
+        echo Typecho::pathToUrl($path, $this->siteURL);
+    }
+    
+    /**
+     * 输出解析地址
+     * 
+     * @access public
+     * @param string $path 子路径
+     * @return void
+     */
+    public function index($path = NULL)
+    {
+        echo Typecho::pathToUrl($path, $this->index);
+    }
+    
+    /**
+     * 输出模板路径
+     * 
+     * @access public
+     * @param string $path 子路径
+     * @return void
+     */
+    public function templateURL($path = NULL)
+    {
+        echo Typecho::pathToUrl($path, $this->templateURL);
+    }
+    
+    /**
+     * 输出后台路径
+     * 
+     * @access public
+     * @param string $path 子路径
+     * @return void
+     */
+    public function adminURL($path = NULL)
+    {
+        echo Typecho::pathToUrl($path, $this->adminURL);
+    }
 
     /**
      * 运行入口函数
@@ -59,12 +107,11 @@ class OptionsWidget extends TypechoWidget
         $this->_stack[] = $this->_row;
 
         $this->charset = __TYPECHO_CHARSET__;
-        $this->index = $this->rewrite ? $this->siteURL : $this->siteURL . '/index.php';
+        $this->index = $this->rewrite ? $this->siteURL : Typecho::pathToUrl('/index.php', $this->siteURL);
         $this->templateURL = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteURL);
         $this->attachmentURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
         $this->gmtTime = time() - intval(date('Z'));
-        $this->xmlrpcURL = $this->index . '/XmlRpc.do';
         $this->rssURL = TypechoRoute::parse('rss', NULL, $this->index);
-        $this->adminURL = $this->siteURL . '/admin/';
+        $this->adminURL = Typecho::pathToUrl('/admin/', $this->siteURL);
     }
 }

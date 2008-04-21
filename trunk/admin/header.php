@@ -5,12 +5,12 @@
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php widget('Options')->charset(); ?>" />
-	<link href="css/default.css" rel="stylesheet" type="text/css" />
-	<link href="css/style.css" rel="stylesheet" type="text/css" />
-	<link href="css/hack.css" rel="stylesheet" type="text/css" />
-	<!--[if IE]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen, projection"><![endif]-->
-	<script src="js/jquery-1.2.3.pack.js" type="text/javascript"></script>
-	<script src="js/add.js" type="text/javascript"></script>
+	<link href="<?php widget('Options')->adminURL('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
+	<link href="<?php widget('Options')->adminURL('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
+	<link href="<?php widget('Options')->adminURL('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
+	<!--[if IE]><link rel="stylesheet" href="<?php widget('Options')->adminURL('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
+	<script src="<?php widget('Options')->adminURL('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
+	<script src="<?php widget('Options')->adminURL('/js/add.js'); ?>" type="text/javascript"></script>
  </head>
 
 <body>
