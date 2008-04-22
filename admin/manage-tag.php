@@ -1,4 +1,10 @@
-<?php include( 'header.php' ); ?>
+<?php 
+require_once 'common.php';
+require_once 'header.php';
+widget('Menu')->setCurrentParent('/admin/post-list.php');
+widget('Menu')->setCurrentChild('/admin/manage-tag.php');
+require_once 'menu.php';
+?>
 
 	<div id="main">
 		<h2>Manage Tags</h2>
@@ -44,4 +50,4 @@
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 	
-<?php include( 'footer.php' ); ?>
+<?php require_once 'footer.php'; ?>

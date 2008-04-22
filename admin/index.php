@@ -41,7 +41,7 @@ require_once 'menu.php';
                 <?php while($post->get()): ?>
 				<tr>
 					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date('Y-m-d H:i'); ?></td>
-					<td><a href="#"><?php $post->title(); ?></a><br /><?php $post->excerpt(100); ?></td>
+					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a><br /><?php $post->excerpt(100); ?></td>
 				</tr>
                 <?php endwhile; ?>
 			</table>

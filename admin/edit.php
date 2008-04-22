@@ -88,4 +88,4 @@ remove_script_host : false
 });
 </script>
 
-<?php include( 'footer.php' ); ?>
+<?php require_once 'footer.php'; ?>
