@@ -90,7 +90,13 @@ EOD;
             }
             // Call the method
             $result = $this->$method($args);
-        } else {
+        } 
+        if(is_array($method))
+        {
+            list($object, $func) = $method;
+            $result = call_user_func_array(array($object, $func), $args);
+        }
+        else {
             // It's a function - does it exist?
             if (!function_exists($method)) {
                 return new IXR_Error(-32601, 'server error. requested function "'.$method.'" does not exist.');
