@@ -66,12 +66,24 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
-<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/nicConfig.js'); ?>"></script>
-<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/bkLib.js'); ?>"></script>
-<script type="text/javascript" src="<?php widget('Options')->adminURL('/js/nicEditor/src/nicEdit.js'); ?>"></script>
+<script type="text/javascript" src="<?php widget('Options')->siteURL('/var/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
-    new nicEditor({iconsPath : '<?php widget('Options')->adminURL('/js/nicEditor/src/nicEditorIcons.gif'); ?>',
-    buttonList : ['fontSize','bold','italic','underline','strikeThrough','subscript','superscript','html','image']}).panelInstance('post_content');
+tinyMCE.init({
+mode : "exact",
+elements : "post_content",
+theme : "advanced",
+skin : "o2k7",
+plugins : "safari,inlinepopups",
+theme_advanced_buttons1 : "bold,italic,underline,strikethrough, separator, forecolor,backcolor,fontselect,fontsizeselect",
+theme_advanced_buttons2_add_before: "cut,copy,pastetext,separator",
+theme_advanced_buttons2 : "undo,redo,separator,hr,link,unlink,image,flash,separator",
+theme_advanced_buttons2_add :"code,emotions,charmap",
+theme_advanced_buttons3 : "",
+theme_advanced_toolbar_location : "top",
+theme_advanced_toolbar_align : "left",
+relative_urls : false,
+remove_script_host : false
+});
 </script>
 
 <?php include( 'footer.php' ); ?>
