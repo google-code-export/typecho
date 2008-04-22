@@ -1,4 +1,10 @@
-<?php include( 'header.php' ); ?>
+<?php 
+require_once 'common.php';
+require_once 'header.php';
+widget('Menu')->setCurrentParent('/admin/general.php');
+widget('Menu')->setCurrentChild('/admin/reading.php');
+require_once 'menu.php';
+?>
 
 	<div id="main">
 		<h2>Reading Settings</h2>
@@ -31,4 +37,4 @@
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 	
-<?php include( 'footer.php' ); ?>
+<?php require_once 'footer.php'; ?>

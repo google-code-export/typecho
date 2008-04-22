@@ -138,12 +138,33 @@ class MenuWidget extends TypechoWidget
         
         $this->_childMenu =  array(array(
             array(_t('概要'), '/admin/index.php'),
-            array(_t('插件'), '/admin/plugin.php')
+            array(_t('插件'), '/admin/plugin.php'),
+            array(_t('外观'), '/admin/theme.php')
         ),
         array(
             array(_t('撰写文章'), '/admin/edit.php'),
             array(_t('创建页面'), '/admin/edit-page.php'),
             array(_t('上传相片'), '/admin/edit-photo.php')
+        ),
+        array(
+            array(_t('文章'), '/admin/post-list.php'),
+            array(_t('页面'), '/admin/edit-page.php'),
+            array(_t('评论'), '/admin/comment-list.php'),
+            array(_t('文件'), '/admin/files.php'),
+            array(_t('分类'), '/admin/manage-cat.php'),
+            array(_t('标签'), '/admin/manage-tag.php'),
+            array(_t('用户'), '/admin/users.php'),
+            array(_t('链接'), '/admin/manage-links.php'),
+            array(_t('链接分类'), '/admin/edit-photo.php'),
+        ),
+        array(
+            array(_t('基本'), '/admin/general.php'),
+            array(_t('评论'), '/admin/discussion.php'),
+            array(_t('文章'), '/admin/reading.php'),
+            array(_t('撰写'), '/admin/writing.php'),
+            array(_t('权限'), '/admin/edit-page.php'),
+            array(_t('邮件'), '/admin/edit-page.php'),
+            array(_t('永久链接'), '/admin/pemarlink.php'),
         ));
                                    
         $hookName = TypechoPlugin::name(__FILE__, 'child');

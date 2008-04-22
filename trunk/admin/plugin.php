@@ -1,4 +1,10 @@
-<?php include( 'header.php' ); ?>
+<?php 
+require_once 'common.php';
+require_once 'header.php';
+widget('Menu')->setCurrentParent('/admin/index.php');
+widget('Menu')->setCurrentChild('/admin/plugin.php');
+require_once 'menu.php';
+?>
 
 	<div id="main">
 		<h2>Plugin Settings</h2>
@@ -39,5 +45,5 @@
 			<hr class="space" />
 		</div><!-- end #page -->
 	</div><!-- end #main -->
-	
-<?php include( 'footer.php' ); ?>
+
+<?php require_once 'footer.php'; ?>
