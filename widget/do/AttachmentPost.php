@@ -9,14 +9,14 @@
  */
 
 /** 载入提交基类支持 **/
-require_once 'Post.php';
+require_once 'DoPost.php';
 
 /**
  * 附件处理类
  *
  * @package Widget
  */
-class AttachmentPostWidget extends PostWidget
+class AttachmentPostWidget extends DoPostWidget
 {
     /**
      * 创建目录树

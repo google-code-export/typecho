@@ -9,14 +9,14 @@
  */
 
 /** 载入提交基类支持 **/
-require_once 'Post.php';
+require_once 'DoPost.php';
 
 /**
  * 内容处理类
  *
  * @package Widget
  */
-class ContentsPostWidget extends PostWidget
+class ContentsPostWidget extends DoPostWidget
 {
     /**
      * 设置内容标签

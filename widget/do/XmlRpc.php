@@ -14,13 +14,25 @@ require_once 'ContentsPost.php';
 /** 载入xmlrpc支持库 **/
 require_once __TYPECHO_LIB_DIR__ . '/IXR.php';
 
+/** 载入电子邮件支持 */
+require_once __TYPECHO_LIB_DIR__ . '/PHPMailer.php';
+
 /**
  * XMLRPC接口支持
  *
  * @package Widget
  */
-class XmpRpcWidget extends ContentsPostWidget
+class XmlRpcWidget extends ContentsPostWidget
 {
+    /**
+     * 检查权限
+     * 
+     * @access private
+     * @param string $userName 用户名
+     * @param string $password 密码
+     * @param string $group 此操作的最低用户组权限
+     * @return IXR_Error
+     */
     private function checkAccess($userName, $password, $group = NULL)
     {
         $user = $this->db->fetchRow($this->db->sql()
@@ -51,6 +63,13 @@ class XmpRpcWidget extends ContentsPostWidget
         return true;
     }
 
+    /**
+     * 获取内容分类列表
+     * 
+     * @access private
+     * @param integer $cid 内容主键
+     * @return void
+     */
     private function getCategories($cid)
     {
         $categories =
@@ -69,7 +88,7 @@ class XmpRpcWidget extends ContentsPostWidget
      * 将每行的值压入堆栈
      *
      * @access public
-     * @param array $value
+     * @param array $value 每行的值
      * @return array
      */
     public function push($value)
@@ -88,6 +107,16 @@ class XmpRpcWidget extends ContentsPostWidget
         return parent::push($value);
     }
 
+    /**
+     * Wordpress获取独立页面API
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param integer $pageId 独立页面主键
+     * @param string $userName 用户名
+     * @param string $password 密码
+     * @return array
+     */
     public function wpGetPage($blogId, $pageId, $userName, $password)
     {
         if(true === ($check = $this->checkAccess($userName, $password, 'editor')))
@@ -454,6 +483,16 @@ class XmpRpcWidget extends ContentsPostWidget
 
         return true;
     }
+    
+    public function typechoSendMail($blogId, $userName, $password, $subject, $body, $reply, array $send)
+    {
+        if(true === ($check = $this->checkAccess($userName, $password, 'administrator')))
+        {
+            return $check;
+        }
+        
+        
+    }
 
     public function render()
     {
@@ -505,7 +544,12 @@ class XmpRpcWidget extends ContentsPostWidget
 
         // PingBack
         'pingback.ping'                    => array($this, 'pingbackPing'),
-        'pingback.extensions.getPingbacks' => array($this, 'pingbackExtensionsGetPingbacks')
+        'pingback.extensions.getPingbacks' => array($this, 'pingbackExtensionsGetPingbacks'),
+        
+        //Typecho API
+        'typecho.sendMail'                 => array($this, 'typechoSendMail'),
+        'typecho.trackback'                => array($this, 'typechoTrackback'),
+        'typecho.pingback'                 => array($this, 'typechoPingback')
         );
 
         if(!isset($GLOBALS['HTTP_RAW_POST_DATA']))
@@ -519,24 +563,36 @@ class XmpRpcWidget extends ContentsPostWidget
 
         if(isset($_GET['rsd']))
         {
-            echo '<?xml version="1.0" encoding="'. widget('Options')->charset .'"?'.'>
+            echo '<?xml version="1.0" encoding="';
+            widget('Options')->charset();
+            echo '"?>
             <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
             <service>
             <engineName>Typecho</engineName>
-            <engineLink>http://www.typecho.ort/</engineLink>
-            <homePageLink>' . widget('Options')->siteURL . '</homePageLink>
+            <engineLink>http://www.typecho.org/</engineLink>
+            <homePageLink>';
+            widget('Options')->siteURL();
+            echo '</homePageLink>
             <apis>
-            <api name="WordPress" blogID="1" preferred="true" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="Movable Type" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
-            <api name="Blogger" blogID="1" preferred="false" apiLink="' . widget('Options')->xmlrpcURL . '" />
+            <api name="WordPress" blogID="1" preferred="true" apiLink="';
+            widget('Options')->index('XmlRpc.do');
+            echo '" />
+            <api name="Movable Type" blogID="1" preferred="false" apiLink="';
+            echo widget('Options')->index('XmlRpc.do');
+            echo '" />
+            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="';
+            widget('Options')->index('XmlRpc.do');
+            echo '" />
+            <api name="Blogger" blogID="1" preferred="false" apiLink="';
+            widget('Options')->index('XmlRpc.do');
+            echo '" />
             </apis>
             </service>
             </rsd>';
         }
         else
         {
-            new IxrServer($methods);
+            new IXR_Server($methods);
         }
     }
 }
