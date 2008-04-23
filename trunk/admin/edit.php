@@ -1,8 +1,8 @@
 <?php 
 require_once 'common.php';
-require_once 'header.php';
 widget('Menu')->setCurrentParent('/admin/edit.php');
 widget('Menu')->setCurrentChild('/admin/edit.php');
+require_once 'header.php';
 require_once 'menu.php';
 ?>
 
