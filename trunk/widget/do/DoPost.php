@@ -5,7 +5,7 @@
  * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id$
+ * @version    $Id: Post.php 129 2008-04-20 11:41:22Z magike.net $
  */
 
 /**
@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class PostWidget extends TypechoWidget
+class DoPostWidget extends TypechoWidget
 {
     /**
      * 数据库对象
@@ -63,6 +63,29 @@ class PostWidget extends TypechoWidget
     protected function goForward($url)
     {
         typechoRedirect(widget('Options')->siteURL . $url, false);
+    }
+    
+    /**
+     * 输出XML
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function toXML()
+    {
+        header('content-Type: application/rss+xml;charset= ' . widget('Options')->charset, true);
+        echo '<?xml version="1.0" encoding="' . widget('Options')->charset . '"?>';
+        echo '<items>';
+        foreach($this->_stack as $item)
+        {
+            echo '<item>';
+            foreach($item as $key => $val)
+            {
+                echo "<{$key}><![CDATA[{$val}]]></{$key}>";
+            }
+            echo '</item>';
+        }
+        echo '</items>'
     }
 
     /**

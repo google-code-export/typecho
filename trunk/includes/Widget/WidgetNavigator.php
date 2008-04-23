@@ -80,7 +80,7 @@ class TypechoWidgetNavigator
     public function __construct($total, $currentPage, $pageSize, $pageTemplate)
     {
         $this->_total = $total;
-        $this->_totalPage = intval($total / $pageSize) + (0 < $total % $pageSize ? 1 : 0);
+        $this->_totalPage = ceil($total / $pageSize);
         $this->_currentPage = $currentPage;
         $this->_pageSize = $pageSize;
         $this->_pageTemplate = $pageTemplate;

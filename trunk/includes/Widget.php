@@ -144,6 +144,31 @@ abstract class TypechoWidget
         $this->_stack[] = $value;
         return $value;
     }
+    
+    /**
+     * 根据余数输出
+     * 
+     * @access public
+     * @param string $param 需要输出的值
+     * @return void
+     */
+    public function alt()
+    {
+        $args = func_get_args();
+        echo $args[key($this->_stack) % func_num_args()];
+    }
+    
+    /**
+     * 如果是第一个则输出字符串
+     * 
+     * @access public
+     * @param string $string
+     * @return void
+     */
+    public function first($string)
+    {
+        echo (0 === key($this->_stack)) ? $string : NULL;
+    }
 
     /**
      * 返回堆栈是否为空

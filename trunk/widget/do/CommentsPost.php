@@ -12,7 +12,7 @@
 require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
 
 /** 载入提交基类支持 **/
-require_once 'Post.php';
+require_once 'DoPost.php';
 
 /**
  * 评论提交
@@ -20,7 +20,7 @@ require_once 'Post.php';
  * @package Widget
  * @todo 增加邮件和个人主页格式判断
  */
-class CommentsPostWidget extends PostWidget
+class CommentsPostWidget extends DoPostWidget
 {
     /**
      * 插入评论

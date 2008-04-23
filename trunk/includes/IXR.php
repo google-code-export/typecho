@@ -214,6 +214,7 @@ class IXR_Client {
         }
         $this->useragent = 'The Incutio XML-RPC PHP Library';
     }
+
     function query() {
         $args = func_get_args();
         $method = array_shift($args);
