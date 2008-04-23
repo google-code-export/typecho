@@ -115,9 +115,26 @@ class MenuWidget extends TypechoWidget
      * @param string $parent
      * @return void
      */
-    public function setCurrentChild($child)
+    public function setCurrentChild($child, $title = NULL)
     {
         $this->_currentChild = $child;
+        
+        foreach($this->_parentMenu as $key => $menu)
+        {
+            if($this->_currentParent == $menu[1])
+            {
+                $current = $key;
+            }
+        }
+        
+        
+        foreach($this->_childMenu[$current] as $menu)
+        {
+            if($this->_currentChild == $menu[1])
+            {
+                widget('Options')->title = (empty($title) ? $menu[0] : $title) . ' &raquo; ' . widget('Options')->title;
+            }
+        }
     }
 
     /**
@@ -164,7 +181,7 @@ class MenuWidget extends TypechoWidget
             array(_t('撰写'), '/admin/writing.php'),
             array(_t('权限'), '/admin/edit-page.php'),
             array(_t('邮件'), '/admin/edit-page.php'),
-            array(_t('永久链接'), '/admin/pemarlink.php'),
+            array(_t('永久链接'), '/admin/permalink.php'),
         ));
                                    
         $hookName = TypechoPlugin::name(__FILE__, 'child');

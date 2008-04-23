@@ -1,8 +1,8 @@
 <?php
 require_once 'common.php';
-require_once 'header.php';
 widget('Menu')->setCurrentParent('/admin/index.php');
 widget('Menu')->setCurrentChild('/admin/index.php');
+require_once 'header.php';
 require_once 'menu.php';
 ?>
 	<div id="main" class="clearfix">
