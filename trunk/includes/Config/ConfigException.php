@@ -9,9 +9,9 @@
  */
 
 /**
- * 组件异常类
+ * 配置异常类
  *
- * @package Widget
+ * @package Config
  */
-class TypechoValidationException extends TypechoException
+class TypechoConfigException extends TypechoException
 {}

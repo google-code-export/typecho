@@ -210,7 +210,7 @@ class ContentsPostWidget extends DoPostWidget
     {
         if(!widget('Access')->pass('editor', true))
         {
-            if($userId != widget('Access')->user('uid'))
+            if($userId != widget('Access')->uid)
             {
                 return false;
             }

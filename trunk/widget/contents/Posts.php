@@ -90,15 +90,13 @@ class PostsWidget extends TypechoWidget
     {
         $args = func_get_args();
 
-        $row = $this->db->fetchRow($this->db->sql()
-        ->select('table.contents', 'COUNT(table.contents.cid) as num')
-        ->where('table.contents.type = ?', 'post')
-        ->where('table.contents.protected = NULL')
-        ->where('table.contents.created < ?', $this->options->gmtTime)
-        ->group('table.contents.cid')
-        ->order('table.contents.created', 'DESC'));
+        $num = $this->db->fetchRow($this->db->sql()
+        ->select('table.contents', 'COUNT(`cid`) AS `num`')
+        ->where('`type` = ?', 'post')
+        ->where('`protected` = NULL')
+        ->where('`created` < ?', $this->options->gmtTime))->num;
 
-        $nav = new TypechoWidgetNavigator($row['num'],
+        $nav = new TypechoWidgetNavigator($num,
                                           $this->_currentPage,
                                           $this->_pageSize,
                                           TypechoRoute::parse('index_page', $this->_row, $this->options->index));
