@@ -10,6 +10,12 @@
  * @version $Id$
  */
 
+/** 异常基类 */
+require_once 'Exception.php';
+
+/** 载入配置异常 */
+require_once 'Config/ConfigException.php';
+
 /**
  * 配置管理类
  *
@@ -75,6 +81,21 @@ class TypechoConfig implements Iterator
     public static function set($name, $value)
     {
         self::$_config[$name] = is_array($value) ? new TypechoConfig($value) : $value;
+    }
+    
+    /**
+     * 判断必须配置是否已经定义
+     * 
+     * @access public
+     * @param string $name 配置名称
+     * @return void
+     */
+    public static function need($name)
+    {
+        if(!isset(self::$_config[$name]))
+        {
+            throw new TypechoConfigException(_t('未定义%s配置', $name), 500);
+        }
     }
 
     /**

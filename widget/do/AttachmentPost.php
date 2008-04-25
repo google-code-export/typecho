@@ -121,7 +121,7 @@ class AttachmentPostWidget extends DoPostWidget
                         'uri'       =>  $fileName,
                         'created'   =>  widget('Options')->gmtTime,
                         'modified'  =>  widget('Options')->gmtTime,
-                        'author'    =>  widget('Access')->user('uid'),
+                        'author'    =>  widget('Access')->uid,
                         'type'      =>  'attachment'
                     );
 
@@ -169,7 +169,7 @@ class AttachmentPostWidget extends DoPostWidget
         }
 
         //验证用户身份
-        if($attachment['author'] != widget('Access')->user('uid'))
+        if($attachment['author'] != widget('Access')->uid)
         {
             widget('Access')->pass('editor');
         }
@@ -237,7 +237,7 @@ class AttachmentPostWidget extends DoPostWidget
             if($attachment)
             {
                 //验证用户身份
-                if($attachment['author'] != widget('Access')->user('uid'))
+                if($attachment['author'] != widget('Access')->uid)
                 {
                     widget('Access')->pass('editor');
                 }

@@ -75,46 +75,76 @@ class AccessWidget extends TypechoWidget
             ->where('`uid` = ?', $uid));
         }
     }
-
+    
     /**
-     * 获取用户各字段值
-     *
+     * 获取用户数据
+     * 
      * @access public
-     * @param string $name 字段名
+     * @param string $type 数据类型
      * @param string $return 是否返回,如果为true此函数将返回字段值,反之则直接输出,默认为false
      * @return string
      */
-    public function user($name, $return = false)
+    public function count($type, $return = false)
     {
+        $return = NULL;
         if($this->hasLogin())
         {
-            if(in_array($name, array('uid', 'group', 'name')))
+            $db = TypechoDb::get();
+            switch($type)
             {
-                $return = TypechoRequest::getSession('name');
-            }
-            else
-            {
-                if(empty($this->_user))
-                {
-                    $db = TypechoDb::get();
-                    $this->_user = $db->fetchRow($db->sql()
-                    ->select('table.user')
-                    ->where('`uid` = ?', TypechoRequest::getSession('uid')));
-                }
-
-                $return = isset($this->_user[$name]) ? $this->_user[$name] : NULL;
+                case 'post':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.contents', 'COUNT(`cid`) AS `num`')
+                    ->where('`author` = ?', $this->uid)
+                    ->where('`type` = ?', 'post'))->num;
+                    break;
+                case 'page':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.contents', 'COUNT(`cid`) AS `num`')
+                    ->where('`author` = ?', $this->uid)
+                    ->where('`type` = ?', 'page'))->num;
+                    break;
+                case 'comment':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.comments', 'COUNT(DISTINCT `coid`) AS `num`')
+                    ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`')
+                    ->where('table.contents.`author` = ?', $this->uid)
+                    ->where('table.contents.`type` = ?', 'post'))->num;
+                    break;
+                case 'approved_comment':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.comments', 'COUNT(DISTINCT `coid`) AS `num`')
+                    ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`')
+                    ->where('table.contents.`author` = ?', $this->uid)
+                    ->where('table.comments.`status` = ?', 'approved')
+                    ->where('table.contents.`type` = ?', 'post'))->num;
+                    break;
+                case 'spam_comment':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.comments', 'COUNT(DISTINCT `coid`) AS `num`')
+                    ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`')
+                    ->where('table.contents.`author` = ?', $this->uid)
+                    ->where('table.comments.`status` = ?', 'spam')
+                    ->where('table.contents.`type` = ?', 'post'))->num;
+                    break;
+                case 'waiting_comment':
+                    $return = $db->fetchObject($db->sql()
+                    ->select('table.comments', 'COUNT(DISTINCT `coid`) AS `num`')
+                    ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`')
+                    ->where('table.contents.`author` = ?', $this->uid)
+                    ->where('table.comments.`status` = ?', 'waiting')
+                    ->where('table.contents.`type` = ?', 'post'))->num;
+                    break;
+                default:
+                    break;
             }
         }
-        else
-        {
-            $return = NULL;
-        }
-
+        
         if($return)
         {
             return $return;
         }
-
+        
         echo $return;
     }
 

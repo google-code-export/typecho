@@ -52,9 +52,16 @@ class TypechoRoute
      */
     public static function target($path)
     {
+        /** 判断是否定义配置 */
+        TypechoConfig::need('Route');
+        
+        /** 获取路由配置 */
         $route = TypechoConfig::get('Route');
+        
+        /** 获取PATHINFO */
         $pathInfo = Typecho::getPathInfo();
 
+        /** 遍历路由 */
         foreach($route as $key => $val)
         {
             if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))

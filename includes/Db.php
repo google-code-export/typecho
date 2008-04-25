@@ -62,6 +62,9 @@ class TypechoDb
      */
     public function __construct()
     {
+        /** 判断是否定义配置 */
+        TypechoConfig::need('Db');
+    
         /** 数据库适配器 */
         require_once 'Db/DbAdapter/' . TypechoConfig::get('Db')->adapter . '.php';
         $adapter = 'Typecho' . TypechoConfig::get('Db')->adapter;
@@ -159,7 +162,12 @@ class TypechoDb
         //执行查询
         $resource = $this->query($query, TypechoDb::READ);
         $result = array();
-        list($object, $method) = $filter;
+        
+        /** 取出过滤器 */
+        if(!empty($filter))
+        {
+            list($object, $method) = $filter;
+        }
 
         //取出每一行
         while($rows = $this->_adapter->fetch($resource))
@@ -181,11 +189,28 @@ class TypechoDb
     public function fetchRow($query, array $filter = NULL)
     {
         $resource = $this->query($query, TypechoDb::READ);
-        list($object, $method) = $filter;
+        
+        /** 取出过滤器 */
+        if(!empty($filter))
+        {
+            list($object, $method) = $filter;
+        }
 
         return ($rows = $this->_adapter->fetch($resource)) ?
         ($filter ? call_user_func(array(&$object, $method), $rows) : $rows) :
         array();
+    }
+    
+    /**
+     * 一次取出一个对象
+     *
+     * @param mixed $query 查询对象
+     * @return array
+     */
+    public function fetchObject($query)
+    {
+        $resource = $this->query($query, TypechoDb::READ);
+        return $this->_adapter->fetchObject($resource);
     }
     
     /**

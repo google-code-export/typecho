@@ -281,10 +281,10 @@ class XmlRpcWidget extends ContentsPostWidget
             return $check;
         }
 
-        $struct = array('user_id'      => widget('Access')->user('uid'),
-                        'user_login'   => widget('Access')->user('name'),
-                        'display_name' => widget('Access')->user('screenName'),
-                        'user_email'   => widget('Access')->user('mail'),
+        $struct = array('user_id'      => widget('Access')->uid,
+                        'user_login'   => widget('Access')->name,
+                        'display_name' => widget('Access')->screenName,
+                        'user_email'   => widget('Access')->mail,
                         'meta_value'   => '');
 
         return array($struct);
@@ -348,7 +348,7 @@ class XmlRpcWidget extends ContentsPostWidget
         $struct = array(
             'isAdmin' => true,
             'url'	  => widget('Options')->siteURL,
-            'blogid'  => widget('Access')->user('uid'),
+            'blogid'  => widget('Access')->uid,
             'blogName'=> widget('Options')->title
         );
 
@@ -362,12 +362,12 @@ class XmlRpcWidget extends ContentsPostWidget
             return $check;
         }
 
-        return array('nickname'  => widget('Access')->user('screenName'),
-                     'userid'    => widget('Access')->user('uid'),
-                     'url'       => widget('Access')->user('url'),
-                     'email'     => widget('Access')->user('mail'),
-                     'lastname'  => widget('Access')->user('name'),
-                     'firstname' => widget('Access')->user('name'));
+        return array('nickname'  => widget('Access')->screenName,
+                     'userid'    => widget('Access')->uid,
+                     'url'       => widget('Access')->url,
+                     'email'     => widget('Access')->mail,
+                     'lastname'  => widget('Access')->name,
+                     'firstname' => widget('Access')->name);
     }
 
     public function bloggerGetPost($blogId, $postId, $userName, $password)
@@ -432,7 +432,7 @@ class XmlRpcWidget extends ContentsPostWidget
 
         if(!widget('Access')->pass('editor', true))
         {
-            $sql->where('table.contents.author = ?', widget('Access')->user('uid'));
+            $sql->where('table.contents.author = ?', widget('Access')->uid);
         }
 
         $posts = $this->db->fetchAll($sql, array($this, 'push'));

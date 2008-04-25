@@ -40,6 +40,14 @@ interface TypechoDbAdapter
      * @return array
      */
     public function fetch($resource);
+    
+    /**
+     * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
+     *
+     * @param resource $resource 查询的资源数据
+     * @return object
+     */
+    public function fetchObject($resource);
 
     /**
      * 引号转义函数
