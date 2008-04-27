@@ -37,7 +37,7 @@ class FeedPostsWidget extends PostsWidget
         ->where('table.contents.`allowFeed` = ?', 'enable')
         ->where('table.contents.`created` < ?', $this->options->gmtTime)
         ->group('table.contents.`cid`')
-        ->order('table.contents.`created`', 'DESC')
+        ->order('table.contents.`created`', TypechoDb::SORT_DESC)
         ->limit(10), array($this, 'push'));
     }
 }

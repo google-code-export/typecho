@@ -191,7 +191,7 @@ class ContentsPostWidget extends DoPostWidget
         $allCategories = Typecho::arrayFlatten($this->db->fetchAll(
         $this->db->sql()->select('table.metas', '`mid`')
         ->where('table.metas.`type` = ?', 'category')
-        ->order('table.metas.`sort`', 'ASC')), 'mid');
+        ->order('table.metas.`sort`', TypechoDb::SORT_ASC)), 'mid');
         $currentCategory = widget('Options')->defaultCategory;
         
         foreach($allCategories as $category)
@@ -206,6 +206,13 @@ class ContentsPostWidget extends DoPostWidget
         return $currentCategory;
     }
 
+    /**
+     * 检测当前用户是否具备修改权限
+     * 
+     * @access protected
+     * @param integer $userId 文章的作者id
+     * @return boolean
+     */
     protected function havePostPermission($userId)
     {
         if(!widget('Access')->pass('editor', true))

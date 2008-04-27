@@ -35,6 +35,10 @@ class TypechoDb
     /** 定义数据库操作 */
     const READ = true;
     const WRITE = false;
+    
+    /** 定义排序方式 */
+    const SORT_ASC = 'ASC';
+    const SORT_DESC = 'DESC';
 
     /**
      * 数据库适配器
