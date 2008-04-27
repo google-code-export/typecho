@@ -341,7 +341,7 @@ class PostsWidget extends TypechoWidget
         ->where('table.contents.`password` = NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime)
         ->group('table.contents.`cid`')
-        ->order('table.contents.`created`', 'DESC')
+        ->order('table.contents.`created`', TypechoDb::SORT_DESC)
         ->page($this->_currentPage, $this->_pageSize), array($this, 'push'));
     }
 }

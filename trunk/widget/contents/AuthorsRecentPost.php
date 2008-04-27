@@ -26,7 +26,7 @@ class AuthorsRecentPostWidget extends PostsWidget
         ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`author` = ?', $author)
         ->group('table.contents.`cid`')
-        ->order('table.contents.`created`', 'DESC')
+        ->order('table.contents.`created`', TypechoDb::SORT_DESC)
         ->limit($limit), array($this, 'push'));
     }
 }
