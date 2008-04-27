@@ -32,13 +32,38 @@ require_once 'Db/DbQuery.php';
  */
 class TypechoDb
 {
-    /** 定义数据库操作 */
+    /** 读取数据库 */
     const READ = true;
+    
+    /** 写入数据库 */
     const WRITE = false;
     
-    /** 定义排序方式 */
+    /** 升序方式 */
     const SORT_ASC = 'ASC';
+    
+    /** 降序方式 */
     const SORT_DESC = 'DESC';
+    
+    /** 表内连接方式 */
+    const INNER_JOIN = 'INNER';
+    
+    /** 表左连接方式 */
+    const LEFT_JOIN = 'LEFT';
+    
+    /** 表外连接方式 */
+    const RIGHT_JOIN = 'RIGHT';
+    
+    /** 数据库查询操作 */
+    const SELECT = 'SELECT';
+    
+    /** 数据库更新操作 */
+    const UPDATE = 'UPDATE';
+    
+    /** 数据库插入操作 */
+    const INSERT = 'INSERT';
+    
+    /** 数据库删除操作 */
+    const DELETE = 'DELETE';
 
     /**
      * 数据库适配器
@@ -121,13 +146,14 @@ class TypechoDb
      * @param string $action 操作动作
      * @return mixed
      */
-    public function query($query, $op = TypechoDb::READ, $action = NULL)
+    public function query($query, $op = TypechoDb::READ, $action = TypechoDb::SELECT)
     {
         //在适配器中执行查询
         if($query instanceof TypechoDbQuery)
         {
             $action = $query->getAttribute('action');
-            $op = ('UPDATE' == $action || 'DELETE' == $action || 'INSERT' == $action) ? TypechoDb::WRITE : TypechoDb::READ;
+            $op = (TypechoDb::UPDATE == $action || TypechoDb::DELETE == $action 
+            || TypechoDb::INSERT == $action) ? TypechoDb::WRITE : TypechoDb::READ;
         }
 
         $resource = $this->_adapter->query($query, $op, $action);
@@ -137,12 +163,12 @@ class TypechoDb
             //根据查询动作返回相应资源
             switch($action)
             {
-                case 'UPDATE':
-                case 'DELETE':
+                case TypechoDb::UPDATE:
+                case TypechoDb::DELETE:
                     return $this->_adapter->affectedRows($resource);
-                case 'INSERT':
+                case TypechoDb::INSERT:
                     return $this->_adapter->lastInsertId($resource);
-                case 'SELECT':
+                case TypechoDb::SELECT:
                 default:
                     return $resource;
             }

@@ -32,13 +32,6 @@ class TypechoDbQuery
     private $_adapter;
 
     /**
-     * 数据库SQL查询语句
-     *
-     * @var string
-     */
-    private $_sql;
-
-    /**
      * 查询语句预结构,由数组构成,方便组合为SQL查询字符串
      *
      * @var array
@@ -107,7 +100,6 @@ class TypechoDbQuery
      */
     public function init()
     {
-        $this->_sql = NULL;
         $this->_sqlPreBuild = array(
             'action' => NULL,
             'table'  => NULL,
@@ -142,7 +134,7 @@ class TypechoDbQuery
      * @param string $po 连接方法(LEFT, RIGHT, INNER)
      * @return TypechoDbQuery
      */
-    public function join($table, $condition, $op = 'INNER')
+    public function join($table, $condition, $op = TypechoDb::INNER_JOIN)
     {
         $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterColumn($this->filterPrefix($condition)), $op);
         return $this;
@@ -277,7 +269,7 @@ class TypechoDbQuery
      * @param string $sort 排序的方式(ASC, DESC)
      * @return TypechoDbQuery
      */
-    public function order($orderby, $sort = NULL)
+    public function order($orderby, $sort = TypechoDb::SORT_ASC)
     {
         $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterColumn($this->filterPrefix($orderby), true) . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
@@ -304,7 +296,7 @@ class TypechoDbQuery
      */
     public function select($table, $fields = '*')
     {
-        $this->_sqlPreBuild['action'] = 'SELECT';
+        $this->_sqlPreBuild['action'] = TypechoDb::SELECT;
         $this->_sqlPreBuild['fields'] = $this->filterColumn($this->filterPrefix($fields));
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
@@ -318,7 +310,7 @@ class TypechoDbQuery
      */
     public function update($table)
     {
-        $this->_sqlPreBuild['action'] = 'UPDATE';
+        $this->_sqlPreBuild['action'] = TypechoDb::UPDATE;
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }
@@ -331,7 +323,7 @@ class TypechoDbQuery
      */
     public function delete($table)
     {
-        $this->_sqlPreBuild['action'] = 'DELETE';
+        $this->_sqlPreBuild['action'] = TypechoDb::DELETE;
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }
@@ -344,7 +336,7 @@ class TypechoDbQuery
      */
     public function insert($table)
     {
-        $this->_sqlPreBuild['action'] = 'INSERT';
+        $this->_sqlPreBuild['action'] = TypechoDb::INSERT;
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }
@@ -356,14 +348,9 @@ class TypechoDbQuery
      */
     public function __toString()
     {
-        if(!(empty($this->_sql)))
-        {
-            return $this->_sql;
-        }
-
         switch($this->_sqlPreBuild['action'])
         {
-            case 'SELECT':
+            case TypechoDb::SELECT:
             {
                 if($this->_sqlPreBuild['join'])
                 {
@@ -374,10 +361,9 @@ class TypechoDbQuery
                     }
                 }
 
-                $this->_sql = $this->_adapter->parseSelect($this->_sqlPreBuild);
-                break;
+                return $this->_adapter->parseSelect($this->_sqlPreBuild);
             }
-            case 'INSERT':
+            case TypechoDb::INSERT:
             {
                 return 'INSERT INTO '
                 . $this->_sqlPreBuild['table']
@@ -385,16 +371,14 @@ class TypechoDbQuery
                 . ' VALUES '
                 . '(' . implode(' , ', array_values($this->_sqlPreBuild['rows'])) . ')'
                 . $this->_sqlPreBuild['limit'];
-                break;
             }
-            case 'DELETE':
+            case TypechoDb::DELETE:
             {
                 return 'DELETE FROM '
                 . $this->_sqlPreBuild['table']
                 . $this->_sqlPreBuild['where'];
-                break;
             }
-            case 'UPDATE':
+            case TypechoDb::UPDATE:
             {
                 $columns = array();
                 if(isset($this->_sqlPreBuild['rows']))
@@ -409,15 +393,9 @@ class TypechoDbQuery
                 . $this->_sqlPreBuild['table']
                 . ' SET ' . implode(' , ', $columns)
                 . $this->_sqlPreBuild['where'];
-                break;
             }
             default:
-            {
-                $this->_sql = NULL;
-                break;
-            }
+                return NULL;
         }
-
-        return $this->_sql;
     }
 }
