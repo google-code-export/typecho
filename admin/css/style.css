@@ -350,6 +350,34 @@ margin-right: 10px;
 .notice a { color: #514721; }
 .success a{ color: #264409; }
 
+/*
+ * Login Page
+ */
+#login {
+background: #fff;
+padding: 1.5em 1.5em 0;
+width: 280px;
+margin: 120px auto;
+}
+
+#login p {
+font-size: 1em;
+}
+
+#login label {
+font-weight: bold;
+}
+
+#login input[type="text"], #login input[type="password"] {
+width: 96%;
+font-size: 1.5em;
+}
+
+#login input[type="submit"] {
+font-size: 1.2em;
+padding: .2em .5em;
+}
+
 
 /*
  * Misc
