@@ -87,26 +87,4 @@ class DoPostWidget extends TypechoWidget
         }
         echo '</items>'
     }
-
-    /**
-     * 执行异步任务
-     *
-     * @access protected
-     * @param string $jobName
-     * @return void
-     */
-    protected function doJob($jobName)
-    {
-        $args = func_get_args();
-        array_shift($args);
-
-        Typecho::httpSender(TypechoRoute::parse('job', array('job' => $jobName), widget('Options')->index),
-        widget('Options')->generator,
-        NULL,
-        array('args' => $args),
-        NULL,
-        2,
-        NULL,
-        $_SERVER['SERVER_ADDR']);
-    }
 }
