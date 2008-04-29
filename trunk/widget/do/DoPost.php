@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class DoPostWidget extends TypechoWidget
+abstract class DoPostWidget extends TypechoWidget
 {
     /**
      * 数据库对象
@@ -52,18 +52,6 @@ class DoPostWidget extends TypechoWidget
 
         typechoRedirect($_SERVER['HTTP_REFERER'] . $anchor, false);
     }
-
-    /**
-     * 直接跳向地址
-     *
-     * @access protected
-     * @param string $url 跳入的地址
-     * @return void
-     */
-    protected function goForward($url)
-    {
-        typechoRedirect(widget('Options')->siteURL . $url, false);
-    }
     
     /**
      * 输出XML
@@ -85,6 +73,6 @@ class DoPostWidget extends TypechoWidget
             }
             echo '</item>';
         }
-        echo '</items>'
+        echo '</items>';
     }
 }

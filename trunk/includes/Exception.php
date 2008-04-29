@@ -22,7 +22,7 @@ class TypechoException extends Exception
      * @access private
      * @var array
      */
-    private $_message;
+    private $_messages;
 
     /**
      * 异常基类构造函数,重载以增加$code的默认参数
@@ -33,8 +33,8 @@ class TypechoException extends Exception
      */
     public function __construct($message, $code = 0)
     {
+        $this->_messages = is_array($message) ? $message : array($message);
         $message = is_array($message) ? implode(',', $message) : $message;
-        $this->_message = is_array($message) ? $message : array($message);
         parent::__construct($message, $code);
     }
 
@@ -86,12 +86,11 @@ class TypechoException extends Exception
      * 重载获取消息方法,支持多列输出
      *
      * @access public
-     * @param string $split
-     * @return string
+     * @return array
      */
-    public function getMessages($split = NULL)
+    public function getMessages()
     {
-        return implode($split, $this->_message);
+        return $this->_messages;
     }
 
     /**

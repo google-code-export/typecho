@@ -49,7 +49,7 @@ class AccessWidget extends TypechoWidget
     }
 
     /**
-     * 入口函数,初始化session
+     * 入口函数
      *
      * @access public
      * @return void
@@ -59,20 +59,22 @@ class AccessWidget extends TypechoWidget
         if($this->hasLogin())
         {
             $db = TypechoDb::get();
+            $user = TypechoRequest::getSession('user');
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
-            ->where('`user` = ?', TypechoRequest::getSession('uid')), array($this, 'push'));
+            ->where('`user` = ?', $user['uid']));
+            $this->push($user);
 
             foreach($rows as $row)
             {
-                widget('Options')->set($row['name'], $row['value']);
+                widget('Options')->__set($row['name'], $row['value']);
             }
 
             //更新最后活动时间
-            $db-query($db->sql()
-            ->update('table.user')
-            ->rows(array('activated' => widget('Options')->gmt_time))
-            ->where('`uid` = ?', $uid));
+            $db->query($db->sql()
+            ->update('table.users')
+            ->rows(array('activated' => widget('Options')->gmtTime))
+            ->where('`uid` = ?', $user['uid']));
         }
     }
     
@@ -152,23 +154,19 @@ class AccessWidget extends TypechoWidget
      * 用户登录函数,用于初始化session状态
      *
      * @access public
-     * @param string $uid 用户id
-     * @param string $name 用户名
-     * @param string $group 用户组
+     * @param array $user 用户
      * @return void
      */
-    public function login($uid, $name, $group)
+    public function login(array $user)
     {
-        TypechoRequest::setSession('uid', $uid);
-        TypechoRequest::setSession('name', $name);
-        TypechoRequest::setSession('group', $group);
+        TypechoRequest::setSession('user', $user);
         $db = TypechoDb::get();
 
         //更新最后登录时间
-        $db-query($db->sql()
-        ->update('table.user')
-        ->row('logged', 'activated')
-        ->where('`uid` = ?', $uid));
+        $db->query($db->sql()
+        ->update('table.users')
+        ->row('logged', '`activated`')
+        ->where('`uid` = ?', $user['uid']));
     }
 
     /**
@@ -179,7 +177,7 @@ class AccessWidget extends TypechoWidget
      */
     public function logout()
     {
-        session_unset();
+        TypechoRequest::destorySession();
     }
 
     /**
@@ -190,8 +188,7 @@ class AccessWidget extends TypechoWidget
      */
     public function hasLogin()
     {
-        $uid = TypechoRequest::getSession('uid');
-        return !empty($uid);
+        return (NULL !== TypechoRequest::getSession('user'));
     }
 
     /**
@@ -232,7 +229,7 @@ class AccessWidget extends TypechoWidget
         {
             if($this->hasLogin())
             {
-                if(array_key_exists($group, $this->_group) && $this->_group[TypechoRequest::getSession('group')] <= $this->_group[$group])
+                if(array_key_exists($group, $this->_group) && $this->_group[$this->group] <= $this->_group[$group])
                 {
                     return true;
                 }

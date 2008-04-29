@@ -73,7 +73,7 @@ class CommentsPostWidget extends DoPostWidget
         $validator->addRule('url', 'url', _t('个人主页地址不合法'));
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $message = $validator->run(TyepchoRequest::getParametersFrom('author', 'mail', 'url', 'text'));
+        $validator->run(TyepchoRequest::getParametersFrom('author', 'mail', 'url', 'text'));
 
         $comment['author'] = TypechoRequest::getParameter('author');
         $comment['mail'] = TypechoRequest::getParameter('mail');

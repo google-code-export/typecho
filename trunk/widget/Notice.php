@@ -53,25 +53,28 @@ class NoticeWidget extends TypechoWidget
      */
     public function set($name, $value = NULL)
     {
+        $notice = array();
+        
         if(is_array($name))
         {
             foreach($name as $key => $row)
             {
-                $_SESSION['notice'][$key] = $row;
+                $notice[$key] = $row;
             }
         }
         else
         {
             if(empty($value))
             {
-                $_SESSION['notice'][] = $name;
-
+                $notice[] = $name;
             }
             else
             {
-                $_SESSION['notice'][$name] = $value;
+                $notice[$name] = $value;
             }
         }
+        
+        TypechoRequest::setSession('notice', $notice);
     }
 
     /**
@@ -82,17 +85,10 @@ class NoticeWidget extends TypechoWidget
      */
     public function render()
     {
-        if(empty($_SESSION['notice']))
+        if(NULL !== TypechoRequest::getSession('notice'))
         {
-            $_SESSION['notice'] = array();
-            $session = $_SESSION['notice'];
+            $this->push(TypechoRequest::getSession('notice'));
+            TypechoRequest::deleteSession('notice');
         }
-        else
-        {
-            $session = $_SESSION['notice'];
-            session_unregister('notice');
-        }
-
-        $this->push($session);
     }
 }
