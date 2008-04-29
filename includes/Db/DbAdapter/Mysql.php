@@ -16,6 +16,14 @@
 class TypechoMysql implements TypechoDbAdapter
 {
     /**
+     * 数据库连接字符串标示
+     * 
+     * @access private
+     * @var resource
+     */
+    private $_dbLink;
+    
+    /**
      * 数据库连接函数
      *
      * @param TypechoConfig $config 数据库配置
@@ -24,15 +32,15 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function connect(TypechoConfig $config)
     {
-        if($dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password))
+        if($this->_dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password))
         {
-            if(@mysql_select_db($config->database, $dbLink))
+            if(@mysql_select_db($config->database, $this->_dbLink))
             {
                 if($config->charset)
                 {
                     $this->query("SET NAMES '{$config->charset}'");
                 }
-                return $dbLink;
+                return $this->_dbLink;
             }
         }
 
@@ -128,7 +136,7 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function affectedRows($resource)
     {
-        return mysql_affected_rows($resource);
+        return mysql_affected_rows($this->_dbLink);
     }
     
     /**
@@ -152,6 +160,6 @@ class TypechoMysql implements TypechoDbAdapter
      */
     public function lastInsertId($resource)
     {
-        return mysql_insert_id($resource);
+        return mysql_insert_id($this->_dbLink);
     }
 }

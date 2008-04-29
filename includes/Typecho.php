@@ -367,7 +367,7 @@ class Typecho
      * @param boolean $isPermanently 是否为永久重定向
      * @return void
      */
-    public static function redirect($location, $isPermanently = true)
+    public static function redirect($location, $isPermanently = false)
     {
         if($isPermanently)
         {

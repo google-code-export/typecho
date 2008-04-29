@@ -349,6 +349,8 @@ margin-right: 10px;
 .error a{ color: #8a1f11; }
 .notice a { color: #514721; }
 .success a{ color: #264409; }
+.error ul,.notice ul,.success ul{padding:0;margin:0;list-style:none}
+.error li,.notice li,.success li{padding:0;margin:0;}
 
 /*
  * Login Page

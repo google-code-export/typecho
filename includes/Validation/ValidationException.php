@@ -9,9 +9,9 @@
  */
 
 /**
- * 组件异常类
+ * 验证异常类
  *
- * @package Widget
+ * @package Validation
  */
 class TypechoValidationException extends TypechoException
 {}
