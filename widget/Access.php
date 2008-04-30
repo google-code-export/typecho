@@ -30,6 +30,14 @@ class AccessWidget extends TypechoWidget
      * @var array
      */
     private $_user;
+    
+    /**
+     * 是否已经登录
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_hasLogin = NULL;
 
     /**
      * 重载父类构造函数,初始化用户组
@@ -59,11 +67,11 @@ class AccessWidget extends TypechoWidget
         if($this->hasLogin())
         {
             $db = TypechoDb::get();
-            $user = TypechoRequest::getSession('user');
+            
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
             ->where('`user` = ?', $user['uid']));
-            $this->push($user);
+            $this->push($this->_user);
 
             foreach($rows as $row)
             {
@@ -151,33 +159,36 @@ class AccessWidget extends TypechoWidget
     }
 
     /**
-     * 用户登录函数,用于初始化session状态
+     * 用户登录函数
      *
      * @access public
      * @param array $user 用户
      * @return void
      */
-    public function login(array $user)
+    public function login($uid, $password, $expire = 0)
     {
-        TypechoRequest::setSession('user', $user);
+        /** 保存登录信息,对密码采用sha1和md5双重加密 */
+        TypechoRequest::setCookie('uid', $uid, $expire, widget('Options')->siteURL);
+        TypechoRequest::setCookie('password', sha1($password), $expire, widget('Options')->siteURL);
         $db = TypechoDb::get();
 
         //更新最后登录时间
         $db->query($db->sql()
         ->update('table.users')
         ->row('logged', '`activated`')
-        ->where('`uid` = ?', $user['uid']));
+        ->where('`uid` = ?', $uid));
     }
 
     /**
-     * 登出函数,销毁session
+     * 登出函数,销毁cookie
      *
      * @access public
      * @return void
      */
     public function logout()
     {
-        TypechoRequest::destorySession();
+        TypechoRequest::deleteCookie('uid', widget('Options')->siteURL);
+        TypechoRequest::deleteCookie('password', widget('Options')->siteURL);
     }
 
     /**
@@ -188,23 +199,31 @@ class AccessWidget extends TypechoWidget
      */
     public function hasLogin()
     {
-        return (NULL !== TypechoRequest::getSession('user'));
-    }
-
-    /**
-     * 获取验证码
-     *
-     * @access public
-     * @return string
-     */
-    public function authCode()
-    {
-        $db = TypechoDb::get();
-        $user = $db->fetchRow($db->sql()
-        ->select('table.user')
-        ->where('`uid` = 1'));
-
-        return md5($user['name'] . $user['password']);
+        if(NULL !== $this->_hasLogin)
+        {
+            return $this->_hasLogin;
+        }
+        else
+        {
+            if(NULL !== TypechoRequest::getCookie('uid') && NULL !== TypechoRequest::getCookie('password'))
+            {
+                $db = TypechoDb::get();
+                
+                /** 验证登陆 */
+                $user = $this->db->fetchRow($this->db->sql()
+                ->select('table.users')
+                ->where('`uid` = ?', TypechoRequest::getCookie('uid'))
+                ->limit(1));
+                
+                if($user && sha1($user['password']) == TypechoRequest::getCookie('password'))
+                {
+                    $this->_user = $user;
+                    return ($this->_hasLogin = true);
+                }
+            }
+            
+            return ($this->_hasLogin = false);
+        }
     }
 
     /**
@@ -212,43 +231,33 @@ class AccessWidget extends TypechoWidget
      *
      * @access public
      * @param string $group 用户组
-     * @param boolean $test 是否为测试模式
+     * @param boolean $return 是否为返回模式
      * @return boolean
      * @throws TypechoWidgetException
      */
-    public function pass($group, $test = false)
+    public function pass($group, $return = false)
     {
-        if('system' == $group)
+        if($this->hasLogin())
         {
-            if($this->authCode() == TypechoRequest::getParameter('auth'))
+            if(array_key_exists($group, $this->_group) && $this->_group[$this->group] <= $this->_group[$group])
             {
                 return true;
             }
         }
         else
         {
-            if($this->hasLogin())
+            if($return)
             {
-                if(array_key_exists($group, $this->_group) && $this->_group[$this->group] <= $this->_group[$group])
-                {
-                    return true;
-                }
+                return false;
             }
             else
             {
-                if($test)
-                {
-                    return false;
-                }
-                else
-                {
-                    Typecho::redirect(widget('Options')->siteURL . '/admin/login.php'
-                    . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
-                }
+                Typecho::redirect(widget('Options')->siteURL . '/admin/login.php'
+                . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }
 
-        if($test)
+        if($return)
         {
             return false;
         }
