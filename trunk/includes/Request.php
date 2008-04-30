@@ -118,9 +118,29 @@ class TypechoRequest
      * @param integer $ttl 过期时间,默认为0,表示随会话时间结束
      * @return void
      */
-    static public function setCookie($key, $value, $ttl = 0)
+    static public function setCookie($key, $value, $expire = 0, $url = NULL)
     {
-        setcookie($key, $value, $ttl, Typecho::getSiteRoot());
+        $path = '/';
+        if(!empty($url))
+        {
+            $parsed = parse_url($url);
+            
+            /** 在路径后面强制加上斜杠 */
+            $path = empty($parsed['path']) ? '/' : Typecho::pathToUrl(NULL, $parsed['path']);
+        }
+        
+        /** 对数组型COOKIE的写入支持 */
+        if(is_array($value))
+        {
+            foreach($value as $name => $val)
+            {
+                setcookie("{$key}[{$name}]", $val, $expire, $path);
+            }
+        }
+        else
+        {
+            setcookie($key, $value, $expire, $path);
+        }
     }
 
     /**
@@ -130,9 +150,34 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return void
      */
-    static public function deleteCookie($key)
+    static public function deleteCookie($key, $url = NULL)
     {
-        setcookie($name, '', 0, Typecho::getSiteRoot());
+        if(!isset($_COOKIE[$key]))
+        {
+            return;
+        }
+
+        $path = '/';
+        if(!empty($url))
+        {
+            $parsed = parse_url($url);
+            
+            /** 在路径后面强制加上斜杠 */
+            $path = empty($parsed['path']) ? '/' : Typecho::pathToUrl(NULL, $parsed['path']);
+        }
+
+        /** 对数组型COOKIE的删除支持 */
+        if(is_array($_COOKIE[$key]))
+        {
+            foreach($_COOKIE[$key] as $name => $val)
+            {
+                setcookie("{$key}[{$name}]", '', time() - 2592000, $path);
+            }
+        }
+        else
+        {
+            setcookie($key, '', time() - 2592000, $path);
+        }
     }
 
     /**

@@ -41,6 +41,7 @@ class LoginWidget extends DoPostWidget
         }
         catch(TypechoValidationException $e)
         {
+            /** 设置提示信息 */
             widget('Notice')->set($e->getMessages());
             Typecho::redirect(Typecho::pathToUrl('login.php', widget('Options')->adminURL)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
@@ -53,6 +54,7 @@ class LoginWidget extends DoPostWidget
         ->where('`name` = ?', TypechoRequest::getParameter('name'))
         ->limit(1));
         
+        /** 比对密码 */
         if($user && $user['password'] == md5(TypechoRequest::getParameter('password')))
         {
             widget('Access')->login($user);
@@ -65,6 +67,7 @@ class LoginWidget extends DoPostWidget
             NULL : '?referer=' . urlencode($referer)));
         }
         
+        /** 跳转验证后地址 */
         if(NULL !== ($referer = TypechoRequest::getParameter('referer')))
         {
             Typecho::redirect($referer);

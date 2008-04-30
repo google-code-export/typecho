@@ -74,21 +74,21 @@ class NoticeWidget extends TypechoWidget
             }
         }
         
-        TypechoRequest::setSession('notice', $notice);
+        TypechoRequest::setCookie('notice', $notice, time() + 2592000, widget('Options')->siteURL);
     }
 
     /**
-     * 入口函数初始化session
+     * 入口函数
      *
      * @access public
      * @return void
      */
     public function render()
     {
-        if(NULL !== TypechoRequest::getSession('notice'))
+        if(NULL !== TypechoRequest::getCookie('notice'))
         {
-            $this->push(TypechoRequest::getSession('notice'));
-            TypechoRequest::deleteSession('notice');
+            $this->push(TypechoRequest::getCookie('notice'));
+            TypechoRequest::deleteCookie('notice', widget('Options')->siteURL);
         }
     }
 }
