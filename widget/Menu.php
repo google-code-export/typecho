@@ -136,6 +136,11 @@ class MenuWidget extends TypechoWidget
             }
         }
     }
+    
+    public function setParent($value)
+    {
+        
+    }
 
     /**
      * 初始化菜单列表
@@ -149,9 +154,6 @@ class MenuWidget extends TypechoWidget
                                    array(_t('创建'), '/admin/edit.php'),
                                    array(_t('管理'), '/admin/post-list.php'),
                                    array(_t('设置'), '/admin/general.php'));
-                                   
-        $hookName = TypechoPlugin::name(__FILE__, 'parent');
-        TypechoPlugin::callFilter($hookName, $this->_parentMenu);
         
         $this->_childMenu =  array(array(
             array(_t('概要'), '/admin/index.php'),
@@ -183,8 +185,5 @@ class MenuWidget extends TypechoWidget
             array(_t('邮件'), '/admin/edit-page.php'),
             array(_t('永久链接'), '/admin/permalink.php'),
         ));
-                                   
-        $hookName = TypechoPlugin::name(__FILE__, 'child');
-        TypechoPlugin::callFilter($hookName, $this->_childMenu);
     }
 }
