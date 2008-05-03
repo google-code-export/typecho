@@ -15,13 +15,24 @@ require_once 'common.php';
 
 <body style="background: #E6EEF7;">
 	<div id="login" class="round clearfix">
-		<p style="text-align: center;"><img id="login-logo.png" src="images/login-logo.png" alt="" /></p>
+		<p style="text-align: center;"><img id="login-logo.png" src="images/login-logo.png" alt="Typecho" /></p>
+		<?php if(!widget('Access')->hasLogin()): ?>
 		<div class="notice"><?php _e('请在下方的输入框中输入您的电子邮件地址,您将在电子邮箱中收到重置以后的密码.'); ?></div>
 		<form method="post" action="">
 			<p><label><?php _e('您的电子邮件地址'); ?>:</label><br /><input type="text" id="" /></p>
 			<p class="left"><a href="<?php widget('Options')->adminURL('login.php'); ?>"><?php _e('返回登录页 &raquo;'); ?></a></p>
 			<p class="right"><input type="submit" value="<?php _e('重置我的密码'); ?>" /></p>
 		</form>
+		<?php else: ?>
+		<div class="notice">
+			<ul>
+			    <li><?php _e('您已经登录到%s', widget('Options')->title); ?></li>
+			    <li><?php _e('点击下面的链接继续操作'); ?></li>
+			</ul>
+		</div>
+		<p class="left"><a href="<?php widget('Options')->adminURL(); ?>"><?php _e('&laquo; 进入后台'); ?></a> | 
+		<a href="<?php widget('Options')->siteURL(); ?>"><?php _e('返回%s &raquo;', widget('Options')->title); ?></a></p>
+		<?php endif; ?>
 	</div>
 </body>
 </html>

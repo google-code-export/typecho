@@ -29,6 +29,13 @@ class LoginWidget extends DoPostWidget
      */
     public function render()
     {
+        /** 如果已经登录 */
+        if(widget('Access')->hasLogin())
+        {
+            /** 直接返回 */
+            Typecho::redirect(widget('Options')->index);
+        }
+        
         /** 初始化验证类 */
         $validator = new TypechoValidation();
         $validator->addRule('name', 'required', _t('请输入用户名'));
@@ -57,7 +64,8 @@ class LoginWidget extends DoPostWidget
         /** 比对密码 */
         if($user && $user['password'] == md5(TypechoRequest::getParameter('password')))
         {
-            widget('Access')->login($user);
+            widget('Access')->login($user['uid'], $user['password'], sha1(Typecho::randString(20)),
+            1 == TypechoRequest::getParameter('remember') ? widget('Options')->gmtTime + widget('Options')->timezone : 0);
         }
         else
         {

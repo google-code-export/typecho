@@ -8,6 +8,9 @@
  * @version    $Id: DoWidget.php 122 2008-04-17 10:04:27Z magike.net $
  */
 
+/** 载入验证库支持 **/
+require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
+
 /**
  * 执行模块
  *
@@ -16,6 +19,17 @@
 class DoWidget extends TypechoWidget
 {
     /**
+     * 排出抽象类
+     * 
+     * @param string $value 输入数据
+     * @param boolean
+     */
+    public function noAbstract($value)
+    {
+        return ($value != 'DoPost');
+    }
+    
+    /**
      * 入口函数,初始化路由器
      *
      * @access public
@@ -23,6 +37,13 @@ class DoWidget extends TypechoWidget
      */
     public function render()
     {
-        widget('do.' . str_replace('.', '', TypechoRoute::getParameter('do')));
+        /** 验证路由地址 **/
+        $validator = new TypechoValidation($this);
+        $validator->addRule('do', 'required', _t('地址不合法'));
+        $validator->addRule('do', 'alphaDash', _t('地址不合法'));
+        $validator->addRule('do', 'noAbstract', _t('地址不合法'));
+        $validator->run(array('do' => TypechoRoute::getParameter('do')));
+        
+        widget('do.' . TypechoRoute::getParameter('do'));
     }
 }

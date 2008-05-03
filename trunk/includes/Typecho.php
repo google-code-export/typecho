@@ -358,6 +358,24 @@ class Typecho
         $str = urlencode($str);
         return NULL == $str ? $default : $str;
     }
+    
+    /**
+     * 生成随机字符串
+     * 
+     * @access public
+     * @param integer $length 字符串长度
+     * @return string
+     */
+    public static function randString($length)
+    {
+        $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+        $result = '';
+        for($i = 0; $i < $length; $i++)
+        {
+            $result .= $str[rand(0, 52)];
+        }
+        return $result;
+    }
 
     /**
      * 重定向函数

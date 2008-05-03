@@ -1,5 +1,6 @@
 <?php
 require_once 'common.php';
+widget('Access')->pass('subscriber');
 widget('Menu')->setCurrentParent('/admin/index.php');
 widget('Menu')->setCurrentChild('/admin/index.php');
 require_once 'header.php';
@@ -9,7 +10,7 @@ require_once 'menu.php';
 		<div id="sidebar">
 			<div id="userInfo">
 				<img src="images/default-userpic.jpg" alt="" class="left" />
-				<h6>Author</h6>
+				<h6><?php widget('Access')->screenName(); ?></h6>
 				<p>You have <a href="#">6 posts</a>, <a href="#">1 page</a>, contained within <a href="#">4 categories</a> and <a href="#">14 tags</a>.</p>
 			</div><!-- end #userInfo -->
 
@@ -30,28 +31,38 @@ require_once 'menu.php';
         
 		<div id="content">
             <h2><?php _e('欢迎回到Typecho'); ?></h2>
-			<a class="botton right" href="#"><?php _e('撰写一篇新文章'); ?></a><a class="botton right" href="#"><?php _e('创建一个新页面'); ?></a>
+			<a class="botton right" href="<?php widget('Options')->adminURL('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
+			<a class="botton right" href="<?php widget('Options')->adminURL('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
             <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="20%"><?php _e('信息'); ?></th>
-					<th width="80%"><?php _e('内容'); ?></th>
+					<th width="25%"><?php _e('作者'); ?></th>
+					<th width="75%"><?php _e('内容'); ?></th>
 				</tr>
-                <?php widget('contents.AuthorsRecentPost', 1)->to($post); ?>
+                <?php widget('contents.AuthorsRecentPost', widget('Access')->uid)->to($post); ?>
+                <?php if($post->have()): ?>
                 <?php while($post->get()): ?>
 				<tr>
-					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date('Y-m-d H:i'); ?></td>
-					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a><br /><?php $post->excerpt(100); ?></td>
+					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date(_t('y年n月j日 H时i分')); ?></td>
+					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a> | 
+					<a href="<?php widget('Options')->adminURL('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
+					<br /><?php $post->excerpt(100); ?></td>
 				</tr>
                 <?php endwhile; ?>
+                <?php else: ?>
+                <tr>
+                	<td colspan="2"><strong><?php _e('对不起, 您没有发布任何文章'); ?></strong></td>
+                </tr>
+                <?php endif; ?>
 			</table>
 
-			<a class="botton right" href="#">2 comments awaiting moderation</a>
+			<a class="botton right" href="#"><?php _e('%d篇评论等待审核', 2); ?></a>
+			<a class="botton right" href="#"><?php _e('%d篇垃圾评论', 5); ?></a>
             <h3><?php _e('最新评论/引用'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="20%"><?php _e('作者'); ?></th>
-					<th width="80%"><?php _e('评论'); ?></th>
+					<th width="25%"><?php _e('作者'); ?></th>
+					<th width="75%"><?php _e('评论'); ?></th>
 				</tr>
 				<tr>
 					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>

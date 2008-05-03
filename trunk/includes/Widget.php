@@ -254,6 +254,6 @@ abstract class TypechoWidget
      */
     public function render()
     {
-        trigger_error('Method render must be implement.', E_WARNING);
+        throw new TypechoWidgetException(_t('render方法必须在继承子类中实现'), 500);
     }
 }

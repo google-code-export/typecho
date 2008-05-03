@@ -70,7 +70,7 @@ class AccessWidget extends TypechoWidget
             
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
-            ->where('`user` = ?', $user['uid']));
+            ->where('`user` = ?', $this->_user['uid']));
             $this->push($this->_user);
 
             foreach($rows as $row)
@@ -82,7 +82,7 @@ class AccessWidget extends TypechoWidget
             $db->query($db->sql()
             ->update('table.users')
             ->rows(array('activated' => widget('Options')->gmtTime))
-            ->where('`uid` = ?', $user['uid']));
+            ->where('`uid` = ?', $this->_user['uid']));
         }
     }
     
@@ -165,23 +165,25 @@ class AccessWidget extends TypechoWidget
      * @param array $user 用户
      * @return void
      */
-    public function login($uid, $password, $expire = 0)
+    public function login($uid, $password, $authCode, $expire = 0)
     {
         /** 保存登录信息,对密码采用sha1和md5双重加密 */
         TypechoRequest::setCookie('uid', $uid, $expire, widget('Options')->siteURL);
         TypechoRequest::setCookie('password', sha1($password), $expire, widget('Options')->siteURL);
+        TypechoRequest::setCookie('authCode', $authCode, $expire, widget('Options')->siteURL);
         $db = TypechoDb::get();
 
-        //更新最后登录时间
+        //更新最后登录时间以及验证码
         $db->query($db->sql()
         ->update('table.users')
         ->row('logged', '`activated`')
+        ->rows(array('authCode' => $authCode))
         ->where('`uid` = ?', $uid));
     }
-
+    
     /**
-     * 登出函数,销毁cookie
-     *
+     * 用户登出函数
+     * 
      * @access public
      * @return void
      */
@@ -189,6 +191,7 @@ class AccessWidget extends TypechoWidget
     {
         TypechoRequest::deleteCookie('uid', widget('Options')->siteURL);
         TypechoRequest::deleteCookie('password', widget('Options')->siteURL);
+        TypechoRequest::deleteCookie('authCode', widget('Options')->siteURL);
     }
 
     /**
@@ -210,12 +213,13 @@ class AccessWidget extends TypechoWidget
                 $db = TypechoDb::get();
                 
                 /** 验证登陆 */
-                $user = $this->db->fetchRow($this->db->sql()
+                $user = $db->fetchRow($db->sql()
                 ->select('table.users')
                 ->where('`uid` = ?', TypechoRequest::getCookie('uid'))
                 ->limit(1));
                 
-                if($user && sha1($user['password']) == TypechoRequest::getCookie('password'))
+                if($user && sha1($user['password']) == TypechoRequest::getCookie('password')
+                && $user['authCode'] == TypechoRequest::getCookie('authCode'))
                 {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
