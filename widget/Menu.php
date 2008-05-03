@@ -137,9 +137,40 @@ class MenuWidget extends TypechoWidget
         }
     }
     
-    public function setParent($value)
+    /**
+     * 增加一个父级菜单
+     * 
+     * @param string $title 菜单标题
+     * @param string $plugin 插件名
+     * @param string $fileName 文件名
+     * @return integer
+     */
+    public function addParent($title, $plugin, $fileName)
     {
-        
+        $this->_parentMenu[] = array($title, '/admin/go.php/' . $plugin . '/' . basename($fileName));
+        return count($this->_parentMenu) - 1;
+    }
+    
+    /**
+     * 增加一个子菜单
+     * 
+     * @param integer $parent 父级菜单索引
+     * @param string $title 菜单标题
+     * @param string $plugin 插件名称
+     * @param string $fileName 文件名
+     * @return integer
+     */
+    public function addChild($parent, $title, $plugin, $fileName)
+    {
+        if(isset($this->_childMenu[$parent]))
+        {
+            $this->_childMenu[$parent][] = array($title, '/admin/go.php/' . $plugin . '/' . basename($fileName));
+            return count($this->_childMenu[$parent]) - 1;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**

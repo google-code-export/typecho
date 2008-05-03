@@ -1,14 +1,14 @@
 <div class="container">
 	<div id="header">
-			<div id="nav-bar" class="right"><?php _e('你好'); ?>, <a href="#">admin</a> | 
-            <a title="Log Out" href="#"><?php _e('登出'); ?></a> | 
-            <a href="#"><?php _e('支持'); ?></a> | 
-            <a href="#"><?php _e('报告错误'); ?></a>
+			<div id="nav-bar" class="right"><?php _e('你好'); ?>, <a href="#"><?php widget('Access')->screenName(); ?></a> | 
+            <a title="<?php _e('退出当前登录'); ?>" href="<?php widget('Options')->index('Logout.do'); ?>"><?php _e('退出'); ?></a> | 
+            <a href="http://www.typecho.org" target="_blank" title="<?php _e('Typecho官方网站'); ?>"><?php _e('支持'); ?></a> | 
+            <a href="http://www.typecho.org" target="_blank" title="<?php _e('向Typecho报告错误以帮助我们更好地完善产品'); ?>"><?php _e('报告错误'); ?></a>
             </div>
-			<h1><a href="#">Typecho: Dashboard</a></h1>
+			<h1><a href="#"><?php widget('Options')->title(); ?></a></h1>
 			<div id="nav-menu">
 				<?php widget('Menu')->outputParent(NULL); ?>
-				<a href="#" style="float: right;"><span><?php _e('返回站点&raquo;'); ?></span></a>
+				<a href="<?php widget('Options')->siteURL(); ?>" style="float: right;"><span><?php _e('返回站点&raquo;'); ?></span></a>
 				<div class="clear"></div>
 				<ul class="level-2">
 					<?php widget('Menu')->outputChild('li'); ?>

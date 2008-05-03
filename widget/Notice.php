@@ -74,7 +74,8 @@ class NoticeWidget extends TypechoWidget
             }
         }
         
-        TypechoRequest::setCookie('notice', $notice, time() + 2592000, widget('Options')->siteURL);
+        TypechoRequest::setCookie('notice', $notice, widget('Options')->gmtTime + widget('Options')->timezone,
+        widget('Options')->siteURL);
     }
 
     /**

@@ -192,7 +192,6 @@ class TypechoValidation
         return true;
     }
 
-
     /**
      * Max Length
      *
@@ -204,7 +203,6 @@ class TypechoValidation
     {
         return (typechoStrLen($str) < $length);
     }
-
 
     /**
      * Valid Email
@@ -230,7 +228,6 @@ class TypechoValidation
         return preg_match("|^http://[_=&///?\.a-zA-Z0-9-]+$|i", $str);
     }
 
-
     /**
      * Alpha
      *
@@ -242,7 +239,6 @@ class TypechoValidation
     {
         return preg_match("/^([a-z])+$/i", $str) ? true : false;
     }
-
 
     /**
      * Alpha-numeric
@@ -256,7 +252,6 @@ class TypechoValidation
         return preg_match("/^([a-z0-9])+$/i", $str);
     }
 
-
     /**
      * Alpha-numeric with underscores and dashes
      *
@@ -266,9 +261,8 @@ class TypechoValidation
      */
     public function alphaDash($str)
     {
-        return preg_match("/^([-a-z0-9_-])+$/i", $str) ? true : false;
+        return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
     }
-
 
     /**
      * Numeric
@@ -282,7 +276,6 @@ class TypechoValidation
         return ereg("^[0-9\.]+$", $str);
     }
 
-
     /**
      * Is Numeric
      *
@@ -295,4 +288,3 @@ class TypechoValidation
         return is_numeric($str);
     }
 }
-
