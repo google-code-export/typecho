@@ -124,7 +124,7 @@ class TypechoRoute
      * @param string $key
      * @return mixed
      */
-    static public function getParameter($key)
+    public static function getParameter($key)
     {
         return empty(self::$_parameters[$key]) ? NULL : self::$_parameters[$key];
     }

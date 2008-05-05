@@ -17,55 +17,8 @@ require_once 'Widget/WidgetException.php';
 /** 载入导航页支持 */
 require_once 'Widget/WidgetNavigator.php';
 
-/**
- * Typecho组件调用
- *
- * @param string $widget 组件名称
- * @param mixed $param 参数
- * @return TypechoWidget
- * @throws TypechoWidgetException
- */
-function widget($widget)
-{
-    /** 已经载入的widget */
-    static $_widgets;
-
-    /** 判断是否为plugin */
-    $widgetRoot = __TYPECHO_WIDGET_DIR__;
-    if(0 === strpos($widget, 'plugin:'))
-    {
-        $widgetRoot = __TYPECHO_PLUGIN_DIR__;
-        $widget = substr($widget, 7);
-    }
-
-    if(empty($_widgets[$widget]))
-    {
-        $widget_rows = explode('.', $widget);
-        $className = array_pop($widget_rows) . 'Widget';
-
-        if(!class_exists($className))
-        {
-            $fileName = __TYPECHO_WIDGET_DIR__ . '/' . str_replace('.', '/', $widget) . '.php';
-            if(file_exists($fileName))
-            {
-                require_once $fileName;
-            }
-            else
-            {
-                throw new TypechoWidgetException(_t('组件%s不存在', $widget), 404);
-            }
-        }
-
-        $object = new $className();
-        $_widgets[$widget] = &$object;
-
-        $args = func_get_args();
-        array_shift($args);
-        call_user_func_array(array($_widgets[$widget], 'render'), $args);
-    }
-
-    return $_widgets[$widget];
-}
+/** 载入api支持 */
+require_once 'Typecho.php';
 
 /**
  * Typecho组件基类

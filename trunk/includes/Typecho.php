@@ -10,6 +10,9 @@
  * @version $Id$
  */
 
+/** 异常基类 */
+require_once 'Exception.php';
+
 /**
  * Typecho公用方法
  *
@@ -65,6 +68,55 @@ class Typecho
         
         //设置文件头
         header('content-Type: text/html;charset= ' . $charset);
+    }
+
+    /**
+     * Typecho组件调用
+     *
+     * @param string $widget 组件名称
+     * @param mixed $param 参数
+     * @return TypechoWidget
+     * @throws TypechoWidgetException
+     */
+    public static function widget($widget)
+    {
+        /** 已经载入的widget */
+        static $_widgets;
+
+        /** 判断是否为plugin */
+        $widgetRoot = __TYPECHO_WIDGET_DIR__;
+        if(0 === strpos($widget, 'plugin:'))
+        {
+            $widgetRoot = __TYPECHO_PLUGIN_DIR__;
+            $widget = substr($widget, 7);
+        }
+
+        if(empty($_widgets[$widget]))
+        {
+            $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . 'Widget';
+
+            if(!class_exists($className))
+            {
+                $fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php';
+                if(file_exists($fileName))
+                {
+                    require_once $fileName;
+                }
+                else
+                {
+                    throw new TypechoException(_t('文件%s不存在', $fileName), 404);
+                }
+            }
+
+            $object = new $className();
+            $_widgets[$widget] = &$object;
+
+            $args = func_get_args();
+            array_shift($args);
+            call_user_func_array(array($_widgets[$widget], 'render'), $args);
+        }
+
+        return $_widgets[$widget];
     }
 
     /**
