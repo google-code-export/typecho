@@ -22,11 +22,11 @@ class LogoutWidget extends TypechoWidget
      */
     public function render()
     {
-        if(widget('Access')->hasLogin())
+        if(Typecho::widget('Access')->hasLogin())
         {
-            widget('Access')->logout();
+            Typecho::widget('Access')->logout();
         }
         
-        Typecho::redirect(widget('Options')->index);
+        Typecho::redirect(Typecho::widget('Options')->index);
     }
 }

@@ -101,7 +101,7 @@ class TypechoRoute
                 {
                     foreach($widgets as $widget)
                     {
-                        widget($widget);
+                        Typecho::widget($widget);
                     }
                 }
 

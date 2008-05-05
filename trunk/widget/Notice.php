@@ -74,8 +74,8 @@ class NoticeWidget extends TypechoWidget
             }
         }
         
-        TypechoRequest::setCookie('notice', $notice, widget('Options')->gmtTime + widget('Options')->timezone,
-        widget('Options')->siteURL);
+        TypechoRequest::setCookie('notice', $notice, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone,
+        Typecho::widget('Options')->siteURL);
     }
 
     /**
@@ -89,7 +89,7 @@ class NoticeWidget extends TypechoWidget
         if(NULL !== TypechoRequest::getCookie('notice'))
         {
             $this->push(TypechoRequest::getCookie('notice'));
-            TypechoRequest::deleteCookie('notice', widget('Options')->siteURL);
+            TypechoRequest::deleteCookie('notice', Typecho::widget('Options')->siteURL);
         }
     }
 }

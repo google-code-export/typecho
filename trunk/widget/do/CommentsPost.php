@@ -33,7 +33,7 @@ class CommentsPostWidget extends DoPostWidget
     {
         $comment = array();
         $comment['cid'] = $cid;
-        $comment['created'] = widget('Options')->gmtTime;
+        $comment['created'] = Typecho::widget('Options')->gmtTime;
         $comment['agent'] = $_SERVER["HTTP_USER_AGENT"];
         $comment['ip'] = Typecho::getClientIp();
         $comment['type'] = 'comment';
@@ -58,14 +58,14 @@ class CommentsPostWidget extends DoPostWidget
         $validator = new TypechoValidation();
         $validator->addRule('author', 'required', _t('必须填写用户名'));
 
-        if(widget('Options')->commentsRequireMail)
+        if(Typecho::widget('Options')->commentsRequireMail)
         {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
 
-        if(widget('Options')->commentsRequireURL)
+        if(Typecho::widget('Options')->commentsRequireURL)
         {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
@@ -109,7 +109,7 @@ class CommentsPostWidget extends DoPostWidget
     public function render()
     {
         //判断来源
-        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], widget('Options')->index))
+        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], Typecho::widget('Options')->index))
         {
             throw new TypechoWidgetException(_t('来源页不合法'));
         }

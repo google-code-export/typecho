@@ -45,7 +45,7 @@ abstract class DoPostWidget extends TypechoWidget
     protected function goBack($anchor = NULL)
     {
         //判断来源
-        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], widget('Options')->index))
+        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], Typecho::widget('Options')->index))
         {
             throw new TypechoWidgetException(_t('无法返回原网页'));
         }
@@ -61,8 +61,8 @@ abstract class DoPostWidget extends TypechoWidget
      */
     protected function toXML()
     {
-        header('content-Type: application/rss+xml;charset= ' . widget('Options')->charset, true);
-        echo '<?xml version="1.0" encoding="' . widget('Options')->charset . '"?>';
+        header('content-Type: application/rss+xml;charset= ' . Typecho::widget('Options')->charset, true);
+        echo '<?xml version="1.0" encoding="' . Typecho::widget('Options')->charset . '"?>';
         echo '<items>';
         foreach($this->_stack as $item)
         {

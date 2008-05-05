@@ -30,10 +30,10 @@ class LoginWidget extends DoPostWidget
     public function render()
     {
         /** 如果已经登录 */
-        if(widget('Access')->hasLogin())
+        if(Typecho::widget('Access')->hasLogin())
         {
             /** 直接返回 */
-            Typecho::redirect(widget('Options')->index);
+            Typecho::redirect(Typecho::widget('Options')->index);
         }
         
         /** 初始化验证类 */
@@ -49,8 +49,8 @@ class LoginWidget extends DoPostWidget
         catch(TypechoValidationException $e)
         {
             /** 设置提示信息 */
-            widget('Notice')->set($e->getMessages());
-            Typecho::redirect(Typecho::pathToUrl('login.php', widget('Options')->adminURL)
+            Typecho::widget('Notice')->set($e->getMessages());
+            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminURL)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));
         }
@@ -64,13 +64,13 @@ class LoginWidget extends DoPostWidget
         /** 比对密码 */
         if($user && $user['password'] == md5(TypechoRequest::getParameter('password')))
         {
-            widget('Access')->login($user['uid'], $user['password'], sha1(Typecho::randString(20)),
-            1 == TypechoRequest::getParameter('remember') ? widget('Options')->gmtTime + widget('Options')->timezone : 0);
+            Typecho::widget('Access')->login($user['uid'], $user['password'], sha1(Typecho::randString(20)),
+            1 == TypechoRequest::getParameter('remember') ? Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone : 0);
         }
         else
         {
-            widget('Notice')->set(_t('无法找到匹配的用户'));
-            Typecho::redirect(Typecho::pathToUrl('login.php', widget('Options')->adminURL)
+            Typecho::widget('Notice')->set(_t('无法找到匹配的用户'));
+            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminURL)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));
         }
@@ -82,7 +82,7 @@ class LoginWidget extends DoPostWidget
         }
         else
         {
-            Typecho::redirect(Typecho::pathToUrl('index.php', widget('Options')->adminURL));
+            Typecho::redirect(Typecho::pathToUrl('index.php', Typecho::widget('Options')->adminURL));
         }
     }
 }

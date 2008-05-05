@@ -50,11 +50,11 @@ class XmlRpcWidget extends ContentsPostWidget
             return new IXR_Error(403, _t('密码错误'));
         }
 
-        widget('Access')->login($user['uid'], $user['name'], $user['group']);
+        Typecho::widget('Access')->login($user['uid'], $user['name'], $user['group']);
 
         if($group)
         {
-            if(widget('Access')->pass($group, true))
+            if(Typecho::widget('Access')->pass($group, true))
             {
                 return new IXR_Error(403, _t('无法获得权限'));
             }
@@ -94,12 +94,12 @@ class XmlRpcWidget extends ContentsPostWidget
     public function push($value)
     {
         //生成日期
-        $value['year'] = date('Y', $value['created'] + widget('Options')->timezone);
-        $value['month'] = date('n', $value['created'] + widget('Options')->timezone);
-        $value['day'] = date('j', $value['created'] + widget('Options')->timezone);
+        $value['year'] = date('Y', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['month'] = date('n', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['day'] = date('j', $value['created'] + Typecho::widget('Options')->timezone);
 
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse($value['type'], $value, widget('Options')->index);
+        $value['permalink'] = TypechoRoute::parse($value['type'], $value, Typecho::widget('Options')->index);
 
         $content = str_replace('<p><!--more--></p>', '<!--more-->', $value['text']);
         list($value['abstract'], $value['more']) = explode('<!--more-->', $content);
@@ -139,7 +139,7 @@ class XmlRpcWidget extends ContentsPostWidget
         }
 
         $pageStruct = array(
-        'dateCreated'			=> new IXR_Date($page['created'] + widget('Options')->timezone),
+        'dateCreated'			=> new IXR_Date($page['created'] + Typecho::widget('Options')->timezone),
         'userid'				=> $page['userId'],
         'page_id'				=> $page['cid'],
         'page_status'			=> 'public',
@@ -184,7 +184,7 @@ class XmlRpcWidget extends ContentsPostWidget
         foreach($pages as $page)
         {
             $pagesStruct = array(
-            'dateCreated'			=> new IXR_Date($page['created'] + widget('Options')->timezone),
+            'dateCreated'			=> new IXR_Date($page['created'] + Typecho::widget('Options')->timezone),
             'userid'				=> $page['userId'],
             'page_id'				=> $page['cid'],
             'page_status'			=> 'public',
@@ -264,7 +264,7 @@ class XmlRpcWidget extends ContentsPostWidget
         foreach($pages as $page)
         {
             $pagesStruct[] = array(
-                "dateCreated"	    => new IXR_Date($page['created'] + widget('Options')->timezone),
+                "dateCreated"	    => new IXR_Date($page['created'] + Typecho::widget('Options')->timezone),
                 "page_id"		    => $page["cid"],
                 "page_title"		=> $page["title"],
                 "page_parent_id"	=> 0
@@ -281,10 +281,10 @@ class XmlRpcWidget extends ContentsPostWidget
             return $check;
         }
 
-        $struct = array('user_id'      => widget('Access')->uid,
-                        'user_login'   => widget('Access')->name,
-                        'display_name' => widget('Access')->screenName,
-                        'user_email'   => widget('Access')->mail,
+        $struct = array('user_id'      => Typecho::widget('Access')->uid,
+                        'user_login'   => Typecho::widget('Access')->name,
+                        'display_name' => Typecho::widget('Access')->screenName,
+                        'user_email'   => Typecho::widget('Access')->mail,
                         'meta_value'   => '');
 
         return array($struct);
@@ -347,9 +347,9 @@ class XmlRpcWidget extends ContentsPostWidget
 
         $struct = array(
             'isAdmin' => true,
-            'url'	  => widget('Options')->siteURL,
-            'blogid'  => widget('Access')->uid,
-            'blogName'=> widget('Options')->title
+            'url'	  => Typecho::widget('Options')->siteURL,
+            'blogid'  => Typecho::widget('Access')->uid,
+            'blogName'=> Typecho::widget('Options')->title
         );
 
         return array($struct);
@@ -362,12 +362,12 @@ class XmlRpcWidget extends ContentsPostWidget
             return $check;
         }
 
-        return array('nickname'  => widget('Access')->screenName,
-                     'userid'    => widget('Access')->uid,
-                     'url'       => widget('Access')->url,
-                     'email'     => widget('Access')->mail,
-                     'lastname'  => widget('Access')->name,
-                     'firstname' => widget('Access')->name);
+        return array('nickname'  => Typecho::widget('Access')->screenName,
+                     'userid'    => Typecho::widget('Access')->uid,
+                     'url'       => Typecho::widget('Access')->url,
+                     'email'     => Typecho::widget('Access')->mail,
+                     'lastname'  => Typecho::widget('Access')->name,
+                     'firstname' => Typecho::widget('Access')->name);
     }
 
     public function bloggerGetPost($blogId, $postId, $userName, $password)
@@ -407,7 +407,7 @@ class XmlRpcWidget extends ContentsPostWidget
         $content .= stripslashes($post['text']);
 
         $struct = array('userid'      => $post['userId'],
-                        'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + widget('Options')->timezone)),
+                        'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + Typecho::widget('Options')->timezone)),
                         'content'     => $content,
                         'postid'      => $post['cid']);
 
@@ -430,9 +430,9 @@ class XmlRpcWidget extends ContentsPostWidget
         ->order('table.contents.created', 'DESC')
         ->limit(1);
 
-        if(!widget('Access')->pass('editor', true))
+        if(!Typecho::widget('Access')->pass('editor', true))
         {
-            $sql->where('table.contents.author = ?', widget('Access')->uid);
+            $sql->where('table.contents.author = ?', Typecho::widget('Access')->uid);
         }
 
         $posts = $this->db->fetchAll($sql, array($this, 'push'));
@@ -456,7 +456,7 @@ class XmlRpcWidget extends ContentsPostWidget
             $content .= stripslashes($post['text']);
 
             $structs[] = array('userid'      => $post['userId'],
-                               'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + widget('Options')->timezone)),
+                               'dateCreated' => new IXR_Date(date('Ymd\TH:i:s', $post['created'] + Typecho::widget('Options')->timezone)),
                                'content'     => $content,
                                'postid'      => $post['cid']);
         }
@@ -564,27 +564,27 @@ class XmlRpcWidget extends ContentsPostWidget
         if(isset($_GET['rsd']))
         {
             echo '<?xml version="1.0" encoding="';
-            widget('Options')->charset();
+            Typecho::widget('Options')->charset();
             echo '"?>
             <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
             <service>
             <engineName>Typecho</engineName>
             <engineLink>http://www.typecho.org/</engineLink>
             <homePageLink>';
-            widget('Options')->siteURL();
+            Typecho::widget('Options')->siteURL();
             echo '</homePageLink>
             <apis>
             <api name="WordPress" blogID="1" preferred="true" apiLink="';
-            widget('Options')->index('XmlRpc.do');
+            Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             <api name="Movable Type" blogID="1" preferred="false" apiLink="';
-            echo widget('Options')->index('XmlRpc.do');
+            echo Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             <api name="MetaWeblog" blogID="1" preferred="false" apiLink="';
-            widget('Options')->index('XmlRpc.do');
+            Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             <api name="Blogger" blogID="1" preferred="false" apiLink="';
-            widget('Options')->index('XmlRpc.do');
+            Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             </apis>
             </service>
