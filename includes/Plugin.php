@@ -94,11 +94,11 @@ class TypechoPlugin
     /**
      * 插件信息
      *
-     * @param array $pluginsList 插件列表
+     * @param string $pluginName 插件名称
      */
     static public function info($pluginName)
     {
-        return self::activate($pluginName, 'return');
+        return self::activate($pluginName, 'info');
     }
 
     /**
