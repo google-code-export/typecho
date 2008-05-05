@@ -1,5 +1,5 @@
 <?php Typecho::feedHeader('RSS2.0', $options->charset, array('content', 'wfw', 'dc')); ?>
-<?php widget('contents.FeedPosts')->to($feeds); ?>
+<?php Typecho::widget('contents.FeedPosts')->to($feeds); ?>
 
 <channel>
 <title><?php $options->title(); ?></title>

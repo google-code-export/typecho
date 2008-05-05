@@ -17,4 +17,4 @@ require_once '../config.php';
 Typecho::start(__TYPECHO_CHARSET__);
 
 /** 载入插件 */
-TypechoPlugin::init(widget('Options')->plugins('admin'));
+TypechoPlugin::init(Typecho::widget('Options')->plugins('admin'));

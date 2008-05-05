@@ -15,7 +15,7 @@ require_once 'config.php';
 Typecho::start(__TYPECHO_CHARSET__);
 
 /** 载入插件 */
-TypechoPlugin::init(widget('Options')->plugins('index'));
+TypechoPlugin::init(Typecho::widget('Options')->plugins('index'));
 
 /** 载入页面 */
-TypechoRoute::target(widget('Options')->templateDirectory . '/' . widget('Options')->template);
+TypechoRoute::target(Typecho::widget('Options')->templateDirectory . '/' . Typecho::widget('Options')->template);

@@ -1,8 +1,8 @@
 <?php
 require_once 'common.php';
-widget('Access')->pass('subscriber');
-widget('Menu')->setCurrentParent('/admin/index.php');
-widget('Menu')->setCurrentChild('/admin/index.php');
+Typecho::widget('Access')->pass('subscriber');
+Typecho::widget('Menu')->setCurrentParent('/admin/index.php');
+Typecho::widget('Menu')->setCurrentChild('/admin/index.php');
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -10,7 +10,7 @@ require_once 'menu.php';
 		<div id="sidebar">
 			<div id="userInfo">
 				<img src="images/default-userpic.jpg" alt="" class="left" />
-				<h6><?php widget('Access')->screenName(); ?></h6>
+				<h6><?php Typecho::widget('Access')->screenName(); ?></h6>
 				<p>You have <a href="#">6 posts</a>, <a href="#">1 page</a>, contained within <a href="#">4 categories</a> and <a href="#">14 tags</a>.</p>
 			</div><!-- end #userInfo -->
 
@@ -31,21 +31,21 @@ require_once 'menu.php';
         
 		<div id="content">
             <h2><?php _e('欢迎回到Typecho'); ?></h2>
-			<a class="botton right" href="<?php widget('Options')->adminURL('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
-			<a class="botton right" href="<?php widget('Options')->adminURL('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
+			<a class="botton right" href="<?php Typecho::widget('Options')->adminURL('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
+			<a class="botton right" href="<?php Typecho::widget('Options')->adminURL('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
             <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="25%"><?php _e('作者'); ?></th>
 					<th width="75%"><?php _e('内容'); ?></th>
 				</tr>
-                <?php widget('contents.AuthorsRecentPost', widget('Access')->uid)->to($post); ?>
+                <?php Typecho::widget('contents.AuthorsRecentPost', Typecho::widget('Access')->uid)->to($post); ?>
                 <?php if($post->have()): ?>
                 <?php while($post->get()): ?>
 				<tr>
 					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date(_t('y年n月j日 H时i分')); ?></td>
 					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a> | 
-					<a href="<?php widget('Options')->adminURL('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
+					<a href="<?php Typecho::widget('Options')->adminURL('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
 					<br /><?php $post->excerpt(100); ?></td>
 				</tr>
                 <?php endwhile; ?>

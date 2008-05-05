@@ -57,7 +57,7 @@ class AttachmentPostWidget extends DoPostWidget
     private function checkFileExtension($extension)
     {
         $extension = empty($extension) ? '?' : $extension;
-        return in_array($extension, explode('|', widget('Options')->attachmentExtensions));
+        return in_array($extension, explode('|', Typecho::widget('Options')->attachmentExtensions));
     }
 
     /**
@@ -68,9 +68,9 @@ class AttachmentPostWidget extends DoPostWidget
      */
     private function getStoragePath($date = NULL)
     {
-        $date = empty($date) ? widget('Options')->gmtTime : $date;
+        $date = empty($date) ? Typecho::widget('Options')->gmtTime : $date;
 
-        return __TYPECHO_ROOT_DIR__ . '/' . widget('Options')->attachmentDirectory . '/'
+        return __TYPECHO_ROOT_DIR__ . '/' . Typecho::widget('Options')->attachmentDirectory . '/'
         . date('Y', $date) . '/'
         . date('n', $date) . '/'
         . date('j', $date);
@@ -86,7 +86,7 @@ class AttachmentPostWidget extends DoPostWidget
     {
         if(empty($_FILES['attachment']))
         {
-            widget('Notice')->set(_t('没有文件被上传'));
+            Typecho::widget('Notice')->set(_t('没有文件被上传'));
             return;
         }
 
@@ -119,9 +119,9 @@ class AttachmentPostWidget extends DoPostWidget
                         'title'     =>  empty($_POST['title'][$key]) ? $_FILES['attachment']['name'][$key] : $_POST['title'][$key],
                         'text'      =>  empty($_POST['text'][$key]) ? NULL : $_POST['text'][$key],
                         'uri'       =>  $fileName,
-                        'created'   =>  widget('Options')->gmtTime,
-                        'modified'  =>  widget('Options')->gmtTime,
-                        'author'    =>  widget('Access')->uid,
+                        'created'   =>  Typecho::widget('Options')->gmtTime,
+                        'modified'  =>  Typecho::widget('Options')->gmtTime,
+                        'author'    =>  Typecho::widget('Access')->uid,
                         'type'      =>  'attachment'
                     );
 
@@ -139,7 +139,7 @@ class AttachmentPostWidget extends DoPostWidget
             }
         }
 
-        widget('Notice')->set(_t('%s 已经被上传'), implode(',', $uploadedAttachments));
+        Typecho::widget('Notice')->set(_t('%s 已经被上传'), implode(',', $uploadedAttachments));
         $this->goBack();
     }
 
@@ -153,7 +153,7 @@ class AttachmentPostWidget extends DoPostWidget
     {
         if(empty($_POST['cid']))
         {
-            widget('Notice')->set(_t('没有文件被更新'));
+            Typecho::widget('Notice')->set(_t('没有文件被更新'));
             return;
         }
 
@@ -164,14 +164,14 @@ class AttachmentPostWidget extends DoPostWidget
                                           ->limit(1));
         if(!$attachment)
         {
-            widget('Notice')->set(_t('没有文件被更新'));
+            Typecho::widget('Notice')->set(_t('没有文件被更新'));
             return;
         }
 
         //验证用户身份
-        if($attachment['author'] != widget('Access')->uid)
+        if($attachment['author'] != Typecho::widget('Access')->uid)
         {
-            widget('Access')->pass('editor');
+            Typecho::widget('Access')->pass('editor');
         }
 
         //添加钩子
@@ -195,7 +195,7 @@ class AttachmentPostWidget extends DoPostWidget
         $attachmentModify = array(
             'title'     =>  empty($_POST['title']) ? NULL : $_POST['title'],
             'text'      =>  empty($_POST['text']) ? NULL : $_POST['text'],
-            'modified'  =>  widget('Options')->gmtTime
+            'modified'  =>  Typecho::widget('Options')->gmtTime
         );
 
         $this->db->query($this->db->sql()
@@ -204,7 +204,7 @@ class AttachmentPostWidget extends DoPostWidget
         ->where('cid = ?', $attachmentId));
 
         TypechoWidgetHook::call($hookName, $attachmentId, $attachmentPath . '/' . $fileName);
-        widget('Notice')->set(_t('附件已经被更新'));
+        Typecho::widget('Notice')->set(_t('附件已经被更新'));
         $this->goBack();
     }
 
@@ -218,7 +218,7 @@ class AttachmentPostWidget extends DoPostWidget
     {
         if(!($formData = TypechoRequest::getParameterList('cid')))
         {
-            widget('Notice')->set(_t('没有文件被删除'));
+            Typecho::widget('Notice')->set(_t('没有文件被删除'));
             return;
         }
 
@@ -237,9 +237,9 @@ class AttachmentPostWidget extends DoPostWidget
             if($attachment)
             {
                 //验证用户身份
-                if($attachment['author'] != widget('Access')->uid)
+                if($attachment['author'] != Typecho::widget('Access')->uid)
                 {
-                    widget('Access')->pass('editor');
+                    Typecho::widget('Access')->pass('editor');
                 }
 
                 $this->db->query($this->db->sql()
@@ -256,14 +256,14 @@ class AttachmentPostWidget extends DoPostWidget
             }
         }
 
-        widget('Notice')->set(_t('%d个附件已经被删除', $deleteCount));
+        Typecho::widget('Notice')->set(_t('%d个附件已经被删除', $deleteCount));
         $this->goBack();
     }
 
     public function render()
     {
         //贡献者以上有提交文件权限
-        widget('Access')->pass('contributor');
+        Typecho::widget('Access')->pass('contributor');
         TypechoRequest::bindParameter(array('act' => 'upload'), 'uploadAttachment');
         TypechoRequest::bindParameter(array('act' => 'modify'), 'modifyAttachment');
         TypechoRequest::bindParameter(array('act' => 'delete'), 'deleteAttachment');

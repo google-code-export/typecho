@@ -1,7 +1,7 @@
 <?php 
 require_once 'common.php';
-widget('Menu')->setCurrentParent('/admin/edit.php');
-widget('Menu')->setCurrentChild('/admin/edit.php');
+Typecho::widget('Menu')->setCurrentParent('/admin/edit.php');
+Typecho::widget('Menu')->setCurrentChild('/admin/edit.php');
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -68,7 +68,7 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
-<script type="text/javascript" src="<?php widget('Options')->siteURL('/var/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php Typecho::widget('Options')->siteURL('/var/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
 tinyMCE.init({
 mode : "exact",

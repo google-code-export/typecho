@@ -74,8 +74,8 @@ class PostsWidget extends TypechoWidget
     public function __construct()
     {
         $this->db = TypechoDb::get();
-        $this->options = widget('Options');
-        $this->access = widget('Access');
+        $this->options = Typecho::widget('Options');
+        $this->access = Typecho::widget('Access');
         $this->_filterName = TypechoPlugin::name(__FILE__);
     }
 

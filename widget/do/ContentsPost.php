@@ -192,7 +192,7 @@ class ContentsPostWidget extends DoPostWidget
         $this->db->sql()->select('table.metas', '`mid`')
         ->where('table.metas.`type` = ?', 'category')
         ->order('table.metas.`sort`', TypechoDb::SORT_ASC)), 'mid');
-        $currentCategory = widget('Options')->defaultCategory;
+        $currentCategory = Typecho::widget('Options')->defaultCategory;
         
         foreach($allCategories as $category)
         {
@@ -215,9 +215,9 @@ class ContentsPostWidget extends DoPostWidget
      */
     protected function havePostPermission($userId)
     {
-        if(!widget('Access')->pass('editor', true))
+        if(!Typecho::widget('Access')->pass('editor', true))
         {
-            if($userId != widget('Access')->uid)
+            if($userId != Typecho::widget('Access')->uid)
             {
                 return false;
             }
