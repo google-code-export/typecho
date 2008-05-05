@@ -19,16 +19,16 @@ require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
 class DoWidget extends TypechoWidget
 {
     /**
-     * 排出抽象类
+     * 排除抽象类
      * 
      * @param string $value 输入数据
      * @param boolean
      */
     public function noAbstract($value)
     {
-        return ($value != 'DoPost');
+        return ($value != 'DoPost' && $value != 'ContentsPost');
     }
-    
+
     /**
      * 入口函数,初始化路由器
      *

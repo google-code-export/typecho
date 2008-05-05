@@ -9,7 +9,7 @@
  */
 
 /** 载入配置支持 */
-require_once 'config.php';
+require_once 'config.inc.php';
 
 /** 系统启动 */
 Typecho::start(__TYPECHO_CHARSET__);

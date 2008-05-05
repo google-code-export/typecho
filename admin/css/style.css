@@ -299,7 +299,7 @@ width: 99%;
 font-size: 1.5em;
 }
 
-#tag, #url_title {
+#tags, #slug {
 width: 99%;
 font-size: 1.2em;
 }
@@ -315,7 +315,7 @@ background: #E6EEF7;
 padding: .2em .3em;
 }
 
-#post_content {
+#text {
 width: 99%;
 }
 

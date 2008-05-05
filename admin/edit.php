@@ -12,11 +12,6 @@ require_once 'menu.php';
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
 			<div id="publishing">
-				<p><label>Post Status</label>
-				<select name="status" style="width: 155px;">
-					<option value="" selected="selected">Published</option>
-					<option value="">Unpublished</option>
-				</select></p>
 				<p><label><?php _e('发布日期'); ?></label><input type="text" name="test" value="<?php echo date('Y-m-d');?>" /></p>
 				<p><label><?php _e('发布时间'); ?></label><input type="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
 			</div>
@@ -33,18 +28,19 @@ require_once 'menu.php';
 			</ul>
 			<hr class="space">
 
-			<h3><?php _e('评论和引用'); ?></h3>
+			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="comment_status" checked="checked"/><label for="comment_status"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="ping_status" checked="checked"/><label for="ping_status"><?php _e('允许引用'); ?></label></p>
+				<p><input type="checkbox" id="allowComment" name="allowComment" checked="checked"/><label for="allowComment"><?php _e('允许评论'); ?></label><br />
+				<input type="checkbox" id="allowPing" name="allowPing" checked="checked"/><label for="allowPing"><?php _e('允许引用'); ?></label><br />
+                <input type="checkbox" id="allowFeed" name="allowFeed" checked="checked"/><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>
-			<p><input type="text" id="" style="width: 225px;" /></p>
+			<p><input type="text" name="pasword" id="pasword" style="width: 225px;" /></p>
 			<p style="margin: -1em 1.5em 1.5em 0;"><small>Setting a password will require people who visit your blog to enter the above password to view this post and its comments.</small></p>
 
 			<h3><?php _e('引用通告'); ?></h3>
-			<p><textarea id="" rows="5" cols="" style="width: 225px;"></textarea></p>
+			<p><textarea id="trackback" name="trackback" rows="5" cols="" style="width: 225px;"></textarea></p>
 			<p style="margin: -1em 1.5em 1.5em 0;"><small>Separate multiple URLs with spaces</small></p>
 		</div><!-- end #sidebar -->
         
@@ -54,16 +50,16 @@ require_once 'menu.php';
 			<!-- <div id="msg" class="success">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
 			<div id="msg" class="error">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div> -->
 			<h4><?php _e('标题'); ?></h4>
-			<p><input id="title" type="text" name="" value="" /></p>
+			<p><input id="title" type="text" name="title" value="" /></p>
 			<h4><?php _e('内容'); ?></h4>
-			<p><textarea id="post_content" name="" rows="15" cols="40"></textarea></p>
+			<p><textarea id="text" name="text" rows="15" cols="40"></textarea></p>
 			<p style="text-align: right;"><input type="submit" value="<?php _e('保存'); ?>" /> 
             <input type="submit" value="<?php _e('保存并继续编辑'); ?>" /> 
             <input type="submit" value="<?php _e('发布'); ?>" /></p>
 			<h4><?php _e('标签'); ?></h4>
-			<p><input id="tag" type="text" name="" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
+			<p><input id="tags" type="text" name="tags" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
 			<h4><?php _e('缩略名'); ?></h4>
-			<p><input id="url_title" type="text" name="" value="" /></p>
+			<p><input id="slug" type="text" name="slug" value="" /></p>
 		</div><!-- end #content -->
 
 	</form>
@@ -72,7 +68,7 @@ require_once 'menu.php';
 <script type="text/javascript">
 tinyMCE.init({
 mode : "exact",
-elements : "post_content",
+elements : "text",
 theme : "advanced",
 skin : "o2k7",
 plugins : "safari,inlinepopups",
