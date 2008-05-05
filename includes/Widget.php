@@ -165,15 +165,7 @@ abstract class TypechoWidget
      */
     public function __call($name, $args)
     {
-        if(function_exists($name))
-        {
-            array_unshift($args, $this, $this->_row);
-            call_user_func_array($name, $args);
-        }
-        else
-        {
-            echo isset($this->_row[$name]) ? $this->_row[$name] : NULL;
-        }
+        echo isset($this->_row[$name]) ? $this->_row[$name] : NULL;
     }
 
     /**
