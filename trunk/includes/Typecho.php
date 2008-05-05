@@ -85,15 +85,18 @@ class Typecho
 
         /** 判断是否为plugin */
         $widgetRoot = __TYPECHO_WIDGET_DIR__;
+        $suffix = 'Widget';
+        
         if(0 === strpos($widget, 'plugin:'))
         {
             $widgetRoot = __TYPECHO_PLUGIN_DIR__;
             $widget = substr($widget, 7);
+            $suffix = 'Plugin';
         }
 
         if(empty($_widgets[$widget]))
         {
-            $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . 'Widget';
+            $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . $suffix;
 
             if(!class_exists($className))
             {
