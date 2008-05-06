@@ -41,7 +41,7 @@ require_once 'menu.php';
 
 			<h3><?php _e('引用通告'); ?></h3>
 			<p><textarea id="trackback" name="trackback" rows="5" cols="" style="width: 225px;"></textarea></p>
-			<p style="margin: -1em 1.5em 1.5em 0;"><small>Separate multiple URLs with spaces</small></p>
+			<p style="margin: -1em 1.5em 1.5em 0;"><small>Separate multiple Urls with spaces</small></p>
 		</div><!-- end #sidebar -->
         
 		<div id="content">
@@ -64,7 +64,7 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
-<script type="text/javascript" src="<?php Typecho::widget('Options')->siteURL('/var/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php Typecho::widget('Options')->siteUrl('/var/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
 tinyMCE.init({
 mode : "exact",

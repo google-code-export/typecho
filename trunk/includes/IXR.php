@@ -198,7 +198,7 @@ class IXR_Client {
     var $error = false;
     function IXR_Client($server, $path = false, $port = 80) {
         if (!$path) {
-            // Assume we have been given a URL instead
+            // Assume we have been given a Url instead
             $bits = parse_url($server);
             $this->server = $bits['host'];
             $this->port = isset($bits['port']) ? $bits['port'] : 80;

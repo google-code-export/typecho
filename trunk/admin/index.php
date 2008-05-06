@@ -31,8 +31,8 @@ require_once 'menu.php';
         
 		<div id="content">
             <h2><?php _e('欢迎回到Typecho'); ?></h2>
-			<a class="botton right" href="<?php Typecho::widget('Options')->adminURL('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
-			<a class="botton right" href="<?php Typecho::widget('Options')->adminURL('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
+			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
+			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
             <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
@@ -45,7 +45,7 @@ require_once 'menu.php';
 				<tr>
 					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date(_t('y年n月j日 H时i分')); ?></td>
 					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a> | 
-					<a href="<?php Typecho::widget('Options')->adminURL('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
+					<a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
 					<br /><?php $post->excerpt(100); ?></td>
 				</tr>
                 <?php endwhile; ?>

@@ -347,7 +347,7 @@ class XmlRpcWidget extends ContentsPostWidget
 
         $struct = array(
             'isAdmin' => true,
-            'url'	  => Typecho::widget('Options')->siteURL,
+            'url'	  => Typecho::widget('Options')->siteUrl,
             'blogid'  => Typecho::widget('Access')->uid,
             'blogName'=> Typecho::widget('Options')->title
         );
@@ -571,14 +571,14 @@ class XmlRpcWidget extends ContentsPostWidget
             <engineName>Typecho</engineName>
             <engineLink>http://www.typecho.org/</engineLink>
             <homePageLink>';
-            Typecho::widget('Options')->siteURL();
+            Typecho::widget('Options')->siteUrl();
             echo '</homePageLink>
             <apis>
             <api name="WordPress" blogID="1" preferred="true" apiLink="';
             Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             <api name="Movable Type" blogID="1" preferred="false" apiLink="';
-            echo Typecho::widget('Options')->index('XmlRpc.do');
+            Typecho::widget('Options')->index('XmlRpc.do');
             echo '" />
             <api name="MetaWeblog" blogID="1" preferred="false" apiLink="';
             Typecho::widget('Options')->index('XmlRpc.do');

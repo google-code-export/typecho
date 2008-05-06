@@ -5,12 +5,12 @@ require_once 'common.php';
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php Typecho::widget('Options')->charset(); ?>" />
     <title><?php _e('登录到%s', Typecho::widget('Options')->title); ?></title>
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
-    <!--[if IE]><link rel="stylesheet" href="<?php Typecho::widget('Options')->adminURL('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
-    <script src="<?php Typecho::widget('Options')->adminURL('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
-    <script src="<?php Typecho::widget('Options')->adminURL('/js/add.js'); ?>" type="text/javascript"></script>
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
+    <!--[if IE]><link rel="stylesheet" href="<?php Typecho::widget('Options')->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
+    <script src="<?php Typecho::widget('Options')->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
+    <script src="<?php Typecho::widget('Options')->adminUrl('/js/add.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body style="background: #E6EEF7;">
@@ -30,10 +30,10 @@ require_once 'common.php';
 			<p><label style="font-weight: normal; vertical-align: middle;" for="remember"><input type="checkbox" id="remember" name="remember" value="1" /> <?php _e('记住我'); ?></label></p>
 			<p class="left">
 			<?php if(Typecho::widget('Options')->allowRegister): ?>
-				<a href="<?php Typecho::widget('Options')->adminURL('register.php'); ?>"><?php _e('注册'); ?></a> | 
+				<a href="<?php Typecho::widget('Options')->adminUrl('register.php'); ?>"><?php _e('注册'); ?></a> | 
 			<?php endif; ?>
-			<a href="<?php Typecho::widget('Options')->adminURL('get-password.php'); ?>"><?php _e('忘记密码?'); ?></a><br />
-			<a href="<?php Typecho::widget('Options')->siteURL(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
+			<a href="<?php Typecho::widget('Options')->adminUrl('get-password.php'); ?>"><?php _e('忘记密码?'); ?></a><br />
+			<a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
 			<p class="right"><input type="submit" value="<?php _e('登录'); ?>" /></p>
 		</form>
 		<?php else: ?>
@@ -43,8 +43,8 @@ require_once 'common.php';
 			    <li><?php _e('点击下面的链接继续操作'); ?></li>
 			</ul>
 		</div>
-		<p class="left"><a href="<?php Typecho::widget('Options')->adminURL(); ?>"><?php _e('&laquo; 进入后台'); ?></a> | 
-		<a href="<?php Typecho::widget('Options')->siteURL(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
+		<p class="left"><a href="<?php Typecho::widget('Options')->adminUrl(); ?>"><?php _e('&laquo; 进入后台'); ?></a> | 
+		<a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
 		<?php endif; ?>
 	</div>
 </body>

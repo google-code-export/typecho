@@ -500,9 +500,9 @@ class Typecho
                 $path = $pathInfo;
             }
         }
-        else if(!empty($_SERVER["REDIRECT_URL"]))
+        else if(!empty($_SERVER["REDIRECT_Url"]))
         {
-            $path = $_SERVER["REDIRECT_URL"];
+            $path = $_SERVER["REDIRECT_Url"];
 
             if(empty($_SERVER['QUERY_STRING']) || $_SERVER['QUERY_STRING'] == $_SERVER["REDIRECT_QUERY_STRING"])
             {

@@ -50,9 +50,9 @@ class OptionsWidget extends TypechoWidget
      * @param string $path 子路径
      * @return void
      */
-    public function siteURL($path = NULL)
+    public function siteUrl($path = NULL)
     {
-        echo Typecho::pathToUrl($path, $this->siteURL);
+        echo Typecho::pathToUrl($path, $this->siteUrl);
     }
     
     /**
@@ -74,9 +74,9 @@ class OptionsWidget extends TypechoWidget
      * @param string $path 子路径
      * @return void
      */
-    public function templateURL($path = NULL)
+    public function templateUrl($path = NULL)
     {
-        echo Typecho::pathToUrl($path, $this->templateURL);
+        echo Typecho::pathToUrl($path, $this->templateUrl);
     }
     
     /**
@@ -86,9 +86,9 @@ class OptionsWidget extends TypechoWidget
      * @param string $path 子路径
      * @return void
      */
-    public function adminURL($path = NULL)
+    public function adminUrl($path = NULL)
     {
-        echo Typecho::pathToUrl($path, $this->adminURL);
+        echo Typecho::pathToUrl($path, $this->adminUrl);
     }
 
     /**
@@ -107,11 +107,11 @@ class OptionsWidget extends TypechoWidget
         $this->_stack[] = $this->_row;
 
         $this->charset = __TYPECHO_CHARSET__;
-        $this->index = $this->rewrite ? $this->siteURL : Typecho::pathToUrl('/index.php', $this->siteURL);
-        $this->templateURL = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteURL);
-        $this->attachmentURL = Typecho::pathToUrl($this->attachmentDirectory, $this->siteURL);
+        $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
+        $this->templateUrl = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteUrl);
+        $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
         $this->gmtTime = time() - intval(date('Z'));
-        $this->rssURL = TypechoRoute::parse('rss', NULL, $this->index);
-        $this->adminURL = Typecho::pathToUrl('/admin/', $this->siteURL);
+        $this->rssUrl = TypechoRoute::parse('rss', NULL, $this->index);
+        $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
     }
 }

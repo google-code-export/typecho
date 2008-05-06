@@ -167,7 +167,7 @@ class PostsWidget extends TypechoWidget
      * @access public
      * @return void
      */
-    public function feedURL()
+    public function feedUrl()
     {
         echo TypechoRoute::parse('post_rss', $this->_row, $this->options->index);
     }
@@ -178,7 +178,7 @@ class PostsWidget extends TypechoWidget
      * @access public
      * @return void
      */
-    public function commentsPostURL()
+    public function commentsPostUrl()
     {
         printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->options->index) . '?%d.%d',
         $this->cid, $this->created);
@@ -190,7 +190,7 @@ class PostsWidget extends TypechoWidget
      * @access public
      * @return void
      */
-    public function trackbackURL()
+    public function trackbackUrl()
     {
         printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->options->index) . '?%d.%d',
         $this->cid, $this->created);

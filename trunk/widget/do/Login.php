@@ -50,7 +50,7 @@ class LoginWidget extends DoPostWidget
         {
             /** 设置提示信息 */
             Typecho::widget('Notice')->set($e->getMessages());
-            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminURL)
+            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminUrl)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));
         }
@@ -70,7 +70,7 @@ class LoginWidget extends DoPostWidget
         else
         {
             Typecho::widget('Notice')->set(_t('无法找到匹配的用户'));
-            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminURL)
+            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminUrl)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));
         }
@@ -82,7 +82,7 @@ class LoginWidget extends DoPostWidget
         }
         else
         {
-            Typecho::redirect(Typecho::pathToUrl('index.php', Typecho::widget('Options')->adminURL));
+            Typecho::redirect(Typecho::pathToUrl('index.php', Typecho::widget('Options')->adminUrl));
         }
     }
 }

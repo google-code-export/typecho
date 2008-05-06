@@ -46,7 +46,7 @@ require_once 'menu.php';
 				</tr>
 				<tr>
 					<td><label>Category Slug</label></td>
-					<td><input type="text" id="" style="width: 60%;" /><small>The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
+					<td><input type="text" id="" style="width: 60%;" /><small>The “slug” is the Url-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
 				</tr>
 				<tr>
 					<td><label>Category description</label></td>
