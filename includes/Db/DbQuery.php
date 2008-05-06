@@ -88,7 +88,14 @@ class TypechoDbQuery
         }
     }
 
-    public function filterColumnCallback($matches)
+    /**
+     * 数组正则匹配回调函数
+     * 
+     * @access public
+     * @param array $matches 匹配数组
+     * @return string
+     */
+    public function filterColumnCallback(array $matches)
     {
         return $this->_adapter->quoteColumn($matches[1]);
     }

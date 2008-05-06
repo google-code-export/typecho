@@ -48,12 +48,12 @@ abstract class ContentsPostWidget extends DoPostWidget
                 ->where('`cid` = ?', $cid)
                 ->where('`mid` = ?', $tag));
                 
-                $row = $this->db->fetchRow($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
+                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.relationships.`mid` = ?', $tag));
+                ->where('table.relationships.`mid` = ?', $tag))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
-                ->row('count', $row['num'])
+                ->row('count', $num)
                 ->where('`mid` = ?', $tag));
             }
         }
@@ -171,12 +171,12 @@ abstract class ContentsPostWidget extends DoPostWidget
                     'cid'  =>   $cid
                 )));
                 
-                $row = $this->db->fetchRow($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
+                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.relationships.`mid` = ?', $category));
+                ->where('table.relationships.`mid` = ?', $category))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
-                ->row('count', $row['num'])
+                ->row('count', $num)
                 ->where('`mid` = ?', $category));
             }
         }
