@@ -86,7 +86,7 @@ class TypechoWidgetNavigator
         $this->_pageTemplate = $pageTemplate;
 
         //如果页面超出范围,则抛出404异常
-        if($currentPage > $this->_totalPage || 1 > $currentPage)
+        if(($currentPage > $this->_totalPage && 0 < $this->_totalPage) || 1 > $currentPage)
         {
             throw new TypechoWidgetException(_t('没有找到'), 404);
         }
@@ -158,7 +158,7 @@ class TypechoWidgetNavigator
             else
             {
                 //当前页
-                echo '<span class="focus">' . $i . '</span>';
+                echo '<span class="current">' . $i . '</span>';
             }
         }
 

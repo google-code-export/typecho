@@ -236,13 +236,14 @@ abstract class ContentsPostWidget extends DoPostWidget
         ->where('`cid` = ?', $insertId));
 
         /** 插入分类 */
-        if(!empty($content['category']) && is_array($content['category']))
+        if(empty($content['category']) || !is_array($content['category']))
         {
-            $currentCategory = $this->setCategories($insertId, $content['category']);
-            $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('meta' => $currentCategory))
-            ->where('`cid` = ?', $insertId));
+            $content['category'] = array(Typecho::widget('Options')->defaultCategory);
         }
+        $currentCategory = $this->setCategories($insertId, $content['category']);
+        $this->db->query($this->db->sql()->update('table.contents')
+        ->rows(array('meta' => $currentCategory))
+        ->where('`cid` = ?', $insertId));
         
         /** 插入标签 */
         if(!empty($content['tag']))
@@ -297,13 +298,15 @@ abstract class ContentsPostWidget extends DoPostWidget
         ->where('`cid` = ?', $cid));
         
         /** 插入分类 */
-        if(!empty($content['category']) && is_array($content['category']))
+        if(empty($content['category']) || !is_array($content['category']))
         {
-            $currentCategory = $this->setCategories($cid, $content['category']);
-            $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('meta' => $currentCategory))
-            ->where('`cid` = ?', $cid));
+            $content['category'] = array(Typecho::widget('Options')->defaultCategory);
         }
+        
+        $currentCategory = $this->setCategories($cid, $content['category']);
+        $this->db->query($this->db->sql()->update('table.contents')
+        ->rows(array('meta' => $currentCategory))
+        ->where('`cid` = ?', $cid));
         
         /** 插入标签 */
         if(!empty($content['tag']))

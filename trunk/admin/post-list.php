@@ -4,83 +4,62 @@ Typecho::widget('Menu')->setCurrentParent('/admin/post-list.php');
 Typecho::widget('Menu')->setCurrentChild('/admin/post-list.php');
 require_once 'header.php';
 require_once 'menu.php';
+Typecho::widget('contents.AdminPosts')->to($posts);
 ?>
 
 	<div id="main">
-		<h2>Manage Posts</h2>
+		<h2><?php _e('管理文章'); ?></h2>
 		<div id="page">
 			<div class="table_nav">
-				<input type="submit" value="Delete" />
-				<input type="text" id="" style="width: 200px;" value="Keywords" onclick="value=''" />
-				<select id="" style="width: 160px;">
-					<option value="" selected="selected">View All Categories</option>
+				<input type="submit" value="<?php _e('删除'); ?>" />
+				<input type="text" name="keywords" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value=''" />
+				<select name="category">
+					<option value="" selected="selected"><?php _e('所有分类'); ?></option>
 					<option value="">Design (6)</option>
 				</select>
-				<select id="" style="width: 100px;">
-					<option value="" selected="selected">All Status</option>
-					<option value="">Published</option>
-					<option value="">Unpublished</option>
+				<select name="status" style="width: 100px;">
+					<option value="" selected="selected"><?php _e('我的所有文章'); ?></option>
+					<option value=""><?php _e('我已发布的文章'); ?></option>
+					<option value=""><?php _e('我的草稿'); ?></option>
 				</select>
-				<input type="submit" value="Filter" />
+				<input type="submit" value="<?php _e('过滤'); ?>" />
 			</div>
 
 			<table class="latest">
 				<tr>
-					<th width="2%"><input type="checkbox" id="" /></th>
-					<th width="40%">title</th>
-					<th width="10%">author</th>
-					<th width="15%">date</th>
-					<th width="15%">categories</th>
-					<th width="10%">comments</th>
-					<th width="8%">status</th>
+					<th width="2%"><input type="checkbox" /></th>
+					<th width="35%"><?php _e('标题'); ?></th>
+					<th width="10%"><?php _e('作者'); ?></th>
+					<th width="20%"><?php _e('发布日期'); ?></th>
+					<th width="15%"><?php _e('分类'); ?></th>
+					<th width="10%"><?php _e('评论'); ?></th>
+					<th width="8%"><?php _e('状态'); ?></th>
 				</tr>
-				<?php for($a=0;$a!=5;$a++) echo'
-				<tr>
-					<td><input type="checkbox" id="" /></td>
-					<td><a href="#">Switching to Linux: The GNOME desktop environment</a></td>
-					<td><a href="#">Admin</a></td>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Design</a>, <a href="#">Theme</a></td>
-					<td><a href="#">10</a></td>
-					<td><a href="#">Published</a></td>
-				</tr>'; ?>
-				<!-- Comments Start -->
-				<tr style="background: #fff;">
-					<td colspan="7" style="padding: 0; border: none;">
-						<table id="comment_list" class="right" style="margin: 1em 0;">
-							<tr>
-								<th width="65%">comment</th>
-								<th width="15%">date</th>
-								<th width="20%">actions</th>
-							</tr>
-							<tr><td colspan="3" style="background: #FFA;"><strong><a href="#">2 Comments Awaiting Moderation</a></strong></td></tr>
-							<tr><td colspan="3" style="background: #A00;"><strong><a style="color: #fff;" href="#">3 Junk Comments</a></strong></td></tr>
-							<?php for($a=0;$a!=5;$a++) echo'
-							<tr>
-								<td><p style="color: #C5D8EB;"><strong><a href="#"><img src="images/default-userpic.jpg" class="cmt_author left" alt="" /> Fen</a></strong><br /><a href="#">http://hellowiki.com</a> | <a href="#">fenbox@msn.com</a> | <a href="#">127.0.0.1</a></p><p>The textarea in the comment form seems be in the extreme left. Any suggestions to fix it?</p></td>
-								<td>2008-03-26 16:00</td>
-								<td style="color: #C5D8EB;"><a href="#">Approve</a> | <a href="#">Unapprove</a> | <a href="#">Spam</a> | <a href="#">Delete</a></td>
-							</tr>'; ?>
-							<tr><td colspan="3"><strong><a href="#">See More (14) &raquo;</a></strong></td></tr>
-						</table>
-					</td>
-				</tr>
-				<!-- Comments End -->
-				<?php for($a=0;$a!=5;$a++) echo'
-				<tr>
-					<td><input type="checkbox" id="" /></td>
-					<td><a href="#">Switching to Linux: The GNOME desktop environment</a></td>
-					<td><a href="#">Admin</a></td>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Design</a>, <a href="#">Theme</a></td>
-					<td><a href="#">10</a></td>
-					<td><a href="#">Published</a></td>
-				</tr>'; ?>
+                <?php if($posts->have()): ?>
+                <?php while($posts->get()): ?>
+                <tr>
+                    <td><input type="checkbox" name="cid[]" value="<?php $posts->cid(); ?>" /></td>
+                    <td><a href="edit.php?cid=<?php $posts->cid(); ?>"><?php $posts->title(); ?></a></td>
+                    <td><?php $posts->author(); ?></td>
+                    <td><?php $posts->date(_t('y年n月j日 H时i分')); ?></td>
+                    <td><?php $posts->category(); ?></td>
+                    <td><?php $posts->commentsNum('%d'); ?></td>
+                    <td><?php if('post' == $posts->type):
+                    _e('已发布');
+                    else:
+                    _e('草稿');
+                    endif;?></th>
+                </tr>
+                <?php endwhile; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="7"><?php _e('对不起,没有找到任何记录'); ?></td>
+                </tr>
+                <?php endif; ?>
 			</table>
-			<hr class="space" />
 
 			<div class="table_nav page_nav">
-				Pages: <a href="#">&lt;</a> <a href="#">1</a> <a class="select" href="#">2</a> ... <a href="#">9</a> <a href="#">10</a> <a href="#">&gt;</a>
+				<?php _e('分页:'); ?> <?php $posts->pageNav(); ?>
 			</div>
 		</div><!-- end #page -->
 	</div><!-- end #main -->

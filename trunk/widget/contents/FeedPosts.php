@@ -26,7 +26,7 @@ class FeedPostsWidget extends PostsWidget
      */
     public function render()
     {
-        $rows = $this->db->fetchAll($this->db->sql()
+        $this->db->fetchAll($this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
         table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
         ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)

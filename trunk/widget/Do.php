@@ -42,7 +42,7 @@ class DoWidget extends TypechoWidget
         $validator->addRule('do', 'required', _t('地址不合法'));
         $validator->addRule('do', 'alphaDash', _t('地址不合法'));
         $validator->addRule('do', 'noAbstract', _t('地址不合法'));
-        $validator->run(TypechoRoute::getParametersFrom('do'));
+        $validator->run(array('do' => TypechoRoute::getParameter('do')));
         
         Typecho::widget('do.' . TypechoRoute::getParameter('do'));
     }

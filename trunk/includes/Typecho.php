@@ -244,6 +244,18 @@ class Typecho
 
         return trim($string);
     }
+    
+    /**
+     * 过滤用于搜索的字符串
+     * 
+     * @access public
+     * @param string $query 搜索字符串
+     * @return string
+     */
+    public static function filterSearchQuery($query)
+    {
+        return str_replace(array('%', '?', '*'), '', $query);
+    }
 
     /**
      * feed头部生成函数
