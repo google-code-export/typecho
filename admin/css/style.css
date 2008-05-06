@@ -153,11 +153,16 @@ margin-bottom: 1.5em;
 border: 1px solid #D6E3F1;
 }
 
-.page_nav a {
+.page_nav a, .page_nav span {
 background: url(../images/button.gif) 0% 30% repeat-x;
 padding: 2px 5px;
 border: 1px solid #D2E1F0;
 }
+
+.page_nav span.current {
+background-position: 0% 40%;
+}
+
 .page_nav a.select, .page_nav a:hover {
 background-position: 0% 40%;
 text-decoration: none;

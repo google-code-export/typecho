@@ -90,7 +90,7 @@ class PostsWidget extends TypechoWidget
     {
         $args = func_get_args();
 
-        $num = $this->db->fetchRow($this->db->sql()
+        $num = $this->db->fetchObject($this->db->sql()
         ->select('table.contents', 'COUNT(`cid`) AS `num`')
         ->where('`type` = ?', 'post')
         ->where('`protected` = NULL')
@@ -329,9 +329,9 @@ class PostsWidget extends TypechoWidget
     public function render($pageSize = NULL)
     {
         $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->_currentPage = empty($_GET['page']) ? 1 : $_GET['page'];
+        $this->_currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
 
-        $rows = $this->db->fetchAll($this->db->sql()
+        $this->db->fetchAll($this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`tags`,
         table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
         ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)

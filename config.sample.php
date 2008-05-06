@@ -78,6 +78,7 @@ TypechoConfig::set('Db', array(
 TypechoConfig::set('Route', array(
     'index'         =>  array('/', 'index.php', NULL, NULL, array('contents.Posts')),
     'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s', array('contents.Posts')),
+    'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s', array('contents.Posts')),
     'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s', array('contents.Post')),
     'rss'           =>  array('/feed[/]?', '../../xml/rss.php', NULL, '/rss', NULL),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),
