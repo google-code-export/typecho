@@ -168,9 +168,9 @@ class AccessWidget extends TypechoWidget
     public function login($uid, $password, $authCode, $expire = 0)
     {
         /** 保存登录信息,对密码采用sha1和md5双重加密 */
-        TypechoRequest::setCookie('uid', $uid, $expire, Typecho::widget('Options')->siteURL);
-        TypechoRequest::setCookie('password', sha1($password), $expire, Typecho::widget('Options')->siteURL);
-        TypechoRequest::setCookie('authCode', $authCode, $expire, Typecho::widget('Options')->siteURL);
+        TypechoRequest::setCookie('uid', $uid, $expire, Typecho::widget('Options')->siteUrl);
+        TypechoRequest::setCookie('password', sha1($password), $expire, Typecho::widget('Options')->siteUrl);
+        TypechoRequest::setCookie('authCode', $authCode, $expire, Typecho::widget('Options')->siteUrl);
         $db = TypechoDb::get();
 
         //更新最后登录时间以及验证码
@@ -189,9 +189,9 @@ class AccessWidget extends TypechoWidget
      */
     public function logout()
     {
-        TypechoRequest::deleteCookie('uid', Typecho::widget('Options')->siteURL);
-        TypechoRequest::deleteCookie('password', Typecho::widget('Options')->siteURL);
-        TypechoRequest::deleteCookie('authCode', Typecho::widget('Options')->siteURL);
+        TypechoRequest::deleteCookie('uid', Typecho::widget('Options')->siteUrl);
+        TypechoRequest::deleteCookie('password', Typecho::widget('Options')->siteUrl);
+        TypechoRequest::deleteCookie('authCode', Typecho::widget('Options')->siteUrl);
     }
 
     /**
@@ -256,7 +256,7 @@ class AccessWidget extends TypechoWidget
             }
             else
             {
-                Typecho::redirect(Typecho::widget('Options')->siteURL . '/admin/login.php'
+                Typecho::redirect(Typecho::widget('Options')->siteUrl . '/admin/login.php'
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }

@@ -19,7 +19,7 @@ require_once 'menu.php';
 					<th width="1%"><input type="checkbox" id="" /></th>
 					<th width="20%">name</th>
 					<th width="49%">description</th>
-					<th width="30%">URL</th>
+					<th width="30%">Url</th>
 				</tr>
 				<?php for($a=0;$a!=5;$a++) echo'
 				<tr>
@@ -38,8 +38,8 @@ require_once 'menu.php';
 					<td><input type="text" id="" style="width: 50%;" /><small>The name is how the tag appears on your site.</small></td>
 				</tr>
 				<tr>
-					<td><label>URL</label></td>
-					<td><input type="text" id="" style="width: 50%;" /><small>The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
+					<td><label>Url</label></td>
+					<td><input type="text" id="" style="width: 50%;" /><small>The “slug” is the Url-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
 				</tr>
 				
 				<tr>

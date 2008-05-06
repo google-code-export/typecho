@@ -55,10 +55,10 @@ class MenuWidget extends TypechoWidget
      */
     public function outputParent($tag = NULL, $current = NULL)
     {
-        $adminURL = Typecho::widget('Options')->siteURL;
+        $adminUrl = Typecho::widget('Options')->siteUrl;
         foreach($this->_parentMenu as $menu)
         {
-            $link = Typecho::pathToUrl($menu[1], $adminURL);
+            $link = Typecho::pathToUrl($menu[1], $adminUrl);
             echo (NULL === $tag ? NULL  : "<{$tag}>")
             . "<a href=\"{$link}\"" . ($menu[1] == $this->_currentParent ? ' class="current"' : NULL) 
             . " title=\"{$menu[0]}\"><span>{$menu[0]}</span></a>"
@@ -74,7 +74,7 @@ class MenuWidget extends TypechoWidget
      */
     public function outputChild($tag = NULL)
     {
-        $adminURL = Typecho::widget('Options')->siteURL;
+        $adminUrl = Typecho::widget('Options')->siteUrl;
         $current = 0;
         
         foreach($this->_parentMenu as $key => $menu)
@@ -88,7 +88,7 @@ class MenuWidget extends TypechoWidget
         
         foreach($this->_childMenu[$current] as $menu)
         {
-            $link = Typecho::pathToUrl($menu[1], $adminURL);
+            $link = Typecho::pathToUrl($menu[1], $adminUrl);
             echo (NULL === $tag ? NULL  : "<{$tag}>")
             . "<a href=\"{$link}\"" . ($menu[1] == $this->_currentChild ? ' class="current-2"' : NULL) 
             . " title=\"{$menu[0]}\">{$menu[0]}</a>"

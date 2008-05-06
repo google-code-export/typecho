@@ -21,7 +21,7 @@ require_once 'menu.php';
 					<td><textarea id="" rows="5" cols=""  style="width: 90%;"></textarea><small>Say somthing about your blog</small></td>
 				</tr>
 				<tr>
-					<td><label>Site URL</label></td>
+					<td><label>Site Url</label></td>
 					<td><input type="text" id="" style="width: 70%;" /><small>Your blog's url, end without "/"</small></td>
 				</tr>
 				<tr>

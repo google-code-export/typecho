@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php Typecho::widget('Options')->charset(); ?>" />
     <title><?php Typecho::widget('Options')->title(); ?></title>
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php Typecho::widget('Options')->adminURL('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
-    <!--[if IE]><link rel="stylesheet" href="<?php Typecho::widget('Options')->adminURL('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
-    <script src="<?php Typecho::widget('Options')->adminURL('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
-    <script src="<?php Typecho::widget('Options')->adminURL('/js/add.js'); ?>" type="text/javascript"></script>
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php Typecho::widget('Options')->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
+    <!--[if IE]><link rel="stylesheet" href="<?php Typecho::widget('Options')->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
+    <script src="<?php Typecho::widget('Options')->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
+    <script src="<?php Typecho::widget('Options')->adminUrl('/js/add.js'); ?>" type="text/javascript"></script>
 </head>
 <body>

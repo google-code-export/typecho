@@ -65,7 +65,7 @@ class CommentsPostWidget extends DoPostWidget
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
 
-        if(Typecho::widget('Options')->commentsRequireURL)
+        if(Typecho::widget('Options')->commentsRequireUrl)
         {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }

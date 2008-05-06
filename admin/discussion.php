@@ -34,7 +34,7 @@ require_once 'menu.php';
 				</tr>
 				<tr>
 					<td><label>Comment Blacklist</label></td>
-					<td><textarea id="" rows="8" cols=""  style="width: 70%;"></textarea><small>When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam.</small></td>
+					<td><textarea id="" rows="8" cols=""  style="width: 70%;"></textarea><small>When a comment contains any of these words in its content, name, Url, e-mail, or IP, it will be marked as spam.</small></td>
 				</tr>
 				<tr>
 					<td></td>

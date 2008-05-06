@@ -8,7 +8,7 @@
 			<h1><a href="#"><?php Typecho::widget('Options')->title(); ?></a></h1>
 			<div id="nav-menu">
 				<?php Typecho::widget('Menu')->outputParent(NULL); ?>
-				<a href="<?php Typecho::widget('Options')->siteURL(); ?>" style="float: right;"><span><?php _e('返回站点&raquo;'); ?></span></a>
+				<a href="<?php Typecho::widget('Options')->siteUrl(); ?>" style="float: right;"><span><?php _e('返回站点&raquo;'); ?></span></a>
 				<div class="clear"></div>
 				<ul class="level-2">
 					<?php Typecho::widget('Menu')->outputChild('li'); ?>
