@@ -94,7 +94,7 @@ class TypechoConfig implements Iterator
     {
         if(!isset(self::$_config[$name]))
         {
-            throw new TypechoConfigException(_t('未定义%s配置', $name), 500);
+            throw new TypechoConfigException(_t('未定义%s配置', $name), TypechoException::RUNTIME);
         }
     }
 
@@ -139,7 +139,7 @@ class TypechoConfig implements Iterator
      */
     public function key()
     {
-        key($this->_currentConfig);
+        return key($this->_currentConfig);
     }
 
     /**

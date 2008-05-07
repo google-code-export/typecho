@@ -45,7 +45,7 @@ class TypechoMysql implements TypechoDbAdapter
         }
 
         throw new TypechoDbException(__TYPECHO_DEBUG__ ?
-        mysql_error() : _t('数据库连接错误'), 503);
+        mysql_error() : _t('数据库连接错误'), TypechoException::UNVAILABLE);
     }
 
     /**
@@ -64,7 +64,7 @@ class TypechoMysql implements TypechoDbAdapter
         }
 
         throw new TypechoDbException(__TYPECHO_DEBUG__ ?
-        mysql_error() : _t('数据库查询错误'), 500);
+        mysql_error() : _t('数据库查询错误'), TypechoException::RUNTIME);
     }
 
     /**

@@ -44,54 +44,34 @@ class TypechoFeed
     
     /** 定义行结束符 */
     const EOL = "\n";
-    
-    /** 定义Feed类型 */
-    private static $_type;
-    
+
     /**
-     * 创建rss1 Feed对象
+     * 创建Feed对象
      * 
      * @access public
      * @return FeedWriter
      */
-    public static function rss1()
+    public static function generator($type = self::RSS2)
     {
-        self::$_type = self::RSS1;
-        return new FeedWriter(self::RSS1);
+        return new FeedWriter($type);
     }
     
     /**
-     * 创建rss2 Feed对象
+     * 获取Feed时间格式
      * 
      * @access public
-     * @return FeedWriter
+     * @param string $type 聚合类型
+     * @return string
      */
-    public static function rss2()
+    public static function dateFormat($type = self::RSS2)
     {
-        self::$_type = self::RSS2;
-        return new FeedWriter(self::RSS2);
-    }
-    
-    /**
-     * 创建atom Feed对象
-     * 
-     * @access public
-     * @return FeedWriter
-     */
-    public static function atom()
-    {
-        self::$_type = self::ATOM;
-        return new FeedWriter(self::ATOM);
-    }
-    
-    /**
-     * 创建原子对象
-     * 
-     * @access public
-     * @return FeedItem
-     */
-    public static function item()
-    {
-        return new FeedWriter(self::$_type);
+        if(self::RSS1 == $type || self::RSS2 == $type)
+        {
+            return self::DATE_RSS;
+        }
+        else
+        {
+            return self::DATE_ATOM;
+        }
     }
 }

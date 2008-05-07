@@ -296,6 +296,7 @@ border-left: 1px solid #D2E1F0;
 cursor: pointer;
 font-size: 12px;
 font-weight: bold;
+overflow:visible;
 }
 
 

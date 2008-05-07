@@ -267,7 +267,7 @@ class AccessWidget extends TypechoWidget
         }
         else
         {
-            throw new TypechoWidgetException(_t('禁止访问'), 403);
+            throw new TypechoWidgetException(_t('禁止访问'), TypechoException::FORBIDDEN);
         }
     }
 }

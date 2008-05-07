@@ -107,7 +107,7 @@ class Typecho
                 }
                 else
                 {
-                    throw new TypechoException(_t('文件%s不存在', $fileName), 404);
+                    throw new TypechoException(_t('文件%s不存在', $fileName), TypechoException::RUNTIME);
                 }
             }
 
