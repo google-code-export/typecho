@@ -127,7 +127,7 @@ class AdminPostsWidget extends PostsWidget
             $this->_filterQuery['keywords'] = $keywords;
         }
         
-        /** 给计算数目对象赋值 */
+        /** 给计算数目对象赋值,克隆对象 */
         $this->_countSql = clone $select;
         
         /** 提交查询 */

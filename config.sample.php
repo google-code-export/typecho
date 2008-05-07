@@ -82,6 +82,7 @@ TypechoConfig::set('Route', array(
     'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s', array('contents.Post')),
     'rss'           =>  array('/feed[/]?', '../../xml/rss.php', NULL, '/rss', NULL),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),
+    'do_plugin'     =>  array('/([_0-9a-zA-Z-]+)/([_0-9a-zA-Z-]+)\.do', array('Do'), array('plugin', 'do'), '/%s/%s.do'),
     'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('Job'), array('job'), '/%s.job'),
     'login'         =>  array('/login[/]?', 'admin/login.php'),
     'admin'         =>  array('/admin[/]?', 'admin/index.php'),
