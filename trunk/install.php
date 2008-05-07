@@ -1,5 +1,15 @@
 <?php
-require_once 'config.sample.php';
+
+/** 载入配置文件 */
+if(file_exists('config.inc.php'))
+{
+    require_once 'config.inc.php';
+}
+else
+{
+    require_once 'config.sample.php';
+}
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -12,7 +22,8 @@ require_once 'config.sample.php';
 </head>
 
 <body style="background: #E6EEF7;">
-    <div id="login" class="round clearfix" style="margin-top:50px;width:400px">
+    <div id="login" class="round clearfix" style="margin-top:50px;width:400px;padding-bottom:10px">
+    <form action="install.php">
         <p style="text-align: center;"><img id="login-logo.png" src="admin/images/login-logo.png" alt="Typecho" /></p>
         <p>
             <ul style="list-style:none">
@@ -21,6 +32,8 @@ require_once 'config.sample.php';
                 请访问<a href="http://www.typecho.org/doku.php?id=install" target="_blank">此页面</a>获取更多信息.'); ?></li>
             </ul>
         </p>
+        <p class="right"><input type="hidden" name="step" value="finish" /><input type="submit" value="<?php _e('只需一步,开始安装 &raquo;'); ?>" /></p>
+    </form>
     </div>
 </body>
 </html>

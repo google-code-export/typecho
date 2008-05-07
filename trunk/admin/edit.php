@@ -64,7 +64,7 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
-<script type="text/javascript" src="<?php Typecho::widget('Options')->siteUrl('/var/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php Typecho::widget('Options')->adminUrl('/js/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
 tinyMCE.init({
 mode : "exact",
