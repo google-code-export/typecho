@@ -330,7 +330,7 @@ class PostsWidget extends TypechoWidget
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
         ->where('table.contents.`type` = ?', 'post')
         ->where('table.metas.`type` = ?', 'category')
-        ->where('table.contents.`password` = NULL')
+        ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime)
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', TypechoDb::SORT_DESC)

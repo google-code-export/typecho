@@ -113,6 +113,7 @@ class PostsFeedWidget extends TypechoWidget
         ->where('table.contents.`type` = ?', 'post')
         ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`allowFeed` = ?', 'enable')
+        ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', Typecho::widget('Options')->gmtTime)
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', TypechoDb::SORT_DESC)
