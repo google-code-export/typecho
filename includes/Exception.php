@@ -44,7 +44,7 @@ class TypechoException extends Exception
      * @param string $exceptionString 异常字符串
      * @return string
      */
-    static public function parse($exceptionString)
+    public static function parse($exceptionString)
     {
         $exceptionString = trim($exceptionString);
         $rows = explode("\n", $exceptionString);

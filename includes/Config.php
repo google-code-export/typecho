@@ -177,6 +177,19 @@ class TypechoConfig implements Iterator
     {
         $this->_currentConfig[$name] = $value;
     }
+    
+    /**
+     * 直接输出默认配置值
+     * 
+     * @access public
+     * @param string $name 配置名称
+     * @param array $args 参数
+     * @return void
+     */
+    public function __call($name, $args)
+    {
+        echo $this->_currentConfig[$name];
+    }
 
     /**
      * 判断当前配置值是否存在

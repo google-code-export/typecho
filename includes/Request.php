@@ -25,7 +25,7 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return mixed
      */
-    static public function getParameter($key)
+    public static function getParameter($key)
     {
         //优先选择GET方式
         if(!empty($_GET[$key]))
@@ -51,7 +51,7 @@ class TypechoRequest
      * @param string $parameter 指定的参数
      * @return unknown
      */
-    static public function getParametersFrom()
+    public static function getParametersFrom()
     {
         $args = func_get_args();
         $parameters = array();
@@ -72,7 +72,7 @@ class TypechoRequest
      * @param string $functionName 触发的函数名
      * @return void
      */
-    static public function bindParameter($postData, $functionName)
+    public static function bindParameter($postData, $functionName)
     {
         if(is_array($postData))
         {
@@ -104,7 +104,7 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return mixed
      */
-    static public function getCookie($key)
+    public static function getCookie($key)
     {
         return empty($_COOKIE[$key]) ? NULL : $_COOKIE[$key];
     }
@@ -118,7 +118,7 @@ class TypechoRequest
      * @param integer $ttl 过期时间,默认为0,表示随会话时间结束
      * @return void
      */
-    static public function setCookie($key, $value, $expire = 0, $url = NULL)
+    public static function setCookie($key, $value, $expire = 0, $url = NULL)
     {
         $path = '/';
         if(!empty($url))
@@ -150,7 +150,7 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return void
      */
-    static public function deleteCookie($key, $url = NULL)
+    public static function deleteCookie($key, $url = NULL)
     {
         if(!isset($_COOKIE[$key]))
         {
@@ -187,7 +187,7 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return string
      */
-    static public function getSession($key)
+    public static function getSession($key)
     {
         return empty($_SESSION[$key]) ?  NULL : $_SESSION[$key];
     }
@@ -200,7 +200,7 @@ class TypechoRequest
      * @param string $value 设置的值
      * @return void
      */
-    static public function setSession($key, $value)
+    public static function setSession($key, $value)
     {
         $_SESSION[$key] = $value;
     }
@@ -212,7 +212,7 @@ class TypechoRequest
      * @param string $key 指定的参数
      * @return void
      */
-    static public function deleteSession($key)
+    public static function deleteSession($key)
     {
         session_unregister($key);
     }
@@ -223,7 +223,7 @@ class TypechoRequest
      * @access public
      * @return void
      */
-    static public function destorySession()
+    public static function destorySession()
     {
         session_unset();
     }

@@ -16,6 +16,14 @@
 class OptionsWidget extends TypechoWidget
 {
     /**
+     * 缓存的插件配置
+     * 
+     * @access private
+     * @var array
+     */
+    private $_pluginConfig = array();
+
+    /**
      * 重载父类push函数,将所有变量值压入堆栈
      *
      * @access public
@@ -41,6 +49,31 @@ class OptionsWidget extends TypechoWidget
         $plugins = unserialize($this->plugins);
         return array_merge(empty($plugins[$namespace]) ? array() : $plugins[$namespace],
         empty($plugins['*']) ? array() : $plugins['*']);
+    }
+    
+    /**
+     * 获取插件的配置信息
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return array
+     */
+    public function plugin($pluginName)
+    {
+        if(!isset($this->_pluginConfig[$pluginName]))
+        {
+            if(!empty($this->_row['plugin:' . $pluginName])
+            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName])))
+            {
+                $this->_pluginConfig[$pluginName] = new TypechoConfig($options);
+            }
+            else
+            {
+                throw new TypechoPluginException(_t('插件%s的配置信息没有找到', $pluginName), 500);
+            }
+        }
+
+        return $this->_pluginConfig[$pluginName];
     }
     
     /**

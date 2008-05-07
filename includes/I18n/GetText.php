@@ -21,7 +21,7 @@ class TypechoGetText
      * @access private
      * @var resource
      */
-    static private $_handle;
+    private static $_handle;
 
     /**
      * 已经载入的文件列表
@@ -29,7 +29,7 @@ class TypechoGetText
      * @access private
      * @var array
      */
-    static private $_files;
+    private static $_files;
 
     /**
      * 翻译字符串列表
@@ -37,7 +37,7 @@ class TypechoGetText
      * @access public
      * @var array
      */
-    static public $strings;
+    public static $strings;
 
     /**
      * mo文件头部信息
@@ -45,14 +45,14 @@ class TypechoGetText
      * @access public
      * @var array
      */
-    static public $meta;
+    public static $meta;
 
     /**
      * initialize i18n
      *
      * @return void
      */
-    static public function init($lang)
+    public static function init($lang)
     {
         self::$_handle = NULL;
         self::$strings = array();
@@ -69,7 +69,7 @@ class TypechoGetText
     * @return  mixed
     * @param   int     $bytes
     */
-    static private function _read($bytes = 1)
+    private static function _read($bytes = 1)
     {
         if (0 < $bytes = abs($bytes)) {
         return fread(self::$_handle, $bytes);
@@ -85,7 +85,7 @@ class TypechoGetText
     * @return  int
     * @param   bool    $bigendian
     */
-    static private function _readInt($bigendian = false)
+    private static function _readInt($bigendian = false)
     {
         return current($array = unpack($bigendian ? 'N' : 'V', self::_read(4)));
     }
@@ -98,7 +98,7 @@ class TypechoGetText
     * @param   array   $params     associative array with offset and length
     *                              of the string
     */
-    static private function _readStr($params)
+    private static function _readStr($params)
     {
         fseek(self::$_handle, $params['offset']);
         return self::_read($params['length']);
@@ -112,7 +112,7 @@ class TypechoGetText
     * @return  array
     * @param   string  $meta
     */
-    static private function meta2array($meta)
+    private static function meta2array($meta)
     {
         $array = array();
         foreach (explode("\n", $meta) as $info) {
@@ -132,7 +132,7 @@ class TypechoGetText
      * @param string $file 文件名
      * @return boolean
      */
-    static public function load($file)
+    public static function load($file)
     {
         if(!isset(self::$_files[$file]))
         {

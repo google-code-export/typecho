@@ -52,7 +52,7 @@ class TypechoI18n
 {
     private $_loaded = false;
 
-    static public function translate($string)
+    public static function translate($string)
     {
         if(__TYPECHO_I18N_LANGUAGE__)
         {
