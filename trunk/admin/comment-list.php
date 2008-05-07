@@ -38,7 +38,6 @@ require_once 'menu.php';
 					<td>Approve</td>
 				</tr>'; ?>
 			</table>
-			<hr class="space" />
 
 			<div class="table_nav page_nav">
 				Pages: <a href="#">&lt;</a> <a href="#">1</a> <a class="select" href="#">2</a> ... <a href="#">9</a> <a href="#">10</a> <a href="#">&gt;</a>

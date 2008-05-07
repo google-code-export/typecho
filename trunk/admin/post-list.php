@@ -11,7 +11,8 @@ Typecho::widget('contents.AdminPosts')->to($posts);
 		<h2><?php _e('管理文章'); ?></h2>
 		<div id="page">
 			<div class="table_nav">
-				<input type="submit" value="<?php _e('删除'); ?>" />
+            <form action="post-list.php">
+				<input type="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
 				<input type="text" name="keywords" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value=''" />
 				<select name="category">
 					<option value="" selected="selected"><?php _e('所有分类'); ?></option>
@@ -23,8 +24,10 @@ Typecho::widget('contents.AdminPosts')->to($posts);
 					<option value=""><?php _e('我的草稿'); ?></option>
 				</select>
 				<input type="submit" value="<?php _e('过滤'); ?>" />
+            </form>
 			</div>
-
+            
+            <form method="post" name="post" id="post">
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>
@@ -56,11 +59,13 @@ Typecho::widget('contents.AdminPosts')->to($posts);
                     <td colspan="7"><?php _e('对不起,没有找到任何记录'); ?></td>
                 </tr>
                 <?php endif; ?>
-			</table>
-
+			</table></form>
+            
+            <?php if($posts->have()): ?>
 			<div class="table_nav page_nav">
 				<?php _e('分页:'); ?> <?php $posts->pageNav(); ?>
 			</div>
+            <?php endif; ?>
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 	

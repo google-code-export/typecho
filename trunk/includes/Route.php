@@ -44,6 +44,30 @@ class TypechoRoute
     private static $_parameters = array();
 
     /**
+     * 解析路径
+     * 
+     * @access public
+     * @param mixed $route 路由表
+     * @param string $pathInfo 全路径
+     * @param string $current 当前键值
+     * @param array $matches 匹配值
+     * @return array
+     */
+    public static function match($route, $pathInfo, &$current, &$matches)
+    {
+        foreach($route as $key => $val)
+        {
+            if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
+            {
+                $current = $key;
+                return $val;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
      *
      * @param string $path 目的文件所在目录
@@ -62,59 +86,56 @@ class TypechoRoute
         $pathInfo = Typecho::getPathInfo();
 
         /** 遍历路由 */
-        foreach($route as $key => $val)
+        if(false !== ($val = self::match($route, $pathInfo, $key, $matches)))
         {
-            if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
+            self::$current = $key;
+            $count = count($val);
+
+            if(5 == $count)
             {
-                self::$current = $key;
-                $count = count($val);
-
-                if(5 == $count)
-                {
-                    list($pattern, $file, $values, $format, $widgets) = $val;
-                }
-                else if(4 == $count)
-                {
-                    list($pattern, $widgets, $values, $format) = $val;
-                }
-                else if(2 == $count)
-                {
-                    list($pattern, $address) = $val;
-                }
-                else
-                {
-                    throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), 404);
-                }
-
-                if(!empty($address))
-                {
-                    Typecho::redirect($address);
-                }
-
-                if(1 < count($matches) && !empty($values))
-                {
-                    unset($matches[0]);
-                    self::$_parameters = array_combine($values, $matches);
-                }
-
-                if(!empty($widgets))
-                {
-                    foreach($widgets as $widget)
-                    {
-                        Typecho::widget($widget);
-                    }
-                }
-
-                if(!empty($file))
-                {
-                    require $path . '/' . $file;
-                }
-
-                exit;
+                list($pattern, $file, $values, $format, $widgets) = $val;
             }
+            else if(4 == $count)
+            {
+                list($pattern, $widgets, $values, $format) = $val;
+            }
+            else if(2 == $count)
+            {
+                list($pattern, $address) = $val;
+            }
+            else
+            {
+                throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), TypechoException::NOTFOUND);
+            }
+
+            if(!empty($address))
+            {
+                Typecho::redirect($address);
+            }
+
+            if(1 < count($matches) && !empty($values))
+            {
+                unset($matches[0]);
+                self::$_parameters = array_combine($values, $matches);
+            }
+
+            if(!empty($widgets))
+            {
+                foreach($widgets as $widget)
+                {
+                    Typecho::widget($widget);
+                }
+            }
+
+            if(!empty($file))
+            {
+                require $path . '/' . $file;
+            }
+
+            return;
         }
 
-        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), 404);
+        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), TypechoException::NOTFOUND);
     }
 
     /**

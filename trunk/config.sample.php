@@ -76,15 +76,15 @@ TypechoConfig::set('Db', array(
 
 /** 定义路由参数 */
 TypechoConfig::set('Route', array(
-    'index'         =>  array('/', 'index.php', NULL, NULL, array('contents.Posts')),
-    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s', array('contents.Posts')),
-    'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s', array('contents.Posts')),
-    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s', array('contents.Post')),
-    'rss'           =>  array('/feed[/]?', '../../xml/rss.php', NULL, '/rss', NULL),
+    'index'         =>  array('[/]?', 'index.php', NULL, '/', array('contents.Posts')),
+    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s/', array('contents.Posts')),
+    'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s/', array('contents.Posts')),
+    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s/', array('contents.Post')),
+    'feed'          =>  array('/feed([_0-9a-zA-Z-\/]*)', array('Feed'), array('feed'), '/feed%s'),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),
     'do_plugin'     =>  array('/([_0-9a-zA-Z-]+)/([_0-9a-zA-Z-]+)\.do', array('Do'), array('plugin', 'do'), '/%s/%s.do'),
     'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('Job'), array('job'), '/%s.job'),
     'login'         =>  array('/login[/]?', 'admin/login.php'),
     'admin'         =>  array('/admin[/]?', 'admin/index.php'),
-    'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s', array('contents.Post')),
+    'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s/', array('contents.Post')),
 ));

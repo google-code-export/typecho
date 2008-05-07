@@ -199,6 +199,6 @@ abstract class TypechoWidget
      */
     public function render()
     {
-        throw new TypechoWidgetException(_t('render方法必须在继承子类中实现'), 500);
+        throw new TypechoWidgetException(_t('render方法必须在继承子类中实现'), TypechoException::RUNTIME);
     }
 }

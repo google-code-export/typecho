@@ -120,6 +120,9 @@ class PostsWidget extends TypechoWidget
 
         //生成静态链接
         $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->options->index);
+        
+        /** 生成聚合链接 */
+        $value['feedUrl'] = TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse($value['type'], $value)), $this->options->index);
 
         TypechoPlugin::callFilter($this->_filterName, $value);
         return parent::push($value);
@@ -159,17 +162,6 @@ class PostsWidget extends TypechoWidget
     public function date($format)
     {
         echo date($format, $this->created);
-    }
-
-    /**
-     * 输出文章聚合地址
-     *
-     * @access public
-     * @return void
-     */
-    public function feedUrl()
-    {
-        echo TypechoRoute::parse('post_rss', $this->_row, $this->options->index);
     }
 
     /**

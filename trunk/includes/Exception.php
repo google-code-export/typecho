@@ -16,6 +16,18 @@
  */
 class TypechoException extends Exception
 {
+    /** 权限异常 */
+    const FORBIDDEN = 403;
+    
+    /** 记录不存在异常 */
+    const NOTFOUND = 404;
+    
+    /** 程序运行异常 */
+    const RUNTIME = 500;
+    
+    /** 服务器不可用 */
+    const UNVAILABLE = 503;
+
     /**
      * 内部消息对象,支持数组类型
      *
@@ -148,26 +160,26 @@ function exceptionHandler($exception)
     {
         switch($exception->getCode())
         {
-            case 403:
+            case TypechoException::FORBIDDEN:
             {
                 header('HTTP/1.1 403 Forbidden');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/403.php';
                 break;
             }
-            case 404:
+            case TypechoException::NOTFOUND:
             {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/404.php';
                 break;
             }
-            case 500:
+            case TypechoException::RUNTIME:
             {
                 header('HTTP/1.1 500 Internal Server Error');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/500.php';
                 break;
             }
-            case 503:
+            case TypechoException::UNVAILABLE:
             {
                 header('HTTP/1.1 503 Service Unvailable');
                 require_once __TYPECHO_EXCEPTION_DIR__ . '/503.php';

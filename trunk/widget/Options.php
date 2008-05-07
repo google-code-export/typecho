@@ -69,7 +69,7 @@ class OptionsWidget extends TypechoWidget
             }
             else
             {
-                throw new TypechoPluginException(_t('插件%s的配置信息没有找到', $pluginName), 500);
+                throw new TypechoPluginException(_t('插件%s的配置信息没有找到', $pluginName), TypechoException::RUNTIME);
             }
         }
 
@@ -140,11 +140,12 @@ class OptionsWidget extends TypechoWidget
         $this->_stack[] = $this->_row;
 
         $this->charset = __TYPECHO_CHARSET__;
+        $this->siteUrl = Typecho::pathToUrl(NULL, $this->siteUrl);
         $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
         $this->templateUrl = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteUrl);
         $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
         $this->gmtTime = time() - intval(date('Z'));
-        $this->rssUrl = TypechoRoute::parse('rss', NULL, $this->index);
+        $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
     }
 }

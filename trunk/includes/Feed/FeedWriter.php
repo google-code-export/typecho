@@ -31,7 +31,7 @@
 		$this->channels['link']         = 'http://www.ajaxray.com/blog';
 
 		//Tag names to encode in CDATA
-		$this->CDATAEncoding = array('description', 'content:encoded', 'summary');
+		$this->CDATAEncoding = array('description', 'content:encoded', 'summary', 'title', 'author', 'dc:creator');
 	}
 
 	// Start # public functions ---------------------------------------------
@@ -66,14 +66,14 @@
 	}
 	
 	/**
-	* Genarate the actual RSS/ATOM file
+	* Generate the actual RSS/ATOM file
 	* 
 	* @access   public
 	* @return   void
 	*/ 
-	public function genarateFeed()
+	public function generateFeed()
 	{
-		header("Content-type: text/xml");
+		header("Content-type: text/xml; charset=" . __TYPECHO_CHARSET__, true);
 		
 		$this->printHead();
 		$this->printChannels();
@@ -176,7 +176,7 @@
     * @param      string  an optional prefix
     * @return     string  the formated uuid
     */
-    public function uuid($key = null, $prefix = '') 
+    public static function uuid($key = null, $prefix = '') 
     {
         $key = ($key == null)? uniqid(rand()) : $key;
         $chars = md5($key);
@@ -201,22 +201,21 @@
 	*/
 	private function printHead()
 	{
-		$out  = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$out  = '<?xml version="1.0" encoding="' . __TYPECHO_CHARSET__ . '"?>' . TypechoFeed::EOL;
 		
 		if($this->version == TypechoFeed::RSS2)
 		{
 			$out .= '<rss version="2.0"
-					xmlns:content="http://purl.org/rss/1.0/modules/content/"
-					xmlns:wfw="http://wellformedweb.org/CommentAPI/"
-				  >' . TypechoFeed::EOL;
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:wfw="http://wellformedweb.org/CommentAPI/">' . TypechoFeed::EOL;
 		}    
 		elseif($this->version == TypechoFeed::RSS1)
 		{
 			$out .= '<rdf:RDF 
-					 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-					 xmlns="http://purl.org/rss/1.0/"
-					 xmlns:dc="http://purl.org/dc/elements/1.1/"
-					>' . TypechoFeed::EOL;;
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 		}
 		else if($this->version == TypechoFeed::ATOM)
 		{
