@@ -48,7 +48,7 @@ class TypechoPlugin
      * @param string $action 默认动作
      * @return mixed
      */
-    static public function activate($pluginName, $action = 'activate')
+    public static function activate($pluginName, $action = 'activate')
     {
         if(file_exists($fileName = __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'))
         {
@@ -73,7 +73,7 @@ class TypechoPlugin
      *
      * @param string $pluginName 插件名称
      */
-    static public function deactivate($pluginName)
+    public static function deactivate($pluginName)
     {
         self::activate($pluginName, 'deactivate');
     }
@@ -83,7 +83,7 @@ class TypechoPlugin
      *
      * @param array $pluginsList 插件列表
      */
-    static public function init(array $pluginsList)
+    public static function init(array $pluginsList)
     {
         foreach($pluginsList as $pluginName)
         {
@@ -96,7 +96,7 @@ class TypechoPlugin
      *
      * @param string $pluginName 插件名称
      */
-    static public function info($pluginName)
+    public static function info($pluginName)
     {
         return self::activate($pluginName, 'info');
     }
@@ -109,7 +109,7 @@ class TypechoPlugin
      * @param string $component 部件名称
      * @return string
      */
-    static public function name($fileName, $component = NULL)
+    public static function name($fileName, $component = NULL)
     {
         return urlencode(realpath($fileName)) . (empty($component) ? NULL : '->' . $component);
     }
@@ -122,7 +122,7 @@ class TypechoPlugin
      * @param mixed $functionName 钩子函数名称
      * @return void
      */
-    static public function registerHook($hookName, $functionName)
+    public static function registerHook($hookName, $functionName)
     {
         if(empty(self::$_hooks[$hookName]))
         {
@@ -139,7 +139,7 @@ class TypechoPlugin
      * @param string $hookName 钩子名称
      * @return array
      */
-    static public function callHook($hookName)
+    public static function callHook($hookName)
     {
         $args = func_get_args();
         array_shift($args);
@@ -164,7 +164,7 @@ class TypechoPlugin
      * @param mixed $functionName 过滤器函数名称
      * @return void
      */
-    static public function registerFilter($filterName, $functionName)
+    public static function registerFilter($filterName, $functionName)
     {
         if(empty(self::$_filters[$filterName]))
         {
@@ -182,7 +182,7 @@ class TypechoPlugin
      * @param array $input 需要过滤的数组
      * @return array
      */
-    static public function callFilter($filterName, &$input)
+    public static function callFilter($filterName, &$input)
     {
         if(!empty(self::$_filters[$filterName]))
         {
