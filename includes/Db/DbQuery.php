@@ -47,6 +47,19 @@ class TypechoDbQuery
     public function __construct(TypechoDbAdapter $adapter)
     {
         $this->_adapter = &$adapter;
+        
+        $this->_sqlPreBuild = array(
+            'action' => NULL,
+            'table'  => NULL,
+            'fields' => NULL,
+            'join'   => array(),
+            'where'  => NULL,
+            'limit'  => NULL,
+            'offset' => NULL,
+            'order'  => NULL,
+            'group'  => NULL,
+            'rows'   => array(),
+        );
     }
 
     /**
@@ -98,27 +111,6 @@ class TypechoDbQuery
     public function filterColumnCallback(array $matches)
     {
         return $this->_adapter->quoteColumn($matches[1]);
-    }
-
-    /**
-     * 初始化参数
-     *
-     * @return void
-     */
-    public function init()
-    {
-        $this->_sqlPreBuild = array(
-            'action' => NULL,
-            'table'  => NULL,
-            'fields' => NULL,
-            'join'   => array(),
-            'where'  => NULL,
-            'limit'  => NULL,
-            'offset' => NULL,
-            'order'  => NULL,
-            'group'  => NULL,
-            'rows'   => array(),
-        );
     }
 
     /**

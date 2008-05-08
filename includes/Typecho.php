@@ -258,65 +258,6 @@ class Typecho
     }
 
     /**
-     * feed头部生成函数
-     *
-     * @access public
-     * @param string $type feed类型
-     * @param string $charset feed字符集
-     * @param array $modules feed使用模块
-     * @return void
-     */
-    public static function feedHeader($type, $charset, array $modules = NULL)
-    {
-        $supportModules = array(
-            'content'   =>  'xmlns:content="http://purl.org/rss/1.0/modules/content/"',
-            'wfw'       =>  'xmlns:wfw="http://wellformedweb.org/CommentAPI/"',
-            'dc'        =>  'xmlns:dc="http://purl.org/dc/elements/1.1/"',
-            'atom'      =>  'xmlns="http://www.w3.org/2005/Atom"',
-            'thr'       =>  'xmlns:thr="http://purl.org/syndication/thread/1.0"',
-            'lang'      =>  'xml:lang="en"'
-        );
-
-        switch  (strtoupper($type))
-        {
-            case 'RSS2.0':
-            {
-                header('content-Type: application/rss+xml;charset= ' . $charset, true);
-                echo '<?xml version="1.0" encoding="' . $charset . '"?>';
-                echo '<rss version="2.0"';
-                break;
-            }
-            case 'RSS0.92':
-            {
-                header('content-Type: text/xml;charset= ' . $charset, true);
-                echo '<?xml version="1.0" encoding="' . $charset . '"?>';
-                echo '<rss version="0.92"';
-            }
-            case 'ATOM':
-            {
-                header('content-Type: application/atom+xml;charset= ' . $charset, true);
-                echo '<?xml version="1.0" encoding="' . $charset . '"?>';
-                echo '<feed';
-            }
-            default:
-                break;
-        }
-
-        if($modules)
-        {
-            foreach($modules as $module)
-            {
-                if(isset($supportModules[$module]))
-                {
-                    echo "\r\n" . $supportModules[$module];
-                }
-            }
-        }
-
-        echo '>';
-    }
-
-    /**
      * 宽字符串截字函数
      *
      * @access public
@@ -330,8 +271,8 @@ class Typecho
     {
         if(function_exists('mb_get_info'))
         {
-            $iLength = mb_strlen($str);
-            $str = mb_substr($str, $start, $length);
+            $iLength = mb_strlen($str, __TYPECHO_CHARSET__);
+            $str = mb_substr($str, $start, $length, __TYPECHO_CHARSET__);
             return ($length < $iLength - $start) ? $str . $trim : $str;
         }
         else
@@ -353,7 +294,7 @@ class Typecho
     {
         if(function_exists('mb_get_info'))
         {
-            return mb_strlen($str);
+            return mb_strlen($str, __TYPECHO_CHARSET__);
         }
         else
         {

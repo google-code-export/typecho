@@ -16,6 +16,25 @@
 class NoticeWidget extends TypechoWidget
 {
     /**
+     * 提示类型
+     * 
+     * @access private
+     * @var string
+     */
+    private $noticeType = 'notice';
+    
+    /**
+     * 输出提示类型
+     * 
+     * @access public
+     * @return void
+     */
+    public function noticeType()
+    {
+        echo $this->noticeType;
+    }
+
+    /**
      * 列表显示所有提示内容
      *
      * @access public
@@ -49,9 +68,10 @@ class NoticeWidget extends TypechoWidget
      *
      * @param string $name 值对应的键值
      * @param mixed $name 相应的值
+     * @param string $type 提示类型
      * @return array
      */
-    public function set($name, $value = NULL)
+    public function set($name, $value = NULL, $type = 'notice')
     {
         $notice = array();
         
@@ -76,6 +96,8 @@ class NoticeWidget extends TypechoWidget
         
         TypechoRequest::setCookie('notice', $notice, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone,
         Typecho::widget('Options')->siteUrl);
+        TypechoRequest::setCookie('noticeType', $type, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone,
+        Typecho::widget('Options')->siteUrl);
     }
 
     /**
@@ -88,8 +110,10 @@ class NoticeWidget extends TypechoWidget
     {
         if(NULL !== TypechoRequest::getCookie('notice'))
         {
+            $this->noticeType = TypechoRequest::getCookie('noticeType');
             $this->push(TypechoRequest::getCookie('notice'));
             TypechoRequest::deleteCookie('notice', Typecho::widget('Options')->siteUrl);
+            TypechoRequest::deleteCookie('noticeType', Typecho::widget('Options')->siteUrl);
         }
     }
 }

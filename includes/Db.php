@@ -112,13 +112,7 @@ class TypechoDb
      */
     public function sql()
     {
-        if(empty($this->_query))
-        {
-            $this->_query = new TypechoDbQuery($this->_adapter);
-        }
-
-        $this->_query->init();
-        return $this->_query;
+        return new TypechoDbQuery($this->_adapter);
     }
 
     /**

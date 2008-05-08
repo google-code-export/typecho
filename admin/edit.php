@@ -7,7 +7,7 @@ require_once 'menu.php';
 ?>
 
 	<div id="main" class="clearfix">
-	<form method="post" action="*.php" id="test" name="test">
+	<form method="post" action="<?php Typecho::widget('Options')->index('DoEditPost.do'); ?>" id="post" name="post">
         
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
@@ -22,9 +22,9 @@ require_once 'menu.php';
 			<h3><?php _e('分类'); ?></h3>
 			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" id="" /> Category_1</label></li>
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" id="" /> Category_2</label></li>
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" id="" /> Category_3</label></li>
+				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="1" id="1" /> Category_1</label></li>
+				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="2" id="2" /> Category_2</label></li>
+				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="3" id="3" /> Category_3</label></li>
 			</ul>
 			<hr class="space">
 
@@ -53,9 +53,13 @@ require_once 'menu.php';
 			<p><input id="title" type="text" name="title" value="" /></p>
 			<h4><?php _e('内容'); ?></h4>
 			<p><textarea id="text" name="text" rows="15" cols="40"></textarea></p>
-			<p style="text-align: right;"><input type="submit" value="<?php _e('保存'); ?>" /> 
-            <input type="submit" value="<?php _e('保存并继续编辑'); ?>" /> 
-            <input type="submit" value="<?php _e('发布'); ?>" /></p>
+			<p style="text-align: right;">
+                <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
+                <input type="submit" value="<?php _e('保存并继续编辑'); ?>" /> 
+                <input type="submit" value="<?php _e('发布'); ?>" />
+                <input type="hidden" name="do" value="insert" />
+                <input type="hidden" name="draft" value="0" />
+            </p>
 			<h4><?php _e('标签'); ?></h4>
 			<p><input id="tags" type="text" name="tags" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
 			<h4><?php _e('缩略名'); ?></h4>

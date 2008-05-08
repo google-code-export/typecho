@@ -35,17 +35,20 @@ require_once 'menu.php';
             <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="25%"><?php _e('作者'); ?></th>
+					<th width="25%"><?php _e('发布于'); ?></th>
 					<th width="75%"><?php _e('内容'); ?></th>
 				</tr>
                 <?php Typecho::widget('contents.AuthorsRecentPost', Typecho::widget('Access')->uid)->to($post); ?>
                 <?php if($post->have()): ?>
                 <?php while($post->get()): ?>
 				<tr>
-					<td><strong><?php $post->author(); ?></strong><br /><?php $post->date(_t('y年n月j日 H时i分')); ?></td>
+					<td>
+                        <strong><?php $post->category(','); ?></strong><br />
+                        <?php $post->date(_t('y年n月j日 H时i分')); ?>
+                    </td>
 					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a> | 
 					<a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
-					<br /><?php $post->excerpt(100); ?></td>
+					<br /><?php $post->excerpt(30); ?></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

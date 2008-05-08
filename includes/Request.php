@@ -63,6 +63,23 @@ class TypechoRequest
 
         return $parameters;
     }
+    
+    /**
+     * 参数条件输出
+     * 
+     * @access public
+     * @param string $name 参数名
+     * @param string $value 参数值
+     * @param string $string 输出值
+     * @return void
+     */
+    public static function callParameter($name, $value, $string)
+    {
+        if($value == self::getParameter($name))
+        {
+            echo $string;
+        }
+    }
 
     /**
      * 提交表单触发函数
@@ -226,5 +243,16 @@ class TypechoRequest
     public static function destorySession()
     {
         session_unset();
+    }
+    
+    /**
+     * 判断请求是否为Ajax请求
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAjax()
+    {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'XMLHTTPREQUEST' == strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 }

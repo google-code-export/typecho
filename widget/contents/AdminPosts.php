@@ -23,15 +23,7 @@ require_once 'Posts.php';
  * @license GNU General Public License 2.0
  */
 class AdminPostsWidget extends PostsWidget
-{
-    /**
-     * 用于计算总数的sql对象
-     * 
-     * @access private
-     * @var TypechoDbQuery
-     */
-    private $_countSql;
-    
+{    
     /**
      * 用于过滤的条件
      * 
@@ -48,7 +40,7 @@ class AdminPostsWidget extends PostsWidget
      */
     public function pageNav()
     {
-        $num = $this->db->fetchObject($this->_countSql->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
+        $num = $this->db->fetchObject($this->countSql->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
         $query = 'post-list.php?' . http_build_query($this->_filterQuery) . '&page={page}';
 
         $nav = new TypechoWidgetNavigator($num,
@@ -68,7 +60,7 @@ class AdminPostsWidget extends PostsWidget
     public function render($pageSize = NULL)
     {
         $this->_pageSize = empty($pageSize) ? 20 : $pageSize;
-        $this->_currentPage = (NULL == TypechoRoute::getParameter('page')) ? 1 : TypechoRoute::getParameter('page');
+        $this->_currentPage = (NULL == TypechoRequest::getParameter('page')) ? 1 : TypechoRequest::getParameter('page');
 
         /** 构建基础查询 */
         $select = $this->db->sql()
@@ -77,7 +69,8 @@ class AdminPostsWidget extends PostsWidget
         table.users.`screenName` AS `author`, table.contents.`author` AS `authorId`')
         ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
-        ->where('table.metas.`type` = ?', 'category');
+        ->where('table.metas.`type` = ?', 'category')
+        ->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft');
 
         /** 过滤分类 */
         if(NULL != ($category = TypechoRequest::getParameter('category')))
@@ -128,7 +121,7 @@ class AdminPostsWidget extends PostsWidget
         }
         
         /** 给计算数目对象赋值,克隆对象 */
-        $this->_countSql = clone $select;
+        $this->countSql = clone $select;
         
         /** 提交查询 */
         $select->group('table.contents.`cid`')

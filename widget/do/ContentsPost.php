@@ -1,4 +1,4 @@
-秀<?php
+<?php
 /**
  * Typecho Blog Platform
  *
@@ -33,7 +33,7 @@ abstract class ContentsPostWidget extends DoPostWidget
 
         /** 取出已有tag */
         $existTags = Typecho::arrayFlatten($this->db->fetchAll(
-        $this->db->sql()->select('table.metas', '`mid`')
+        $this->db->sql()->select('table.metas', 'table.metas.`mid`')
         ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $cid)
         ->where('table.metas.`type` = ?', 'tag')
@@ -74,6 +74,7 @@ abstract class ContentsPostWidget extends DoPostWidget
                 
                 $row = $this->db->fetchRow($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
+                ->where('table.contents.`type` = ?', 'post')
                 ->where('table.relationships.`mid` = ?', $tag));
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -97,6 +98,11 @@ abstract class ContentsPostWidget extends DoPostWidget
         $result = array();
         foreach($tags as $tag)
         {
+            if(empty($tag))
+            {
+                continue;
+            }
+        
             $row = $this->db->fetchRow($this->db->sql()->select('table.metas', '`mid`')
             ->where('`name` = ?', $tag)->limit(1));
             
@@ -135,7 +141,7 @@ abstract class ContentsPostWidget extends DoPostWidget
 
         /** 取出已有category */
         $existCategories = Typecho::arrayFlatten($this->db->fetchAll(
-        $this->db->sql()->select('table.metas', '`mid`')
+        $this->db->sql()->select('table.metas', 'table.metas.`mid`')
         ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $cid)
         ->where('table.metas.`type` = ?', 'category')
@@ -173,6 +179,7 @@ abstract class ContentsPostWidget extends DoPostWidget
                 
                 $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
+                ->where('table.contents.`type` = ?', 'post')
                 ->where('table.relationships.`mid` = ?', $category))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -213,7 +220,6 @@ abstract class ContentsPostWidget extends DoPostWidget
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
-            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -227,7 +233,8 @@ abstract class ContentsPostWidget extends DoPostWidget
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db->query($this->db->sql()->insert('table.contents')->rows($insertStruct));
+        $insertId = $this->db->query($this->db->sql()->insert('table.contents')->rows($insertStruct)
+        ->row('password', empty($content['password']) ? 'NULL' : $content['password']));
         
         /** 更新缩略名 */
         $slug = Typecho::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
@@ -235,24 +242,28 @@ abstract class ContentsPostWidget extends DoPostWidget
         ->rows(array('slug' => $slug))
         ->where('`cid` = ?', $insertId));
 
-        /** 插入分类 */
-        if(empty($content['category']) || !is_array($content['category']))
+        /** 更新关联数据 */
+        if('post' == $insertStruct['type'] || 'draft' == $insertStruct['type'])
         {
-            $content['category'] = array(Typecho::widget('Options')->defaultCategory);
-        }
-        
-        $currentCategory = $this->setCategories($insertId, $content['category']);
-        $this->db->query($this->db->sql()->update('table.contents')
-        ->rows(array('meta' => $currentCategory))
-        ->where('`cid` = ?', $insertId));
-        
-        /** 插入标签 */
-        if(!empty($content['tag']))
-        {
-            $tags = $this->setTags($insertId, $content['tags']);
+            /** 插入分类 */
+            if(empty($content['category']) || !is_array($content['category']))
+            {
+                $content['category'] = array(Typecho::widget('Options')->defaultCategory);
+            }
+            
+            $currentCategory = $this->setCategories($insertId, $content['category']);
             $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('tags' => $tags))
+            ->rows(array('meta' => $currentCategory))
             ->where('`cid` = ?', $insertId));
+            
+            /** 插入标签 */
+            if(!empty($content['tags']))
+            {
+                $tags = $this->setTags($insertId, $content['tags']);
+                $this->db->query($this->db->sql()->update('table.contents')
+                ->rows(array('tags' => $tags))
+                ->where('`cid` = ?', $insertId));
+            }
         }
 
         return $insertId;
@@ -268,11 +279,16 @@ abstract class ContentsPostWidget extends DoPostWidget
      */
     protected function updateContent(array $content, $cid)
     {
+        /** 首先验证写入权限 */
+        if(false === $this->postIsWriteable($cid))
+        {
+            return false;
+        }
+    
         /** 构建更新结构 */
         $updateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
-            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -284,6 +300,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         
         /** 首先插入部分数据 */
         $updateRows = $this->db->query($this->db->sql()->update('table.contents')->rows($updateStruct)
+        ->row('password', empty($content['password']) ? 'NULL' : $content['password'])
         ->where('`cid` = ?', $cid));
         
         /** 如果数据不存在 */
@@ -298,24 +315,28 @@ abstract class ContentsPostWidget extends DoPostWidget
         ->rows(array('slug' => $slug))
         ->where('`cid` = ?', $cid));
         
-        /** 插入分类 */
-        if(empty($content['category']) || !is_array($content['category']))
+        /** 更新关联数据 */
+        if('post' == $updateStruct['type'] || 'draft' == $updateStruct['type'])
         {
-            $content['category'] = array(Typecho::widget('Options')->defaultCategory);
-        }
-        
-        $currentCategory = $this->setCategories($cid, $content['category']);
-        $this->db->query($this->db->sql()->update('table.contents')
-        ->rows(array('meta' => $currentCategory))
-        ->where('`cid` = ?', $cid));
-        
-        /** 插入标签 */
-        if(!empty($content['tag']))
-        {
-            $tags = $this->setTags($cid, $content['tags']);
+            /** 插入分类 */
+            if(empty($content['category']) || !is_array($content['category']))
+            {
+                $content['category'] = array(Typecho::widget('Options')->defaultCategory);
+            }
+            
+            $currentCategory = $this->setCategories($cid, $content['category']);
             $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('tags' => $tags))
+            ->rows(array('meta' => $currentCategory))
             ->where('`cid` = ?', $cid));
+            
+            /** 插入标签 */
+            if(!empty($content['tags']))
+            {
+                $tags = $this->setTags($cid, $content['tags']);
+                $this->db->query($this->db->sql()->update('table.contents')
+                ->rows(array('tags' => $tags))
+                ->where('`cid` = ?', $cid));
+            }
         }
 
         return true;
@@ -330,8 +351,12 @@ abstract class ContentsPostWidget extends DoPostWidget
      */
     protected function deleteContent($cid)
     {
-        $cid = intval($cid);
-    
+        /** 首先验证写入权限 */
+        if(false === ($post = $this->postIsWriteable($cid)))
+        {
+            return false;
+        }
+
         $deleteRows = $this->db->query($this->db->sql()->delete('table.contents')
         ->where('`cid` = ?', $cid));
         
@@ -341,15 +366,19 @@ abstract class ContentsPostWidget extends DoPostWidget
             return false;
         }
         
-        /** 删除分类 */
-        $this->setCategories($cid, array());
-        
-        /** 删除标签 */
-        $this->setTags($cid, NULL);
-        
-        /** 删除评论 */
-        $this->db->query($this->db->sql()->delete('table.comments')
-        ->where('`cid` = ?', $cid));
+        /** 更新关联数据 */
+        if('post' == $post['type'] || 'draft' == $post['type'])
+        {
+            /** 删除分类 */
+            $this->setCategories($cid, array());
+            
+            /** 删除标签 */
+            $this->setTags($cid, NULL);
+            
+            /** 删除评论 */
+            $this->db->query($this->db->sql()->delete('table.comments')
+            ->where('`cid` = ?', $cid));
+        }
         
         return true;
     }
@@ -372,5 +401,25 @@ abstract class ContentsPostWidget extends DoPostWidget
         }
 
         return true;
+    }
+    
+    /**
+     * 内容是否可以被修改
+     * 
+     * @access protected
+     * @param integer $cid 内容主键
+     * @return mixed
+     */
+    protected function postIsWriteable($cid)
+    {
+        $post = $this->db->fetchRow($this->db->sql()->select('table.contents')
+        ->where('`cid` = ?', $cid)->limit(1));
+        
+        if($post && $this->haveContentPermission($post['author']))
+        {
+            return $post;
+        }
+        
+        return false;
     }
 }
