@@ -8,8 +8,8 @@
  * @author          Anis uddin Ahmad <anisniit@gmail.com>
  * @link            http://www.ajaxray.com/projects/rss
  */
- class FeedItem
- {
+class FeedItem
+{
 	private $elements = array();    //Collection of feed elements
 	private $version;
 	
@@ -76,7 +76,7 @@
 	* @param    string  The content of 'description' element
 	* @return   void
 	*/
-	public function setDescription($description) 
+	public function setDescription($description)
 	{
 		$tag = ($this->version == TypechoFeed::ATOM)? 'summary' : 'description'; 
 		$this->addElement($tag, $description);
@@ -88,7 +88,7 @@
 	* @param    string  The content of 'title' element
 	* @return   void
 	*/
-	public function setTitle($title) 
+	public function setTitle($title)
 	{
 		$this->addElement('title', $title);  	
 	}
@@ -100,7 +100,7 @@
 	* @param    string  The content of 'date' element
 	* @return   void
 	*/
-	public function setDate($date) 
+	public function setDate($date)
 	{
 		if(! is_numeric($date))
 		{
@@ -133,7 +133,7 @@
 	* @param    string  The content of 'link' element
 	* @return   void
 	*/
-	public function setLink($link) 
+	public function setLink($link)
 	{
 		if($this->version == TypechoFeed::RSS2 || $this->version == TypechoFeed::RSS1)
 		{
@@ -164,4 +164,3 @@
 	}
 	
 } // end of class FeedItem
-

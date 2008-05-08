@@ -8,14 +8,14 @@
  * @author      Anis uddin Ahmad <anisniit@gmail.com>
  * @link        http://www.ajaxray.com/projects/rss
  */
- class FeedWriter
- {
-	 private $channels      = array();  // Collection of channel elements
-	 private $items         = array();  // Collection of items as object of FeedItem class.
-	 private $data          = array();  // Store some other version wise data
-	 private $CDATAEncoding = array();  // The tag names which have to encoded as CDATA
-	 
-	 private $version   = null; 
+class FeedWriter
+{
+    private $channels      = array();  // Collection of channel elements
+    private $items         = array();  // Collection of items as object of FeedItem class.
+    private $data          = array();  // Store some other version wise data
+    private $CDATAEncoding = array();  // The tag names which have to encoded as CDATA
+
+    private $version   = null; 
 	
 	/**
 	* Constructor
