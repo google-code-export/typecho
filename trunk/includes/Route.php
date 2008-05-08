@@ -110,7 +110,7 @@ class TypechoRoute
 
             if(!empty($address))
             {
-                Typecho::redirect($address);
+                Typecho::redirect($address, true);
             }
 
             if(1 < count($matches) && !empty($values))
