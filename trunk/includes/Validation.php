@@ -68,16 +68,25 @@ class TypechoValidation
         $this->_object = $object;
     }
 
+    /**
+     * 增加验证规则
+     * 
+     * @access public
+     * @param string $key 数值键值
+     * @param string $rule 规则名称
+     * @param string $message 错误字符串
+     * @return void
+     */
     public function addRule($key, $rule, $message)
     {
-        if(func_num_args() > 3)
+        if(func_num_args() <= 3)
         {
             $this->_rules[$key][$rule] = $message;
         }
         else
         {
             $params = func_get_args();
-            $params = array_splice($params, 0, 3);
+            $params = array_splice($params, 3);
             $this->_rules[$key][$rule] = array_merge(array($message), $params);
         }
     }
@@ -223,9 +232,9 @@ class TypechoValidation
     /**
      * Valid Email
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
     public function email($str)
     {

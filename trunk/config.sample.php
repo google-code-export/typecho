@@ -77,8 +77,11 @@ TypechoConfig::set('Db', array(
 /** 定义路由参数 */
 TypechoConfig::set('Route', array(
     'index'         =>  array('[/]?', 'index.php', NULL, '/', array('contents.Posts')),
-    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s/', array('contents.Posts')),
     'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s/', array('contents.Posts')),
+    'tag'           =>  array('/tag/(.+)[/]?', 'archive.php', array('slug'), '/tag/%s/', array('contents.Posts')),
+    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s/', array('contents.Posts')),
+    'category_page' =>  array('/category/([_0-9a-zA-Z-]+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/category/%s/%s/', array('contents.Posts')),
+    'tag_page'      =>  array('/tag/(.+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/tag/%s/%s/', array('contents.Posts')),
     'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s/', array('contents.Post')),
     'feed'          =>  array('/feed([_0-9a-zA-Z-\/]*)', array('Feed'), array('feed'), '/feed%s'),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),

@@ -45,14 +45,14 @@ abstract class DoPostWidget extends TypechoWidget
     protected function goBack($anchor = NULL)
     {
         //判断来源
-        if(empty($_SERVER['HTTP_REFERER']) || 0 === strpos($_SERVER['HTTP_REFERER'], Typecho::widget('Options')->index))
+        if(empty($_SERVER['HTTP_REFERER']))
         {
             throw new TypechoWidgetException(_t('无法返回原网页'));
         }
 
-        typechoRedirect($_SERVER['HTTP_REFERER'] . $anchor, false);
+        Typecho::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
     }
-    
+
     /**
      * 输出XML
      * 

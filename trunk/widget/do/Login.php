@@ -69,7 +69,7 @@ class LoginWidget extends DoPostWidget
         }
         else
         {
-            Typecho::widget('Notice')->set(_t('无法找到匹配的用户'));
+            Typecho::widget('Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
             Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminUrl)
             . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));

@@ -82,7 +82,7 @@ class AttachmentPostWidget extends DoPostWidget
      * @access public
      * @return void
      */
-    public function uploadAttachment()
+    public function insertAttachment()
     {
         if(empty($_FILES['attachment']))
         {
@@ -149,7 +149,7 @@ class AttachmentPostWidget extends DoPostWidget
      * @access public
      * @return void
      */
-    public function modifyAttachment()
+    public function updateAttachment()
     {
         if(empty($_POST['cid']))
         {
@@ -264,8 +264,8 @@ class AttachmentPostWidget extends DoPostWidget
     {
         //贡献者以上有提交文件权限
         Typecho::widget('Access')->pass('contributor');
-        TypechoRequest::bindParameter(array('act' => 'upload'), 'uploadAttachment');
-        TypechoRequest::bindParameter(array('act' => 'modify'), 'modifyAttachment');
-        TypechoRequest::bindParameter(array('act' => 'delete'), 'deleteAttachment');
+        TypechoRequest::bindParameter(array('do' => 'insert'), 'insertAttachment');
+        TypechoRequest::bindParameter(array('do' => 'update'), 'updateAttachment');
+        TypechoRequest::bindParameter(array('do' => 'delete'), 'deleteAttachment');
     }
 }

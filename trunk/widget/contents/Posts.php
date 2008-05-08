@@ -64,6 +64,14 @@ class PostsWidget extends TypechoWidget
      * @var string
      */
     private $_filterName;
+    
+    /**
+     * 用于计算总数的sql对象
+     * 
+     * @access private
+     * @var TypechoDbQuery
+     */
+    public $countSql;
 
     /**
      * 构造函数,初始化数据库
@@ -90,12 +98,7 @@ class PostsWidget extends TypechoWidget
     {
         $args = func_get_args();
 
-        $num = $this->db->fetchObject($this->db->sql()
-        ->select('table.contents', 'COUNT(`cid`) AS `num`')
-        ->where('`type` = ?', 'post')
-        ->where('`protected` = NULL')
-        ->where('`created` < ?', $this->options->gmtTime))->num;
-
+        $num = $this->db->fetchObject($this->countSql->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
         $nav = new TypechoWidgetNavigator($num,
                                           $this->_currentPage,
                                           $this->_pageSize,
@@ -119,37 +122,16 @@ class PostsWidget extends TypechoWidget
         $value['day'] = date('j', $value['created'] + $this->options->timezone);
 
         //生成静态链接
-        $value['permalink'] = TypechoRoute::parse($value['type'], $value, $this->options->index);
+        $type = $value['type'];
+        $value['permalink'] = isset(TypechoConfig::get('Route')->$type) ? 
+        TypechoRoute::parse($value['type'], $value, $this->options->index) : '#';
         
         /** 生成聚合链接 */
-        $value['feedUrl'] = TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse($value['type'], $value)), $this->options->index);
+        $value['feedUrl'] = isset(TypechoConfig::get('Route')->$type) ? TypechoRoute::parse('feed', 
+        array('feed' => TypechoRoute::parse($value['type'], $value)), $this->options->index) : '#';
 
         TypechoPlugin::callFilter($this->_filterName, $value);
         return parent::push($value);
-    }
-
-    /**
-     * 按行输出函数
-     *
-     * @access public
-     * @param string $tag 每行的Html标签
-     * @param string $target 目标
-     * @param string $class css类
-     * @param boolean $comments 是否输出评论数
-     * @param integer $length 标题截取长度
-     * @param string $trim 省略号
-     * @return void
-     */
-    public function output($tag = 'li', $target = NULL, $class = NULL, $comments = false, $length = 0, $trim = '...')
-    {
-        foreach($this->_stack as $val)
-        {
-            echo "<$tag" . (empty($class) ? " class=\"$class\"" : NULL)
-            . "><a" . (empty($target) ? " target=\"$target\"" : NULL)
-            . " href=\"{$val['permalink']}\">"
-            . ($length ? Typecho::subStr($val['title'], 0, $length, $trim) : $val['title'])
-            . "</a>" . ($comments ? "<span>{$val['commentsNum']}</span>" : NULL) . "</$tag>";
-        }
     }
 
     /**
@@ -223,9 +205,13 @@ class PostsWidget extends TypechoWidget
      * @param string $tag 评论链接锚点
      * @return void
      */
-    public function commentsNum($string = 'Comments %d', $anchor = '#comments')
+    public function commentsNum($string = 'Comments %d')
     {
-        echo '<a href="' . $this->permalink . $anchor . '">' . sprintf($string, $this->commentsNum) . '</a>';
+        $args = func_get_args();
+        $num = intval($this->commentsNum);
+        
+        echo '<a href="' . $this->permalink . '#comments">' . 
+        sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num) . '</a>';
     }
 
     /**
@@ -322,8 +308,8 @@ class PostsWidget extends TypechoWidget
     {
         $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
         $this->_currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
-
-        $this->db->fetchAll($this->db->sql()
+        
+        $select = $this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`tags`,
         table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
         ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)
@@ -331,9 +317,43 @@ class PostsWidget extends TypechoWidget
         ->where('table.contents.`type` = ?', 'post')
         ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`password` IS NULL')
-        ->where('table.contents.`created` < ?', $this->options->gmtTime)
-        ->group('table.contents.`cid`')
+        ->where('table.contents.`created` < ?', $this->options->gmtTime);
+
+        if('tag' == TypechoRoute::$current)
+        {
+            $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
+            ->where('type = ?', 'tag')
+            ->where('slug = ?', urlencode(TypechoRoute::getParameter('slug')))->limit(1));
+            
+            if(!$tag)
+            {
+                throw new TypechoWidgetException(_t('标签%s不存在', TypechoRoute::getParameter('slug')), TypechoException::NOTFOUND);
+            }
+        
+            $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
+            ->where('table.relationships.`mid` = ?', $tag['mid']);
+        }
+        else if('category' == TypechoRoute::$current)
+        {
+            $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
+            ->where('type = ?', 'category')
+            ->where('slug = ?', TypechoRoute::getParameter('slug'))->limit(1));
+            
+            if(!$category)
+            {
+                throw new TypechoWidgetException(_t('分类不存在'), TypechoException::NOTFOUND);
+            }
+        
+            $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
+            ->where('table.relationships.`mid` = ?', $category['mid']);
+        }
+        
+        $this->countSql = clone $select;
+
+        $select->group('table.contents.`cid`')
         ->order('table.contents.`created`', TypechoDb::SORT_DESC)
-        ->page($this->_currentPage, $this->_pageSize), array($this, 'push'));
+        ->page($this->_currentPage, $this->_pageSize);
+        
+        $this->db->fetchAll($select, array($this, 'push'));
     }
 }

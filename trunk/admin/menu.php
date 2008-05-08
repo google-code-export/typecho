@@ -5,7 +5,7 @@
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('Typecho官方网站'); ?>"><?php _e('支持'); ?></a> | 
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('向Typecho报告错误以帮助我们更好地完善产品'); ?>"><?php _e('报告错误'); ?></a>
             </div>
-			<h1><a href="#"><?php Typecho::widget('Options')->title(); ?></a></h1>
+			<h1><a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php Typecho::widget('Options')->title(); ?></a></h1>
 			<div id="nav-menu">
 				<?php Typecho::widget('Menu')->outputParent(NULL); ?>
 				<a href="<?php Typecho::widget('Options')->siteUrl(); ?>" style="float: right;"><span><?php _e('返回站点&raquo;'); ?></span></a>

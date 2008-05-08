@@ -17,13 +17,7 @@ require_once 'common.php';
 	<div id="login" class="round clearfix">
 		<p style="text-align: center;"><img id="login-logo.png" src="images/login-logo.png" alt="Typecho" /></p>
 		<?php if(!Typecho::widget('Access')->hasLogin()): ?>
-		<?php if(Typecho::widget('Notice')->have()): ?>
-		<div class="error">
-		<ul>
-			<?php Typecho::widget('Notice')->lists(); ?>
-		</ul>
-		</div>
-		<?php endif; ?>
+		<?php require_once 'notice.php'; ?>
 		<form method="post" action="<?php Typecho::widget('Options')->index('Login.do'); ?>">
 			<p><label for="name"><?php _e('用户名'); ?>:<br /><input type="text" id="name" name="name" /></label></p>
 			<p><label for="password"><?php _e('密码'); ?>:<br /><input type="password" id="password" name="password" /></label></p>
