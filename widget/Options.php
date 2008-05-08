@@ -150,6 +150,6 @@ class OptionsWidget extends TypechoWidget
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
         
         /** 添加Pingback */
-        header('X-Pingback:' . $this->adminUrl);
+        header('X-Pingback:' . $this->xmlRpcUrl);
     }
 }
