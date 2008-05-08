@@ -1,6 +1,5 @@
 <?php
 require_once 'common.php';
-Typecho::widget('Access')->pass('subscriber');
 Typecho::widget('Menu')->setCurrentParent('/admin/index.php');
 Typecho::widget('Menu')->setCurrentChild('/admin/index.php');
 require_once 'header.php';
