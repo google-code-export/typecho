@@ -155,12 +155,12 @@ class TypechoValidation
     }
 
     /**
-     * Minimum Length
-     *
-     * @access	public
-     * @param	string $str 待处理的字符串
-     * @param   integer $length 最小长度
-     * @return	boolean
+     * 最小长度
+     * 
+     * @access public
+     * @param string $str 待处理的字符串
+     * @param integer $length 最小长度
+     * @return boolean
      */
     public function minLength($str, $length)
     {
@@ -191,15 +191,31 @@ class TypechoValidation
     {
         return true;
     }
+    
+    /**
+     * 枚举类型判断
+     * 
+     * @access public
+     * @param string $str 待处理的字符串
+     * @param mixed $param 枚举值
+     * @return unknown
+     */
+    public function enum($str)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        
+        return in_array($str, $args);
+    }
 
     /**
      * Max Length
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
-    function maxLength($str, $length)
+    public function maxLength($str, $length)
     {
         return (typechoStrLen($str) < $length);
     }
@@ -231,9 +247,9 @@ class TypechoValidation
     /**
      * Alpha
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
     public function alpha($str)
     {
@@ -243,9 +259,9 @@ class TypechoValidation
     /**
      * Alpha-numeric
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
     public function alphaNumeric($str)
     {
@@ -255,9 +271,9 @@ class TypechoValidation
     /**
      * Alpha-numeric with underscores and dashes
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
     public function alphaDash($str)
     {
@@ -267,9 +283,9 @@ class TypechoValidation
     /**
      * Numeric
      *
-     * @access	public
-     * @param	integer
-     * @return	boolean
+     * @access public
+     * @param integer
+     * @return boolean
      */
     public function isFloat($str)
     {
@@ -279,9 +295,9 @@ class TypechoValidation
     /**
      * Is Numeric
      *
-     * @access	public
-     * @param	string
-     * @return	boolean
+     * @access public
+     * @param string
+     * @return boolean
      */
     public function isInteger($str)
     {
