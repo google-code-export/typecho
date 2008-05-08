@@ -35,7 +35,7 @@ require_once 'menu.php';
             <h3><?php _e('最新发布的文章'); ?></h3>
 			<table class="latest">
 				<tr>
-					<th width="25%"><?php _e('发布于'); ?></th>
+					<th width="25%"><?php _e('标题'); ?></th>
 					<th width="75%"><?php _e('内容'); ?></th>
 				</tr>
                 <?php Typecho::widget('contents.AuthorsRecentPost', Typecho::widget('Access')->uid)->to($post); ?>
@@ -43,10 +43,10 @@ require_once 'menu.php';
                 <?php while($post->get()): ?>
 				<tr>
 					<td>
-                        <strong><?php $post->category(','); ?></strong><br />
+                        <strong><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a></strong><br />
                         <?php $post->date(_t('y年n月j日 H时i分')); ?>
                     </td>
-					<td><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a> | 
+					<td><?php $post->category(','); ?> | 
 					<a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
 					<br /><?php $post->excerpt(30); ?></td>
 				</tr>
