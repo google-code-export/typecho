@@ -212,7 +212,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         /** 构建插入结构 */
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'uri'           =>  $content['uri'],
+            'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -280,7 +280,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         /** 构建更新结构 */
         $updateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'uri'           =>  $content['uri'],
+            'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -348,6 +348,8 @@ abstract class ContentsPostWidget extends DoPostWidget
      */
     protected function deleteContent($cid)
     {
+        $cid = intval($cid);
+    
         $deleteRows = $this->db->query($this->db->sql()->delete('table.contents')
         ->where('`cid` = ?', $cid));
         

@@ -120,12 +120,12 @@ class CommentsPostWidget extends DoPostWidget
             list($cid, $created) = $query;
 
             if($post = $this->db->fetchRow($this->db->sql()->select('table.contents', 'created')
-            ->where('cid = ?', intval($cid))
+            ->where('cid = ?', $cid)
             ->limit(1)))
             {
                 if($created == $post['created'])
                 {
-                    $this->insertComment(intval($cid));
+                    $this->insertComment($cid);
                     return;
                 }
             }
