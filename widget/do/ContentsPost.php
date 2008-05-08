@@ -213,6 +213,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
+            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -225,18 +226,8 @@ abstract class ContentsPostWidget extends DoPostWidget
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
         );
         
-        $insert = $this->db->sql()->insert('table.contents')->rows($insertStruct);
-        if(empty($content['password']))
-        {
-            $insert->row('password', 'NULL');
-        }
-        else
-        {
-            $insertStruct['password'] = $content['password'];
-        }
-        
         /** 首先插入部分数据 */
-        $insertId = $this->db->query($insert);
+        $insertId = $this->db->query($this->db->sql()->insert('table.contents')->rows($insertStruct));
         
         /** 更新缩略名 */
         $slug = Typecho::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
@@ -281,6 +272,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         $updateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
+            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -290,19 +282,9 @@ abstract class ContentsPostWidget extends DoPostWidget
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
         );
         
-        $update = $this->db->sql()->update('table.contents')->rows($updateStruct)
-        ->where('`cid` = ?', $cid);
-        if(empty($content['password']))
-        {
-            $update->row('password', 'NULL');
-        }
-        else
-        {
-            $updateStruct['password'] = $content['password'];
-        }
-        
         /** 首先插入部分数据 */
-        $updateRows = $this->db->query($update);
+        $updateRows = $this->db->query($this->db->sql()->update('table.contents')->rows($updateStruct)
+        ->where('`cid` = ?', $cid));
         
         /** 如果数据不存在 */
         if($updateRows < 1)
