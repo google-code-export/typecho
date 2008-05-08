@@ -147,6 +147,8 @@ function exceptionHandler($exception)
 
     if(__TYPECHO_DEBUG__)
     {
+        header('content-Type: text/html;charset= ' . __TYPECHO_CHARSET__, true);
+    
         if($exception instanceof TypechoException)
         {
             die((string) $exception);
