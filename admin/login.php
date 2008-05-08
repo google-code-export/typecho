@@ -28,7 +28,8 @@ require_once 'common.php';
 			<?php endif; ?>
 			<a href="<?php Typecho::widget('Options')->adminUrl('get-password.php'); ?>"><?php _e('忘记密码?'); ?></a><br />
 			<a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
-			<p class="right"><input type="submit" value="<?php _e('登录'); ?>" /></p>
+			<p class="right"><input type="submit" value="<?php _e('登录'); ?>" />
+            <input type="hidden" name="referer" value="<?php echo TypechoRequest::getParameter('referer'); ?>" /></p>
 		</form>
 		<?php else: ?>
 		<div class="notice">
