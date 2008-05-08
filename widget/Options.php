@@ -146,6 +146,10 @@ class OptionsWidget extends TypechoWidget
         $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
         $this->gmtTime = time() - intval(date('Z'));
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
+        $this->xmlRpcUrl = TypechoRoute::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
+        
+        /** 添加Pingback */
+        header('X-Pingback:' . $this->adminUrl);
     }
 }
