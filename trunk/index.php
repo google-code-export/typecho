@@ -12,7 +12,7 @@
 require_once 'config.inc.php';
 
 /** 系统启动 */
-Typecho::start(__TYPECHO_CHARSET__);
+Typecho::start();
 
 /** 载入插件 */
 TypechoPlugin::init(Typecho::widget('Options')->plugins('index'));

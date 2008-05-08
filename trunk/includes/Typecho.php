@@ -31,7 +31,7 @@ class Typecho
      * @param 字符集
      * @return void
      */
-    public static function start($charset = 'UTF-8')
+    public static function start($charset = __TYPECHO_CHARSET__)
     {
         //初始化会话
         session_start();
