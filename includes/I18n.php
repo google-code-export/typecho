@@ -35,7 +35,7 @@ function _t($string)
  * I18n function, translate and echo
  *
  * @param string $string 需要翻译并输出的文字
- * @return string
+ * @return void
  */
 function _e()
 {
@@ -160,19 +160,25 @@ class TypechoI18n
         $between = $now - $from;
         
         /** 如果是一天 */
-        if($between < 86400 && date('d', $from) == date('d', $now))
+        if($between < 86400 && idate('d', $from) == idate('d', $now))
         {
             return str_replace($localDateSourceCache, $localDateDestCache, date(_t('a g:i'), $from));
         }
         
+        /** 如果是昨天 */
+        if($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now)))
+        {
+            return _t('昨天');
+        }
+        
         /** 如果是一个星期 */
-        if($between < 604800 && date('W', $from) == date('W', $now))
+        if($between < 604800 && idate('W', $from) == idate('W', $now))
         {
             return str_replace($localDateSourceCache, $localDateDestCache, date('D', $from));
         }
         
         /** 如果是 */
-        if($between < 31622400 && date('Y', $from) == date('Y', $now))
+        if($between < 31622400 && idate('Y', $from) == idate('Y', $now))
         {
             return str_replace($localDateSourceCache, $localDateDestCache, date('M jS', $from));
         }
