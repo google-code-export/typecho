@@ -94,9 +94,9 @@ class NoticeWidget extends TypechoWidget
             }
         }
         
-        TypechoRequest::setCookie('notice', $notice, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone,
+        TypechoRequest::setCookie('notice', $notice, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone + 86400,
         Typecho::widget('Options')->siteUrl);
-        TypechoRequest::setCookie('noticeType', $type, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone,
+        TypechoRequest::setCookie('noticeType', $type, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone + 86400,
         Typecho::widget('Options')->siteUrl);
     }
 
