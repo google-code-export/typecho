@@ -21,7 +21,7 @@ require_once 'common.php';
 		<form method="post" action="<?php Typecho::widget('Options')->index('Login.do'); ?>">
 			<p><label for="name"><?php _e('用户名'); ?>:<br /><input type="text" id="name" name="name" /></label></p>
 			<p><label for="password"><?php _e('密码'); ?>:<br /><input type="password" id="password" name="password" /></label></p>
-			<p><label style="font-weight: normal; vertical-align: middle;" for="remember"><input type="checkbox" id="remember" name="remember" value="1" /> <?php _e('记住我'); ?></label></p>
+			<p><label style="font-weight: normal;" for="remember"><input type="checkbox" id="remember" name="remember" value="1" /> <?php _e('记住我'); ?></label></p>
 			<p class="left">
 			<?php if(Typecho::widget('Options')->allowRegister): ?>
 				<a href="<?php Typecho::widget('Options')->adminUrl('register.php'); ?>"><?php _e('注册'); ?></a> | 
