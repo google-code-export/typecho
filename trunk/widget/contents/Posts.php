@@ -123,12 +123,13 @@ class PostsWidget extends TypechoWidget
 
         //生成静态链接
         $type = $value['type'];
-        $value['permalink'] = isset(TypechoConfig::get('Route')->$type) ? 
-        TypechoRoute::parse($value['type'], $value, $this->options->index) : '#';
+        $routeExists = isset(TypechoConfig::get('Route')->$type);
+        
+        $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
         
         /** 生成聚合链接 */
-        $value['feedUrl'] = isset(TypechoConfig::get('Route')->$type) ? TypechoRoute::parse('feed', 
-        array('feed' => TypechoRoute::parse($value['type'], $value)), $this->options->index) : '#';
+        $value['feedUrl'] = $routeExists ? TypechoRoute::parse('feed', 
+        array('feed' => TypechoRoute::parse($type, $value)), $this->options->index) : '#';
 
         TypechoPlugin::callFilter($this->_filterName, $value);
         return parent::push($value);
@@ -143,7 +144,18 @@ class PostsWidget extends TypechoWidget
      */
     public function date($format)
     {
-        echo date($format, $this->created);
+        echo date($format, $this->created + $this->options->timezone);
+    }
+    
+    /**
+     * 输出词义化日期
+     * 
+     * @access public
+     * @return void
+     */
+    public function dateWord()
+    {
+        echo TypechoI18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }
 
     /**

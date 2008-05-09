@@ -51,7 +51,7 @@ Typecho::widget('contents.AdminPosts')->to($posts);
                     <td><input type="checkbox" name="cid[]" value="<?php $posts->cid(); ?>" /></td>
                     <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                     <td><?php $posts->author(); ?></td>
-                    <td><?php $posts->date(_t('y年n月j日 H时i分')); ?></td>
+                    <td><?php $posts->dateWord(); ?></td>
                     <td><?php $posts->category(); ?></td>
                     <td><?php $posts->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
                     <td><?php if('post' == $posts->type):
