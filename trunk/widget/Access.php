@@ -256,7 +256,7 @@ class AccessWidget extends TypechoWidget
             }
             else
             {
-                Typecho::redirect(Typecho::widget('Options')->siteUrl . '/admin/login.php'
+                Typecho::redirect(Typecho::pathToUrl('/login.php', Typecho::widget('Options')->adminUrl)
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }
