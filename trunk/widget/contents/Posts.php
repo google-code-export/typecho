@@ -111,7 +111,7 @@ class PostsWidget extends TypechoWidget
      * 将每行的值压入堆栈
      *
      * @access public
-     * @param array $value
+     * @param array $value 每行的值
      * @return array
      */
     public function push($value)

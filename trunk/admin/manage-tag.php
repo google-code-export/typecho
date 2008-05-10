@@ -7,27 +7,29 @@ require_once 'menu.php';
 ?>
 
 	<div id="main">
-		<h2>Manage Tags</h2>
+		<h2><?php _e('管理标签'); ?></h2>
 		<div id="page">
 		<form method="post" action="">
 			<div class="table_nav">
-				<input type="submit" value="Delete" />
+				<input type="submit" value="<?php _e('删除'); ?>" />
 			</div>
 
 			<table class="latest">
 				<tr>
 					<th width="1%"><input type="checkbox" id="" /></th>
-					<th width="80%">name</th>
-					<th width="10%">slug</th>
+					<th width="60%">name</th>
+					<th width="30%">slug</th>
 					<th width="9%">post</th>
 				</tr>
-				<?php for($a=0;$a!=5;$a++) echo'
+                <?php Typecho::widget('Metas', 'tag')->to($tag); ?>
+				<?php while($tag->get()): ?>
 				<tr>
-					<td><input type="checkbox" id="" /></td>
-					<td><a href="#">sample</a></td>
-					<td>sample</td>
-					<td><a href="#">10</a></td>
-				</tr>'; ?>
+					<td><input type="checkbox" id="<?php $tag->mid(); ?>" /></td>
+					<td><a href="#"><?php $tag->name(); ?></a></td>
+					<td><?php $tag->slug(); ?></td>
+					<td><a href="<?php $tag->permalink(); ?>"><?php $tag->count(); ?></a></td>
+				</tr>
+                <?php endwhile; ?>
 			</table>
 			<hr class="space" />
 			<h4>Add Tag</h4>
