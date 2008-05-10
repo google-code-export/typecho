@@ -306,7 +306,7 @@ width: 99%;
 font-size: 1.5em;
 }
 
-#tags, #slug {
+#content #tags, #content #slug {
 width: 99%;
 font-size: 1.2em;
 }

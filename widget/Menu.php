@@ -147,7 +147,8 @@ class MenuWidget extends TypechoWidget
             if($this->_currentChild == $menu[1])
             {
                 Typecho::widget('Access')->pass($menu[2]);
-                Typecho::widget('Options')->title = (empty($title) ? $menu[0] : $title) . ' &raquo; ' . Typecho::widget('Options')->title;
+                Typecho::widget('Options')->adminTitle = 
+                (empty($title) ? $menu[0] : $title) . ' &raquo; ' . _t('%s后台', Typecho::widget('Options')->title);
             }
         }
     }

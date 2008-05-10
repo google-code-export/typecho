@@ -106,5 +106,6 @@ class DoEditPostWidget extends ContentsPostWidget
         Typecho::widget('Access')->pass('contributor');
         TypechoRequest::bindParameter(array('do' => 'insert'), array($this, 'insertPost'));
         TypechoRequest::bindParameter(array('do' => 'delete'), array($this, 'deletePost'));
+        Typecho::redirect(Typecho::widget('Options')->adminUrl);
     }
 }

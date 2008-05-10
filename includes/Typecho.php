@@ -86,12 +86,26 @@ class Typecho
         /** 判断是否为plugin */
         $widgetRoot = __TYPECHO_WIDGET_DIR__;
         $suffix = 'Widget';
+        $newWidget = false;
+        
+        /** 判断是否新建对象 */
+        if(0 === strpos($widget, 'new:'))
+        {
+            $widget = substr($widget, 4);
+            $newWidget = isset($_widgets[$widget]);
+        }
         
         if(0 === strpos($widget, 'plugin:'))
         {
             $widgetRoot = __TYPECHO_PLUGIN_DIR__;
             $widget = substr($widget, 7);
             $suffix = 'Plugin';
+        }
+        
+        /** 删除旧对象 */
+        if($newWidget)
+        {
+            unset($_widgets[$widget]);
         }
 
         if(empty($_widgets[$widget]))

@@ -16,9 +16,14 @@ Typecho::widget('contents.AdminPosts')->to($posts);
             <form action="<?php Typecho::widget('Options')->adminUrl('post-list.php'); ?>">
 				<input type="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
 				<input type="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
-				<select name="category">
-					<option value="" selected="selected"><?php _e('所有分类'); ?></option>
-					<option value="">Design (6)</option>
+				<?php Typecho::widget('Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
+                <select name="category" style="width: 160px;">
+                <option value=""><?php _e('所有分类'); ?></option>
+                <?php while($category->get()): ?>
+                    <option value="<?php $category->mid(); ?>" <?php TypechoRequest::callParameter('category', $category->mid, 'selected="selected"'); ?>>
+                        <?php $category->name(); ?> (<?php $category->count(); ?>)
+                    </option>
+                <?php endwhile; ?>
 				</select>
 				<select name="status">
 					<option value="my" <?php TypechoRequest::callParameter('status', 'my', 'selected="selected"'); ?>><?php _e('我的所有文章'); ?></option>

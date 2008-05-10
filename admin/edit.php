@@ -4,6 +4,7 @@ Typecho::widget('Menu')->setCurrentParent('/admin/edit.php');
 Typecho::widget('Menu')->setCurrentChild('/admin/edit.php');
 require_once 'header.php';
 require_once 'menu.php';
+Typecho::widget('contents.EditPost')->to($post);
 ?>
 
 	<div id="main" class="clearfix">
@@ -22,9 +23,14 @@ require_once 'menu.php';
 			<h3><?php _e('分类'); ?></h3>
 			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="1" id="1" /> Category_1</label></li>
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="2" id="2" /> Category_2</label></li>
-				<li><span class="right"><a href="#">&times;</a></span><label><input type="checkbox" name="category[]" value="3" id="3" /> Category_3</label></li>
+            <?php Typecho::widget('Metas', 'category')->to($category); $categories = $post->categories(); ?>
+            <?php if($category->have()): ?>
+            <?php while($category->get()): ?>
+                <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
+            <?php endwhile; ?>
+            <?php else: ?>
+                <li><?php _e('没有任何分类'); ?></li>
+            <?php endif; ?>
 			</ul>
 			<hr class="space">
 
@@ -50,15 +56,16 @@ require_once 'menu.php';
 			<!-- <div id="msg" class="success">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
 			<div id="msg" class="error">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div> -->
 			<h4><?php _e('标题'); ?></h4>
-			<p><input id="title" type="text" name="title" value="" /></p>
+			<p><input id="title" type="text" name="title" value="<?php $post->title(); ?>" /></p>
 			<h4><?php _e('内容'); ?></h4>
-			<p><textarea id="text" name="text" rows="15" cols="40"></textarea></p>
+			<p><textarea id="text" name="text" rows="15" cols="40"><?php $post->text(); ?></textarea></p>
 			<p style="text-align: right;">
                 <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
-                <input type="submit" value="<?php _e('保存并继续编辑'); ?>" /> 
+                <input type="button" onclick="$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="insert" />
                 <input type="hidden" name="draft" value="0" />
+                <input type="hidden" name="continue" value="0" />
             </p>
 			<h4><?php _e('标签'); ?></h4>
 			<p><input id="tags" type="text" name="tags" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>

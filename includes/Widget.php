@@ -185,11 +185,23 @@ abstract class TypechoWidget
      *
      * @param string $name 值对应的键值
      * @param mixed $value 相应的值
-     * @return array
+     * @return void
      */
     public function __set($name, $value)
     {
         $this->_row[$name] = $value;
+    }
+    
+    /**
+     * 验证堆栈值是否存在
+     * 
+     * @access public
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this->_row[$name]);
     }
 
     /**
