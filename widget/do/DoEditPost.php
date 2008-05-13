@@ -60,7 +60,14 @@ class DoEditPostWidget extends ContentsPostWidget
         }
 
         /** 跳转页面 */
-        Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
+        if(1 == TypechoRequest::getParameter('continue'))
+        {
+            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $insertId, Typecho::widget('Options')->adminUrl));
+        }
+        else
+        {
+            Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
+        }
     }
     
     /**

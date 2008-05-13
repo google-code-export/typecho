@@ -115,7 +115,7 @@ class EditPostWidget extends TypechoWidget
             /** 更新模式 */
             $post = $this->db->fetchRow($this->db->sql()
             ->select('table.contents')->where('`cid` = ?', TypechoRequest::getParameter('cid'))
-            ->where('`type` = ?', $type)->limit(1), array($this, 'push'));
+            ->where('`type` = ? OR `type` = ?', $type, 'draft')->limit(1), array($this, 'push'));
             
             if(!$post)
             {

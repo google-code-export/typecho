@@ -52,16 +52,16 @@ Typecho::widget('contents.EditPost')->to($post);
         
 		<div id="content">
             <h2><?php _e('撰写新文章'); ?></h2>
-			<div id="msg" class="notice">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
-			<!-- <div id="msg" class="success">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div>
-			<div id="msg" class="error">A saved version of this entry was auto-saved 6 days ago. <a href="#">Recover auto-saved content</a></div> -->
+            
+			<?php require_once 'notice.php'; ?>
+            
 			<h4><?php _e('标题'); ?></h4>
-			<p><input id="title" type="text" name="title" value="<?php $post->title(); ?>" /></p>
+			<p><input id="title" type="text" name="title" onfocus="this.select();" value="<?php $post->title(); ?>" /></p>
 			<h4><?php _e('内容'); ?></h4>
-			<p><textarea id="text" name="text" rows="15" cols="40"><?php $post->text(); ?></textarea></p>
+			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $post->text(); ?></textarea></p>
 			<p style="text-align: right;">
                 <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
-                <input type="button" onclick="$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
+                <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="insert" />
                 <input type="hidden" name="draft" value="0" />
