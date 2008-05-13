@@ -30,6 +30,9 @@ require_once 'common.php';
 			<a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
 			<p class="right"><input type="submit" value="<?php _e('登录'); ?>" />
             <input type="hidden" name="referer" value="<?php echo TypechoRequest::getParameter('referer'); ?>" /></p>
+            <script>
+                $('input[@name=name]').trigger('focus');
+            </script>
 		</form>
 		<?php else: ?>
 		<div class="notice">
