@@ -1,4 +1,6 @@
 <?php
+define('__TYPECHO_INSTALL_VERSION__', 'Typecho Developer Preview');
+
 
 /** 载入配置文件 */
 if(file_exists('config.inc.php'))
@@ -13,7 +15,7 @@ else
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
-	<title>Typecho: Install</title>
+	<title><?php _e('Typecho安装程序'); ?></title>
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo __TYPECHO_CHARSET__; ?>" />
@@ -39,7 +41,7 @@ else
 	<div id="install">
 		<div id="i-logo" class="round clearfix"><a href="http://typecho.org"><img src="admin/images/logo.png" alt="Typecho" /></a></div>
 		<hr class="space" />
-		<div id="i-main"><h2>Typecho 2.0 Release 安装配置程序</h2>
+		<div id="i-main"><h2><?php _e('%s安装配置程序', __TYPECHO_INSTALL_VERSION__); ?></h2>
 
 			<ul class="rows">
     		<li><h3>版权信息</h3>
