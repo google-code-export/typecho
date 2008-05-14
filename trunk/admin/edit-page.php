@@ -49,7 +49,7 @@ Typecho::widget('contents.EditPage')->to($page);
                 <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
                 <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
-                <input type="hidden" name="do" value="<?php $post->do(); ?>" />
+                <input type="hidden" name="do" value="<?php $page->do(); ?>" />
                 <input type="hidden" name="draft" value="0" />
                 <input type="hidden" name="continue" value="0" />
             </p>
