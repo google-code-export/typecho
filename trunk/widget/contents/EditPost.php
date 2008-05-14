@@ -56,11 +56,16 @@ class EditPostWidget extends TypechoWidget
             {
                 if($value['author'] != Typecho::widget('Access')->uid)
                 {
-                    throw new TypechoWidgetException(_t('没有编辑权限'), TypechoException::FORBIDDEN);
+                    throw new TypechoWidgetException(_t('没有编辑此文章的权限'), TypechoException::FORBIDDEN);
                 }
             }
         }
     
+        if(!isset($value['do']))
+        {
+            $value['do'] = 'update';
+        }
+        
         return parent::push($value);
     }
     
@@ -97,29 +102,21 @@ class EditPostWidget extends TypechoWidget
      * @param string $type 内容类型
      * @return void
      */
-    public function render($type = 'post')
+    public function render()
     {
-        if('page' == $type)
-        {
-            /** 编辑以上权限 */
-            Typecho::widget('Access')->pass('editor');
-        }
-        else
-        {
-            /** 贡献者以上权限 */
-            Typecho::widget('Access')->pass('contributor');
-        }
+        /** 贡献者以上权限 */
+        Typecho::widget('Access')->pass('contributor');
     
         if(NULL != TypechoRequest::getParameter('cid'))
         {
             /** 更新模式 */
             $post = $this->db->fetchRow($this->db->sql()
             ->select('table.contents')->where('`cid` = ?', TypechoRequest::getParameter('cid'))
-            ->where('`type` = ? OR `type` = ?', $type, 'draft')->limit(1), array($this, 'push'));
+            ->where('`type` = ? OR `type` = ?', 'post', 'draft')->limit(1), array($this, 'push'));
             
             if(!$post)
             {
-                throw new TypechoWidgetException(_t('内容不存在'), TypechoException::NOTFOUND);
+                throw new TypechoWidgetException(_t('文章不存在'), TypechoException::NOTFOUND);
             }
         }
         else

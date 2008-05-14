@@ -1,10 +1,10 @@
 <?php 
 require_once 'common.php';
 Typecho::widget('Menu')->setCurrentParent('/admin/edit.php');
-Typecho::widget('Menu')->setCurrentChild('/admin/edit.php');
+Typecho::widget('Menu')->setCurrentChild('/admin/edit-page.php');
 require_once 'header.php';
 require_once 'menu.php';
-Typecho::widget('contents.EditPost')->to($post);
+Typecho::widget('contents.EditPage')->to($page);
 ?>
 
 	<div id="main" class="clearfix">
@@ -17,19 +17,8 @@ Typecho::widget('contents.EditPost')->to($post);
 				<p><label><?php _e('发布时间'); ?></label><input type="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
 			</div>
 
-			<h3><?php _e('分类'); ?></h3>
-			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
-			<ul id="cat_list">
-            <?php Typecho::widget('Metas', 'category')->to($category); $categories = $post->categories(); ?>
-            <?php if($category->have()): ?>
-            <?php while($category->get()): ?>
-                <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
-            <?php endwhile; ?>
-            <?php else: ?>
-                <li><?php _e('没有任何分类'); ?></li>
-            <?php endif; ?>
-			</ul>
-			<hr class="space">
+			<h3><?php _e('页面顺序'); ?></h3>
+			<p><input type="text" id="" style="width: 240px;" value="0" /></p>
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
@@ -53,15 +42,14 @@ Typecho::widget('contents.EditPost')->to($post);
 			<?php require_once 'notice.php'; ?>
             
 			<h4><?php _e('标题'); ?></h4>
-			<p><input id="title" type="text" name="title" onfocus="this.select();" value="<?php $post->title(); ?>" /></p>
+			<p><input id="title" type="text" name="title" onfocus="this.select();" value="<?php $page->title(); ?>" /></p>
 			<h4><?php _e('内容'); ?></h4>
-			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $post->text(); ?></textarea></p>
+			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $page->text(); ?></textarea></p>
 			<p style="text-align: right;">
                 <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
                 <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="<?php $post->do(); ?>" />
-                <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                 <input type="hidden" name="draft" value="0" />
                 <input type="hidden" name="continue" value="0" />
             </p>
