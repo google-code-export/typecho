@@ -242,7 +242,8 @@ class TypechoDbQuery
     {
         foreach($rows as $key => $row)
         {
-            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->_adapter->quoteValue($row);
+            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = empty($row) 
+            && 0 !== $row && false !== $row ? 'NULL' : $this->_adapter->quoteValue($row);
         }
         return $this;
     }

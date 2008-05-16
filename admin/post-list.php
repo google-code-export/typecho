@@ -45,9 +45,9 @@ Typecho::widget('contents.AdminPosts')->to($posts);
 					<th width="2%"><input type="checkbox" /></th>
 					<th width="35%"><?php _e('标题'); ?></th>
 					<th width="10%"><?php _e('作者'); ?></th>
-					<th width="20%"><?php _e('发布日期'); ?></th>
+					<th width="15%"><?php _e('发布日期'); ?></th>
 					<th width="15%"><?php _e('分类'); ?></th>
-					<th width="10%"><?php _e('评论'); ?></th>
+					<th width="15%"><?php _e('评论'); ?></th>
 					<th width="8%"><?php _e('状态'); ?></th>
 				</tr>
                 <?php if($posts->have()): ?>
