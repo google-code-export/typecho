@@ -228,6 +228,7 @@ abstract class ContentsPostWidget extends DoPostWidget
             'author'        =>  Typecho::widget('Access')->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
+            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'commentsNum'   =>  0,
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 'enable' : 'disable',
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
@@ -235,8 +236,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db->query($this->db->sql()->insert('table.contents')->rows($insertStruct)
-        ->row('password', empty($content['password']) ? 'NULL' : $content['password']));
+        $insertId = $this->db->query($this->db->sql()->insert('table.contents')->rows($insertStruct));
         
         /** 更新缩略名 */
         $slug = Typecho::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
@@ -295,6 +295,7 @@ abstract class ContentsPostWidget extends DoPostWidget
             'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
+            'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 'enable' : 'disable',
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
@@ -302,7 +303,6 @@ abstract class ContentsPostWidget extends DoPostWidget
         
         /** 首先插入部分数据 */
         $updateRows = $this->db->query($this->db->sql()->update('table.contents')->rows($updateStruct)
-        ->row('password', empty($content['password']) ? 'NULL' : $content['password'])
         ->where('`cid` = ?', $cid));
         
         /** 如果数据不存在 */
