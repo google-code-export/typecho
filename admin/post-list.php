@@ -57,7 +57,7 @@ Typecho::widget('contents.AdminPosts')->to($posts);
                     <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                     <td><?php $posts->author(); ?></td>
                     <td><?php $posts->dateWord(); ?></td>
-                    <td><?php $posts->category(', '); ?></td>
+                    <td><?php $posts->category(' | '); ?></td>
                     <td><?php $posts->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
                     <td><?php if('post' == $posts->type):
                     _e('已发布');
