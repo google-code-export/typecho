@@ -1,7 +1,5 @@
 <?php 
 require_once 'common.php';
-Typecho::widget('Menu')->setCurrentParent('/admin/edit.php');
-Typecho::widget('Menu')->setCurrentChild('/admin/edit.php');
 require_once 'header.php';
 require_once 'menu.php';
 Typecho::widget('contents.EditPost')->to($post);
@@ -48,7 +46,7 @@ Typecho::widget('contents.EditPost')->to($post);
 		</div><!-- end #sidebar -->
         
 		<div id="content">
-            <h2><?php _e('撰写新文章'); ?></h2>
+            <h2><?php Typecho::widget('Menu')->title(); ?></h2>
             
 			<?php require_once 'notice.php'; ?>
             

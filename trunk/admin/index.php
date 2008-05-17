@@ -1,7 +1,5 @@
 <?php
 require_once 'common.php';
-Typecho::widget('Menu')->setCurrentParent('/admin/index.php');
-Typecho::widget('Menu')->setCurrentChild('/admin/index.php');
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -29,7 +27,7 @@ require_once 'menu.php';
 		</div><!-- end #sidebar -->
         
 		<div id="content">
-            <h2><?php _e('欢迎回到Typecho'); ?></h2>
+            <h2><?php Typecho::widget('Menu')->title(); ?></h2>
 			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
 			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
             <h3><?php _e('最新发布的文章'); ?></h3>

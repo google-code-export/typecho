@@ -1,7 +1,5 @@
 <?php 
 require_once 'common.php';
-Typecho::widget('Menu')->setCurrentParent('/admin/index.php');
-Typecho::widget('Menu')->setCurrentChild('/admin/plugin.php');
 require_once 'header.php';
 require_once 'menu.php';
 ?>

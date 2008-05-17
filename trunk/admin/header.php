@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php Typecho::widget('Options')->charset(); ?>" />
-    <title><?php Typecho::widget('Options')->adminTitle(); ?> - Powered By Typecho</title>
+    <title><?php Typecho::widget('Menu')->title(); ?> &raquo; <?php Typecho::widget('Options')->title(); ?> - Powered By Typecho</title>
     <link href="<?php Typecho::widget('Options')->adminUrl('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php Typecho::widget('Options')->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php Typecho::widget('Options')->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />

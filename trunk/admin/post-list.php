@@ -1,14 +1,12 @@
 <?php 
 require_once 'common.php';
-Typecho::widget('Menu')->setCurrentParent('/admin/post-list.php');
-Typecho::widget('Menu')->setCurrentChild('/admin/post-list.php');
 require_once 'header.php';
 require_once 'menu.php';
 Typecho::widget('contents.AdminPosts')->to($posts);
 ?>
 
 	<div id="main">
-		<h2><?php _e('管理文章'); ?></h2>
+		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
 		<div id="page">
             <?php require_once 'notice.php'; ?>
             
