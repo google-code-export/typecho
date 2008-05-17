@@ -35,17 +35,65 @@ class MenuWidget extends TypechoWidget
      * 当前父菜单
      * 
      * @access private
-     * @var string
+     * @var integer
      */
-    private $_currentParent = NULL;
+    private $_currentParent = 0;
     
     /**
      * 当前子菜单
      * 
      * @access private
-     * @var string
+     * @var integer
      */
-    private $_currentChild = NULL;
+    private $_currentChild = 0;
+    
+    /**
+     * 构造函数,初始化菜单
+     * 
+     * @access public
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->_parentMenu = array(_t('状态面板'), _t('创建'), _t('管理'), _t('设置'));
+        
+        $this->_childMenu =  array(array(
+            array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
+            array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
+            array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
+        ),
+        array(
+            array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
+            array(_t('创建页面'), _t('创建新页面'), '/admin/edit-page.php', 'editor'),
+            array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
+        ),
+        array(
+            array(_t('文章'), _t('管理文章'), '/admin/post-list.php', 'contributor'),
+            array(_t('页面'), _t('管理页面'), '/admin/page-list.php', 'editor'),
+            array(_t('评论'), _t('管理评论'), '/admin/comment-list.php', 'contributor'),
+            array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
+            array(_t('分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
+            array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
+            array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
+            array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
+            array(_t('链接分类'), _t('管理链接分类'), '/admin/edit-photo.php', 'administrator'),
+        ),
+        array(
+            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
+            array(_t('评论'), _t('评论设置'), '/admin/discussion.php', 'administrator'),
+            array(_t('文章'), _t('文章设置'), '/admin/reading.php', 'administrator'),
+            array(_t('撰写'), _t('撰写习惯设置'), '/admin/writing.php', 'contributor'),
+            array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
+            array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
+            array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
+        ));
+        
+        $parentFilterName = TypechoPlugin::name(__FILE__, 'addParent');
+        TypechoPlugin::callFilter($parentFilterName, $this->_parentMenu);
+        
+        $childFilterName = TypechoPlugin::name(__FILE__, 'addChild');
+        TypechoPlugin::callFilter($childFilterName, $this->_childMenu);
+    }
 
     /**
      * 输出父级菜单
@@ -53,19 +101,19 @@ class MenuWidget extends TypechoWidget
      * @access public
      * @return string
      */
-    public function outputParent($tag = NULL, $current = NULL)
+    public function outputParent($tag = NULL, $class = 'current')
     {
         $adminUrl = Typecho::widget('Options')->siteUrl;
-        foreach($this->_parentMenu as $menu)
+        
+        foreach($this->_parentMenu as $key => $title)
         {
-            if(Typecho::widget('Access')->pass($menu[2], true))
-            {
-                $link = Typecho::pathToUrl($menu[1], $adminUrl);
-                echo (NULL === $tag ? NULL  : "<{$tag}>")
-                . "<a href=\"{$link}\"" . ($menu[1] == $this->_currentParent ? ' class="current"' : NULL) 
-                . " title=\"{$menu[0]}\"><span>{$menu[0]}</span></a>"
-                . (NULL === $tag ? NULL  : "</{$tag}>");
-            }
+            $current = reset($this->_childMenu[$key]);
+            $link = Typecho::pathToUrl($current[2], $adminUrl);
+            
+            echo (NULL === $tag ? NULL  : "<{$tag}>")
+            . "<a href=\"{$link}\"" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) 
+            . " title=\"{$title}\"><span>{$title}</span></a>"
+            . (NULL === $tag ? NULL  : "</{$tag}>");
         }
     }
     
@@ -73,119 +121,24 @@ class MenuWidget extends TypechoWidget
      * 输出子菜单
      * 
      * @access public
+     * @param string $tag HTML标签
+     * @param string $class 当前菜单css类
      * @return string
      */
-    public function outputChild($tag = NULL)
+    public function outputChild($tag = NULL, $class = 'current-2')
     {
         $adminUrl = Typecho::widget('Options')->siteUrl;
-        $current = 0;
         
-        foreach($this->_parentMenu as $key => $menu)
+        foreach($this->_childMenu[$this->_currentParent] as $key => $menu)
         {
-            if($this->_currentParent == $menu[1])
+            if(Typecho::widget('Access')->pass($menu[3], true))
             {
-                $current = $key;
-            }
-        }
-        
-        
-        foreach($this->_childMenu[$current] as $menu)
-        {
-            if(Typecho::widget('Access')->pass($menu[2], true))
-            {
-                $link = Typecho::pathToUrl($menu[1], $adminUrl);
+                $link = Typecho::pathToUrl($menu[2], $adminUrl);
                 echo (NULL === $tag ? NULL  : "<{$tag}>")
-                . "<a href=\"{$link}\"" . ($menu[1] == $this->_currentChild ? ' class="current-2"' : NULL) 
+                . "<a href=\"{$link}\"" . ($key == $this->_currentChild ? ' class="' . $class . '"' : NULL) 
                 . " title=\"{$menu[0]}\">{$menu[0]}</a>"
                 . (NULL === $tag ? NULL  : "</{$tag}>");
             }
-        }
-    }
-    
-    /**
-     * 设定当前父级菜单
-     * 
-     * @access public
-     * @param string $parent
-     * @return void
-     */
-    public function setCurrentParent($parent)
-    {
-        foreach($this->_parentMenu as $key => $menu)
-        {
-            if($parent == $menu[1])
-            {
-                Typecho::widget('Access')->pass($menu[2]);
-            }
-        }
-        
-        $this->_currentParent = $parent;
-    }
-    
-    /**
-     * 设定当前子菜单
-     * 
-     * @access public
-     * @param string $parent
-     * @return void
-     */
-    public function setCurrentChild($child, $title = NULL)
-    {
-        $this->_currentChild = $child;
-        
-        foreach($this->_parentMenu as $key => $menu)
-        {
-            if($this->_currentParent == $menu[1])
-            {
-                $current = $key;
-            }
-        }
-        
-        
-        foreach($this->_childMenu[$current] as $menu)
-        {
-            if($this->_currentChild == $menu[1])
-            {
-                Typecho::widget('Access')->pass($menu[2]);
-                Typecho::widget('Options')->adminTitle = 
-                (empty($title) ? $menu[0] : $title) . ' &raquo; ' . _t('%s后台', Typecho::widget('Options')->title);
-            }
-        }
-    }
-    
-    /**
-     * 增加一个父级菜单
-     * 
-     * @param string $title 菜单标题
-     * @param string $plugin 插件名
-     * @param string $fileName 文件名
-     * @return integer
-     */
-    public function addParent($title, $plugin, $fileName, $group)
-    {
-        $this->_parentMenu[] = array($title, '/admin/go.php/' . $plugin . '/' . basename($fileName), $group);
-        return count($this->_parentMenu) - 1;
-    }
-    
-    /**
-     * 增加一个子菜单
-     * 
-     * @param integer $parent 父级菜单索引
-     * @param string $title 菜单标题
-     * @param string $plugin 插件名称
-     * @param string $fileName 文件名
-     * @return integer
-     */
-    public function addChild($parent, $title, $plugin, $fileName, $group)
-    {
-        if(isset($this->_childMenu[$parent]))
-        {
-            $this->_childMenu[$parent][] = array($title, '/admin/go.php/' . $plugin . '/' . basename($fileName), $group);
-            return count($this->_childMenu[$parent]) - 1;
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -197,40 +150,36 @@ class MenuWidget extends TypechoWidget
      */
     public function render()
     {
-        $this->_parentMenu = array(array(_t('状态面板'), '/admin/index.php', 'subscriber'),
-                                   array(_t('创建'), '/admin/edit.php', 'contributor'),
-                                   array(_t('管理'), '/admin/post-list.php', 'contributor'),
-                                   array(_t('设置'), '/admin/general.php', 'contributor'));
+        $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
+        $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
+        $adminUrl = Typecho::widget('Options')->siteUrl;
+        $childMenu = $this->_childMenu;
+        $match = 0;
         
-        $this->_childMenu =  array(array(
-            array(_t('概要'), '/admin/index.php', 'subscriber'),
-            array(_t('插件'), '/admin/plugin.php', 'administrator'),
-            array(_t('外观'), '/admin/theme.php', 'administrator')
-        ),
-        array(
-            array(_t('撰写文章'), '/admin/edit.php', 'contributor'),
-            array(_t('创建页面'), '/admin/edit-page.php', 'editor'),
-            array(_t('上传相片'), '/admin/edit-photo.php', 'contributor')
-        ),
-        array(
-            array(_t('文章'), '/admin/post-list.php', 'contributor'),
-            array(_t('页面'), '/admin/edit-page.php', 'editor'),
-            array(_t('评论'), '/admin/comment-list.php', 'contributor'),
-            array(_t('文件'), '/admin/files.php', 'editor'),
-            array(_t('分类'), '/admin/manage-cat.php', 'editor'),
-            array(_t('标签'), '/admin/manage-tag.php', 'editor'),
-            array(_t('用户'), '/admin/users.php', 'administrator'),
-            array(_t('链接'), '/admin/manage-links.php', 'administrator'),
-            array(_t('链接分类'), '/admin/edit-photo.php', 'administrator'),
-        ),
-        array(
-            array(_t('基本'), '/admin/general.php', 'administrator'),
-            array(_t('评论'), '/admin/discussion.php', 'administrator'),
-            array(_t('文章'), '/admin/reading.php', 'administrator'),
-            array(_t('撰写'), '/admin/writing.php', 'contributor'),
-            array(_t('权限'), '/admin/edit-page.php', 'administrator'),
-            array(_t('邮件'), '/admin/edit-page.php', 'administrator'),
-            array(_t('永久链接'), '/admin/permalink.php', 'administrator'),
-        ));
+        foreach($childMenu as $parentKey => $parentVal)
+        {
+            foreach($parentVal as $childKey => $childVal)
+            {
+                $link = Typecho::pathToUrl($childVal[2], $adminUrl);
+                if(0 === strpos($url, $link) && strlen($link) > $match)
+                {
+                    $this->_currentParent =  $parentKey;
+                    $this->_currentChild =  $childKey;
+                }
+                
+                if(!Typecho::widget('Access')->pass($childVal[3], true))
+                {
+                    unset($this->_childMenu[$parentKey][$childKey]);
+                }
+            }
+            
+            if(0 == count($this->_childMenu[$parentKey]))
+            {
+                unset($this->_parentMenu[$parentKey]);
+            }
+        }
+
+        Typecho::widget('Access')->pass($this->_childMenu[$this->_currentParent][$this->_currentChild][3]);
+        $this->title = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
     }
 }
