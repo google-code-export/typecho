@@ -149,6 +149,15 @@ class OptionsWidget extends TypechoWidget
         $this->xmlRpcUrl = TypechoRoute::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
         
+        Typecho::header('meta', array('name' => 'description', 'content' => $this->description));
+        Typecho::header('meta', array('name' => 'generator', 'content' => $this->generator));
+        Typecho::header('meta', array('name' => 'template', 'content' => $this->template));
+        Typecho::header('link', array('rel' => 'pingback', 'href' => $this->xmlRpcUrl));
+        Typecho::header('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 
+        'title' => 'RSD', 'href' => $this->xmlRpcUrl . '?rsd'));
+        Typecho::header('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
+        'href' => Typecho::pathToUrl('wlwmanifestxml', $this->adminUrl)));
+        
         /** 添加Pingback */
         header('X-Pingback:' . $this->xmlRpcUrl);
     }

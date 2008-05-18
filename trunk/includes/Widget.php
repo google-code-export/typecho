@@ -78,6 +78,9 @@ abstract class TypechoWidget
         {
             echo str_replace($_rowsKey, $val, $format);
         }
+        
+        reset($this->_row);
+        reset($this->_stack);
     }
 
     /**
