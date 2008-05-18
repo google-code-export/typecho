@@ -6,10 +6,12 @@ define('__TYPECHO_INSTALL_VERSION__', 'Typecho Developer Preview');
 if(file_exists('config.inc.php'))
 {
     require_once 'config.inc.php';
+    $configured = true;
 }
 else
 {
     require_once 'config.sample.php';
+    $configured = false;
 }
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -27,7 +29,7 @@ else
 	<script src="admin/js/add.js" type="text/javascript"></script>
 	<script src="admin/js/jquery.curvycorners.packed.js" type="text/javascript"></script>
 	<style>
-		body { background: #E6EEF7; text-align: center; }
+		body { background: #E6EEF7;}
 
 		#install { background: #fff; width: 500px; margin: 50px auto 0; }
 		#i-logo { background: #000; padding: 5px; }
@@ -39,10 +41,10 @@ else
 
 <body>
 	<div id="install">
-		<div id="i-logo" class="round clearfix"><a href="http://typecho.org"><img src="admin/images/logo.png" alt="Typecho" /></a></div>
+		<div id="i-logo" class="round clearfix" style="text-align:center"><a href="http://typecho.org"><img src="admin/images/logo.png" alt="Typecho" /></a></div>
 		<hr class="space" />
 		<div id="i-main"><h2><?php _e('%s安装配置程序', __TYPECHO_INSTALL_VERSION__); ?></h2>
-
+        <?php if($configured): ?>
 			<ul class="rows">
     		<li><h3>版权信息</h3>
     		<p>Magike Blog是一款开源免费的博客程序. 您可以在
@@ -73,6 +75,11 @@ else
     		</li>
     	</ul>
 		<input type="button" value="同意并安装" onclick="" />
+        <?php else: ?>
+        <div class="notice">
+            <?php _e('没有找到配置文件,<a href="install.php?config">点击这里创建</a>'); ?>
+        </div>
+        <?php endif; ?>
 		</div>
 	</div>
 </body>

@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class MetasWidget extends TypechoWidget
+class AdminMetasWidget extends TypechoWidget
 {
     /**
      * 数据库对象
@@ -118,20 +118,21 @@ class MetasWidget extends TypechoWidget
      * 输出内容分页
      *
      * @access public
-     * @param string $class 分页类型
+     * @param string $fileName 文件名
      * @return void
      */
-    public function pageNav($class)
+    public function pageNav($fileName)
     {
         $args = func_get_args();
+        $query = $fileName . '?page={page}';
 
         $num = $this->db->fetchObject($this->countSql->select('table.metas', 'COUNT(table.metas.`mid`) AS `num`'))->num;
         $nav = new TypechoWidgetNavigator($num,
                                           $this->_currentPage,
                                           $this->_pageSize,
-                                          TypechoRoute::parse(TypechoRoute::$current . '_page', $this->_row, $this->options->index));
+                                          Typecho::pathToUrl($query, $this->options->adminUrl));
 
-        call_user_func_array(array($nav, 'make'), $args);
+        $nav->makeBoxNavigator(_t('上一页'), _t('下一页'));
     }
 
     /**
@@ -151,7 +152,7 @@ class MetasWidget extends TypechoWidget
         if($pageSize > 0)
         {
             $this->_pageSize = $pageSize;
-            $this->_currentPage = TypechoRequest::getParameter('page') ? 1 : TypechoRequest::getParameter('page');
+            $this->_currentPage = (NULL === TypechoRequest::getParameter('page')) ? 1 : TypechoRequest::getParameter('page');
             $select->page($this->_currentPage, $this->_pageSize);
         }
         
