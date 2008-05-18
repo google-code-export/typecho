@@ -135,6 +135,44 @@ class Typecho
 
         return $_widgets[$widget];
     }
+    
+    /**
+     * 控制头部输出和内容
+     * 
+     * @access public
+     * @param string $tag html标签
+     * @param string $attribute 属性名称以及其值
+     * @param string $close 是否自闭合
+     * @return void
+     */
+    public static function header($tag = NULL, array $attribute = NULL, $close = true)
+    {
+        static $headers;
+        
+        if(empty($tag))
+        {
+            foreach($headers as $val)
+            {
+                foreach($val as $inval)
+                {
+                    echo $inval . "\n";
+                }
+            }
+        }
+        else
+        {
+            $string = "<{$tag}";
+            if($attribute)
+            {
+                foreach($attribute as $key => $val)
+                {
+                    $string .= " {$key}=\"{$val}\"";
+                }
+            }
+            $string .= $close ? " />" : "></{$tag}>";
+            $headers[$tag][] = $string;
+        }
+    }
 
     /**
      * 递归去掉数组反斜线

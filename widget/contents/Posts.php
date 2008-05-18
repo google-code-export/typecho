@@ -344,6 +344,9 @@ class PostsWidget extends TypechoWidget
         
             $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
             ->where('table.relationships.`mid` = ?', $tag['mid']);
+            
+            /** 设置关键词 */
+            Typecho::header('meta', array('name' => 'keywords', 'content' => $tag['name']));
         }
         else if('category' == TypechoRoute::$current)
         {
@@ -358,6 +361,42 @@ class PostsWidget extends TypechoWidget
         
             $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
             ->where('table.relationships.`mid` = ?', $category['mid']);
+            
+            /** 设置关键词 */
+            Typecho::header('meta', array('name' => 'keywords', 'content' => $category['name']));
+            
+            /** 设置头部feed */
+            /** RSS 2.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
+            'href' => $this->options->feedUrl));
+            
+            /** RSS 0.92 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
+            TypechoRoute::parse('category', $category)), $this->options->index)));
+            
+            /** Atom 0.3 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
+            TypechoRoute::parse('category', $category)), $this->options->index)));
+        }
+        else
+        {
+            /** 设置关键词 */
+            Typecho::header('meta', array('name' => 'keywords', 'content' => $this->options->keywords));
+        
+            /** 设置头部feed */
+            /** RSS 2.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
+            'href' => $this->options->feedUrl));
+            
+            /** RSS 0.92 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/rss'), $this->options->index)));
+            
+            /** Atom 0.3 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/atom'), $this->options->index)));
         }
         
         $this->countSql = clone $select;
