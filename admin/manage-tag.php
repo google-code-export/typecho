@@ -19,7 +19,7 @@ require_once 'menu.php';
 					<th width="30%">slug</th>
 					<th width="9%">post</th>
 				</tr>
-                <?php Typecho::widget('Metas', 'tag')->to($tag); ?>
+                <?php Typecho::widget('metas.AdminMetas', 'tag', 20)->to($tag); ?>
 				<?php while($tag->get()): ?>
 				<tr>
 					<td><input type="checkbox" id="<?php $tag->mid(); ?>" /></td>
@@ -29,6 +29,13 @@ require_once 'menu.php';
 				</tr>
                 <?php endwhile; ?>
 			</table>
+            
+            <?php if($tag->have()): ?>
+			<div class="table_nav page_nav">
+				<?php _e('分页:'); ?> <?php $tag->pageNav('manage-tag.php'); ?>
+			</div>
+            <?php endif; ?>
+            
 			<hr class="space" />
 			<h4>Add Tag</h4>
 			<table class="setting">
@@ -47,6 +54,7 @@ require_once 'menu.php';
 				</tr>
 			</table>
 		</form>
+
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 	

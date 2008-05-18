@@ -114,6 +114,8 @@ class EditPostWidget extends TypechoWidget
             ->select('table.contents')->where('`cid` = ?', TypechoRequest::getParameter('cid'))
             ->where('`type` = ? OR `type` = ?', 'post', 'draft')->limit(1), array($this, 'push'));
             
+            Typecho::widget('Menu')->title = _t('编辑文章');
+            
             if(!$post)
             {
                 throw new TypechoWidgetException(_t('文章不存在'), TypechoException::NOTFOUND);

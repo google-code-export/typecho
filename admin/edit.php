@@ -1,8 +1,8 @@
 <?php 
 require_once 'common.php';
+Typecho::widget('contents.EditPost')->to($post);
 require_once 'header.php';
 require_once 'menu.php';
-Typecho::widget('contents.EditPost')->to($post);
 ?>
 
 	<div id="main" class="clearfix">
@@ -18,7 +18,7 @@ Typecho::widget('contents.EditPost')->to($post);
 			<h3><?php _e('分类'); ?></h3>
 			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
-            <?php Typecho::widget('Metas', 'category')->to($category); $categories = $post->categories(); ?>
+            <?php Typecho::widget('metas.AdminMetas', 'category')->to($category); $categories = $post->categories(); ?>
             <?php if($category->have()): ?>
             <?php while($category->get()): ?>
                 <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
