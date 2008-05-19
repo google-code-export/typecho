@@ -19,6 +19,48 @@ require_once 'DoPost.php';
 abstract class ContentsPostWidget extends DoPostWidget
 {
     /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param integer $cid 内容主键
+     * @param string $type 内容类型
+     * @return array
+     */
+    public function permalink($cid, $type)
+    {
+        $select = $this->db->sql()
+        ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
+        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.users.`screenName` AS `author`')
+        ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
+        ->where('table.contents.`type` = ?', $type)
+        ->where('table.contents.`password` IS NULL')
+        ->where('table.contents.`created` < ?', Typecho::widget('Options')->gmtTime)
+        ->group('table.contents.`cid`')
+        ->limit(1);
+        
+        $value = $this->db->fetchRow($select);
+    
+        /** 生成分类 */
+        $categories = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $value['cid'])
+        ->where('table.metas.`type` = ?', 'category')
+        ->group('table.metas.`mid`')
+        ->order('sort', 'ASC'));
+        
+        $value['category'] = implode('+', Typecho::arrayFlatten($categories, 'slug'));
+    
+        //生成日期
+        $value['year'] = date('Y', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['month'] = date('n', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['day'] = date('j', $value['created'] + Typecho::widget('Options')->timezone);
+
+        //生成静态链接
+        return isset(TypechoConfig::get('Route')->$type) ? TypechoRoute::parse($type, $value, Typecho::widget('Options')->index) : '#';
+    }
+
+    /**
      * 设置内容标签
      * 
      * @access protected

@@ -10,7 +10,7 @@ require_once 'menu.php';
 		<div id="page">
         <?php require_once 'notice.php'; ?>
         
-		<form method="post" id="category" name="category" action="">
+		<form method="post" id="category" name="category" action="<?php Typecho::widget('Options')->index('DoEditMeta.do'); ?>">
 			<div class="table_nav">
                 <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
 				<input type="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
@@ -34,7 +34,7 @@ require_once 'menu.php';
                 <?php if($categories->have()): ?>
                 <?php while($categories->get()): ?>
                 <tr>
-					<td><input type="checkbox" id="" /></td>
+					<td><input type="checkbox" name="mid[]" value="<?php $categories->mid(); ?>" /></td>
 					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit"><?php $categories->name(); ?></a></td>
 					<td><?php $categories->description(); ?></td>
 					<td><a href="<?php Typecho::widget('Options')->adminUrl('post-list.php?status=allPost&category=' . $categories->mid); ?>">
@@ -50,7 +50,7 @@ require_once 'menu.php';
 			</table>
         </form>    
         
-        <form method="post" action="">
+        <form method="post" action="<?php Typecho::widget('Options')->index('DoEditMeta.do'); ?>">
 			<hr class="space" />
 			<h4 id="edit"><?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?></h4>
 			<table class="setting">
@@ -70,7 +70,8 @@ require_once 'menu.php';
                     <small><?php _e('此文字用于描述分类,在有的主题中它会被显示.'); ?></small></td>
 				</tr>
 				<tr>
-					<td><input type="hidden" name="do" value="<?php $category->do(); ?>" /></td>
+					<td><input type="hidden" name="do" value="<?php $category->do(); ?>" />
+                    <input type="hidden" name="type" value="category" /></td>
 					<td><input type="submit" value="<?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?>" /></td>
 				</tr>
 			</table>
