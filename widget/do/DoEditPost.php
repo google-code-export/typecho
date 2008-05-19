@@ -48,15 +48,61 @@ class DoEditPostWidget extends ContentsPostWidget
         if('post' == $contents['type'])
         {
             Typecho::widget('Notice')->set($insertId > 0 ? 
-            _t('文章<a href="%s" target="_blank">%s</a>已经被创建',
-            TypechoRoute::parse('post', $contents, Typecho::widget('Options')->index),
+            _t("文章'<a href=\"%s\" target=\"_blank\">%s</a>'已经被创建",
+            $this->permalink($insertId, $contents['type']),
             $contents['title']) : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
         else
         {
             Typecho::widget('Notice')->set($insertId > 0 ? 
-            _t('草稿%s已经被保存', $contents['title']) :
+            _t("草稿'%s'已经被保存", $contents['title']) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
+        }
+
+        /** 跳转页面 */
+        if(1 == TypechoRequest::getParameter('continue'))
+        {
+            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $insertId, Typecho::widget('Options')->adminUrl));
+        }
+        else
+        {
+            Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
+        }
+    }
+    
+    /**
+     * 更新文章
+     * 
+     * @access public
+     * @return void
+     */
+    public function updatePost()
+    {
+        $validator = new TypechoValidation();
+        $validator->addRule('cid', 'required', _t('文章不存在'));
+        $validator->run(TypechoRequest::getParametersFrom('cid'));
+    
+        $contents = TypechoRequest::getParametersFrom('password', 'created', 'text', 'template',
+        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
+        $contents['type'] = (1 == TypechoRequest::getParameter('draft')) ? 'draft' : 'post';
+        $contents['title'] = (NULL == TypechoRequest::getParameter('title')) ? 
+        _t('未命名文档') : TypechoRequest::getParameter('title');
+    
+        $updateRows = $this->updateContent($contents, TypechoRequest::getParameter('cid'));
+
+        /** 文章提示信息 */
+        if('post' == $contents['type'])
+        {
+            Typecho::widget('Notice')->set($updateRows > 0 ? 
+            _t("文章'<a href=\"%s\" target=\"_blank\">%s</a>'已经被更新",
+            $this->permalink(TypechoRequest::getParameter('cid'), $contents['type']),
+            $contents['title']) : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+        }
+        else
+        {
+            Typecho::widget('Notice')->set($updateRows > 0 ? 
+            _t("草稿'%s'已经被保存", $contents['title']) :
+            _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
 
         /** 跳转页面 */
@@ -100,52 +146,6 @@ class DoEditPostWidget extends ContentsPostWidget
         
         /** 返回原网页 */
         $this->goBack();
-    }
-    
-    /**
-     * 更新文章
-     * 
-     * @access public
-     * @return void
-     */
-    public function updatePost()
-    {
-        $validator = new TypechoValidation();
-        $validator->addRule('cid', 'required', _t('文章不存在'));
-        $validator->run(TypechoRequest::getParametersFrom('cid'));
-    
-        $contents = TypechoRequest::getParametersFrom('password', 'created', 'text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = (1 == TypechoRequest::getParameter('draft')) ? 'draft' : 'post';
-        $contents['title'] = (NULL == TypechoRequest::getParameter('title')) ? 
-        _t('未命名文档') : TypechoRequest::getParameter('title');
-    
-        $updateRows = $this->updateContent($contents, TypechoRequest::getParameter('cid'));
-
-        /** 文章提示信息 */
-        if('post' == $contents['type'])
-        {
-            Typecho::widget('Notice')->set($updateRows > 0 ? 
-            _t('文章<a href="%s" target="_blank">%s</a>已经被更新',
-            TypechoRoute::parse('post', $contents, Typecho::widget('Options')->index),
-            $contents['title']) : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        }
-        else
-        {
-            Typecho::widget('Notice')->set($updateRows > 0 ? 
-            _t('草稿%s已经被保存', $contents['title']) :
-            _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        }
-
-        /** 跳转页面 */
-        if(1 == TypechoRequest::getParameter('continue'))
-        {
-            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $insertId, Typecho::widget('Options')->adminUrl));
-        }
-        else
-        {
-            Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
-        }
     }
 
     /**

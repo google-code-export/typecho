@@ -156,7 +156,7 @@ class OptionsWidget extends TypechoWidget
         Typecho::header('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 
         'title' => 'RSD', 'href' => $this->xmlRpcUrl . '?rsd'));
         Typecho::header('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
-        'href' => Typecho::pathToUrl('wlwmanifestxml', $this->adminUrl)));
+        'href' => Typecho::pathToUrl('wlwmanifest.xml', $this->adminUrl)));
         
         /** 添加Pingback */
         header('X-Pingback:' . $this->xmlRpcUrl);

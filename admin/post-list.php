@@ -41,10 +41,10 @@ Typecho::widget('contents.AdminPosts')->to($posts);
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>
-					<th width="35%"><?php _e('标题'); ?></th>
+					<th width="30%"><?php _e('标题'); ?></th>
 					<th width="10%"><?php _e('作者'); ?></th>
 					<th width="15%"><?php _e('发布日期'); ?></th>
-					<th width="15%"><?php _e('分类'); ?></th>
+					<th width="20%"><?php _e('分类'); ?></th>
 					<th width="15%"><?php _e('评论'); ?></th>
 					<th width="8%"><?php _e('状态'); ?></th>
 				</tr>
@@ -55,7 +55,7 @@ Typecho::widget('contents.AdminPosts')->to($posts);
                     <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                     <td><?php $posts->author(); ?></td>
                     <td><?php $posts->dateWord(); ?></td>
-                    <td><?php $posts->category(' | '); ?></td>
+                    <td><?php $posts->category(' '); ?></td>
                     <td><?php $posts->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
                     <td><?php if('post' == $posts->type):
                     _e('已发布');
