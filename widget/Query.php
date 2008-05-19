@@ -53,6 +53,12 @@ class QueryWidget extends TypechoWidget
                 unset($params['sort']);
             }
         }
+        
+        if(!empty($params['limit']))
+        {
+            $sql->limit($params['limit']);
+            unset($params['limit']);
+        }
 
         //获取条件
         foreach($params as $key => $val)

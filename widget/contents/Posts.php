@@ -18,6 +18,14 @@
 class PostsWidget extends TypechoWidget
 {
     /**
+     * 分类列表
+     * 
+     * @access protected
+     * @var array
+     */
+    protected $_categories = array();
+
+    /**
      * 分页数目
      *
      * @access protected
@@ -116,6 +124,17 @@ class PostsWidget extends TypechoWidget
      */
     public function push($value)
     {
+        /** 生成分类 */
+        $this->_categories[$value['cid']] = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $value['cid'])
+        ->where('table.metas.`type` = ?', 'category')
+        ->group('table.metas.`mid`')
+        ->order('sort', 'ASC'));
+        
+        $value['category'] = implode('+', Typecho::arrayFlatten($this->_categories[$value['cid']], 'slug'));
+    
         //生成日期
         $value['year'] = date('Y', $value['created'] + $this->options->timezone);
         $value['month'] = date('n', $value['created'] + $this->options->timezone);
@@ -268,23 +287,23 @@ class PostsWidget extends TypechoWidget
      */
     public function category($split = ',', $link = true)
     {
-        $categories =
-        $this->db->fetchAll($this->db->sql()
-        ->select('table.metas', '`name`, `slug`')
-        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
-        ->where('table.relationships.`cid` = ?', $this->cid)
-        ->where('table.metas.`type` = ?', 'category')
-        ->group('table.metas.`mid`')
-        ->order('sort', 'ASC'));
-
-        $result = array();
-        foreach($categories as $row)
+        $categories = $this->_categories[$this->cid];
+        if($categories)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->options->index) . '">'
-            . $row['name'] . '</a>' : $row['name'];
-        }
+            $result = array();
+            
+            foreach($categories as $row)
+            {
+                $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->options->index) . '">'
+                . $row['name'] . '</a>' : $row['name'];
+            }
 
-        echo implode($split, $result);
+            echo implode($split, $result);
+        }
+        else
+        {
+            echo _t('没有归类');
+        }
     }
 
     /**
@@ -297,13 +316,18 @@ class PostsWidget extends TypechoWidget
      */
     public function tags($split = ',', $link = true)
     {
-        $tags = explode(',', $this->tags);
+        $tags = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas', 'table.metas.`name`, table.metas.`slug`')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $this->cid)
+        ->where('table.metas.`type` = ?', 'tag')
+        ->group('table.metas.`mid`'));
 
         $result = array();
         foreach($tags as $tag)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', array('tag' => $tag), $this->options->index) . '">'
-            . $tag . '</a>' : $tag;
+            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', $tag, $this->options->index) . '">'
+            . $tag['name'] . '</a>' : $tag['name'];
         }
 
         echo implode($split, $result);
@@ -322,12 +346,10 @@ class PostsWidget extends TypechoWidget
         $this->_currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
         
         $select = $this->db->sql()
-        ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`tags`,
-        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
-        ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)
+        ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
+        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.users.`screenName` AS `author`')
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
         ->where('table.contents.`type` = ?', 'post')
-        ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
@@ -347,6 +369,21 @@ class PostsWidget extends TypechoWidget
             
             /** 设置关键词 */
             Typecho::header('meta', array('name' => 'keywords', 'content' => $tag['name']));
+            
+            /** 设置头部feed */
+            /** RSS 2.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
+            'href' => TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            
+            /** RSS 0.92 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
+            TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            
+            /** Atom 0.3 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
+            TypechoRoute::parse('tag', $tag)), $this->options->index)));
         }
         else if('category' == TypechoRoute::$current)
         {
@@ -368,7 +405,7 @@ class PostsWidget extends TypechoWidget
             /** 设置头部feed */
             /** RSS 2.0 */
             Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
-            'href' => $this->options->feedUrl));
+            'href' => TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse('category', $category)), $this->options->index)));
             
             /** RSS 0.92 */
             Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',

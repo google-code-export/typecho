@@ -83,8 +83,6 @@ abstract class ContentsPostWidget extends DoPostWidget
                 ->where('`mid` = ?', $tag));
             }
         }
-
-        return implode(',', $tags);
     }
     
     /**
@@ -189,24 +187,6 @@ abstract class ContentsPostWidget extends DoPostWidget
                 ->where('`mid` = ?', $category));
             }
         }
-        
-        /** 取出第一个分类 */
-        $allCategories = Typecho::arrayFlatten($this->db->fetchAll(
-        $this->db->sql()->select('table.metas', '`mid`')
-        ->where('table.metas.`type` = ?', 'category')
-        ->order('table.metas.`sort`', TypechoDb::SORT_ASC)), 'mid');
-        $currentCategory = Typecho::widget('Options')->defaultCategory;
-        
-        foreach($allCategories as $category)
-        {
-            if(in_array($category, $categories))
-            {
-                $currentCategory = $category;
-                break;
-            }
-        }
-
-        return $currentCategory;
     }
     
     /**
@@ -248,24 +228,11 @@ abstract class ContentsPostWidget extends DoPostWidget
         if('post' == $insertStruct['type'] || 'draft' == $insertStruct['type'])
         {
             /** 插入分类 */
-            if(empty($content['category']) || !is_array($content['category']))
-            {
-                $content['category'] = array(Typecho::widget('Options')->defaultCategory);
-            }
-            
-            $currentCategory = $this->setCategories($insertId, $content['category']);
-            $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('meta' => $currentCategory))
-            ->where('`cid` = ?', $insertId));
+            $this->setCategories($insertId, !empty($content['category']) && is_array($content['category']) ? 
+            $content['category'] : array());
             
             /** 插入标签 */
-            if(!empty($content['tags']))
-            {
-                $tags = $this->setTags($insertId, $content['tags']);
-                $this->db->query($this->db->sql()->update('table.contents')
-                ->rows(array('tags' => $tags))
-                ->where('`cid` = ?', $insertId));
-            }
+            $tags = $this->setTags($insertId, empty($content['tags']) ? NULL : $content['tags']);
         }
 
         return $insertId;
@@ -318,27 +285,14 @@ abstract class ContentsPostWidget extends DoPostWidget
         ->where('`cid` = ?', $cid));
         
         /** 更新关联数据 */
-        if('post' == $updateStruct['type'] || 'draft' == $updateStruct['type'])
+        if('post' == $content['type'] || 'draft' == $content['type'])
         {
             /** 插入分类 */
-            if(empty($content['category']) || !is_array($content['category']))
-            {
-                $content['category'] = array(Typecho::widget('Options')->defaultCategory);
-            }
-            
-            $currentCategory = $this->setCategories($cid, $content['category']);
-            $this->db->query($this->db->sql()->update('table.contents')
-            ->rows(array('meta' => $currentCategory))
-            ->where('`cid` = ?', $cid));
+            $this->setCategories($cid, !empty($content['category']) && is_array($content['category']) ? 
+            $content['category'] : array());
             
             /** 插入标签 */
-            if(!empty($content['tags']))
-            {
-                $tags = $this->setTags($cid, $content['tags']);
-                $this->db->query($this->db->sql()->update('table.contents')
-                ->rows(array('tags' => $tags))
-                ->where('`cid` = ?', $cid));
-            }
+            $tags = $this->setTags($cid, empty($content['tags']) ? NULL : $content['tags']);
         }
 
         return true;

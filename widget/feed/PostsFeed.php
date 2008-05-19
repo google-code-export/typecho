@@ -33,6 +33,17 @@ class PostsFeedWidget extends TypechoWidget
      * @var string
      */
     private $type;
+    
+    /**
+     * 构造函数,初始化数据库
+     *
+     * @access public
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->db = TypechoDb::get();
+    }
 
     /**
      * 生成节点
@@ -43,6 +54,22 @@ class PostsFeedWidget extends TypechoWidget
      */
     public function push(array $value)
     {
+        /** 生成分类 */
+        $value['categories'] = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas', '`name`, `slug`')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $value['cid'])
+        ->where('table.metas.`type` = ?', 'category')
+        ->group('table.metas.`mid`')
+        ->order('sort', 'ASC'));
+        
+        $value['category'] = implode('+', Typecho::arrayFlatten($value['categories'], 'slug'));
+    
+        //生成日期
+        $value['year'] = date('Y', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['month'] = date('n', $value['created'] + Typecho::widget('Options')->timezone);
+        $value['day'] = date('j', $value['created'] + Typecho::widget('Options')->timezone);
+    
         $permalink = TypechoRoute::parse('post', $value, Typecho::widget('Options')->index);
     
         $item = $this->feed->createNewItem();
@@ -78,7 +105,6 @@ class PostsFeedWidget extends TypechoWidget
     {
         $this->feed = TypechoFeed::generator($feedType);
         $this->type = $feedType;
-        $db = TypechoDb::get();
         
         $this->feed->setTitle(Typecho::widget('Options')->title);
         $this->feed->setLink($link);
@@ -105,13 +131,11 @@ class PostsFeedWidget extends TypechoWidget
             Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone));
         }
     
-        $db->fetchAll($db->sql()
+        $this->db->fetchAll($this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
-        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, table.users.`screenName` AS `author`')
-        ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)
+        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.users.`screenName` AS `author`')
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
         ->where('table.contents.`type` = ?', 'post')
-        ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`allowFeed` = ?', 'enable')
         ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', Typecho::widget('Options')->gmtTime)
