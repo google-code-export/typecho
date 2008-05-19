@@ -1,5 +1,6 @@
 <?php 
 require_once 'common.php';
+Typecho::widget('metas.EditMeta', 'category')->to($category);
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -9,14 +10,16 @@ require_once 'menu.php';
 		<div id="page">
         <?php require_once 'notice.php'; ?>
         
-		<form method="post" action="">
+		<form method="post" id="category" name="category" action="">
 			<div class="table_nav">
-				<input type="submit" value="<?php _e('删除'); ?>" />
+                <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
+				<input type="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
 				<select id="" style="width: 160px;">
                     <?php Typecho::widget('Query', 'from=table.metas&type=category&order=sort&sort=ASC')
                     ->parse('<option value="{mid}">{name}</option>'); ?>
 				</select>
-				<input type="submit" value="<?php _e('合并'); ?>" />
+				<input type="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
+                <input type="hidden" name="do" value="delete" />
 			</div>
 
 			<table class="latest">
@@ -27,16 +30,16 @@ require_once 'menu.php';
 					<th width="10%"><?php _e('文章'); ?></th>
 					<th width="19%"><?php _e('分类缩略名'); ?></th>
 				</tr>
-                <?php Typecho::widget('metas.AdminMetas', 'category')->to($category); ?>
-                <?php if($category->have()): ?>
-                <?php while($category->get()): ?>
+                <?php Typecho::widget('metas.AdminMetas', 'category')->to($categories); ?>
+                <?php if($categories->have()): ?>
+                <?php while($categories->get()): ?>
                 <tr>
 					<td><input type="checkbox" id="" /></td>
-					<td><a href="#"><?php $category->name(); ?></a></td>
-					<td><?php $category->description(); ?></td>
-					<td><a href="<?php Typecho::widget('Options')->adminUrl('post-list.php?status=allPost&category=' . $category->mid); ?>">
-                    <?php $category->count(); ?></a></td>
-					<td><?php $category->slug(); ?></td>
+					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit"><?php $categories->name(); ?></a></td>
+					<td><?php $categories->description(); ?></td>
+					<td><a href="<?php Typecho::widget('Options')->adminUrl('post-list.php?status=allPost&category=' . $categories->mid); ?>">
+                    <?php $categories->count(); ?></a></td>
+					<td><?php $categories->slug(); ?></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>
@@ -45,27 +48,30 @@ require_once 'menu.php';
                 </tr>
                 <?php endif; ?>
 			</table>
+        </form>    
+        
+        <form method="post" action="">
 			<hr class="space" />
-			<h4><?php _e('增加分类'); ?></h4>
+			<h4 id="edit"><?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?></h4>
 			<table class="setting">
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
 					<td><label for="name"><?php _e('分类名称'); ?></label></td>
-					<td><input type="text" name="name" id="name" style="width: 60%;" /></td>
+					<td><input type="text" name="name" id="name" style="width: 60%;" value="<?php $category->name(); ?>" /></td>
 				</tr>
 				<tr>
 					<td><label for="slug"><?php _e('分类缩略名'); ?></label></td>
-					<td><input type="text" name="slug" id="slug" style="width: 60%;" />
+					<td><input type="text" name="slug" id="slug" style="width: 60%;" value="<?php $category->slug(); ?>" />
                     <small><?php _e('分类缩略名用于创建友好的链接形式,请使用纯字母或者下划线.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label for="description"><?php _e('分类描述'); ?></label></td>
-					<td><textarea name="description" id="description" rows="5" style="width: 80%;"></textarea>
+					<td><textarea name="description" id="description" rows="5" style="width: 80%;"><?php $category->description(); ?></textarea>
                     <small><?php _e('此文字用于描述分类,在有的主题中它会被显示.'); ?></small></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td><input type="submit" value="<?php _e('增加分类'); ?>" /></td>
+					<td><input type="hidden" name="do" value="<?php $category->do(); ?>" /></td>
+					<td><input type="submit" value="<?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?>" /></td>
 				</tr>
 			</table>
 		</form>

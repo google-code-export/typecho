@@ -310,6 +310,7 @@ font-size: 1.5em;
 width: 99%;
 font-size: 1.2em;
 }
+
 span#tag_list {
 display: block;
 margin: 1em .5em;
@@ -322,8 +323,9 @@ background: #E6EEF7;
 padding: .2em .3em;
 }
 
-#text {
+#text , #description {
 width: 99%;
+font-size:1.1em;
 }
 
 /*

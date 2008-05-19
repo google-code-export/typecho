@@ -44,7 +44,6 @@ class EditPageWidget extends TypechoWidget
      * 入口函数
      * 
      * @access public
-     * @param string $type 内容类型
      * @return void
      */
     public function render()
@@ -57,7 +56,11 @@ class EditPageWidget extends TypechoWidget
             /** 更新模式 */
             $page = $this->db->fetchRow($this->db->sql()
             ->select('table.contents')->where('`cid` = ?', TypechoRequest::getParameter('cid'))
-            ->where('`type` = ? OR `type` = ?', 'page', 'draft')->limit(1), array($this, 'push'));
+            ->where('`type` = ? OR `type` = ?', 'page', 'draft')->limit(1));
+            
+            $page['do'] = 'update';
+            Typecho::widget('Menu')->title = _t('编辑页面');
+            $this->push($page);
             
             if(!$page)
             {

@@ -60,11 +60,6 @@ class EditPostWidget extends TypechoWidget
                 }
             }
         }
-    
-        if(!isset($value['do']))
-        {
-            $value['do'] = 'update';
-        }
         
         return parent::push($value);
     }
@@ -94,12 +89,35 @@ class EditPostWidget extends TypechoWidget
             return array(Typecho::widget('Options')->defaultCategory);
         }
     }
+    
+    /**
+     * 输出文章标签
+     *
+     * @access public
+     * @return void
+     */
+    public function tags()
+    {
+        $tags = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas', 'table.metas.`name`')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $this->cid)
+        ->where('table.metas.`type` = ?', 'tag')
+        ->group('table.metas.`mid`'));
+
+        $result = array();
+        foreach($tags as $tag)
+        {
+            $result[] = $tag['name'];
+        }
+
+        echo implode(',', $result);
+    }
 
     /**
      * 入口函数
      * 
      * @access public
-     * @param string $type 内容类型
      * @return void
      */
     public function render()
@@ -112,9 +130,11 @@ class EditPostWidget extends TypechoWidget
             /** 更新模式 */
             $post = $this->db->fetchRow($this->db->sql()
             ->select('table.contents')->where('`cid` = ?', TypechoRequest::getParameter('cid'))
-            ->where('`type` = ? OR `type` = ?', 'post', 'draft')->limit(1), array($this, 'push'));
+            ->where('`type` = ? OR `type` = ?', 'post', 'draft')->limit(1));
             
+            $post['do'] = 'update';
             Typecho::widget('Menu')->title = _t('编辑文章');
+            $this->push($post);
             
             if(!$post)
             {

@@ -64,9 +64,17 @@ require_once 'menu.php';
                 <input type="hidden" name="continue" value="0" />
             </p>
 			<h4><?php _e('标签'); ?></h4>
-			<p><input id="tags" type="text" name="tags" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
-			<h4><?php _e('缩略名'); ?></h4>
-			<p><input id="slug" type="text" name="slug" value="" /></p>
+            <?php Typecho::widget('Query', 'from=table.metas&type=tag&order=count&sort=DESC&limit=8')->to($tags); ?>
+			<p><input id="tags" type="text" name="tags" value="<?php $post->tags(); ?>" />
+            <span id="tag_list">
+            <?php while($tags->get()): ?>
+                <a href="#" class="select"><?php $tags->name(); ?></a> 
+            <?php endwhile; ?>
+            </span>
+            </p>
+			
+            <h4><?php _e('缩略名'); ?></h4>
+			<p><input id="slug" type="text" name="slug" value="<?php $post->slug(); ?>" /></p>
 		</div><!-- end #content -->
 
 	</form>

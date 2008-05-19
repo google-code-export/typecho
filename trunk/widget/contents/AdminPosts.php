@@ -65,11 +65,9 @@ class AdminPostsWidget extends PostsWidget
         /** 构建基础查询 */
         $select = $this->db->sql()
         ->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
-        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.metas.`slug` AS `category`, 
+        table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, 
         table.users.`screenName` AS `author`, table.contents.`author` AS `authorId`')
-        ->join('table.metas', 'table.contents.`meta` = table.metas.`mid`', TypechoDb::LEFT_JOIN)
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN)
-        ->where('table.metas.`type` = ?', 'category')
         ->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft');
 
         /** 过滤分类 */
