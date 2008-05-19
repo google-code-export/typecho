@@ -65,7 +65,7 @@ class TypechoPDOMysql implements TypechoDbAdapter
     {
         try
         {
-            $resource = $this->_object->prepare((string) $query);
+            $resource = $this->_object->prepare($query instanceof TypechoDbQuery ? $query->__toString() : $query);
             $resource->execute();
         }
         catch(PDOException $e)

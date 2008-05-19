@@ -151,11 +151,12 @@ function exceptionHandler($exception)
     
         if($exception instanceof TypechoException)
         {
-            die((string) $exception);
+            /** 显示调用__toString,修正PHP 5.2之前的bug */
+            die($exception->__toString());
         }
         else
         {
-            die(TypechoException::parse((string) $exception));
+            die(TypechoException::parse($exception->__toString()));
         }
     }
     else

@@ -58,7 +58,7 @@ class TypechoPDOPgsql implements TypechoDbAdapter
         try
         {
             $this->_lastInsertTable = (!empty($action) && 'INSERT' == $action) ? $query->getAttribute('table') : NULL;
-            $resource = $this->_object->prepare((string) $query);
+            $resource = $this->_object->prepare($query instanceof TypechoDbQuery ? $query->__toString() : $query);
             $resource->execute();
         }
         catch(PDOException $e)
