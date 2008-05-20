@@ -64,12 +64,21 @@ class EditMetaWidget extends TypechoWidget
                 throw new TypechoWidgetException(_t('不存在'), TypechoException::NOTFOUND);
             }
             
+            if($cookieMeta = TypechoRequest::getCookie($type))
+            {
+                $meta = array_merge($meta, $cookieMeta);
+            }
+            
             $meta['do'] = 'update';
             $this->push($meta);
         }
         else
         {
-            $this->push(array('do' => 'insert'));
+            $meta = TypechoRequest::getCookie($type);
+            $meta['do'] = 'insert';
+            $this->push($meta);
         }
+        
+        TypechoRequest::deleteCookie($type);
     }
 }

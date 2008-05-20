@@ -18,10 +18,10 @@ class NoticeWidget extends TypechoWidget
     /**
      * 提示类型
      * 
-     * @access private
+     * @access public
      * @var string
      */
-    private $noticeType = 'notice';
+    public $noticeType = 'notice';
     
     /**
      * 输出提示类型

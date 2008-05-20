@@ -131,7 +131,7 @@ class PostsWidget extends TypechoWidget
         ->where('table.relationships.`cid` = ?', $value['cid'])
         ->where('table.metas.`type` = ?', 'category')
         ->group('table.metas.`mid`')
-        ->order('sort', 'ASC'));
+        ->order('`sort`', 'ASC'));
         
         $value['category'] = implode('+', Typecho::arrayFlatten($this->_categories[$value['cid']], 'slug'));
     
@@ -356,8 +356,8 @@ class PostsWidget extends TypechoWidget
         if('tag' == TypechoRoute::$current)
         {
             $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
-            ->where('type = ?', 'tag')
-            ->where('slug = ?', urlencode(TypechoRoute::getParameter('slug')))->limit(1));
+            ->where('`type` = ?', 'tag')
+            ->where('`slug` = ?', urlencode(TypechoRoute::getParameter('slug')))->limit(1));
             
             if(!$tag)
             {
@@ -388,8 +388,8 @@ class PostsWidget extends TypechoWidget
         else if('category' == TypechoRoute::$current)
         {
             $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
-            ->where('type = ?', 'category')
-            ->where('slug = ?', TypechoRoute::getParameter('slug'))->limit(1));
+            ->where('`type` = ?', 'category')
+            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1));
             
             if(!$category)
             {

@@ -50,9 +50,7 @@ class LoginWidget extends DoPostWidget
         {
             /** 设置提示信息 */
             Typecho::widget('Notice')->set($e->getMessages());
-            Typecho::redirect(Typecho::pathToUrl('login.php', Typecho::widget('Options')->adminUrl)
-            . (NULL === ($referer = TypechoRequest::getParameter('referer')) ? 
-            NULL : '?referer=' . urlencode($referer)));
+            $this->goBack();
         }
         
         /** 开始验证用户 **/

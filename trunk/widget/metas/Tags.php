@@ -79,8 +79,8 @@ class TagsWidget extends CategoriesWidget
      */
     public function render($pageSize = 0)
     {
-        $select = $this->db->sql()->select('table.metas')->where('type = ?', 'tag')
-        ->order('table.metas.`sort`', TypechoDb::SORT_ASC);
+        $select = $this->db->sql()->select('table.metas')->where('`type` = ?', 'tag')
+        ->order('`mid`', TypechoDb::SORT_ASC);
         $this->countSql = clone $select;
         
         if($pageSize > 0)
