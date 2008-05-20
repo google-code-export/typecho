@@ -88,7 +88,7 @@ class CategoriesWidget extends TypechoWidget
      */
     public function render()
     {
-        $this->db->fetchAll($this->db->sql()->select('table.metas')->where('type = ?', 'category')
+        $this->db->fetchAll($this->db->sql()->select('table.metas')->where('`type` = ?', 'category')
         ->order('table.metas.`sort`', TypechoDb::SORT_ASC), array($this, 'push'));
     }
 }

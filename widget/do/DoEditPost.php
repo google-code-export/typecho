@@ -48,14 +48,14 @@ class DoEditPostWidget extends ContentsPostWidget
         if('post' == $contents['type'])
         {
             Typecho::widget('Notice')->set($insertId > 0 ? 
-            _t("文章'<a href=\"%s\" target=\"_blank\">%s</a>'已经被创建",
+            _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被创建",
             $this->permalink($insertId, $contents['type']),
             $contents['title']) : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
         else
         {
             Typecho::widget('Notice')->set($insertId > 0 ? 
-            _t("草稿'%s'已经被保存", $contents['title']) :
+            _t("草稿 '%s' 已经被保存", $contents['title']) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
 
@@ -94,14 +94,14 @@ class DoEditPostWidget extends ContentsPostWidget
         if('post' == $contents['type'])
         {
             Typecho::widget('Notice')->set($updateRows > 0 ? 
-            _t("文章'<a href=\"%s\" target=\"_blank\">%s</a>'已经被更新",
+            _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新",
             $this->permalink(TypechoRequest::getParameter('cid'), $contents['type']),
             $contents['title']) : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
         else
         {
             Typecho::widget('Notice')->set($updateRows > 0 ? 
-            _t("草稿'%s'已经被保存", $contents['title']) :
+            _t("草稿 '%s' 已经被保存", $contents['title']) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
 

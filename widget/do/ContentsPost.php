@@ -90,9 +90,8 @@ abstract class ContentsPostWidget extends DoPostWidget
                 ->where('`cid` = ?', $cid)
                 ->where('`mid` = ?', $tag));
                 
-                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
-                ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.contents.`type` = ?', 'post')
+                $num = $this->db->fetchObject($this->db->sql()
+                ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->where('table.relationships.`mid` = ?', $tag))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -115,9 +114,8 @@ abstract class ContentsPostWidget extends DoPostWidget
                     'cid'  =>   $cid
                 )));
                 
-                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
-                ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.contents.`type` = ?', 'post')
+                $num = $this->db->fetchObject($this->db->sql()
+                ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->where('table.relationships.`mid` = ?', $tag))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -197,9 +195,8 @@ abstract class ContentsPostWidget extends DoPostWidget
                 ->where('`cid` = ?', $cid)
                 ->where('`mid` = ?', $category));
                 
-                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
-                ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.contents.`type` = ?', 'post')
+                $num = $this->db->fetchObject($this->db->sql()
+                ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->where('table.relationships.`mid` = ?', $category))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -219,9 +216,8 @@ abstract class ContentsPostWidget extends DoPostWidget
                     'cid'  =>   $cid
                 )));
                 
-                $num = $this->db->fetchObject($this->db->sql()->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
-                ->join('table.contents', 'table.relationships.`cid` = table.contents.`cid`')
-                ->where('table.contents.`type` = ?', 'post')
+                $num = $this->db->fetchObject($this->db->sql()
+                ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
                 ->where('table.relationships.`mid` = ?', $category))->num;
                 
                 $this->db->query($this->db->sql()->update('table.metas')
@@ -245,7 +241,7 @@ abstract class ContentsPostWidget extends DoPostWidget
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
             'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
-            'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
+            'modified'      =>  Typecho::widget('Options')->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'author'        =>  Typecho::widget('Access')->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
@@ -300,8 +296,7 @@ abstract class ContentsPostWidget extends DoPostWidget
         $updateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'uri'           =>  empty($content['uri']) ? NULL : $content['uri'],
-            'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
-            'modified'      =>  empty($content['modified']) ? Typecho::widget('Options')->gmtTime : $content['modified'],
+            'modified'      =>  Typecho::widget('Options')->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
@@ -309,6 +304,11 @@ abstract class ContentsPostWidget extends DoPostWidget
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
         );
+        
+        if(!empty($content['created']))
+        {
+            $updateStruct['created'] = $content['created'];
+        }
         
         /** 首先插入部分数据 */
         $updateRows = $this->db->query($this->db->sql()->update('table.contents')->rows($updateStruct)
