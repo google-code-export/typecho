@@ -24,7 +24,7 @@ define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
 define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
 
 /** 定义异常截获页面地址 */
-define('__TYPECHO_EXCEPTION_DIR__', __TYPECHO_ROOT_DIR__ . '/var/error');
+define('__TYPECHO_EXCEPTION_FILE__', __TYPECHO_ROOT_DIR__ . '/admin/error.php');
 
 /** 定义调试开关 **/
 define('__TYPECHO_DEBUG__', true);
