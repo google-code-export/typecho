@@ -93,6 +93,17 @@ class XmlRpcWidget extends ContentsPostWidget
      */
     public function push($value)
     {
+        /** 生成分类 */
+        $categories = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas', 'table.metas.`slug`')
+        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $value['cid'])
+        ->where('table.metas.`type` = ?', 'category')
+        ->group('table.metas.`mid`')
+        ->order('sort', 'ASC'));
+        
+        $value['category'] = implode('+', Typecho::arrayFlatten($categories, 'slug'));
+    
         //生成日期
         $value['year'] = date('Y', $value['created'] + Typecho::widget('Options')->timezone);
         $value['month'] = date('n', $value['created'] + Typecho::widget('Options')->timezone);

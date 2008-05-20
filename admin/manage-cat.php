@@ -30,14 +30,14 @@ require_once 'menu.php';
 					<th width="10%"><?php _e('文章'); ?></th>
 					<th width="19%"><?php _e('分类缩略名'); ?></th>
 				</tr>
-                <?php Typecho::widget('metas.AdminMetas', 'category')->to($categories); ?>
+                <?php Typecho::widget('metas.Categories')->to($categories); ?>
                 <?php if($categories->have()): ?>
                 <?php while($categories->get()): ?>
                 <tr>
 					<td><input type="checkbox" name="mid[]" value="<?php $categories->mid(); ?>" /></td>
 					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit"><?php $categories->name(); ?></a></td>
 					<td><?php $categories->description(); ?></td>
-					<td><a href="<?php Typecho::widget('Options')->adminUrl('post-list.php?status=allPost&category=' . $categories->mid); ?>">
+					<td><a href="<?php $categories->permalink(); ?>">
                     <?php $categories->count(); ?></a></td>
 					<td><?php $categories->slug(); ?></td>
 				</tr>
@@ -50,7 +50,7 @@ require_once 'menu.php';
 			</table>
         </form>    
         
-        <form method="post" action="<?php Typecho::widget('Options')->index('DoEditMeta.do'); ?>">
+        <form method="post" action="<?php Typecho::widget('Options')->index('DoEditCategory.do'); ?>">
 			<hr class="space" />
 			<h4 id="edit"><?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?></h4>
 			<table class="setting">
@@ -71,7 +71,7 @@ require_once 'menu.php';
 				</tr>
 				<tr>
 					<td><input type="hidden" name="do" value="<?php $category->do(); ?>" />
-                    <input type="hidden" name="type" value="category" /></td>
+                    <input type="hidden" name="mid" value="<?php $category->mid(); ?>" /></td>
 					<td><input type="submit" value="<?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?>" /></td>
 				</tr>
 			</table>
