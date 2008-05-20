@@ -10,6 +10,9 @@
  * @version $Id$
  */
 
+/** 载入分类支持 */
+require_once 'Categories.php';
+
 /**
  * 描述记录输出组件
  * 
@@ -19,16 +22,8 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class AdminMetasWidget extends TypechoWidget
+class TagsWidget extends CategoriesWidget
 {
-    /**
-     * 数据库对象
-     *
-     * @access protected
-     * @var TypechoDb
-     */
-    protected $db;
-    
     /**
      * 分页数目
      *
@@ -46,73 +41,12 @@ class AdminMetasWidget extends TypechoWidget
     protected $_currentPage;
     
     /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-
-    /**
-     * 实例化的权限对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $access;
-    
-    /**
      * 用于计算总数的sql对象
      * 
      * @access private
      * @var TypechoDbQuery
      */
     public $countSql;
-    
-    /**
-     * 过滤器名称
-     *
-     * @access private
-     * @var string
-     */
-    private $_filterName;
-    
-    /**
-     * 构造函数,初始化数据库
-     *
-     * @access public
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->db = TypechoDb::get();
-        $this->options = Typecho::widget('Options');
-        $this->access = Typecho::widget('Access');
-        $this->_filterName = TypechoPlugin::name(__FILE__);
-    }
-    
-    /**
-     * 将每行的值压入堆栈
-     *
-     * @access public
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function push($value)
-    {
-        //生成静态链接
-        $type = $value['type'];
-        $routeExists = isset(TypechoConfig::get('Route')->$type);
-        
-        $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
-        
-        /** 生成聚合链接 */
-        $value['feedUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => TypechoRoute::parse($type, $value)), $this->options->index) : '#';
-
-        TypechoPlugin::callFilter($this->_filterName, $value);
-        return parent::push($value);
-    }
     
     /**
      * 输出内容分页
@@ -143,9 +77,9 @@ class AdminMetasWidget extends TypechoWidget
      * @param string $pageSize 分页参数,为0时表示不分页
      * @return unknown
      */
-    public function render($type = 'category', $pageSize = 0)
+    public function render($pageSize = 0)
     {
-        $select = $this->db->sql()->select('table.metas')->where('type = ?', $type)
+        $select = $this->db->sql()->select('table.metas')->where('type = ?', 'tag')
         ->order('table.metas.`sort`', TypechoDb::SORT_ASC);
         $this->countSql = clone $select;
         

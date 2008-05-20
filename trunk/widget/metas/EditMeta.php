@@ -59,13 +59,13 @@ class EditMetaWidget extends TypechoWidget
             ->select('table.metas')->where('`mid` = ?', TypechoRequest::getParameter('mid'))
             ->where('`type` = ?', $type)->limit(1));
             
-            $meta['do'] = 'update';
-            $this->push($meta);
-            
             if(!$meta)
             {
                 throw new TypechoWidgetException(_t('不存在'), TypechoException::NOTFOUND);
             }
+            
+            $meta['do'] = 'update';
+            $this->push($meta);
         }
         else
         {

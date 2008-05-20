@@ -19,7 +19,7 @@ require_once 'menu.php';
 					<th width="30%">slug</th>
 					<th width="9%">post</th>
 				</tr>
-                <?php Typecho::widget('metas.AdminMetas', 'tag', 20)->to($tag); ?>
+                <?php Typecho::widget('metas.Tags', 20)->to($tag); ?>
 				<?php while($tag->get()): ?>
 				<tr>
 					<td><input type="checkbox" id="<?php $tag->mid(); ?>" /></td>

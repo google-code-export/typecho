@@ -1,4 +1,4 @@
-<?php if(Typecho::widget('Notice')->have()): ?>
+<?php if(Typecho::widget('Notice')->have() && in_array(Typecho::widget('Notice')->type, array('success', 'notice', 'error'))): ?>
 <div class="<?php Typecho::widget('Notice')->noticeType(); ?>" ondblclick="this.style.display='none'">
 <ul>
     <?php Typecho::widget('Notice')->lists(); ?>

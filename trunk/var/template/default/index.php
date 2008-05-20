@@ -15,7 +15,7 @@
 
     <h2><a href="<?php $posts->permalink(); ?>"><?php $posts->title(); ?></a></h2>
     
-    <cite><?php $posts->date('Y-m-d'); ?> | <?php $posts->category(','); ?></cite>
+    <cite><?php $posts->date('Y-m-d'); ?> | <?php $posts->category(','); ?> | <?php $posts->tags(','); ?></cite>
     
     <div><?php $posts->content('阅读更多...'); ?></div>
 
