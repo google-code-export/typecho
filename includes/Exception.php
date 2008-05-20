@@ -164,37 +164,23 @@ function exceptionHandler($exception)
         switch($exception->getCode())
         {
             case TypechoException::FORBIDDEN:
-            {
                 header('HTTP/1.1 403 Forbidden');
-                require_once __TYPECHO_EXCEPTION_DIR__ . '/403.php';
                 break;
-            }
             case TypechoException::NOTFOUND:
-            {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
-                require_once __TYPECHO_EXCEPTION_DIR__ . '/404.php';
                 break;
-            }
             case TypechoException::RUNTIME:
-            {
                 header('HTTP/1.1 500 Internal Server Error');
-                require_once __TYPECHO_EXCEPTION_DIR__ . '/500.php';
                 break;
-            }
             case TypechoException::UNVAILABLE:
-            {
                 header('HTTP/1.1 503 Service Unvailable');
-                require_once __TYPECHO_EXCEPTION_DIR__ . '/503.php';
                 break;
-            }
             default:
-            {
-                require_once __TYPECHO_EXCEPTION_DIR__ . '/error.php';
                 break;
-            }
         }
 
+        require_once __TYPECHO_EXCEPTION_FILE__;
         die();
     }
 }
