@@ -1,0 +1,6 @@
+2008.5.20 by qining
+
+增加DoEditPage
+分离DoEditMeta为DoEditCategory和DoEditTag
+为Meta增加条件判断以及提示信息
+判断meta slug是否重复
