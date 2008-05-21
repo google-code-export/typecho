@@ -265,20 +265,19 @@ class ContentsWidget extends TypechoWidget
      * 输出内容分页
      *
      * @access public
-     * @param string $class 分页类型
+     * @param string $pageTemplate 分页模板
      * @return void
      */
-    public function pageNav($class)
-    {
-        $args = func_get_args();
-
+    public function pageNav($pageTemplate = NULL)
+    {        
         $num = $this->db->fetchObject($this->countSql->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
+
         $nav = new TypechoWidgetNavigator($num,
-                                          $this->currentPage,
-                                          $this->pageSize,
+                                          $this->_currentPage,
+                                          $this->_pageSize, NULL != $pageTemplate ? $pageTemplate : 
                                           TypechoRoute::parse(TypechoRoute::$current . '_page', $this->_row, $this->options->index));
 
-        call_user_func_array(array($nav, 'make'), $args);
+        $nav->makeBoxNavigator(_t('上一页'), _t('下一页'));
     }
 
     /**
