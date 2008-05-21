@@ -145,10 +145,15 @@ class OptionsWidget extends TypechoWidget
         $this->templateUrl = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteUrl);
         $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
         $this->gmtTime = time() - intval(date('Z'));
+        
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
+        $this->feedRssUrl = TypechoRoute::parse('feed', array('feed' => '/rss'), $this->index);
+        $this->feedAtomUrl = TypechoRoute::parse('feed', array('feed' => '/atom'), $this->index);
+        
         $this->xmlRpcUrl = TypechoRoute::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
         
+        /** 初始化header内容 */
         Typecho::header('meta', array('name' => 'description', 'content' => $this->description));
         Typecho::header('meta', array('name' => 'generator', 'content' => $this->generator));
         Typecho::header('meta', array('name' => 'template', 'content' => $this->template));

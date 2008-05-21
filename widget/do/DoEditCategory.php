@@ -242,6 +242,8 @@ class DoEditCategoryWidget extends DoPostWidget
                         $this->db->query($this->db->sql()->insert('table.relationships')
                         ->rows(array('mid' => $merge, 'cid' => $post)));
                     }
+                    
+                    unset($existsPosts);
                 }
             }
         }

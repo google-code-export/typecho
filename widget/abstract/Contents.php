@@ -13,7 +13,7 @@
  *
  * @package Widget
  */
-class PostsWidget extends TypechoWidget
+class ContentsWidget extends TypechoWidget
 {
     /**
      * 分页数目
@@ -300,7 +300,7 @@ class PostsWidget extends TypechoWidget
         ->order('`sort`', 'ASC'));
         
         /** 取出第一个分类作为slug条件 */
-        $value['category'] = reset(Typecho::arrayFlatten($value['categories'], 'slug'));
+        $value['category'] = current(Typecho::arrayFlatten($value['categories'], 'slug'));
 
         /** 生成日期 */
         $value['year'] = date('Y', $value['created'] + $this->options->timezone);
