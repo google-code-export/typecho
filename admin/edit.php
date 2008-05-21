@@ -1,6 +1,6 @@
 <?php 
 require_once 'common.php';
-Typecho::widget('contents.EditPost')->to($post);
+Typecho::widget('Contents.EditPost')->to($post);
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -18,7 +18,8 @@ require_once 'menu.php';
 			<h3><?php _e('分类'); ?></h3>
 			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
-            <?php Typecho::widget('metas.Categories')->to($category); $categories = $post->categories(); ?>
+            <?php Typecho::widget('Categories')->to($category);
+            $categories = ($categories = Typecho::arrayFlatten($post->categories, 'mid')) ? $categories : array(Typecho::widget('Options')->defaultCategory); ?>
             <?php if($category->have()): ?>
             <?php while($category->get()): ?>
                 <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
@@ -31,9 +32,9 @@ require_once 'menu.php';
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="allowComment" name="allowComment" checked="checked"/><label for="allowComment"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="allowPing" name="allowPing" checked="checked"/><label for="allowPing"><?php _e('允许引用'); ?></label><br />
-                <input type="checkbox" id="allowFeed" name="allowFeed" checked="checked"/><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
+				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($post->allow('comment')): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
+				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($post->allow('ping')): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
+                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($post->allow('feed')): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>
@@ -65,7 +66,7 @@ require_once 'menu.php';
             </p>
 			<h4><?php _e('标签'); ?></h4>
             <?php Typecho::widget('Query', 'from=table.metas&type=tag&order=count&sort=DESC&limit=8')->to($tags); ?>
-			<p><input id="tags" type="text" name="tags" value="<?php $post->tags(); ?>" />
+			<p><input id="tags" type="text" name="tags" value="<?php $post->tags(',', false); ?>" />
             <span id="tag_list">
             <?php while($tags->get()): ?>
                 <a href="#" class="select"><?php $tags->name(); ?></a> 
