@@ -9,15 +9,16 @@ require_once 'menu.php';
 		<div id="page">
 		<form method="post" action="">
 			<div class="table_nav">
+                <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
 				<input type="submit" value="<?php _e('删除'); ?>" />
 			</div>
 
 			<table class="latest">
 				<tr>
 					<th width="1%"><input type="checkbox" id="" /></th>
-					<th width="60%">name</th>
-					<th width="30%">slug</th>
-					<th width="9%">post</th>
+					<th width="60%"><?php _e('标签名称'); ?></th>
+					<th width="30%"><?php _e('标签缩略名'); ?></th>
+					<th width="9%"><?php _e('文章'); ?></th>
 				</tr>
                 <?php Typecho::widget('Tags')->to($tag); ?>
 				<?php while($tag->get()): ?>
@@ -37,16 +38,16 @@ require_once 'menu.php';
             <?php endif; ?>
             
 			<hr class="space" />
-			<h4>Add Tag</h4>
+			<h4 id="edit">Add Tag</h4>
 			<table class="setting">
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
-					<td><label>Tag Name</label></td>
-					<td><input type="text" id="" style="width: 50%;" /><small>The name is how the tag appears on your site.</small></td>
+					<td><label for="name"><?php _e('标签名称'); ?></label></td>
+					<td><input type="text" id="name" name="name" style="width: 50%;" /><small>The name is how the tag appears on your site.</small></td>
 				</tr>
 				<tr>
-					<td><label>Tag Slug</label></td>
-					<td><input type="text" id="" style="width: 50%;" /><small>The “slug” is the Url-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
+					<td><label for="slug"><?php _e('标签缩略名'); ?></label></td>
+					<td><input type="text" id="slug" name="slug" style="width: 50%;" /><small>The “slug” is the Url-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.</small></td>
 				</tr>
 				<tr>
 					<td></td>
