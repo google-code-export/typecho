@@ -387,6 +387,49 @@ class MetasWidget extends TypechoWidget
     }
     
     /**
+     * 合并数据
+     * 
+     * @access public
+     * @param integer $mid 数据主键
+     * @param string $type 数据类型
+     * @param array $metas 需要合并的数据集
+     * @return void
+     */
+    public function mergeMeta($mid, $type, array $metas)
+    {
+        $contents = Typecho::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
+        ->where('`mid` = ?', $mid)), 'cid');
+    
+        foreach($metas as $meta)
+        {
+            if($mid != $meta)
+            {
+                $existsContents = Typecho::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
+                ->where('`mid` = ?', $meta)), 'cid');
+                
+                $this->deleteMeta($meta, $type);
+                $diffContents = array_diff($existsContents, $contents);
+                
+                foreach($diffContents as $content)
+                {
+                    $this->db->query($this->db->sql()->insert('table.relationships')
+                    ->rows(array('mid' => $mid, 'cid' => $content)));
+                }
+                
+                unset($existsContents);
+            }
+        }
+        
+        $num = $this->db->fetchObject($this->db->sql()
+        ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
+        ->where('table.relationships.`mid` = ?', $mid))->num;
+        
+        $this->db->query($this->db->sql()->update('table.metas')
+        ->row('count', $num)
+        ->where('`mid` = ?', $mid));
+    }
+    
+    /**
      * 入口函数
      *
      * @access public

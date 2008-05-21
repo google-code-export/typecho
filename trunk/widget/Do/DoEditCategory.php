@@ -223,38 +223,11 @@ class DoEditCategoryWidget extends MetasWidget
         
         $merge = TypechoRequest::getParameter('merge');
         $categories = TypechoRequest::getParameter('mid');
-        $posts = Typecho::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
-        ->where('`mid` = ?', $merge)), 'cid');
         
         if($categories && is_array($categories))
         {
-            foreach($categories as $category)
-            {
-                if($merge != $category)
-                {
-                    $existsPosts = Typecho::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
-                    ->where('`mid` = ?', $category)), 'cid');
-                    
-                    $this->deleteMeta($category, 'category');
-                    $diffPosts = array_diff($existsPosts, $posts);
-                    foreach($diffPosts as $post)
-                    {
-                        $this->db->query($this->db->sql()->insert('table.relationships')
-                        ->rows(array('mid' => $merge, 'cid' => $post)));
-                    }
-                    
-                    unset($existsPosts);
-                }
-            }
+            $this->mergeMeta($merge, 'category', $categories);
         }
-        
-        $num = $this->db->fetchObject($this->db->sql()
-        ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
-        ->where('table.relationships.`mid` = ?', $merge))->num;
-        
-        $this->db->query($this->db->sql()->update('table.metas')
-        ->row('count', $num)
-        ->where('`mid` = ?', $merge));
         
         /** 提示信息 */
         Typecho::widget('Notice')->set(_t("分类已经合并"), NULL, 'success');

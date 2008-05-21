@@ -105,7 +105,7 @@ class PostsFeedWidget extends ContentsWidget
             date(TypechoFeed::dateFormat($feedType), 
             $this->options->gmtTime + $this->options->timezone));
         }
-    
+
         $this->db->fetchAll($this->selectSql->where('table.contents.`type` = ?', 'post')
         ->where('table.contents.`allowFeed` = ?', 'enable')
         ->where('table.contents.`password` IS NULL')
