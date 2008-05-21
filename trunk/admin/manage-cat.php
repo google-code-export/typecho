@@ -30,7 +30,7 @@ require_once 'menu.php';
 					<th width="10%"><?php _e('文章'); ?></th>
 					<th width="19%"><?php _e('分类缩略名'); ?></th>
 				</tr>
-                <?php Typecho::widget('metas.Categories')->to($categories); ?>
+                <?php Typecho::widget('Categories')->to($categories); ?>
                 <?php if($categories->have()): ?>
                 <?php while($categories->get()): ?>
                 <tr>

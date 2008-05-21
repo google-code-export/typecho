@@ -42,6 +42,48 @@ abstract class TypechoWidget
      * @var array
      */
     protected $_row = array();
+    
+    /**
+     * 返回来路
+     *
+     * @access protected
+     * @param string $anchor 锚点地址
+     * @return void
+     * @throws TypechoWidgetException
+     */
+    protected function goBack($anchor = NULL)
+    {
+        //判断来源
+        if(empty($_SERVER['HTTP_REFERER']))
+        {
+            throw new TypechoWidgetException(_t('无法返回原网页'));
+        }
+
+        Typecho::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
+    }
+
+    /**
+     * 输出XML
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function toXML()
+    {
+        header('content-Type: application/rss+xml;charset= ' . __TYPECHO_CHARSET__, true);
+        echo '<?xml version="1.0" encoding="' . __TYPECHO_CHARSET__ . '"?>';
+        echo '<items>';
+        foreach($this->_stack as $item)
+        {
+            echo '<item>';
+            foreach($item as $key => $val)
+            {
+                echo "<{$key}><![CDATA[{$val}]]></{$key}>";
+            }
+            echo '</item>';
+        }
+        echo '</items>';
+    }
 
     /**
      * 将类本身赋值

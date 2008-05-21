@@ -2,7 +2,7 @@
 require_once 'common.php';
 require_once 'header.php';
 require_once 'menu.php';
-Typecho::widget('contents.EditPage')->to($page);
+Typecho::widget('Contents.EditPage')->to($page);
 ?>
 
 	<div id="main" class="clearfix">
@@ -20,9 +20,9 @@ Typecho::widget('contents.EditPage')->to($page);
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="allowComment" name="allowComment" checked="checked"/><label for="allowComment"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="allowPing" name="allowPing" checked="checked"/><label for="allowPing"><?php _e('允许引用'); ?></label><br />
-                <input type="checkbox" id="allowFeed" name="allowFeed" checked="checked"/><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
+				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($page->allow('comment')): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
+				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($page->allow('ping')): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
+                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($page->allow('feed')): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>
