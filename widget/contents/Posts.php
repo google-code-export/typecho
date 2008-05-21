@@ -133,7 +133,7 @@ class PostsWidget extends TypechoWidget
         ->group('table.metas.`mid`')
         ->order('`sort`', 'ASC'));
         
-        $value['category'] = implode('+', Typecho::arrayFlatten($this->_categories[$value['cid']], 'slug'));
+        $value['category'] = current(Typecho::arrayFlatten($this->_categories[$value['cid']], 'slug'));
     
         //生成日期
         $value['year'] = date('Y', $value['created'] + $this->options->timezone);

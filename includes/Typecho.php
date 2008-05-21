@@ -308,6 +308,18 @@ class Typecho
     {
         return str_replace(array('%', '?', '*'), '', $query);
     }
+    
+    /**
+     * 判断一个变量是否可以作为字符串
+     * 
+     * @access public
+     * @param string $value 被判断的变量
+     * @return boolean
+     */
+    public static function stringAble($value)
+    {
+        return !is_array($value) && !is_object($value);
+    }
 
     /**
      * 宽字符串截字函数

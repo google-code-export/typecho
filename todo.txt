@@ -1,3 +1,12 @@
+2008.5.21 by qining
+
+增加DoEditPage
+增加多重关键词条件
+增加Tag管理
+修改数据库meta和tags字段
+干掉contents表uri字段
+修改widget结构,增加重用度
+
 2008.5.20 by qining
 
 增加DoEditPage
