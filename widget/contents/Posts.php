@@ -384,6 +384,9 @@ class PostsWidget extends TypechoWidget
             Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
             'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
             TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            
+            /** 设置标题 */
+            $this->options->title = _t('%s &raquo; 标签 &raquo; %s', $tag['name'], $this->options->title);
         }
         else if('category' == TypechoRoute::$current)
         {
@@ -416,6 +419,9 @@ class PostsWidget extends TypechoWidget
             Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
             'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
             TypechoRoute::parse('category', $category)), $this->options->index)));
+            
+            /** 设置标题 */
+            $this->options->title = _t('%s &raquo; 分类 &raquo; %s', $category['name'], $this->options->title);
         }
         else
         {
