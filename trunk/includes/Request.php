@@ -23,9 +23,10 @@ class TypechoRequest
      *
      * @access public
      * @param string $key 指定的参数
+     * @param mixed $default 默认的参数
      * @return mixed
      */
-    public static function getParameter($key)
+    public static function getParameter($key, $default = NULL)
     {
         //优先选择GET方式
         if(!empty($_GET[$key]))
@@ -40,7 +41,7 @@ class TypechoRequest
         //如果都没有返回空
         else
         {
-            return NULL;
+            return $default;
         }
     }
 
@@ -119,9 +120,10 @@ class TypechoRequest
      *
      * @access public
      * @param string $key 指定的参数
+     * @param string $default 默认的参数
      * @return mixed
      */
-    public static function getCookie($key)
+    public static function getCookie($key, $default = NULL)
     {
         return empty($_COOKIE[$key]) ? NULL : $_COOKIE[$key];
     }
@@ -202,11 +204,12 @@ class TypechoRequest
      *
      * @access public
      * @param string $key 指定的参数
+     * @param mixed $default 默认的参数
      * @return string
      */
-    public static function getSession($key)
+    public static function getSession($key, $default = NULL)
     {
-        return empty($_SESSION[$key]) ?  NULL : $_SESSION[$key];
+        return empty($_SESSION[$key]) ?  $default : $_SESSION[$key];
     }
 
     /**
