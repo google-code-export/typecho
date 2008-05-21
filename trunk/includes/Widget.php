@@ -68,6 +68,9 @@ abstract class TypechoWidget
     {
         $_rowsKey = array();
 
+        /** 过滤数据行 */
+        $this->_row = array_filter($this->_row, array('Typecho', 'stringAble'));
+
         //将数据格式化
         foreach($this->_row as $key => $val)
         {
@@ -76,9 +79,12 @@ abstract class TypechoWidget
 
         foreach($this->_stack as $val)
         {
+            /** 过滤数据行 */
+            $val = array_filter($val, array('Typecho', 'stringAble'));
             echo str_replace($_rowsKey, $val, $format);
         }
         
+        /** 重置指针 */
         reset($this->_row);
         reset($this->_stack);
     }

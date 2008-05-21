@@ -102,7 +102,7 @@ class XmlRpcWidget extends ContentsPostWidget
         ->group('table.metas.`mid`')
         ->order('sort', 'ASC'));
         
-        $value['category'] = implode('+', Typecho::arrayFlatten($categories, 'slug'));
+        $value['category'] = current(Typecho::arrayFlatten($categories, 'slug'));
     
         //生成日期
         $value['year'] = date('Y', $value['created'] + Typecho::widget('Options')->timezone);
