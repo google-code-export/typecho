@@ -36,6 +36,40 @@ class OptionsWidget extends TypechoWidget
         $this->_row[$value['name']] = $value['value'];
         return $value;
     }
+    
+    /**
+     * 更新设置值
+     *
+     * @access public
+     * @param array $option 设置值
+     * @return boolean
+     */
+    public function update(array $option)
+    {
+        $db = TypechoDb::get();
+    
+        foreach($option as $name => $value)
+        {
+            if(Typecho::widget('Access')->hasLogin() && $db->fetchRow($db->sql()->select('table.options')
+            ->where('`name` = ? AND `user` = ?', $name, Typecho::widget('Access')->uid)->limit(1)))
+            {
+                $db->query($db->sql()->update('table.options')->rows(array('value' => $value))
+                ->where('`name` = ? AND `user` = ?', $name, Typecho::widget('Access')->uid));
+            }
+            else if($db->fetchRow($db->sql()->select('table.options')
+            ->where('`name` = ? AND `user` = ?', $name, '0')->limit(1)))
+            {
+                $db->query($db->sql()->update('table.options')->rows(array('value' => $value))
+                ->where('`name` = ? AND `user` = ?', $name, '0'));
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 
     /**
      * 按命名空间获取插件列表

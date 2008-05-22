@@ -90,6 +90,14 @@ class CommentsWidget extends TypechoWidget
      * @var string
      */
     protected $filterName;
+    
+    /**
+     * 关键词名称
+     * 
+     * @access protected
+     * @var array
+     */
+    protected $wordList;
 
     /**
      * 构造函数,初始化数据库
@@ -111,14 +119,14 @@ class CommentsWidget extends TypechoWidget
         $this->filterName = TypechoPlugin::name(__FILE__);
         
         /** 初始化共用选择器 */
-        $this->selectSql = $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
+        $this->selectSql = $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
         table.comments.`coid`, table.comments.`created` AS `date`, table.comments.`author`, table.comments.`mail`, table.comments.`url`, table.comments.`ip`,
-        table.comments.`agent`, table.comments.`text`, table.comments.`type`, table.comments.`status`, table.comments.`parent`')
+        table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`')
         ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`');
         
         /** 初始化分页变量 */
         $this->pageSize = 20;
-        $this->currentPage = TypechoRequest::getParameter('page') ? 1 : TypechoRequest::getParameter('page');
+        $this->currentPage = TypechoRequest::getParameter('page') ? TypechoRequest::getParameter('page') : 1;
     }
     
     /**
@@ -153,6 +161,24 @@ class CommentsWidget extends TypechoWidget
     }
     
     /**
+     * 输出内容分页
+     *
+     * @access public
+     * @param string $pageTemplate 分页模板
+     * @return void
+     */
+    public function pageNav($pageTemplate = NULL)
+    {        
+        $num = $this->db->fetchObject($this->countSql->select('table.comments', 'COUNT(table.comments.`coid`) AS `num`'))->num;
+        $nav = new TypechoWidgetNavigator($num,
+                                          $this->currentPage,
+                                          $this->pageSize, NULL != $pageTemplate ? $pageTemplate : 
+                                          TypechoRoute::parse(TypechoRoute::$current . '_page', $this->_row, $this->options->index));
+
+        $nav->makeBoxNavigator(_t('上一页'), _t('下一页'));
+    }
+    
+    /**
      * 输出文章发布日期
      *
      * @access public
@@ -173,6 +199,68 @@ class CommentsWidget extends TypechoWidget
     public function dateWord()
     {
         echo TypechoI18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
+    
+    /**
+     * 输出文章摘要
+     *
+     * @access public
+     * @param integer $length 摘要截取长度
+     * @return void
+     */
+    public function excerpt($length = 100)
+    {
+        echo Typecho::subStr(Typecho::stripTags($this->text), 0, $length);
+    }
+    
+    /**
+     * 输出评论状态
+     * 
+     * @access public
+     * @return void
+     */
+    public function status()
+    {
+        switch($this->status)
+        {
+            case 'approved':
+                echo _t('展现');
+                break;
+            case 'spam':
+                echo _t('垃圾');
+                break;
+            case 'waiting':
+                echo _t('待审核');
+                break;
+            default:
+                echo _t('不明');
+                break;
+        }
+    }
+    
+    /**
+     * 输出评论类型
+     * 
+     * @access public
+     * @return void
+     */
+    public function mode()
+    {
+        switch($this->mode)
+        {
+            case 'pingback':
+                echo _t('广播');
+                break;
+            case 'trackback':
+                echo _t('引用');
+                break;
+            case 'comment':
+                echo _t('评论');
+                break;
+            default:
+                echo _t('不明');
+                break;
+        }
     }
     
     /**

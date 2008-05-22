@@ -114,7 +114,7 @@ class ContentsWidget extends TypechoWidget
         
         /** 初始化分页变量 */
         $this->pageSize = 20;
-        $this->currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
+        $this->currentPage = TypechoRoute::getParameter('page') ? TypechoRoute::getParameter('page') : 1;
     }
     
     /**
@@ -319,8 +319,7 @@ class ContentsWidget extends TypechoWidget
     {
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db->sql()
-        ->select('table.metas')
-        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $value['cid'])
         ->where('table.metas.`type` = ?', 'category')
         ->group('table.metas.`mid`')
@@ -523,8 +522,7 @@ class ContentsWidget extends TypechoWidget
     public function tags($split = ',', $link = true)
     {
         $tags = $this->db->fetchAll($this->db->sql()
-        ->select('table.metas', 'table.metas.`name`, table.metas.`slug`')
-        ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $this->cid)
         ->where('table.metas.`type` = ?', 'tag')
         ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));

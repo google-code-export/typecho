@@ -25,7 +25,7 @@ require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Metas.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class DoEditCategoryWidget extends MetasWidget
+class DoCategoryWidget extends MetasWidget
 {
     /**
      * 验证数据
@@ -57,7 +57,7 @@ class DoEditCategoryWidget extends MetasWidget
         catch(TypechoValidationException $e)
         {
             /** 记录cookie */
-            TypechoRequest::setCookie('category', TypechoRequest::getParametersFrom('name', 'slug', 'description', 'mid'));
+            TypechoRequest::setCookie('category', TypechoRequest::getParametersFrom('name', 'slug', 'description'));
             
             /** 设置提示信息 */
             Typecho::widget('Notice')->set($e->getMessages(), NULL, 'detail');
@@ -191,17 +191,22 @@ class DoEditCategoryWidget extends MetasWidget
     public function deleteCategory()
     {
         $categories = TypechoRequest::getParameter('mid');
+        $deleteCount = 0;
         
         if($categories && is_array($categories))
         {
             foreach($categories as $category)
             {
-                $this->deleteMeta($category, 'category');
+                if($this->deleteMeta($category, 'category'))
+                {
+                    $deleteCount ++;
+                }
             }
         }
         
         /** 提示信息 */
-        Typecho::widget('Notice')->set(_t("分类已经删除"), NULL, 'success');
+        Typecho::widget('Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), NULL,
+        $deleteCount > 0 ? 'success' : 'notice');
         
         /** 转向原页 */
         Typecho::redirect(Typecho::pathToUrl('manage-cat.php', Typecho::widget('Options')->adminUrl));
@@ -230,7 +235,7 @@ class DoEditCategoryWidget extends MetasWidget
         }
         
         /** 提示信息 */
-        Typecho::widget('Notice')->set(_t("分类已经合并"), NULL, 'success');
+        Typecho::widget('Notice')->set(_t('分类已经合并'), NULL, 'success');
         
         /** 转向原页 */
         Typecho::redirect(Typecho::pathToUrl('manage-cat.php', Typecho::widget('Options')->adminUrl));
@@ -253,6 +258,27 @@ class DoEditCategoryWidget extends MetasWidget
             }
         }
     }
+    
+    public function defaultCategory()
+    {
+        /** 验证数据 */
+        $validator = new TypechoValidation($this);
+        $validator->addRule('mid', 'required', _t('分类主键不存在'));
+        $validator->addRule('mid', 'categoryExists', _t('分类不存在'));
+        $validator->run(TypechoRequest::getParametersFrom('mid'));
+        
+        $this->options->update(array('defaultCategory' => TypechoRequest::getParameter('mid')));
+        
+        $this->db->fetchRow($this->selectSql->where('`mid` = ?', TypechoRequest::getParameter('mid'))
+        ->where('`type` = ?', 'category')->limit(1), array($this, 'push'));
+        
+        /** 提示信息 */
+        Typecho::widget('Notice')->set(_t("'<a href=\"%s\" target=\"_blank\">%s</a>' 已经被设为默认分类",
+        $this->permalink, $this->name), NULL, 'success');
+        
+        /** 转向原页 */
+        Typecho::redirect(Typecho::pathToUrl('manage-cat.php', Typecho::widget('Options')->adminUrl));
+    }
 
     /**
      * 入口函数,绑定事件
@@ -268,6 +294,7 @@ class DoEditCategoryWidget extends MetasWidget
         TypechoRequest::bindParameter(array('do' => 'delete'), array($this, 'deleteCategory'));
         TypechoRequest::bindParameter(array('do' => 'merge'), array($this, 'mergeCategory'));
         TypechoRequest::bindParameter(array('do' => 'sort'), array($this, 'sortCategory'));
+        TypechoRequest::bindParameter(array('do' => 'default'), array($this, 'defaultCategory'));
         Typecho::redirect(Typecho::widget('Options')->adminUrl);
     }
 }
