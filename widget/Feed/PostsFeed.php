@@ -53,6 +53,7 @@ class PostsFeedWidget extends ContentsWidget
         $item->setLink($value['permalink']);
         $item->setDate($this->options->gmtTime + $this->options->timezone);
         $item->setDescription($value['text']);
+        $item->setCategory($value['categories']);
         
         if(TypechoFeed::RSS2 == $this->type)
         {

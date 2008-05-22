@@ -94,6 +94,17 @@ class FeedItem
 	}
 	
 	/**
+	* @desc     Set the 'title' element of feed item
+	* @access   public
+	* @param    string  The content of 'title' element
+	* @return   void
+	*/
+	public function setCategory($category)
+	{
+		$this->addElement('category', $category);  	
+	}
+    
+	/**
 	* Set the 'date' element of feed item
 	* 
 	* @access   public
