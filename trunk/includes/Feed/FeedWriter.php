@@ -31,7 +31,7 @@ class FeedWriter
 		$this->channels['link']         = 'http://www.ajaxray.com/blog';
 
 		//Tag names to encode in CDATA
-		$this->CDATAEncoding = array('description', 'content:encoded', 'summary', 'title', 'author', 'dc:creator');
+		$this->CDATAEncoding = array('description', 'content:encoded', 'summary', 'title', 'author', 'dc:creator', 'category');
 	}
 
 	// Start # public functions ---------------------------------------------
@@ -288,7 +288,15 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 		
 		
 		$attrText .= (in_array($tagName, $this->CDATAEncoding) && $this->version == TypechoFeed::ATOM)? ' type="html" ' : '';
-		$nodeText .= (in_array($tagName, $this->CDATAEncoding))? "<{$tagName}{$attrText}><![CDATA[" : "<{$tagName}{$attrText}>";
+        
+        if(empty($tagContent))
+        {
+            $nodeText .= "<{$tagName}{$attrText}";
+        }
+        else
+        {
+            $nodeText .= (in_array($tagName, $this->CDATAEncoding)) ? "<{$tagName}{$attrText}><![CDATA[" : "<{$tagName}{$attrText}>";
+        }
 		 
 		if(is_array($tagContent))
 		{ 
@@ -301,8 +309,15 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 		{
 			$nodeText .= (in_array($tagName, $this->CDATAEncoding))? $tagContent : htmlentities($tagContent);
 		}           
-			
-		$nodeText .= (in_array($tagName, $this->CDATAEncoding))? "]]></$tagName>" : "</$tagName>";
+        
+        if(empty($tagContent))
+        {
+            $nodeText .=  "/>";
+        }
+        else
+        {
+            $nodeText .= (in_array($tagName, $this->CDATAEncoding)) ? "]]></$tagName>" : "</$tagName>";
+        }
 
 		return $nodeText . TypechoFeed::EOL;
 	}
@@ -341,8 +356,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 			else
 			{
 				echo $this->makeNode($key, $value);
-			}    
-			
+			}
 		}
 		
 		//RSS 1.0 have special tag <rdf:Seq> with channel 
@@ -373,9 +387,26 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 			//the argument is printed as rdf:about attribute of item in rss 1.0 
 			echo $this->startItem($thisItems['link']['content']);
 			
-			foreach ($thisItems as $feedItem ) 
+			foreach ($thisItems as $feedItem)
 			{
-				echo $this->makeNode($feedItem['name'], $feedItem['content'], $feedItem['attributes']); 
+                if('category' == $feedItem['name'])
+                {
+                    foreach($feedItem['content'] as $category)
+                    {
+                        if(TypechoFeed::ATOM == $this->version)
+                        {
+                            echo $this->makeNode('category', NULL, array('scheme' => $category['permalink'], 'term' => $category['name']));
+                        }
+                        else if(TypechoFeed::RSS2 == $this->version)
+                        {
+                            echo $this->makeNode('category', $category['name']);
+                        }
+                    }
+                }
+                else
+                {
+                    echo $this->makeNode($feedItem['name'], $feedItem['content'], $feedItem['attributes']); 
+                }
 			}
 			echo $this->endItem();
 		}

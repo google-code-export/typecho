@@ -20,6 +20,9 @@ require_once 'Route/RouteException.php';
 /** 载入api支持 */
 require_once 'Typecho.php';
 
+/** 载入request支持 */
+require_once 'Request.php';
+
 /**
  * Typecho组件基类
  *
@@ -83,7 +86,7 @@ class TypechoRoute
         $route = TypechoConfig::get('Route');
         
         /** 获取PATHINFO */
-        $pathInfo = Typecho::getPathInfo();
+        $pathInfo = TypechoRequest::getPathInfo();
 
         /** 遍历路由 */
         if(false !== ($val = self::match($route, $pathInfo, $key, $matches)))

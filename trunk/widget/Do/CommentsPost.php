@@ -35,7 +35,7 @@ class CommentsPostWidget extends DoPostWidget
         $comment['cid'] = $cid;
         $comment['created'] = Typecho::widget('Options')->gmtTime;
         $comment['agent'] = $_SERVER["HTTP_USER_AGENT"];
-        $comment['ip'] = Typecho::getClientIp();
+        $comment['ip'] = TypechoRequest::getClientIp();
         $comment['type'] = 'comment';
 
         //判断父节点

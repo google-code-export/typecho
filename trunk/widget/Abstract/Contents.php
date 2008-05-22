@@ -113,7 +113,7 @@ class ContentsWidget extends TypechoWidget
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', TypechoDb::LEFT_JOIN);
         
         /** 初始化分页变量 */
-        $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
+        $this->pageSize = 20;
         $this->currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
     }
     

@@ -27,12 +27,16 @@ class PostsWidget extends ContentsWidget
      * @return void
      */
     public function render($pageSize = NULL)
-    {        
+    {
+        /** 初始化分页变量 */
+        $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
+        $this->currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
+    
         $select = $this->selectSql->where('table.contents.`type` = ?', 'post')
         ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
-        if('tag' == TypechoRoute::$current)
+        if('tag' == TypechoRoute::$current || 'tag_page' == TypechoRoute::$current)
         {
             $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'tag')
@@ -67,7 +71,7 @@ class PostsWidget extends ContentsWidget
             /** 设置标题 */
             $this->options->title = _t('%s &raquo; 标签 &raquo; %s', $tag['name'], $this->options->title);
         }
-        else if('category' == TypechoRoute::$current)
+        else if('category' == TypechoRoute::$current || 'category_page' == TypechoRoute::$current)
         {
             $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'category')
