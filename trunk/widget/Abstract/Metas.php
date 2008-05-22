@@ -108,7 +108,7 @@ class MetasWidget extends TypechoWidget
         
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = TypechoRequest::getParameter('page') ? 1 : TypechoRequest::getParameter('page');
+        $this->currentPage = TypechoRequest::getParameter('page') ? TypechoRequest::getParameter('page') : 1;
     }
     
     /**
@@ -124,7 +124,17 @@ class MetasWidget extends TypechoWidget
         $type = $value['type'];
         $routeExists = isset(TypechoConfig::get('Route')->$type);
         
-        $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
+        if('tag' == $type)
+        {
+            $tmpSlug = $value['slug'];
+            $value['slug'] = urldecode($value['slug']);
+            $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
+            $value['slug'] = $tmpSlug;
+        }
+        else
+        {
+            $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
+        }
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
@@ -270,7 +280,7 @@ class MetasWidget extends TypechoWidget
                 $this->db->query($this->db->sql()->insert('table.metas')
                 ->rows(array(
                     'name'  =>  $tag,
-                    'slug'  =>  urlencode($tag),
+                    'slug'  =>  $tag,
                     'type'  =>  'tag',
                     'count' =>  0,
                     'sort'  =>  0,
@@ -394,10 +404,13 @@ class MetasWidget extends TypechoWidget
      */
     public function deleteMeta($mid, $type)
     {
-        if($this->db->query($this->db->sql()->delete('table.metas')->where('`mid` = ? AND `type` = ?', $mid, $type)))
+        if($rows = $this->db->query($this->db->sql()->delete('table.metas')->where('`mid` = ? AND `type` = ?', $mid, $type)))
         {
             $this->db->query($this->db->sql()->delete('table.relationships')->where('`mid` = ?', $mid));
+            return $rows;
         }
+        
+        return 0;
     }
     
     /**

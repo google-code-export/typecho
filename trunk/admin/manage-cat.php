@@ -1,6 +1,6 @@
 <?php 
 require_once 'common.php';
-Typecho::widget('metas.EditMeta', 'category')->to($category);
+Typecho::widget('Metas.EditCategory')->to($category);
 require_once 'header.php';
 require_once 'menu.php';
 ?>
@@ -10,7 +10,7 @@ require_once 'menu.php';
 		<div id="page">
         <?php require_once 'notice.php'; ?>
         
-		<form method="post" id="category" name="category" action="<?php Typecho::widget('Options')->index('DoEditCategory.do'); ?>">
+		<form method="post" id="category" name="category" action="<?php Typecho::widget('Options')->index('DoCategory.do'); ?>">
 			<div class="table_nav">
                 <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
 				<input type="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
@@ -35,7 +35,11 @@ require_once 'menu.php';
                 <?php while($categories->get()): ?>
                 <tr>
 					<td><input type="checkbox" name="mid[]" value="<?php $categories->mid(); ?>" /></td>
-					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit"><?php $categories->name(); ?></a></td>
+					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit">
+                    <?php $categories->name(); ?></a>
+                    <?php if(Typecho::widget('Options')->defaultCategory == $categories->mid): ?> <sup><strong><?php _e('默认分类'); ?></strong></sup>
+                    <?php else: ?> <sub><a href="<?php Typecho::widget('Options')->index('DoCategory.do'); ?>?do=default&mid=<?php $categories->mid(); ?>"><?php _e('设为默认'); ?></a></sub><?php endif; ?>
+                    </td>
 					<td><?php $categories->description(); ?></td>
 					<td><a href="<?php $categories->permalink(); ?>">
                     <?php $categories->count(); ?></a></td>
@@ -50,8 +54,7 @@ require_once 'menu.php';
 			</table>
         </form>    
         
-        <form method="post" action="<?php Typecho::widget('Options')->index('DoEditCategory.do'); ?>">
-			<hr class="space" />
+        <form method="post" action="<?php Typecho::widget('Options')->index('DoCategory.do'); ?>">
 			<h4 id="edit"><?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?></h4>
 			<table class="setting">
 				<tr><th width="20%"></th><th width="80%"></th></tr>
@@ -64,7 +67,7 @@ require_once 'menu.php';
 					<td><label for="slug"><?php _e('分类缩略名'); ?></label></td>
 					<td><input type="text" name="slug" id="slug" style="width: 60%;" value="<?php $category->slug(); ?>" />
                     <?php Typecho::widget('Notice')->display('slug', '<span class="detail">%s</span>'); ?>
-                    <small><?php _e('分类缩略名用于创建友好的链接形式,请使用纯字母或者下划线.'); ?></small></td>
+                    <small><?php _e('分类缩略名用于创建友好的链接形式,请使用字母,数字,下划线和横杠.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label for="description"><?php _e('分类描述'); ?></label></td>

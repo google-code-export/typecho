@@ -8,6 +8,7 @@
  * @version    $Id: Posts.php 200 2008-05-21 06:33:20Z magike.net $
  */
 
+/** 载入文章基类支持 **/
 require_once 'Abstract/Contents.php';
 
 /**
@@ -30,7 +31,7 @@ class PostsWidget extends ContentsWidget
     {
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = TypechoRoute::getParameter('page') ? 1 : TypechoRoute::getParameter('page');
+        $this->currentPage = TypechoRoute::getParameter('page') ? TypechoRoute::getParameter('page') : 1;
     
         $select = $this->selectSql->where('table.contents.`type` = ?', 'post')
         ->where('table.contents.`password` IS NULL')
@@ -40,7 +41,7 @@ class PostsWidget extends ContentsWidget
         {
             $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'tag')
-            ->where('`slug` = ?', urlencode(TypechoRoute::getParameter('slug')))->limit(1));
+            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1));
             
             if(!$tag)
             {

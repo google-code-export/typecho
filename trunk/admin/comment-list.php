@@ -5,41 +5,59 @@ require_once 'menu.php';
 ?>
 
 	<div id="main">
-		<h2>Manage Comments</h2>
+		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
+        
 		<div id="page">
 			<div class="table_nav">
-				<a href="#" class="botton right">Awaiting Moderation (2)</a>
-				<input type="submit" value="Approve" />
-				<input type="submit" value="Mark as Span" />
-				<input type="submit" value="Unapprove" />
-				<input type="submit" value="Delete" />
-				<input type="text" id="" style="width: 200px;" value="Keywords" onclick="value=''" />
-				<input type="submit" value="Filter" />
+            <form action="<?php Typecho::widget('Options')->adminUrl('comment-list.php'); ?>">
+				<input type="submit" value="<?php _e('展现'); ?>" />
+				<input type="submit" value="<?php _e('垃圾'); ?>" />
+				<input type="submit" value="<?php _e('待审核'); ?>" />
+				<input type="submit" value="<?php _e('删除'); ?>" />
+				<input type="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+				<input type="submit" value="<?php _e('过滤'); ?>" />
+            </form>
 			</div>
 
-			<table id="comment_list" class="latest">
+			<table class="latest">
 				<tr>
 					<th width="1%"><input type="checkbox" id="" /></th>
-					<th width="10%">date</th>
-					<th width="7%">name</th>
-					<th width="53%">comment</th>
-					<th width="22%">parent</th>
-					<th width="7%">status</th>
+					<th width="10%"><?php _e('日期'); ?></th>
+					<th width="15%"><?php _e('作者'); ?></th>
+					<th width="45%"><?php _e('摘要'); ?></th>
+					<th width="22%"><?php _e('文章'); ?></th>
+					<th width="7%"><?php _e('状态'); ?></th>
 				</tr>
-				<?php for($a=0;$a!=10;$a++) echo'
+                <?php Typecho::widget('Comments.AdminComments')->to($comments); ?>
+                <?php if($comments->have()): ?>
+				<?php while($comments->get()): ?>
 				<tr>
 					<td><input type="checkbox" id="" /></td>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Fen</a></td>
-					<td><p>The textarea in the comment form seems be in the extreme left. Any suggestions to fix it?</p></td>
-					<td><a href="#">How to cultivate mad-hot creative flow</a></td>
-					<td>Approve</td>
-				</tr>'; ?>
+					<td><?php $comments->dateWord(); ?></td>
+					<td><?php $comments->author(); ?>
+                    <sup><?php $comments->mode(); ?></sup>
+                    <sub>
+                        <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>">网址</a><?php endif; ?>
+                        <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>">邮件</a><?php endif; ?>
+                    </sub>
+                    </td>
+					<td><?php $comments->excerpt(30); ?></td>
+					<td><a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
+					<td><?php $comments->status(); ?></td>
+				</tr>
+                <?php endwhile; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="6"><?php _e('没有找到评论'); ?></td>
+                </tr>
+                <?php endif; ?>
 			</table>
 
+            <?php if($comments->have()): ?>
 			<div class="table_nav page_nav">
-				Pages: <a href="#">&lt;</a> <a href="#">1</a> <a class="select" href="#">2</a> ... <a href="#">9</a> <a href="#">10</a> <a href="#">&gt;</a>
+				<?php _e('分页:'); ?> <?php $comments->pageNav(); ?>
 			</div>
+            <?php endif; ?>
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 	
