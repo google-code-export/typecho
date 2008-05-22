@@ -84,10 +84,8 @@ class PostsFeedWidget extends ContentsWidget
         $this->feed->setTitle($this->options->title);
         $this->feed->setLink($link);
         
-        if(TypechoFeed::RSS1 == $feedType)
-        {
-            $this->feed->setChannelAbout($link);
-        }
+        $this->feed->setChannelAbout($link);
+        $this->feed->setSubTitle($this->options->description);
         
         if(TypechoFeed::RSS2 == $feedType)
         {

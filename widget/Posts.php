@@ -59,8 +59,8 @@ class PostsWidget extends ContentsWidget
             'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
             TypechoRoute::parse('tag', $tag)), $this->options->index)));
             
-            /** Atom 0.3 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            /** ATOM 1.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
             'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
             TypechoRoute::parse('tag', $tag)), $this->options->index)));
             
@@ -94,8 +94,8 @@ class PostsWidget extends ContentsWidget
             'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
             TypechoRoute::parse('category', $category)), $this->options->index)));
             
-            /** Atom 0.3 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            /** ATOM 1.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
             'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
             TypechoRoute::parse('category', $category)), $this->options->index)));
             
@@ -116,8 +116,8 @@ class PostsWidget extends ContentsWidget
             Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
             'href' => TypechoRoute::parse('feed', array('feed' => '/rss'), $this->options->index)));
             
-            /** Atom 0.3 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'Atom 0.3',
+            /** ATOM 1.0 */
+            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
             'href' => TypechoRoute::parse('feed', array('feed' => '/atom'), $this->options->index)));
         }
         

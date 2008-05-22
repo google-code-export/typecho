@@ -112,13 +112,13 @@ class MetasWidget extends TypechoWidget
     }
     
     /**
-     * 将每行的值压入堆栈
-     *
+     * 通用过滤器
+     * 
      * @access public
-     * @param array $value 每行的值
+     * @param array $value 需要过滤的行数据
      * @return array
      */
-    public function push(array $value)
+    public function filter(array $value)
     {
         //生成静态链接
         $type = $value['type'];
@@ -135,11 +135,25 @@ class MetasWidget extends TypechoWidget
         $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse('feed', 
         array('feed' => '/rss' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
         
-        /** ATOM 0.3 */
+        /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse('feed', 
         array('feed' => '/atom' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
-
+        
         TypechoPlugin::callFilter($this->filterName, $value);
+        
+        return $value;
+    }
+    
+    /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param array $value 每行的值
+     * @return array
+     */
+    public function push(array $value)
+    {
+        $value = $this->filter($value);
         return parent::push($value);
     }
     
