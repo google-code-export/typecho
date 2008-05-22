@@ -74,11 +74,11 @@ class DoEditPostWidget extends ContentsWidget
         /** 跳转页面 */
         if(1 == TypechoRequest::getParameter('continue'))
         {
-            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $this->cid, Typecho::widget('Options')->adminUrl));
+            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
         }
         else
         {
-            Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
+            Typecho::redirect(Typecho::pathToUrl('post-list.php', $this->options->adminUrl));
         }
     }
     
@@ -139,11 +139,11 @@ class DoEditPostWidget extends ContentsWidget
         /** 跳转页面 */
         if(1 == TypechoRequest::getParameter('continue'))
         {
-            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $this->cid, Typecho::widget('Options')->adminUrl));
+            Typecho::redirect(Typecho::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
         }
         else
         {
-            Typecho::redirect(Typecho::pathToUrl('post-list.php', Typecho::widget('Options')->adminUrl));
+            Typecho::redirect(Typecho::pathToUrl('post-list.php', $this->options->adminUrl));
         }
     }
     
@@ -197,10 +197,10 @@ class DoEditPostWidget extends ContentsWidget
      */
     public function render()
     {
-        Typecho::widget('Access')->pass('contributor');
+        $this->access->pass('contributor');
         TypechoRequest::bindParameter(array('do' => 'insert'), array($this, 'insertPost'));
         TypechoRequest::bindParameter(array('do' => 'update'), array($this, 'updatePost'));
         TypechoRequest::bindParameter(array('do' => 'delete'), array($this, 'deletePost'));
-        Typecho::redirect(Typecho::widget('Options')->adminUrl);
+        Typecho::redirect($this->options->adminUrl);
     }
 }
