@@ -235,6 +235,24 @@ class DoEditCategoryWidget extends MetasWidget
         /** 转向原页 */
         Typecho::redirect(Typecho::pathToUrl('manage-cat.php', Typecho::widget('Options')->adminUrl));
     }
+    
+    /**
+     * 分类排序
+     * 
+     * @access public
+     * @return void
+     */
+    public function sortCategory()
+    {
+        if(TypechoRequest::isAjax())
+        {
+            $categories = TypechoRequest::getParameter('mid');
+            if($categories && is_array($categories))
+            {
+                $this->sortMeta($categories, 'category');
+            }
+        }
+    }
 
     /**
      * 入口函数,绑定事件
@@ -249,6 +267,7 @@ class DoEditCategoryWidget extends MetasWidget
         TypechoRequest::bindParameter(array('do' => 'update'), array($this, 'updateCategory'));
         TypechoRequest::bindParameter(array('do' => 'delete'), array($this, 'deleteCategory'));
         TypechoRequest::bindParameter(array('do' => 'merge'), array($this, 'mergeCategory'));
+        TypechoRequest::bindParameter(array('do' => 'sort'), array($this, 'sortCategory'));
         Typecho::redirect(Typecho::widget('Options')->adminUrl);
     }
 }

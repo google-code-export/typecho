@@ -401,6 +401,23 @@ class MetasWidget extends TypechoWidget
     }
     
     /**
+     * 对数据按照sort字段排序
+     * 
+     * @access public
+     * @param array $metas
+     * @param string $type
+     * @return void
+     */
+    public function sortMeta(array $metas, $type)
+    {
+        foreach($metas as $mid => $sort)
+        {
+            $this->db->query($this->db->sql()->update('table.contents')->row('sort', $sort)
+            ->where('`mid` = ?', $mid)->where('`type` = ?', $type));
+        }
+    }
+    
+    /**
      * 合并数据
      * 
      * @access public

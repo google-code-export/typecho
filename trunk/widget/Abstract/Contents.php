@@ -229,6 +229,26 @@ class ContentsWidget extends TypechoWidget
         
         return true;
     }
+    
+    /**
+     * 对内容按照meta字段排序
+     * 
+     * @access public
+     * @param array $contents
+     * @param string $type
+     * @return void
+     */
+    public function sortContent(array $contents, $type)
+    {
+        foreach($contents as $cid => $sort)
+        {
+            if($this->postIsWriteable($cid))
+            {
+                $this->db->query($this->db->sql()->update('table.contents')->row('meta', $sort)
+                ->where('`cid` = ?', $cid)->where('`type` = ?', $type));
+            }
+        }
+    }
 
     /**
      * 检测当前用户是否具备修改权限
