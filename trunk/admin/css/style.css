@@ -273,7 +273,7 @@ vertical-align: middle;
  * Forms
  */
 input, textarea, select {
-font-family: "Lucida Grande", Tahoma, Arial, sans-serif;
+font-family: "Lucida Grande", Tahoma, Arial, sans-serif;font-size:9pt;
 }
 
 input[type="text"], input[type="password"], textarea, select {

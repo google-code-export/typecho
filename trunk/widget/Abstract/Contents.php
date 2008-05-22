@@ -16,6 +16,14 @@
 class ContentsWidget extends TypechoWidget
 {
     /**
+     * 实例化的抽象Meta类
+     * 
+     * @access private
+     * @var MetasWidget
+     */
+    private $abstractMetasWidget;
+
+    /**
      * 分页数目
      *
      * @access protected
@@ -93,6 +101,7 @@ class ContentsWidget extends TypechoWidget
         /** 初始化常用widget */
         $this->options = Typecho::widget('Options');
         $this->access = Typecho::widget('Access');
+        $this->abstractMetasWidget = Typecho::widget('Abstract.Metas');
         
         /** 初始化过滤器名称 */
         $this->filterName = TypechoPlugin::name(__FILE__);
@@ -278,15 +287,15 @@ class ContentsWidget extends TypechoWidget
 
         $nav->makeBoxNavigator(_t('上一页'), _t('下一页'));
     }
-
+    
     /**
-     * 将每行的值压入堆栈
-     *
+     * 通用过滤器
+     * 
      * @access public
-     * @param array $value 每行的值
+     * @param array $value 需要过滤的行数据
      * @return array
      */
-    public function push($value)
+    public function filter(array $value)
     {
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db->sql()
@@ -295,7 +304,7 @@ class ContentsWidget extends TypechoWidget
         ->where('table.relationships.`cid` = ?', $value['cid'])
         ->where('table.metas.`type` = ?', 'category')
         ->group('table.metas.`mid`')
-        ->order('`sort`', 'ASC'));
+        ->order('`sort`', 'ASC'), array($this->abstractMetasWidget, 'filter'));
         
         /** 取出第一个分类作为slug条件 */
         $value['category'] = current(Typecho::arrayFlatten($value['categories'], 'slug'));
@@ -321,11 +330,25 @@ class ContentsWidget extends TypechoWidget
         $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse('feed', 
         array('feed' => '/rss' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
         
-        /** ATOM 0.3 */
+        /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse('feed', 
         array('feed' => '/atom' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
-
+        
         TypechoPlugin::callFilter($this->filterName, $value);
+        
+        return $value;
+    }
+
+    /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param array $value 每行的值
+     * @return array
+     */
+    public function push(array $value)
+    {
+        $value = $this->filter($value);
         return parent::push($value);
     }
 
@@ -455,10 +478,10 @@ class ContentsWidget extends TypechoWidget
         {
             $result = array();
             
-            foreach($categories as $row)
+            foreach($categories as $category)
             {
-                $result[] = $link ? '<a href="' . TypechoRoute::parse('category', $row, $this->options->index) . '">'
-                . $row['name'] . '</a>' : $row['name'];
+                $result[] = $link ? '<a href="' . $category['permalink'] . '">'
+                . $category['name'] . '</a>' : $category['name'];
             }
 
             echo implode($split, $result);
@@ -484,12 +507,12 @@ class ContentsWidget extends TypechoWidget
         ->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $this->cid)
         ->where('table.metas.`type` = ?', 'tag')
-        ->group('table.metas.`mid`'));
+        ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
 
         $result = array();
         foreach($tags as $tag)
         {
-            $result[] = $link ? '<a href="' . TypechoRoute::parse('tag', $tag, $this->options->index) . '">'
+            $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
             . $tag['name'] . '</a>' : $tag['name'];
         }
 

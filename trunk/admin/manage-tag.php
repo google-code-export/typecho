@@ -11,6 +11,11 @@ require_once 'menu.php';
 			<div class="table_nav">
                 <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
 				<input type="submit" value="<?php _e('删除'); ?>" />
+                <input type="text" style="width: 120px;" value="<?php _e('请输入合并入的标签'); ?>" onclick="value='';name='merge';" />
+                <input type="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
+                <input type="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                <input type="submit" value="<?php _e('过滤'); ?>" />
+                <input type="hidden" name="do" value="delete" />
 			</div>
 
 			<table class="latest">

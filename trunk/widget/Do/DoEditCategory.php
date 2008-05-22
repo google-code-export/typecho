@@ -175,7 +175,7 @@ class DoEditCategoryWidget extends MetasWidget
         $this->push($category);
         
         /** 提示信息 */
-        Typecho::widget('Notice')->set(_t("分类 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被增加",
+        Typecho::widget('Notice')->set(_t("分类 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */

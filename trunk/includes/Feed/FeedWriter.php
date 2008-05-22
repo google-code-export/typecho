@@ -119,6 +119,18 @@ class FeedWriter
 	{
 		$this->setChannelElement('title', $title);
 	}
+    
+	/**
+	* Set the 'subtitle' channel element
+	* 
+	* @access   public
+	* @param    srting  value of 'title' channel tag
+	* @return   void
+	*/
+	public function setSubTitle($subtitle)
+	{
+        $this->data['subtitle'] = $subtitle;
+	}
 	
 	/**
 	* Set the 'description' channel element
@@ -305,12 +317,15 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . TypechoFeed::EOL;;
 		//Start channel tag
 		switch ($this->version) 
 		{
-		   case TypechoFeed::RSS2: 
+		    case TypechoFeed::RSS2: 
 				echo '<channel>' . TypechoFeed::EOL;        
 				break;
-		   case TypechoFeed::RSS1: 
-				echo (isset($this->data['ChannelAbout']))? "<channel rdf:about=\"{$this->data['ChannelAbout']}\">" : "<channel rdf:about=\"{$this->channels['link']}\">";
+		    case TypechoFeed::RSS1: 
+                echo (isset($this->data['ChannelAbout']))? "<channel rdf:about=\"{$this->data['ChannelAbout']}\">" : "<channel rdf:about=\"{$this->channels['link']}\">";
 				break;
+            case TypechoFeed::ATOM:
+                echo (isset($this->data['subtitle']))? '<subtitle type="text">' . $this->data['subtitle'] . '</subtitle>' : NULL;
+                break;
 		}
 		
 		//Print Items of channel
