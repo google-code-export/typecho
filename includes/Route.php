@@ -56,13 +56,20 @@ class TypechoRoute
      * @param array $matches 匹配值
      * @return array
      */
-    public static function match($route, $pathInfo, &$current, &$matches)
+    public static function match($route, $pathInfo)
     {
         foreach($route as $key => $val)
         {
             if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
             {
-                $current = $key;
+                self::$current = $key;
+                
+                if(4 <= count($val) && is_array($val[2]))
+                {
+                    unset($matches[0]);
+                    self::$_parameters = array_combine($val[2], $matches);
+                }
+                
                 return $val;
             }
         }
@@ -89,9 +96,8 @@ class TypechoRoute
         $pathInfo = TypechoRequest::getPathInfo();
 
         /** 遍历路由 */
-        if(false !== ($val = self::match($route, $pathInfo, $key, $matches)))
+        if(false !== ($val = self::match($route, $pathInfo)))
         {
-            self::$current = $key;
             $count = count($val);
 
             if(5 == $count)
@@ -114,12 +120,6 @@ class TypechoRoute
             if(!empty($address))
             {
                 Typecho::redirect($address, true);
-            }
-
-            if(1 < count($matches) && !empty($values))
-            {
-                unset($matches[0]);
-                self::$_parameters = array_combine($values, $matches);
             }
 
             if(!empty($widgets))
@@ -145,12 +145,13 @@ class TypechoRoute
      * 获取路径解析值
      *
      * @access public
-     * @param string $key
+     * @param string $key 路径键值
+     * @param mixed $default 默认值
      * @return mixed
      */
-    public static function getParameter($key)
+    public static function getParameter($key, $default = NULL)
     {
-        return empty(self::$_parameters[$key]) ? NULL : self::$_parameters[$key];
+        return empty(self::$_parameters[$key]) ? $default : self::$_parameters[$key];
     }
 
     /**

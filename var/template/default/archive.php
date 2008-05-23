@@ -1,6 +1,6 @@
 <html>
 <head>
-<title><?php Typecho::widget('Options')->title(); ?></title>
+<title><?php Typecho::widget('Options')->archiveTitle('%s - '); ?><?php Typecho::widget('Options')->title(); ?></title>
 <?php Typecho::header(); ?>
 </head>
 <body>

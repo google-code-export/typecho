@@ -22,10 +22,10 @@ class CommentsWidget extends TypechoWidget
     /**
      * 实例化的抽象Meta类
      * 
-     * @access private
+     * @access protected
      * @var MetasWidget
      */
-    private $abstractContentsWidget;
+    protected $abstractContentsWidget;
 
     /**
      * 分页数目
@@ -126,7 +126,7 @@ class CommentsWidget extends TypechoWidget
         
         /** 初始化分页变量 */
         $this->pageSize = 20;
-        $this->currentPage = TypechoRequest::getParameter('page') ? TypechoRequest::getParameter('page') : 1;
+        $this->currentPage = TypechoRequest::getParameter('page', 1);
     }
     
     /**

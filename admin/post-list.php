@@ -52,7 +52,8 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
                 <?php while($posts->get()): ?>
                 <tr>
                     <td><input type="checkbox" name="cid[]" value="<?php $posts->cid(); ?>" /></td>
-                    <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
+                    <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                    <sup><?php $posts->tags(','); ?></sup></td>
                     <td><?php $posts->author(); ?></td>
                     <td><?php $posts->dateWord(); ?></td>
                     <td><?php $posts->category(' | '); ?></td>

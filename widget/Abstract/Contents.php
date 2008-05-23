@@ -18,10 +18,10 @@ class ContentsWidget extends TypechoWidget
     /**
      * 实例化的抽象Meta类
      * 
-     * @access private
+     * @access protected
      * @var MetasWidget
      */
-    private $abstractMetasWidget;
+    protected $abstractMetasWidget;
 
     /**
      * 分页数目
@@ -114,7 +114,7 @@ class ContentsWidget extends TypechoWidget
         
         /** 初始化分页变量 */
         $this->pageSize = 20;
-        $this->currentPage = TypechoRoute::getParameter('page') ? TypechoRoute::getParameter('page') : 1;
+        $this->currentPage = TypechoRoute::getParameter('page', 1);
     }
     
     /**
@@ -342,16 +342,13 @@ class ContentsWidget extends TypechoWidget
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedUrl) : '#';
         
         /** RSS 0.92 */
-        $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => '/rss' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => '/atom' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedAtomUrl) : '#';
         
         TypechoPlugin::callFilter($this->filterName, $value);
         
@@ -521,7 +518,7 @@ class ContentsWidget extends TypechoWidget
      */
     public function tags($split = ',', $link = true)
     {
-        $tags = $this->db->fetchAll($this->db->sql()
+        $tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db->sql()
         ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $this->cid)
         ->where('table.metas.`type` = ?', 'tag')

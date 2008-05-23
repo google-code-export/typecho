@@ -108,7 +108,7 @@ class MetasWidget extends TypechoWidget
         
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = TypechoRequest::getParameter('page') ? TypechoRequest::getParameter('page') : 1;
+        $this->currentPage = TypechoRequest::getParameter('page', 1);
     }
     
     /**
@@ -127,27 +127,25 @@ class MetasWidget extends TypechoWidget
         if('tag' == $type)
         {
             $tmpSlug = $value['slug'];
-            $value['slug'] = urldecode($value['slug']);
-            $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
-            $value['slug'] = $tmpSlug;
+            $value['slug'] = urlencode($value['slug']);
         }
-        else
-        {
-            $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
-        }
+        
+        $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedUrl) : '#';
         
         /** RSS 0.92 */
-        $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => '/rss' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse('feed', 
-        array('feed' => '/atom' . TypechoRoute::parse($type, $value)), $this->options->index) : '#';
+        $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedAtomUrl) : '#';
+        
+        if('tag' == $type)
+        {
+            $value['slug'] = $tmpSlug;
+        }
         
         TypechoPlugin::callFilter($this->filterName, $value);
         

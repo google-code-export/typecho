@@ -21,6 +21,24 @@ require_once 'Abstract/Contents.php';
 class PostsWidget extends ContentsWidget
 {
     /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param array $value 每行的值
+     * @return array
+     */
+    public function singlePush($value)
+    {
+        $value['tags'] = $this->db->fetchAll($this->db->sql()
+        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $value['cid'])
+        ->where('table.metas.`type` = ?', 'tag')
+        ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
+        
+        return parent::push($value);
+    }
+
+    /**
      * 入口函数
      *
      * @access public
@@ -31,17 +49,18 @@ class PostsWidget extends ContentsWidget
     {
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = TypechoRoute::getParameter('page') ? TypechoRoute::getParameter('page') : 1;
+        $this->currentPage = TypechoRoute::getParameter('page', 1);
+        $hasPushed = false;
     
-        $select = $this->selectSql->where('table.contents.`type` = ?', 'post')
-        ->where('table.contents.`password` IS NULL')
+        $select = $this->selectSql->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
         if('tag' == TypechoRoute::$current || 'tag_page' == TypechoRoute::$current)
         {
             $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'tag')
-            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1));
+            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1),
+            array($this->abstractMetasWidget, 'filter'));
             
             if(!$tag)
             {
@@ -52,31 +71,27 @@ class PostsWidget extends ContentsWidget
             ->where('table.relationships.`mid` = ?', $tag['mid']);
             
             /** 设置关键词 */
-            Typecho::header('meta', array('name' => 'keywords', 'content' => $tag['name']));
+            $this->options->keywords = $tag['name'];
             
             /** 设置头部feed */
             /** RSS 2.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
-            'href' => TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            $this->options->feedUrl = $tag['feedUrl'];
             
             /** RSS 0.92 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
-            TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            $this->options->feedRssUrl = $tag['feedRssUrl'];
             
             /** ATOM 1.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
-            TypechoRoute::parse('tag', $tag)), $this->options->index)));
+            $this->options->feedAtomUrl = $tag['feedAtomUrl'];
             
             /** 设置标题 */
-            $this->options->title = _t('%s &raquo; 标签 &raquo; %s', $tag['name'], $this->options->title);
+            $this->options->archiveTitle = $tag['name'];
         }
         else if('category' == TypechoRoute::$current || 'category_page' == TypechoRoute::$current)
         {
             $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'category')
-            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1));
+            ->where('`slug` = ?', TypechoRoute::getParameter('slug'))->limit(1),
+            array($this->abstractMetasWidget, 'filter'));
             
             if(!$category)
             {
@@ -87,48 +102,85 @@ class PostsWidget extends ContentsWidget
             ->where('table.relationships.`mid` = ?', $category['mid']);
             
             /** 设置关键词 */
-            Typecho::header('meta', array('name' => 'keywords', 'content' => $category['name']));
+            $this->options->keywords = $category['name'];
             
             /** 设置头部feed */
             /** RSS 2.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
-            'href' => TypechoRoute::parse('feed', array('feed' => TypechoRoute::parse('category', $category)), $this->options->index)));
+            $this->options->feedUrl = $category['feedUrl'];
             
             /** RSS 0.92 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/rss' .
-            TypechoRoute::parse('category', $category)), $this->options->index)));
+            $this->options->feedRssUrl = $category['feedRssUrl'];
             
             /** ATOM 1.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/atom' .
-            TypechoRoute::parse('category', $category)), $this->options->index)));
+            $this->options->feedAtomUrl = $category['feedAtomUrl'];
             
             /** 设置标题 */
-            $this->options->title = _t('%s &raquo; 分类 &raquo; %s', $category['name'], $this->options->title);
+            $this->options->archiveTitle = $category['name'];
         }
-        else
+        else if('post' == TypechoRoute::$current || 'page' == TypechoRoute::$current)
         {
-            /** 设置关键词 */
-            Typecho::header('meta', array('name' => 'keywords', 'content' => $this->options->keywords));
+            if(NULL !== TypechoRoute::getParameter('cid'))
+            {
+                $select->where('table.contents.`cid` = ?', TypechoRoute::getParameter('cid'));
+            }
         
-            /** 设置头部feed */
-            /** RSS 2.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0',
-            'href' => $this->options->feedUrl));
+            if(NULL !== TypechoRoute::getParameter('slug'))
+            {
+                $select->where('table.contents.`slug` = ?', TypechoRoute::getParameter('slug'));
+            }
             
-            /** RSS 0.92 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/rss'), $this->options->index)));
+            $select->where('table.contents.`type` = ?', TypechoRoute::$current)
+            ->group('table.contents.`cid`')->limit(1);
+            $post = $this->db->fetchRow($select, array($this, 'singlePush'));
+
+            if($post)
+            {
+                /** 设置关键词 */
+                $this->options->keywords = implode(',', Typecho::arrayFlatten($post['tags'], 'name'));
+                
+                /** 设置头部feed */
+                /** RSS 2.0 */
+                $this->options->feedUrl = $post['feedUrl'];
+                
+                /** RSS 0.92 */
+                $this->options->feedRssUrl = $post['feedRssUrl'];
+                
+                /** ATOM 1.0 */
+                $this->options->feedAtomUrl = $post['feedAtomUrl'];
+                
+                /** 设置标题 */
+                $this->options->archiveTitle = $post['title'];
+            }
+            else
+            {
+                throw new TypechoWidgetException('post' == TypechoRoute::$current ? _t('文章不存在') : _t('页面不存在'), TypechoException::NOTFOUND);
+            }
             
-            /** ATOM 1.0 */
-            Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0',
-            'href' => TypechoRoute::parse('feed', array('feed' => '/atom'), $this->options->index)));
+            $hasPushed = true;
+        }
+
+        /** 设置关键词 */
+        Typecho::header('meta', array('name' => 'keywords', 'content' => $this->options->keywords));
+    
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options->feedUrl));
+        
+        /** RSS 0.92 */
+        Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92', 'href' => $this->options->feedRssUrl));
+        
+        /** ATOM 1.0 */
+        Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl));
+        
+        if($hasPushed)
+        {
+            return;
         }
         
         $this->countSql = clone $select;
 
-        $select->group('table.contents.`cid`')
+        $select->where('table.contents.`type` = ?', 'post')
+        ->group('table.contents.`cid`')
         ->order('table.contents.`created`', TypechoDb::SORT_DESC)
         ->page($this->currentPage, $this->pageSize);
         
