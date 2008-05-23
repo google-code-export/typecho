@@ -157,6 +157,18 @@ class OptionsWidget extends TypechoWidget
     {
         echo Typecho::pathToUrl($path, $this->adminUrl);
     }
+    
+    /**
+     * 归档标题
+     * 
+     * @access public
+     * @param string $format 标题格式
+     * @return void
+     */
+    public function archiveTitle($format = '%s')
+    {
+        echo sprintf($format, $this->archiveTitle);
+    }
 
     /**
      * 运行入口函数
@@ -181,8 +193,8 @@ class OptionsWidget extends TypechoWidget
         $this->gmtTime = time() - intval(date('Z'));
         
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
-        $this->feedRssUrl = TypechoRoute::parse('feed', array('feed' => '/rss'), $this->index);
-        $this->feedAtomUrl = TypechoRoute::parse('feed', array('feed' => '/atom'), $this->index);
+        $this->feedRssUrl = TypechoRoute::parse('feed', array('feed' => '/rss/'), $this->index);
+        $this->feedAtomUrl = TypechoRoute::parse('feed', array('feed' => '/atom/'), $this->index);
         
         $this->xmlRpcUrl = TypechoRoute::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);

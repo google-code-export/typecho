@@ -23,35 +23,20 @@ require_once 'menu.php';
         </form>
         
         <form method="post" name="tag" id="tag" action="<?php Typecho::widget('Options')->index('DoTag.do'); ?>">
-			<table class="latest">
-				<tr>
-					<th width="1%"><input type="checkbox" id="" /></th>
-					<th width="60%"><?php _e('标签名称'); ?></th>
-					<th width="30%"><?php _e('标签缩略名'); ?></th>
-					<th width="9%"><?php _e('文章'); ?></th>
-				</tr>
-                <?php Typecho::widget('Metas.AdminTags')->to($tags); ?>
+            <p>
+                <?php Typecho::widget('Tags')->to($tags); ?>
                 <?php if($tags->have()): ?>
 				<?php while($tags->get()): ?>
-				<tr>
-					<td><input type="checkbox" name="mid[]" value="<?php $tags->mid(); ?>" /></td>
-					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-tag.php?mid=' . $tags->mid); ?>#edit"><?php $tags->name(); ?></a></td>
-					<td><?php $tags->slug(); ?></td>
-					<td><a href="<?php $tags->permalink(); ?>"><?php $tags->count(); ?></a></td>
-				</tr>
+				<label class="table_nav" for="tag-<?php $tags->mid(); ?>">
+					<input type="checkbox" name="mid[]" id="tag-<?php $tags->mid(); ?>" value="<?php $tags->mid(); ?>" />
+					<a style="<?php $tags->split('font-size:8pt', 'font-size:11pt', 'font-size:13pt;font-weight:bold'); ?>" href="<?php Typecho::widget('Options')->adminUrl('/manage-tag.php?mid=' . $tags->mid); ?>#edit"><?php $tags->name(); ?></a>
+					<sup><a href="<?php $tags->permalink(); ?>" target="_blank"><?php $tags->count(); ?></a></sup>
+				</label>&nbsp;&nbsp;
                 <?php endwhile; ?>
                 <?php else: ?>
-                <tr>
-                    <td colspan="4"><?php _e('没有任何标签,请在下方添加'); ?></td>
-                </tr>
+                <span><?php _e('没有任何标签,请在下方添加'); ?></span>
                 <?php endif; ?>
-			</table>
-            
-            <?php if($tags->have()): ?>
-			<div class="table_nav page_nav">
-				<?php _e('分页:'); ?> <?php $tags->pageNav(); ?>
-			</div>
-            <?php endif; ?>
+            </p>
             
             <input type="hidden" name="do" value="delete" />
             <input type="hidden" name="merge" value="" />

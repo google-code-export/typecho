@@ -54,7 +54,7 @@ class AdminPostsWidget extends ContentsWidget
     public function render($pageSize = NULL)
     {
         $this->pageSize = empty($pageSize) ? 20 : $pageSize;
-        $this->currentPage = (NULL == TypechoRequest::getParameter('page')) ? 1 : TypechoRequest::getParameter('page');
+        $this->currentPage = TypechoRequest::getParameter('page', 1);
 
         /** 构建基础查询 */
         $select = $this->selectSql->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft');
@@ -102,8 +102,16 @@ class AdminPostsWidget extends ContentsWidget
         /** 过滤标题 */
         if(NULL != ($keywords = TypechoRequest::getParameter('keywords')))
         {
-            $select->where('table.contents.`title` LIKE ?', '%' . Typecho::filterSearchQuery($keywords) . '%');
+            $args = array();
+            $keywordsList = explode(' ', $keywords);
+            $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.`title` LIKE ?'));
             
+            foreach($keywordsList as $keyword)
+            {
+                $args[] = '%' . Typecho::filterSearchQuery($keyword) . '%';
+            }
+            
+            call_user_func_array(array($select, 'where'), $args);
             $this->_filterQuery['keywords'] = $keywords;
         }
         
