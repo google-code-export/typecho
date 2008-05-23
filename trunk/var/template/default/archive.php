@@ -8,10 +8,10 @@
 <div>
 
 <!-- 第二种调用方法,调用集成方法生成列表 -->
-<?php Typecho::widget('contents.Posts')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
+<?php Typecho::widget('Archive')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
 
 <!-- 第三种调用方法,每行输出 -->
-<?php Typecho::widget('contents.Posts')->to($posts); ?>
+<?php Typecho::widget('Archive')->to($posts); ?>
 
 <?php while($posts->get()): ?>
 
