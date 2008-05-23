@@ -18,7 +18,7 @@ require_once 'Abstract/Contents.php';
  *
  * @package Widget
  */
-class PostsWidget extends ContentsWidget
+class ArchiveWidget extends ContentsWidget
 {
     /**
      * 将每行的值压入堆栈
@@ -133,7 +133,10 @@ class PostsWidget extends ContentsWidget
             ->group('table.contents.`cid`')->limit(1);
             $post = $this->db->fetchRow($select, array($this, 'singlePush'));
 
-            if($post)
+            if($post && $post['category'] == TypechoRoute::getParameter('category', $post['category'])
+            && $post['year'] == TypechoRoute::getParameter('year', $post['year'])
+            && $post['month'] == TypechoRoute::getParameter('month', $post['month'])
+            && $post['day'] == TypechoRoute::getParameter('day', $post['day']))
             {
                 /** 设置关键词 */
                 $this->options->keywords = implode(',', Typecho::arrayFlatten($post['tags'], 'name'));

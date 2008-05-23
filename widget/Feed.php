@@ -14,7 +14,7 @@
 require_once __TYPECHO_LIB_DIR__ . '/Feed.php';
 
 /** 载入父类支持 **/
-require_once 'Posts.php';
+require_once 'Archive.php';
 
 /**
  * 聚合生成组件
@@ -25,7 +25,7 @@ require_once 'Posts.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class FeedWidget extends PostsWidget
+class FeedWidget extends ArchiveWidget
 {
     /**
      * feed生成对象
@@ -83,26 +83,31 @@ class FeedWidget extends PostsWidget
      */
     public function singlePush(array $value)
     {
-        $value = parent::singlePush($value);
-    
-        $item = $this->feed->createNewItem();
-        $item->setTitle($value['title']);
-        $item->setLink($value['permalink']);
-        $item->setDate($value['created'] + $this->options->timezone);
-        $item->setDescription($value['text']);
-        $item->setCategory($value['categories']);
+        Typecho::widget('ArchiveComments')->to($comments);
         
-        if(TypechoFeed::RSS2 == $this->type)
+        if($comments->have())
         {
-            $item->addElement('guid', $value['permalink']);
-            $item->addElement('comments', $value['permalink'] . '#comments');
-            $item->addElement('content:encoded', Typecho::subStr(Typecho::stripTags($value['text']), 0, 100, '...'));
-            $item->addElement('author', $value['author']);
-            $item->addElement('dc:creator', $value['author']);
-            $item->addElement('wfw:commentRss', $value['feedUrl']);
+            while($comments->get())
+            {
+                $item = $this->feed->createNewItem();
+                $item->setTitle($comments->author);
+                $item->setLink($comments->permalink);
+                $item->setDate($comments->created + $this->options->timezone);
+                $item->setDescription($comments->text);
+
+                if(TypechoFeed::RSS2 == $this->type)
+                {
+                    $item->addElement('guid', $comments->permalink);
+                    $item->addElement('content:encoded', Typecho::subStr(Typecho::stripTags($comments->text), 0, 100, '...'));
+                    $item->addElement('author', $comments->author);
+                    $item->addElement('dc:creator', $comments->author);
+                }
+                
+                $this->feed->addItem($item);
+            }
         }
         
-        $this->feed->addItem($item);
+        return parent::singlePush($value);
     }
     
     public function render()
@@ -123,29 +128,14 @@ class FeedWidget extends PostsWidget
             $feedQuery = substr($feedQuery, 5);
             $feedType = TypechoFeed::ATOM;
         }
-        
+
         $this->feed = TypechoFeed::generator($feedType);
-        
-        if(TypechoFeed::RSS1 == $feedType)
-        {
-            /** 如果是RSS1标准 */
-            $this->feed->setChannelAbout($this->options->feedRssUrl);
-        }
-        else if(TypechoFeed::ATOM == $feedType)
-        {
-            /** 如果是ATOM标准 */
-            $this->feed->setLink($this->options->feedAtomUrl);
-        }
-        else
-        {
-            $this->feed->setLink($this->options->feedUrl);
-        }
         
         /** 解析路径 */
         if(false !== ($value = TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery)))
         {
-            parent::render(10);
             $this->type = $feedType;
+            parent::render(10);
 
             $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
             $this->feed->setSubTitle($this->options->description);
@@ -153,6 +143,19 @@ class FeedWidget extends PostsWidget
             if(TypechoFeed::RSS2 == $feedType)
             {
                 $this->feed->setChannelElement('language', _t('zh-cn'));
+                $this->feed->setLink($this->options->feedUrl);
+            }
+            
+            if(TypechoFeed::RSS1 == $feedType)
+            {
+                /** 如果是RSS1标准 */
+                $this->feed->setChannelAbout($this->options->feedRssUrl);
+            }
+            
+            if(TypechoFeed::ATOM == $feedType)
+            {
+                /** 如果是ATOM标准 */
+                $this->feed->setLink($this->options->feedAtomUrl);
             }
 
             if(TypechoFeed::RSS1 == $feedType || TypechoFeed::RSS2 == $feedType)

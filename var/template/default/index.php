@@ -7,9 +7,9 @@
 
 <div>
 
-<?php Typecho::widget('contents.Posts')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
+<?php Typecho::widget('Archive')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
 
-<?php Typecho::widget('contents.Posts')->to($posts); ?>
+<?php Typecho::widget('Archive')->to($posts); ?>
 
 <?php while($posts->get()): ?>
 

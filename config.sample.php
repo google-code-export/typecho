@@ -76,18 +76,18 @@ TypechoConfig::set('Db', array(
 
 /** 定义路由参数 */
 TypechoConfig::set('Route', array(
-    'index'         =>  array('[/]?', 'index.php', NULL, '/', array('Posts')),
-    'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s/', array('Posts')),
-    'tag'           =>  array('/tag/([^/]+)[/]?', 'archive.php', array('slug'), '/tag/%s/', array('Posts')),
-    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s/', array('Posts')),
-    'category_page' =>  array('/category/([_0-9a-zA-Z-]+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/category/%s/%s/', array('Posts')),
-    'tag_page'      =>  array('/tag/(.+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/tag/%s/%s/', array('Posts')),
-    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s/', array('Posts')),
+    'index'         =>  array('[/]?', 'index.php', NULL, '/', array('Archive')),
+    'category'      =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'archive.php', array('slug'), '/category/%s/', array('Archive')),
+    'tag'           =>  array('/tag/([^/]+)[/]?', 'archive.php', array('slug'), '/tag/%s/', array('Archive')),
+    'index_page'    =>  array('/page/([0-9]+)[/]?', 'index.php', array('page'), '/page/%s/', array('Archive')),
+    'category_page' =>  array('/category/([_0-9a-zA-Z-]+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/category/%s/%s/', array('Archive')),
+    'tag_page'      =>  array('/tag/([^/]+)/([0-9]+)[/]?', 'archive.php', array('slug', 'page'), '/tag/%s/%s/', array('Archive')),
+    'post'          =>  array('/archives/([0-9]+)[/]?', 'post.php', array('cid'), '/archives/%s/', array('Archive')),
     'feed'          =>  array('/feed(.*)', array('Feed'), array('feed'), '/feed%s'),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', array('Do'), array('do'), '/%s.do'),
     'do_plugin'     =>  array('/([_0-9a-zA-Z-]+)/([_0-9a-zA-Z-]+)\.do', array('Do'), array('plugin', 'do'), '/%s/%s.do'),
     'job'           =>  array('/([_0-9a-zA-Z-]+)\.job', array('Job'), array('job'), '/%s.job'),
     'login'         =>  array('/login[/]?', 'admin/login.php'),
     'admin'         =>  array('/admin[/]?', 'admin/index.php'),
-    'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s/', array('Posts')),
+    'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s/', array('Archive')),
 ));
