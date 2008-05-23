@@ -57,7 +57,7 @@ class FeedWidget extends PostsWidget
         $item = $this->feed->createNewItem();
         $item->setTitle($value['title']);
         $item->setLink($value['permalink']);
-        $item->setDate($this->created + $this->options->timezone);
+        $item->setDate($value['created'] + $this->options->timezone);
         $item->setDescription($value['text']);
         $item->setCategory($value['categories']);
         
@@ -88,7 +88,7 @@ class FeedWidget extends PostsWidget
         $item = $this->feed->createNewItem();
         $item->setTitle($value['title']);
         $item->setLink($value['permalink']);
-        $item->setDate($this->created + $this->options->timezone);
+        $item->setDate($value['created'] + $this->options->timezone);
         $item->setDescription($value['text']);
         $item->setCategory($value['categories']);
         
