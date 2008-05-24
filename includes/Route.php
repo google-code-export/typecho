@@ -102,11 +102,11 @@ class TypechoRoute
 
             if(5 == $count)
             {
-                list($pattern, $file, $values, $format, $widgets) = $val;
+                list($pattern, $file, $values, $format, $widget) = $val;
             }
             else if(4 == $count)
             {
-                list($pattern, $widgets, $values, $format) = $val;
+                list($pattern, $widget, $values, $format) = $val;
             }
             else if(2 == $count)
             {
@@ -122,12 +122,9 @@ class TypechoRoute
                 Typecho::redirect($address, true);
             }
 
-            if(!empty($widgets))
+            if(!empty($widget))
             {
-                foreach($widgets as $widget)
-                {
-                    Typecho::widget($widget);
-                }
+                Typecho::widget($widget);
             }
 
             if(!empty($file))
