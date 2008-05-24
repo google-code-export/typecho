@@ -1,80 +1,99 @@
-<?php
-require_once 'common.php';
-require_once 'header.php';
-require_once 'menu.php';
-?>
-	<div id="main" class="clearfix">
-		<div id="sidebar">
-			<div id="userInfo">
-				<img src="images/default-userpic.jpg" alt="" class="left" />
-				<h6><?php Typecho::widget('Access')->screenName(); ?></h6>
-				<p>You have <a href="#">6 posts</a>, <a href="#">1 page</a>, contained within <a href="#">4 categories</a> and <a href="#">14 tags</a>.</p>
-			</div><!-- end #userInfo -->
+<?php include( 'header.php' ); ?>
 
-			<h3><?php _e('快速链接'); ?></h3>
-			<ul id="quick-links">
-				<li><a href="#"><?php _e('更改我的资料'); ?></a></li>
-				<li><a href="#"><?php _e('增加一个链接'); ?></a></li>
-				<li><a href="#"><?php _e('更换站点外观'); ?></a></li>
-				<li><a href="#"><?php _e('站点设置'); ?></a></li>
-			</ul>
-			
-			<h3><?php _e('工具箱'); ?></h3>
-			<ul id="toolbox">
-				<li><a href="#"><?php _e('优化数据库'); ?></a></li>
-				<li><a href="#"><?php _e('检查更新'); ?></a></li>
-			</ul>
-		</div><!-- end #sidebar -->
-        
-		<div id="content">
-            <h2><?php Typecho::widget('Menu')->title(); ?></h2>
-			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit-page.php'); ?>"><?php _e('创建一个新页面'); ?></a>
-			<a class="botton right" href="<?php Typecho::widget('Options')->adminUrl('/edit.php'); ?>"><?php _e('撰写一篇新文章'); ?></a>
-            <h3><?php _e('最新发布的文章'); ?></h3>
+	<div id="main">
+		<a class="botton right" href="#">2 Comments Awaiting</a><a class="botton right" href="#">Write a New Post</a><h2>Welcome to Typecho</h2>
+		<table class="latest" id="quick-links">
+			<tr>
+				<td><a href="#">更改我的资料</a></td>
+				<td><a href="#">增加一个链接</a></td>
+				<td><a href="#">更换站点外观</a></td>
+				<td><a href="#">修改站点设置</a></td>
+				<td><a href="#">优化数据库</a></td>
+				<td><a href="#">检查更新</a></td>
+			</tr>
+		</table>
+		<div style="width: 49%" class="left">
+			<h3>Most Recent Weblog Entires</h3>
 			<table class="latest">
 				<tr>
-					<th width="25%"><?php _e('标题'); ?></th>
-					<th width="75%"><?php _e('内容'); ?></th>
-				</tr>
-                <?php Typecho::widget('contents.AuthorsRecentPost', Typecho::widget('Access')->uid)->to($post); ?>
-                <?php if($post->have()): ?>
-                <?php while($post->get()): ?>
-				<tr>
-					<td>
-                        <strong><a href="<?php $post->permalink(); ?>"><?php $post->title(); ?></a></strong><br />
-                        <?php $post->date(_t('y年n月j日 H时i分')); ?>
-                    </td>
-					<td><?php $post->category(','); ?> | 
-					<a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $post->cid); ?>"><?php _e('编辑'); ?></a>
-					<br /><?php $post->excerpt(30); ?></td>
-				</tr>
-                <?php endwhile; ?>
-                <?php else: ?>
-                <tr>
-                	<td colspan="2"><strong><?php _e('对不起, 您没有发布任何文章'); ?></strong></td>
-                </tr>
-                <?php endif; ?>
-			</table>
-
-			<a class="botton right" href="#"><?php _e('%d篇评论等待审核', 2); ?></a>
-			<a class="botton right" href="#"><?php _e('%d篇垃圾评论', 5); ?></a>
-            <h3><?php _e('最新评论/引用'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="25%"><?php _e('作者'); ?></th>
-					<th width="75%"><?php _e('评论'); ?></th>
+					<th width="30%">date</th>
+					<th width="70%">entries</th>
 				</tr>
 				<tr>
-					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
 				</tr>
 				<tr>
-					<td><strong>GuestOne</strong><br />2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a><br />Hi, this is a comment. To delete a comment, just log in and view the post's comments.</td>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
 				</tr>
 			</table>
 
-		</div><!-- end #content -->
+			<h3>Most Recent Comments/Trackbacks</h3>
+			<table class="latest">
+				<tr>
+					<th width="30%">date</th>
+					<th width="70%">entries</th>
+				</tr>
+				<tr>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
+				</tr>
+				<tr>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
+				</tr>
+			</table>
+		</div>
+		<div style="width: 49%" class="right">
+			<h3>Site Statistics</h3>
+			<table class="latest">
+				<tr>
+					<th width="70%">Name</th>
+					<th width="30%">Value</th>
+				</tr>
+				<tr>
+					<td>Version</td>
+					<td>1.0</td>
+				</tr>
+				<tr>
+					<td>Total Weblog Entries</td>
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>Total Comments</td>
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>Total Trackbacks</td>
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>Comments Awaiting Validation</td>
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>Spam Comments</td>
+					<td>2</td>
+				</tr>
+			</table>
+
+			<h3>Official News</h3>
+			<table class="latest">
+				<tr>
+					<th width="30%">date</th>
+					<th width="70%">entries</th>
+				</tr>
+				<tr>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
+				</tr>
+				<tr>
+					<td>2008-03-26 16:00</td>
+					<td><a href="#">Example post title</a></td>
+				</tr>
+			</table>
+		</div>
 	</div><!-- end #main -->
 	
-<?php require_once 'footer.php'; ?>
+<?php include( 'footer.php' ); ?>
