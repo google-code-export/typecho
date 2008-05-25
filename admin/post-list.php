@@ -24,13 +24,25 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
                 <?php endwhile; ?>
 				</select>
 				<select name="status">
-					<option value="my" <?php TypechoRequest::callParameter('status', 'my', 'selected="selected"'); ?>><?php _e('我的所有文章'); ?></option>
-					<option value="myPost" <?php TypechoRequest::callParameter('status', 'myPost', 'selected="selected"'); ?>><?php _e('我的已发布文章'); ?></option>
-					<option value="myDraft" <?php TypechoRequest::callParameter('status', 'myDraft', 'selected="selected"'); ?>><?php _e('我的草稿'); ?></option>
+					<option value="my" <?php TypechoRequest::callParameter('status', 'my', 'selected="selected"'); ?>>
+                        <?php _e('我的所有文章(%s)', Typecho::widget('Abstract.Contents')->count(array('post', 'draft'), Typecho::widget('Access')->uid)); ?>
+                    </option>
+					<option value="myPost" <?php TypechoRequest::callParameter('status', 'myPost', 'selected="selected"'); ?>>
+                        <?php _e('我的已发布文章(%s)', Typecho::widget('Abstract.Contents')->count('post', Typecho::widget('Access')->uid)); ?>
+                    </option>
+					<option value="myDraft" <?php TypechoRequest::callParameter('status', 'myDraft', 'selected="selected"'); ?>>
+                        <?php _e('我的草稿(%s)', Typecho::widget('Abstract.Contents')->count('draft', Typecho::widget('Access')->uid)); ?>
+                    </option>
                     <?php if(Typecho::widget('Access')->pass('editor', true)): ?>
-                    <option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>><?php _e('所有文章'); ?></option>
-					<option value="allPost" <?php TypechoRequest::callParameter('status', 'allPost', 'selected="selected"'); ?>><?php _e('所有已发布的文章'); ?></option>
-					<option value="allDraft" <?php TypechoRequest::callParameter('status', 'allDraft', 'selected="selected"'); ?>><?php _e('所有草稿'); ?></option>
+                    <option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>>
+                        <?php _e('所有文章(%s)', Typecho::widget('Abstract.Contents')->count(array('post', 'draft'), NULL)); ?>
+                    </option>
+					<option value="allPost" <?php TypechoRequest::callParameter('status', 'allPost', 'selected="selected"'); ?>>
+                        <?php _e('所有已发布的文章(%s)', Typecho::widget('Abstract.Contents')->count('post', NULL)); ?>
+                    </option>
+					<option value="allDraft" <?php TypechoRequest::callParameter('status', 'allDraft', 'selected="selected"'); ?>>
+                        <?php _e('所有草稿(%s)', Typecho::widget('Abstract.Contents')->count('draft', NULL)); ?>
+                    </option>
                     <?php endif; ?>
 				</select>
 				<input type="submit" value="<?php _e('过滤'); ?>" />

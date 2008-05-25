@@ -309,6 +309,47 @@ class ContentsWidget extends TypechoWidget
     }
     
     /**
+     * 按照条件计算内容数量
+     * 
+     * @access public
+     * @param string $type 类型
+     * @param integer $author 作者
+     * @return integer
+     */
+    public function count($type = NULL, $author = NULL)
+    {
+        $countSql = clone $this->selectSql;
+        
+        /** 增加类型判断 */
+        if(!empty($type))
+        {
+            if(is_array($type))
+            {
+                $args[] = implode(' OR ', array_fill(0, count($type), 'table.contents.`type` = ?'));
+
+                foreach($type as $val)
+                {
+                    $args[] = $val;
+                }
+                
+                call_user_func_array(array($countSql, 'where'), $args);
+            }
+            else
+            {
+                $countSql->where('table.contents.`type` = ?', $type);
+            }
+        }
+        
+        /** 增加作者判断 */
+        if(!empty($author))
+        {
+            $countSql->where('table.contents.`author` = ?', $author);
+        }
+        
+        return $this->db->fetchObject($countSql->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
+    }
+    
+    /**
      * 通用过滤器
      * 
      * @access public

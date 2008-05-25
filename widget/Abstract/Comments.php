@@ -161,7 +161,7 @@ class CommentsWidget extends TypechoWidget
     }
     
     /**
-     * 输出内容分页
+     * 输出评论分页
      *
      * @access public
      * @param string $pageTemplate 分页模板
@@ -176,6 +176,40 @@ class CommentsWidget extends TypechoWidget
                                           TypechoRoute::parse(TypechoRoute::$current . '_page', $this->_row, $this->options->index));
 
         $nav->makeBoxNavigator(_t('上一页'), _t('下一页'));
+    }
+    
+    /**
+     * 按照条件计算评论数量
+     * 
+     * @access public
+     * @param string $status 状态
+     * @param string $mode 模式
+     * @param integer $author 作者
+     * @return integer
+     */
+    public function count($status = NULL, $mode = NULL, $author = NULL)
+    {
+        $countSql = clone $this->selectSql;
+        
+        /** 增加状态判断 */
+        if(!empty($status))
+        {
+            $countSql->where('table.comments.`status` = ?', $status);
+        }
+        
+        /** 增加模式判断 */
+        if(!empty($mode))
+        {
+            $countSql->where('table.comments.`mode` = ?', $mode);
+        }
+        
+        /** 增加作者判断 */
+        if(!empty($author))
+        {
+            $countSql->where('table.contents.`author` = ?', $author);
+        }
+        
+        return $this->db->fetchObject($countSql->select('table.comments', 'COUNT(table.comments.`coid`) AS `num`'))->num;
     }
     
     /**
