@@ -1,17 +1,11 @@
-<?php include( 'header.php' ); ?>
+<?php
+require_once 'common.php';
+require_once 'header.php';
+require_once 'menu.php';
+?>
 
 	<div id="main">
 		<a class="botton right" href="#">2 Comments Awaiting</a><a class="botton right" href="#">Write a New Post</a><h2>Welcome to Typecho</h2>
-		<table class="latest" id="quick-links">
-			<tr>
-				<td><a href="#">更改我的资料</a></td>
-				<td><a href="#">增加一个链接</a></td>
-				<td><a href="#">更换站点外观</a></td>
-				<td><a href="#">修改站点设置</a></td>
-				<td><a href="#">优化数据库</a></td>
-				<td><a href="#">检查更新</a></td>
-			</tr>
-		</table>
 		<div style="width: 49%" class="left">
 			<h3>Most Recent Weblog Entires</h3>
 			<table class="latest">
