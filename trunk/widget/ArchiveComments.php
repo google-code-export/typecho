@@ -8,7 +8,7 @@
  * @version    $Id$
  */
  
- /** 载入文章基类支持 **/
+ /** 载入评论基类支持 **/
 require_once 'Abstract/Comments.php';
  
 /**

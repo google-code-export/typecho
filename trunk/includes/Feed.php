@@ -10,11 +10,18 @@
  * @version $Id$
  */
 
+
+/** 载入api支持 */
+require_once 'Typecho.php';
+
 /** UnivarselFeedWriter */
 require_once 'Feed/FeedWriter.php';
 
 /** UnivarselFeedItem */
 require_once 'Feed/FeedItem.php';
+
+/** UnivarselFeedParser */
+require_once 'Feed/FeedParser.php';
 
 /**
  * UnivarselFeedWriter
@@ -54,6 +61,20 @@ class TypechoFeed
     public static function generator($type = self::RSS2)
     {
         return new FeedWriter($type);
+    }
+    
+    /**
+     * 创建Parser对象
+     * 
+     * @access public
+     * @return FeedParser
+     */
+    public static function parser($url)
+    {
+        $parser = new FeedParser();
+        $parser->parse($url);
+        
+        return $parser;
     }
     
     /**

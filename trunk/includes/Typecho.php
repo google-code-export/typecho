@@ -567,15 +567,15 @@ class Typecho
      * @param integer $locationTimes 转向次数,内部使用
      * @return array
      */
-    public static function httpSender($url,
-                                      $agent = NULL,
-                                      $getData = NULL,
-                                      $postData = NULL,
-                                      $fileData = NULL,
-                                      $timeOut = 5,
-                                      $host = NULL,
-                                      $ip = NULL,
-                                      $locationTimes = 0)
+    public static function httpRequest($url,
+                                       $agent = NULL,
+                                       $getData = NULL,
+                                       $postData = NULL,
+                                       $fileData = NULL,
+                                       $timeOut = 5,
+                                       $host = NULL,
+                                       $ip = NULL,
+                                       $locationTimes = 0)
     {
         //check locationTimes
         if($locationTimes >= 3)
@@ -706,15 +706,15 @@ class Typecho
                     {
                         $response['location'] = 'http://'.$parsedUrl['host'].$response['location'];
                     }
-                    return  self::httpSender($response['location'],
-                                             $agent,
-                                             $getData,
-                                             $postData,
-                                             $fileData,
-                                             $timeOut,
-                                             $host,
-                                             $ip,
-                                             $locationTimes + 1);
+                    return  self::httpRequest($response['location'],
+                                              $agent,
+                                              $getData,
+                                              $postData,
+                                              $fileData,
+                                              $timeOut,
+                                              $host,
+                                              $ip,
+                                              $locationTimes + 1);
                 }
                 else
                 {

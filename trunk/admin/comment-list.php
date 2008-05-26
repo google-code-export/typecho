@@ -15,6 +15,20 @@ require_once 'menu.php';
 				<input type="submit" value="<?php _e('待审核'); ?>" />
 				<input type="submit" value="<?php _e('删除'); ?>" />
 				<input type="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+				<select name="status" style="width: 160px;">
+					<option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>>
+                        <?php _e('所有评论(%s)', Typecho::widget('Abstract.Comments')->count()); ?>
+                    </option>
+					<option value="approved" <?php TypechoRequest::callParameter('status', 'approved', 'selected="selected"'); ?>>
+                        <?php _e('展现(%s)', Typecho::widget('Abstract.Comments')->count('approved')); ?>
+                    </option>
+					<option value="waiting" <?php TypechoRequest::callParameter('status', 'waiting', 'selected="selected"'); ?>>
+                        <?php _e('待审核(%s)', Typecho::widget('Abstract.Comments')->count('waiting')); ?>
+                    </option>
+					<option value="spam" <?php TypechoRequest::callParameter('status', 'spam', 'selected="selected"'); ?>>
+                        <?php _e('垃圾箱(%s)', Typecho::widget('Abstract.Comments')->count('spam')); ?>
+                    </option>
+				</select>
 				<input type="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>

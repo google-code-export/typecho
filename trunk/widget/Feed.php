@@ -44,6 +44,38 @@ class FeedWidget extends ArchiveWidget
     private $type;
     
     /**
+     * 增加评论节点
+     * 
+     * @access public
+     * @param CommentsWidget $comments
+     * @return void
+     */
+    public function pushCommentElement($comments)
+    {
+        if($comments->have())
+        {
+            while($comments->get())
+            {
+                $item = $this->feed->createNewItem();
+                $item->setTitle($comments->author);
+                $item->setLink($comments->permalink);
+                $item->setDate($comments->created + idate('Z'));
+                $item->setDescription($comments->text);
+
+                if(TypechoFeed::RSS2 == $this->type)
+                {
+                    $item->addElement('guid', $comments->permalink);
+                    $item->addElement('content:encoded', Typecho::subStr(Typecho::stripTags($comments->text), 0, 100, '...'));
+                    $item->addElement('author', $comments->author);
+                    $item->addElement('dc:creator', $comments->author);
+                }
+                
+                $this->feed->addItem($item);
+            }
+        }
+    }
+    
+    /**
      * 生成节点
      * 
      * @access public
@@ -57,7 +89,7 @@ class FeedWidget extends ArchiveWidget
         $item = $this->feed->createNewItem();
         $item->setTitle($value['title']);
         $item->setLink($value['permalink']);
-        $item->setDate($value['created'] + $this->options->timezone);
+        $item->setDate($value['created'] + idate('Z'));
         $item->setDescription($value['text']);
         $item->setCategory($value['categories']);
         
@@ -84,32 +116,17 @@ class FeedWidget extends ArchiveWidget
     public function singlePush(array $value)
     {
         Typecho::widget('ArchiveComments')->to($comments);
-        
-        if($comments->have())
-        {
-            while($comments->get())
-            {
-                $item = $this->feed->createNewItem();
-                $item->setTitle($comments->author);
-                $item->setLink($comments->permalink);
-                $item->setDate($comments->created + $this->options->timezone);
-                $item->setDescription($comments->text);
-
-                if(TypechoFeed::RSS2 == $this->type)
-                {
-                    $item->addElement('guid', $comments->permalink);
-                    $item->addElement('content:encoded', Typecho::subStr(Typecho::stripTags($comments->text), 0, 100, '...'));
-                    $item->addElement('author', $comments->author);
-                    $item->addElement('dc:creator', $comments->author);
-                }
-                
-                $this->feed->addItem($item);
-            }
-        }
+        $this->pushCommentElement($comments);
         
         return parent::singlePush($value);
     }
     
+    /**
+     * 入口函数
+     * 
+     * @access public
+     * @return void
+     */
     public function render()
     {
         $feedQuery = TypechoRoute::getParameter('feed');
@@ -130,50 +147,61 @@ class FeedWidget extends ArchiveWidget
         }
 
         $this->feed = TypechoFeed::generator($feedType);
+        $this->type = $feedType;
         
-        /** 解析路径 */
-        if(false !== ($value = TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery)))
+        /** 处理评论聚合 */
+        if('/comments' == $feedQuery || '/comments/' == $feedQuery)
         {
-            $this->type = $feedType;
+            Typecho::widget('RecentComments', 20)->to($comments);
+            $this->pushCommentElement($comments);
+        
+            $this->options->feedUrl = Typecho::pathToUrl('/comments/', $this->options->feedUrl);
+            $this->options->feedRssUrl = Typecho::pathToUrl('/comments/', $this->options->feedRssUrl);
+            $this->options->feedAtomUrl = Typecho::pathToUrl('/comments/', $this->options->feedAtomUrl);
+        }
+        /** 解析路径 */
+        else if(false !== ($value = TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery)))
+        {
             parent::render(10);
-
-            $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
-            $this->feed->setSubTitle($this->options->description);
-
-            if(TypechoFeed::RSS2 == $feedType)
-            {
-                $this->feed->setChannelElement('language', _t('zh-cn'));
-                $this->feed->setLink($this->options->feedUrl);
-            }
-            
-            if(TypechoFeed::RSS1 == $feedType)
-            {
-                /** 如果是RSS1标准 */
-                $this->feed->setChannelAbout($this->options->feedRssUrl);
-            }
-            
-            if(TypechoFeed::ATOM == $feedType)
-            {
-                /** 如果是ATOM标准 */
-                $this->feed->setLink($this->options->feedAtomUrl);
-            }
-
-            if(TypechoFeed::RSS1 == $feedType || TypechoFeed::RSS2 == $feedType)
-            {
-                $this->feed->setDescription($this->options->description);
-            }
-
-            if(TypechoFeed::RSS2 == $feedType || TypechoFeed::ATOM == $feedType)
-            {
-                $this->feed->setChannelElement(TypechoFeed::RSS2 == $feedType ? 'pubDate' : 'updated',
-                date(TypechoFeed::dateFormat($feedType), 
-                $this->options->gmtTime + $this->options->timezone));
-            }
-            
-            $this->feed->generateFeed();
-            return;
+        }
+        else
+        {
+            throw new TypechoWidgetException(_t('聚合页不存在'), TypechoException::NOTFOUND);
         }
         
-        throw new TypechoWidgetException(_t('聚合页不存在'), TypechoException::NOTFOUND);
+        $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
+        $this->feed->setSubTitle($this->options->description);
+
+        if(TypechoFeed::RSS2 == $feedType)
+        {
+            $this->feed->setChannelElement('language', _t('zh-cn'));
+            $this->feed->setLink($this->options->feedUrl);
+        }
+        
+        if(TypechoFeed::RSS1 == $feedType)
+        {
+            /** 如果是RSS1标准 */
+            $this->feed->setChannelAbout($this->options->feedRssUrl);
+        }
+        
+        if(TypechoFeed::ATOM == $feedType)
+        {
+            /** 如果是ATOM标准 */
+            $this->feed->setLink($this->options->feedAtomUrl);
+        }
+
+        if(TypechoFeed::RSS1 == $feedType || TypechoFeed::RSS2 == $feedType)
+        {
+            $this->feed->setDescription($this->options->description);
+        }
+
+        if(TypechoFeed::RSS2 == $feedType || TypechoFeed::ATOM == $feedType)
+        {
+            $this->feed->setChannelElement(TypechoFeed::RSS2 == $feedType ? 'pubDate' : 'updated',
+            date(TypechoFeed::dateFormat($feedType), 
+            $this->options->gmtTime + $this->options->timezone));
+        }
+        
+        $this->feed->generateFeed();
     }
 }
