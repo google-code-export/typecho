@@ -131,6 +131,15 @@ class TypechoPDOMysql implements TypechoDbAdapter
      */
     public function parseSelect(array $sql)
     {
+        if(!empty($sql['join']))
+        {
+            foreach($sql['join'] as $val)
+            {
+                list($table, $condition, $op) = $val;
+                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
+            }
+        }
+        
         $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
         $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
 

@@ -37,7 +37,7 @@ class DoEditPostWidget extends ContentsWidget
     {
         $contents = TypechoRequest::getParametersFrom('password', 'created', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = (1 == TypechoRequest::getParameter('draft')) ? 'draft' : 'post';
+        $contents['type'] = (1 == TypechoRequest::getParameter('draft') || !$this->access->pass('editor', true)) ? 'draft' : 'post';
         $contents['title'] = (NULL == TypechoRequest::getParameter('title')) ? 
         _t('未命名文档') : TypechoRequest::getParameter('title');
     
@@ -94,23 +94,24 @@ class DoEditPostWidget extends ContentsWidget
         $validator->addRule('cid', 'required', _t('文章不存在'));
         $validator->run(TypechoRequest::getParametersFrom('cid'));
         
-        $post = $this->db->fetchRow($this->selectSql->group('table.contents.`cid`')
+        $exists = $this->db->fetchRow($this->selectSql->group('table.contents.`cid`')
         ->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft')
         ->where('table.contents.`cid` = ?', TypechoRequest::getParameter('cid'))
-        ->limit(1), array($this, 'push'));
+        ->limit(1));
         
-        if(!$post)
+        if(!$exists)
         {
             throw new TypechoWidgetException(_t('文章不存在'), TypechoException::NOTFOUND);
         }
     
         $contents = TypechoRequest::getParametersFrom('password', 'created', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = (1 == TypechoRequest::getParameter('draft')) ? 'draft' : 'post';
+        $contents['type'] = (1 == TypechoRequest::getParameter('draft') || !$this->access->pass('editor', true)) ? 'draft' : 'post';
         $contents['title'] = (NULL == TypechoRequest::getParameter('title')) ? 
         _t('未命名文档') : TypechoRequest::getParameter('title');
     
         $updateRows = $this->updateContent($contents, TypechoRequest::getParameter('cid'));
+        $this->db->fetchRow($this->selectSql, array($this, 'push'));
 
         if($updateRows > 0)
         {

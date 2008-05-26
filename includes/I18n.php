@@ -115,13 +115,25 @@ class TypechoI18n
         /** 如果是一天 */
         if($between < 86400 && idate('d', $from) == idate('d', $now))
         {
-            return str_replace($localDateSourceCache, $localDateDestCache, date(_t('a g:i'), $from));
+            /** 如果是一小时 */
+            if($between < 3600 && idate('H', $from) == idate('H', $now))
+            {                
+                /** 如果是一分钟 */
+                if($between < 60 && idate('i', $from) == idate('i', $now))
+                {
+                    return _t('%d秒前', idate('s', $now) - idate('s', $from));
+                }
+                
+                return _t('%d分钟前', idate('i', $now) - idate('i', $from));
+            }
+            
+            return _t('%d秒前', idate('H', $now) - idate('H', $from));
         }
         
         /** 如果是昨天 */
         if($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now)))
         {
-            return _t('昨天');
+            return _t('昨天a g:i');
         }
         
         /** 如果是一个星期 */

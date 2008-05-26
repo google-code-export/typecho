@@ -190,7 +190,7 @@ class OptionsWidget extends TypechoWidget
         $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
         $this->templateUrl = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteUrl);
         $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
-        $this->gmtTime = time() - intval(date('Z'));
+        $this->gmtTime = time() - idate('Z');
         
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
         $this->feedRssUrl = TypechoRoute::parse('feed', array('feed' => '/rss/'), $this->index);

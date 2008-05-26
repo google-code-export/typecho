@@ -351,33 +351,18 @@ class TypechoDbQuery
         switch($this->_sqlPreBuild['action'])
         {
             case TypechoDb::SELECT:
-            {
-                if($this->_sqlPreBuild['join'])
-                {
-                    foreach($this->_sqlPreBuild['join'] as $val)
-                    {
-                        list($table, $condition, $op) = $val;
-                        $this->_sqlPreBuild['table'] = "({$this->_sqlPreBuild['table']} {$op} JOIN {$table} ON {$condition})";
-                    }
-                }
-
                 return $this->_adapter->parseSelect($this->_sqlPreBuild);
-            }
             case TypechoDb::INSERT:
-            {
                 return 'INSERT INTO '
                 . $this->_sqlPreBuild['table']
                 . '(' . implode(' , ', array_keys($this->_sqlPreBuild['rows'])) . ')'
                 . ' VALUES '
                 . '(' . implode(' , ', array_values($this->_sqlPreBuild['rows'])) . ')'
                 . $this->_sqlPreBuild['limit'];
-            }
             case TypechoDb::DELETE:
-            {
                 return 'DELETE FROM '
                 . $this->_sqlPreBuild['table']
                 . $this->_sqlPreBuild['where'];
-            }
             case TypechoDb::UPDATE:
             {
                 $columns = array();

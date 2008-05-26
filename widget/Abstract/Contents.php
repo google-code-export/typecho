@@ -178,6 +178,7 @@ class ContentsWidget extends TypechoWidget
             'modified'      =>  Typecho::widget('Options')->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
+            'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 'enable' : 'disable',
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
