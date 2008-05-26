@@ -20,8 +20,13 @@ require_once 'Feed/FeedWriter.php';
 /** UnivarselFeedItem */
 require_once 'Feed/FeedItem.php';
 
-/** UnivarselFeedParser */
-require_once 'Feed/FeedParser.php';
+/**
+ * We are extending TypechoException
+ */
+require_once 'Exception.php';
+
+/** Feed Parser */
+require_once 'Feed/Parser.php';
 
 /**
  * UnivarselFeedWriter
@@ -67,14 +72,12 @@ class TypechoFeed
      * 创建Parser对象
      * 
      * @access public
-     * @return FeedParser
+     * @param string $xml xml字符串
+     * @return XML_Feed_Parser
      */
-    public static function parser($url)
+    public static function parser($xml)
     {
-        $parser = new FeedParser();
-        $parser->parse($url);
-        
-        return $parser;
+        return new XML_Feed_Parser($xml);
     }
     
     /**

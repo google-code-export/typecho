@@ -133,7 +133,7 @@ class TypechoI18n
         /** 如果是昨天 */
         if($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now)))
         {
-            return _t('昨天a g:i');
+            return date(_t('昨天a g:i'), $from);
         }
         
         /** 如果是一个星期 */
