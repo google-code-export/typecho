@@ -55,16 +55,12 @@ class MenuWidget extends TypechoWidget
      */
     public function __construct()
     {
-        $this->_parentMenu = array(_t('控制台'), _t('我的'), _t('创建'), _t('管理'), _t('设置'));
+        $this->_parentMenu = array(_t('控制台'), _t('创建'), _t('管理'), _t('设置'));
         
         $this->_childMenu =  array(array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
             array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
-        ),
-        array(
-            array(_t('档案'), _t('关于我'), '/admin/profile.php', 'subscriber'),
-            array(_t('朋友'), _t('我的朋友圈'), '/admin/friend.php', 'subscriber'),
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
@@ -75,21 +71,21 @@ class MenuWidget extends TypechoWidget
             array(_t('文章'), _t('管理文章'), '/admin/post-list.php', 'contributor'),
             array(_t('页面'), _t('管理页面'), '/admin/page-list.php', 'editor'),
             array(_t('评论'), _t('管理评论'), '/admin/comment-list.php', 'contributor'),
-            array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
+        //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
             array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
             array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
-            array(_t('链接分类'), _t('管理链接分类'), '/admin/edit-photo.php', 'administrator'),
+        //    array(_t('链接分类'), _t('管理链接分类'), '/admin/edit-photo.php', 'administrator'),
         ),
         array(
             array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), '/admin/discussion.php', 'administrator'),
             array(_t('文章'), _t('文章设置'), '/admin/reading.php', 'administrator'),
             array(_t('撰写'), _t('撰写习惯设置'), '/admin/writing.php', 'contributor'),
-            array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
-            array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
-            array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
+        //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
+        //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
+        //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
         ));
         
         $parentFilterName = TypechoPlugin::name(__FILE__, 'addParent');

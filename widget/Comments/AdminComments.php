@@ -49,6 +49,11 @@ class AdminCommentsWidget extends CommentsWidget
             $select->where('table.comments.`text` LIKE ?', '%' . Typecho::filterSearchQuery($keywords) . '%');
             $this->_filterQuery['keywords'] = $keywords;
         }
+        
+        if(in_array(TypechoRequest::getParameter('status'), array('approved', 'waiting', 'spam')))
+        {
+            $select->where('table.comments.`status` = ?', TypechoRequest::getParameter('status'));
+        }
     
         $this->countSql = clone $select;
         

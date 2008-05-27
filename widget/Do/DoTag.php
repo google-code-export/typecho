@@ -41,7 +41,6 @@ class DoTagWidget extends MetasWidget
         $validator = new TypechoValidation($this);
         $validator->addRule('name', 'required', _t('必须填写标签名称'));
         $validator->addRule('name', 'nameExists', _t('标签名称已经存在'));
-        $validator->addRule('slug', 'required', _t('必须填写标签缩略名'));
         $validator->addRule('slug', 'slugExists', _t('缩略名已经存在'));
         
         if($isUpdate)

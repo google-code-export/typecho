@@ -15,24 +15,25 @@ require_once 'menu.php';
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
 					<td><label><?php _e('站点名称'); ?></label></td>
-					<td><input type="text" id="" style="width: 70%;" /><small><?php _e('站点的名称将显示在网页的标题处.'); ?></small></td>
+					<td><input type="text" name="title" style="width: 70%;" value="<?php Typecho::widget('Options')->title(); ?>" /><small><?php _e('站点的名称将显示在网页的标题处.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label><?php _e('站点描述'); ?></label></td>
-					<td><textarea id="" rows="5" cols=""  style="width: 90%;"></textarea><small><?php _e('站点描述将显示在网页代码的头部.'); ?></small></td>
+					<td><textarea id="" rows="5" cols=""  style="width: 90%;"><?php Typecho::widget('Options')->description(); ?></textarea><small><?php _e('站点描述将显示在网页代码的头部.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label><?php _e('关键词'); ?></label></td>
-					<td><input type="text" id="" style="width: 70%;" /><small><?php _e('请以半角逗号","分割多个关键字.'); ?></small></td>
+					<td><input type="text" id="" style="width: 70%;" value="<?php Typecho::widget('Options')->keywords(); ?>" /><small><?php _e('请以半角逗号","分割多个关键字.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label><?php _e('时区'); ?></label></td>
 					<td><select id="" style="width: 20%;">
-						<option value="" selected="selected">GMT +08:00</option>
+						<option value="">GMT +08:00</option>
 						<option value="">GMT +09:00</option>
 					</select></td>
 				</tr>
 			</table>
+            <hr class="space">
             <div class="table_nav">
                 <input type="submit" value="<?php _e('保存设置'); ?>" />
             </div>

@@ -30,7 +30,7 @@ class FeedProxyWidget extends TypechoWidget
      * @access public
      * @return unknown
      */
-    public function parse()
+    public function parseFeed()
     {
         /** 获取feed数据 */
         $response = @file_get_contents(TypechoRequest::getParameter('url'));
@@ -38,7 +38,7 @@ class FeedProxyWidget extends TypechoWidget
         /** 处理异常 */
         if(empty($response))
         {
-            die('error');
+            die(_t('网络通讯异常'));
         }
     
         /** 开始解析 */
@@ -48,12 +48,19 @@ class FeedProxyWidget extends TypechoWidget
         }
         catch(XML_Feed_Parser_Exception $e)
         {
-            die('error');
+            die(_t('文件解析错误'));
         }
 
         foreach($feed as $item)
         {
-            echo $item->title;
+            $value = array(
+                'link'  =>  $item->link,
+                'title' =>  $item->title,
+                'date'  =>  TypechoI18n::dateWord($item->pubDate, 
+                Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)
+            );
+            
+            $this->push($value);
         }
     }
 
@@ -66,6 +73,7 @@ class FeedProxyWidget extends TypechoWidget
     public function render()
     {
         Typecho::widget('Access')->pass('subscriber');
-        TypechoRequest::bindParameter('url', array($this, 'parse'));
+        TypechoRequest::bindParameter('url', array($this, 'parseFeed'));
+        $this->parse('<li><a href="{link}">{title}</a><small> - {date}</small></li>');
     }
 }
