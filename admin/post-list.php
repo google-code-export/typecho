@@ -57,8 +57,8 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
 					<th width="10%"><?php _e('作者'); ?></th>
 					<th width="15%"><?php _e('发布日期'); ?></th>
 					<th width="20%"><?php _e('分类'); ?></th>
-					<th width="15%"><?php _e('评论'); ?></th>
-					<th width="8%"><?php _e('状态'); ?></th>
+					<th width="13%"><?php _e('评论'); ?></th>
+					<th width="10%"><?php _e('状态'); ?></th>
 				</tr>
                 <?php if($posts->have()): ?>
                 <?php while($posts->get()): ?>
@@ -71,10 +71,12 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
                     <td><?php $posts->category(' | '); ?></td>
                     <td><?php $posts->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
                     <td><?php if('post' == $posts->type):
-                    _e('已发布');
+                    _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
                     else:
                     _e('草稿');
-                    endif;?></th>
+                    endif;?>
+                    <?php if(NULL != $posts->password): ?><sup><strong><?php _e('密码'); ?></strong></sup><?php endif; ?>
+                    </td>
                 </tr>
                 <?php endwhile; ?>
                 <?php else: ?>

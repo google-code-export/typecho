@@ -54,9 +54,10 @@ class TagsWidget extends MetasWidget
      * @access public
      * @param string $sort 排序类型
      * @param integer $split 分割数量
-     * @return unknown
+     * @param boolean $ignoreZeroCount 忽略零数量
+     * @return void
      */
-    public function render($sort = 'count', $split = 5)
+    public function render($sort = 'count', $split = 5, $ignoreZeroCount = false)
     {
         $this->split = $split;
         $this->selectSql->where('`type` = ?', 'tag')->order('`' . $sort . '`', TypechoDb::SORT_DESC);
@@ -74,6 +75,12 @@ class TagsWidget extends MetasWidget
             }
             
             call_user_func_array(array($this->selectSql, 'where'), $args);
+        }
+        
+        /** 忽略零数量 */
+        if($ignoreZeroCount)
+        {
+            $this->selectSql->where('count > 0');
         }
         
         $this->db->fetchAll($this->selectSql, array($this, 'push'));
