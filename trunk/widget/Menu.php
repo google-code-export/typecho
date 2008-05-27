@@ -55,12 +55,16 @@ class MenuWidget extends TypechoWidget
      */
     public function __construct()
     {
-        $this->_parentMenu = array(_t('状态面板'), _t('创建'), _t('管理'), _t('设置'));
+        $this->_parentMenu = array(_t('控制台'), _t('我的'), _t('创建'), _t('管理'), _t('设置'));
         
         $this->_childMenu =  array(array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
             array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
+        ),
+        array(
+            array(_t('档案'), _t('关于我'), '/admin/profile.php', 'subscriber'),
+            array(_t('朋友'), _t('我的朋友圈'), '/admin/friend.php', 'subscriber'),
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),

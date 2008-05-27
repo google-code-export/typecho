@@ -38,7 +38,7 @@ require_once 'menu.php';
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>
-			<p><input type="text" name="pasword" id="pasword" style="width: 225px;" /></p>
+			<p><input type="text" name="password" id="password" style="width: 225px;" value="<?php $post->password(); ?>" /></p>
 			<p style="margin: -1em 1.5em 1.5em 0;"><small>Setting a password will require people who visit your blog to enter the above password to view this post and its comments.</small></p>
 
 			<h3><?php _e('引用通告'); ?></h3>
