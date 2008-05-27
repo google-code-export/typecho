@@ -25,16 +25,16 @@ require_once __TYPECHO_LIB_DIR__ . '/Feed.php';
 class FeedProxyWidget extends TypechoWidget
 {
     /**
-     * 聚合解析入口
+     * 解析聚合文件
      * 
      * @access public
-     * @return void
+     * @return unknown
      */
-    public function render()
+    public function parse()
     {
         /** 获取feed数据 */
-        $response = Typecho::httpRequest('http://localhost/typecho/index.php/feed/rss');
-        
+        $response = @file_get_contents(TypechoRequest::getParameter('url'));
+
         /** 处理异常 */
         if(empty($response))
         {
@@ -44,7 +44,7 @@ class FeedProxyWidget extends TypechoWidget
         /** 开始解析 */
         try
         {
-            $feed = TypechoFeed::parser($response['body']);
+            $feed = TypechoFeed::parser($response);
         }
         catch(XML_Feed_Parser_Exception $e)
         {
@@ -53,7 +53,19 @@ class FeedProxyWidget extends TypechoWidget
 
         foreach($feed as $item)
         {
-            echo $item->date;
+            echo $item->title;
         }
+    }
+
+    /**
+     * 聚合解析入口
+     * 
+     * @access public
+     * @return void
+     */
+    public function render()
+    {
+        Typecho::widget('Access')->pass('subscriber');
+        TypechoRequest::bindParameter('url', array($this, 'parse'));
     }
 }

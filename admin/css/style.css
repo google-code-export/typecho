@@ -281,11 +281,31 @@ border-top: 1px solid #A6C4E1;
 border-left: 1px solid #A6C4E1;
 }
 
+input.text, input.password {
+padding: .2em;
+border: 1px solid #D2E1F0;
+border-top: 1px solid #A6C4E1;
+border-left: 1px solid #A6C4E1;
+}
+
 select {
 padding: .1em;
 }
 
 input[type="submit"], input[type="button"] {
+color: #369;
+background: url(../images/button.gif) 0% 20% repeat-x;
+padding: .2em .8em;
+border: 1px solid #A6C4E1;
+border-top: 1px solid #D2E1F0;
+border-left: 1px solid #D2E1F0;
+cursor: pointer;
+font-size: 12px;
+font-weight: bold;
+overflow:visible;
+}
+
+input.submit, input.button {
 color: #369;
 background: url(../images/button.gif) 0% 20% repeat-x;
 padding: .2em .8em;
@@ -386,10 +406,21 @@ width: 96%;
 font-size: 1.5em;
 }
 
+#login input.text, #login input.password {
+width: 96%;
+font-size: 1.5em;
+}
+
 #login input[type="submit"] {
 font-size: 1.2em;
 padding: .2em .5em;
 }
+
+#login input.submit {
+font-size: 1.2em;
+padding: .2em .5em;
+}
+
 
 
 /*

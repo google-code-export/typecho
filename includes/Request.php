@@ -109,7 +109,7 @@ class TypechoRequest
                 call_user_func($functionName);
             }
         }
-        else if(NULL == self::getParameter($key))
+        else if(NULL !== self::getParameter($postData))
         {
             call_user_func($functionName);
         }

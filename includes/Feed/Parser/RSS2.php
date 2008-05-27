@@ -46,7 +46,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
      * The feed type we are parsing
      * @var string
      */
-    public $version = 'RSS 2.0';
+    public $version = TypechoFeed::RSS2;
 
     /**
      * The class used to represent individual items
