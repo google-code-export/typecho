@@ -84,7 +84,7 @@ class ArchiveWidget extends ContentsWidget
                 /** RSS 2.0 */
                 $this->options->feedUrl = $post['feedUrl'];
                 
-                /** RSS 0.92 */
+                /** RSS 1.0 */
                 $this->options->feedRssUrl = $post['feedRssUrl'];
                 
                 /** ATOM 1.0 */
@@ -123,7 +123,7 @@ class ArchiveWidget extends ContentsWidget
             /** RSS 2.0 */
             $this->options->feedUrl = $category['feedUrl'];
             
-            /** RSS 0.92 */
+            /** RSS 1.0 */
             $this->options->feedRssUrl = $category['feedRssUrl'];
             
             /** ATOM 1.0 */
@@ -155,7 +155,7 @@ class ArchiveWidget extends ContentsWidget
             /** RSS 2.0 */
             $this->options->feedUrl = $tag['feedUrl'];
             
-            /** RSS 0.92 */
+            /** RSS 1.0 */
             $this->options->feedRssUrl = $tag['feedRssUrl'];
             
             /** ATOM 1.0 */
@@ -209,7 +209,7 @@ class ArchiveWidget extends ContentsWidget
             /** RSS 2.0 */
             $this->options->feedUrl = TypechoRoute::parse(TypechoRoute::$current, $value, $this->options->feedUrl);
             
-            /** RSS 0.92 */
+            /** RSS 1.0 */
             $this->options->feedRssUrl = TypechoRoute::parse(TypechoRoute::$current, $value, $this->options->feedRssUrl);
             
             /** ATOM 1.0 */
@@ -223,8 +223,8 @@ class ArchiveWidget extends ContentsWidget
         /** RSS 2.0 */
         Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options->feedUrl));
         
-        /** RSS 0.92 */
-        Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 0.92', 'href' => $this->options->feedRssUrl));
+        /** RSS 1.0 */
+        Typecho::header('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->options->feedRssUrl));
         
         /** ATOM 1.0 */
         Typecho::header('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl));

@@ -39,14 +39,26 @@ require_once 'Feed/Parser.php';
  */
 class TypechoFeed
 {
-    /** 定义RSS1类型 */
+    /** 定义RSS0.91类型 */
+    const RSS09 = 'RSS 0.9';
+    
+    /** 定义RSS0.91类型 */
+    const RSS091 = 'RSS 0.91';
+    
+    /** 定义RSS0.92类型 */
+    const RSS092 = 'RSS 0.92';
+
+    /** 定义RSS 1.0类型 */
     const RSS1 = 'RSS 1.0';
     
-    /** 定义RSS2类型 */
+    /** 定义RSS 2.0类型 */
     const RSS2 = 'RSS 2.0';
     
-    /** 定义ATOM类型 */
-    const ATOM = 'ATOM';
+    /** 定义ATOM 0.3类型 */
+    const ATOM03 = 'ATOM 0.3';
+    
+    /** 定义ATOM 1.0类型 */
+    const ATOM1 = 'ATOM 1.0';
     
     /** 定义RSS时间格式 */
     const DATE_RSS = 'r';

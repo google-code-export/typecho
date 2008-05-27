@@ -10,8 +10,16 @@
  * @version $Id$
  */
 
-/** 载入配置支持 */
-require_once '../config.inc.php';
+/** 定义绝对根目录 */
+if(!defined('__DIR__'))
+{
+    /** 兼容PHP 5.3 */
+    define('__DIR__', dirname(__FILE__));
+}
+
+/** 载入配置文件 */
+require_once file_exists(__DIR__ . '/../config.admin.php') ?
+__DIR__ . '/../config.admin.php' : __DIR__ . '/../config.inc.php';
 
 /** 系统启动 */
 Typecho::start(__TYPECHO_CHARSET__);

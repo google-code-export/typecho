@@ -57,7 +57,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      * The feed type we are parsing 
      * @var string
      */
-    public $version = 'Atom 1.0';
+    public $version = TypechoFeed::ATOM1;
 
     /** 
      * The class used to represent individual items 

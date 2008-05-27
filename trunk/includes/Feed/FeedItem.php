@@ -78,7 +78,7 @@ class FeedItem
 	*/
 	public function setDescription($description)
 	{
-		$tag = ($this->version == TypechoFeed::ATOM)? 'summary' : 'description'; 
+		$tag = ($this->version == TypechoFeed::ATOM1)? 'summary' : 'description'; 
 		$this->addElement($tag, $description);
 	}
 	
@@ -118,7 +118,7 @@ class FeedItem
 			$date = strtotime($date);
 		}
 		
-		if($this->version == TypechoFeed::ATOM)
+		if($this->version == TypechoFeed::ATOM1)
 		{
 			$tag    = 'updated';
 			$value  = date(TypechoFeed::DATE_ATOM, $date);

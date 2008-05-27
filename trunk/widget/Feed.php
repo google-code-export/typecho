@@ -143,7 +143,7 @@ class FeedWidget extends ArchiveWidget
         {
             /** 如果是ATOM标准 */
             $feedQuery = substr($feedQuery, 5);
-            $feedType = TypechoFeed::ATOM;
+            $feedType = TypechoFeed::ATOM1;
         }
 
         $this->feed = TypechoFeed::generator($feedType);
@@ -184,7 +184,7 @@ class FeedWidget extends ArchiveWidget
             $this->feed->setChannelAbout($this->options->feedRssUrl);
         }
         
-        if(TypechoFeed::ATOM == $feedType)
+        if(TypechoFeed::ATOM1 == $feedType)
         {
             /** 如果是ATOM标准 */
             $this->feed->setLink($this->options->feedAtomUrl);
@@ -195,7 +195,7 @@ class FeedWidget extends ArchiveWidget
             $this->feed->setDescription($this->options->description);
         }
 
-        if(TypechoFeed::RSS2 == $feedType || TypechoFeed::ATOM == $feedType)
+        if(TypechoFeed::RSS2 == $feedType || TypechoFeed::ATOM1 == $feedType)
         {
             $this->feed->setChannelElement(TypechoFeed::RSS2 == $feedType ? 'pubDate' : 'updated',
             date(TypechoFeed::dateFormat($feedType), 

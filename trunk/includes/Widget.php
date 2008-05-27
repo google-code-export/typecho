@@ -63,29 +63,6 @@ abstract class TypechoWidget
     }
 
     /**
-     * 输出XML
-     * 
-     * @access protected
-     * @return void
-     */
-    protected function toXML()
-    {
-        header('content-Type: application/rss+xml;charset= ' . __TYPECHO_CHARSET__, true);
-        echo '<?xml version="1.0" encoding="' . __TYPECHO_CHARSET__ . '"?>';
-        echo '<items>';
-        foreach($this->_stack as $item)
-        {
-            echo '<item>';
-            foreach($item as $key => $val)
-            {
-                echo "<{$key}><![CDATA[{$val}]]></{$key}>";
-            }
-            echo '</item>';
-        }
-        echo '</items>';
-    }
-
-    /**
      * 将类本身赋值
      *
      * @param string $variable 变量名

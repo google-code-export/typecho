@@ -136,7 +136,7 @@ class MetasWidget extends TypechoWidget
         /** RSS 2.0 */
         $value['feedUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedUrl) : '#';
         
-        /** RSS 0.92 */
+        /** RSS 1.0 */
         $value['feedRssUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */

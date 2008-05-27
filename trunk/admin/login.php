@@ -19,8 +19,8 @@ require_once 'common.php';
 		<?php if(!Typecho::widget('Access')->hasLogin()): ?>
 		<?php require_once 'notice.php'; ?>
 		<form method="post" action="<?php Typecho::widget('Options')->index('Login.do'); ?>">
-			<p><label for="name"><?php _e('用户名'); ?>:<br /><input type="text" id="name" name="name" /></label></p>
-			<p><label for="password"><?php _e('密码'); ?>:<br /><input type="password" id="password" name="password" /></label></p>
+			<p><label for="name"><?php _e('用户名'); ?>:<br /><input type="text" class="text" id="name" name="name" /></label></p>
+			<p><label for="password"><?php _e('密码'); ?>:<br /><input type="password" class="password" id="password" name="password" /></label></p>
 			<p><label style="font-weight: normal;" for="remember"><input type="checkbox" id="remember" name="remember" value="1" /> <?php _e('记住我'); ?></label></p>
 			<p class="left">
 			<?php if(Typecho::widget('Options')->allowRegister): ?>
@@ -28,7 +28,7 @@ require_once 'common.php';
 			<?php endif; ?>
 			<a href="<?php Typecho::widget('Options')->adminUrl('get-password.php'); ?>"><?php _e('忘记密码?'); ?></a><br />
 			<a href="<?php Typecho::widget('Options')->siteUrl(); ?>"><?php _e('返回%s &raquo;', Typecho::widget('Options')->title); ?></a></p>
-			<p class="right"><input type="submit" value="<?php _e('登录'); ?>" />
+			<p class="right"><input type="submit" class="submit" value="<?php _e('登录'); ?>" />
             <input type="hidden" name="referer" value="<?php echo TypechoRequest::getParameter('referer'); ?>" /></p>
             <script>
                 $('input[@name=name]').trigger('focus');
