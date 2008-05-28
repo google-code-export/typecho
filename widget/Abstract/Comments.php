@@ -142,7 +142,6 @@ class CommentsWidget extends TypechoWidget
         $value = $this->abstractContentsWidget->filter($value);
         
         $value['permalink'] = $value['permalink'] . '#comments-' . $value['coid'];
-        TypechoPlugin::callFilter($this->filterName, $value);
         
         $this->plugin->filter(__METHOD__, $value);
         return $value;
