@@ -1,3 +1,10 @@
+2008.5.28 by qining
+
+保留xmlrpc
+去掉邮件提示
+去掉附件管理
+去掉静态链接
+
 2008.5.22 by qining
 
 改DoEditCategory为DoCategory
