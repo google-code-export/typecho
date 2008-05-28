@@ -15,7 +15,13 @@ require_once 'config.inc.php';
 Typecho::start();
 
 /** 载入插件 */
-TypechoPlugin::init(Typecho::widget('Options')->plugins('index'));
+TypechoPlugin::init();
 
-/** 载入页面 */
-TypechoRoute::target(Typecho::widget('Options')->templateDirectory . '/' . Typecho::widget('Options')->template);
+/** 注册一个初始化插件 */
+TypechoPlugin::instance(__FILE__)->start();
+
+/** 通过路由器载入页面 */
+TypechoRoute::target(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . Typecho::widget('Options')->theme);
+
+/** 注册一个结束插件 */
+TypechoPlugin::instance(__FILE__)->end();

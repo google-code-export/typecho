@@ -81,7 +81,7 @@ class TypechoRoute
      * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
      *
      * @param string $path 目的文件所在目录
-     * @return string
+     * @return void
      * @throws TypechoRouteException
      */
     public static function target($path)
@@ -129,7 +129,15 @@ class TypechoRoute
 
             if(!empty($file))
             {
-                require $path . '/' . $file;
+                if(file_exists($filePath = $path . '/' . $file))
+                {
+                    /** 如果文件存在 */
+                    require $filePath;
+                }
+                else
+                {
+                    throw new TypechoRouteException(_t('文件不存在 %s', $filePath), TypechoException::NOTFOUND);
+                }
             }
 
             return;

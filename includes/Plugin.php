@@ -14,6 +14,9 @@ require_once 'Exception.php';
 /** 载入异常支持 */
 require_once 'Plugin/PluginException.php';
 
+/** 载入插件列表 */
+require_once __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+
 /**
  * 插件处理类
  *
@@ -25,170 +28,137 @@ require_once 'Plugin/PluginException.php';
  */
 class TypechoPlugin
 {
+    /** 钩子类型 */
+    const HOOK = 0;
+    
+    /** 过滤器类型 */
+    const FILTER = 1;
+
     /**
-     * 当前所有钩子
-     *
+     * 实例化对象列表
+     * 
      * @access private
      * @var array
      */
-    private static $_hooks = array();
-
+    private static $_instance = array();
+    
     /**
-     * 当前所有过滤器
-     *
+     * 回调函数列表
+     * 
      * @access private
      * @var array
      */
-    private static $_filters = array();
+    private $_callback = array();
 
     /**
-     * 激活插件
-     *
-     * @param string $pluginName 插件名称
-     * @param string $action 默认动作
-     * @return mixed
+     * 插件初始化
+     * 
+     * @access public
+     * @return void
+     * @throws TypechoPluginException
      */
-    public static function activate($pluginName, $action = 'activate')
+    public static function init()
     {
-        if(file_exists($fileName = __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'))
+        /** 检测配置是否存在 */
+        TypechoConfig::need('Plugin');
+        
+        /** 初始化插件 */
+        $plugins = TypechoConfig::get('Plugin');
+        foreach($plugins as $plugin)
         {
-            require_once $fileName;
+            if(file_exists($pluginFileName = __TYPECHO_PLUGIN_DIR__ . '/' . $plugin . '/' . $plugin . '.php'))
+            {
+                /** 载入插件主文件 */
+                require_once $pluginFileName;
+            }
+            else
+            {
+                /** 如果不存在则抛出异常 */
+                throw new TypechoPluginException(_t('插件文件不存在 %s', $pluginFileName), TypechoException::RUNTIME);
+            }
+        }
+    }
+
+    /**
+     * 根据唯一的文件名初始化一个plugin实例
+     * 
+     * @access public
+     * @param string $fileName 文件名
+     * @return TypechoPlugin
+     * @throws TypechoPluginException
+     */
+    public static function instance($fileName)
+    {
+        if(file_exists($fileName))
+        {
+            $realPath = realpath($fileName);
+            if(empty(self::$_instance[$realPath]))
+            {
+                self::$_instance[$realPath] = new TypechoPlugin();
+            }
+            
+            return self::$_instance[$realPath];
+        }
+        
+        throw new TypechoPluginException(_t('插件目标文件不存在 %s', $fileName), TypechoException::RUNTIME);
+    }
+    
+    /**
+     * 注册一个回调函数
+     * 
+     * @access public
+     * @param integer $type 插件类型
+     * @param string $method 方法名
+     * @param mixed $callback 回调函数
+     * @return void
+     * @throws TypechoPluginException
+     */
+    public function register($type, $method, $callback)
+    {
+        if(is_callable($callback))
+        {
+            $this->_callback[$type][$method][] = $callback;
         }
         else
         {
-            require_once __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
-        }
-
-        $functionName = array($pluginName, $action);
-        if(is_callable($functionName))
-        {
-            return call_user_func($functionName);
-        }
-
-        return false;
-    }
-
-    /**
-     * 禁用插件
-     *
-     * @param string $pluginName 插件名称
-     */
-    public static function deactivate($pluginName)
-    {
-        self::activate($pluginName, 'deactivate');
-    }
-
-    /**
-     * 载入插件
-     *
-     * @param array $pluginsList 插件列表
-     */
-    public static function init(array $pluginsList)
-    {
-        foreach($pluginsList as $pluginName)
-        {
-            self::activate($pluginName, 'init');
+            throw new TypechoPluginException(_t('回调函数不合法 %s', var_export($callback, true)), TypechoException::RUNTIME);
         }
     }
-
+    
     /**
-     * 插件信息
-     *
-     * @param string $pluginName 插件名称
-     */
-    public static function info($pluginName)
-    {
-        return self::activate($pluginName, 'info');
-    }
-
-    /**
-     * 返回标准化名称
-     *
+     * 魔术函数,钩住回调函数
+     * 
      * @access public
-     * @param string $fileName 文件名称
-     * @param string $component 部件名称
-     * @return string
-     */
-    public static function name($fileName, $component = NULL)
-    {
-        return urlencode(realpath($fileName)) . (empty($component) ? NULL : '->' . $component);
-    }
-
-    /**
-     * 注册钩子
-     *
-     * @access public
-     * @param string $hookName 钩子名称
-     * @param mixed $functionName 钩子函数名称
+     * @param string $method 方法名
+     * @param array $args 参数
      * @return void
      */
-    public static function registerHook($hookName, $functionName)
+    public function __call($method, array $args)
     {
-        if(empty(self::$_hooks[$hookName]))
+        if(isset($this->_callback[self::HOOK][$method]))
         {
-            self::$_hooks[$hookName] = array();
-        }
-
-        self::$_hooks[$hookName][] = $functionName;
-    }
-
-    /**
-     * 运行钩子
-     *
-     * @access public
-     * @param string $hookName 钩子名称
-     * @return array
-     */
-    public static function callHook($hookName)
-    {
-        $args = func_get_args();
-        array_shift($args);
-        $result = array();
-
-        if(!empty(self::$_hooks[$hookName]))
-        {
-            foreach(self::$_hooks[$hookName] as $functionName)
+            foreach($this->_callback[self::HOOK][$method] as $callback)
             {
-                $result[$functionName] = call_user_func_array($functionName, $args);
+                call_user_func_array($callback, $args);
             }
         }
-
-        return $result;
     }
-
+    
     /**
-     * 注册过滤器
-     *
+     * 过滤器函数
+     * 
      * @access public
-     * @param string $filterName 过滤器名称
-     * @param mixed $functionName 过滤器函数名称
+     * @param string $method 方法名
+     * @param array $value 需要过滤的数组
      * @return void
      */
-    public static function registerFilter($filterName, $functionName)
+    public function filter($method, array &$value)
     {
-        if(empty(self::$_filters[$filterName]))
+        if(isset($this->_callback[self::FILTER][$method]))
         {
-            self::$_filters[$filterName] = array();
-        }
-
-        self::$_filters[$filterName][] = $functionName;
-    }
-
-    /**
-     * 运行过滤器
-     *
-     * @access public
-     * @param string $filterName 过滤器名称
-     * @param array $input 需要过滤的数组
-     * @return array
-     */
-    public static function callFilter($filterName, &$input)
-    {
-        if(!empty(self::$_filters[$filterName]))
-        {
-            foreach(self::$_filters[$filterName] as $functionName)
+            foreach($this->_callback[self::FILTER][$method] as $callback)
             {
-                $functionName($input);
+                $value = call_user_func($callback, $value);
             }
         }
     }

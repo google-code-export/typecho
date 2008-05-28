@@ -26,6 +26,12 @@ define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
 /** 定义异常截获页面地址 */
 define('__TYPECHO_EXCEPTION_FILE__', __TYPECHO_ROOT_DIR__ . '/admin/error.php');
 
+/** 定义模板目录(相对路径) */
+define('__TYPECHO_THEME_DIR__', '/var/theme');
+
+/** 附件存储目录(相对路径) */
+define('__TYPECHO_ATTACHMENT_DIR__', '/var/attachment');
+
 /** 定义调试开关 **/
 define('__TYPECHO_DEBUG__', true);
 

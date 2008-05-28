@@ -4,6 +4,10 @@
 去掉邮件提示
 去掉附件管理
 去掉静态链接
+重新设计Plugin系统
+去掉options存储目录
+去掉options模板目录
+改options中template为theme
 
 2008.5.22 by qining
 

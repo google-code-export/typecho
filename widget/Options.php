@@ -141,9 +141,9 @@ class OptionsWidget extends TypechoWidget
      * @param string $path 子路径
      * @return void
      */
-    public function templateUrl($path = NULL)
+    public function themeUrl($path = NULL)
     {
-        echo Typecho::pathToUrl($path, $this->templateUrl);
+        echo Typecho::pathToUrl($path, $this->themeUrl);
     }
     
     /**
@@ -188,8 +188,8 @@ class OptionsWidget extends TypechoWidget
         $this->charset = __TYPECHO_CHARSET__;
         $this->siteUrl = Typecho::pathToUrl(NULL, $this->siteUrl);
         $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
-        $this->templateUrl = Typecho::pathToUrl($this->templateDirectory . '/' . $this->template, $this->siteUrl);
-        $this->attachmentUrl = Typecho::pathToUrl($this->attachmentDirectory, $this->siteUrl);
+        $this->themeUrl = Typecho::pathToUrl(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
+        $this->attachmentUrl = Typecho::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
