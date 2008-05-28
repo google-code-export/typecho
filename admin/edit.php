@@ -6,7 +6,7 @@ require_once 'menu.php';
 ?>
 
 	<div id="main" class="clearfix">
-	<form method="post" action="<?php Typecho::widget('Options')->index('DoEditPost.do'); ?>" id="post" name="post">
+	<form method="post" action="<?php Typecho::widget('Options')->index('DoPost.do'); ?>" id="post" name="post">
         
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>

@@ -49,7 +49,7 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
             </form>
 			</div>
             
-            <form method="post" name="post" id="post" action="<?php Typecho::widget('Options')->index('DoEditPost.do'); ?>">
+            <form method="post" name="post" id="post" action="<?php Typecho::widget('Options')->index('DoPost.do'); ?>">
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>
