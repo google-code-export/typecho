@@ -11,15 +11,12 @@
 /** 载入验证库支持 **/
 require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
 
-/** 载入提交基类 */
-require_once 'DoPost.php';
-
 /**
  * 用户登录
  *
  * @category Widget
  */
-class LoginWidget extends DoPostWidget
+class LoginWidget extends TypechoWidget
 {
     /**
      * 开始用户登录
@@ -29,6 +26,8 @@ class LoginWidget extends DoPostWidget
      */
     public function render()
     {
+        $db = TypechoDb::get();
+    
         /** 如果已经登录 */
         if(Typecho::widget('Access')->hasLogin())
         {
@@ -54,7 +53,7 @@ class LoginWidget extends DoPostWidget
         }
         
         /** 开始验证用户 **/
-        $user = $this->db->fetchRow($this->db->sql()
+        $user = $db->fetchRow($db->sql()
         ->select('table.users')
         ->where('`name` = ?', TypechoRequest::getParameter('name'))
         ->limit(1));

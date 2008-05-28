@@ -8,6 +8,7 @@
 去掉options存储目录
 去掉options模板目录
 改options中template为theme
+增加评论关闭选项
 
 2008.5.22 by qining
 
