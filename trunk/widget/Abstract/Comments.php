@@ -84,12 +84,12 @@ class CommentsWidget extends TypechoWidget
     protected $countSql;
 
     /**
-     * 过滤器名称
+     * 插件
      *
      * @access protected
-     * @var string
+     * @var TypechoPlugin
      */
-    protected $filterName;
+    protected $plugin;
     
     /**
      * 关键词名称
@@ -115,8 +115,8 @@ class CommentsWidget extends TypechoWidget
         $this->access = Typecho::widget('Access');
         $this->abstractContentsWidget = Typecho::widget('Abstract.Contents');
         
-        /** 初始化过滤器名称 */
-        $this->filterName = TypechoPlugin::name(__FILE__);
+        /** 初始化插件 */
+        $this->plugin = TypechoPlugin::instance(__FILE__);
         
         /** 初始化共用选择器 */
         $this->selectSql = $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
@@ -144,6 +144,7 @@ class CommentsWidget extends TypechoWidget
         $value['permalink'] = $value['permalink'] . '#comments-' . $value['coid'];
         TypechoPlugin::callFilter($this->filterName, $value);
         
+        $this->plugin->filter(__METHOD__, $value);
         return $value;
     }
 

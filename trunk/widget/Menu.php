@@ -88,11 +88,8 @@ class MenuWidget extends TypechoWidget
         //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
         ));
         
-        $parentFilterName = TypechoPlugin::name(__FILE__, 'addParent');
-        TypechoPlugin::callFilter($parentFilterName, $this->_parentMenu);
-        
-        $childFilterName = TypechoPlugin::name(__FILE__, 'addChild');
-        TypechoPlugin::callFilter($childFilterName, $this->_childMenu);
+        TypechoPlugin::instance(__FILE__)->filter('parent', $this->_parentMenu);
+        TypechoPlugin::instance(__FILE__)->filter('child', $this->_childMenu);
     }
 
     /**

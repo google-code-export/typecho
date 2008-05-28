@@ -78,12 +78,12 @@ class MetasWidget extends TypechoWidget
     protected $countSql;
 
     /**
-     * 过滤器名称
+     * 插件
      *
      * @access protected
-     * @var string
+     * @var TypechoPlugin
      */
-    protected $filterName;
+    protected $plugin;
     
     /**
      * 构造函数,初始化数据库
@@ -100,8 +100,8 @@ class MetasWidget extends TypechoWidget
         $this->options = Typecho::widget('Options');
         $this->access = Typecho::widget('Access');
         
-        /** 初始化过滤器名称 */
-        $this->filterName = TypechoPlugin::name(__FILE__);
+        /** 初始插件 */
+        $this->plugin = TypechoPlugin::instance(__FILE__);
         
         /** 初始化共用选择器 */
         $this->selectSql = $this->db->sql()->select('table.metas');
@@ -147,8 +147,7 @@ class MetasWidget extends TypechoWidget
             $value['slug'] = $tmpSlug;
         }
         
-        TypechoPlugin::callFilter($this->filterName, $value);
-        
+        $this->plugin->filter(__METHOD__, $value);
         return $value;
     }
     

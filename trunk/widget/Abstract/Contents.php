@@ -80,12 +80,12 @@ class ContentsWidget extends TypechoWidget
     protected $countSql;
 
     /**
-     * 过滤器名称
+     * 插件
      *
      * @access protected
-     * @var string
+     * @var TypechoPlugin
      */
-    protected $filterName;
+    protected $plugin;
 
     /**
      * 构造函数,初始化数据库
@@ -103,8 +103,8 @@ class ContentsWidget extends TypechoWidget
         $this->access = Typecho::widget('Access');
         $this->abstractMetasWidget = Typecho::widget('Abstract.Metas');
         
-        /** 初始化过滤器名称 */
-        $this->filterName = TypechoPlugin::name(__FILE__);
+        /** 初始化插件 */
+        $this->plugin = TypechoPlugin::instance(__FILE__);
         
         /** 初始化共用选择器 */
         $this->selectSql = $this->db->sql()->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
@@ -392,8 +392,7 @@ class ContentsWidget extends TypechoWidget
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedAtomUrl) : '#';
         
-        TypechoPlugin::callFilter($this->filterName, $value);
-        
+        $this->plugin->filter(__METHOD__, $value);
         return $value;
     }
 
