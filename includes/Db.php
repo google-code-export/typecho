@@ -47,6 +47,9 @@ class TypechoDb
     /** 表内连接方式 */
     const INNER_JOIN = 'INNER';
     
+    /** 表外连接方式 */
+    const OUTER_JOIN = 'OUTER';
+    
     /** 表左连接方式 */
     const LEFT_JOIN = 'LEFT';
     

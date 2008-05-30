@@ -185,6 +185,7 @@ class OptionsWidget extends TypechoWidget
         ->where('`user` = 0'), array($this, 'push'));
         $this->_stack[] = $this->_row;
 
+        /** 初始化站点信息 */
         $this->charset = __TYPECHO_CHARSET__;
         $this->siteUrl = Typecho::pathToUrl(NULL, $this->siteUrl);
         $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
@@ -192,10 +193,12 @@ class OptionsWidget extends TypechoWidget
         $this->attachmentUrl = Typecho::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         
+        /** 初始化Feed地址 */
         $this->feedUrl = TypechoRoute::parse('feed', array('feed' => '/'), $this->index);
         $this->feedRssUrl = TypechoRoute::parse('feed', array('feed' => '/rss/'), $this->index);
         $this->feedAtomUrl = TypechoRoute::parse('feed', array('feed' => '/atom/'), $this->index);
         
+        /** 初始化常用地址 */
         $this->xmlRpcUrl = TypechoRoute::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho::pathToUrl('/admin/', $this->siteUrl);
         
