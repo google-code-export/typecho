@@ -70,6 +70,7 @@ class FeedWidget extends ArchiveWidget
                     $item->addElement('dc:creator', $comments->author);
                 }
                 
+                TypechoPlugin::instance(__FILE__)->pushCommentElement($item, $comments, $this->type);
                 $this->feed->addItem($item);
             }
         }
@@ -103,6 +104,7 @@ class FeedWidget extends ArchiveWidget
             $item->addElement('wfw:commentRss', $value['feedUrl']);
         }
         
+        TypechoPlugin::instance(__FILE__)->push($item, $value, $this->type);
         $this->feed->addItem($item);
     }
     
@@ -202,6 +204,8 @@ class FeedWidget extends ArchiveWidget
             $this->options->gmtTime + $this->options->timezone));
         }
         
+        /** 增加插件接口 */
+        TypechoPlugin::instance(__FILE__)->render($this->feed, $feedType);
         $this->feed->generateFeed();
     }
 }

@@ -62,7 +62,7 @@ class LoginWidget extends TypechoWidget
         if($user && $user['password'] == md5(TypechoRequest::getParameter('password')))
         {
             Typecho::widget('Access')->login($user['uid'], $user['password'], sha1(Typecho::randString(20)),
-            1 == TypechoRequest::getParameter('remember') ? Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone : 0);
+            1 == TypechoRequest::getParameter('remember') ? Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone + 30*24*3600 : 0);
         }
         else
         {
