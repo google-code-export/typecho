@@ -170,12 +170,12 @@ text-decoration: none;
 }
 
 table.latest { width: 100%; margin-bottom:2em }
-table.latest tr {}
-table.latest tr.alt { background: #F3F6F9; }
-table.latest tr.over { background: #EBEFF5; }
+table.latest tr { background:  url(../images/white-line.png) repeat-x; }
+table.latest tr.alt { background-color: #F3F6F9; }
+table.latest tr.over { background-color: #EBEFF5; }
 table.latest tr th, table.latest tr td { text-align: left; padding: 2px 10px; vertical-align: middle; border: 1px solid #D6E3F1; }
 table.latest tr td { padding: 5px 10px; }
-table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) repeat-x; text-transform: capitalize; }
+table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) left bottom repeat-x; border-bottom-color: #B0CAE6; text-transform: capitalize; }
 
 table#comment_list {
 background: #fff;
@@ -250,9 +250,31 @@ margin-bottom: .2em;
 margin-left: 65px;
 }
 
-table#quick-links td {
-text-align: center;
+ul.quick-links {
+list-style-type: none;
+background: #F3F6F9;
+border: 1px solid #D6E3F1;
+border-bottom: none;
+margin-bottom: 1.45em;
+}
+
+ul.quick-links li {
+margin: 0;
+}
+
+ul.quick-links li a {
+display: block;
+padding: 4px 15px;
+border-top: 1px solid #fff;
+border-bottom: 1px solid #D6E3F1;
 font-weight: bold;
+height: 1%;
+}
+
+ul.quick-links li a:hover {
+background-color: #fff;
+text-decoration: none;
+border-top-color: #EEF3F9;
 }
 
 #publishing label {
@@ -274,7 +296,7 @@ input, textarea, select {
 font-family:verdana,Helvetica,sans-serif; font-size:1em;
 }
 
-input[type="text"], input[type="password"], textarea, select {
+/*input[type="text"], input[type="password"], */textarea, select {
 padding: .2em;
 border: 1px solid #D2E1F0;
 border-top: 1px solid #A6C4E1;
@@ -292,7 +314,7 @@ select {
 padding: .1em;
 }
 
-input[type="submit"], input[type="button"] {
+/*input[type="submit"], input[type="button"] {
 color: #369;
 background: url(../images/button.gif) 0% 20% repeat-x;
 padding: .2em .8em;
@@ -303,7 +325,7 @@ cursor: pointer;
 font-size: 12px;
 font-weight: bold;
 overflow:visible;
-}
+}*/
 
 input.submit, input.button {
 color: #369;
@@ -350,16 +372,16 @@ width: 99%;
  */
  
 #footer {
+border-top: 1px solid #D6E3F1;
+padding: 15px 0;
+width: 100%;
+background: #EBEFF5 url(../images/white-line.png) repeat-x;
 color: #666;
 text-align: center;
-height: 40px;
-display: block;
-margin: 50px 0;
 }
 
 #footer img {
 vertical-align: middle;
-margin-right: 10px;
 }
 
 /* Success, notice and error boxes
@@ -401,20 +423,20 @@ font-size: 1em;
 font-weight: bold;
 }
 
-#login input[type="text"], #login input[type="password"] {
+/*#login input[type="text"], #login input[type="password"] {
 width: 96%;
 font-size: 1.5em;
-}
+}*/
 
 #login input.text, #login input.password {
 width: 96%;
 font-size: 1.5em;
 }
 
-#login input[type="submit"] {
+/*#login input[type="submit"] {
 font-size: 1.2em;
 padding: .2em .5em;
-}
+}*/
 
 #login input.submit {
 font-size: 1.2em;
