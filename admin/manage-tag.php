@@ -13,12 +13,12 @@ require_once 'menu.php';
         
 		<form method="get">
 			<div class="table_nav">
-                <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
-				<input type="button" onclick="$('#tag input[@name=do]').val('delete');tag.submit();" value="<?php _e('删除'); ?>" />
-                <input type="text" style="width: 120px;" value="<?php _e('请输入合并入的标签'); ?>" onclick="value='';" id="merge" />
-                <input type="button" onclick="$('#tag input[@name=do]').val('merge');$('#tag input[@name=merge]').val($('#merge').val());tag.submit();" value="<?php _e('合并'); ?>" />
-                <input type="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
-                <input type="submit" value="<?php _e('过滤'); ?>" />
+                <input type="button" class="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
+				<input type="button" class="button" onclick="$('#tag input[@name=do]').val('delete');tag.submit();" value="<?php _e('删除'); ?>" />
+                <input type="text" class="text" style="width: 120px;" value="<?php _e('请输入合并入的标签'); ?>" onclick="value='';" id="merge" />
+                <input type="button" class="button" onclick="$('#tag input[@name=do]').val('merge');$('#tag input[@name=merge]').val($('#merge').val());tag.submit();" value="<?php _e('合并'); ?>" />
+                <input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                <input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
 			</div>
         </form>
         
@@ -49,20 +49,20 @@ require_once 'menu.php';
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
 					<td><label for="name"><?php _e('标签名称'); ?>*</label></td>
-					<td><input type="text" id="name" name="name" style="width: 60%;" value="<?php $tag->name(); ?>" />
+					<td><input type="text" class="text" id="name" name="name" style="width: 60%;" value="<?php $tag->name(); ?>" />
                     <?php Typecho::widget('Notice')->display('name', '<span class="detail">%s</span>'); ?>
                     <small><?php _e('这是标签在站点中显示的名称.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label for="slug"><?php _e('标签缩略名'); ?></label></td>
-					<td><input type="text" id="slug" name="slug" style="width: 60%;" value="<?php $tag->slug(); ?>" />
+					<td><input type="text" class="text" id="slug" name="slug" style="width: 60%;" value="<?php $tag->slug(); ?>" />
                     <?php Typecho::widget('Notice')->display('slug', '<span class="detail">%s</span>'); ?>
                     <small><?php _e('标签缩略名用于创建友好的链接形式,如果留空则默认使用标签名称.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><input type="hidden" name="do" value="<?php $tag->do(); ?>" />
                     <input type="hidden" name="mid" value="<?php $tag->mid(); ?>" /></td>
-					<td><input type="submit" value="<?php if('update' == $tag->do){ _e('编辑标签'); }else{ _e('增加标签'); } ?>" /></td>
+					<td><input type="submit" class="submit" value="<?php if('update' == $tag->do){ _e('编辑标签'); }else{ _e('增加标签'); } ?>" /></td>
 				</tr>
 			</table>
 		</form>

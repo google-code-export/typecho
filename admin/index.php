@@ -25,7 +25,7 @@ require_once 'menu.php';
 				<li><a href="#">检查更新</a></li>
 			</ul>
 		</div>
-		<div style="width: 64%" class="left">
+		<div style="width: 59%" class="left">
 			<h3>Most Recent Weblog Entires</h3>
 			<table class="latest">
 				<tr>
@@ -74,7 +74,7 @@ require_once 'menu.php';
 				</tr>
 			</table>
 		</div>
-		<div style="width: 20%" class="right">
+		<div style="width: 25%" class="right">
 			<h3>About Me</h3>
 			<table class="latest">
 				<tr>

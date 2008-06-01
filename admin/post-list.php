@@ -12,8 +12,8 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
             
 			<div class="table_nav">
             <form action="<?php Typecho::widget('Options')->adminUrl('post-list.php'); ?>">
-				<input type="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
-				<input type="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+				<input type="button" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
+				<input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<?php Typecho::widget('Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
                 <select name="category" style="width: 160px;">
                 <option value=""><?php _e('所有分类'); ?></option>
@@ -45,7 +45,7 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
                     </option>
                     <?php endif; ?>
 				</select>
-				<input type="submit" value="<?php _e('过滤'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>
             
