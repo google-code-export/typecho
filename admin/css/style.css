@@ -372,10 +372,10 @@ width: 99%;
  */
  
 #footer {
-border-top: 1px solid #D6E3F1;
 padding: 15px 0;
-width: 100%;
-background: #EBEFF5 url(../images/white-line.png) repeat-x;
+/*width: 100%;
+border-top: 1px solid #D6E3F1;
+background: #EBEFF5 url(../images/white-line.png) repeat-x;*/
 color: #666;
 text-align: center;
 }
