@@ -12,13 +12,13 @@ require_once 'menu.php';
         
 		<form method="post" id="category" name="category" action="<?php Typecho::widget('Options')->index('DoCategory.do'); ?>">
 			<div class="table_nav">
-                <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
-				<input type="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
+                <input type="button" class="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
+				<input type="button" class="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
 				<select name="merge" style="width: 160px;">
                     <?php Typecho::widget('Query', 'from=table.metas&type=category&order=sort&sort=ASC')
                     ->parse('<option value="{mid}">{name}</option>'); ?>
 				</select>
-				<input type="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
+				<input type="button" class="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
                 <input type="hidden" name="do" value="delete" />
 			</div>
 
@@ -60,12 +60,12 @@ require_once 'menu.php';
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
 					<td><label for="name"><?php _e('分类名称'); ?>*</label></td>
-					<td><input type="text" name="name" id="name" style="width: 60%;" value="<?php $category->name(); ?>" />
+					<td><input type="text" class="text" name="name" id="name" style="width: 60%;" value="<?php $category->name(); ?>" />
                     <?php Typecho::widget('Notice')->display('name', '<span class="detail">%s</span>'); ?></td>
 				</tr>
 				<tr>
 					<td><label for="slug"><?php _e('分类缩略名'); ?>*</label></td>
-					<td><input type="text" name="slug" id="slug" style="width: 60%;" value="<?php $category->slug(); ?>" />
+					<td><input type="text" class="text" name="slug" id="slug" style="width: 60%;" value="<?php $category->slug(); ?>" />
                     <?php Typecho::widget('Notice')->display('slug', '<span class="detail">%s</span>'); ?>
                     <small><?php _e('分类缩略名用于创建友好的链接形式,请使用字母,数字,下划线和横杠.'); ?></small></td>
 				</tr>
@@ -77,7 +77,7 @@ require_once 'menu.php';
 				<tr>
 					<td><input type="hidden" name="do" value="<?php $category->do(); ?>" />
                     <input type="hidden" name="mid" value="<?php $category->mid(); ?>" /></td>
-					<td><input type="submit" value="<?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?>" /></td>
+					<td><input type="submit" class="button" value="<?php if('update' == $category->do){ _e('编辑分类'); }else{ _e('增加分类'); } ?>" /></td>
 				</tr>
 			</table>
 		</form>

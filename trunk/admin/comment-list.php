@@ -10,11 +10,11 @@ require_once 'menu.php';
 		<div id="page">
 			<div class="table_nav">
             <form action="<?php Typecho::widget('Options')->adminUrl('comment-list.php'); ?>">
-				<input type="submit" value="<?php _e('展现'); ?>" />
-				<input type="submit" value="<?php _e('垃圾'); ?>" />
-				<input type="submit" value="<?php _e('待审核'); ?>" />
-				<input type="submit" value="<?php _e('删除'); ?>" />
-				<input type="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+				<input type="submit" class="submit" value="<?php _e('展现'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('垃圾'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('待审核'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('删除'); ?>" />
+				<input type="text" class="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status" style="width: 160px;">
 					<option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>>
                         <?php _e('所有评论(%s)', Typecho::widget('Abstract.Comments')->count()); ?>
@@ -29,7 +29,7 @@ require_once 'menu.php';
                         <?php _e('垃圾箱(%s)', Typecho::widget('Abstract.Comments')->count('spam')); ?>
                     </option>
 				</select>
-				<input type="submit" value="<?php _e('过滤'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>
 

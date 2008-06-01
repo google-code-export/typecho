@@ -11,8 +11,8 @@ Typecho::widget('Links')->to($links);
 		<div id="page">
 		<form method="post" action="">
 			<div class="table_nav">
-                <input type="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-links.php'); ?>#edit'" value="<?php _e('增加链接'); ?>" />
-				<input type="submit" value="<?php _e('删除'); ?>" />
+                <input type="button" class="button" onclick="window.location = '<?php Typecho::widget('Options')->adminUrl('/manage-links.php'); ?>#edit'" value="<?php _e('增加链接'); ?>" />
+				<input type="submit" class="submit" value="<?php _e('删除'); ?>" />
 			</div>
 
 			<table class="latest">
@@ -45,12 +45,12 @@ Typecho::widget('Links')->to($links);
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
 					<td><label for="name"><?php _e('链接名称'); ?>*</label></td>
-					<td><input type="text" id="name" name="name" style="width: 60%;" />
+					<td><input type="text" class="text" id="name" name="name" style="width: 60%;" />
                     <small><?php _e('用一个名称描述此链接.'); ?></small></td>
 				</tr>
 				<tr>
 					<td><label for="slug"><?php _e('链接地址'); ?>*</label></td>
-					<td><input type="text" id="slug" name="slug" style="width: 60%;" />
+					<td><input type="text" class="text" id="slug" name="slug" style="width: 60%;" />
                     <small><?php _e('此链接的网址,请用<strong>http://</strong>开头.'); ?></small></td>
 				</tr>
 				
@@ -61,7 +61,7 @@ Typecho::widget('Links')->to($links);
 				</tr>
 				<tr>
 					<td></td>
-					<td><input type="submit" value="<?php if('update' == $link->do){ _e('编辑链接'); }else{ _e('增加链接'); } ?>" /></td>
+					<td><input type="submit" class="submit" value="<?php if('update' == $link->do){ _e('编辑链接'); }else{ _e('增加链接'); } ?>" /></td>
 				</tr>
 			</table>
 		</form>

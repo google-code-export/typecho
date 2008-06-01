@@ -11,12 +11,12 @@ require_once 'menu.php';
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
 			<div id="publishing">
-				<p><label><?php _e('发布日期'); ?></label><input type="text" name="test" value="<?php echo date('Y-m-d');?>" /></p>
-				<p><label><?php _e('发布时间'); ?></label><input type="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
+				<p><label><?php _e('发布日期'); ?></label><input type="text" class="text" name="test" value="<?php echo date('Y-m-d');?>" /></p>
+				<p><label><?php _e('发布时间'); ?></label><input type="text" class="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
 			</div>
 
 			<h3><?php _e('分类'); ?></h3>
-			<p><input type="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" value="<?php _e('增加'); ?>" onclick="" /></p>
+			<p><input type="text" class="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" class="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
             <?php Typecho::widget('Categories')->to($category);
             $categories = ($categories = Typecho::arrayFlatten($post->categories, 'mid')) ? $categories : array(Typecho::widget('Options')->defaultCategory); ?>
@@ -38,7 +38,7 @@ require_once 'menu.php';
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>
-			<p><input type="text" name="password" id="password" style="width: 225px;" value="<?php $post->password(); ?>" /></p>
+			<p><input type="text" class="text" name="password" id="password" style="width: 225px;" value="<?php $post->password(); ?>" /></p>
 			<p style="margin: -1em 1.5em 1.5em 0;"><small>Setting a password will require people who visit your blog to enter the above password to view this post and its comments.</small></p>
 
 			<h3><?php _e('引用通告'); ?></h3>
@@ -52,13 +52,13 @@ require_once 'menu.php';
 			<?php require_once 'notice.php'; ?>
             
 			<h4><?php _e('标题'); ?></h4>
-			<p><input id="title" type="text" name="title" onfocus="this.select();" value="<?php $post->title(); ?>" /></p>
+			<p><input id="title" class="text" type="text" name="title" onfocus="this.select();" value="<?php $post->title(); ?>" /></p>
 			<h4><?php _e('内容'); ?></h4>
 			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $post->text(); ?></textarea></p>
 			<p style="text-align: right;">
-                <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
-                <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
-                <input type="submit" value="<?php _e('发布'); ?>" />
+                <input type="button" class="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
+                <input type="button" class="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
+                <input type="submit" class="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="<?php $post->do(); ?>" />
                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                 <input type="hidden" name="draft" value="0" />
@@ -66,7 +66,7 @@ require_once 'menu.php';
             </p>
 			<h4><?php _e('标签'); ?></h4>
             <?php Typecho::widget('Query', 'from=table.metas&type=tag&order=count&sort=DESC&limit=8')->to($tags); ?>
-			<p><input id="tags" type="text" name="tags" value="<?php $post->tags(',', false); ?>" />
+			<p><input id="tags" type="text" class="text" name="tags" value="<?php $post->tags(',', false); ?>" />
             <span id="tag_list">
             <?php while($tags->get()): ?>
                 <a href="#" class="select"><?php $tags->name(); ?></a> 
@@ -75,7 +75,7 @@ require_once 'menu.php';
             </p>
 			
             <h4><?php _e('缩略名'); ?></h4>
-			<p><input id="slug" type="text" name="slug" value="<?php $post->slug(); ?>" /></p>
+			<p><input id="slug" type="text" class="text" name="slug" value="<?php $post->slug(); ?>" /></p>
 		</div><!-- end #content -->
 
 	</form>
