@@ -48,7 +48,7 @@ require_once 'menu.php';
 			<table class="setting">
 				<tr><th width="20%"></th><th width="80%"></th></tr>
 				<tr>
-					<td><label for="name"><?php _e('标签名称'); ?></label></td>
+					<td><label for="name"><?php _e('标签名称'); ?>*</label></td>
 					<td><input type="text" id="name" name="name" style="width: 60%;" value="<?php $tag->name(); ?>" />
                     <?php Typecho::widget('Notice')->display('name', '<span class="detail">%s</span>'); ?>
                     <small><?php _e('这是标签在站点中显示的名称.'); ?></small></td>

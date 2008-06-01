@@ -1,4 +1,8 @@
-<?php include( 'header.php' ); ?>
+<?php
+require_once 'common.php';
+require_once 'header.php';
+require_once 'menu.php';
+?>
 
 	<div id="main"><h2>Welcome to Typecho</h2>
 		<div class="left" style="width: 14%; margin-right: 1%;">
