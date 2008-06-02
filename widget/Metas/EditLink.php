@@ -57,10 +57,10 @@ class EditLinkWidget extends MetasWidget
         }
         else
         {
-            $meta = TypechoRequest::getCookie('type');
+            $meta = TypechoRequest::getCookie('link');
             $meta['type'] = 'link';
             $meta['do'] = 'insert';
-            $meta['slug'] = NULL;
+            $meta['slug'] = 'http://';
             $this->push($meta);
         }
         
