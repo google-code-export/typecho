@@ -155,7 +155,7 @@ class DoTagWidget extends MetasWidget
         /** 取出数据 */
         $tag = TypechoRequest::getParametersFrom('name', 'slug');
         $tag['type'] = 'tag';
-        $tag['slug'] = $tag['name'];
+        $tag['slug'] = empty($tag['slug']) ? $tag['name'] : $tag['slug'];
         
         /** 验证数据 */
         $this->validate($tag);
@@ -183,7 +183,7 @@ class DoTagWidget extends MetasWidget
         /** 取出数据 */
         $tag = TypechoRequest::getParametersFrom('name', 'slug', 'mid');
         $tag['type'] = 'tag';
-        $tag['slug'] = $tag['name'];
+        $tag['slug'] = empty($tag['slug']) ? $tag['name'] : $tag['slug'];
         
         /** 验证数据 */
         $this->validate($tag, true);

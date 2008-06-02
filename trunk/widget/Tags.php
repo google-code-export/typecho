@@ -63,7 +63,7 @@ class TagsWidget extends MetasWidget
         $this->selectSql->where('`type` = ?', 'tag')->order('`' . $sort . '`', TypechoDb::SORT_DESC);
         
         /** 过滤标题 */
-        if(NULL != ($keywords = TypechoRequest::getParameter('keywords')) && $this->access->pass('editor', true))
+        if(empty(TypechoRoute::$current) && NULL != ($keywords = TypechoRequest::getParameter('keywords')) && $this->access->pass('editor', true))
         {
             $args = array();
             $keywords = explode(' ', $keywords);

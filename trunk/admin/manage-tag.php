@@ -34,7 +34,8 @@ require_once 'menu.php';
 				</label>&nbsp;&nbsp;
                 <?php endwhile; ?>
                 <?php else: ?>
-                <span><?php _e('没有任何标签,请在下方添加'); ?></span>
+                <span><?php if(NULL === TypechoRequest::getParameter('keywords')){ _e('没有任何标签,请在下方添加'); }
+                else{ _e('没有找到匹配的标签'); } ?></span>
                 <?php endif; ?>
             </p>
             

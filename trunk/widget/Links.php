@@ -30,8 +30,23 @@ class LinksWidget extends TypechoWidget
     public function render()
     {
         $db = TypechoDb::get();
+        $select = $db->sql()->select('table.metas', '`mid`, `slug` AS `url`, `name`, `description`');
         
-        $db->fetchAll($db->sql()->select('table.metas', '`mid`, `slug` AS `url`, `name`, `description`')
-        ->where('`type` = ?', 'link')->order('`sort`', TypechoDb::SORT_ASC), array($this, 'push'));
+        /** 过滤标题 */
+        if(empty(TypechoRoute::$current) && NULL != ($keywords = TypechoRequest::getParameter('keywords')) && Typecho::widget('Access')->pass('editor', true))
+        {
+            $args = array();
+            $keywords = explode(' ', $keywords);
+            $args[] = implode(' OR ', array_fill(0, count($keywords), 'table.metas.`name` LIKE ?'));
+            
+            foreach($keywords as $keyword)
+            {
+                $args[] = '%' . Typecho::filterSearchQuery($keyword) . '%';
+            }
+            
+            call_user_func_array(array($select, 'where'), $args);
+        }
+        
+        $db->fetchAll($select->where('`type` = ?', 'link')->order('`sort`', TypechoDb::SORT_ASC), array($this, 'push'));
     }
 }

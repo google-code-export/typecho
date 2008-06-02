@@ -60,7 +60,7 @@ class EditTagWidget extends MetasWidget
             $meta = TypechoRequest::getCookie('tag');
             $meta['type'] = 'tag';
             $meta['do'] = 'insert';
-            $meta['slug'] = NULL;
+            $meta['slug'] = empty($meta['slug']) ? NULL : $meta['slug'];
             $this->push($meta);
         }
         

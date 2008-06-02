@@ -205,7 +205,7 @@ class OptionsWidget extends TypechoWidget
         /** 初始化header内容 */
         Typecho::header('meta', array('name' => 'description', 'content' => $this->description));
         Typecho::header('meta', array('name' => 'generator', 'content' => $this->generator));
-        Typecho::header('meta', array('name' => 'template', 'content' => $this->template));
+        Typecho::header('meta', array('name' => 'template', 'content' => $this->theme));
         Typecho::header('link', array('rel' => 'pingback', 'href' => $this->xmlRpcUrl));
         Typecho::header('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 
         'title' => 'RSD', 'href' => $this->xmlRpcUrl . '?rsd'));

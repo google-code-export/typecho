@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php Typecho::widget('Options')->charset(); ?>" />
 <title><?php Typecho::widget('Options')->title(); ?></title>
 <?php Typecho::header(); ?>
 </head>
