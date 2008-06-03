@@ -9,7 +9,7 @@
  */
 
 /** 载入提交基类支持 **/
-require_once 'ContentsPost.php';
+require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
 
 /** 载入xmlrpc支持库 **/
 require_once __TYPECHO_LIB_DIR__ . '/IXR.php';
@@ -22,7 +22,7 @@ require_once __TYPECHO_LIB_DIR__ . '/PHPMailer.php';
  *
  * @package Widget
  */
-class XmlRpcWidget extends ContentsPostWidget
+class XmlRpcWidget extends ContentsWidget
 {
     /**
      * 检查权限
@@ -574,28 +574,30 @@ class XmlRpcWidget extends ContentsPostWidget
 
         if(isset($_GET['rsd']))
         {
+            header("Content-type: text/xml; charset=" . $this->options->charset, true);
+            
             echo '<?xml version="1.0" encoding="';
-            Typecho::widget('Options')->charset();
+            $this->options->charset();
             echo '"?>
             <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
             <service>
             <engineName>Typecho</engineName>
-            <engineLink>http://www.typecho.org/</engineLink>
+            <engineLink>http://www.typecho.org</engineLink>
             <homePageLink>';
-            Typecho::widget('Options')->siteUrl();
+            $this->options->siteUrl();
             echo '</homePageLink>
             <apis>
             <api name="WordPress" blogID="1" preferred="true" apiLink="';
-            Typecho::widget('Options')->index('XmlRpc.do');
+            $this->options->index('XmlRpc.do');
             echo '" />
             <api name="Movable Type" blogID="1" preferred="false" apiLink="';
-            Typecho::widget('Options')->index('XmlRpc.do');
+            $this->options->index('XmlRpc.do');
             echo '" />
             <api name="MetaWeblog" blogID="1" preferred="false" apiLink="';
-            Typecho::widget('Options')->index('XmlRpc.do');
+            $this->options->index('XmlRpc.do');
             echo '" />
             <api name="Blogger" blogID="1" preferred="false" apiLink="';
-            Typecho::widget('Options')->index('XmlRpc.do');
+            $this->options->index('XmlRpc.do');
             echo '" />
             </apis>
             </service>
