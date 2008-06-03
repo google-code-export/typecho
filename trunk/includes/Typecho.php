@@ -277,26 +277,63 @@ class Typecho
      *
      * @access public
      * @param string $string 需要处理的字符串
-     * @param string $except 需要忽略的html标签
+     * @param string $allowableTags 需要忽略的html标签
      * @return string
      */
-    public static function stripTags($string, $except = NULL)
+    public static function stripTags($string, $allowableTags = NULL)
     {
-        $string = str_replace('<!DOC', '<DOC', $string);
-
-        if(NULL === $except)
+        if(!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags))
         {
-            $string = preg_replace( "/<\/(div|h1|h2|h3|h4|h5|h6|p|th|td|li|ol|dt|dd|pre|caption|input|textarea|blockquote|code|pre|button|body)[^>]*>/", "\n\n", $string);
+            $normalizeTags = '<' . implode('><', $tags[1]) . '>';
+            $string = strip_tags($string, $normalizeTags);
+            $attributes = array_map('trim', $tags[2]);
+            
+            $allowableAttributes = array();
+            foreach($attributes as $key => $val)
+            {
+                $allowableAttributes[$tags[1][$key]] = array();
+                if(preg_match_all("/([a-z]+)\s*\=/is", $val, $vals))
+                {
+                    foreach($vals[1] as $attribute)
+                    {
+                        $allowableAttributes[$tags[1][$key]][] = $attribute;
+                    }
+                }
+            }
+            
+            foreach($tags[1] as $key => $val)
+            {
+                $match = "/\<{$val}(\s*[a-z]+\s*\=\s*[\"'][^\"']*[\"'])*\s*\>/is";
+                
+                if(preg_match_all($match, $string, $out))
+                {
+                    foreach($out[0] as $startTag)
+                    {
+                        if(preg_match_all("/([a-z]+)\s*\=\s*[\"'][^\"']*[\"']/is", $startTag, $attributesMatch))
+                        {
+                            $replace = $startTag;
+                            foreach($attributesMatch[1] as $attribute)
+                            {
+                                if(!in_array($attribute, $allowableAttributes[$val]))
+                                {
+                                    $startTag = preg_replace("/\s*{$attribute}\s*=\s*[\"'][^\"']*[\"']/is", '', $startTag);
+                                }
+                            }
+                            
+                            $string = str_replace($replace, $startTag, $string);
+                        }
+                    }
+                }
+            }
+            
+            return $string;
         }
-
-        $string = preg_replace("/\s*<br\s*\/>\s*/is", "\n", $string);
-        $string = strip_tags($string, $except);
-        $string = str_replace("\r\n", "\n", $string);
-        $string = str_replace("\r", "", $string);
-
-        return trim($string);
+        else
+        {
+            return strip_tags($string);
+        }
     }
-    
+
     /**
      * 过滤用于搜索的字符串
      * 

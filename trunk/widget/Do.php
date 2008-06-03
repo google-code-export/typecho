@@ -19,17 +19,6 @@ require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
 class DoWidget extends TypechoWidget
 {
     /**
-     * 排除抽象类
-     * 
-     * @param string $value 输入数据
-     * @param boolean
-     */
-    public function noAbstract($value)
-    {
-        return ($value != 'DoPost' && $value != 'ContentsPost');
-    }
-
-    /**
      * 入口函数,初始化路由器
      *
      * @access public
@@ -41,7 +30,6 @@ class DoWidget extends TypechoWidget
         $validator = new TypechoValidation($this);
         $validator->addRule('do', 'required', _t('地址不合法'));
         $validator->addRule('do', 'alphaDash', _t('地址不合法'));
-        $validator->addRule('do', 'noAbstract', _t('地址不合法'));
         
         $data = array('do' => TypechoRoute::getParameter('do'));
         

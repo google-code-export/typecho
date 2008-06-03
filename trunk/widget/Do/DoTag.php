@@ -261,10 +261,14 @@ class DoTagWidget extends MetasWidget
         if($tags && is_array($tags))
         {
             $this->mergeMeta($merge, 'tag', $tags);
+            
+            /** 提示信息 */
+            Typecho::widget('Notice')->set(_t('标签已经合并'), NULL, 'success');
         }
-        
-        /** 提示信息 */
-        Typecho::widget('Notice')->set(_t('标签已经合并'), NULL, 'success');
+        else
+        {
+            Typecho::widget('Notice')->set(_t('没有选择任何标签'), NULL, 'success');
+        }
         
         /** 转向原页 */
         Typecho::redirect(Typecho::pathToUrl('manage-tag.php', Typecho::widget('Options')->adminUrl));

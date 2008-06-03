@@ -129,6 +129,20 @@ class CommentsWidget extends TypechoWidget
         $this->currentPage = TypechoRequest::getParameter('page', 1);
     }
     
+    public function insertComment($comment, $cid)
+    {
+        /** 构建插入结构 */
+        $insertStruct = array(
+            'created'   =>  Typecho::widget('Options')->gmtTime,
+            'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
+            'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
+            'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
+            'ip'        =>  empty($comment['ip']) ? TypechoRequest::getClientIp() : $comment['ip'],
+            'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
+            'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
+        );
+    }
+    
     /**
      * 通用过滤器
      * 

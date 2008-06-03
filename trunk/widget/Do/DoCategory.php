@@ -232,10 +232,14 @@ class DoCategoryWidget extends MetasWidget
         if($categories && is_array($categories))
         {
             $this->mergeMeta($merge, 'category', $categories);
+            
+            /** 提示信息 */
+            Typecho::widget('Notice')->set(_t('分类已经合并'), NULL, 'success');
         }
-        
-        /** 提示信息 */
-        Typecho::widget('Notice')->set(_t('分类已经合并'), NULL, 'success');
+        else
+        {
+            Typecho::widget('Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+        }
         
         /** 转向原页 */
         Typecho::redirect(Typecho::pathToUrl('manage-cat.php', Typecho::widget('Options')->adminUrl));
@@ -259,6 +263,12 @@ class DoCategoryWidget extends MetasWidget
         }
     }
     
+    /**
+     * 设置默认分类
+     * 
+     * @access public
+     * @return void
+     */
     public function defaultCategory()
     {
         /** 验证数据 */
