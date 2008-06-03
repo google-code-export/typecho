@@ -25,7 +25,7 @@ require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class DoEditPostWidget extends ContentsWidget
+class DoPostWidget extends ContentsWidget
 {
     /**
      * 提交文章
