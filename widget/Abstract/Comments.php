@@ -129,10 +129,19 @@ class CommentsWidget extends TypechoWidget
         $this->currentPage = TypechoRequest::getParameter('page', 1);
     }
     
-    public function insertComment($comment, $cid)
+    /**
+     * 增加评论
+     * 
+     * @access public
+     * @param array $comment 评论结构数组
+     * @param integer $cid 内容主键
+     * @return integer
+     */
+    public function insertComment(array $comment, $cid)
     {
         /** 构建插入结构 */
         $insertStruct = array(
+            'cid'       =>  $cid,
             'created'   =>  Typecho::widget('Options')->gmtTime,
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
@@ -140,7 +149,121 @@ class CommentsWidget extends TypechoWidget
             'ip'        =>  empty($comment['ip']) ? TypechoRequest::getClientIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
+            'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],
+            'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
+            'parent'    =>  empty($comment['parent']) ? '0' : $comment['parent'],
         );
+        
+        /** 首先插入部分数据 */
+        $insertId = $this->db->query($this->db->sql()->insert('table.comments')->rows($insertStruct));
+        
+        /** 更新评论数 */
+        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        
+        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('`cid` = ?', $cid));
+        
+        return $insertId;
+    }
+    
+    /**
+     * 增加评论
+     * 
+     * @access public
+     * @param array $comment 评论结构数组
+     * @param integer $coid 评论主键
+     * @return boolean
+     */
+    public function updateComment(array $comment, $coid)
+    {
+        /** 获取内容主键 */
+        $updateComment = $this->db->fetchObject($this->db->sql()->select('table.comments', '`cid`')
+        ->where('`coid` = ?', $coid)->limit(1));
+        
+        if($updateComment)
+        {
+            $cid = $updateComment->cid;
+        }
+        else
+        {
+            return false;
+        }
+    
+        /** 构建插入结构 */
+        $preUpdateStruct = array(
+            'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
+            'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
+            'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
+            'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
+            'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
+        );
+        
+        $updateStruct = array();
+        foreach($comment as $key => $val)
+        {
+            $updateStruct[$key] = isset($preUpdateStruct[$key]) ? $preUpdateStruct[$key] : $comment[$key];
+        }
+        
+        /** 更新评论数据 */
+        $updateRows = $this->db->query($this->db->sql()->update('table.comments')->rows($updateStruct)
+        ->where('`coid` = ?', $coid));
+        
+        /** 如果数据不存在 */
+        if($updateRows < 1)
+        {
+            return false;
+        }
+        
+        /** 更新评论数 */
+        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        
+        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('`cid` = ?', $cid));
+        
+        return true;
+    }
+    
+    /**
+     * 删除数据
+     * 
+     * @access public
+     * @param integer $coid 评论主键
+     * @return boolean
+     */
+    public function deleteComment($coid)
+    {
+        /** 获取内容主键 */
+        $updateComment = $this->db->fetchObject($this->db->sql()->select('table.comments', '`cid`')
+        ->where('`coid` = ?', $coid)->limit(1));
+        
+        if($updateComment)
+        {
+            $cid = $updateComment->cid;
+        }
+        else
+        {
+            return false;
+        }
+        
+        /** 删除评论数据 */
+        $deleteRows = $this->db->query($this->db->sql()->delete('table.comments')->where('`coid` = ?', $coid));
+        
+        /** 如果数据不存在 */
+        if($deleteRows < 1)
+        {
+            return false;
+        }
+        
+        /** 更新评论数 */
+        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        
+        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('`cid` = ?', $cid));
+        
+        return true;
     }
     
     /**

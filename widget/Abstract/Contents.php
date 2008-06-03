@@ -129,11 +129,11 @@ class ContentsWidget extends TypechoWidget
         /** 构建插入结构 */
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'created'       =>  empty($content['created']) ? Typecho::widget('Options')->gmtTime : $content['created'],
-            'modified'      =>  Typecho::widget('Options')->gmtTime,
+            'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
+            'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'meta'          =>  empty($content['meta']) ? '0' : $content['meta'],
-            'author'        =>  Typecho::widget('Access')->uid,
+            'author'        =>  $this->access->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
@@ -172,10 +172,9 @@ class ContentsWidget extends TypechoWidget
         }
     
         /** 构建更新结构 */
-        $updateStruct = array(
+        $preUpdateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
             'meta'          =>  empty($content['meta']) ? '0' : $content['meta'],
-            'modified'      =>  Typecho::widget('Options')->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
@@ -185,11 +184,19 @@ class ContentsWidget extends TypechoWidget
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
         );
         
+        $updateStruct = array();
+        foreach($content as $key => $val)
+        {
+            $updateStruct[$key] = isset($preUpdateStruct[$key]) ? $preUpdateStruct[$key] : $content[$key];
+        }
+        
         /** 更新创建时间 */
         if(!empty($content['created']))
         {
             $updateStruct['created'] = $content['created'];
         }
+        
+        $updateStruct['modified'] = $this->options->gmtTime;
         
         /** 首先插入部分数据 */
         $updateRows = $this->db->query($this->db->sql()->update('table.contents')->rows($updateStruct)

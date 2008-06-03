@@ -10,7 +10,7 @@ require_once 'menu.php';
 			<ul class="quick-links">
 				<li><a href="#">撰写新文章</a></li>
 				<li><a href="#">撰写新页面</a></li>
-				<li><a href="#">待审核评论 (10)</a></li>
+				<li><a href="#">待审核评论 <sup>10</sup></a></li>
 				<li><a href="#">增加一个链接</a></li>
 				<li><a href="#">编辑我的资料</a></li>
 				<li><a href="#">更换站点外观</a></li>
