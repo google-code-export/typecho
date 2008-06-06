@@ -4,9 +4,9 @@ require_once 'header.php';
 require_once 'menu.php';
 ?>
 
-	<div id="main"><h2>Welcome to Typecho</h2>
+	<div id="main"><h2><?php Typecho::widget('Menu')->title(); ?></h2>
 		<div class="left" style="width: 14%; margin-right: 1%;">
-			<h3>Quick Links</h3>
+			<h3><?php _e('快速链接'); ?></h3>
 			<ul class="quick-links">
 				<li><a href="#">撰写新文章</a></li>
 				<li><a href="#">撰写新页面</a></li>
@@ -17,7 +17,7 @@ require_once 'menu.php';
 				<li><a href="#">修改站点设置</a></li>
 			</ul>
 
-			<h3>Useful Tools</h3>
+			<h3><?php _e('工具箱'); ?></h3>
 			<ul class="quick-links">
 				<li><a href="#">优化数据库</a></li>
 				<li><a href="#">备份数据库</a></li>
@@ -26,7 +26,7 @@ require_once 'menu.php';
 			</ul>
 		</div>
 		<div style="width: 59%" class="left">
-			<h3>Most Recent Weblog Entires</h3>
+			<h3><?php _e('最新文章'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="25%">date</th>
@@ -42,7 +42,7 @@ require_once 'menu.php';
 				</tr>
 			</table>
 
-			<h3>Most Recent Comments/Trackbacks</h3>
+			<h3><?php _e('最新评论'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="25%">date</th>
@@ -58,7 +58,7 @@ require_once 'menu.php';
 				</tr>
 			</table>
 
-			<h3>Typecho Official News</h3>
+			<h3><?php _e('官方新闻'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="25%">date</th>
@@ -75,7 +75,7 @@ require_once 'menu.php';
 			</table>
 		</div>
 		<div style="width: 25%" class="right">
-			<h3>About Me</h3>
+			<h3><?php _e('关于我'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="40%">Name</th>
@@ -95,7 +95,7 @@ require_once 'menu.php';
 				</tr>
 			</table>
 
-			<h3>Site Statistics</h3>
+			<h3><?php _e('运行信息'); ?></h3>
 			<table class="latest">
 				<tr>
 					<th width="40%">Name</th>
