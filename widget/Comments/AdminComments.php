@@ -8,7 +8,7 @@
  */
 
 /** 载入文章基类支持 **/
-require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Comments.php';
+require_once 'widget/Abstract/Comments.php';
 
 /**
  * 后台评论组件

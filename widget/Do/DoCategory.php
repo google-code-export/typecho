@@ -9,11 +9,8 @@
  * @version $Id$
  */
 
-/** 载入验证库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
-
 /** 载入提交基类支持 **/
-require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Metas.php';
+require_once 'widget/Abstract/Metas.php';
 
 /**
  * 描述数据提交管理组件
