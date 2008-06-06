@@ -34,7 +34,7 @@ require_once 'menu.php';
 					<td><textarea id="" rows="8" cols=""  style="width: 70%;"></textarea><small>When a comment contains any of these words in its content, name, Url, e-mail, or IP, it will be marked as spam.</small></td>
 				</tr>
 			</table>
-            <hr class="space">
+            <hr class="space" />
             <div class="table_nav">
                 <input type="submit" value="<?php _e('保存设置'); ?>" />
             </div>

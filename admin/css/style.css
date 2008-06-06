@@ -250,31 +250,19 @@ margin-bottom: .2em;
 margin-left: 65px;
 }
 
-ul.quick-links {
-list-style-type: none;
-background: #F3F6F9;
-border: 1px solid #D6E3F1;
-border-bottom: none;
-margin-bottom: 1.45em;
+.quick-links {
+margin: 0 0 25px 0;
+background: #EDF3F9;
+border: 1px solid #D2E1F0;
+padding: 10px;
+list-style: none;
 }
 
-ul.quick-links li {
+.quick-links li {
 margin: 0;
-}
-
-ul.quick-links li a {
-display: block;
-padding: 4px 15px;
-border-top: 1px solid #fff;
-border-bottom: 1px solid #D6E3F1;
-font-weight: bold;
-height: 1%;
-}
-
-ul.quick-links li a:hover {
-background-color: #fff;
-text-decoration: none;
-border-top-color: #EEF3F9;
+padding: 0;
+line-height:25px;
+font-weight:bold;
 }
 
 #publishing label {

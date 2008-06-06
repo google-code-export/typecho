@@ -33,7 +33,7 @@ require_once 'menu.php';
 					</select></td>
 				</tr>
 			</table>
-            <hr class="space">
+            <hr class="space" />
             <div class="table_nav">
                 <input type="submit" value="<?php _e('保存设置'); ?>" />
             </div>
