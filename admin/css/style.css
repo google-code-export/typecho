@@ -246,8 +246,17 @@ border: 1px solid #C5D8EB;
 margin-bottom: .2em;
 }
 
-#userInfo p {
-margin-left: 65px;
+#userInfo ol {
+margin:0;
+margin-left:20px;
+padding:0;
+}
+
+#userInfo ol li {
+line-height:20px;
+list-style-type:disc;
+padding:0;
+margin:0;
 }
 
 .quick-links {

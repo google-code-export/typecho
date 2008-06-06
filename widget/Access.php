@@ -70,6 +70,7 @@ class AccessWidget extends TypechoWidget
             $rows = $db->fetchAll($db->sql()
             ->select('table.options')
             ->where('`user` = ?', $this->_user['uid']));
+
             $this->push($this->_user);
 
             foreach($rows as $row)

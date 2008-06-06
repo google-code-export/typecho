@@ -75,57 +75,24 @@ require_once 'menu.php';
 			</table>
 		</div>
 		<div style="width: 25%" class="right">
-			<h3><?php _e('关于我'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="40%">Name</th>
-					<th width="60%">Value</th>
-				</tr>
-				<tr>
-					<td>用户名</td>
-					<td>admin</td>
-				</tr>
-				<tr>
-					<td>昵称</td>
-					<td>nick</td>
-				</tr>
-				<tr>
-					<td>注册时间</td>
-					<td>08-05-31 00:00</td>
-				</tr>
-			</table>
-
-			<h3><?php _e('运行信息'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="40%">Name</th>
-					<th width="60%">Value</th>
-				</tr>
-				<tr>
-					<td>程序版本</td>
-					<td>1.0</td>
-				</tr>
-				<tr>
-					<td>日志总数</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td>回复总数</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td>引用总数</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td>待审核评论</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td>垃圾留言</td>
-					<td>2</td>
-				</tr>
-			</table>
+			<div id="userInfo">
+                <h3><?php Typecho::widget('Access')->screenName(); ?></h3>
+                <p><img src="images/default-userpic.jpg" alt="" class="left" />
+				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
+                Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
+                Typecho::widget('Abstract.contents')->count('post', Typecho::widget('Access')->uid), 
+                Typecho::pathToUrl('/page-list.php?status=my', Typecho::widget('Options')->adminUrl),
+                Typecho::widget('Abstract.contents')->count('page', Typecho::widget('Access')->uid)); ?><br />
+                <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br /><br />
+                <h3><?php _e('服务器环境'); ?></h3>
+                <ol>
+                    <li><?php _e('当前服务器操作系统为%s', PHP_OS); ?></li>
+                    <li><?php _e('网页服务器为%s', isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明')); ?></li>
+                    <li><?php _e('数据库驱动为%s', TypechoDb::get()->version()); ?></li>
+                    <li><?php _e('PHP版本为%s', PHP_VERSION); ?></li>
+                </ol>
+                </p>
+			</div>
 		</div>
 	</div><!-- end #main -->
 	
