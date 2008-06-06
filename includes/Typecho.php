@@ -2,7 +2,6 @@
 /**
  * API方法,Typecho命名空间
  *
- * @author qining
  * @category typecho
  * @package default
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -16,7 +15,6 @@ require_once 'Exception.php';
 /**
  * Typecho公用方法
  *
- * @author qining
  * @category typecho
  * @package default
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

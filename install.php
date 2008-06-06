@@ -36,6 +36,8 @@ else
 		#i-main { padding: 0 15px 15px; }
 		ul.rows { border: 1px solid #E6EEF7; height: 300px; margin: 0 0 15px; list-style-type: none; padding: 10px 15px; overflow: auto; }
 		h2 { color: #36c; }
+        ol { margin-left:20px }
+        ol li { margin:0 }
 	</style>
  </head>
 
@@ -43,42 +45,38 @@ else
 	<div id="install">
 		<div id="i-logo" class="round clearfix" style="text-align:center"><a href="http://typecho.org"><img src="admin/images/logo.png" alt="Typecho" /></a></div>
 		<hr class="space" />
-		<div id="i-main"><h2><?php _e('%s安装配置程序', __TYPECHO_INSTALL_VERSION__); ?></h2>
+		<div id="i-main"><h2><?php _e('欢迎使用Typecho'); ?></h2>
         <?php if($configured): ?>
-			<ul class="rows">
-    		<li><h3>版权信息</h3>
-    		<p>Magike Blog是一款开源免费的博客程序. 您可以在
-    		<a href="http://www.opensource.org/licenses/gpl-license.php" target="__blank">GPL协议</a>允许的范围内使用此产品. </p>
-    		<p>您可以在该协议授权的范围内使用或修改此软件. 此协议的约束范围并不包括在该软件中使用的第三方库资源. 所有在本软件中使用的第三方资源
-    著作权归原作者所有, 其版权协议也继承自原有协议. </p>
-    		</li>
-    		<li><h3>支持及免责条款</h3>
-
-    		<p>您可以在<a href="http://www.magike.org" target="__blank">Magike官方网站</a>或者<a href="http://forum.magike.org" target="__blank">Magike开发社区</a>获得持续的技术支持. </p>
-    		<p>我们并不保证使用该程序不存在任何风险, 对使用该程序可能造成的损失不承担任何责任. 但是我们会对可能存在的风险进行持续的跟踪评估, 并尽量减少您的损失. </p>
-    		</li>
-    		<li><h3>致谢</h3>
-    		<p>对所有在Magike开发过程中给予我们支持和帮助的朋友表示感谢. 对在Magike测试过程中辛勤劳动的测试人员表示感谢. 对以下在本软件中使用的第三方资源的原作者表示感谢: </p>
-
-    		<p>
-    			<strong>Silk图标</strong>, 作者: <a href="http://www.famfamfam.com" target="_blank">Mark James</a>, 使用范围: 后台部分图标及默认模板部分图标<br>
-    			<strong>PHPMailer库</strong>, 作者: <a href="http://phpmailer.sourceforge.net" target="_blank">Chris Ryan</a>, 使用范围: 第三方类库<br>
-    			<strong>XML-RPC库</strong>, 作者: <a href="http://scripts.incutio.com/xmlrpc/" target="_blank">Incutio Ltd</a>, 使用范围: 第三方类库<br>
-
-    			<strong>ServicesJson库</strong>, 作者: <a href="http://pear.php.net/pepr/pepr-proposal-show.php?id=198" target="__blank">Michal Migurski, Matt Knapp, Brett Stimmerman</a>, 使用范围: 第三方类库<br>
-    			<strong>jQuery库</strong>, 作者: <a href="http://www.jquery.com" target="_blank">jQuery team</a>, 使用范围: javascript框架<br>
-    			<strong>Gettext库</strong>, 作者: <a href="http://pear.php.net/package/File_Gettext" target="_blank">Michael Wallner</a>, 使用范围: 国际化语言文件读取库<br>
-
-    			<strong>NetIDNA库</strong>, 作者: <a href="http://pear.php.net/package/Net_IDNA/download" target="_blank">Markus Nix, Matthias Sommerfeld</a>, 使用范围: 第三方类库
-                     <strong>管理后台语义标准化</strong>, 作者: <a href="http://www.awflasher.com" target="_blank">awflasher</a>, 使用范围: 后台语言源
-              </p>
+        <ul class="rows">
+    		<li>
+                <h3><?php _e('安装说明'); ?></h3>
+                <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求.如果不符合,将在上方出现提示信息,
+请按照提示信息检查你的主机配置.如果服务器环境符合要求,将在下方出现"同意并安装"的按钮,点击此按钮即可一步完成安装.'); ?></strong></p>
+                <h3><?php _e('许可及协议'); ?></h3>
+                <p><?php _e('Typecho基于GPL协议发布,我们允许用户在GPL协议许可的范围内使用,拷贝,修改和分发此程序.
+你可以自由地将其用于商业以及非商业用途.'); ?></p>
+                <p><?php _e('Typecho软件由其社区提供支持,核心开发团队负责维护程序日常开发工作以及新特性的制定.如果你遇到使用上的问题,
+程序中的BUG,以及期许的新功能,欢迎你在社区中交流或者直接向我们贡献代码.对于贡献突出者,他的名字将出现在贡献者名单中.'); ?></p>
+                <h3><?php _e('此版本贡献者(排名不分先后)'); ?></h3>
+                <ol>
+                    <li><a href="http://www.joyqi.com">Joyqi</a></li>
+                    <li><a href="http://www.luweiqing.com">Sluke</a></li>
+                    <li><a href="http://www.hellowiki.com">Fen</a></li>
+                </ol>
+                <p><a href="http://www.typecho.org">查看所有贡献者</a></p>
     		</li>
     	</ul>
-		<input type="button" value="同意并安装" onclick="" />
+		<input type="button" class="button" value="同意并安装" onclick="" />
         <?php else: ?>
-        <div class="notice">
-            <?php _e('没有找到配置文件,<a href="install.php?config">点击这里创建</a>'); ?>
-        </div>
+            <?php if(is_writable('.')): ?>
+            <div class="notice">
+                <?php _e('还没有配置文件?<a href="install.php?config">点击这里创建</a> <sup><a href="#">什么是配置文件?</a></sup>'); ?>
+            </div>
+            <?php else: ?>
+            <div class="error">
+                <?php _e('程序根目录 <sup><a href="#">什么是根目录?</a></sup>无法写入 <sup><a href="#">为何无法写入?</a></sup>,请检查 <sup><a href="#">如何检查?</a></sup>服务器环境.'); ?>
+            </div>
+            <?php endif; ?>
         <?php endif; ?>
 		</div>
 	</div>

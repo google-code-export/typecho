@@ -2,7 +2,6 @@
 /**
  * Typecho Blog Platform
  *
- * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id: AttachmentPost.php 174 2008-05-08 17:01:39Z magike.net $
