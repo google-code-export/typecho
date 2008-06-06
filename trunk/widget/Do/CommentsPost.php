@@ -7,9 +7,6 @@
  * @version    $Id: CommentsPost.php 186 2008-05-14 06:23:50Z magike.net $
  */
 
-/** 载入验证库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
-
 /** 载入提交基类支持 **/
 require_once 'DoPost.php';
 

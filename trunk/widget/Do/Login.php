@@ -7,9 +7,6 @@
  * @version    $Id$
  */
 
-/** 载入验证库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
-
 /**
  * 用户登录
  *

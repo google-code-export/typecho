@@ -10,7 +10,7 @@
  */
 
 /** 载入父类 */
-require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
+require_once 'widget/Abstract/Contents.php';
 
 /**
  * 编辑文章组件

@@ -6,7 +6,6 @@ require_once 'menu.php';
 
 	<div id="main"><h2><?php Typecho::widget('Menu')->title(); ?></h2>
 		<div class="left" style="width: 14%; margin-right: 1%;">
-			<h3><?php _e('快速链接'); ?></h3>
 			<ul class="quick-links">
 				<li><a href="#">撰写新文章</a></li>
 				<li><a href="#">撰写新页面</a></li>
@@ -16,93 +15,68 @@ require_once 'menu.php';
 				<li><a href="#">更换站点外观</a></li>
 				<li><a href="#">修改站点设置</a></li>
 			</ul>
-
-			<h3><?php _e('工具箱'); ?></h3>
-			<ul class="quick-links">
-				<li><a href="#">优化数据库</a></li>
-				<li><a href="#">备份数据库</a></li>
-				<li><a href="#">清理缓存</a></li>
-				<li><a href="#">检查更新</a></li>
-			</ul>
 		</div>
 		<div style="width: 59%" class="left">
-			<h3><?php _e('最新文章'); ?></h3>
+            <?php Typecho::widget('RecentPosts', 5)->to($recentPosts); ?>
 			<table class="latest">
 				<tr>
-					<th width="25%">date</th>
-					<th width="75%">entries</th>
+					<th width="20%"><?php _e('最新文章'); ?></th>
 				</tr>
+                <?php if($recentPosts->have()): ?>
+                <?php while($recentPosts->get()): ?>
 				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
+					<td>
+                        <strong><a target="_blank" href="<?php $recentPosts->permalink(); ?>"><?php $recentPosts->title(); ?></a></strong>
+                        <sup><?php $recentPosts->tags(','); ?></sup>
+                        <?php _e('发布于'); ?>
+                        <?php $recentPosts->category(', '); ?>
+                        <sup><?php $recentPosts->dateWord(); ?></sup>
+                    </td>
 				</tr>
-				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
-				</tr>
+                <?php endwhile; ?>
+                <?php else: ?>
+                <tr>
+                    <td><?php _e('暂时没有文章'); ?></td>
+                </tr>
+                <?php endif; ?>
 			</table>
 
-			<h3><?php _e('最新评论'); ?></h3>
+            <?php Typecho::widget('RecentComments', 5)->to($recentComments); ?>
 			<table class="latest">
 				<tr>
-					<th width="25%">date</th>
-					<th width="75%">entries</th>
+					<th><?php _e('最新评论'); ?></th>
 				</tr>
+                <?php if($recentComments->have()): ?>
+                <?php while($recentComments->get()): ?>
 				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
+					<td><?php _e('<strong>%s</strong> 发表在 <a href="%s">%s</a>', $recentComments->author, $recentComments->permalink, $recentComments->title); ?> <sup><?php $recentComments->dateWord(); ?></sup></td>
 				</tr>
-				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
-				</tr>
-			</table>
-
-			<h3><?php _e('官方新闻'); ?></h3>
-			<table class="latest">
-				<tr>
-					<th width="25%">date</th>
-					<th width="75%">entries</th>
-				</tr>
-				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
-				</tr>
-				<tr>
-					<td>2008-03-26 16:00</td>
-					<td><a href="#">Example post title</a></td>
-				</tr>
+                <?php endwhile; ?>
+                <?php else: ?>
+                <tr>
+                    <td><?php _e('暂时没有评论'); ?></td>
+                </tr>
+                <?php endif; ?>
 			</table>
 		</div>
 		<div style="width: 25%" class="right">
 			<div id="userInfo">
-                <h3><?php _e('关于我'); ?></h3>
-                <p><img src="images/default-userpic.jpg" alt="" class="left" />
+                <img src="images/default-userpic.jpg" alt="" class="left" />
                 <h6><?php Typecho::widget('Access')->screenName(); ?></h6>
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
                 Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('post', Typecho::widget('Access')->uid), 
                 Typecho::pathToUrl('/page-list.php?status=my', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('page', Typecho::widget('Access')->uid)); ?><br />
-                <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br /><br />
-                <table class="latest">
-                    <tr>
-                        <th><?php _e('服务器环境'); ?></th>
-                    </tr>
-                    <tr>
-                        <td><?php _e('当前服务器操作系统为%s', PHP_OS); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php _e('网页服务器为%s', isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明')); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php _e('数据库驱动为%s', TypechoDb::get()->version()); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php _e('PHP版本为%s', PHP_VERSION); ?></td>
-                    </tr>
-                </table>
-                </p>
+                <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br />
+                <h6 style="margin-top:10px;"><?php _e('服务器环境'); ?></h6>
+                <ol>
+                    <li><small><?php Typecho::widget('Options')->generator(); ?></small></li>
+                    <li><small><?php echo PHP_OS; ?></small></li>
+                    <li><small><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明'); ?></small></li>
+                    <li><small><?php echo TypechoDb::get()->version(); ?></small></li>
+                    <li><small>PHP <?php echo PHP_VERSION; ?></small></li>
+                </ol>
 			</div>
 		</div>
 	</div><!-- end #main -->

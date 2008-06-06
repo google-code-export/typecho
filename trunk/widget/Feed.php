@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入聚合库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Feed.php';
-
 /** 载入父类支持 **/
 require_once 'Archive.php';
 

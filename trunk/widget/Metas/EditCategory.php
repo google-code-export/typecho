@@ -10,7 +10,7 @@
  */
  
 /** 载入父类 */
-require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Metas.php';
+require_once 'widget/Abstract/Metas.php';
 
 /**
  * 编辑分类组件

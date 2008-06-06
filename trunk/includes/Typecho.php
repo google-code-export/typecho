@@ -64,6 +64,22 @@ class Typecho
             @date_default_timezone_set('UTC');
         }
         
+        /** 注册自动载入函数 */
+        function __autoLoad($className)
+        {
+            if(0 === strpos($className, 'Typecho'))
+            {
+                require_once __TYPECHO_LIB_DIR__ . '/' . substr($className, 7) . '.php';
+            }
+            else
+            {
+                require_once __TYPECHO_LIB_DIR__ . '/' . $className . '.php';
+            }
+        }
+        
+        /** 设置包含路径 */
+        set_include_path(__TYPECHO_ROOT_DIR__);
+        
         //设置文件头
         header('content-Type: text/html;charset= ' . $charset);
     }
@@ -109,18 +125,15 @@ class Typecho
         if(empty($_widgets[$widget]))
         {
             $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . $suffix;
-
-            if(!class_exists($className))
+            $fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php';
+            
+            if(file_exists($fileName))
             {
-                $fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php';
-                if(file_exists($fileName))
-                {
-                    require_once $fileName;
-                }
-                else
-                {
-                    throw new TypechoException(_t('文件%s不存在', $fileName), TypechoException::RUNTIME);
-                }
+                require_once $fileName;
+            }
+            else
+            {
+                throw new TypechoException(_t('文件%s不存在', $fileName), TypechoException::RUNTIME);
             }
 
             $object = new $className();

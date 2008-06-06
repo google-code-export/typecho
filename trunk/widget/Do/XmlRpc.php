@@ -8,13 +8,7 @@
  */
 
 /** 载入提交基类支持 **/
-require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
-
-/** 载入xmlrpc支持库 **/
-require_once __TYPECHO_LIB_DIR__ . '/IXR.php';
-
-/** 载入电子邮件支持 */
-require_once __TYPECHO_LIB_DIR__ . '/PHPMailer.php';
+require_once 'widget/Abstract/Contents.php';
 
 /**
  * XMLRPC接口支持

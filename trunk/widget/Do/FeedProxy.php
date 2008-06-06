@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入聚合库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Feed.php';
-
 /**
  * 聚合代理组件
  * 
