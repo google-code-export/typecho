@@ -126,7 +126,7 @@ class TypechoI18n
                 return _t('%d分钟前', idate('i', $now) - idate('i', $from));
             }
             
-            return _t('%d秒前', idate('H', $now) - idate('H', $from));
+            return _t('%d小时前', idate('H', $now) - idate('H', $from));
         }
         
         /** 如果是昨天 */
