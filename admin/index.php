@@ -76,21 +76,32 @@ require_once 'menu.php';
 		</div>
 		<div style="width: 25%" class="right">
 			<div id="userInfo">
-                <h3><?php Typecho::widget('Access')->screenName(); ?></h3>
+                <h3><?php _e('关于我'); ?></h3>
                 <p><img src="images/default-userpic.jpg" alt="" class="left" />
+                <h6><?php Typecho::widget('Access')->screenName(); ?></h6>
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
                 Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('post', Typecho::widget('Access')->uid), 
                 Typecho::pathToUrl('/page-list.php?status=my', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('page', Typecho::widget('Access')->uid)); ?><br />
                 <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br /><br />
-                <h3><?php _e('服务器环境'); ?></h3>
-                <ol>
-                    <li><?php _e('当前服务器操作系统为%s', PHP_OS); ?></li>
-                    <li><?php _e('网页服务器为%s', isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明')); ?></li>
-                    <li><?php _e('数据库驱动为%s', TypechoDb::get()->version()); ?></li>
-                    <li><?php _e('PHP版本为%s', PHP_VERSION); ?></li>
-                </ol>
+                <table class="latest">
+                    <tr>
+                        <th><?php _e('服务器环境'); ?></th>
+                    </tr>
+                    <tr>
+                        <td><?php _e('当前服务器操作系统为%s', PHP_OS); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php _e('网页服务器为%s', isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明')); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php _e('数据库驱动为%s', TypechoDb::get()->version()); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php _e('PHP版本为%s', PHP_VERSION); ?></td>
+                    </tr>
+                </table>
                 </p>
 			</div>
 		</div>
