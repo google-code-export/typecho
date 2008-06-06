@@ -2,7 +2,6 @@
 /**
  * Typecho Blog Platform
  *
- * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
@@ -11,6 +10,14 @@
 /** 载入文章基类支持 **/
 require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Comments.php';
 
+/**
+ * 后台评论组件
+ * 
+ * @category typecho
+ * @package Widget
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ */
 class AdminCommentsWidget extends CommentsWidget
 {
     /**

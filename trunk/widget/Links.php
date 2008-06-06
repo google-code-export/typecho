@@ -2,7 +2,6 @@
 /**
  * 链接输出
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -13,7 +12,6 @@
 /**
  * 链接输出组件
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

@@ -12,7 +12,6 @@
  * </code>
  *
  * @todo       需要批量的处理规则
- * @author     feelinglucky
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id: Validation.php 106 2008-04-11 02:23:54Z magike.net $

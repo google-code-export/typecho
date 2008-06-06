@@ -2,7 +2,6 @@
 /**
  * 描述记录输出
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -16,7 +15,6 @@ require_once 'Abstract/Metas.php';
 /**
  * 描述记录输出组件
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

@@ -2,7 +2,6 @@
 /**
  * 文章提交管理
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -19,7 +18,6 @@ require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
 /**
  * 内容处理类
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

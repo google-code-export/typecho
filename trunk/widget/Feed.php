@@ -2,7 +2,6 @@
 /**
  * 聚合生成
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -19,7 +18,6 @@ require_once 'Archive.php';
 /**
  * 聚合生成组件
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

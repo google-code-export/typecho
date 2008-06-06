@@ -2,7 +2,6 @@
 /**
  * 后台头部
  * 
- * @author qining
  * @category typecho
  * @package admin
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

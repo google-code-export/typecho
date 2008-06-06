@@ -2,7 +2,6 @@
 /**
  * 配置管理
  *
- * @author qining
  * @category typecho
  * @package config
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -19,7 +18,6 @@ require_once 'Config/ConfigException.php';
 /**
  * 配置管理类
  *
- * @author qining
  * @category typecho
  * @package Config
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -201,5 +199,16 @@ class TypechoConfig implements Iterator
     public function __isset($name)
     {
         return isset($this->_currentConfig[$name]);
+    }
+    
+    /**
+     * 魔术方法,打印当前配置数组
+     * 
+     * @access public
+     * @return string
+     */
+    public function __toString()
+    {
+        return var_export($this->_currentConfig, true);
     }
 }

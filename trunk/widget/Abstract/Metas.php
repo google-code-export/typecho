@@ -2,7 +2,6 @@
 /**
  * 描述性数据
  * 
- * @author qining
  * @category typecho
  * @package default
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -13,7 +12,6 @@
 /**
  * 描述性数据组件
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

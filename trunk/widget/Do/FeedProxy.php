@@ -2,7 +2,6 @@
 /**
  * 聚合代理库
  * 
- * @author qining
  * @category typecho
  * @package default
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -16,7 +15,6 @@ require_once __TYPECHO_LIB_DIR__ . '/Feed.php';
 /**
  * 聚合代理组件
  * 
- * @author qining
  * @category typecho
  * @package FeedProxyWidget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

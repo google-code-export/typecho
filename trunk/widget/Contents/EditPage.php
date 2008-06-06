@@ -2,7 +2,6 @@
 /**
  * 编辑页面输出
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -16,7 +15,6 @@ require_once __TYPECHO_WIDGET_DIR__ . '/Abstract/Contents.php';
 /**
  * 编辑页面组件
  * 
- * @author qining
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)

@@ -1,3 +1,3 @@
 <?php
 
-TypechoConfig::set('Plugin', array());
+$plugins = array();

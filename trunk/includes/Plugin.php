@@ -2,7 +2,6 @@
 /**
  * Typecho Blog Platform
  *
- * @author     qining
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
@@ -14,13 +13,9 @@ require_once 'Exception.php';
 /** 载入异常支持 */
 require_once 'Plugin/PluginException.php';
 
-/** 载入插件列表 */
-require_once __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
-
 /**
  * 插件处理类
  *
- * @author qining
  * @category typecho
  * @package Plugin
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -59,23 +54,102 @@ class TypechoPlugin
      */
     public static function init()
     {
-        /** 检测配置是否存在 */
-        TypechoConfig::need('Plugin');
-        
-        /** 初始化插件 */
-        $plugins = TypechoConfig::get('Plugin');
+        /** 初始化插件列表 */
+        $plugins = array();
+    
+        /** 载入插件列表 */
+        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+
         foreach($plugins as $plugin)
         {
             if(file_exists($pluginFileName = __TYPECHO_PLUGIN_DIR__ . '/' . $plugin . '/' . $plugin . '.php'))
             {
                 /** 载入插件主文件 */
                 require_once $pluginFileName;
+                
+                /** 运行初始化方法 */
+                call_user_func(array($plugin, 'init'));
             }
             else
             {
                 /** 如果不存在则抛出异常 */
                 throw new TypechoPluginException(_t('插件文件不存在 %s', $pluginFileName), TypechoException::RUNTIME);
             }
+        }
+    }
+    
+    /**
+     * 获取插件列表
+     * 
+     * @access public
+     * @return array
+     */
+    public static function listAll()
+    {
+        /** 初始化插件列表 */
+        $plugins = array();
+    
+        /** 载入插件列表 */
+        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        
+        
+    }
+    
+    /**
+     * 激活插件
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return void
+     */
+    public static function activate($pluginName)
+    {
+        /** 初始化插件列表 */
+        $plugins = array();
+    
+        /** 载入插件列表 */
+        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        
+        if(!in_array($pluginName, $plugins))
+        {
+            require_once __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+        
+            /** 激活插件 */
+            call_user_func(array($pluginName, 'activate'));
+            
+            /** 写入插件表 */
+            $plugins[] = $pluginName;
+            
+            file_put_contents(__TYPECHO_PLUGIN_DIR__ . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
+        }
+    }
+    
+    /**
+     * 禁用插件
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return void
+     */
+    public static function deactivate($pluginName)
+    {
+        /** 初始化插件列表 */
+        $plugins = array();
+    
+        /** 载入插件列表 */
+        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        
+        if(in_array($pluginName, $plugins))
+        {
+            require_once __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+            
+            /** 禁用插件 */
+            call_user_func(array($pluginName, 'deactivate'));
+            
+            /** 写入插件表 */
+            unset($plugins[array_search($pluginName, $plugins)]);
+            
+            file_put_contents(__TYPECHO_PLUGIN_DIR__ . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
         }
     }
 
