@@ -61,7 +61,7 @@ require_once 'menu.php';
 		</div>
 		<div style="width: 25%" class="right">
 			<div id="userInfo">
-                <img src="images/default-userpic.jpg" alt="" class="left" />
+                <img src="http://www.gravatar.com/avatar.php?gravatar_id=<?php echo md5(Typecho::widget('Access')->mail); ?>&rating=X&size=50&default=<?php Typecho::widget('Options')->adminUrl('/images/default-userpic.jpg'); ?>" alt="<?php Typecho::widget('Access')->screenName(); ?>" class="left" />
                 <h6><?php Typecho::widget('Access')->screenName(); ?></h6>
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
                 Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
