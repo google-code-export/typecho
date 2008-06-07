@@ -35,7 +35,7 @@ Typecho::widget('Links')->to($links);
 					<td><input type="checkbox" name="mid[]" value="<?php $links->mid(); ?>" /></td>
 					<td><a href="<?php Typecho::widget('Options')->adminUrl('/manage-links.php?mid=' . $links->mid); ?>#edit"><?php $links->name(); ?></a></td>
 					<td><?php $links->description(); ?></td>
-					<td><a href="<?php $links->url(); ?>"><?php $links->url(); ?></a></td>
+					<td><a target="_blank" href="<?php $links->url(); ?>"><?php $links->url(); ?></a></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

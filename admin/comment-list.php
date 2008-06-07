@@ -56,7 +56,7 @@ require_once 'menu.php';
                     </sub>
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
-					<td><a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
+					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
 					<td><?php $comments->status(); ?></td>
 				</tr>
                 <?php endwhile; ?>

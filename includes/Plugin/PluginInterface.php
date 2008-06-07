@@ -53,6 +53,7 @@ interface TypechoPluginInterface
      * 'title'          =>  'Hello World',
      * 'author'         =>  'Typecho Team',
      * 'homepage'       =>  'http://www.typecho.org',
+     * 'check'          =>  'http://www.typecho.org/check.php?{version}',
      * 'version'        =>  '1.0.0',
      * 'description'    =>  'This is an example.'
      * );

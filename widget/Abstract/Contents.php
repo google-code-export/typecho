@@ -186,7 +186,10 @@ class ContentsWidget extends TypechoWidget
         $updateStruct = array();
         foreach($content as $key => $val)
         {
-            $updateStruct[$key] = isset($preUpdateStruct[$key]) ? $preUpdateStruct[$key] : $content[$key];
+            if(isset($preUpdateStruct[$key]))
+            {
+                $updateStruct[$key] = $preUpdateStruct[$key];
+            }
         }
         
         /** 更新创建时间 */
