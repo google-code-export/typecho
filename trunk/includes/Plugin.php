@@ -13,6 +13,9 @@ require_once 'Exception.php';
 /** 载入异常支持 */
 require_once 'Plugin/PluginException.php';
 
+/** 载入接口支持 */
+require_once 'Plugin/PluginInterface.php';
+
 /**
  * 插件处理类
  *
@@ -56,19 +59,20 @@ class TypechoPlugin
     {
         /** 初始化插件列表 */
         $plugins = array();
+        $pluginDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     
         /** 载入插件列表 */
-        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        require $pluginDir . '/plugins.php';
 
         foreach($plugins as $plugin)
         {
-            if(file_exists($pluginFileName = __TYPECHO_PLUGIN_DIR__ . '/' . $plugin . '/' . $plugin . '.php'))
+            if(file_exists($pluginFileName = $pluginDir . '/' . $plugin . '/' . $plugin . '.php'))
             {
                 /** 载入插件主文件 */
                 require_once $pluginFileName;
                 
                 /** 运行初始化方法 */
-                call_user_func(array($plugin, 'init'));
+                call_user_func(array($plugin . 'Plugin', 'init'));
             }
             else
             {
@@ -88,11 +92,31 @@ class TypechoPlugin
     {
         /** 初始化插件列表 */
         $plugins = array();
+        $result = array();
+        $pluginDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     
         /** 载入插件列表 */
-        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        require $pluginDir . '/plugins.php';
         
+        /** 获取所有插件 */
+        $pluginFiles = glob($pluginDir . '/*/*.php');
         
+        foreach($pluginFiles as $pluginFile)
+        {
+            /** 获得类名 */
+            $className = substr(basename($pluginFile), 0, -4);
+            
+            /** 载入插件 */
+            require_once $pluginFile;
+            
+            /** 获取插件信息 */
+            $info = call_user_func(array($className . 'Plugin', 'information'));
+            $info['name'] = $className;
+            $info['activated'] = in_array($className, $plugins);
+            $result[] = $info;
+        }
+        
+        return $result;
     }
     
     /**
@@ -106,21 +130,22 @@ class TypechoPlugin
     {
         /** 初始化插件列表 */
         $plugins = array();
+        $pluginDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     
         /** 载入插件列表 */
-        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        require $pluginDir . '/plugins.php';
         
         if(!in_array($pluginName, $plugins))
         {
-            require_once __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+            require_once $pluginDir . '/' . $pluginName . '/' . $pluginName . '.php';
         
             /** 激活插件 */
-            call_user_func(array($pluginName, 'activate'));
+            call_user_func(array($pluginName . 'Plugin', 'activate'));
             
             /** 写入插件表 */
             $plugins[] = $pluginName;
             
-            file_put_contents(__TYPECHO_PLUGIN_DIR__ . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
+            file_put_contents($pluginDir . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
         }
     }
     
@@ -135,21 +160,22 @@ class TypechoPlugin
     {
         /** 初始化插件列表 */
         $plugins = array();
+        $pluginDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     
         /** 载入插件列表 */
-        require __TYPECHO_PLUGIN_DIR__ . '/plugins.php';
+        require $pluginDir . '/plugins.php';
         
         if(in_array($pluginName, $plugins))
         {
-            require_once __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+            require_once $pluginDir . '/' . $pluginName . '/' . $pluginName . '.php';
             
             /** 禁用插件 */
-            call_user_func(array($pluginName, 'deactivate'));
+            call_user_func(array($pluginName . 'Plugin', 'deactivate'));
             
             /** 写入插件表 */
             unset($plugins[array_search($pluginName, $plugins)]);
             
-            file_put_contents(__TYPECHO_PLUGIN_DIR__ . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
+            file_put_contents($pluginDir . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
         }
     }
 

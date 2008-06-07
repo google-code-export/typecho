@@ -7,9 +7,6 @@
  * @version    $Id: DoWidget.php 122 2008-04-17 10:04:27Z magike.net $
  */
 
-/** 载入验证库支持 **/
-require_once __TYPECHO_LIB_DIR__ . '/Validation.php';
-
 /**
  * 执行模块
  *

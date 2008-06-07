@@ -31,6 +31,9 @@ class Typecho
      */
     public static function start($charset = __TYPECHO_CHARSET__)
     {
+        /** 设置包含路径 */
+        set_include_path(__TYPECHO_ROOT_DIR__);
+        
         //初始化会话
         session_start();
 
@@ -67,18 +70,16 @@ class Typecho
         /** 注册自动载入函数 */
         function __autoLoad($className)
         {
-            if(0 === strpos($className, 'Typecho'))
+            if(0 === strpos($className, 'Typecho') &&
+            file_exists($fileName = 'includes/' . substr($className, 7) . '.php'))
             {
-                require_once __TYPECHO_LIB_DIR__ . '/' . substr($className, 7) . '.php';
+                require_once $fileName;
             }
-            else
+            else if(file_exists($fileName = 'includes/' . $className . '.php'))
             {
-                require_once __TYPECHO_LIB_DIR__ . '/' . $className . '.php';
+                require_once $fileName;
             }
         }
-        
-        /** 设置包含路径 */
-        set_include_path(__TYPECHO_ROOT_DIR__);
         
         //设置文件头
         header('content-Type: text/html;charset= ' . $charset);
@@ -98,7 +99,7 @@ class Typecho
         static $_widgets;
 
         /** 判断是否为plugin */
-        $widgetRoot = __TYPECHO_WIDGET_DIR__;
+        $widgetRoot = 'widget';
         $suffix = 'Widget';
         $newWidget = false;
         
@@ -111,7 +112,7 @@ class Typecho
         
         if(0 === strpos($widget, 'plugin:'))
         {
-            $widgetRoot = __TYPECHO_PLUGIN_DIR__;
+            $widgetRoot = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
             $widget = substr($widget, 7);
             $suffix = 'Plugin';
         }
@@ -126,15 +127,7 @@ class Typecho
         {
             $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . $suffix;
             $fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php';
-            
-            if(file_exists($fileName))
-            {
-                require_once $fileName;
-            }
-            else
-            {
-                throw new TypechoException(_t('文件%s不存在', $fileName), TypechoException::RUNTIME);
-            }
+            require_once $fileName;
 
             $object = new $className();
             $_widgets[$widget] = &$object;

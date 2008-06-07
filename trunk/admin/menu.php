@@ -1,6 +1,8 @@
 <div class="container">
 	<div id="header">
-			<div id="nav-bar" class="right"><?php _e('你好'); ?>, <a href="#"><?php Typecho::widget('Access')->screenName(); ?></a> | 
+			<div id="nav-bar" class="right">
+            <?php TypechoPlugin::instance(__FILE__)->navBar(); ?>
+            <?php _e('你好'); ?>, <a href="#"><?php Typecho::widget('Access')->screenName(); ?></a> | 
             <a title="<?php _e('退出当前登录'); ?>" href="<?php Typecho::widget('Options')->index('Logout.do'); ?>"><?php _e('退出'); ?></a> | 
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('Typecho官方网站'); ?>"><?php _e('支持'); ?></a> | 
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('向Typecho报告错误以帮助我们更好地完善产品'); ?>"><?php _e('报告错误'); ?></a>

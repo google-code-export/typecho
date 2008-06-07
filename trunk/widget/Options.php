@@ -146,6 +146,18 @@ class OptionsWidget extends TypechoWidget
     }
     
     /**
+     * 输出插件路径
+     * 
+     * @access public
+     * @param string $path 子路径
+     * @return void
+     */
+    public function pluginUrl($path = NULL)
+    {
+        echo Typecho::pathToUrl($path, $this->pluginUrl);
+    }
+    
+    /**
      * 输出后台路径
      * 
      * @access public
@@ -190,6 +202,7 @@ class OptionsWidget extends TypechoWidget
         $this->index = $this->rewrite ? $this->siteUrl : Typecho::pathToUrl('/index.php', $this->siteUrl);
         $this->themeUrl = Typecho::pathToUrl(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
         $this->attachmentUrl = Typecho::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
+        $this->pluginUrl = Typecho::pathToUrl(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         
         /** 初始化Feed地址 */
