@@ -200,7 +200,10 @@ class CommentsWidget extends TypechoWidget
         $updateStruct = array();
         foreach($comment as $key => $val)
         {
-            $updateStruct[$key] = isset($preUpdateStruct[$key]) ? $preUpdateStruct[$key] : $comment[$key];
+            if(isset($preUpdateStruct[$key]))
+            {
+                $updateStruct[$key] = $preUpdateStruct[$key];
+            }
         }
         
         /** 更新评论数据 */

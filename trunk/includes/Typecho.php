@@ -99,7 +99,7 @@ class Typecho
         static $_widgets;
 
         /** 判断是否为plugin */
-        $widgetRoot = 'widget';
+        $widgetRoot = __TYPECHO_ROOT_DIR__ . '/widget';
         $suffix = 'Widget';
         $newWidget = false;
         
@@ -126,15 +126,22 @@ class Typecho
         if(empty($_widgets[$widget]))
         {
             $className = ((false === ($find = strstr($widget, '.'))) ? $widget : substr($find, 1)) . $suffix;
-            $fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php';
-            require_once $fileName;
+            
+            if(file_exists($fileName = $widgetRoot . '/' . str_replace('.', '/', $widget) . '.php'))
+            {
+                require_once $fileName;
 
-            $object = new $className();
-            $_widgets[$widget] = &$object;
+                $object = new $className();
+                $_widgets[$widget] = &$object;
 
-            $args = func_get_args();
-            array_shift($args);
-            call_user_func_array(array($_widgets[$widget], 'render'), $args);
+                $args = func_get_args();
+                array_shift($args);
+                call_user_func_array(array($_widgets[$widget], 'render'), $args);
+            }
+            else
+            {
+                throw new TypechoWidgetException(_t('%s文件不存在', $fileName), TypechoException::NOTFOUND);
+            }
         }
 
         return $_widgets[$widget];

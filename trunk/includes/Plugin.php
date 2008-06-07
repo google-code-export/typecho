@@ -113,6 +113,8 @@ class TypechoPlugin
             $info = call_user_func(array($className . 'Plugin', 'information'));
             $info['name'] = $className;
             $info['activated'] = in_array($className, $plugins);
+            $info['status'] = $info['activated'] ? _t('已激活') : _t('已禁用');
+            $info['check'] = !empty($info['check']) ? str_replace('{version}', $info['version'], $info['check']) : $info['homepage'];
             $result[] = $info;
         }
         

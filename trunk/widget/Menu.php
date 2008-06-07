@@ -64,7 +64,7 @@ class MenuWidget extends TypechoWidget
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
             array(_t('创建页面'), _t('创建新页面'), '/admin/edit-page.php', 'editor'),
-            array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
+        //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
             array(_t('文章'), _t('管理文章'), '/admin/post-list.php', 'contributor'),

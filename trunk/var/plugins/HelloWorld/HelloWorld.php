@@ -23,6 +23,7 @@ class HelloWorldPlugin implements TypechoPluginInterface
                      'author'       => 'Typecho Team',
                      'homepage'     => 'http://www.typecho.org',
                      'version'      => '1.0.0',
+                     'check'        => 'http://www.typecho.org/check.php?{version}',
                      'description'  => 'This is an example.');
     }
     
