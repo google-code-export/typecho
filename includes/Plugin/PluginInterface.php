@@ -50,7 +50,7 @@ interface TypechoPluginInterface
      * 获取插件信息方法
      * <code>
      * return array(
-     * 'name'           =>  'Hello World',
+     * 'title'          =>  'Hello World',
      * 'author'         =>  'Typecho Team',
      * 'homepage'       =>  'http://www.typecho.org',
      * 'version'        =>  '1.0.0',

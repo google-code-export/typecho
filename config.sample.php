@@ -10,20 +10,11 @@
 /** 定义根目录 */
 define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
-/** 定义库目录 */
-define('__TYPECHO_LIB_DIR__', __TYPECHO_ROOT_DIR__ . '/includes');
-
-/** 定义组件路径 */
-define('__TYPECHO_WIDGET_DIR__', __TYPECHO_ROOT_DIR__ . '/widget');
-
-/** 定义后台目录 */
-define('__TYPECHO_ADMIN_DIR__', __TYPECHO_ROOT_DIR__ . '/admin');
-
-/** 定义插件目录 */
-define('__TYPECHO_PLUGIN_DIR__', __TYPECHO_ROOT_DIR__ . '/var/plugins');
-
 /** 定义异常截获页面地址 */
 define('__TYPECHO_EXCEPTION_FILE__', __TYPECHO_ROOT_DIR__ . '/admin/error.php');
+
+/** 定义插件目录(相对路径) */
+define('__TYPECHO_PLUGIN_DIR__', '/var/plugins');
 
 /** 定义模板目录(相对路径) */
 define('__TYPECHO_THEME_DIR__', '/var/theme');
