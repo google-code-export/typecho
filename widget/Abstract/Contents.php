@@ -391,6 +391,15 @@ class ContentsWidget extends TypechoWidget
         /** 生成静态链接 */
         $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
         
+        /** 生成反馈地址 */
+        /** 评论 */
+        $value['commentUrl'] = TypechoRoute::parse('feedback', 
+        array('type' => 'comment', 'permalink' => $value['permalink']), $this->options->index);
+        
+        /** trackback */
+        $value['trackbackUrl'] = TypechoRoute::parse('feedback', 
+        array('type' => 'trackback', 'permalink' => $value['permalink']), $this->options->index);
+        
         /** 生成聚合链接 */
         /** RSS 2.0 */
         $value['feedUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedUrl) : '#';
@@ -439,30 +448,6 @@ class ContentsWidget extends TypechoWidget
     public function dateWord()
     {
         echo TypechoI18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
-    }
-
-    /**
-     * 输出文章评论提交地址
-     *
-     * @access public
-     * @return void
-     */
-    public function commentsPostUrl()
-    {
-        printf(TypechoRoute::parse('do', array('do' => 'CommentsPost'), $this->options->index) . '?%d.%d',
-        $this->cid, $this->created);
-    }
-
-    /**
-     * 输出文章引用通告地址
-     *
-     * @access public
-     * @return void
-     */
-    public function trackbackUrl()
-    {
-        printf(TypechoRoute::parse('do', array('do' => 'Trackback'), $this->options->index) . '?%d.%d',
-        $this->cid, $this->created);
     }
 
     /**
