@@ -157,7 +157,7 @@ class FeedWidget extends ArchiveWidget
             $this->options->feedAtomUrl = Typecho::pathToUrl('/comments/', $this->options->feedAtomUrl);
         }
         /** 解析路径 */
-        else if(false !== ($value = TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery)))
+        else if(false !== TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery))
         {
             parent::render(10);
         }

@@ -38,6 +38,10 @@
                 <li><?php _e('或者程序配置出现问题'); ?></li>
                 <li><?php _e('访问Typecho.org获得更多支持'); ?></li>
             </ul>
+        <?php else: ?>
+            <ul>
+                <li><?php echo implode('</li><li>', $exception->getMessages()); ?></li>
+            </ul>
         <?php endif; ?>
         <small style="float:right;font-size:8pt;font-weight:bold">Powered By <a href="http://www.typecho.org">Typecho</a></small>
     </div>
