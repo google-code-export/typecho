@@ -113,7 +113,8 @@ class FeedbackWidget extends CommentsWidget
         
         if(false !== TypechoRoute::match(TypechoConfig::get('Route'), $permalink) && 
         ('post' == TypechoRoute::$current || 'page' == TypechoRoute::$current) &&
-        Typecho::widget('Archive')->have())
+        Typecho::widget('Archive')->have() && 
+        in_array($callback, array('comment', 'trackback')))
         {
             $this->content = Typecho::widget('Archive');
             
