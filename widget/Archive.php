@@ -34,6 +34,12 @@ class ArchiveWidget extends ContentsWidget
         ->where('table.metas.`type` = ?', 'tag')
         ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
         
+        if(!empty($value['template']))
+        {
+            /** 应用自定义模板 */
+            TypechoRoute::$file = $value['template'];
+        }
+        
         return parent::push($value);
     }
 
