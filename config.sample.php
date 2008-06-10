@@ -83,7 +83,7 @@ TypechoConfig::set('Route', array(
     'archive_month' =>  array('/([0-9]{4})/([0-9]{1,2})[/]?', 'archive.php', array('year', 'month'), '/%s/%s/', 'Archive'),
     'archive_day'   =>  array('/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})[/]?', 'archive.php', array('year', 'month', 'day'), '/%s/%s/%s/', 'Archive'),
     'feed'          =>  array('/feed(.*)', 'Feed', array('feed'), '/feed%s'),
-    'feedback'      =>  array('(.*)/(comment|trackback)[/]?', 'Feedback', array('permalink', 'type'), '%s/%s'),
+    'feedback'      =>  array('(.*)/([_0-9a-zA-Z-]+)[/]?', 'Feedback', array('permalink', 'type'), '%s/%s'),
     'do'            =>  array('/([_0-9a-zA-Z-]+)\.do', 'Do', array('do'), '/%s.do'),
     'do_plugin'     =>  array('/([_0-9a-zA-Z-]+)/([_0-9a-zA-Z-]+)\.do', 'Do', array('plugin', 'do'), '/%s/%s.do'),
     'page'          =>  array('/([_0-9a-zA-Z-]+)[/]?', 'page.php', array('slug'), '/%s/', array('Archive')),
