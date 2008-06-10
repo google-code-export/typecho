@@ -119,7 +119,7 @@ class FeedbackWidget extends CommentsWidget
             $this->content = Typecho::widget('Archive');
             
             /** 判断来源 */
-            if(empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->content->permalink)
+            if('comment' == $callback && (empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->content->permalink))
             {
                 throw new TypechoWidgetException(_t('来源页不合法'));
             }
