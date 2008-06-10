@@ -36,6 +36,14 @@ class TypechoRoute
      * @var string
      */
     public static $current;
+    
+    /**
+     * 当前路由最终导向文件
+     * 
+     * @access public
+     * @var string
+     */
+    public static $file;
 
     /**
      * 路径解析值列表
@@ -101,7 +109,12 @@ class TypechoRoute
 
             if(5 == $count)
             {
-                list($pattern, $file, $values, $format, $widget) = $val;
+                /** 
+                 * 将file存入静态变量表,作为widget可以改变的参数
+                 * 使用方法:
+                 * TypechoRoute::$file = 'test.php';
+                 */
+                list($pattern, self::$file, $values, $format, $widget) = $val;
             }
             else if(4 == $count)
             {
@@ -126,9 +139,9 @@ class TypechoRoute
                 Typecho::widget($widget);
             }
 
-            if(!empty($file))
+            if(!empty(self::$file))
             {
-                if(file_exists($filePath = $path . '/' . $file))
+                if(file_exists($filePath = $path . '/' . self::$file))
                 {
                     /** 如果文件存在 */
                     require $filePath;
