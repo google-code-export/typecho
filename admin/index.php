@@ -66,7 +66,7 @@ require_once 'menu.php';
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
                 Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('post', Typecho::widget('Access')->uid), 
-                Typecho::pathToUrl('/page-list.php?status=my', Typecho::widget('Options')->adminUrl),
+                Typecho::pathToUrl('/page-list.php?status=myPost', Typecho::widget('Options')->adminUrl),
                 Typecho::widget('Abstract.contents')->count('page', Typecho::widget('Access')->uid)); ?><br />
                 <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br />
                 <h6 style="margin-top:10px;"><?php _e('服务器环境'); ?></h6>

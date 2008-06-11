@@ -31,6 +31,7 @@ class TypechoSQLite implements TypechoDbAdapter
      */
     private function filterColumnName($result)
     {
+        /** 如果结果为空,直接返回 */
         if(!$result)
         {
             return $result;
@@ -38,13 +39,16 @@ class TypechoSQLite implements TypechoDbAdapter
     
         $tResult = array();
         
+        /** 遍历数组 */
         foreach($result as $key => $val)
         {
+            /** 按点分隔 */
             if(false !== ($pos = strpos($key, '.')))
             {
                 $key = substr($key, $pos + 1);
             }
         
+            /** 按引号分割 */
             if(false === ($pos = strpos($key, '"')))
             {
                 $tResult[$key] = $val;

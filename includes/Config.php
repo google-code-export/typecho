@@ -209,6 +209,6 @@ class TypechoConfig implements Iterator
      */
     public function __toString()
     {
-        return var_export($this->_currentConfig, true);
+        return serialize($this->_currentConfig);
     }
 }
