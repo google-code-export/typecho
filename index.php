@@ -20,7 +20,7 @@ TypechoPlugin::init();
 TypechoPlugin::instance(__FILE__)->start();
 
 /** 通过路由器载入页面 */
-TypechoRoute::target(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . Typecho::widget('Options')->theme);
+TypechoRoute::target();
 
 /** 注册一个结束插件 */
 TypechoPlugin::instance(__FILE__)->end();
