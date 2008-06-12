@@ -159,7 +159,7 @@ class FeedWidget extends ArchiveWidget
         /** 解析路径 */
         else if(false !== TypechoRoute::match(TypechoConfig::get('Route'), $feedQuery))
         {
-            parent::render(10);
+            parent::render(10, false);
         }
         else
         {

@@ -36,14 +36,6 @@ class TypechoRoute
      * @var string
      */
     public static $current;
-    
-    /**
-     * 当前路由最终导向文件
-     * 
-     * @access public
-     * @var string
-     */
-    public static $file;
 
     /**
      * 路径解析值列表
@@ -71,7 +63,7 @@ class TypechoRoute
             {
                 self::$current = $key;
                 
-                if(4 <= count($val) && is_array($val[2]))
+                if(is_array($val[2]))
                 {
                     unset($matches[0]);
                     self::$_parameters = array_combine($val[2], $matches);
@@ -91,7 +83,7 @@ class TypechoRoute
      * @return void
      * @throws TypechoRouteException
      */
-    public static function target($path)
+    public static function target()
     {
         /** 判断是否定义配置 */
         TypechoConfig::need('Route');
@@ -105,57 +97,13 @@ class TypechoRoute
         /** 遍历路由 */
         if(false !== ($val = self::match($route, $pathInfo)))
         {
-            $count = count($val);
-
-            if(5 == $count)
-            {
-                /** 
-                 * 将file存入静态变量表,作为widget可以改变的参数
-                 * 使用方法:
-                 * TypechoRoute::$file = 'test.php';
-                 */
-                list($pattern, self::$file, $values, $format, $widget) = $val;
-            }
-            else if(4 == $count)
-            {
-                list($pattern, $widget, $values, $format) = $val;
-            }
-            else if(2 == $count)
-            {
-                list($pattern, $address) = $val;
-            }
-            else
-            {
-                throw new TypechoRouteException(_t('目录错误 %s', $pathInfo), TypechoException::NOTFOUND);
-            }
-
-            if(!empty($address))
-            {
-                Typecho::redirect($address, true);
-            }
-
-            if(!empty($widget))
-            {
-                Typecho::widget($widget);
-            }
-
-            if(!empty(self::$file))
-            {
-                if(file_exists($filePath = $path . '/' . self::$file))
-                {
-                    /** 如果文件存在 */
-                    require $filePath;
-                }
-                else
-                {
-                    throw new TypechoRouteException(_t('文件不存在 %s', $filePath), TypechoException::NOTFOUND);
-                }
-            }
-
-            return;
+            list($pattern, $widget, $values, $format) = $val;
+            Typecho::widget($widget);
         }
-
-        throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), TypechoException::NOTFOUND);
+        else
+        {
+            throw new TypechoRouteException(_t('没有找到 %s', $pathInfo), TypechoException::NOTFOUND);
+        }
     }
 
     /**

@@ -20,6 +20,14 @@ require_once 'Abstract/Contents.php';
 class ArchiveWidget extends ContentsWidget
 {
     /**
+     * 调用的风格文件
+     * 
+     * @access private
+     * @var string
+     */
+    private $themeFile = 'index.php';
+
+    /**
      * 将每行的值压入堆栈
      *
      * @access public
@@ -37,7 +45,7 @@ class ArchiveWidget extends ContentsWidget
         if(!empty($value['template']))
         {
             /** 应用自定义模板 */
-            TypechoRoute::$file = $value['template'];
+            $this->themeFile = $value['template'];
         }
         
         return parent::push($value);
@@ -48,9 +56,10 @@ class ArchiveWidget extends ContentsWidget
      *
      * @access public
      * @param integer $pageSize 每页文章数
+     * @param boolean $displayTheme 是否输出模板
      * @return void
      */
-    public function render($pageSize = NULL)
+    public function render($pageSize = NULL, $displayTheme = true)
     {
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
@@ -103,6 +112,8 @@ class ArchiveWidget extends ContentsWidget
                 throw new TypechoWidgetException('post' == TypechoRoute::$current ? _t('文章不存在') : _t('页面不存在'), TypechoException::NOTFOUND);
             }
             
+            /** 设置风格文件 */
+            $this->themeFile = TypechoRoute::$current . '.php';
             $hasPushed = true;
         }
         else if('category' == TypechoRoute::$current || 'category_page' == TypechoRoute::$current)
@@ -136,6 +147,9 @@ class ArchiveWidget extends ContentsWidget
             
             /** 设置标题 */
             $this->options->archiveTitle = $category['name'];
+            
+            /** 设置风格文件 */
+            $this->themeFile = 'archive.php';
         }
         else if('tag' == TypechoRoute::$current || 'tag_page' == TypechoRoute::$current)
         {
@@ -168,6 +182,9 @@ class ArchiveWidget extends ContentsWidget
             
             /** 设置标题 */
             $this->options->archiveTitle = $tag['name'];
+            
+            /** 设置风格文件 */
+            $this->themeFile = 'archive.php';
         }
         else if('archive_year' == TypechoRoute::$current || 'archive_month' == TypechoRoute::$current
         || 'archive_day' == TypechoRoute::$current)
@@ -219,6 +236,9 @@ class ArchiveWidget extends ContentsWidget
             
             /** ATOM 1.0 */
             $this->options->feedAtomUrl = TypechoRoute::parse(TypechoRoute::$current, $value, $this->options->feedAtomUrl);
+            
+            /** 设置风格文件 */
+            $this->themeFile = 'archive.php';
         }
 
         /** 设置关键词 */
@@ -248,5 +268,10 @@ class ArchiveWidget extends ContentsWidget
         ->page($this->currentPage, $this->pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));
+        
+        if($displayTheme)
+        {
+            require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->themeFile;
+        }
     }
 }
