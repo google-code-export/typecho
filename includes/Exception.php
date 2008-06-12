@@ -164,22 +164,27 @@ function exceptionHandler($exception)
         {
             case TypechoException::FORBIDDEN:
                 header('HTTP/1.1 403 Forbidden');
+                $handle = '_403';
                 break;
             case TypechoException::NOTFOUND:
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
+                $handle = '_404';
                 break;
             case TypechoException::RUNTIME:
                 header('HTTP/1.1 500 Internal Server Error');
+                $handle = '_500';
                 break;
             case TypechoException::UNVAILABLE:
                 header('HTTP/1.1 503 Service Unvailable');
+                $handle = '_503';
                 break;
             default:
+                $handle = '_error';
                 break;
         }
 
-        require_once __TYPECHO_EXCEPTION_FILE__;
+        require_once TypechoConfig::get('Exception')->$handle;
         die();
     }
 }
