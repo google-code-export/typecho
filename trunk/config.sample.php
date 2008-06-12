@@ -10,9 +10,6 @@
 /** 定义根目录 */
 define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
-/** 定义异常截获页面地址 */
-define('__TYPECHO_EXCEPTION_FILE__', __TYPECHO_ROOT_DIR__ . '/admin/error.php');
-
 /** 定义插件目录(相对路径) */
 define('__TYPECHO_PLUGIN_DIR__', '/var/plugins');
 
@@ -68,6 +65,16 @@ TypechoConfig::set('Db', array(
     'prefix'        =>  'typecho_',
     'charset'       =>  'utf8',
     'adapter'       =>  'Mysql'
+));
+
+/** 自定义错误页面 */
+TypechoConfig::set('Exception', array(
+    '_403'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    '_404'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    '_500'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    '_501'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    '_503'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    '_error'        =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
 ));
 
 /** 定义路由参数 */
