@@ -80,9 +80,9 @@ class FeedbackWidget extends CommentsWidget
 
         $validator->run(TypechoRequest::getParametersFrom('author', 'mail', 'url', 'text'));
 
-        $comment['author'] = TypechoRequest::getParameter('author');
-        $comment['mail'] = TypechoRequest::getParameter('mail');
-        $comment['url'] = TypechoRequest::getParameter('url');
+        $comment['author'] = strip_tags(TypechoRequest::getParameter('author'));
+        $comment['mail'] = strip_tags(TypechoRequest::getParameter('mail'));
+        $comment['url'] = strip_tags(TypechoRequest::getParameter('url'));
         $comment['text'] = TypechoRequest::getParameter('text');
 
         TypechoRequest::setCookie('author', $comment['author']);
