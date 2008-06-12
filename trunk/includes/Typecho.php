@@ -285,6 +285,13 @@ class Typecho
 
     /**
      * 去掉字符串中的html标签
+     * 使用方法:
+     * <code>
+     * $input = '<a href="http://test/test.php" title="example">hello</a>';
+     * $output = Typecho::stripTags($input, <a href="">);
+     * echo $output;
+     * //display: '<a href="http://test/test.php">hello</a>'
+     * </code>
      *
      * @access public
      * @param string $string 需要处理的字符串
