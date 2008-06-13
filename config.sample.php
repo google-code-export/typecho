@@ -81,7 +81,7 @@ TypechoConfig::set('Exception', array(
 TypechoConfig::set('Route', array(
     'index'             =>  array('[/]?', 'Archive', NULL, '/'),
     'post'              =>  array('/archives/([0-9]+)[/]?', 'Archive', array('cid'), '/archives/%s/'),
-    'category'          =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'Archive', array('slug'), '/category/%s/'),
+    'category'          =>  array('/category/([^/]+)[/]?', 'Archive', array('slug'), '/category/%s/'),
     'tag'               =>  array('/tag/([^/]+)[/]?', 'Archive', array('slug'), '/tag/%s/'),
     'index_page'        =>  array('/page/([0-9]+)[/]?', 'Archive', array('page'), '/page/%s/'),
     'category_page'     =>  array('/category/([_0-9a-zA-Z-]+)/([0-9]+)[/]?', 'Archive', array('slug', 'page'), '/category/%s/%s/'),

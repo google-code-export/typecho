@@ -57,7 +57,7 @@ class EditCategoryWidget extends MetasWidget
         {
             $meta = TypechoRequest::getCookie('category');
             $meta['type'] = 'category';
-            $meta['slug'] = NULL;
+            $meta['slug'] = empty($meta['slug']) ? NULL : $meta['slug'];
             $meta['do'] = 'insert';
             $this->push($meta);
         }

@@ -42,7 +42,8 @@ class FeedbackWidget extends CommentsWidget
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  TypechoRequest::getClientIp(),
-            'type'      =>  'comment'
+            'type'      =>  'comment',
+            'status'    =>  'approved'
         );
     
         /** 判断父节点 */
@@ -99,6 +100,27 @@ class FeedbackWidget extends CommentsWidget
         TypechoRequest::deleteCookie('text');
         $this->goBack('#comment-' . $commentId);
     }
+    
+    private function trackback()
+    {
+        $trackback = array(
+            'created'   =>  $this->options->gmtTime,
+            'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
+            'ip'        =>  TypechoRequest::getClientIp(),
+            'type'      =>  'trackback',
+            'status'    =>  'approved'
+        );
+        
+        $trackback['author'] = strip_tags(TypechoRequest::getParameter('blog_name'));
+        $trackback['url'] = strip_tags(TypechoRequest::getParameter('url'));
+        $trackback['text'] = TypechoRequest::getParameter('excerpt');
+        
+        /** 生成过滤器 */
+        TypechoPlugin::instance(__FILE__)->filter(__METHOD__, $trackback);
+        
+        /** 添加引用 */
+        $trackbackId = $this->insertComment($trackback, $this->content->cid);
+    }
 
     /**
      * 入口函数,提交评论
@@ -116,12 +138,18 @@ class FeedbackWidget extends CommentsWidget
         Typecho::widget('Archive')->have() && 
         in_array($callback, array('comment', 'trackback')))
         {
-            $this->content = Typecho::widget('Archive');
+            $this->content = Typecho::widget('Archive', 1, false);
             
             /** 判断来源 */
             if('comment' == $callback && (empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->content->permalink))
             {
                 throw new TypechoWidgetException(_t('来源页不合法'));
+            }
+            
+            /** 如果文章允许反馈 */
+            if(!$this->content->allow($callback))
+            {
+                throw new TypechoWidgetException(_t('对不起,此内容的反馈被关闭.'), TypechoException::FORBIDDEN);
             }
             
             /** 调用函数 */

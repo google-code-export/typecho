@@ -26,17 +26,16 @@ class DoCategoryWidget extends MetasWidget
      * 验证数据
      * 
      * @access private
+     * @param array $data 需要验证的数据
      * @param boolean $isUpdate 是否为更新数据
      * @return void
      */
-    private function validate($isUpdate = false)
+    private function validate(array $data, $isUpdate = false)
     {
         /** 验证数据 */
         $validator = new TypechoValidation($this);
         $validator->addRule('name', 'required', _t('必须填写分类名称'));
         $validator->addRule('name', 'nameExists', _t('分类名称已经存在'));
-        $validator->addRule('slug', 'required', _t('必须填写分类缩略名'));
-        $validator->addRule('slug', 'alphaDash', _t('分类缩略名只能使用字母,数字,下划线和横杠'));
         $validator->addRule('slug', 'slugExists', _t('缩略名已经存在'));
         
         if($isUpdate)
@@ -47,12 +46,12 @@ class DoCategoryWidget extends MetasWidget
         
         try
         {
-            $validator->run(TypechoRequest::getParametersFrom('name', 'slug', 'mid'));
+            $validator->run($data);
         }
         catch(TypechoValidationException $e)
         {
             /** 记录cookie */
-            TypechoRequest::setCookie('category', TypechoRequest::getParametersFrom('name', 'slug', 'description'));
+            TypechoRequest::setCookie('category', $data);
             
             /** 设置提示信息 */
             Typecho::widget('Notice')->set($e->getMessages(), NULL, 'detail');
@@ -129,13 +128,14 @@ class DoCategoryWidget extends MetasWidget
      * @return void
      */
     public function insertCategory()
-    {
-        /** 验证数据 */
-        $this->validate();
-    
+    {    
         /** 取出数据 */
         $category = TypechoRequest::getParametersFrom('name', 'slug', 'description');
+        $category['slug'] = empty($category['slug']) ? $category['name'] : $category['slug'];
         $category['type'] = 'category';
+        
+        /** 验证数据 */
+        $this->validate($category);
     
         /** 插入数据 */
         $category['mid'] = $this->insertMeta($category, true);
@@ -150,6 +150,40 @@ class DoCategoryWidget extends MetasWidget
     }
     
     /**
+     * 通过ajax插入分类
+     * 
+     * @access public
+     * @return void
+     */
+    public function ajaxInsertCategory()
+    {
+        /** 取出数据 */
+        $category = TypechoRequest::getParametersFrom('name');
+        $category['slug'] = $category['name'];
+        $category['type'] = 'category';
+    
+        /** 验证数据 */
+        $validator = new TypechoValidation($this);
+        $validator->addRule('name', 'required', _t('必须填写分类名称'));
+        $validator->addRule('name', 'nameExists', _t('分类名称已经存在'));
+        $validator->addRule('slug', 'slugExists', _t('缩略名已经存在'));
+        
+        /** 插入分类 */
+        $insertId = $this->insertMeta($category, true);
+        
+        try
+        {
+            $validator->run($category);
+        }
+        catch(TypechoValidationException $e)
+        {
+            die(implode(',', $e->getMessages()));
+        }
+        
+        echo $insertId;
+    }
+    
+    /**
      * 更新分类
      * 
      * @access public
@@ -157,12 +191,13 @@ class DoCategoryWidget extends MetasWidget
      */
     public function updateCategory()
     {
-        /** 验证数据 */
-        $this->validate(true);
-        
         /** 取出数据 */
         $category = TypechoRequest::getParametersFrom('name', 'slug', 'description');
+        $category['slug'] = empty($category['slug']) ? $category['name'] : $category['slug'];
         $category['type'] = 'category';
+        
+        /** 验证数据 */
+        $this->validate($category, true);
     
         /** 更新数据 */
         $this->updateMeta($category, TypechoRequest::getParameter('mid'), 'category');

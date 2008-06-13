@@ -75,6 +75,7 @@ class EditPostWidget extends ContentsWidget
                           'do'          => 'insert',
                           'cid'         => 0,
                           'type'        => 'post',
+                          'slug'        => NULL,
                           'created'     => $this->options->gmtTime + $this->options->timezone,
                           'allowComment'=> $this->options->allowComment,
                           'allowPing'   => $this->options->allowPing,

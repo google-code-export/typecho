@@ -482,7 +482,6 @@ class Typecho
             $str = substr($str, $cutOff);
         }
 
-        $str = urlencode($str);
         return NULL == $str ? $default : $str;
     }
     
