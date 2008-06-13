@@ -7,24 +7,21 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 异常基类 */
-require_once 'Exception.php';
+/** Typecho_Widget_Action */
+require_once 'Typecho/Widget/Action.php';
 
-/** 载入异常支持 */
-require_once 'Widget/WidgetException.php';
+/** Typecho_Widget_Dataset */
+require_once 'Typecho/Widget/Dataset.php';
 
-/** 载入导航页支持 */
-require_once 'Widget/WidgetNavigator.php';
-
-/** 载入api支持 */
-require_once 'Typecho.php';
+/** Typecho_Widget_Response */
+require_once 'Typecho/Widget/Response.php';
 
 /**
  * Typecho组件基类
  *
  * @package Widget
  */
-abstract class TypechoWidget implements Iterator, Countable
+abstract class Typecho_Widget implements Iterator, Countable
 {
     /**
      * 内部数据堆栈
@@ -41,25 +38,6 @@ abstract class TypechoWidget implements Iterator, Countable
      * @var array
      */
     protected $_row = array();
-    
-    /**
-     * 返回来路
-     *
-     * @access protected
-     * @param string $anchor 锚点地址
-     * @return void
-     * @throws TypechoWidgetException
-     */
-    protected function goBack($anchor = NULL)
-    {
-        //判断来源
-        if(empty($_SERVER['HTTP_REFERER']))
-        {
-            throw new TypechoWidgetException(_t('无法返回原网页'));
-        }
-
-        Typecho::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
-    }
 
     /**
      * 将类本身赋值
@@ -69,11 +47,7 @@ abstract class TypechoWidget implements Iterator, Countable
      */
     public function to(&$variable)
     {
-        if(empty($variable) ||
-        ($variable instanceof TypechoWidget && !$variable->have()))
-        {
-            $variable = $this;
-        }
+        $variable = $this;
     }
 
     /**
@@ -295,15 +269,5 @@ abstract class TypechoWidget implements Iterator, Countable
     public function count()
     {
         return count($this->_stack);
-    }
-
-    /**
-     * 必须实现的执行函数
-     *
-     * @return void
-     */
-    public function render()
-    {
-        throw new TypechoWidgetException(_t('%s::render方法必须在继承子类中实现', get_class($this)), TypechoException::RUNTIME);
     }
 }
