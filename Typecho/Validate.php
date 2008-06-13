@@ -18,23 +18,15 @@
  */
 
 /** 验证异常支持 */
-require_once 'Typecho/Validation/Exception.php';
+require_once 'Typecho/Validate/Exception.php';
 
 /**
  * 验证类
  *
- * @package Validation
+ * @package Validate
  */
-class Typecho_Validation
+class Typecho_Validate
 {
-    /**
-     * 默认对象
-     *
-     * @access private
-     * @var object
-     */
-    private $_object;
-
     /**
      * 内部数据
      *
@@ -52,42 +44,31 @@ class Typecho_Validation
     private $_rules = array();
 
     /**
-     * 初始化函数
-     *
-     * @access public
-     * @param string $object 默认对象
-     * @return void
-     */
-    public function __construct($object = NULL)
-    {
-        //载入对象
-        $this->_object = $object;
-    }
-
-    /**
      * 增加验证规则
      * 
      * @access public
      * @param string $key 数值键值
      * @param string $rule 规则名称
      * @param string $message 错误字符串
-     * @return void
+     * @return Typecho_Validation
      */
     public function addRule($key, $rule, $message)
     {
         if(func_num_args() <= 3)
         {
-            $this->_rules[$key][$rule] = $message;
+            $this->_rules[$key][] = array($rule, $message);
         }
         else
         {
             $params = func_get_args();
             $params = array_splice($params, 3);
-            $this->_rules[$key][$rule] = array_merge(array($message), $params);
+            $this->_rules[$key][] = array_merge(array($rule, $message), $params);
         }
+        
+        return $this;
     }
 
-   /**
+    /**
      * Run the Validator
      * This function does all the work.
      *
@@ -95,6 +76,7 @@ class Typecho_Validation
      * @param   array $data 需要验证的数据
      * @param   array $rules 验证数据遵循的规则
      * @return	array
+     * @throws  Typecho_Validate_Exception
      */
     public function run(array $data, $rules = NULL)
     {
@@ -103,59 +85,28 @@ class Typecho_Validation
         $rules = empty($rules) ? $this->_rules : $rules;
 
         // Cycle through the rules and test for errors
-        foreach($rules as $key => $rule)
+        foreach($rules as $key => $rules)
         {
-            if(empty($data[$key]))
+            $data[$key] = empty($data[$key]) ? NULL : $data[$key];
+
+            foreach($rules as $params)
             {
-                if(isset($rule['required']))
+                $method = $params[0];
+                $message = $params[1];
+                $params[1] = $data[$key];
+                $params = array_slice($params, 1);
+
+                if(!call_user_func_array($method, $params))
                 {
-                    $message = is_array($rule['required']) ? $rule['required'][0] : $rule['required'];
                     $result[$key] = $message;
-                }
-            }
-            else
-            {
-                foreach($rule as $method => $params)
-                {
-                    if(is_array($params))
-                    {
-                        $message = $params[0];
-                        $params[0] = $data[$key];
-                    }
-                    else
-                    {
-                        $message = $params;
-                        $params = array($data[$key]);
-                    }
-
-                    if(method_exists($this, $method))
-                    {
-                        $method = array(&$this, $method);
-                    }
-                    else if(!empty($this->_object) && method_exists($this->_object, $method))
-                    {
-                        $method = array(&$this->_object, $method);
-                    }
-                    else if(function_exists($method))
-                    {
-                        $method = $method;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    if(!call_user_func_array($method, $params))
-                    {
-                        $result[$key] = $message;
-                    }
+                    break;
                 }
             }
         }
 
         if($result)
         {
-            throw new Typecho_Validation_Exception($result);
+            throw new Typecho_Validate_Exception($result);
         }
     }
 
@@ -186,7 +137,7 @@ class Typecho_Validation
     }
 
     /**
-     * 虚函数
+     * 是否为空
      *
      * @access public
      * @param string $str 待处理的字符串
@@ -194,7 +145,7 @@ class Typecho_Validation
      */
     public function required($str)
     {
-        return true;
+        return !empty($str);
     }
     
     /**

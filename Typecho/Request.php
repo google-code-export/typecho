@@ -48,13 +48,20 @@ class Typecho_Request
      * 从参数列表指定的值中获取http传递参数
      *
      * @access public
-     * @param string $parameter 指定的参数
+     * @param mixed $parameter 指定的参数
      * @return unknown
      */
-    public static function getParametersFrom()
+    public static function getParametersFrom($parameter)
     {
-        $args = func_get_args();
-        $parameters = array();
+        if(is_array($parameter))
+        {
+            $args = $parameter;
+        }
+        else
+        {
+            $args = func_get_args();
+            $parameters = array();
+        }
 
         foreach($args as $arg)
         {
