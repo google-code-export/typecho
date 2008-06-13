@@ -388,6 +388,9 @@ class ContentsWidget extends TypechoWidget
         $type = $value['type'];
         $routeExists = isset(TypechoConfig::get('Route')->$type);
         
+        $tmpSlug = $value['slug'];
+        $value['slug'] = urlencode($value['slug']);
+        
         /** 生成静态链接 */
         $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
         
@@ -409,6 +412,8 @@ class ContentsWidget extends TypechoWidget
         
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedAtomUrl) : '#';
+        
+        $value['slug'] = $tmpSlug;
         
         $this->plugin->filter(__METHOD__, $value);
         return $value;

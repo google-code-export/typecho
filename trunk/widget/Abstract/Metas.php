@@ -122,11 +122,8 @@ class MetasWidget extends TypechoWidget
         $type = $value['type'];
         $routeExists = isset(TypechoConfig::get('Route')->$type);
         
-        if('tag' == $type)
-        {
-            $tmpSlug = $value['slug'];
-            $value['slug'] = urlencode($value['slug']);
-        }
+        $tmpSlug = $value['slug'];
+        $value['slug'] = urlencode($value['slug']);
         
         $value['permalink'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->index) : '#';
         
@@ -140,10 +137,7 @@ class MetasWidget extends TypechoWidget
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? TypechoRoute::parse($type, $value, $this->options->feedAtomUrl) : '#';
         
-        if('tag' == $type)
-        {
-            $value['slug'] = $tmpSlug;
-        }
+        $value['slug'] = $tmpSlug;
         
         $this->plugin->filter(__METHOD__, $value);
         return $value;
@@ -418,9 +412,9 @@ class MetasWidget extends TypechoWidget
      */
     public function sortMeta(array $metas, $type)
     {
-        foreach($metas as $mid => $sort)
+        foreach($metas as $sort => $mid)
         {
-            $this->db->query($this->db->sql()->update('table.contents')->row('sort', $sort)
+            $this->db->query($this->db->sql()->update('table.contents')->row('sort', $sort + 1)
             ->where('`mid` = ?', $mid)->where('`type` = ?', $type));
         }
     }

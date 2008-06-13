@@ -12,7 +12,7 @@
  *
  * @package Db
  */
-class TypechoPDOPgsql implements TypechoDbAdapter
+class TypechoPDOPgsqlDbAdapter implements TypechoDbAdapter
 {
     /**
      * 数据库对象

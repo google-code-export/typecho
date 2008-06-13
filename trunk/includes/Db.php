@@ -98,7 +98,7 @@ class TypechoDb
     
         /** 数据库适配器 */
         require_once 'Db/DbAdapter/' . TypechoConfig::get('Db')->adapter . '.php';
-        $adapter = 'Typecho' . TypechoConfig::get('Db')->adapter;
+        $adapter = 'Typecho' . TypechoConfig::get('Db')->adapter . 'DbAdapter';
 
         //实例化适配器对象
         $this->_adapter = new $adapter();

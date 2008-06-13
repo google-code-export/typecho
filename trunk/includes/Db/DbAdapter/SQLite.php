@@ -12,7 +12,7 @@
  *
  * @package Db
  */
-class TypechoSQLite implements TypechoDbAdapter
+class TypechoSQLiteDbAdapter implements TypechoDbAdapter
 {
     /**
      * 数据库标示

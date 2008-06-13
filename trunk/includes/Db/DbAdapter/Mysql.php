@@ -12,7 +12,7 @@
  *
  * @package Db
  */
-class TypechoMysql implements TypechoDbAdapter
+class TypechoMysqlDbAdapter implements TypechoDbAdapter
 {
     /**
      * 数据库连接字符串标示
