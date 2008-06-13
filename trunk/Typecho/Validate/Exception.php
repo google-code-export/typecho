@@ -13,7 +13,7 @@ require_once 'Exception.php';
 /**
  * 验证异常类
  *
- * @package Validation
+ * @package Validate
  */
-class Typecho_Validation_Exception extends Typecho_Exception
+class Typecho_Validate_Exception extends Typecho_Exception
 {}

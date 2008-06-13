@@ -7,14 +7,8 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** Typecho_Widget_Action */
-require_once 'Typecho/Widget/Action.php';
-
-/** Typecho_Widget_Dataset */
-require_once 'Typecho/Widget/Dataset.php';
-
-/** Typecho_Widget_Response */
-require_once 'Typecho/Widget/Response.php';
+/** Typecho_Widget_Exception */
+require_once 'Typecho/Widget/Exception.php';
 
 /**
  * Typecho组件基类
