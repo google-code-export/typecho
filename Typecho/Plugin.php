@@ -8,10 +8,10 @@
  */
 
 /** 载入异常支持 */
-require_once 'Typehco/Plugin/Exception.php';
+require_once 'Typecho/Plugin/Exception.php';
 
 /** 载入接口支持 */
-require_once 'Typehco/Plugin/Interface.php';
+require_once 'Typecho/Plugin/Interface.php';
 
 /**
  * 插件处理类

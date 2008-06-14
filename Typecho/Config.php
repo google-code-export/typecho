@@ -9,6 +9,9 @@
  * @version $Id$
  */
 
+/** 国际化语言 */
+require_once 'Typecho/I18n.php';
+
 /** 载入配置异常 */
 require_once 'Typecho/Config/Exception.php';
 
@@ -62,7 +65,7 @@ class Typecho_Config implements Iterator
      */
     public static function get($name)
     {
-        return self::$_config[$name];
+        return isset(self::$_config[$name]) ? self::$_config[$name] : NULL;
     }
 
     /**

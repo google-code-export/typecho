@@ -163,7 +163,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         catch(Typecho_Validate_Exception $e)
         {
             /** 利用cookie记录错误 */
-            Typecho_Request::setCookie('notice', $e->getMessages());
+            Typecho_Request::setCookie('form_message', $e->getMessages());
         }
     }
     
@@ -176,6 +176,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function render()
     {
         parent::render();
-        Typecho_Request::deleteCookie('notice');
+        Typecho_Request::deleteCookie('form_message');
     }
 }

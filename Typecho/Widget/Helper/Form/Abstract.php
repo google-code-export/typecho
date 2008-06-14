@@ -111,7 +111,7 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
         ->appendTo($this->rightTd);
         
         /** 如果有错误提示 */
-        $notice = Typecho_Request::getCookie('notice');
+        $notice = Typecho_Request::getCookie('form_message');
         if(!empty($notice[$inputName]))
         {
             $detail = new Typecho_Widget_Helper_Layout('span');

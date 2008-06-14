@@ -12,11 +12,9 @@
 /** 载入配置文件 */
 require_once '../config.inc.php';
 
-/** 系统启动 */
-Typecho::start();
-
-/** 载入插件 */
-TypechoPlugin::init();
-
 /** 注册一个初始化插件 */
-TypechoPlugin::instance(__FILE__)->admin();
+Typecho_Plugin::instance(__FILE__)->admin();
+
+$options = Typecho_API::factory('Widget_Abstract_Options');
+$access = Typecho_API::factory('Widget_Users_Current');
+$notice = Typecho_API::factory('Widget_Notice');

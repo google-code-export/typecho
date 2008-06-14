@@ -10,17 +10,4 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
-/** 系统启动 */
-Typecho::start();
-
-/** 载入插件 */
-TypechoPlugin::init();
-
-/** 注册一个初始化插件 */
-TypechoPlugin::instance(__FILE__)->start();
-
-/** 通过路由器载入页面 */
-TypechoRoute::target();
-
-/** 注册一个结束插件 */
-TypechoPlugin::instance(__FILE__)->end();
+Typecho_Router::target();

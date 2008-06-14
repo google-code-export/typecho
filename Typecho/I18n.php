@@ -63,8 +63,6 @@ class Typecho_I18n
      */
     public static function translate($string)
     {
-        Typecho_Config::need('I18n');
-    
         if(Typecho_Config::get('I18n'))
         {
             if(!self::$_loaded)
