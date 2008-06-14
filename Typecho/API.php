@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 异常基类 */
-require_once 'Exception.php';
-
 /**
  * Typecho公用方法
  *
