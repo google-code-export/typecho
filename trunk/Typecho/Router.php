@@ -7,6 +7,9 @@
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
+/** 国际化语言 */
+require_once 'Typecho/I18n.php';
+
 /** 配置管理 */
 require_once 'Typecho/Config.php';
 
@@ -98,7 +101,7 @@ class Typecho_Router
         if(false !== ($val = self::match($route, $pathInfo)))
         {
             list($pattern, $widget, $values, $format) = $val;
-            Typecho_API::factory($widget);
+            Typecho_API::factory($widget)->render();
         }
         else
         {
@@ -129,7 +132,7 @@ class Typecho_Router
      */
     public static function parse($name, array $value = NULL, $prefix = NULL)
     {
-        $route = Typecho_Config::get('Route')->$name;
+        $route = Typecho_Config::get('Router')->$name;
 
         if($value)
         {

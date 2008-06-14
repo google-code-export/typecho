@@ -97,7 +97,7 @@ class Typecho_API
      */
     public static function setContentType($contentType = 'text/html', $charset = 'UTF-8')
     {
-        header('content-Type: ' . $contentType . ';charset= ' . $charset);
+        header('content-Type: ' . $contentType . ';charset= ' . $charset, true);
     }
     
     /**
@@ -114,7 +114,8 @@ class Typecho_API
         if(!isset($classStack[$className]))
         {
             require_once dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
-            $classStack[$className] = new $className;
+            $params = array_slice(func_get_args(), 1);
+            $classStack[$className] = call_user_func_array(array(new ReflectionClass($className), 'newInstance'), $params);
         }
         
         return $classStack[$className];
@@ -167,7 +168,7 @@ class Typecho_API
      */
     public static function stripslashesDeep($value)
     {
-        return is_array($value) ? array_map(array('Typecho', 'stripslashesDeep'), $value) : stripslashes($value);
+        return is_array($value) ? array_map(array('Typecho_API', 'stripslashesDeep'), $value) : stripslashes($value);
     }
 
     /**
@@ -176,7 +177,7 @@ class Typecho_API
      * <code>
      * <?php
      * $fruit = array(array('apple' => 2, 'banana' => 3), array('apple' => 10, 'banana' => 12));
-     * $banana = Typecho::arrayFlatten($fruit, 'banana');
+     * $banana = Typecho_API::arrayFlatten($fruit, 'banana');
      * print_r($banana);
      * //outputs: array(0 => 3, 1 => 12);
      * ?>
@@ -261,7 +262,7 @@ class Typecho_API
      * 使用方法:
      * <code>
      * $input = '<a href="http://test/test.php" title="example">hello</a>';
-     * $output = Typecho::stripTags($input, <a href="">);
+     * $output = Typecho_API::stripTags($input, <a href="">);
      * echo $output;
      * //display: '<a href="http://test/test.php">hello</a>'
      * </code>

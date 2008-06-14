@@ -7,6 +7,9 @@
  * @version    $Id: Exception.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
+/** 配置管理 */
+require_once 'Typecho/Config.php';
+
 /**
  * Typecho异常基类
  * 主要重载异常打印函数
@@ -144,38 +147,36 @@ function exceptionHandler($exception)
 {
     @ob_clean();
 
-    if(__TYPECHO_DEBUG__)
-    {
-        header('content-Type: text/html;charset= ' . __TYPECHO_CHARSET__, true);
-    
-        if($exception instanceof TypechoException)
+    if(!Typecho_Config::get('Exception'))
+    {    
+        if($exception instanceof Typecho_Exception)
         {
             /** 显示调用__toString,修正PHP 5.2之前的bug */
             die($exception->__toString());
         }
         else
         {
-            die(TypechoException::parse($exception->__toString()));
+            die(Typecho_Exception::parse($exception->__toString()));
         }
     }
     else
     {
         switch($exception->getCode())
         {
-            case TypechoException::FORBIDDEN:
+            case Typecho_Exception::FORBIDDEN:
                 header('HTTP/1.1 403 Forbidden');
                 $handle = '_403';
                 break;
-            case TypechoException::NOTFOUND:
+            case Typecho_Exception::NOTFOUND:
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 $handle = '_404';
                 break;
-            case TypechoException::RUNTIME:
+            case Typecho_Exception::RUNTIME:
                 header('HTTP/1.1 500 Internal Server Error');
                 $handle = '_500';
                 break;
-            case TypechoException::UNVAILABLE:
+            case Typecho_Exception::UNVAILABLE:
                 header('HTTP/1.1 503 Service Unvailable');
                 $handle = '_503';
                 break;
@@ -184,7 +185,7 @@ function exceptionHandler($exception)
                 break;
         }
 
-        require_once TypechoConfig::get('Exception')->$handle;
+        require_once Typecho_Config::get('Exception')->$handle;
         die();
     }
 }
@@ -213,7 +214,7 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
         $errors = array();
     }
 
-    if(__TYPECHO_DEBUG__)
+    if(!Typecho_Config::get('Exception'))
     {
         $errorWord = array (
             E_ERROR              => 'Error',

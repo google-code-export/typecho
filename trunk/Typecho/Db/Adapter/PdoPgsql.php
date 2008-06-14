@@ -25,7 +25,7 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
     /**
      * 数据库连接函数
      *
-     * @param TypechoConfig $config 数据库配置
+     * @param Typecho_Config $config 数据库配置
      * @throws Typecho_Db_Exception
      * @return resource
      */

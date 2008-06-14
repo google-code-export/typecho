@@ -26,6 +26,22 @@ require_once 'Typecho/Db.php';
 abstract class Typecho_Widget_Dataset extends Typecho_Widget
 {
     /**
+     * 分页大小
+     * 
+     * @access protected
+     * @var integer
+     */
+    protected $pageSize;
+    
+    /**
+     * 当前页
+     * 
+     * @access protected
+     * @var integer
+     */
+    protected $currentPage;
+
+    /**
      * 数据库对象
      * 
      * @access protected
@@ -45,6 +61,30 @@ abstract class Typecho_Widget_Dataset extends Typecho_Widget
     }
     
     /**
+     * 设置分页大小
+     * 
+     * @access public
+     * @param integer $pageSize 分页大小
+     * @return void
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->pageSize = $pageSize;
+    }
+    
+    /**
+     * 设置当前页
+     * 
+     * @access public
+     * @param integer $currentPage 当前页
+     * @return void
+     */
+    public function setCurrentPage($currentPage)
+    {
+        $this->currentPage = $currentPage;
+    }
+    
+    /**
      * 查询方法
      * 
      * @access public
@@ -56,10 +96,10 @@ abstract class Typecho_Widget_Dataset extends Typecho_Widget
      * 获得所有记录数
      * 
      * @access public
-     * @param Typecho_Db_Query $select 查询对象
+     * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    abstract public function size(Typecho_Db_Query $select);
+    abstract public function size(Typecho_Db_Query $condition);
     
     /**
      * 增加记录方法
@@ -75,17 +115,17 @@ abstract class Typecho_Widget_Dataset extends Typecho_Widget
      * 
      * @access public
      * @param array $rows 字段对应值
-     * @param Typecho_Db_Query $select 查询对象
+     * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    abstract public function update(array $rows, Typecho_Db_Query $select);
+    abstract public function update(array $rows, Typecho_Db_Query $condition);
     
     /**
      * 删除记录方法
      * 
      * @access public
-     * @param Typecho_Db_Query $select 查询对象
+     * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    abstract public function delete(Typecho_Db_Query $select);
+    abstract public function delete(Typecho_Db_Query $condition);
 }

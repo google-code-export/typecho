@@ -55,7 +55,7 @@ abstract class Typecho_Widget implements Iterator, Countable
         $_rowsKey = array();
 
         /** 过滤数据行 */
-        $this->_row = array_filter($this->_row, array('Typecho', 'stringAble'));
+        $this->_row = array_filter($this->_row, array('Typecho_API', 'stringAble'));
 
         //将数据格式化
         foreach($this->_row as $key => $val)
@@ -66,8 +66,8 @@ abstract class Typecho_Widget implements Iterator, Countable
         foreach($this->_stack as $val)
         {
             /** 过滤数据行 */
-            $val = array_filter($val, array('Typecho', 'stringAble'));
-            echo str_replace($_rowsKey, $val, $format);
+            $val = array_filter($val, array('Typecho_API', 'stringAble'));
+            echo str_replace($_rowsKey, $val, $format) . "\n";
         }
         
         /** 重置指针 */

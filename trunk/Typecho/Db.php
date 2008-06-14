@@ -7,6 +7,9 @@
  * @version    $Id: Db.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
+/** 国际化语言 */
+require_once 'Typecho/I18n.php';
+
 /** 配置管理 */
 require_once 'Typecho/Config.php';
 

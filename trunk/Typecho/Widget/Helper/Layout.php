@@ -200,7 +200,7 @@ class Typecho_Widget_Helper_Layout
      */
     public function end()
     {
-        echo $this->_close ? ' />' : "</{$this->_tagName}>";
+        echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
     }
     
     /**
