@@ -126,7 +126,7 @@ class Widget_Users_Current extends Widget_Abstract_Users
                 $user = $this->db->fetchRow($this->select()
                 ->where('`uid` = ?', Typecho_Request::getCookie('uid'))
                 ->limit(1));
-                
+
                 if($user && sha1($user['password']) == Typecho_Request::getCookie('password')
                 && $user['authCode'] == Typecho_Request::getCookie('authCode'))
                 {
@@ -152,7 +152,7 @@ class Widget_Users_Current extends Widget_Abstract_Users
     {
         if($this->hasLogin())
         {
-            if(array_key_exists($group, $this->_group) && $this->_group[$this->group] <= $this->_group[$group])
+            if(array_key_exists($group, $this->groups) && $this->groups[$this->group] <= $this->groups[$group])
             {
                 return true;
             }

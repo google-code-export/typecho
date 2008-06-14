@@ -35,7 +35,9 @@ class Widget_Abstract_Users extends Typecho_Widget_Dataset
      */
     public function __construct()
     {
-        $this->group = array(
+        parent::__construct();
+    
+        $this->groups = array(
             'administrator' => 0,
             'editor'		=> 1,
             'contributor'	=> 2,

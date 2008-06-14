@@ -15,7 +15,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class CommentsWidget extends TypechoWidget
+class Widget_Abstract_Comments extends Typecho_Widget_Dataset
 {
     /**
      * 实例化的抽象Meta类
@@ -75,16 +75,20 @@ class CommentsWidget extends TypechoWidget
         
         /** 初始化插件 */
         $this->plugin = Typecho_Plugin::instance(__FILE__);
-        
-        /** 初始化共用选择器 */
-        $this->selectSql = $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
+    }
+    
+    /**
+     * 获取查询对象
+     * 
+     * @access public
+     * @return Typecho_Db_Query
+     */
+    public function select()
+    {
+        return $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
         table.comments.`coid`, table.comments.`created` AS `date`, table.comments.`author`, table.comments.`mail`, table.comments.`url`, table.comments.`ip`,
         table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`')
         ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`');
-        
-        /** 初始化分页变量 */
-        $this->pageSize = 20;
-        $this->currentPage = TypechoRequest::getParameter('page', 1);
     }
     
     /**

@@ -26,8 +26,10 @@ class Widget_Contents_RecentPosts extends Widget_Abstract_Contents
      * @param integer $pageSize 文章数量
      * @return void
      */
-    public function render($pageSize = NULL)
+    public function __construct($pageSize = NULL)
     {
+        parent::__construct();
+        
         $this->pageSize = empty($pageSize) ? $this->options->postsListSize : $pageSize;
     
         $this->db->fetchAll($this->select()->where('table.contents.`password` IS NULL')

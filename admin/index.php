@@ -4,7 +4,7 @@ require_once 'header.php';
 require_once 'menu.php';
 ?>
 
-	<div id="main"><h2><?php Typecho::widget('Menu')->title(); ?></h2>
+	<div id="main"><h2><?php $menu->title(); ?></h2>
 		<div class="left" style="width: 14%; margin-right: 1%;">
 			<ul class="quick-links">
 				<li><a href="#">撰写新文章</a></li>
@@ -17,7 +17,7 @@ require_once 'menu.php';
 			</ul>
 		</div>
 		<div style="width: 59%" class="left">
-            <?php Typecho::widget('RecentPosts', 5)->to($recentPosts); ?>
+            <?php Typecho_API::factory('Widget_Contents_RecentPosts', 5)->to($recentPosts); ?>
 			<table class="latest">
 				<tr>
 					<th width="20%"><?php _e('最新文章'); ?></th>
@@ -41,7 +41,7 @@ require_once 'menu.php';
                 <?php endif; ?>
 			</table>
 
-            <?php Typecho::widget('RecentComments', 5)->to($recentComments); ?>
+            <?php Typecho_API::factory('Widget_Comments_Recent', 5)->to($recentComments); ?>
 			<table class="latest">
 				<tr>
 					<th><?php _e('最新评论'); ?></th>
@@ -61,20 +61,20 @@ require_once 'menu.php';
 		</div>
 		<div style="width: 25%" class="right">
 			<div id="userInfo">
-                <img width="50" height="50" src="http://www.gravatar.com/avatar.php?gravatar_id=<?php echo md5(Typecho::widget('Access')->mail); ?>&rating=X&size=50&default=<?php Typecho::widget('Options')->adminUrl('/images/default-userpic.jpg'); ?>" alt="<?php Typecho::widget('Access')->screenName(); ?>" class="left" />
-                <h6><?php Typecho::widget('Access')->screenName(); ?></h6>
+                <img width="50" height="50" src="http://www.gravatar.com/avatar.php?gravatar_id=<?php echo md5($access->mail); ?>&rating=X&size=50&default=<?php $options->adminUrl('/images/default-userpic.jpg'); ?>" alt="<?php $access->screenName(); ?>" class="left" />
+                <h6><?php $access->screenName(); ?></h6>
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
-                Typecho::pathToUrl('/post-list.php?status=my', Typecho::widget('Options')->adminUrl),
-                Typecho::widget('Abstract.contents')->count('post', Typecho::widget('Access')->uid), 
-                Typecho::pathToUrl('/page-list.php?status=myPost', Typecho::widget('Options')->adminUrl),
-                Typecho::widget('Abstract.contents')->count('page', Typecho::widget('Access')->uid)); ?><br />
-                <?php _e('上次登陆为%s.', TypechoI18n::dateWord(Typecho::widget('Access')->logged + Typecho::widget('Options')->timezone, Typecho::widget('Options')->gmtTime + Typecho::widget('Options')->timezone)); ?><br />
+                Typecho_API::pathToUrl('/post-list.php?status=my', $options->adminUrl),
+                10, 
+                Typecho_API::pathToUrl('/page-list.php?status=myPost', $options->adminUrl),
+                4); ?><br />
+                <?php _e('上次登陆为%s.', Typecho_I18n::dateWord($access->logged + $options->timezone, $options->gmtTime + $options->timezone)); ?><br />
                 <h6 style="margin-top:10px;"><?php _e('服务器环境'); ?></h6>
                 <ol>
-                    <li><small><?php Typecho::widget('Options')->generator(); ?></small></li>
+                    <li><small><?php $options->generator(); ?></small></li>
                     <li><small><?php echo PHP_OS; ?></small></li>
                     <li><small><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : _t('不明'); ?></small></li>
-                    <li><small><?php echo TypechoDb::get()->version(); ?></small></li>
+                    <li><small><?php echo Typecho_Db::get()->version(); ?></small></li>
                     <li><small>PHP <?php echo PHP_VERSION; ?></small></li>
                 </ol>
 			</div>
