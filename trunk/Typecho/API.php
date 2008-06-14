@@ -9,6 +9,9 @@
  * @version $Id$
  */
 
+/** Typecho_Exception */
+require_once 'Typecho/Exception.php';
+
 /**
  * Typecho公用方法
  *
@@ -106,6 +109,7 @@ class Typecho_API
      * @access public
      * @param string $className
      * @return object
+     * @throws Typecho_Exception
      */
     public static function factory($className)
     {
@@ -113,7 +117,22 @@ class Typecho_API
         
         if(!isset($classStack[$className]))
         {
-            require_once dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
+            $fileName = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
+            
+            /** 如果文件不存在 */
+            if(!file_exists($fileName))
+            {
+                throw new Typecho_Exception($fileName, Typecho_Exception::NOTFOUND);
+            }
+            
+            require_once $fileName;
+            
+            /** 如果类不存在 */
+            if(!class_exists($className))
+            {
+                throw new Typecho_Exception($className, Typecho_Exception::NOTFOUND);
+            }
+            
             $params = array_slice(func_get_args(), 1);
             $classStack[$className] = call_user_func_array(array(new ReflectionClass($className), 'newInstance'), $params);
         }
@@ -510,6 +529,22 @@ class Typecho_API
     <h1>Moved Temporarily</h1>
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
     </body></html>');
+        }
+    }
+    
+    /**
+     * 返回来路
+     *
+     * @access protected
+     * @param string $anchor 锚点地址
+     * @return void
+     */
+    public static function goBack($anchor = NULL)
+    {
+        //判断来源
+        if(!empty($_SERVER['HTTP_REFERER']))
+        {
+            self::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
         }
     }
 

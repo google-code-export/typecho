@@ -18,3 +18,4 @@ Typecho_Plugin::instance(__FILE__)->admin();
 $options = Typecho_API::factory('Widget_Abstract_Options');
 $access = Typecho_API::factory('Widget_Users_Current');
 $notice = Typecho_API::factory('Widget_Notice');
+$menu = Typecho_API::factory('Widget_Menu');

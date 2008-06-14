@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Feed extends Widget_Archive
+class Widget_Feed extends Widget_Archive implements Typecho_Widget_Response
 {
     /**
      * feed生成对象

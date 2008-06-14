@@ -82,8 +82,7 @@ Typecho_Config::set('Router', array(
     'archive_day_page'  =>  array('/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/([0-9]+)[/]?', 'Widget_Archive', array('year', 'month', 'day', 'page'), '/%s/%s/%s/'),
     'feed'              =>  array('/feed(.*)', 'Widget_Feed', array('feed'), '/feed%s'),
     'feedback'          =>  array('(.*)/([_0-9a-zA-Z-]+)[/]?', 'Widget_Feedback', array('permalink', 'type'), '%s/%s'),
-    'do'                =>  array('/([_0-9a-zA-Z-]+)\.do', 'Widget_Do', array('do'), '/%s.do'),
-    'do_plugin'         =>  array('/([_0-9a-zA-Z-]+)/([_0-9a-zA-Z-]+)\.do', 'Widget_Do', array('plugin', 'do'), '/%s/%s.do'),
+    'do'                =>  array('/([_0-9a-zA-Z-\/]+)\.do', 'Widget_Do', array('do'), '/%s.do'),
     'page'              =>  array('/([_0-9a-zA-Z-]+)[/]?', 'Widget_Archive', array('slug'), '/%s/'),
 ));
 

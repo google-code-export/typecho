@@ -57,6 +57,12 @@ class Widget_Abstract_Contents extends Typecho_Widget_Dataset
         $this->plugin = Typecho_Plugin::instance(__FILE__);
     }
     
+    /**
+     * 获取查询对象
+     * 
+     * @access public
+     * @return Typecho_Db_Query
+     */
     public function select()
     {
         return $this->db->sql()->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,

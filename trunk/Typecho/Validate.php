@@ -96,7 +96,7 @@ class Typecho_Validate
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
 
-                if(!call_user_func_array($method, $params))
+                if(!call_user_func_array(is_array($method) ? $method : array($this, $method), $params))
                 {
                     $result[$key] = $message;
                     break;
