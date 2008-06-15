@@ -77,11 +77,14 @@ class Typecho_Widget_Helper_Layout
      */
     public function __construct($tagName = 'div', array $attributes = NULL)
     {
-        $this->_tagName = $tagName;
+        $this->setTagName($tagName);
         
         if(!empty($attributes))
         {
-            $this->_attributes = $attributes;
+            foreach($attributes as $attributeName => $attributeValue)
+            {
+                $this->setAttribute($attributeName, $attributeValue);
+            }
         }
     }
     
@@ -126,6 +129,18 @@ class Typecho_Widget_Helper_Layout
             $this->_html = $html;
             return $this;
         }
+    }
+    
+    /**
+     * 设置标签名
+     * 
+     * @access public
+     * @param string $tagName 标签名
+     * @return void
+     */
+    public function setTagName($tagName)
+    {
+        $this->_tagName = $tagName;
     }
     
     /**
@@ -188,7 +203,7 @@ class Typecho_Widget_Helper_Layout
         /** 支持自闭合 */
         if(!$this->_close)
         {
-            echo ">";
+            echo ">\n";
         }
     }
     
@@ -201,6 +216,19 @@ class Typecho_Widget_Helper_Layout
     public function end()
     {
         echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
+    }
+    
+    /**
+     * 设置表单属性
+     * 
+     * @access public
+     * @param string $attributeName 属性名称
+     * @param string $attributeValue 属性值
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        $this->_attributes[$name] = $value;
     }
     
     /**

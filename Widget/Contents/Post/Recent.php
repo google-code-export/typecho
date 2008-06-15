@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_RecentPosts extends Widget_Abstract_Contents
+class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
 {
     /**
      * 入口函数

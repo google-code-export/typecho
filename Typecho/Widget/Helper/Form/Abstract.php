@@ -91,7 +91,7 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
      * @param string $description 表单描述
      * @return void
      */
-    public function __construct($tagName, $inputName, $label = NULL, $description = NULL)
+    public function __construct($tagName, $inputName, $value = NULL, $label = NULL, $description = NULL)
     {
         /** 设置表单输入项标签 */
         parent::__construct('tr');
@@ -115,7 +115,7 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
         if(!empty($notice[$inputName]))
         {
             $detail = new Typecho_Widget_Helper_Layout('span');
-            $detail->setAttribute('detail')->html($notice[$inputName])->appendTo($this->rightTd);
+            $detail->setAttribute('class', 'detail')->html($notice[$inputName])->appendTo($this->rightTd);
         }
         
         $this->addItem($this->rightTd);
@@ -125,7 +125,18 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
         {
             $this->description($description);
         }
+        
+        $this->value($value);
     }
+    
+    /**
+     * 设置表单元素值
+     * 
+     * @access public
+     * @param string $value 表单元素值
+     * @return Typecho_Widget_Helper_Form_Abstract
+     */
+    abstract public function value($value);
     
     /**
      * 设置标题
@@ -159,7 +170,7 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
      * @access public
      * @return Typecho_Widget_Helper_Form_Abstract
      */
-    public function addRules()
+    public function addRule($name)
     {
         $this->rules[] = func_get_args();
         return $this;

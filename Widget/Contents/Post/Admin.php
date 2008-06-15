@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_AdminPosts extends Widget_Abstract_Contents
+class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
 {
     /**
      * 用于计算数值的语句对象

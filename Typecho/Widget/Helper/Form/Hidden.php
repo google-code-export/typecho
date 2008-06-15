@@ -1,6 +1,6 @@
 <?php
 /**
- * 文字输入表单项帮手
+ * 隐藏域帮手类
  * 
  * @category typecho
  * @package Widget
@@ -13,28 +13,33 @@
 require_once 'Typecho/Widget/Helper/Form/Abstract.php';
 
 /**
- * 文字输入表单项帮手类
+ * 隐藏域帮手类
  * 
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstract
+class Typecho_Widget_Helper_Form_Hidden extends Typecho_Widget_Helper_Form_Abstract
 {
     /**
      * 重载构造函数
      * 
      * @access public
      * @param string $inputName 表单名称
-     * @param string $label 表单标题
-     * @param string $description 表单描述
      * @return void
      */
-    public function __construct($inputName, $value = NULL, $label = NULL, $description = NULL)
+    public function __construct($inputName, $value = NULL)
     {
-        parent::__construct('input', $inputName, $value, $label, $description);
-        $this->input->setAttribute('type', 'text');
+        $this->setTagName('input');
+        
+        $this->name = $inputName;
+        $this->input = $this;
+        $this->setAttribute('name', $inputName)
+        ->setAttribute('id', $inputName)
+        ->setAttribute('type', 'hidden');
+        
+        $this->value($value);
     }
     
     /**
@@ -42,11 +47,11 @@ class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstra
      * 
      * @access public
      * @param string $value 表单项默认值
-     * @return Typecho_Widget_Helper_Form_Input
+     * @return Typecho_Widget_Helper_Form_Hidden
      */
     public function value($value)
     {
-        $this->input->setAttribute('value', $value);
+        $this->setAttribute('value', $value);
         return $this;
     }
 }

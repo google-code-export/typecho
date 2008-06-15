@@ -15,7 +15,7 @@ require_once 'Typecho/Widget/Exception.php';
  *
  * @package Widget
  */
-abstract class Typecho_Widget implements Iterator, Countable
+abstract class Typecho_Widget implements Iterator
 {
     /**
      * 内部数据堆栈
@@ -252,16 +252,5 @@ abstract class Typecho_Widget implements Iterator, Countable
     public function valid()
     {
         return false === current($this->_stack) ? false : true;
-    }
-    
-    /**
-     * 获取总数
-     * 
-     * @access public
-     * @return integer
-     */
-    public function count()
-    {
-        return count($this->_stack);
     }
 }

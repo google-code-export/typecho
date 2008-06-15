@@ -107,7 +107,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Dataset
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'ip'        =>  empty($comment['ip']) ? TypechoRequest::getClientIp() : $comment['ip'],
+            'ip'        =>  empty($comment['ip']) ? Typecho_Request::getClientIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
             'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],

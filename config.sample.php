@@ -69,10 +69,10 @@ if(!__TYPECHO_DEBUG__)
 Typecho_Config::set('Router', array(
     'index'             =>  array('[/]?', 'Widget_Archive', NULL, '/'),
     'post'              =>  array('/archives/([0-9]+)[/]?', 'Widget_Archive', array('cid'), '/archives/%s/'),
-    'category'          =>  array('/category/([_0-9a-zA-Z-]+)[/]?', 'Widget_Archive', array('slug'), '/category/%s/'),
+    'category'          =>  array('/category/([^/]+)[/]?', 'Widget_Archive', array('slug'), '/category/%s/'),
     'tag'               =>  array('/tag/([^/]+)[/]?', 'Widget_Archive', array('slug'), '/tag/%s/'),
     'index_page'        =>  array('/page/([0-9]+)[/]?', 'Widget_Archive', array('page'), '/page/%s/'),
-    'category_page'     =>  array('/category/([_0-9a-zA-Z-]+)/([0-9]+)[/]?', 'Widget_Archive', array('slug', 'page'), '/category/%s/%s/'),
+    'category_page'     =>  array('/category/([^/]+)/([0-9]+)[/]?', 'Widget_Archive', array('slug', 'page'), '/category/%s/%s/'),
     'tag_page'          =>  array('/tag/([^/]+)/([0-9]+)[/]?', 'Widget_Archive', array('slug', 'page'), '/tag/%s/%s/'),
     'archive_year'      =>  array('/([0-9]{4})[/]?', 'Widget_Archive', array('year'), '/%s/'),
     'archive_month'     =>  array('/([0-9]{4})/([0-9]{1,2})[/]?', 'Widget_Archive', array('year', 'month'), '/%s/%s/'),
