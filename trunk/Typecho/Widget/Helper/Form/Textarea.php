@@ -1,6 +1,6 @@
 <?php
 /**
- * 文字输入表单项帮手
+ * 多行文字域帮手
  * 
  * @category typecho
  * @package Widget
@@ -13,14 +13,14 @@
 require_once 'Typecho/Widget/Helper/Form/Abstract.php';
 
 /**
- * 文字输入表单项帮手类
+ * 多行文字域帮手类
  * 
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstract
+class Typecho_Widget_Helper_Form_Textarea extends Typecho_Widget_Helper_Form_Abstract
 {
     /**
      * 重载构造函数
@@ -33,8 +33,8 @@ class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstra
      */
     public function __construct($inputName, $value = NULL, $label = NULL, $description = NULL)
     {
-        parent::__construct('input', $inputName, $value, $label, $description);
-        $this->input->setAttribute('type', 'text');
+        parent::__construct('textarea', $inputName, $value, $label, $description);
+        $this->input->setClose(false);
     }
     
     /**
@@ -42,11 +42,11 @@ class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstra
      * 
      * @access public
      * @param string $value 表单项默认值
-     * @return Typecho_Widget_Helper_Form_Input
+     * @return Typecho_Widget_Helper_Form_Textarea
      */
     public function value($value)
     {
-        $this->input->setAttribute('value', $value);
+        $this->input->html($value);
         return $this;
     }
 }

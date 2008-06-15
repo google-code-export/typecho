@@ -65,13 +65,18 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      * @access public
      * @return void
      */
-    public function __construct()
+    public function __construct($action = NULL, $method = self::GET_METHOD, $enctype = self::STANDARD_ENCODE)
     {
         /** 设置表单标签 */
         parent::__construct('form');
         
         /** 关闭自闭合 */
         $this->setClose(false);
+        
+        /** 设置表单属性 */
+        $this->setAction($action);
+        $this->setMethod($method);
+        $this->setEncodeType($enctype);
     }
     
     /**
@@ -156,14 +161,23 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             $rules[$input->name] = $input->rules;
         }
         
+        /** 表单值 */
+        $formData = Typecho_Request::getParametersFrom(array_keys($rules));
+
         try
         {
-            $validator->run(Typecho_Request::getParametersFrom(array_keys($rules)), $rules);
+            $validator->run($formData, $rules);
         }
         catch(Typecho_Validate_Exception $e)
         {
             /** 利用cookie记录错误 */
             Typecho_Request::setCookie('form_message', $e->getMessages());
+            
+            /** 利用cookie记录表单值 */
+            Typecho_Request::setCookie('form_record', $formData);
+            
+            /** 继续抛出异常 */
+            throw new Typecho_Widget_Exception($e->getMessages());
         }
     }
     
@@ -175,6 +189,17 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function render()
     {
+        /** 恢复表单值 */
+        if($record = Typecho_Request::getCookie('form_record'))
+        {
+            foreach($this->_inputs as $input)
+            {
+                $input->value(isset($record[$input->name]) ? $record[$input->name] : NULL);
+            }
+            
+            Typecho_Request::deleteCookie('form_record');
+        }
+    
         parent::render();
         Typecho_Request::deleteCookie('form_message');
     }

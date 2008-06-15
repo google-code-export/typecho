@@ -1,3 +1,4 @@
+<?php $menu = Typecho_API::factory('Widget_Menu'); ?>
 <div class="container">
 	<div id="header">
 			<div id="nav-bar" class="right">

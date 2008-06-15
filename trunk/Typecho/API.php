@@ -423,7 +423,7 @@ class Typecho_API
      * @param string $default 默认的缩略名
      * @return string
      */
-    public static function slugName($str, $default)
+    public static function slugName($str, $default = NULL)
     {
         $str = str_replace(array("'", ":", "\\", "/"), "", $str);
         $str = str_replace(array("+", ",", " ", ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
@@ -475,7 +475,7 @@ class Typecho_API
             $str = substr($str, $cutOff);
         }
 
-        return NULL == $str ? $default : $str;
+        return empty($str) ? (empty($default) ? time() : $default) : $str;
     }
     
     /**

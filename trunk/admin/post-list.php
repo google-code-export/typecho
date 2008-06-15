@@ -2,46 +2,46 @@
 require_once 'common.php';
 require_once 'header.php';
 require_once 'menu.php';
-Typecho::widget('Contents.AdminPosts')->to($posts);
+Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
 ?>
 
 	<div id="main">
-		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
+		<h2><?php $menu->title(); ?></h2>
 		<div id="page">
             <?php require_once 'notice.php'; ?>
             
 			<div class="table_nav">
-            <form action="<?php Typecho::widget('Options')->adminUrl('post-list.php'); ?>">
+            <form action="<?php $options->adminUrl('post-list.php'); ?>">
 				<input type="button" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
 				<input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
-				<?php Typecho::widget('Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
+				<?php Typecho_API::factory('Widget_Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
                 <select name="category" style="width: 160px;">
                 <option value=""><?php _e('所有分类'); ?></option>
                 <?php while($category->get()): ?>
-                    <option value="<?php $category->mid(); ?>" <?php TypechoRequest::callParameter('category', $category->mid, 'selected="selected"'); ?>>
+                    <option value="<?php $category->mid(); ?>" <?php Typecho_Request::callParameter('category', $category->mid, 'selected="selected"'); ?>>
                         <?php $category->name(); ?> (<?php $category->count(); ?>)
                     </option>
                 <?php endwhile; ?>
 				</select>
 				<select name="status">
-					<option value="my" <?php TypechoRequest::callParameter('status', 'my', 'selected="selected"'); ?>>
-                        <?php _e('我的所有文章(%s)', Typecho::widget('Abstract.Contents')->count(array('post', 'draft'), Typecho::widget('Access')->uid)); ?>
+					<option value="my" <?php Typecho_Request::callParameter('status', 'my', 'selected="selected"'); ?>>
+                        <?php _e('我的所有文章'); ?>
                     </option>
-					<option value="myPost" <?php TypechoRequest::callParameter('status', 'myPost', 'selected="selected"'); ?>>
-                        <?php _e('我的已发布文章(%s)', Typecho::widget('Abstract.Contents')->count('post', Typecho::widget('Access')->uid)); ?>
+					<option value="myPost" <?php Typecho_Request::callParameter('status', 'myPost', 'selected="selected"'); ?>>
+                        <?php _e('我的已发布文章'); ?>
                     </option>
-					<option value="myDraft" <?php TypechoRequest::callParameter('status', 'myDraft', 'selected="selected"'); ?>>
-                        <?php _e('我的草稿(%s)', Typecho::widget('Abstract.Contents')->count('draft', Typecho::widget('Access')->uid)); ?>
+					<option value="myDraft" <?php Typecho_Request::callParameter('status', 'myDraft', 'selected="selected"'); ?>>
+                        <?php _e('我的草稿'); ?>
                     </option>
-                    <?php if(Typecho::widget('Access')->pass('editor', true)): ?>
-                    <option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>>
-                        <?php _e('所有文章(%s)', Typecho::widget('Abstract.Contents')->count(array('post', 'draft'), NULL)); ?>
+                    <?php if($access->pass('editor', true)): ?>
+                    <option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
+                        <?php _e('所有文章'); ?>
                     </option>
-					<option value="allPost" <?php TypechoRequest::callParameter('status', 'allPost', 'selected="selected"'); ?>>
-                        <?php _e('所有已发布的文章(%s)', Typecho::widget('Abstract.Contents')->count('post', NULL)); ?>
+					<option value="allPost" <?php Typecho_Request::callParameter('status', 'allPost', 'selected="selected"'); ?>>
+                        <?php _e('所有已发布的文章'); ?>
                     </option>
-					<option value="allDraft" <?php TypechoRequest::callParameter('status', 'allDraft', 'selected="selected"'); ?>>
-                        <?php _e('所有草稿(%s)', Typecho::widget('Abstract.Contents')->count('draft', NULL)); ?>
+					<option value="allDraft" <?php Typecho_Request::callParameter('status', 'allDraft', 'selected="selected"'); ?>>
+                        <?php _e('所有草稿'); ?>
                     </option>
                     <?php endif; ?>
 				</select>
@@ -49,7 +49,7 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
             </form>
 			</div>
             
-            <form method="post" name="post" id="post" action="<?php Typecho::widget('Options')->index('DoPost.do'); ?>">
+            <form method="post" name="post" id="post" action="<?php $options->index('DoPost.do'); ?>">
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>
@@ -64,7 +64,7 @@ Typecho::widget('Contents.AdminPosts')->to($posts);
                 <?php while($posts->get()): ?>
                 <tr>
                     <td><input type="checkbox" name="cid[]" value="<?php $posts->cid(); ?>" /></td>
-                    <td><a href="<?php Typecho::widget('Options')->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                    <td><a href="<?php $options->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                     <sup><?php $posts->tags(','); ?></sup></td>
                     <td><?php $posts->author(); ?></td>
                     <td><?php $posts->dateWord(); ?></td>
