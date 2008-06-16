@@ -23,7 +23,7 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Action
     public function render()
     {
         /** 验证路由地址 **/
-        $prefix = ucfirst(Typecho_Router::$current);
+        $prefix = 'plugin' == Typecho_Router::$current ? 'Plugin' : 'Widget';
         $widgetName = $prefix . '_' . str_replace('/', '_', Typecho_Router::getParameter('do'));
         $fileName = __TYPECHO_ROOT_DIR__ . '/' . $prefix . '/' . Typecho_Router::getParameter('do') . '.php';
         
