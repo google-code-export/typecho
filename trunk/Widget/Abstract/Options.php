@@ -1,6 +1,6 @@
 <?php
 
-class Widget_Abstract_Options extends Typecho_Widget_Dataset
+class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
 {
     public function __construct()
     {

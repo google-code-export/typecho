@@ -23,7 +23,7 @@ require_once 'Typecho/Db.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-abstract class Typecho_Widget_Dataset extends Typecho_Widget
+abstract class Typecho_Widget_Abstract_Dataset extends Typecho_Widget
 {
     /**
      * 分页大小
