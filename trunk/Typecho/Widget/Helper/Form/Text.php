@@ -20,7 +20,7 @@ require_once 'Typecho/Widget/Helper/Form/Abstract.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Input extends Typecho_Widget_Helper_Form_Abstract
+class Typecho_Widget_Helper_Form_Text extends Typecho_Widget_Helper_Form_Abstract
 {
     /**
      * 重载构造函数

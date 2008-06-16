@@ -14,7 +14,7 @@ define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 set_include_path(__TYPECHO_ROOT_DIR__);
 
 /** 定义插件目录(相对路径) */
-define('__TYPECHO_PLUGIN_DIR__', '/var/plugins');
+define('__TYPECHO_PLUGIN_DIR__', '/Plugin');
 
 /** 定义模板目录(相对路径) */
 define('__TYPECHO_THEME_DIR__', '/var/theme');
@@ -83,6 +83,7 @@ Typecho_Config::set('Router', array(
     'feed'              =>  array('/feed(.*)', 'Widget_Feed', array('feed'), '/feed%s'),
     'feedback'          =>  array('(.*)/([_0-9a-zA-Z-]+)[/]?', 'Widget_Feedback', array('permalink', 'type'), '%s/%s'),
     'do'                =>  array('/([_0-9a-zA-Z-\/]+)\.do', 'Widget_Do', array('do'), '/%s.do'),
+    'plugin'            =>  array('/([_0-9a-zA-Z-\/]+)\.plugin', 'Widget_Do', array('plugin'), '/%s.plugin'),
     'page'              =>  array('/([_0-9a-zA-Z-]+)[/]?', 'Widget_Archive', array('slug'), '/%s/'),
 ));
 
