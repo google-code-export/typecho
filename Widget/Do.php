@@ -23,8 +23,9 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Action
     public function render()
     {
         /** 验证路由地址 **/
-        $widgetName = 'Widget_' . str_replace('/', '_', Typecho_Router::getParameter('do'));
-        $fileName = __TYPECHO_ROOT_DIR__ . '/Widget/' . Typecho_Router::getParameter('do') . '.php';
+        $prefix = ucfirst(Typecho_Router::$current);
+        $widgetName = $prefix . '_' . str_replace('/', '_', Typecho_Router::getParameter('do'));
+        $fileName = __TYPECHO_ROOT_DIR__ . '/' . $prefix . '/' . Typecho_Router::getParameter('do') . '.php';
         
         if(file_exists($fileName))
         {

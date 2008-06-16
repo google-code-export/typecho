@@ -113,12 +113,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Typech
         $form->addItem($title->setAttribute('id', 'edit'));
         
         /** 分类名称 */
-        $name = new Typecho_Widget_Helper_Form_Input('name', NULL, _t('分类名称*'));
+        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('分类名称*'));
         $name->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($name);
         
         /** 分类缩略名 */
-        $slug = new Typecho_Widget_Helper_Form_Input('slug', NULL, _t('分类缩略名'), _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
+        $slug = new Typecho_Widget_Helper_Form_Text('slug', NULL, _t('分类缩略名'), _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
         $slug->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($slug);
         
