@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Abstract_Metas extends Typecho_Widget_Dataset
+class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
 {
     /**
      * 分页数目

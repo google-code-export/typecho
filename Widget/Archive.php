@@ -14,7 +14,7 @@
  *
  * @package Widget
  */
-class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_Response
+class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_Interface_Response
 {
     /**
      * 调用的风格文件
@@ -286,11 +286,23 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         return parent::push($value);
     }
     
+    /**
+     * 输出头部元数据
+     * 
+     * @access public
+     * @return void
+     */
     public function header()
     {
         $this->header->render();
     }
     
+    /**
+     * 输出视图
+     * 
+     * @access public
+     * @return void
+     */
     public function render()
     {
         $this->header = new Typecho_Widget_Helper_HtmlHeader();

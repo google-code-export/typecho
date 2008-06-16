@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Typecho_Widget_Action
+class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget_Interface_DoWidget
 {
     /**
      * 入口函数
