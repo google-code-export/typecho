@@ -132,7 +132,7 @@ class Typecho_Router
      */
     public static function parse($name, array $value = NULL, $prefix = NULL)
     {
-        $route = Typecho_Config::get('Router')->$name;
+        $route = Typecho_Config::get('Router')->{$name};
 
         if($value)
         {

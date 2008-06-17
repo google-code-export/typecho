@@ -20,7 +20,7 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Interface_Actio
      * @access public
      * @return void
      */
-    public function render()
+    public function action()
     {
         /** 验证路由地址 **/
         $prefix = 'plugin' == Typecho_Router::$current ? 'Plugin' : 'Widget';

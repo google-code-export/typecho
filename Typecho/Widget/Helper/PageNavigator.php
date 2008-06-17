@@ -63,7 +63,6 @@ abstract class Typecho_Widget_Helper_PageNavigator
      * @param integer $pageSize 每页记录数
      * @param string $pageTemplate 页面链接模板
      * @return void
-     * @throws TypechoWidgetException
      */
     public function __construct($total, $currentPage, $pageSize, $pageTemplate)
     {

@@ -14,7 +14,7 @@
  *
  * @package Widget
  */
-class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_Interface_Response
+class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_Interface_ViewRenderer
 {
     /**
      * 调用的风格文件
@@ -317,6 +317,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options->feedUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->options->feedRssUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl)));
+    
+        /** 添加Pingback */
+        header('X-Pingback:' . $this->options->xmlRpcUrl);
     
         require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->themeFile;
     }
