@@ -139,7 +139,7 @@ class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
     {
         //生成静态链接
         $type = $value['type'];
-        $routeExists = isset(Typecho_Config::get('Router')->$type);
+        $routeExists = isset(Typecho_Config::get('Router')->{$type});
         
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);

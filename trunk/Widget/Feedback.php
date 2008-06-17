@@ -133,7 +133,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
      * @access public
      * @return void
      */
-    public function render()
+    public function action()
     {
         $permalink = Typecho_Route::getParameter('permalink');
         $callback = Typecho_Route::getParameter('type');

@@ -185,7 +185,7 @@ function exceptionHandler($exception)
                 break;
         }
 
-        require_once Typecho_Config::get('Exception')->$handle;
+        require_once Typecho_Config::get('Exception')->{$handle};
         die();
     }
 }

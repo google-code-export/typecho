@@ -25,7 +25,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_DoW
      * @access public
      * @return void
      */
-    public function render()
+    public function action()
     {
         /** 如果已经登录 */
         if(Typecho_API::factory('Widget_Users_Current')->hasLogin())

@@ -381,7 +381,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      * @access public
      * @return void
      */
-    public function render()
+    public function action()
     {
         Typecho_API::factory('Widget_Users_Current')->pass('editor');
         Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertCategory'));

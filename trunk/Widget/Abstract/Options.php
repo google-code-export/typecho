@@ -27,9 +27,6 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
         /** 初始化常用地址 */
         $this->xmlRpcUrl = Typecho_Router::parse('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho_API::pathToUrl('/admin/', $this->siteUrl);
-        
-        /** 添加Pingback */
-        header('X-Pingback:' . $this->xmlRpcUrl);
     }
     
     /**
