@@ -80,7 +80,7 @@ Typecho_Config::set('Router', array(
     'archive_year_page' =>  array('url' => '/[year:digital:4]/page/[page:digital]', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'archive_month_page'=>  array('url' => '/[year:digital:4]/[month:digital:2]/page/[page:digital]', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'archive_day_page'  =>  array('url' => '/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]', 'widget' => 'Widget_Archive', 'action' => 'render'),
-    'feed'              =>  array('url' => '/feed[query:string]', 'widget' => 'Widget_Feed', 'action' => 'render'),
+    'feed'              =>  array('url' => '/feed[feed:string]', 'widget' => 'Widget_Feed', 'action' => 'render'),
     'feedback'          =>  array('url' => '[permalink:string]/[type:alpha]', 'widget' => 'Widget_Feedback', 'action' => 'render'),
     'do'                =>  array('url' => '/[do:alpha].do', 'widget' => 'Widget_Do', 'action' => 'action'),
     'plugin'            =>  array('url' => '/[plugin:alpha].plugin', 'widget' => 'Widget_Do', 'action' => 'action'),
