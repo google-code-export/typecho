@@ -22,6 +22,9 @@ require_once 'Typecho/Request.php';
 /** 载入request支持 */
 require_once 'Typecho/Widget.php';
 
+/** 载入路由解析支持 */
+require_once 'Typecho/Router/Parser.php';
+
 /** 载入路由异常支持 */
 require_once 'Typecho/Router/Exception.php';
 
@@ -47,32 +50,62 @@ class Typecho_Router
      * @var array
      */
     private static $_parameters = array();
+    
+    /**
+     * 已经解析完毕的路由配置
+     * 
+     * @access private
+     * @var mixed
+     */
+    private static $_routes = false;
+    
+    /**
+     * 解析路由
+     * 
+     * @access private
+     * @return void
+     */
+    private static function _parseRoute()
+    {
+        if(false === self::$_routes)
+        {
+            /** 判断是否定义配置 */
+            Typecho_Config::need('Router');
+            
+            /** 获取路由配置 */
+            $config = Typecho_Config::get('Router');
+            
+            /** 解析路由配置 */
+            $parser = new Typecho_Router_Parser($config);
+            self::$_routes = $parser->parse($config);
+        }
+    }
 
     /**
      * 解析路径
      * 
      * @access public
-     * @param mixed $route 路由表
      * @param string $pathInfo 全路径
-     * @param string $current 当前键值
-     * @param array $matches 匹配值
-     * @return array
+     * @return mixed
      */
-    public static function match($route, $pathInfo)
+    public static function match($pathInfo)
     {
-        foreach($route as $key => $val)
+        self::_parseRoute();
+    
+        foreach(self::$_routes as $key => $route)
         {
-            if(preg_match('|^' . $val[0] . '$|', $pathInfo, $matches))
+            if(preg_match($route['regx'], $pathInfo, $matches))
             {
                 self::$current = $key;
                 
-                if(is_array($val[2]))
+                if(!empty($route['params']))
                 {
                     unset($matches[0]);
-                    self::$_parameters = array_combine($val[2], $matches);
+                    $_REQUEST = array_merge($_REQUEST, array_combine($route['params'], $matches));
+                    reset($_REQUEST);
                 }
                 
-                return $val;
+                return $route;
             }
         }
         
@@ -80,46 +113,25 @@ class Typecho_Router
     }
 
     /**
-     * 路由指向函数,返回根据pathinfo和路由表配置的目的文件名
+     * 路由分发函数
      *
      * @param string $path 目的文件所在目录
      * @return void
      * @throws Typecho_Route_Exception
      */
-    public static function target()
-    {
-        /** 判断是否定义配置 */
-        Typecho_Config::need('Router');
-        
-        /** 获取路由配置 */
-        $route = Typecho_Config::get('Router');
-        
+    public static function dispatch()
+    {        
         /** 获取PATHINFO */
         $pathInfo = Typecho_Request::getPathInfo();
 
         /** 遍历路由 */
-        if(false !== ($val = self::match($route, $pathInfo)))
+        if(false !== ($route = self::match($pathInfo)))
         {
-            list($pattern, $widget, $values, $format) = $val;
-            Typecho_API::factory($widget)->render();
+            Typecho_API::factory($route['widget'])->{$route['action']}();
+            return;
         }
-        else
-        {
-            throw new Typecho_Router_Exception(_t('没有找到 %s', $pathInfo), Typecho_Exception::NOTFOUND);
-        }
-    }
 
-    /**
-     * 获取路径解析值
-     *
-     * @access public
-     * @param string $key 路径键值
-     * @param mixed $default 默认值
-     * @return mixed
-     */
-    public static function getParameter($key, $default = NULL)
-    {
-        return empty(self::$_parameters[$key]) ? $default : self::$_parameters[$key];
+        throw new Typecho_Router_Exception(_t('没有找到 %s', $pathInfo), Typecho_Exception::NOTFOUND);
     }
 
     /**
@@ -130,20 +142,21 @@ class Typecho_Router
      * @param string $prefix 最终合成路径的前缀
      * @return string
      */
-    public static function parse($name, array $value = NULL, $prefix = NULL)
+    public static function url($name, array $value = NULL, $prefix = NULL)
     {
-        $route = Typecho_Config::get('Router')->{$name};
-
         if($value)
         {
+            self::_parseRoute();
+            $route = self::$_routes[$name];
+            
             //交换数组键值
             $pattern = array();
-            foreach($route[2] as $row)
+            foreach($route['params'] as $row)
             {
                 $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
             }
 
-            return Typecho_API::pathToUrl(vsprintf($route[3], $pattern), $prefix);
+            return Typecho_API::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
         }
         else
         {

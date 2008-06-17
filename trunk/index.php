@@ -10,4 +10,4 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
-Typecho_Router::target();
+Typecho_Router::dispatch();

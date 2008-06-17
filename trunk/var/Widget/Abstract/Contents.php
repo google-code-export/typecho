@@ -223,26 +223,26 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $value['slug'] = urlencode($value['slug']);
         
         /** 生成静态链接 */
-        $value['permalink'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
         
         /** 生成反馈地址 */
         /** 评论 */
-        $value['commentUrl'] = Typecho_Router::parse('feedback', 
+        $value['commentUrl'] = Typecho_Router::url('feedback', 
         array('type' => 'comment', 'permalink' => $value['permalink']), $this->options->index);
         
         /** trackback */
-        $value['trackbackUrl'] = Typecho_Router::parse('feedback', 
+        $value['trackbackUrl'] = Typecho_Router::url('feedback', 
         array('type' => 'trackback', 'permalink' => $value['permalink']), $this->options->index);
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
         
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
         
