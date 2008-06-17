@@ -20,12 +20,12 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
         $this->gmtTime = time() - idate('Z');
         
         /** 初始化Feed地址 */
-        $this->feedUrl = Typecho_Router::parse('feed', array('feed' => '/'), $this->index);
-        $this->feedRssUrl = Typecho_Router::parse('feed', array('feed' => '/rss/'), $this->index);
-        $this->feedAtomUrl = Typecho_Router::parse('feed', array('feed' => '/atom/'), $this->index);
-        
+        $this->feedUrl = Typecho_Router::url('feed', array('feed' => '/'), $this->index);
+        $this->feedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
+        $this->feedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
+
         /** 初始化常用地址 */
-        $this->xmlRpcUrl = Typecho_Router::parse('do', array('do' => 'XmlRpc'), $this->index);
+        $this->xmlRpcUrl = Typecho_Router::url('do', array('do' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho_API::pathToUrl('/admin/', $this->siteUrl);
     }
     

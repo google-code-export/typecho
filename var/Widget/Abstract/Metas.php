@@ -144,17 +144,17 @@ class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
         
-        $value['permalink'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
         
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::parse($type, $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
         

@@ -24,9 +24,9 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Interface_Actio
     {
         /** 验证路由地址 **/
         $prefix = 'plugin' == Typecho_Router::$current ? 'Plugin' : 'Widget';
-        $widgetName = $prefix . '_' . str_replace('/', '_', Typecho_Router::getParameter('do'));
-        $fileName = __TYPECHO_ROOT_DIR__ . '/' . $prefix . '/' . Typecho_Router::getParameter('do') . '.php';
-        
+        $widgetName = $prefix . '_' . str_replace('/', '_', Typecho_Request::getParameter('do'));
+        $fileName = __TYPECHO_ROOT_DIR__ . '/var/' . $prefix . '/' . Typecho_Request::getParameter('do') . '.php';
+
         if(file_exists($fileName))
         {
             require_once $fileName;
@@ -36,7 +36,7 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Interface_Actio
                 $reflectionWidget =  new ReflectionClass($widgetName);
                 if($reflectionWidget->implementsInterface('Widget_Interface_Do' . $prefix))
                 {
-                    Typecho_API::factory($widgetName)->render();
+                    Typecho_API::factory($widgetName)->action();
                     return;
                 }
             }

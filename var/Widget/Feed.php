@@ -51,7 +51,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
      */
     public function __construct()
     {        
-        $feedQuery = Typecho_Router::getParameter('feed');
+        $feedQuery = Typecho_Request::getParameter('feed');
         $feedType = Typecho_Feed::RSS2;
         
         /** 过滤路径 */
@@ -78,7 +78,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         }
         
         /** 解析路径 */
-        if(false === Typecho_Router::match(Typecho_Config::get('Router'), $feedQuery))
+        if(false === Typecho_Router::match($feedQuery))
         {
             throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
         }

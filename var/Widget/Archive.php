@@ -53,7 +53,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     
         /** 初始化分页变量 */
         $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = Typecho_Router::getParameter('page', 1);
+        $this->currentPage = Typecho_Request::getParameter('page', 1);
         $hasPushed = false;
     
         $select = $this->select()->where('table.contents.`password` IS NULL')
@@ -62,24 +62,24 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         if('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current)
         {
             /** 如果是单篇文章或独立页面 */
-            if(NULL !== Typecho_Router::getParameter('cid'))
+            if(NULL !== Typecho_Request::getParameter('cid'))
             {
-                $select->where('table.contents.`cid` = ?', Typecho_Router::getParameter('cid'));
+                $select->where('table.contents.`cid` = ?', Typecho_Request::getParameter('cid'));
             }
         
-            if(NULL !== Typecho_Router::getParameter('slug'))
+            if(NULL !== Typecho_Request::getParameter('slug'))
             {
-                $select->where('table.contents.`slug` = ?', Typecho_Router::getParameter('slug'));
+                $select->where('table.contents.`slug` = ?', Typecho_Request::getParameter('slug'));
             }
             
             $select->where('table.contents.`type` = ?', Typecho_Router::$current)
             ->group('table.contents.`cid`')->limit(1);
             $post = $this->db->fetchRow($select, array($this, 'singlePush'));
 
-            if($post && $post['category'] == Typecho_Router::getParameter('category', $post['category'])
-            && $post['year'] == Typecho_Router::getParameter('year', $post['year'])
-            && $post['month'] == Typecho_Router::getParameter('month', $post['month'])
-            && $post['day'] == Typecho_Router::getParameter('day', $post['day']))
+            if($post && $post['category'] == Typecho_Request::getParameter('category', $post['category'])
+            && $post['year'] == Typecho_Request::getParameter('year', $post['year'])
+            && $post['month'] == Typecho_Request::getParameter('month', $post['month'])
+            && $post['day'] == Typecho_Request::getParameter('day', $post['day']))
             {
                 /** 设置关键词 */
                 $this->options->keywords = implode(',', Typecho_API::arrayFlatten($post['tags'], 'name'));
@@ -111,7 +111,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             /** 如果是分类 */
             $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'category')
-            ->where('`slug` = ?', Typecho_Router::getParameter('slug'))->limit(1),
+            ->where('`slug` = ?', Typecho_Request::getParameter('slug'))->limit(1),
             array($this->abstractMetasWidget, 'filter'));
             
             if(!$category)
@@ -146,12 +146,12 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             /** 如果是标签 */
             $tag = $this->db->fetchRow($this->db->sql()->select('table.metas')
             ->where('`type` = ?', 'tag')
-            ->where('`slug` = ?', Typecho_Router::getParameter('slug'))->limit(1),
+            ->where('`slug` = ?', Typecho_Request::getParameter('slug'))->limit(1),
             array($this->abstractMetasWidget, 'filter'));
             
             if(!$tag)
             {
-                throw new Typecho_Widget_Exception(_t('标签%s不存在', Typecho_Router::getParameter('slug')), Typecho_Exception::NOTFOUND);
+                throw new Typecho_Widget_Exception(_t('标签%s不存在', Typecho_Request::getParameter('slug')), Typecho_Exception::NOTFOUND);
             }
         
             $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
@@ -180,9 +180,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         || 'archive_day' == Typecho_Router::$current)
         {
             /** 如果是按日期归档 */
-            $year = Typecho_Router::getParameter('year');
-            $month = Typecho_Router::getParameter('month');
-            $day = Typecho_Router::getParameter('day');
+            $year = Typecho_Request::getParameter('year');
+            $month = Typecho_Request::getParameter('month');
+            $day = Typecho_Request::getParameter('day');
             
             /** 如果按日归档 */
             if(!empty($year) && !empty($month) && !empty($day))
@@ -219,13 +219,13 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             $value = array('year' => $year, 'month' => $month, 'day' => $day);
             
             /** RSS 2.0 */
-            $this->options->feedUrl = Typecho_Router::parse(Typecho_Router::$current, $value, $this->options->feedUrl);
+            $this->options->feedUrl = Typecho_Router::url(Typecho_Router::$current, $value, $this->options->feedUrl);
             
             /** RSS 1.0 */
-            $this->options->feedRssUrl = Typecho_Router::parse(Typecho_Router::$current, $value, $this->options->feedRssUrl);
+            $this->options->feedRssUrl = Typecho_Router::url(Typecho_Router::$current, $value, $this->options->feedRssUrl);
             
             /** ATOM 1.0 */
-            $this->options->feedAtomUrl = Typecho_Router::parse(Typecho_Router::$current, $value, $this->options->feedAtomUrl);
+            $this->options->feedAtomUrl = Typecho_Router::url(Typecho_Router::$current, $value, $this->options->feedAtomUrl);
             
             /** 设置风格文件 */
             $this->themeFile = 'archive.php';
@@ -255,7 +255,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      */
     public function pageNav()
     {
-        $query = Typecho_Router::parse(Typecho_Router::$current . '_page', $this->_row, $this->options->index);
+        $query = Typecho_Router::url(Typecho_Router::$current . '_page', $this->_row, $this->options->index);
         
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->countSql), $this->currentPage, $this->pageSize, $query);

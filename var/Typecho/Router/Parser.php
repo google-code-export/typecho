@@ -1,0 +1,131 @@
+<?php
+/**
+ * 路由器解析器
+ * 
+ * @category typecho
+ * @package Router
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ * @version $Id$
+ */
+
+/** 配置管理 */
+require_once 'Typecho/Config.php';
+
+/**
+ * 路由器解析器
+ * 
+ * @category typecho
+ * @package Router
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ */
+class Typecho_Router_Parser
+{
+    /**
+     * 默认匹配表
+     * 
+     * @access private
+     * @var array
+     */
+    private $_defaultRegx;
+    
+    /**
+     * 路由器映射表
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private $_routeMap;
+    
+    /**
+     * 参数表
+     * 
+     * @access private
+     * @var array
+     */
+    private $_params;
+    
+    /**
+     * 设置路由表
+     * 
+     * @access public
+     * @param Typecho_Config $routeMap 路由器映射表
+     * @return void
+     */
+    public function __construct(Typecho_Config $routeMap)
+    {
+        $this->_routeMap = $routeMap;
+        
+        $this->_defaultRegx = array(
+            'string' => '(.%s)',
+            'char'   => '([^/]%s)',
+            'digital'=> '([0-9]%s)',
+            'alpha'  => '([_0-9a-zA-Z-]%s)'
+        );
+    }
+    
+    /**
+     * 局部匹配并替换正则字符串
+     * 
+     * @access public
+     * @param array $matches 匹配部分
+     * @return string
+     */
+    public function _match(array $matches)
+    {
+        $params = explode(' ', $matches[1]);
+        $paramsNum = count($params);
+        $this->_params[] = $params[0];
+        
+        if(1 == $paramsNum)
+        {
+            return sprintf($this->_defaultRegx['char'], '+');
+        }
+        else if(2 == $paramsNum)
+        {
+            return sprintf($this->_defaultRegx[$params[1]], '+');
+        }
+        else if(3 == $paramsNum)
+        {
+            return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . '}');
+        }
+        else if(4 == $paramsNum)
+        {
+            return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . ',' . $params[3] . '}');
+        }
+    }
+    
+    /**
+     * 解析路由表
+     * 
+     * @access public
+     * @return array
+     */
+    public function parse()
+    {
+        $result = array();
+    
+        foreach($this->_routeMap as $key => $route)
+        {
+            $this->_params = array();
+            $route['regx'] = preg_replace_callback("/%([^%]+)%/", array($this, '_match'),
+            preg_quote(str_replace(array('[', ']', ':'), array('%', '%', ' '), $route['url'])));
+            
+            /** 处理斜线 */
+            $regx = $route['regx'];
+            if('/' == $regx[strlen($route['regx']) - 1])
+            {
+                $route['regx'] = substr($route['regx'], 0, -1);
+            }
+            $route['regx'] = '|^' . $route['regx'] . '[/]?$|';
+            
+            $route['format'] = preg_replace("/\[([^\]]+)\]/", "%s", $route['url']);
+            $route['params'] = $this->_params;
+            
+            $result[$key] = $route;
+        }
+        
+        return $result;
+    }
+}
