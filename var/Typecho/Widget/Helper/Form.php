@@ -101,7 +101,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function addInput(Typecho_Widget_Helper_Form_Abstract $input)
     {
-        $this->_inputs[] = $input;
+        $this->_inputs[$input->name] = $input;
         
         if(empty($this->_formBody))
         {
@@ -117,6 +117,30 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         
         $this->_formBody->addItem($input);
         return $this;
+    }
+    
+    /**
+     * 获取输入项
+     * 
+     * @access public
+     * @param string $name 输入项名称
+     * @return mixed
+     */
+    public function getInput($name)
+    {
+        return $this->_inputs[$name];
+    }
+    
+    /**
+     * 获取输入项
+     * 
+     * @access public
+     * @param string $name 输入项名称
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->getInput($name);
     }
     
     /**
@@ -156,9 +180,9 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $validator = new Typecho_Validate();
         $rules = array();
         
-        foreach($this->_inputs as $input)
+        foreach($this->_inputs as $name => $input)
         {
-            $rules[$input->name] = $input->rules;
+            $rules[$name] = $input->rules;
         }
         
         /** 表单值 */
@@ -192,9 +216,9 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         /** 恢复表单值 */
         if($record = Typecho_Request::getCookie('form_record'))
         {
-            foreach($this->_inputs as $input)
+            foreach($this->_inputs as $name => $input)
             {
-                $input->value(isset($record[$input->name]) ? $record[$input->name] : NULL);
+                $input->value(isset($record[$name]) ? $record[$name] : NULL);
             }
             
             Typecho_Request::deleteCookie('form_record');
