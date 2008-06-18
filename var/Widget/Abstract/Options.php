@@ -25,7 +25,7 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
         $this->feedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
 
         /** 初始化常用地址 */
-        $this->xmlRpcUrl = Typecho_Router::url('do', array('do' => 'XmlRpc'), $this->index);
+        $this->xmlRpcUrl = Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho_API::pathToUrl('/admin/', $this->siteUrl);
     }
     

@@ -82,8 +82,8 @@ Typecho_Config::set('Router', array(
     'archive_day_page'  =>  array('url' => '/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'feed'              =>  array('url' => '/feed[feed:string]', 'widget' => 'Widget_Feed', 'action' => 'render'),
     'feedback'          =>  array('url' => '[permalink:string]/[type:alpha]', 'widget' => 'Widget_Feedback', 'action' => 'render'),
-    'do'                =>  array('url' => '/[do:alpha].do', 'widget' => 'Widget_Do', 'action' => 'action'),
-    'plugin'            =>  array('url' => '/[plugin:alpha].plugin', 'widget' => 'Widget_Do', 'action' => 'action'),
+    'do'                =>  array('url' => '/[widget:alphaslash].do', 'widget' => 'Widget_Do', 'action' => 'action'),
+    'plugin'            =>  array('url' => '/[plugin:alphaslash].plugin', 'widget' => 'Widget_Do', 'action' => 'action'),
     'page'              =>  array('url' => '/[slug].html', 'widget' => 'Widget_Archive', 'action' => 'render'),
 ));
 
