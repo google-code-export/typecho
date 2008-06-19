@@ -13,6 +13,9 @@ require_once 'Typecho/Plugin/Exception.php';
 /** 载入接口支持 */
 require_once 'Typecho/Plugin/Interface.php';
 
+/** 载入组件支持 */
+require_once 'Typecho/Widget/Abstract/Plugin.php';
+
 /**
  * 插件处理类
  *
@@ -28,14 +31,6 @@ class Typecho_Plugin
     
     /** 过滤器类型 */
     const FILTER = 1;
-
-    /**
-     * 插件根目录
-     * 
-     * @access private
-     * @var string
-     */
-    private static $_rootPath = '/Plugins/';
 
     /**
      * 实例化对象列表
@@ -54,31 +49,28 @@ class Typecho_Plugin
     private $_callback = array();
     
     /**
-     * 设置插件根目录
+     * 插件管理组件
      * 
-     * @access public
-     * @param string $rootPath 插件根目录
-     * @return void
+     * @access private
+     * @var Typecho_Widget_Abstract_Plugin
      */
-    public static function setRoot($rootPath)
-    {
-        self::$_rootPath = $rootPath;
-    }
+    private $_pluginWidget;
 
     /**
      * 插件初始化
      * 
      * @access public
+     * @param Typecho_Widget_Abstract_Plugin $pluginWidget 插件管理组件
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public static function init()
+    public static function init(Typecho_Widget_Abstract_Plugin $pluginWidget)
     {
+        /** 初始化插件管理组件 */
+        self::$_pluginWidget = $pluginWidget;
+        
         /** 初始化插件列表 */
-        $plugins = array();
-    
-        /** 载入插件列表 */
-        require self::$_rootPath . '/plugins.php';
+        $plugins = $pluginWidget->getActivated();
 
         foreach($plugins as $plugin)
         {
@@ -133,7 +125,7 @@ class Typecho_Plugin
             $result[] = $info;
         }
         
-        return $result;
+        return self::$_pluginWidget->listAll();
     }
     
     /**
@@ -159,9 +151,7 @@ class Typecho_Plugin
             call_user_func(array($pluginName . 'Plugin', 'activate'));
             
             /** 写入插件表 */
-            $plugins[] = $pluginName;
-            
-            file_put_contents(self::$_rootPath . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
+            self::$_pluginWidget->activate($pluginName);
         }
     }
     
@@ -188,9 +178,7 @@ class Typecho_Plugin
             call_user_func(array($pluginName . 'Plugin', 'deactivate'));
             
             /** 写入插件表 */
-            unset($plugins[array_search($pluginName, $plugins)]);
-            
-            file_put_contents(self::$_rootPath . '/plugins.php', '<?php $plugins = ' . var_export($plugins, true) . ';');
+            self::$_pluginWidget->deactivate($pluginName);
         }
     }
 

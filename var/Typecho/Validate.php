@@ -34,6 +34,14 @@ class Typecho_Validate
      * @var array
      */
     private $_data;
+    
+    /**
+     * 当前验证指针
+     * 
+     * @access private
+     * @var string
+     */
+    private $_key;
 
     /**
      * 验证规则数组
@@ -87,6 +95,7 @@ class Typecho_Validate
         // Cycle through the rules and test for errors
         foreach($rules as $key => $rules)
         {
+            $this->_key = $key;
             $data[$key] = empty($data[$key]) ? NULL : $data[$key];
 
             foreach($rules as $params)
@@ -145,7 +154,7 @@ class Typecho_Validate
      */
     public function required($str)
     {
-        return !empty($str);
+        return !empty($this->_data[$this->_key]);
     }
     
     /**
