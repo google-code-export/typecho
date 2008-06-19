@@ -16,9 +16,6 @@ require_once 'Typecho/Plugin/Exception.php';
 /** 载入接口支持 */
 require_once 'Typecho/Plugin/Interface.php';
 
-/** 载入组件支持 */
-require_once 'Typecho/Widget/Abstract/Plugin.php';
-
 /**
  * 插件处理类
  *
@@ -45,7 +42,7 @@ class Typecho_Plugin
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public static function init(Typecho_Widget_Abstract_Plugin $pluginWidget)
+    public static function init($pluginWidget)
     {
         /** 初始化插件管理组件 */
         self::$_pluginWidget = $pluginWidget;
