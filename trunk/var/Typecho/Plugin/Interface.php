@@ -63,4 +63,12 @@ interface Typecho_Plugin_Interface
      * @return unknown
      */
     public static function information();
+    
+    /**
+     * 获取插件配置面板
+     * 
+     * @access public
+     * @return Typecho_Widget_Helper_Form
+     */
+    public static function config();
 }
