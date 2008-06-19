@@ -65,7 +65,7 @@ class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
         $this->options = Typecho_API::factory('Widget_Abstract_Options');
         
         /** 初始插件 */
-        $this->plugin = Typecho_Plugin::instance(__FILE__);
+        $this->plugin = Typecho_Plugin::filter(__FILE__);
     }
     
     /**
@@ -158,7 +158,7 @@ class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
         
         $value['slug'] = $tmpSlug;
         
-        $this->plugin->filter(__METHOD__, $value);
+        $value = $this->plugin->filter($value);
         return $value;
     }
     
