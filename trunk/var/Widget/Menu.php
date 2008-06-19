@@ -58,8 +58,8 @@ class Widget_Menu extends Typecho_Widget
         
         $this->_childMenu =  array(array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
-            array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
-            array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
+        //    array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
+        //    array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
@@ -75,7 +75,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
             array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
-        //    array(_t('链接分类'), _t('管理链接分类'), '/admin/edit-photo.php', 'administrator'),
+            array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
             array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),

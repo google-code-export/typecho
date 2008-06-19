@@ -5,7 +5,7 @@ require_once 'menu.php';
 ?>
 
 	<div id="main">
-		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
+		<h2><?php $menu->title(); ?></h2>
 		<div id="page">
 
 			<table class="latest" id="plugin">
@@ -17,7 +17,7 @@ require_once 'menu.php';
 					<th width="6%"><?php _e('状态'); ?></th>
 					<th width="10%"><?php _e('操作'); ?></th>
 				</tr>
-                <?php $plugins = TypechoPlugin::listAll(); ?>
+                <?php $plugins = Typecho_Plugin::listAll(); ?>
                 <?php foreach($plugins as $plugin): ?>
 				<tr>
 					<td><?php echo $plugin['title']; ?></td>
@@ -26,9 +26,9 @@ require_once 'menu.php';
 					<td><a target="_blank" href="<?php echo $plugin['homepage']; ?>"><?php echo $plugin['author']; ?></a></td>
 					<td><?php echo $plugin['status']; ?></td>
 					<td><?php if($plugin['activated']): ?>
-                        <a href="<?php Typecho::widget('Options')->index('DoPlugin.do?do=deactivate&plugin=' . $plugin['name']); ?>"><?php _e('禁用'); ?></a>
+                        <a href="<?php $options->index('DoPlugin.do?do=deactivate&plugin=' . $plugin['name']); ?>"><?php _e('禁用'); ?></a>
                     <?php else: ?>
-                        <a href="<?php Typecho::widget('Options')->index('DoPlugin.do?do=activate&plugin=' . $plugin['name']); ?>"><?php _e('激活'); ?></a>
+                        <a href="<?php $options->index('DoPlugin.do?do=activate&plugin=' . $plugin['name']); ?>"><?php _e('激活'); ?></a>
                     <?php endif; ?></td>
 				</tr>
                 <?php endforeach; ?>

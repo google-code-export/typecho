@@ -295,28 +295,28 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function mergeTag()
     {
         /** 验证数据 */
-        $validator = new TypechoValidation($this);
+        $validator = new Typecho_Validate();
         $validator->addRule('merge', 'required', _t('合并入的标签不存在'));
-        $validator->addRule('merge', 'tagNameExists', _t('合并入的标签不存在'));
+        $validator->addRule('merge', array($this, 'tagNameExists'), _t('合并入的标签不存在'));
         
         /** 设置提示信息 */
         try
         {
-            $validator->run(TypechoRequest::getParametersFrom('merge'));
+            $validator->run(Typecho_Request::getParametersFrom('merge'));
         }
-        catch(TypechoValidationException $e)
+        catch(Typecho_Validate_Exception $e)
         {
             Typecho_API::factory('Widget_Notice')->set($e->getMessages(), NULL, 'error');
-            $this->goBack();
+            Typecho_API::goBack();
         }
         
         $merge = $this->db->fetchObject($this->db->sql()->select('table.metas', '`mid`')->where('`type` = ?', 'tag')
-        ->where('`name` = ?', TypechoRequest::getParameter('merge'))->limit(1))->mid;
-        $tags = TypechoRequest::getParameter('mid');
+        ->where('`name` = ?', Typecho_Request::getParameter('merge'))->limit(1))->mid;
+        $tags = Typecho_Request::getParameter('mid');
         
         if($tags && is_array($tags))
         {
-            $this->mergeMeta($merge, 'tag', $tags);
+            $this->merge($merge, 'tag', $tags);
             
             /** 提示信息 */
             Typecho_API::factory('Widget_Notice')->set(_t('标签已经合并'), NULL, 'success');
@@ -327,7 +327,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         }
         
         /** 转向原页 */
-        Typecho::redirect(Typecho::pathToUrl('manage-tag.php', $this->options->adminUrl));
+        Typecho_API::redirect(Typecho_API::pathToUrl('manage-tag.php', $this->options->adminUrl));
     }
 
     /**
