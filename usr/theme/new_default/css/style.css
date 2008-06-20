@@ -2,6 +2,7 @@ body {
 background:#fff;
 color:#333;
 font-family:Tahoma, Verdana, Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
+border-top:3px solid #690;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -43,7 +44,6 @@ text-decoration:none;
 
 ul#nav_menu {
 list-style-type:none;
-border-top:3px solid #690;
 font-family:Georgia, Sans-Serif;
 text-transform:uppercase;
 margin:0 0 20px;
