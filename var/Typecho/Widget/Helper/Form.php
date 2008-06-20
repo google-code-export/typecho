@@ -170,6 +170,23 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 获取此表单的所有输入项
+     * 
+     * @access public
+     * @return array
+     */
+    public function getParameters()
+    {
+        $parameters = array();
+        
+        foreach($this->_inputs as $name => $input)
+        {
+            $parameters[$name] = Typecho_Request::getParameter($name);
+        }
+        return $parameters;
+    }
+    
+    /**
      * 验证表单
      * 
      * @access public

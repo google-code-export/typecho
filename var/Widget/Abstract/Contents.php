@@ -296,8 +296,10 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
     public function content($more = NULL)
     {
         $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
-        list($abstract) = explode('<!--more-->', $content);
-        echo Typecho_API::fixHtml($abstract) . ($more ? '<p class="more"><a href="'
+        $contents = explode('<!--more-->', $content);
+        
+        list($abstract) = $contents;
+        echo Typecho_API::fixHtml($abstract) . ($more && count($contents) > 1 ? '<p class="more"><a href="'
         . $this->permalink . '">' . $more . '</a></p>' : NULL);
     }
 
@@ -318,7 +320,6 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      *
      * @access public
      * @param string $string 评论数格式化数据
-     * @param string $tag 评论链接锚点
      * @return void
      */
     public function commentsNum($string = 'Comments %d')

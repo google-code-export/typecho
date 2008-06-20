@@ -4,12 +4,8 @@
 		<div class="widget">
             <h2>Recent Articles</h2>
             <ul>
-                <li><a href="#">MySpace, a Virtual Mirror of Society</a></li>
-                <li><a href="#">Religion in the Modern world</a></li>
-                <li><a href="#">A 13-Year-Old is Not a Playboy Bunny</a></li>
-                <li><a href="#">Truth Behind the Mask</a></li>
-                <li><a href="#">The Business of Blogging and How It is Mostly Rubbish</a></li>
-                <li><a href="#">Newsflash: Differing opinions are dangerous.</a></li>
+                <?php $this->widget('Contents/Post/Recent')
+                ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
             </ul>
         </div>
 		<div class="widget">
@@ -26,12 +22,8 @@
         <div class="widget">
             <h2>Categories</h2>
             <ul>
-                <li><a href="#">Basic principles</a> (10)</li>
-                <li><a href="#">Cooking techniques</a> (2)</li>
-                <li><a href="#">Flavours</a> (5)</li>
-                <li><a href="#">Ingredients</a> (6)</li>
-                <li><a href="#">Recipes</a> (1)</li>
-                <li><a href="#">Restaurant business</a> (3)</li>
+                <?php $this->widget('Metas/Category/List')
+                ->parse('<li><a href="{permalink}">{name}</a> ({count})</li>'); ?>
             </ul>
         </div>
         <div class="widget">

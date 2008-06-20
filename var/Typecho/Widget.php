@@ -137,6 +137,13 @@ abstract class Typecho_Widget implements Iterator
     {
         $this->_row = &$this->_stack[key($this->_stack)];
         next($this->_stack);
+        
+        if(!$this->_row)
+        {
+            $this->_row = reset($this->_stack);
+            return false;
+        }
+        
         return $this->_row;
     }
     
