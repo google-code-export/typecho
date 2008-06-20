@@ -8,5 +8,10 @@ $(document).ready(function() {
 			 $(this).removeClass("over"); });
 	$("table.latest tr:even").addClass("alt");
 	$("table.setting tr:odd").addClass("alt");
+
+	$(":text").addClass("text");
+	$(":password").addClass("password");
+	$(":submit").addClass("submit");
+	$(":button").addClass("button");
 });
 
