@@ -52,12 +52,11 @@ abstract class Typecho_Plugin_Adapter
      * 注册一个回调函数
      * 
      * @access public
-     * @param string $fileName 文件名
      * @param string $component 元件名称
      * @param string $callback 回调函数
      * @return void
      */
-    public function register($component, $callback)
+    public function __set($component, $callback)
     {
         $this->callback[$component][] = $callback;
     }

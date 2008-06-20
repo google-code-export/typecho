@@ -54,7 +54,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $this->abstractMetasWidget = Typecho_API::factory('Widget_Abstract_Metas');
         
         /** 初始化插件 */
-        $this->plugin = Typecho_Plugin::filter(__FILE__);
+        $this->plugin = _p(__FILE__, 'Filter');
     }
     
     /**

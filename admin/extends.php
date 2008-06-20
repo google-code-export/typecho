@@ -15,6 +15,6 @@ require_once 'header.php';
 require_once 'menu.php';
 
 /** 调用插件 */
-TypechoPlugin::instance(__FILE__)->display();
+_p(__FILE__, 'Layout')->display();
 
 require_once 'footer.php';

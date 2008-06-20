@@ -121,7 +121,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         }
         
         /** 增加插件接口 */
-        Typecho_Plugin::action(__FILE__)->render($this->feed, $feedType);
+        _p(__FILE__, 'Action')->render($this->feed, $feedType);
     }
     
     /**
@@ -151,7 +151,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
                     $item->addElement('dc:creator', $comments->author);
                 }
                 
-                Typecho_Plugin::action(__FILE__)->pushCommentElement($item, $comments, $this->type);
+                _p(__FILE__, 'Action')->pushCommentElement($item, $comments, $this->type);
                 $this->feed->addItem($item);
             }
         }
@@ -196,7 +196,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
                 $item->addElement('wfw:commentRss', $value['feedUrl']);
             }
             
-            Typecho_Plugin::action(__FILE__)->push($item, $value, $this->type);
+            _p(__FILE__, 'Action')->push($item, $value, $this->type);
             $this->feed->addItem($item);
         }
     }

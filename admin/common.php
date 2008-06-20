@@ -13,7 +13,7 @@
 require_once '../config.inc.php';
 
 /** 注册一个初始化插件 */
-Typecho_Plugin::action(__FILE__)->init();
+_p(__FILE__, 'Action')->init();
 
 $options = Typecho_API::factory('Widget_Abstract_Options');
 $access = Typecho_API::factory('Widget_Users_Current');
