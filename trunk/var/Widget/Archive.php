@@ -103,7 +103,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             }
             
             /** 设置风格文件 */
-            $this->themeFile = Typecho_Router::$current . '.php';
+            $this->themeFile = 'post' == Typecho_Router::$current ? 'single.php' : 'page.php';
             $hasPushed = true;
         }
         else if('category' == Typecho_Router::$current || 'category_page' == Typecho_Router::$current)

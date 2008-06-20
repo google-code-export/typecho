@@ -3,8 +3,9 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>Typecho</title>
-<link rel="stylesheet" type="text/css" media="all" href="css/960.gs.css" />
-<link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('css/960.gs.css'); ?>" />
+<link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('css/style.css'); ?>" />
+<?php $this->header(); ?>
 </head>
 
 <body>
@@ -21,8 +22,8 @@
 		</div>
 		<div class="grid_9">
 			<img src="images/header.png" width="50" height="50" alt="" style="float: left; margin: 5px 10px 0 0;" />
-	        <h1><a href="#">文字输出 Typecho )))</a></h1>
-			<span>kitchen tips, recipes, and cooking principles</span>
+	        <h1><a href="#"><?php $this->options->title() ?></a></h1>
+			<span><?php $this->options->description() ?></span>
 		</div>
 		<div class="grid_7">
 			<div id="search"><input type="text" class="text" size="40" /> <input type="submit" class="submit" value="Search" /></div>

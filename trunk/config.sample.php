@@ -34,8 +34,14 @@ define('__TYPECHO_GZIP_ENABLE__', false);
 /** 载入API支持 */
 require_once 'Typecho/API.php';
 
-/** 载入API支持 */
+/** 载入配置支持 */
 require_once 'Typecho/Config.php';
+
+/** 载入插件支持 */
+require_once 'Typecho/Plugin.php';
+
+/** 载入国际化支持 */
+require_once 'Typecho/I18n.php';
 
 /** 定义数据库参数 */
 Typecho_Config::set('Db', array(
