@@ -27,6 +27,7 @@ class Typecho_Widget_Helper_Form_Text extends Typecho_Widget_Helper_Form_Abstrac
      * 
      * @access public
      * @param string $inputName 表单名称
+     * @param string $value 表单默认值
      * @param string $label 表单标题
      * @param string $description 表单描述
      * @return void

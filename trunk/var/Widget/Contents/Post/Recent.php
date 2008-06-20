@@ -30,13 +30,13 @@ class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
     {
         parent::__construct();
         
-        $this->pageSize = empty($pageSize) ? $this->options->postsListSize : $pageSize;
+        $pageSize = empty($pageSize) ? $this->options->postsListSize : $pageSize;
     
         $this->db->fetchAll($this->select()->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime)
         ->where('table.contents.`type` = ?', 'post')
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
-        ->limit($this->pageSize), array($this, 'push'));
+        ->limit($pageSize), array($this, 'push'));
     }
 }

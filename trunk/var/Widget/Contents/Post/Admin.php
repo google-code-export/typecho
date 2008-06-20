@@ -34,6 +34,22 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * @var array
      */
     private $_filterQuery = array();
+    
+    /**
+     * 分页大小
+     * 
+     * @access private
+     * @var integer
+     */
+    private $pageSize;
+    
+    /**
+     * 当前页
+     * 
+     * @access private
+     * @var integer
+     */
+    private $currentPage;
 
     /**
      * 构造函数

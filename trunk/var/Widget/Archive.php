@@ -33,6 +33,22 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     private $countSql;
     
     /**
+     * 分页大小
+     * 
+     * @access private
+     * @var integer
+     */
+    private $pageSize;
+    
+    /**
+     * 当前页
+     * 
+     * @access private
+     * @var integer
+     */
+    private $currentPage;
+    
+    /**
      * header内容
      * 
      * @access public
@@ -251,15 +267,21 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * 输出分页
      * 
      * @access public
+     * @param string $prevWord 上一页文字
+     * @param string $nextWord 下一页文字
+     * @param int $splitPage 分割范围
+     * @param string $splitWord 分割字符
      * @return void
      */
-    public function pageNav()
+    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        $query = Typecho_Router::url(Typecho_Router::$current . '_page', $this->_row, $this->options->index);
-        
+        $query = Typecho_Router::url(Typecho_Router::$current . 
+        (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
+        $this->_row, $this->options->index);
+
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->countSql), $this->currentPage, $this->pageSize, $query);
-        $nav->render(_t('上一页'), _t('下一页'));
+        $nav->render($prev, $next, $splitPage, $splitWord);
     }
     
     /**
@@ -295,6 +317,20 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     public function header()
     {
         $this->header->render();
+    }
+    
+    /**
+     * 根据别名获取widget对象
+     * 
+     * @access public
+     * @param string $alias
+     * @return Typecho_Widget
+     */
+    public function widget($alias)
+    {
+        $args = func_get_args();
+        $args[0] = 'Widget_' . str_replace('/', '_', $alias);
+        return call_user_func_array(array('Typecho_API', 'factory'), $args);
     }
     
     /**

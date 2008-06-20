@@ -141,11 +141,11 @@ class Typecho_Router
      */
     public static function url($name, array $value = NULL, $prefix = NULL)
     {
+        self::_parseRoute();
+        $route = self::$_routes[$name];
+    
         if($value)
-        {
-            self::_parseRoute();
-            $route = self::$_routes[$name];
-            
+        {            
             //交换数组键值
             $pattern = array();
             foreach($route['params'] as $row)
@@ -157,7 +157,7 @@ class Typecho_Router
         }
         else
         {
-            return Typecho_API::pathToUrl($route[3], $prefix);
+            return Typecho_API::pathToUrl($route['url'], $prefix);
         }
     }
 }

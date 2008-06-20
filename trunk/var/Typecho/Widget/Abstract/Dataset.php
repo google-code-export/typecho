@@ -26,22 +26,6 @@ require_once 'Typecho/Db.php';
 abstract class Typecho_Widget_Abstract_Dataset extends Typecho_Widget
 {
     /**
-     * 分页大小
-     * 
-     * @access protected
-     * @var integer
-     */
-    protected $pageSize;
-    
-    /**
-     * 当前页
-     * 
-     * @access protected
-     * @var integer
-     */
-    protected $currentPage;
-
-    /**
      * 数据库对象
      * 
      * @access protected
@@ -58,30 +42,6 @@ abstract class Typecho_Widget_Abstract_Dataset extends Typecho_Widget
     public function __construct()
     {
         $this->db = Typecho_Db::get();
-    }
-    
-    /**
-     * 设置分页大小
-     * 
-     * @access public
-     * @param integer $pageSize 分页大小
-     * @return void
-     */
-    public function setPageSize($pageSize)
-    {
-        $this->pageSize = $pageSize;
-    }
-    
-    /**
-     * 设置当前页
-     * 
-     * @access public
-     * @param integer $currentPage 当前页
-     * @return void
-     */
-    public function setCurrentPage($currentPage)
-    {
-        $this->currentPage = $currentPage;
     }
     
     /**

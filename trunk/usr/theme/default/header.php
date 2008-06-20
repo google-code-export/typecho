@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-type" content="text/html; charset=<?php $this->options->charset(); ?>" />
 <title>Typecho</title>
 <link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('css/960.gs.css'); ?>" />
 <link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('css/style.css'); ?>" />
@@ -21,7 +21,7 @@
 			</ul>
 		</div>
 		<div class="grid_9">
-			<img src="images/header.png" width="50" height="50" alt="" style="float: left; margin: 5px 10px 0 0;" />
+			<img src="<?php $this->options->themeUrl('images/header.png'); ?>" width="50" height="50" alt="" style="float: left; margin: 5px 10px 0 0;" />
 	        <h1><a href="#"><?php $this->options->title() ?></a></h1>
 			<span><?php $this->options->description() ?></span>
 		</div>
