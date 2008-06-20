@@ -2,7 +2,7 @@
 <div class="container">
 	<div id="header">
 			<div id="nav-bar" class="right">
-            <?php Typecho_Plugin::action(__FILE__)->navBar(); ?>
+            <?php _p(__FILE__, 'Layout')->navBar(); ?>
             <?php _e('你好'); ?>, <a href="#"><?php $access->screenName(); ?></a> | 
             <a title="<?php _e('退出当前登录'); ?>" href="<?php $options->index('Logout.do'); ?>"><?php _e('退出'); ?></a> | 
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('Typecho官方网站'); ?>"><?php _e('支持'); ?></a> | 

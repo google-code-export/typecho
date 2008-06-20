@@ -81,6 +81,6 @@ abstract class Typecho_Widget_Helper_PageNavigator
      */
     public function render()
     {
-        throw new Typecho_Widget_Exception(_t('%s::render方法必须在继承子类中实现', get_class($this)), Typecho_Exception::RUNTIME);
+        throw new Typecho_Widget_Exception(get_class($this) . ':' . __METHOD__, Typecho_Exception::RUNTIME);
     }
 }

@@ -7,9 +7,6 @@
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 国际化语言 */
-require_once 'Typecho/I18n.php';
-
 /** 配置管理 */
 require_once 'Typecho/Config.php';
 
@@ -131,7 +128,7 @@ class Typecho_Router
             return;
         }
 
-        throw new Typecho_Router_Exception(_t('没有找到 %s', $pathInfo), Typecho_Exception::NOTFOUND);
+        throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", Typecho_Exception::NOTFOUND);
     }
 
     /**
