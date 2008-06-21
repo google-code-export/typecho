@@ -74,17 +74,22 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         /** 处理评论聚合 */
         if('/comments' == $feedQuery || '/comments/' == $feedQuery)
         {
-            $this->_isComments = true;
+            $this->options = Typecho_API::factory('Widget_Abstract_Options');
+            Typecho_API::factory('Widget_Comments_Recent', 20)->to($comments);
+            $this->pushCommentElement($comments);
+            
+            $this->options->feedUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedUrl);
+            $this->options->feedRssUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedRssUrl);
+            $this->options->feedAtomUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedAtomUrl);
         }
-        
         /** 解析路径 */
-        if(false === Typecho_Router::match($feedQuery))
+        else if(false !== Typecho_Router::match($feedQuery))
         {
-            throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
+            parent::__construct(10);
         }
         else
         {
-            parent::__construct(10);
+            throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
         }
         
         $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
@@ -139,7 +144,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
      * 增加评论节点
      * 
      * @access public
-     * @param CommentsWidget $comments
+     * @param Widget_Comments_Recent $comments
      * @return void
      */
     public function pushCommentElement($comments)
@@ -179,37 +184,25 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
     {
         $value = parent::push($value);
     
-        if($this->_isComments)
-        {
-            Typecho_API::widget('Widget_Comments_Recent', 20)->to($comments);
-            $this->pushCommentElement($comments);
+        $item = $this->feed->createNewItem();
+        $item->setTitle($value['title']);
+        $item->setLink($value['permalink']);
+        $item->setDate($value['created'] + idate('Z'));
+        $item->setDescription($value['text']);
+        $item->setCategory($value['categories']);
         
-            $this->options->feedUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedUrl);
-            $this->options->feedRssUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedRssUrl);
-            $this->options->feedAtomUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedAtomUrl);
-        }
-        else
+        if(Typecho_Feed::RSS2 == $this->type)
         {
-            $item = $this->feed->createNewItem();
-            $item->setTitle($value['title']);
-            $item->setLink($value['permalink']);
-            $item->setDate($value['created'] + idate('Z'));
-            $item->setDescription($value['text']);
-            $item->setCategory($value['categories']);
-            
-            if(Typecho_Feed::RSS2 == $this->type)
-            {
-                $item->addElement('guid', $value['permalink']);
-                $item->addElement('comments', $value['permalink'] . '#comments');
-                $item->addElement('content:encoded', Typecho_API::subStr(Typecho_API::stripTags($value['text']), 0, 100, '...'));
-                $item->addElement('author', $value['author']);
-                $item->addElement('dc:creator', $value['author']);
-                $item->addElement('wfw:commentRss', $value['feedUrl']);
-            }
-            
-            _p(__FILE__, 'Action')->push($item, $value, $this->type);
-            $this->feed->addItem($item);
+            $item->addElement('guid', $value['permalink']);
+            $item->addElement('comments', $value['permalink'] . '#comments');
+            $item->addElement('content:encoded', Typecho_API::subStr(Typecho_API::stripTags($value['text']), 0, 100, '...'));
+            $item->addElement('author', $value['author']);
+            $item->addElement('dc:creator', $value['author']);
+            $item->addElement('wfw:commentRss', $value['feedUrl']);
         }
+        
+        _p(__FILE__, 'Action')->push($item, $value, $this->type);
+        $this->feed->addItem($item);
     }
     
     /**

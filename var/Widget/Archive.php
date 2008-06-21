@@ -193,7 +193,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             $this->themeFile = 'archive.php';
         }
         else if('archive_year' == Typecho_Router::$current || 'archive_month' == Typecho_Router::$current
-        || 'archive_day' == Typecho_Router::$current)
+        || 'archive_day' == Typecho_Router::$current || 'archive_year_page' == Typecho_Router::$current || 
+        'archive_month_page' == Typecho_Router::$current || 'archive_day_page' == Typecho_Router::$current)
         {
             /** 如果是按日期归档 */
             $year = Typecho_Request::getParameter('year');
