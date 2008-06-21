@@ -49,7 +49,23 @@ require_once 'menu.php';
 					<td><input type="checkbox" id="" /></td>
 					<td><?php $comments->dateWord(); ?></td>
 					<td><?php $comments->author(); ?>
-                    <sup><?php $comments->mode(); ?></sup>
+                    <sup><?php
+                        switch($comments->status)
+                        {
+                            case 'approved':
+                                echo _t('展现');
+                                break;
+                            case 'spam':
+                                echo _t('垃圾');
+                                break;
+                            case 'waiting':
+                                echo _t('待审核');
+                                break;
+                            default:
+                                echo _t('不明');
+                                break;
+                        }
+                    ?></sup>
                     <sub>
                         <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>">网址</a><?php endif; ?>
                         <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>">邮件</a><?php endif; ?>
@@ -57,7 +73,23 @@ require_once 'menu.php';
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
-					<td><?php $comments->status(); ?></td>
+					<td><?php
+                        switch($comments->mode)
+                        {
+                            case 'pingback':
+                                echo _t('广播');
+                                break;
+                            case 'trackback':
+                                echo _t('引用');
+                                break;
+                            case 'comment':
+                                echo _t('评论');
+                                break;
+                            default:
+                                echo _t('不明');
+                                break;
+                        }
+                    ?></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

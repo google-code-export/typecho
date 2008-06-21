@@ -1,3 +1,7 @@
+2008.6.21 by qining
+
+在set_include_path时对get_include_path和PATH_SEPARATOR的支持
+
 2008.5.28 by qining
 
 保留xmlrpc
