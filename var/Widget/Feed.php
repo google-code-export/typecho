@@ -215,10 +215,9 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
      */
     public function singlePush(array $value)
     {
-        Typecho_API::factory('Widget_Comments_Archive')->to($comments);
-        $this->pushCommentElement($comments);
-        
-        return parent::singlePush($value);
+        $value = parent::singlePush($value);
+        $this->pushCommentElement($this->comments());
+        return $value;
     }
     
     /**
