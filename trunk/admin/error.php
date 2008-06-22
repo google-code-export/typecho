@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo __TYPECHO_CHARSET__; ?>" />
-	<title><?php echo $exception->getMessage(); ?> - Powered By Typecho</title>
+	<title><?php _e('出现错误'); ?> - Powered By Typecho</title>
 	<style>
 		body { background: #E6EEF7;padding:0;margin:0; font-family:Georgia,Times,"Times New Roman",serif }
         #e-logo { background: #000; padding: 10px; width: 420px; margin:0 auto; text-align:right; }
@@ -16,22 +16,22 @@
 </head>
 <body>
     <div id="exception">
-        <h2><?php _e('%s错误', $exception->getCode()); ?></h2>
-        <?php if(TypechoException::NOTFOUND == $exception->getCode()): ?>
+        <h2><?php _e('错误', $exception->getCode()); ?></h2>
+        <?php if(Typecho_Exception::NOTFOUND == $exception->getCode()): ?>
             <ul>
                 <li><?php _e('您访问的页面 %s 不存在', $_SERVER['REQUEST_URI']); ?></li>
                 <li><?php _e('请确认您访问的地址是否正确'); ?></li>
             </ul>
-        <?php elseif(TypechoException::FORBIDDEN == $exception->getCode()): ?>
+        <?php elseif(Typecho_Exception::FORBIDDEN == $exception->getCode()): ?>
             <ul>
                 <li><?php _e('您请求的地址被禁止访问'); ?></li>
             </ul>
-        <?php elseif(TypechoException::RUNTIME == $exception->getCode()): ?>
+        <?php elseif(Typecho_Exception::RUNTIME == $exception->getCode()): ?>
             <ul>
                 <li><?php _e('服务器在运行中出现错误'); ?></li>
                 <li><?php _e('请检查服务器的运行日志或者访问Typecho.org获得更多支持'); ?></li>
             </ul>
-        <?php elseif(TypechoException::UNVAILABLE == $exception->getCode()): ?>
+        <?php elseif(Typecho_Exception::UNVAILABLE == $exception->getCode()): ?>
             <ul>
                 <li><?php _e('数据库当前不可用'); ?></li>
                 <li><?php _e('请检查数据库是否运行正常'); ?></li>

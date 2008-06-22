@@ -29,6 +29,14 @@ abstract class Typecho_Widget implements Iterator
      * @var array
      */
     protected $_row = array();
+    
+    /**
+     * 当前堆栈指针顺序值,从1开始
+     * 
+     * @access public
+     * @var integer
+     */
+    public $sequence = 0;
 
     /**
      * 将类本身赋值
@@ -126,6 +134,17 @@ abstract class Typecho_Widget implements Iterator
     {
         echo (0 === key($this->_stack)) ? $string : NULL;
     }
+    
+    /**
+     * 输出顺序值
+     * 
+     * @access public
+     * @return void
+     */
+    public function sequence()
+    {
+        echo $this->sequence;
+    }
 
     /**
      * 返回堆栈是否为空
@@ -146,10 +165,12 @@ abstract class Typecho_Widget implements Iterator
     {
         $this->_row = &$this->_stack[key($this->_stack)];
         next($this->_stack);
+        $this->sequence ++;
         
         if(!$this->_row)
         {
             $this->_row = reset($this->_stack);
+            $this->sequence = 0;
             return false;
         }
         

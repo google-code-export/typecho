@@ -222,17 +222,20 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
         
-        /** 生成静态链接 */
-        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
+        /** 生成静态路径 */
+        $linkPath = $routeExists ? Typecho_Router::url($type, $value) : '#';
         
         /** 生成反馈地址 */
         /** 评论 */
         $value['commentUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'comment', 'permalink' => $value['permalink']), $this->options->index);
+        array('type' => 'comment', 'permalink' => $linkPath), $this->options->index);
         
         /** trackback */
         $value['trackbackUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'trackback', 'permalink' => $value['permalink']), $this->options->index);
+        array('type' => 'trackback', 'permalink' => $linkPath), $this->options->index);
+        
+        /** 生成静态链接 */
+        $value['permalink'] = Typecho_API::pathToUrl($linkPath, $this->options->index);
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
