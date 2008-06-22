@@ -31,6 +31,11 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT')
     {
+        if($this->_total < 1)
+        {
+            return;
+        }
+    
         //输出下一页
         if($this->_currentPage < $this->_totalPage)
         {

@@ -11,12 +11,10 @@
 		<div class="widget">
             <h2>Recent Comments</h2>
             <ul>
-                <li>sluke: <a href="#">@insraq新版在秘密开发中...</a></li>
-                <li>Jeffrey04: <a href="#">frameworks最基本上要解决的...</a></li>
-                <li>insraq: <a href="#">分析精当。另外，Magike最近...</a></li>
-                <li>aw: <a href="#">结构在很大程度上说明了思考...</a></li>
-                <li>humeniuc: <a href="#">一个人住的My饥渴同学~~~</a></li>
-                <li>SACN: <a href="#">打少了点字上面的某句是：与...</a></li>
+            <?php $this->widget('Comments/Recent')->to($comments); ?>
+            <?php while($comments->get()): ?>
+                <li><?php $comments->author(); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(10, '[...]'); ?></a></li>
+            <?php endwhile; ?>
             </ul>
         </div>
         <div class="widget">

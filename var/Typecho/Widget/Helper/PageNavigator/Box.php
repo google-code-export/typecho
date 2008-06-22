@@ -33,6 +33,11 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...')
     {
+        if($this->_total < 1)
+        {
+            return;
+        }
+    
         $from = max(1, $this->_currentPage - $splitPage);
         $to = min($this->_totalPage, $this->_currentPage + $splitPage);
 
