@@ -98,6 +98,12 @@ class Typecho_Validate
             foreach($rules as $params)
             {
                 $method = $params[0];
+                
+                if('required' != $method && empty($data[$key]))
+                {
+                    continue;
+                }
+                
                 $message = $params[1];
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
