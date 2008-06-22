@@ -90,13 +90,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         Typecho_Request::setCookie('text', $comment['text']);
         
         /** 生成过滤器 */
-        Typecho_Plugin::instance(__FILE__)->filter(__METHOD__, $comment);
+        $comment = _p(__FILE__, 'Filter')->comment($comment);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
         
         Typecho_Request::deleteCookie('text');
-        $this->goBack('#comment-' . $commentId);
+        Typecho_API::goBack('#comment-' . $commentId);
     }
     
     /**
@@ -135,11 +135,11 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
      */
     public function action()
     {
-        $permalink = Typecho_Route::getParameter('permalink');
-        $callback = Typecho_Route::getParameter('type');
-        
-        if(false !== Typecho_Route::match(Typecho_Config::get('Route'), $permalink) && 
-        ('post' == Typecho_Route::$current || 'page' == Typecho_Route::$current) &&
+        $permalink = Typecho_Request::getParameter('permalink');
+        $callback = Typecho_Request::getParameter('type');
+
+        if(false !== Typecho_Router::match($permalink) && 
+        ('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current) &&
         Typecho_API::factory('Widget_Archive', 1)->have() && 
         in_array($callback, array('comment', 'trackback')))
         {

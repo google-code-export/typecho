@@ -27,23 +27,22 @@
 		<div id="comments">
 			<h4><?php $this->commentsNum('No Response', 'One Response to"' . $this->title . '"', '%d Responses to "' . $this->title . '"'); ?></h4>
 			<ol id="comment_list">
-			<?php for($a=1; $a!=6; $a++) echo'
-				<li>
-					<div class="c_user">'.$a.' | <strong><a href="#">Fen</a></strong> at January 12th, 2008 at 1:58 am </div>
+			<?php $this->comments()->to($comments); ?>
+            <?php while($comments->get()): ?>
+				<li id="<?php $comments->id(); ?>">
+					<div class="c_user"><?php echo $comments->sequence(); ?> | <strong><?php $comments->author(); ?></strong> at <?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> </div>
 					<div class="c_text">
-						<img src="http://www.gravatar.com/avatar.php?gravatar_id=d18d64bf2b1d256fdcb811cafbbfa487&amp;size=32" width="32" height="32" class="gravatar" alt="" />
-						<p>Wt? You are asking? I bet, if you start selling premium themes, you will be number one in the paid theme market. Honestly.</p>
-						<p>The most best thing about you is attention to details that tops all other designers out there. I would only say, “go for it!”.</p>
+						<?php $comments->content(); ?>
 					</div>
 				</li>
-			'; ?>
+			<?php endwhile; ?>
 			</ol>
 			<h4 id="response">Leave a Reply</h4>
-			<form method="post" action="" id="comment_form">
-				<p><input type="text" class="text" size="50" /><label>Name (Required)</label></p>
-				<p><input type="text" class="text" size="50" /><label>E-mail (Required *will not be published)</label></p>
-				<p><input type="text" class="text" size="50" /><label>Website</label></p>
-				<p><textarea rows="12" cols=""></textarea></p>
+			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
+				<p><input type="text" name="author" class="text" size="50" /><label>Name (Required)</label></p>
+				<p><input type="text" name="mail" class="text" size="50" /><label>E-mail (Required *will not be published)</label></p>
+				<p><input type="text" name="url" class="text" size="50" /><label>Website</label></p>
+				<p><textarea rows="12" name="text" cols=""></textarea></p>
 				<p><input type="submit" value="Submit Comment" class="submit" /></p>
 			</form>
 		</div>

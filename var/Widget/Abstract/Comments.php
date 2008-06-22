@@ -103,7 +103,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
         /** 构建插入结构 */
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
-            'created'   =>  Typecho_API::widget('Options')->gmtTime,
+            'created'   =>  $this->options->gmtTime,
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
@@ -281,6 +281,48 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
     public function dateWord()
     {
         echo Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
+    
+    /**
+     * 输出作者相关
+     * 
+     * @access public
+     * @param boolean $autoLink 是否自动加上链接
+     * @param boolean $noFollow 是否加上nofollow标签
+     * @return void
+     */
+    public function author($autoLink = true, $noFollow = true)
+    {
+        if($this->url && $autoLink)
+        {
+            echo '<a href="' . $this->url . '"' . ($noFollow ? ' rel="external nofollow"' : NULL) . '>' . $this->author . '</a>';
+        }
+        else
+        {
+            echo $this->author;
+        }
+    }
+    
+    /**
+     * 输出格式化后的内容
+     * 
+     * @access public
+     * @return void
+     */
+    public function content()
+    {
+        echo Typecho_API::cutParagraph($this->text);
+    }
+    
+    /**
+     * 输出锚点id
+     * 
+     * @access public
+     * @return void
+     */
+    public function id()
+    {
+        echo 'comments-' . $this->coid;
     }
     
     /**

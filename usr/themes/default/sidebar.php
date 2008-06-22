@@ -13,7 +13,7 @@
             <ul>
             <?php $this->widget('Comments/Recent')->to($comments); ?>
             <?php while($comments->get()): ?>
-                <li><?php $comments->author(); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(10, '[...]'); ?></a></li>
+                <li><?php $comments->author(false); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(10, '[...]'); ?></a></li>
             <?php endwhile; ?>
             </ul>
         </div>

@@ -468,6 +468,49 @@ class Typecho_API
     }
     
     /**
+     * 文本分段函数
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function cutParagraph($string)
+    {
+        $string = "\n\n" . $string . "\n\n";
+        
+        //过滤非转义分段
+        $string = preg_replace("/<\/*(div|blockquote|pre|table|tr|th|td|li|ol|ul)[^>]*>/i", "\n\n\\0\n\n", $string);
+        
+        //过滤code
+        $string = preg_replace("/<code[^>]*>/i", "\n\n\\0", $string);
+        $string = preg_replace("/<\/code[^>]*>/i", "\\0\n\n", $string);
+        $string = preg_replace("/<code[^>]*\/>/i", "\\0\n\n", $string);
+        
+        //区分段落
+        $rows = explode("\n\n", trim($string));
+        
+        $finalRows = array();
+        
+        //去掉空段落
+        foreach($rows as $row)
+        {
+            $row = trim($row);
+            
+            if($row)
+            {
+                $result = '';
+                if(!preg_match("/^<\/*(div|code|blockquote|pre|table|tr|th|td|li|ol|ul)(.*)$/i", $row))
+                {
+                    $row = '<p>' . $row . '</p>';
+                }
+                
+                $finalRows[] = str_replace("\n", '<br />', $row);
+            }
+        }
+        
+        return implode('', $finalRows);
+    }
+    
+    /**
      * 生成随机字符串
      * 
      * @access public
