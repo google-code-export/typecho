@@ -19,7 +19,15 @@ class Typecho_Feed_Writer
     private $data          = array();  // Store some other version wise data
     private $CDATAEncoding = array();  // The tag names which have to encoded as CDATA
 
-    private $version   = null; 
+    private $version   = null;
+    
+    /**
+     * 字符集
+     * 
+     * @access private
+     * @var string
+     */
+    private $charset   = 'UTF-8';
 	
 	/**
 	* Constructor
@@ -109,6 +117,17 @@ class Typecho_Feed_Writer
 		$this->items[] = $feedItem;    
 	}
 	
+    /**
+     * 设置字符集
+     * 
+     * @access public
+     * @param string $charset 字符集
+     * @return void
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+    }
 	
 	// Wrapper functions -------------------------------------------------------------------
 	
@@ -217,7 +236,7 @@ class Typecho_Feed_Writer
 	*/
 	private function printHead()
 	{
-		$out  = '<?xml version="1.0" encoding="' . __TYPECHO_CHARSET__ . '"?>' . Typecho_Feed::EOL;
+		$out  = '<?xml version="1.0" encoding="' . $this->charset . '"?>' . Typecho_Feed::EOL;
 		
 		if($this->version == Typecho_Feed::RSS2)
 		{

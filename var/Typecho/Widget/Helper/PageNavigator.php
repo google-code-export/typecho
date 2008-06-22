@@ -81,6 +81,8 @@ abstract class Typecho_Widget_Helper_PageNavigator
      */
     public function render()
     {
+        /** 载入异常支持 */
+        require_once 'Typecho/Widget/Exception.php';
         throw new Typecho_Widget_Exception(get_class($this) . ':' . __METHOD__, Typecho_Exception::RUNTIME);
     }
 }

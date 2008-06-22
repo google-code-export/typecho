@@ -105,6 +105,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         {
             /** 如果是RSS1标准 */
             $this->feed->setChannelAbout($this->options->feedRssUrl);
+            $this->feed->setLink($this->options->feedRssUrl);
         }
         
         if(Typecho_Feed::ATOM1 == $feedType)
@@ -214,7 +215,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
      */
     public function singlePush(array $value)
     {
-        Typecho_API::widget('ArchiveComments')->to($comments);
+        Typecho_API::factory('Widget_Comments_Archive')->to($comments);
         $this->pushCommentElement($comments);
         
         return parent::singlePush($value);
@@ -228,6 +229,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
      */
     public function render()
     {
+        $this->feed->setCharset($this->options->charset);
         $this->feed->generateFeed();
     }
 }

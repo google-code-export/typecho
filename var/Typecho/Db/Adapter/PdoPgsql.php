@@ -7,6 +7,9 @@
  * @version    $Id: Mysql.php 89 2008-03-31 00:10:57Z magike.net $
  */
 
+/** 数据库适配器接口 */
+require_once 'Typecho/Db/Adapter.php';
+
 /**
  * 数据库PDOMysql适配器
  *
@@ -39,6 +42,8 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
         }
         catch(PDOException $e)
         {
+            /** 数据库异常 */
+            require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::UNVAILABLE);
         }
     }
@@ -61,6 +66,8 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
         }
         catch(PDOException $e)
         {
+            /** 数据库异常 */
+            require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::RUNTIME);
         }
 

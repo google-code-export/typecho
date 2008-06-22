@@ -7,6 +7,9 @@
  * @version    $Id: Mysql.php 103 2008-04-09 16:22:43Z magike.net $
  */
 
+/** 数据库适配器接口 */
+require_once 'Typecho/Db/Adapter.php';
+
 /**
  * 数据库SQLite适配器
  *
@@ -76,6 +79,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
             return $this->_dbHandle;
         }
 
+        /** 数据库异常 */
+        require_once 'Typecho/Db/Exception.php';
         throw new Typecho_Db_Exception($error, Typecho_Exception::UNVAILABLE);
     }
 
@@ -93,7 +98,9 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         {
             return $resource;
         }
-
+        
+        /** 数据库异常 */
+        require_once 'Typecho/Db/Exception.php';
         throw new Typecho_Db_Exception(sqlite_error_string(sqlite_last_error($this->_dbHandle)), Typecho_Exception::RUNTIME);
     }
 

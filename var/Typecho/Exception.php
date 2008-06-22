@@ -120,7 +120,7 @@ class Typecho_Exception extends Exception
 <title>Exception</title>
 </head><body>
             <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:12px;background:#AA0000;padding:10px;color:#FFF">'
-            . $this->message . '</h1>';
+            . $this->code . ' : ' . $this->message . '</h1>';
             return self::parse(parent::__toString()) . errorHandler() . '</body></html>';
     }
 }

@@ -61,7 +61,7 @@ color:#690;
 padding:0 20px 2px 35px;
 }
 
-ul#nav_menu li a:hover {
+ul#nav_menu li a:hover, ul#nav_menu li a.current {
 background:#690 url(../images/nav_menu.png) 17px 5px no-repeat;
 color:#fff;
 text-decoration:none;

@@ -10,12 +10,6 @@
 /** 配置管理 */
 require_once 'Typecho/Config.php';
 
-/** 数据库异常 */
-require_once 'Typecho/Db/Exception.php';
-
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter.php';
-
 /** sql构建器 */
 require_once 'Typecho/Db/Query.php';
 
@@ -94,7 +88,7 @@ class Typecho_Db
         Typecho_Config::need('Db');
     
         /** 数据库适配器 */
-        require_once 'Db/Adapter/' . Typecho_Config::get('Db')->adapter . '.php';
+        require_once 'Typecho/Db/Adapter/' . Typecho_Config::get('Db')->adapter . '.php';
         $adapter = 'Typecho_Db_Adapter_' . Typecho_Config::get('Db')->adapter;
 
         //实例化适配器对象

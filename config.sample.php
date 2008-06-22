@@ -11,13 +11,13 @@
 define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
 /** 设置包含路径 */
-set_include_path(__TYPECHO_ROOT_DIR__ . '/var');
+@set_include_path(__TYPECHO_ROOT_DIR__ . '/var');
 
 /** 定义插件目录(相对路径) */
-define('__TYPECHO_PLUGIN_DIR__', '/var/Plugin');
+define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
 
 /** 定义模板目录(相对路径) */
-define('__TYPECHO_THEME_DIR__', '/usr/theme');
+define('__TYPECHO_THEME_DIR__', '/usr/themes');
 
 /** 附件存储目录(相对路径) */
 define('__TYPECHO_ATTACHMENT_DIR__', '/usr/attachment');

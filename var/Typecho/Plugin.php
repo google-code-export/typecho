@@ -7,12 +7,6 @@
  * @version    $Id$
  */
 
-/** 载入异常支持 */
-require_once 'Typecho/Plugin/Exception.php';
-
-/** 载入接口支持 */
-require_once 'Typecho/Plugin/Interface.php';
-
 /**
  * Typecho_Plugin::instance别名
  * 
@@ -66,6 +60,8 @@ class Typecho_Plugin
             }
             else
             {
+                /** 载入异常支持 */
+                require_once 'Typecho/Plugin/Exception.php';
                 /** 如果不存在则抛出异常 */
                 throw new Typecho_Plugin_Exception("Plugin '{$pluginFileName}' not found", Typecho_Exception::RUNTIME);
             }

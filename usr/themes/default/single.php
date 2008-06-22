@@ -4,11 +4,10 @@
         <div class="post">
 			<div class="entry_main">
 				<div class="entry_title">
-	                <h2><a href="#">K2 Release Candidate 6 Released</a></h2>
+	                <h2><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
 		        </div>
 			    <div class="entry_text">
-				    <p>PHP界的开发热潮可以用风起云涌来形容了，最新的WEB动向都可以在这里体会到。在我上大学那会还是流行开发论坛，后来流行开发博客，最近似乎开始流行框架了。我们亲爱的水水同学也加入到这水生火热的框架开发大军中了，那么我觉得作为一个PHP开发人员，有必要谈一谈我对框架的看法，希望对这些框架开发者有些启示。</p>
-				    <p>PHP界的开发热潮可以用风起云涌来形容了，最新的WEB动向都可以在这里体会到。在我上大学那会还是流行开发论坛，后来流行开发博客，最近似乎开始流行框架了。我们亲爱的水水同学也加入到这水生火热的框架开发大军中了，那么我觉得作为一个PHP开发人员，有必要谈一谈我对框架的看法，希望对这些框架开发者有些启示。</p>
+				    <?php $this->content(); ?>
 					<div class="single_data clearfix">
 						<h3>Related Articles</h3>
 						<ul id="related_post">
@@ -20,11 +19,13 @@
 						</ul>
 					</div>
 		        </div>
-				<div class="entry_data">70 on June 18, 2008 | Filed Under <a href="#">Blogging Basics</a> | <a href="#">Trackbacks</a> | <a href="#response">leave a response</a>.<br />Tags: <a href="#">Blog</a>, <a href="#">Typecho</a>, <a href="#">Wordpress</a></div>
+				<div class="entry_data"><?php $this->author(); ?> on <?php $this->date('F j, Y'); ?> 
+                | Filed Under <?php $this->category(','); ?> | <?php $this->commentsNum('%d Comments'); ?>.<br />
+                Tags: <?php $this->tags(',', true, 'none'); ?></div>
 			</div>
         </div>
 		<div id="comments">
-			<h4>5 Responses to "K2 Release Candidate 6 Released"</h4>
+			<h4><?php $this->commentsNum('No Response', 'One Response to"' . $this->title . '"', '%d Responses to "' . $this->title . '"'); ?></h4>
 			<ol id="comment_list">
 			<?php for($a=1; $a!=6; $a++) echo'
 				<li>
