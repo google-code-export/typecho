@@ -288,10 +288,11 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      *
      * @access public
      * @param integer $length 摘要截取长度
+     * @param string $trim 摘要后缀
      * @return void
      */
-    public function excerpt($length = 100)
+    public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_API::subStr(Typecho_API::stripTags($this->text), 0, $length);
+        echo Typecho_API::subStr(Typecho_API::stripTags($this->text), 0, $length, $trim);
     }
 }
