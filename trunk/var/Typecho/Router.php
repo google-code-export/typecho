@@ -7,24 +7,6 @@
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 配置管理 */
-require_once 'Typecho/Config.php';
-
-/** 载入api支持 */
-require_once 'Typecho/API.php';
-
-/** 载入request支持 */
-require_once 'Typecho/Request.php';
-
-/** 载入request支持 */
-require_once 'Typecho/Widget.php';
-
-/** 载入路由解析支持 */
-require_once 'Typecho/Router/Parser.php';
-
-/** 载入路由异常支持 */
-require_once 'Typecho/Router/Exception.php';
-
 /**
  * Typecho组件基类
  *
@@ -66,11 +48,17 @@ class Typecho_Router
     {
         if(false === self::$_routes)
         {
+            /** 配置管理 */
+            require_once 'Typecho/Config.php';
+        
             /** 判断是否定义配置 */
             Typecho_Config::need('Router');
             
             /** 获取路由配置 */
             $config = Typecho_Config::get('Router');
+            
+            /** 载入路由解析支持 */
+            require_once 'Typecho/Router/Parser.php';
             
             /** 解析路由配置 */
             $parser = new Typecho_Router_Parser($config);
@@ -117,7 +105,13 @@ class Typecho_Router
      * @throws Typecho_Route_Exception
      */
     public static function dispatch()
-    {        
+    {
+        /** 载入api支持 */
+        require_once 'Typecho/API.php';
+        
+        /** 载入request支持 */
+        require_once 'Typecho/Request.php';
+        
         /** 获取PATHINFO */
         $pathInfo = Typecho_Request::getPathInfo();
 
@@ -128,6 +122,8 @@ class Typecho_Router
             return;
         }
 
+        /** 载入路由异常支持 */
+        require_once 'Typecho/Router/Exception.php';
         throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", Typecho_Exception::NOTFOUND);
     }
 

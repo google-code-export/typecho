@@ -216,7 +216,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             
             /** 利用cookie记录表单值 */
             Typecho_Request::setCookie('form_record', $formData);
-            
+
+            /** 载入异常支持 */
+            require_once 'Typecho/Widget/Exception.php';
+        
             /** 继续抛出异常 */
             throw new Typecho_Widget_Exception($e->getMessages());
         }

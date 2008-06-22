@@ -7,9 +7,6 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** Typecho_Widget_Exception */
-require_once 'Typecho/Widget/Exception.php';
-
 /**
  * Typecho组件基类
  *
@@ -55,7 +52,13 @@ abstract class Typecho_Widget implements Iterator
         $_rowsKey = array();
 
         /** 过滤数据行 */
-        $this->_row = array_filter($this->_row, array('Typecho_API', 'stringAble'));
+        foreach($this->_row as $key => $val)
+        {
+            if(is_array($val) || is_object($val))
+            {
+                unset($this->_row[$key]);
+            }
+        }
 
         //将数据格式化
         foreach($this->_row as $key => $val)
@@ -66,7 +69,13 @@ abstract class Typecho_Widget implements Iterator
         foreach($this->_stack as $val)
         {
             /** 过滤数据行 */
-            $val = array_filter($val, array('Typecho_API', 'stringAble'));
+            foreach($val as $inkey => $inval)
+            {
+                if(is_array($inval) || is_object($inval))
+                {
+                    unset($val[$inkey]);
+                }
+            }
             echo str_replace($_rowsKey, $val, $format) . "\n";
         }
         

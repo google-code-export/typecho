@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** Typecho_Exception */
-require_once 'Typecho/Exception.php';
-
 /**
  * Typecho公用方法
  *
@@ -122,6 +119,8 @@ class Typecho_API
             /** 如果文件不存在 */
             if(!file_exists($fileName))
             {
+                /** Typecho_Exception */
+                require_once 'Typecho/Exception.php';
                 throw new Typecho_Exception($fileName, Typecho_Exception::NOTFOUND);
             }
             
@@ -130,6 +129,8 @@ class Typecho_API
             /** 如果类不存在 */
             if(!class_exists($className))
             {
+                /** Typecho_Exception */
+                require_once 'Typecho/Exception.php';
                 throw new Typecho_Exception($className, Typecho_Exception::NOTFOUND);
             }
             
@@ -354,19 +355,7 @@ class Typecho_API
      */
     public static function filterSearchQuery($query)
     {
-        return str_replace(array('%', '?', '*'), '', $query);
-    }
-    
-    /**
-     * 判断一个变量是否可以作为字符串
-     * 
-     * @access public
-     * @param string $value 被判断的变量
-     * @return boolean
-     */
-    public static function stringAble($value)
-    {
-        return !is_array($value) && !is_object($value);
+        return str_replace(array('%', '?', '*', '/'), '', $query);
     }
 
     /**

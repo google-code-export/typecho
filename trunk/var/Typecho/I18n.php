@@ -10,9 +10,6 @@
 /** 配置管理 */
 require_once 'Typecho/Config.php';
 
-/** GetText支持 */
-require_once 'Typecho/I18n/GetText.php';
-
 /**
  * I18n function
  *
@@ -67,6 +64,8 @@ class Typecho_I18n
         {
             if(!self::$_loaded)
             {
+                /** GetText支持 */
+                require_once 'Typecho/I18n/GetText.php';
                 Typecho_I18n_GetText::init(Typecho_Config::get('I18n'));
                 self::$_loaded = true;
             }

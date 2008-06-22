@@ -299,7 +299,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $contents = explode('<!--more-->', $content);
         
         list($abstract) = $contents;
-        echo Typecho_API::fixHtml($abstract) . ($more && count($contents) > 1 ? '<p class="more"><a href="'
+        echo empty($more) ? $content : Typecho_API::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
         . $this->permalink . '">' . $more . '</a></p>' : NULL);
     }
 
@@ -357,9 +357,10 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      * @access public
      * @param string $split 多个分类之间分隔符
      * @param boolean $link 是否输出链接
+     * @param string $default 如果没有则输出
      * @return void
      */
-    public function category($split = ',', $link = true)
+    public function category($split = ',', $link = true, $default = NULL)
     {
         $categories = $this->categories;
         if($categories)
@@ -376,7 +377,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         }
         else
         {
-            echo _t('没有归类');
+            echo $default;
         }
     }
 
@@ -386,9 +387,10 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      * @access public
      * @param string $split 多个标签之间分隔符
      * @param boolean $link 是否输出链接
+     * @param string $default 如果没有则输出
      * @return void
      */
-    public function tags($split = ',', $link = true)
+    public function tags($split = ',', $link = true, $default = NULL)
     {
         $tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db->sql()
         ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
@@ -396,13 +398,20 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         ->where('table.metas.`type` = ?', 'tag')
         ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
 
-        $result = array();
-        foreach($tags as $tag)
+        if($tags)
         {
-            $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
-            . $tag['name'] . '</a>' : $tag['name'];
-        }
+            $result = array();
+            foreach($tags as $tag)
+            {
+                $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
+                . $tag['name'] . '</a>' : $tag['name'];
+            }
 
-        echo implode($split, $result);
+            echo implode($split, $result);
+        }
+        else
+        {
+            echo $default;
+        }
     }
 }

@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入配置异常 */
-require_once 'Typecho/Config/Exception.php';
-
 /**
  * 配置管理类
  *
@@ -89,6 +86,8 @@ class Typecho_Config implements Iterator
     {
         if(!isset(self::$_config[$name]))
         {
+            /** 载入配置异常 */
+            require_once 'Typecho/Config/Exception.php';
             throw new Typecho_Config_Exception("Configure '{$name}' not found", Typecho_Exception::RUNTIME);
         }
     }

@@ -17,9 +17,6 @@
  * @version    $Id: Validation.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
-/** 验证异常支持 */
-require_once 'Typecho/Validate/Exception.php';
-
 /**
  * 验证类
  *
@@ -115,6 +112,8 @@ class Typecho_Validate
 
         if($result)
         {
+            /** 验证异常支持 */
+            require_once 'Typecho/Validate/Exception.php';
             throw new Typecho_Validate_Exception($result);
         }
     }
