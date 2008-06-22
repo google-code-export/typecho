@@ -76,7 +76,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $select = $this->select()->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
-        switch (Typecho_Router::$current)
+        switch(Typecho_Router::$current)
         {
             /** 单篇内容 */
             case 'page':
@@ -373,6 +373,29 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         }
         
         return parent::push($value);
+    }
+    
+    /**
+     * 获取评论归档对象
+     * 
+     * @access public
+     * @param string $mode 评论模式
+     * @return Widget_Abstract_Comments
+     */
+    public function comments($mode = NULL)
+    {
+        $mode = strtolower($mode);
+        switch($mode)
+        {
+            case 'comment':
+                return Typecho_API::factory('Widget_Comments_Archive_Comment', $this->cid);
+            case 'trackback':
+                return Typecho_API::factory('Widget_Comments_Archive_Trackback', $this->cid);
+            case 'pingback':
+                return Typecho_API::factory('Widget_Comments_Archive_Pingback', $this->cid);
+            default:
+                return Typecho_API::factory('Widget_Comments_Archive', $this->cid);
+        }
     }
     
     /**
