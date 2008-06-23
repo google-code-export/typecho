@@ -120,10 +120,10 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
         
         /** 更新评论数 */
         $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
-        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        ->where('`status` = ? AND `cid` = ?', 'approved', $comment['cid']))->num;
         
         $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('`cid` = ?', $cid));
+        ->where('`cid` = ?', $comment['cid']));
         
         return $insertId;
     }
