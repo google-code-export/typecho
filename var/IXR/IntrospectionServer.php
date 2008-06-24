@@ -7,18 +7,18 @@
    Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
 */
 
-/** Typecho_IXR_Server */
-require_once 'Typecho/IXR/Server.php';
+/** IXR_Server */
+require_once 'IXR/Server.php';
 
 /**
  * IXR服务器
  *
  * @package IXR
  */
-class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
+class IXR_IntrospectionServer extends IXR_Server {
     var $signatures;
     var $help;
-    function Typecho_IXR_IntrospectionServer() {
+    function IXR_IntrospectionServer() {
         $this->setCallbacks();
         $this->setCapabilities();
         $this->capabilities['introspection'] = array(
@@ -62,7 +62,7 @@ class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
         }
         // Over-rides default call method, adds signature check
         if (!$this->hasMethod($methodname)) {
-            return new Typecho_IXR_Error(-32601, 'server error. requested method "'.$this->message->methodName.'" not specified.');
+            return new IXR_Error(-32601, 'server error. requested method "'.$this->message->methodName.'" not specified.');
         }
         $method = $this->callbacks[$methodname];
         $signature = $this->signatures[$methodname];
@@ -70,7 +70,7 @@ class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
         // Check the number of arguments
         if (count($args) != count($signature)) {
             // print 'Num of args: '.count($args).' Num in signature: '.count($signature);
-            return new Typecho_IXR_Error(-32602, 'server error. wrong number of method parameters');
+            return new IXR_Error(-32602, 'server error. wrong number of method parameters');
         }
         // Check the argument types
         $ok = true;
@@ -110,7 +110,7 @@ class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
                     break;
             }
             if (!$ok) {
-                return new Typecho_IXR_Error(-32602, 'server error. invalid method parameters');
+                return new IXR_Error(-32602, 'server error. invalid method parameters');
             }
         }
         // It passed the test - run the "real" method call
@@ -118,7 +118,7 @@ class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
     }
     function methodSignature($method) {
         if (!$this->hasMethod($method)) {
-            return new Typecho_IXR_Error(-32601, 'server error. requested method "'.$method.'" not specified.');
+            return new IXR_Error(-32601, 'server error. requested method "'.$method.'" not specified.');
         }
         // We should be returning an array of types
         $types = $this->signatures[$method];
@@ -136,13 +136,13 @@ class Typecho_IXR_IntrospectionServer extends Typecho_IXR_Server {
                     $return[] = 3.1415;
                     break;
                 case 'dateTime.iso8601':
-                    $return[] = new Typecho_IXR_Date(time());
+                    $return[] = new IXR_Date(time());
                     break;
                 case 'boolean':
                     $return[] = true;
                     break;
                 case 'base64':
-                    $return[] = new Typecho_IXR_Base64('base64');
+                    $return[] = new IXR_Base64('base64');
                     break;
                 case 'array':
                     $return[] = array('array');

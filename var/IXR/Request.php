@@ -12,11 +12,11 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Request {
+class IXR_Request {
     var $method;
     var $args;
     var $xml;
-    function Typecho_IXR_Request($method, $args) {
+    function IXR_Request($method, $args) {
         $this->method = $method;
         $this->args = $args;
         $this->xml = <<<EOD

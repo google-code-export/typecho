@@ -12,14 +12,14 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Date {
+class IXR_Date {
     var $year;
     var $month;
     var $day;
     var $hour;
     var $minute;
     var $second;
-    function Typecho_IXR_Date($time) {
+    function IXR_Date($time) {
         // $time can be a PHP timestamp or an ISO one
         if (is_numeric($time)) {
             $this->parseTimestamp($time);

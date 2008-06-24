@@ -12,7 +12,7 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Message {
+class IXR_Message {
     var $message;
     var $messageType;  // methodCall / methodResponse / fault
     var $faultCode;
@@ -29,7 +29,7 @@ class Typecho_IXR_Message {
     var $_currentTagContents;
     // The XML parser
     var $_parser;
-    function Typecho_IXR_Message ($message) {
+    function IXR_Message ($message) {
         $this->message = $message;
     }
     function parse() {

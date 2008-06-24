@@ -8,29 +8,29 @@
 */
 
 /** IXR值 */
-require_once 'Typecho/IXR/Value.php';
+require_once 'IXR/Value.php';
 
 /** IXR消息 */
-require_once 'Typecho/IXR/Message.php';
+require_once 'IXR/Message.php';
 
 /** IXR请求体 */
-require_once 'Typecho/IXR/Request.php';
+require_once 'IXR/Request.php';
 
 /** IXR错误 */
-require_once 'Typecho/IXR/Error.php';
+require_once 'IXR/Error.php';
 
 /** IXR日期 */
-require_once 'Typecho/IXR/Date.php';
+require_once 'IXR/Date.php';
 
 /** IXR Base64编码 */
-require_once 'Typecho/IXR/Base64.php';
+require_once 'IXR/Base64.php';
 
 /**
  * IXR客户端
  *
  * @package IXR
  */
-class Typecho_IXR_Client {
+class IXR_Client {
     var $server;
     var $port;
     var $path;
@@ -40,7 +40,7 @@ class Typecho_IXR_Client {
     var $debug = false;
     // Storage place for an error message
     var $error = false;
-    function Typecho_IXR_Client($server, $path = false, $port = 80) {
+    function IXR_Client($server, $path = false, $port = 80) {
         if (!$path) {
             // Assume we have been given a Url instead
             $bits = parse_url($server);
@@ -62,7 +62,7 @@ class Typecho_IXR_Client {
     function query() {
         $args = func_get_args();
         $method = array_shift($args);
-        $request = new Typecho_IXR_Request($method, $args);
+        $request = new IXR_Request($method, $args);
         $length = $request->getLength();
         $xml = $request->getXml();
         $r = "\r\n";
@@ -78,7 +78,7 @@ class Typecho_IXR_Client {
         }
         $fp = @fsockopen($this->server, $this->port);
         if (!$fp) {
-            $this->error = new Typecho_IXR_Error(-32300, 'transport error - could not open socket');
+            $this->error = new IXR_Error(-32300, 'transport error - could not open socket');
             return false;
         }
         fputs($fp, $request);
@@ -90,7 +90,7 @@ class Typecho_IXR_Client {
             if (!$gotFirstLine) {
                 // Check line for '200'
                 if (strstr($line, '200') === false) {
-                    $this->error = new Typecho_IXR_Error(-32300, 'transport error - HTTP status code was not 200');
+                    $this->error = new IXR_Error(-32300, 'transport error - HTTP status code was not 200');
                     return false;
                 }
                 $gotFirstLine = true;
@@ -106,15 +106,15 @@ class Typecho_IXR_Client {
             echo '<pre>'.htmlspecialchars($contents)."\n</pre>\n\n";
         }
         // Now parse what we've got back
-        $this->message = new Typecho_IXR_Message($contents);
+        $this->message = new IXR_Message($contents);
         if (!$this->message->parse()) {
             // XML error
-            $this->error = new Typecho_IXR_Error(-32700, 'parse error. not well formed');
+            $this->error = new IXR_Error(-32700, 'parse error. not well formed');
             return false;
         }
         // Is the message a fault?
         if ($this->message->messageType == 'fault') {
-            $this->error = new Typecho_IXR_Error($this->message->faultCode, $this->message->faultString);
+            $this->error = new IXR_Error($this->message->faultCode, $this->message->faultString);
             return false;
         }
         // Message must be OK

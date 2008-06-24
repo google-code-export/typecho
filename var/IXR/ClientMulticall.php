@@ -7,18 +7,18 @@
    Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
 */
 
-/** Typecho_IXR_Clinet */
-require_once 'Typecho/IXR/Clinet.php';
+/** IXR_Clinet */
+require_once 'IXR/Clinet.php';
 
 /**
  * IXR客户端
  *
  * @package IXR
  */
-class Typecho_IXR_ClientMulticall extends Typecho_IXR_Client {
+class IXR_ClientMulticall extends IXR_Client {
     var $calls = array();
-    function Typecho_IXR_ClientMulticall($server, $path = false, $port = 80) {
-        parent::Typecho_IXR_Client($server, $path, $port);
+    function IXR_ClientMulticall($server, $path = false, $port = 80) {
+        parent::IXR_Client($server, $path, $port);
         $this->useragent = 'The Incutio XML-RPC PHP Library (multicall client)';
     }
     function addCall() {
