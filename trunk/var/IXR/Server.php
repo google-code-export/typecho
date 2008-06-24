@@ -8,34 +8,34 @@
 */
 
 /** IXR值 */
-require_once 'Typecho/IXR/Value.php';
+require_once 'IXR/Value.php';
 
 /** IXR消息 */
-require_once 'Typecho/IXR/Message.php';
+require_once 'IXR/Message.php';
 
 /** IXR请求体 */
-require_once 'Typecho/IXR/Request.php';
+require_once 'IXR/Request.php';
 
 /** IXR错误 */
-require_once 'Typecho/IXR/Error.php';
+require_once 'IXR/Error.php';
 
 /** IXR日期 */
-require_once 'Typecho/IXR/Date.php';
+require_once 'IXR/Date.php';
 
 /** IXR Base64编码 */
-require_once 'Typecho/IXR/Base64.php';
+require_once 'IXR/Base64.php';
 
 /**
  * IXR服务器
  *
  * @package IXR
  */
-class Typecho_IXR_Server {
+class IXR_Server {
     var $data;
     var $callbacks = array();
     var $message;
     var $capabilities;
-    function Typecho_IXR_Server($callbacks = false, $data = false) {
+    function IXR_Server($callbacks = false, $data = false) {
         $this->setCapabilities();
         if ($callbacks) {
             $this->callbacks = $callbacks;
@@ -51,7 +51,7 @@ class Typecho_IXR_Server {
             }
             $data = $HTTP_RAW_POST_DATA;
         }
-        $this->message = new Typecho_IXR_Message($data);
+        $this->message = new IXR_Message($data);
         if (!$this->message->parse()) {
             $this->error(-32700, 'parse error. not well formed');
         }
@@ -60,11 +60,11 @@ class Typecho_IXR_Server {
         }
         $result = $this->call($this->message->methodName, $this->message->params);
         // Is the result an error?
-        if (is_a($result, 'Typecho_IXR_Error')) {
+        if (is_a($result, 'IXR_Error')) {
             $this->error($result);
         }
         // Encode the result
-        $r = new Typecho_IXR_Value($result);
+        $r = new IXR_Value($result);
         $resultxml = $r->getXml();
         // Create the XML
         $xml = <<<EOD
@@ -84,7 +84,7 @@ EOD;
     }
     function call($methodname, $args) {
         if (!$this->hasMethod($methodname)) {
-            return new Typecho_IXR_Error(-32601, 'server error. requested method '.$methodname.' does not exist.');
+            return new IXR_Error(-32601, 'server error. requested method '.$methodname.' does not exist.');
         }
         $method = $this->callbacks[$methodname];
         // Perform the callback and send the response
@@ -97,7 +97,7 @@ EOD;
             // It's a class method - check it exists
             $method = substr($method, 5);
             if (!method_exists($this, $method)) {
-                return new Typecho_IXR_Error(-32601, 'server error. requested class method "'.$method.'" does not exist.');
+                return new IXR_Error(-32601, 'server error. requested class method "'.$method.'" does not exist.');
             }
             // Call the method
             $result = $this->$method($args);
@@ -110,7 +110,7 @@ EOD;
         else {
             // It's a function - does it exist?
             if (!function_exists($method)) {
-                return new Typecho_IXR_Error(-32601, 'server error. requested function "'.$method.'" does not exist.');
+                return new IXR_Error(-32601, 'server error. requested function "'.$method.'" does not exist.');
             }
             // Call the function
             $result = $method($args);
@@ -121,7 +121,7 @@ EOD;
     function error($error, $message = false) {
         // Accepts either an error object or an error code and message
         if ($message && !is_object($error)) {
-            $error = new Typecho_IXR_Error($error, $message);
+            $error = new IXR_Error($error, $message);
         }
         $this->output($error->getXml());
     }
@@ -175,11 +175,11 @@ EOD;
             $method = $call['methodName'];
             $params = $call['params'];
             if ($method == 'system.multicall') {
-                $result = new Typecho_IXR_Error(-32600, 'Recursive calls to system.multicall are forbidden');
+                $result = new IXR_Error(-32600, 'Recursive calls to system.multicall are forbidden');
             } else {
                 $result = $this->call($method, $params);
             }
-            if (is_a($result, 'Typecho_IXR_Error')) {
+            if (is_a($result, 'IXR_Error')) {
                 $return[] = array(
                     'faultCode' => $result->code,
                     'faultString' => $result->message

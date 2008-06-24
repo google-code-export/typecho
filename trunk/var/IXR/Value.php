@@ -12,10 +12,10 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Value {
+class IXR_Value {
     var $data;
     var $type;
-    function Typecho_IXR_Value ($data, $type = false) {
+    function IXR_Value ($data, $type = false) {
         $this->data = $data;
         if (!$type) {
             $type = $this->calculateType();
@@ -29,7 +29,7 @@ class Typecho_IXR_Value {
         }
         if ($type == 'array') {
             for ($i = 0, $j = count($this->data); $i < $j; $i++) {
-                $this->data[$i] = new Typecho_IXR_Value($this->data[$i]);
+                $this->data[$i] = new IXR_Value($this->data[$i]);
             }
         }
     }

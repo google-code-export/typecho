@@ -12,10 +12,10 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Error {
+class IXR_Error {
     var $code;
     var $message;
-    function Typecho_IXR_Error($code, $message) {
+    function IXR_Error($code, $message) {
         $this->code = $code;
         $this->message = $message;
     }

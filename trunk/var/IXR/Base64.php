@@ -12,9 +12,9 @@
  *
  * @package IXR
  */
-class Typecho_IXR_Base64 {
+class IXR_Base64 {
     var $data;
-    function Typecho_IXR_Base64($data) {
+    function IXR_Base64($data) {
         $this->data = $data;
     }
     function getXml() {
