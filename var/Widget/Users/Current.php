@@ -133,6 +133,8 @@ class Widget_Users_Current extends Widget_Abstract_Users
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }
+                
+                $this->logout();
             }
             
             return ($this->_hasLogin = false);
