@@ -34,19 +34,8 @@
 		<div class="widget">
 			<h2>Blogroll</h2>
 			<ul>
-				<li><a href="http://ooboy.net/blog/">Fdream</a></li>
-				<li><a href="http://hee.ajaxeye.com">elliott</a></li>
-				<li><a href="http://wi2ard.com/blog">wi2ard</a></li>
-				<li><a href="http://www.monsternunu.com">monsternunu</a></li>
-				<li><a href="http://www.hi-open.cn/">Feeling</a></li>
-				<li><a href="http://www.magike.net">Magike</a></li>
-				<li><a href="http://www.ytblog.com/">Mouse</a></li>
-				<li><a href="http://www.ccvita.com">ccvita</a></li>
-				<li><a href="http://www.vichair.cn">Vichair</a></li>
-				<li><a href="http://www.luweiqing.com">sluke</a></li>
-				<li><a href="http://www.coolcode.cn">coolcode</a></li>
-				<li><a href="http://aileenguan.cn">Aileenguan</a></li>
-				<li><a href="http://www.gracecode.com">Gracecode</a></li>
+				<?php $this->widget('Metas/Link/List')
+                ->parse('<li><a title="{description}" href="{url}">{name}</a></li>'); ?>
 			</ul>
 		</div>
 		<div class="widget">
