@@ -50,16 +50,16 @@ require_once 'menu.php';
 					<td><?php $comments->dateWord(); ?></td>
 					<td><?php $comments->author(); ?>
                     <sup><?php
-                        switch($comments->status)
+                        switch($comments->mode)
                         {
-                            case 'approved':
-                                echo _t('展现');
+                            case 'pingback':
+                                echo _t('广播');
                                 break;
-                            case 'spam':
-                                echo _t('垃圾');
+                            case 'trackback':
+                                echo _t('引用');
                                 break;
-                            case 'waiting':
-                                echo _t('待审核');
+                            case 'comment':
+                                echo _t('评论');
                                 break;
                             default:
                                 echo _t('不明');
@@ -74,16 +74,16 @@ require_once 'menu.php';
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
 					<td><?php
-                        switch($comments->mode)
+                        switch($comments->status)
                         {
-                            case 'pingback':
-                                echo _t('广播');
+                            case 'approved':
+                                echo _t('展现');
                                 break;
-                            case 'trackback':
-                                echo _t('引用');
+                            case 'spam':
+                                echo _t('垃圾');
                                 break;
-                            case 'comment':
-                                echo _t('评论');
+                            case 'waiting':
+                                echo _t('待审核');
                                 break;
                             default:
                                 echo _t('不明');

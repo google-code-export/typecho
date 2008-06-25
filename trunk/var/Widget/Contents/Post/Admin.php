@@ -67,7 +67,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->currentPage = Typecho_Request::getParameter('page', 1);
 
         /** 构建基础查询 */
-        $select = $this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft');
+        $select = $this->select();
 
         /** 过滤分类 */
         if(NULL != ($category = Typecho_Request::getParameter('category')))

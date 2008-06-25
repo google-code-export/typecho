@@ -73,7 +73,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $this->_currentPage = Typecho_Request::getParameter('page', 1);
         $hasPushed = false;
     
-        $select = $this->select()->where('table.contents.`password` IS NULL')
+        $select = $this->select()->where('table.contents.`type` = ?', 'post')
+        ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
         switch(Typecho_Router::$current)
@@ -322,8 +323,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         
         $this->_countSql = clone $select;
 
-        $select->where('table.contents.`type` = ?', 'post')
-        ->group('table.contents.`cid`')
+        $select->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->_pageSize);
         
