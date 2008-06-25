@@ -17,16 +17,16 @@ require_once 'menu.php';
 				<input type="text" class="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status" style="width: 160px;">
 					<option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
-                        <?php _e('所有评论(%s)', Typecho::widget('Abstract.Comments')->count()); ?>
+                        <?php _e('所有评论 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid")->num); ?>
                     </option>
 					<option value="approved" <?php Typecho_Request::callParameter('status', 'approved', 'selected="selected"'); ?>>
-                        <?php _e('展现(%s)', Typecho::widget('Abstract.Comments')->count('approved')); ?>
+                        <?php _e('展现 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=approved")->num); ?>
                     </option>
 					<option value="waiting" <?php Typecho_Request::callParameter('status', 'waiting', 'selected="selected"'); ?>>
-                        <?php _e('待审核(%s)', Typecho::widget('Abstract.Comments')->count('waiting')); ?>
+                        <?php _e('待审核 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=waiting")->num); ?>
                     </option>
 					<option value="spam" <?php Typecho_Request::callParameter('status', 'spam', 'selected="selected"'); ?>>
-                        <?php _e('垃圾箱(%s)', Typecho::widget('Abstract.Comments')->count('spam')); ?>
+                        <?php _e('垃圾箱 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=spam")->num); ?>
                     </option>
 				</select>
 				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
@@ -42,7 +42,7 @@ require_once 'menu.php';
 					<th width="22%"><?php _e('文章'); ?></th>
 					<th width="7%"><?php _e('状态'); ?></th>
 				</tr>
-                <?php Typecho::widget('Comments.AdminComments')->to($comments); ?>
+                <?php Typecho_API::factory('Widget_Comments_Admin')->to($comments); ?>
                 <?php if($comments->have()): ?>
 				<?php while($comments->get()): ?>
 				<tr>

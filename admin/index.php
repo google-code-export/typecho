@@ -65,13 +65,9 @@ require_once 'menu.php';
                 <h6><?php $access->screenName(); ?></h6>
 				<?php _e('总共撰写了<a href="%s">%d篇日志</a>和<a href="%s">%d篇页面</a>.', 
                 Typecho_API::pathToUrl('/post-list.php?status=my', $options->adminUrl),
-                Typecho_API::factory('Widget_Abstract_Contents')
-                ->size(Typecho_API::factory('Widget_Abstract_Contents')->select()
-                ->where('table.contents.`type` = ? AND table.contents.`author` = ?', 'post', $access->uid)), 
+                Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type=post")->num, 
                 Typecho_API::pathToUrl('/page-list.php?status=myPost', $options->adminUrl),
-                Typecho_API::factory('Widget_Abstract_Contents')
-                ->size(Typecho_API::factory('Widget_Abstract_Contents')->select()
-                ->where('table.contents.`type` = ? AND table.contents.`author` = ?', 'page', $access->uid))); ?><br />
+                Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type=page")->num); ?><br />
                 <?php _e('上次登陆为%s.', Typecho_I18n::dateWord($access->logged + $options->timezone, $options->gmtTime + $options->timezone)); ?><br />
                 <h6 style="margin-top:10px;"><?php _e('服务器环境'); ?></h6>
                 <ol>

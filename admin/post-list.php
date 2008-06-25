@@ -25,23 +25,23 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
 				</select>
 				<select name="status">
 					<option value="my" <?php Typecho_Request::callParameter('status', 'my', 'selected="selected"'); ?>>
-                        <?php _e('我的所有文章'); ?>
+                        <?php _e('我的所有文章 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type[]=post&type[]=draft")->num); ?>
                     </option>
 					<option value="myPost" <?php Typecho_Request::callParameter('status', 'myPost', 'selected="selected"'); ?>>
-                        <?php _e('我的已发布文章'); ?>
+                        <?php _e('我的已发布文章 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type=post")->num); ?>
                     </option>
 					<option value="myDraft" <?php Typecho_Request::callParameter('status', 'myDraft', 'selected="selected"'); ?>>
-                        <?php _e('我的草稿'); ?>
+                        <?php _e('我的草稿 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type=draft")->num); ?>
                     </option>
                     <?php if($access->pass('editor', true)): ?>
                     <option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
-                        <?php _e('所有文章'); ?>
+                        <?php _e('所有文章 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&type[]=post&type[]=draft")->num); ?>
                     </option>
 					<option value="allPost" <?php Typecho_Request::callParameter('status', 'allPost', 'selected="selected"'); ?>>
-                        <?php _e('所有已发布的文章'); ?>
+                        <?php _e('所有已发布的文章 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&type=post")->num); ?>
                     </option>
 					<option value="allDraft" <?php Typecho_Request::callParameter('status', 'allDraft', 'selected="selected"'); ?>>
-                        <?php _e('所有草稿'); ?>
+                        <?php _e('所有草稿 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&type=draft")->num); ?>
                     </option>
                     <?php endif; ?>
 				</select>

@@ -9,8 +9,6 @@ require_once 'common.php';
     <link href="<?php $options->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
     <!--[if IE]><link rel="stylesheet" href="<?php $options->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
-    <script src="<?php $options->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/add.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body style="background: #E6EEF7;">
@@ -31,7 +29,7 @@ require_once 'common.php';
 			<p class="right"><input type="submit" class="submit" value="<?php _e('登录'); ?>" />
             <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" /></p>
             <script>
-                $('input[@name=name]').trigger('focus');
+                document.getElementById("name").focus();
             </script>
 		</form>
 		<?php else: ?>
