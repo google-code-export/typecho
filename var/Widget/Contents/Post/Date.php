@@ -35,7 +35,8 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     
         $posts = $db->fetchAll($db->sql()->select('table.contents', '`created`')
         ->where('type = ?', 'post')
-        ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Abstract_Options')->gmtTime));
+        ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Abstract_Options')->gmtTime)
+        ->order('table.contents.`created`', Typecho_Db::SORT_DESC));
         
         $result = array();
         foreach($posts as $post)

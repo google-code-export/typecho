@@ -75,7 +75,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
             array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
-            array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
+        //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
             array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
