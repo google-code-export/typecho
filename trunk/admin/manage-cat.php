@@ -23,7 +23,7 @@ require_once 'menu.php';
 			</div>
 
 			<table class="latest">
-				<tr>
+				<tr class="nodrop">
 					<th width="1%"><input type="checkbox" id="" /></th>
 					<th width="20%"><?php _e('分类名称'); ?></th>
 					<th width="50%"><?php _e('分类描述'); ?></th>
