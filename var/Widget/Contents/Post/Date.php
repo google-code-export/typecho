@@ -35,7 +35,6 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     
         $posts = $db->fetchAll($db->sql()->select('table.contents', '`created`')
         ->where('type = ?', 'post')
-        ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Abstract_Options')->gmtTime));
         
         $result = array();
