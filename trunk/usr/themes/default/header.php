@@ -50,11 +50,10 @@
 				<li><a href="#">About</a></li>
 				<li><a href="#">Guestbook</a></li>
 				<li><a href="#">Contact</a></li>
-				<li><a href="#" style="float: right; margin-right: 0;">Login</a></li>
+				<li class="last"><a href="#">Login</a></li>
 			</ul>
 		</div>
 		<div class="grid_9">
-			<img src="<?php $this->options->themeUrl('images/header.png'); ?>" width="50" height="50" alt="" style="float: left; margin: 5px 10px 0 0;" />
 	        <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
 			<span><?php $this->options->description() ?></span>
 		</div>

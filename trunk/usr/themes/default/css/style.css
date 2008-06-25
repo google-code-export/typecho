@@ -1,5 +1,5 @@
 body {
-background:#fff;
+background:#fff url(../images/bg.png) repeat-x;
 color:#333;
 font-family:Tahoma, Verdana, Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
 border-top:3px solid #690;
@@ -23,7 +23,6 @@ color: #666;
 }
 
 .container_16 {
-background:#fff;
 }
 
 /* Header */
@@ -44,27 +43,29 @@ text-decoration:none;
 
 ul#nav_menu {
 list-style-type:none;
-font-family:Georgia, Sans-Serif;
 text-transform:uppercase;
-margin:0 0 20px;
+margin:3px 0 25px;
+font-weight:700;
 }
 
 ul#nav_menu li {
-display:inline;
+display:block;
+float:left;
+margin:0 25px 0 0;
+padding-right: 26px;
+background:url(../images/nav_menu.png) right center no-repeat;
 }
 
 ul#nav_menu li a {
-display:block;
-float:left;
-margin-right:15px;
 color:#690;
-padding:0 20px 2px 35px;
+color:#fff;
 }
 
-ul#nav_menu li a:hover, ul#nav_menu li a.current {
-background:#690 url(../images/nav_menu.png) 17px 5px no-repeat;
-color:#fff;
-text-decoration:none;
+ul#nav_menu li.last {
+float:right;
+margin-right:0;
+padding:0 0 0 26px;
+background:url(../images/nav_menu.png) left center no-repeat;
 }
 
 #search {
@@ -115,7 +116,7 @@ margin:0;
 }
 
 #comments ol li {
-border-bottom:1px dotted #ccc;
+border-bottom:1px solid #eee;
 margin:0 0 15px;
 }
 
@@ -195,6 +196,7 @@ color:#fff;
 cursor:pointer;
 overflow:visible;
 padding:2px 7px;
+*padding: 1px 7px; /* IE 6, 7 hack */
 }
 
 #comment_form input {
