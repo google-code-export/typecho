@@ -47,6 +47,14 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * @var integer
      */
     private $_currentPage;
+    
+    /**
+     * 生成分页的内容
+     * 
+     * @access private
+     * @var array
+     */
+    private $_pageRow;
 
     /**
      * 入口函数
@@ -155,6 +163,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
                 ->where('table.relationships.`mid` = ?', $category['mid']);
                 
+                /** 设置分页 */
+                $this->_pageRow = $category;
+                
                 /** 设置关键词 */
                 $this->options->keywords = $category['name'];
                 
@@ -195,6 +206,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             
                 $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
                 ->where('table.relationships.`mid` = ?', $tag['mid']);
+                
+                /** 设置分页 */
+                $this->_pageRow = $tag;
                 
                 /** 设置关键词 */
                 $this->options->keywords = $tag['name'];
@@ -269,6 +283,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 /** 设置头部feed */
                 $value = array('year' => $year, 'month' => $month, 'day' => $day);
                 
+                /** 设置分页 */
+                $this->_pageRow = $value;
+                
                 /** 获取当前路由,过滤掉翻页情况 */
                 $currentRoute = str_replace('_page', '', Typecho_Router::$current);
                 
@@ -298,6 +315,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 
                 /** 设置关键词 */
                 $this->options->keywords = $keywords;
+                
+                /** 设置分页 */
+                $this->_pageRow = array('keywords' => $keywords);
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
@@ -352,7 +372,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     {
         $query = Typecho_Router::url(Typecho_Router::$current . 
         (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
-        $this->_row, $this->options->index);
+        $this->_pageRow, $this->options->index);
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->_countSql), $this->_currentPage, $this->_pageSize, $query);

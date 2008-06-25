@@ -1,5 +1,22 @@
 <?php
+/**
+ * 全局选项
+ * 
+ * @link typecho
+ * @package Widget
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ * @version $Id$
+ */
 
+/**
+ * 全局选项组件
+ * 
+ * @link typecho
+ * @package Widget
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ */
 class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
 {
     public function __construct()

@@ -139,21 +139,14 @@ class Typecho_Router
     {
         self::_parseRoute();
         $route = self::$_routes[$name];
-    
-        if($value)
-        {            
-            //交换数组键值
-            $pattern = array();
-            foreach($route['params'] as $row)
-            {
-                $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
-            }
-
-            return Typecho_API::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
-        }
-        else
+       
+        //交换数组键值
+        $pattern = array();
+        foreach($route['params'] as $row)
         {
-            return Typecho_API::pathToUrl($route['url'], $prefix);
+            $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
         }
+
+        return Typecho_API::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
     }
 }
