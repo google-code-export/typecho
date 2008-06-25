@@ -337,13 +337,20 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        if(Typecho_Request::isAjax())
+        $categories = Typecho_Request::getParameter('sort');
+        if($categories && is_array($categories))
         {
-            $categories = Typecho_Request::getParameter('mid');
-            if($categories && is_array($categories))
-            {
-                $this->sort($categories, 'category');
-            }
+            $this->sort($categories, 'category');
+        }
+        
+        if(!Typecho_Request::isAjax())
+        {
+            /** 转向原页 */
+            Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        }
+        else
+        {
+            die(_t('分类排序已经完成'));
         }
     }
     

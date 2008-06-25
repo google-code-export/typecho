@@ -26,14 +26,6 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
     protected $abstractContentsWidget;
 
     /**
-     * 数据库对象
-     *
-     * @access protected
-     * @var TypechoDb
-     */
-    protected $db;
-
-    /**
      * 实例化的配置对象
      *
      * @access protected

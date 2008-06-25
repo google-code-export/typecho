@@ -22,15 +22,15 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * @access private
      * @var string
      */
-    private $themeFile = 'index.php';
+    private $_themeFile = 'index.php';
     
     /**
      * 分页计算对象
      * 
      * @access private
-     * @var void
+     * @var Typecho_Db_Query
      */
-    private $countSql;
+    private $_countSql;
     
     /**
      * 分页大小
@@ -38,7 +38,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * @access private
      * @var integer
      */
-    private $pageSize;
+    private $_pageSize;
     
     /**
      * 当前页
@@ -46,13 +46,13 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * @access private
      * @var integer
      */
-    private $currentPage;
+    private $_currentPage;
 
     /**
      * 入口函数
      *
      * @access public
-     * @param integer $pageSize 每页文章数
+     * @param integer $_pageSize 每页文章数
      * @return void
      */
     public function __construct($pageSize = NULL)
@@ -69,8 +69,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         }
     
         /** 初始化分页变量 */
-        $this->pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->currentPage = Typecho_Request::getParameter('page', 1);
+        $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
+        $this->_currentPage = Typecho_Request::getParameter('page', 1);
         $hasPushed = false;
     
         $select = $this->select()->where('table.contents.`password` IS NULL')
@@ -127,7 +127,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 }
                 
                 /** 设置风格文件 */
-                $this->themeFile = 'post' == Typecho_Router::$current ? 'single.php' : 'page.php';
+                $this->_themeFile = 'post' == Typecho_Router::$current ? 'single.php' : 'page.php';
                 $hasPushed = true;
                 break;
                 
@@ -169,7 +169,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 $this->options->archiveType = 'category';
                 
                 /** 设置风格文件 */
-                $this->themeFile = 'archive.php';
+                $this->_themeFile = 'archive.php';
                 break;
 
             /** 标签归档 */
@@ -210,7 +210,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 $this->options->archiveType = 'tag';
                 
                 /** 设置风格文件 */
-                $this->themeFile = 'archive.php';
+                $this->_themeFile = 'archive.php';
                 break;
 
             /** 日期归档 */
@@ -276,7 +276,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 $this->options->feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
                 
                 /** 设置风格文件 */
-                $this->themeFile = 'archive.php';
+                $this->_themeFile = 'archive.php';
                 break;
 
             /** 搜索归档 */
@@ -307,7 +307,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                 $this->options->archiveType = 'search';
                 
                 /** 设置风格文件 */
-                $this->themeFile = 'archive.php';
+                $this->_themeFile = 'archive.php';
                 break;
 
             default:
@@ -320,12 +320,12 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             return;
         }
         
-        $this->countSql = clone $select;
+        $this->_countSql = clone $select;
 
         $select->where('table.contents.`type` = ?', 'post')
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
-        ->page($this->currentPage, $this->pageSize);
+        ->page($this->_currentPage, $this->_pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));
     }
@@ -347,7 +347,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $this->_row, $this->options->index);
 
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->countSql), $this->currentPage, $this->pageSize, $query);
+        $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
         $nav->render($prev, $next, $splitPage, $splitWord);
     }
     
@@ -369,7 +369,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         if(!empty($value['template']))
         {
             /** 应用自定义模板 */
-            $this->themeFile = $value['template'];
+            $this->_themeFile = $value['template'];
         }
         
         return parent::push($value);
@@ -451,6 +451,6 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         /** 添加Pingback */
         header('X-Pingback:' . $this->options->xmlRpcUrl);
     
-        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->themeFile;
+        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->_themeFile;
     }
 }

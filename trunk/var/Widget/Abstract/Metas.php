@@ -187,7 +187,7 @@ class Widget_Abstract_Metas extends Typecho_Widget_Abstract_Dataset
     {
         foreach($metas as $sort => $mid)
         {
-            $this->db->query($this->db->sql()->update('table.contents')->row('sort', $sort + 1)
+            $this->db->query($this->db->sql()->update('table.metas')->row('sort', $sort + 1)
             ->where('`mid` = ?', $mid)->where('`type` = ?', $type));
         }
     }
