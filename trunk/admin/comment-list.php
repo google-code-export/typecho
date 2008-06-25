@@ -5,27 +5,27 @@ require_once 'menu.php';
 ?>
 
 	<div id="main">
-		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
+		<h2><?php Typecho_API::factory('Widget_Menu')->title(); ?></h2>
         
 		<div id="page">
 			<div class="table_nav">
-            <form action="<?php Typecho::widget('Options')->adminUrl('comment-list.php'); ?>">
+            <form action="<?php $options->adminUrl('comment-list.php'); ?>">
 				<input type="submit" class="submit" value="<?php _e('展现'); ?>" />
 				<input type="submit" class="submit" value="<?php _e('垃圾'); ?>" />
 				<input type="submit" class="submit" value="<?php _e('待审核'); ?>" />
 				<input type="submit" class="submit" value="<?php _e('删除'); ?>" />
 				<input type="text" class="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status" style="width: 160px;">
-					<option value="all" <?php TypechoRequest::callParameter('status', 'all', 'selected="selected"'); ?>>
+					<option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
                         <?php _e('所有评论(%s)', Typecho::widget('Abstract.Comments')->count()); ?>
                     </option>
-					<option value="approved" <?php TypechoRequest::callParameter('status', 'approved', 'selected="selected"'); ?>>
+					<option value="approved" <?php Typecho_Request::callParameter('status', 'approved', 'selected="selected"'); ?>>
                         <?php _e('展现(%s)', Typecho::widget('Abstract.Comments')->count('approved')); ?>
                     </option>
-					<option value="waiting" <?php TypechoRequest::callParameter('status', 'waiting', 'selected="selected"'); ?>>
+					<option value="waiting" <?php Typecho_Request::callParameter('status', 'waiting', 'selected="selected"'); ?>>
                         <?php _e('待审核(%s)', Typecho::widget('Abstract.Comments')->count('waiting')); ?>
                     </option>
-					<option value="spam" <?php TypechoRequest::callParameter('status', 'spam', 'selected="selected"'); ?>>
+					<option value="spam" <?php Typecho_Request::callParameter('status', 'spam', 'selected="selected"'); ?>>
                         <?php _e('垃圾箱(%s)', Typecho::widget('Abstract.Comments')->count('spam')); ?>
                     </option>
 				</select>
