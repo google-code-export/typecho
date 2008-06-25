@@ -27,7 +27,21 @@ class Typecho_Request
      */
     public static function getParameter($key, $default = NULL)
     {
-        return isset($_REQUEST[$key]) ? $_REQUEST[$key] : $default;
+        //优先选择GET方式
+        if(!empty($_GET[$key]))
+        {
+            return $_GET[$key];
+        }
+        //其次为POST方式
+        else if(!empty($_POST[$key]))
+        {
+            return $_POST[$key];
+        }
+        //如果都没有返回空
+        else
+        {
+            return $default;
+        }
     }
 
     /**
