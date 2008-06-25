@@ -112,6 +112,18 @@ class Typecho_API
     {
         static $classStack;
         
+        /** 支持缓存禁用 */
+        if(0 === strpos($className, '*'))
+        {
+            $className = subStr($className, 1);
+            
+            /** 清除缓存 */
+            if(isset($classStack[$className]))
+            {
+                unset($classStack[$className]);
+            }
+        }
+        
         if(!isset($classStack[$className]))
         {
             $fileName = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
