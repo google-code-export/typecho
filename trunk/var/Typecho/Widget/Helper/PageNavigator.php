@@ -71,6 +71,11 @@ abstract class Typecho_Widget_Helper_PageNavigator
         $this->_currentPage = $currentPage;
         $this->_pageSize = $pageSize;
         $this->_pageTemplate = $pageTemplate;
+
+        if(($currentPage > $this->_totalPage || $currentPage < 1) && $total > 0)
+        {
+            throw new Typecho_Widget_Exception('Page Not Exists', Typecho_Exception::NOTFOUND);
+        }
     }
     
     /**
