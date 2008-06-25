@@ -86,8 +86,8 @@ class Typecho_Router
                 if(!empty($route['params']))
                 {
                     unset($matches[0]);
-                    $_REQUEST = array_merge($_REQUEST, array_combine($route['params'], $matches));
-                    reset($_REQUEST);
+                    $_GET = array_merge($_GET, array_combine($route['params'], $matches));
+                    reset($_GET);
                 }
                 
                 return $route;

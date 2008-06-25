@@ -120,7 +120,9 @@ abstract class Typecho_Widget implements Iterator
     public function alt()
     {
         $args = func_get_args();
-        echo $args[key($this->_stack) % func_num_args()];
+        $num = func_num_args();
+        $split = $this->sequence % $num;
+        echo $args[(0 == $split ? $num : $split) -1];
     }
     
     /**
