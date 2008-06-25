@@ -34,7 +34,8 @@ require_once 'menu.php';
                 <?php if($categories->have()): ?>
                 <?php while($categories->get()): ?>
                 <tr>
-					<td><input type="checkbox" name="mid[]" value="<?php $categories->mid(); ?>" /></td>
+					<td><input type="checkbox" name="mid[]" value="<?php $categories->mid(); ?>" />
+                    <input type="hidden" name="sort[]" value="<?php $categories->mid(); ?>" /></td>
 					<td><a href="<?php $options->adminUrl('/manage-cat.php?mid=' . $categories->mid); ?>#edit">
                     <?php $categories->name(); ?></a>
                     <?php if($options->defaultCategory == $categories->mid): ?> <sup><strong><?php _e('默认分类'); ?></strong></sup>
@@ -52,7 +53,25 @@ require_once 'menu.php';
                 </tr>
                 <?php endif; ?>
 			</table>
-        </form>    
+            <script src="<?php $options->adminUrl('/js/jquery.tablednd.js'); ?>" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $(".latest").tableDnD({
+                        onDragClass: "drag",
+                        onDrop: function(table, row) {
+                            $("tr", table).removeClass("alt");
+                            $("tr:even", table).addClass("alt");
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
+                                data: $("input[@type=hidden]", table).serialize() + '&do=sort',
+                                cache: false
+                            });
+                        }
+                    });
+                });
+            </script>
+        </form>
 
         <?php $category->form()->render(); ?>
 		</div><!-- end #page -->
