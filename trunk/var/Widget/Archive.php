@@ -74,7 +74,6 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $hasPushed = false;
     
         $select = $this->select()->where('table.contents.`type` = ?', 'post')
-        ->where('table.contents.`password` IS NULL')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
         switch(Typecho_Router::$current)
@@ -121,6 +120,12 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                     
                     /** 设置归档类型 */
                     $this->options->archiveType = Typecho_Router::$current;
+                    
+                    /** 设置密码的cookie记录 */
+                    if(!empty($post['password']) && Typecho_Request::getParameter('protect_password'))
+                    {
+                        Typecho_Request::setCookie('protect_password', Typecho_Request::getParameter('protect_password'));
+                    }
                 }
                 else
                 {
@@ -286,7 +291,10 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     
                 $keywords = Typecho_API::filterSearchQuery($keywords);
                 $searchQuery = '%' . $keywords . '%';
-                $select->where('table.contents.`title` LIKE ? OR table.contents.`text` LIKE ?', $searchQuery, $searchQuery);
+                
+                /** 搜索无法进入隐私项保护归档 */
+                $select->where('table.contents.`password` IS NULL')
+                ->where('table.contents.`title` LIKE ? OR table.contents.`text` LIKE ?', $searchQuery, $searchQuery);
                 
                 /** 设置关键词 */
                 $this->options->keywords = $keywords;
@@ -384,18 +392,67 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      */
     public function comments($mode = NULL)
     {
-        $mode = strtolower($mode);
-        switch($mode)
+        if(NULL == $this->password || 
+        $this->password == Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password')))
         {
-            case 'comment':
-                return Typecho_API::factory('Widget_Comments_Archive_Comment', $this->cid);
-            case 'trackback':
-                return Typecho_API::factory('Widget_Comments_Archive_Trackback', $this->cid);
-            case 'pingback':
-                return Typecho_API::factory('Widget_Comments_Archive_Pingback', $this->cid);
-            default:
-                return Typecho_API::factory('Widget_Comments_Archive', $this->cid);
+            $mode = strtolower($mode);
+            switch($mode)
+            {
+                case 'comment':
+                    return Typecho_API::factory('Widget_Comments_Archive_Comment', $this->cid);
+                case 'trackback':
+                    return Typecho_API::factory('Widget_Comments_Archive_Trackback', $this->cid);
+                case 'pingback':
+                    return Typecho_API::factory('Widget_Comments_Archive_Pingback', $this->cid);
+                default:
+                    return Typecho_API::factory('Widget_Comments_Archive', $this->cid);
+            }
         }
+        else
+        {
+            return Typecho_API::factory('Widget_Abstract_Comments');
+        }
+    }
+    
+    /**
+     * 输出文章内容,支持隐私项输出
+     *
+     * @access public
+     * @param string $more 文章截取后缀
+     * @return void
+     */
+    public function content($more = NULL)
+    {
+        if(NULL == $this->password || 
+        $this->password == Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password')))
+        {
+            $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
+            $contents = explode('<!--more-->', $content);
+            
+            list($abstract) = $contents;
+            echo empty($more) ? $content : Typecho_API::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+            . $this->permalink . '">' . $more . '</a></p>' : NULL);
+        }
+        else
+        {
+            echo '<form class="protected" action="' . $this->permalink . '" method="post">' .
+            '<p>' . _t('请输入密码访问') . '</p>' .
+            '<p><input type="text" name="protect_password" /><input type="submit" value="' . _t('提交') . '" /></p>' .
+            '</form>';
+        }
+    }
+    
+    /**
+     * 输出标题,支持隐私项输出
+     * 
+     * @access public
+     * @return void
+     */
+    public function title()
+    {
+        echo NULL == $this->password || 
+        $this->password == Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password'))
+        ? $this->title : _t('此文章被密码保护');
     }
     
     /**

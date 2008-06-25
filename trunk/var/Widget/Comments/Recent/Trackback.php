@@ -30,6 +30,7 @@ class Widget_Comments_Recent_Trackback extends Widget_Abstract_Comments
         $pageSize = empty($pageSize) ? $this->options->commentsListSize : $pageSize;
         
         $this->db->fetchAll($this->select()->limit($pageSize)
+        ->where('table.contents.`password` IS NULL')
         ->where('table.comments.`type` = ?', 'trackback')
         ->where('table.comments.`status` = ?', 'approved')
         ->group('table.comments.`coid`')

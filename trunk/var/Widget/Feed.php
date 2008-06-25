@@ -131,14 +131,15 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
     }
     
     /**
-     * 获取查询对象,重载父类方法,添加对聚合条件判断的支持
+     * 获取查询对象,重载父类方法,添加对聚合条件判断的支持以及对隐私项的过滤
      * 
      * @access public
      * @return Typecho_Db_Query
      */
     public function select()
     {
-        return parent::select()->where('table.contents.`allowFeed` = ?', 'enable');
+        return parent::select()->where('table.contents.`allowFeed` = ?', 'enable')
+        ->where('table.contents.`password` IS NULL');
     }
     
     /**

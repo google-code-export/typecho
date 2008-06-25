@@ -48,7 +48,7 @@ require_once 'menu.php';
 				<tr>
 					<td><input type="checkbox" id="" /></td>
 					<td><?php $comments->dateWord(); ?></td>
-					<td><?php $comments->author(); ?>
+					<td><?php $comments->author(false); ?>
                     <sup><?php
                         switch($comments->mode)
                         {

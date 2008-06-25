@@ -54,7 +54,6 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                     else:
                     _e('草稿');
                     endif;?>
-                    <?php if(NULL != $page->password): ?><sup><strong><?php _e('密码'); ?></strong></sup><?php endif; ?>
                     </td>
                 </tr>
                 <?php endwhile; ?>
