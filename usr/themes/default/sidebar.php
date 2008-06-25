@@ -27,8 +27,8 @@
         <div class="widget">
             <h2>Archives</h2>
             <ul>
-                <li><a href="#">September 2008</a></li>
-                <li><a href="#">October 2008</a></li>
+                <?php $this->widget('Contents/Post/Date', 'month', 'F Y')
+                ->parse('<li><a href="{permalink}">{date}</a></li>'); ?>
             </ul>
         </div>
 		<div class="widget">

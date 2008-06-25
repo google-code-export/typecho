@@ -212,8 +212,8 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
 
         /** 生成日期 */
         $value['year'] = date('Y', $value['created'] + $this->options->timezone);
-        $value['month'] = date('n', $value['created'] + $this->options->timezone);
-        $value['day'] = date('j', $value['created'] + $this->options->timezone);
+        $value['month'] = date('m', $value['created'] + $this->options->timezone);
+        $value['day'] = date('d', $value['created'] + $this->options->timezone);
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];

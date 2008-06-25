@@ -47,9 +47,8 @@
 		<div class="grid_16">
 			<ul class="clearfix" id="nav_menu">
 				<li><a href="<?php $this->options->siteUrl(); ?>" class="current">Home</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Guestbook</a></li>
-				<li><a href="#">Contact</a></li>
+				<?php $this->widget('Contents/Page/List')
+                ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
 				<li class="last"><a href="#">Login</a></li>
 			</ul>
 		</div>
