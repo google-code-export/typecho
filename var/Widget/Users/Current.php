@@ -104,6 +104,7 @@ class Widget_Users_Current extends Widget_Abstract_Users
         Typecho_Request::deleteCookie('uid', $this->options->siteUrl);
         Typecho_Request::deleteCookie('password', $this->options->siteUrl);
         Typecho_Request::deleteCookie('authCode', $this->options->siteUrl);
+        Typecho_Request::deleteCookie('protect_password', $this->options->siteUrl);
     }
     
     /**

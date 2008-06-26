@@ -132,7 +132,15 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                     /** 设置密码的cookie记录 */
                     if(!empty($post['password']) && Typecho_Request::getParameter('protect_password'))
                     {
-                        Typecho_Request::setCookie('protect_password', Typecho_Request::getParameter('protect_password'));
+                        if($post['password'] == Typecho_Request::getParameter('protect_password'))
+                        {
+                            Typecho_Request::setCookie('protect_password', 
+                            Typecho_Request::getParameter('protect_password'), 0, $this->options->siteUrl);
+                        }
+                        else
+                        {
+                            throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'));
+                        }
                     }
                 }
                 else
@@ -456,7 +464,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         else
         {
             echo '<form class="protected" action="' . $this->permalink . '" method="post">' .
-            '<p>' . _t('请输入密码访问') . '</p>' .
+            '<p class="word">' . _t('请输入密码访问') . '</p>' .
             '<p><input type="password" class="text" name="protect_password" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
             '</form>';
