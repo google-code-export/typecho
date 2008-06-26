@@ -157,6 +157,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
                 throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被关闭.'), Typecho_Exception::FORBIDDEN);
             }
             
+            if(NULL != $this->content->password && 
+            $this->content->password != Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password')))
+            {
+                throw new Typecho_Widget_Exception(_t('此文章被密码保护.'), Typecho_Exception::FORBIDDEN);
+            }
+            
             /** 调用函数 */
             $this->$callback();
         }
