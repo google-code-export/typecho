@@ -457,7 +457,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         {
             echo '<form class="protected" action="' . $this->permalink . '" method="post">' .
             '<p>' . _t('请输入密码访问') . '</p>' .
-            '<p><input type="text" name="protect_password" /><input type="submit" value="' . _t('提交') . '" /></p>' .
+            '<p><input type="password" class="text" name="protect_password" />
+            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
             '</form>';
         }
     }

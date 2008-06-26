@@ -61,7 +61,7 @@ class Typecho_API
     public static function obStart($gzipAble = false)
     {
         //开始监视输出区
-        if($gzipAble && empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+        if($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
            && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
         {
             ob_start("ob_gzhandler");
