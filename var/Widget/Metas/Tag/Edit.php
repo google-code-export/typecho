@@ -1,5 +1,23 @@
 <?php
+/**
+ * 标签编辑
+ * 
+ * @category typecho
+ * @package default
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ * @version $Id$
+ */
 
+/**
+ * 标签编辑组件
+ * 
+ * @author qining
+ * @category typecho
+ * @package Widget
+ * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @license GNU General Public License 2.0
+ */
 class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Interface_DoWidget
 {
     /**
@@ -342,6 +360,6 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updateTag'));
         Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deleteTag'));
         Typecho_Request::bindParameter(array('do' => 'merge'), array($this, 'mergeTag'));
-        Typecho::redirect($this->options->adminUrl);
+        Typecho_API::redirect($this->options->adminUrl);
     }
 }

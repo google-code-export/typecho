@@ -49,7 +49,7 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
             </form>
 			</div>
             
-            <form method="post" name="post" id="post" action="<?php $options->index('DoPost.do'); ?>">
+            <form method="post" name="post" id="post" action="<?php $options->index('/Contents/Post/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>

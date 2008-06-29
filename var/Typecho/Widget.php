@@ -101,10 +101,7 @@ abstract class Typecho_Widget implements Iterator
     public function push(array $value)
     {
         //将行数据按顺序置位
-        if(empty($this->_row))
-        {
-            $this->_row = $value;
-        }
+        $this->_row = $value;
 
         $this->_stack[] = $value;
         return $value;
