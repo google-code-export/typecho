@@ -1,12 +1,12 @@
 <?php 
 require_once 'common.php';
+Typecho_API::factory('Widget_Contents_Page_Edit')->to($page);
 require_once 'header.php';
 require_once 'menu.php';
-Typecho::widget('Contents.EditPage')->to($page);
 ?>
 
 	<div id="main" class="clearfix">
-	<form method="post" action="<?php Typecho::widget('Options')->index('DoPage.do'); ?>" id="post" name="post">
+	<form method="post" action="<?php $options->index('/Contents/Page/Edit.do'); ?>" id="post" name="post">
         
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
@@ -16,7 +16,7 @@ Typecho::widget('Contents.EditPage')->to($page);
 			</div>
 
 			<h3><?php _e('页面顺序'); ?></h3>
-			<p><input type="text" id="" style="width: 240px;" value="0" /></p>
+			<p><input type="text" id="meta" name="meta" style="width: 240px;" value="<?php echo $post->meta ? $post->meta : 0; ?>" /></p>
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
@@ -35,7 +35,7 @@ Typecho::widget('Contents.EditPage')->to($page);
 		</div><!-- end #sidebar -->
         
 		<div id="content">
-            <h2><?php Typecho::widget('Menu')->title(); ?></h2>
+            <h2><?php $menu->title(); ?></h2>
             
 			<?php require_once 'notice.php'; ?>
             
@@ -47,19 +47,18 @@ Typecho::widget('Contents.EditPage')->to($page);
                 <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
                 <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
-                <input type="hidden" name="do" value="<?php $page->do(); ?>" />
+                <input type="hidden" name="do" value="<?php echo ($page->cid ? 'update' : 'insert'); ?>" />
+                <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                 <input type="hidden" name="draft" value="0" />
                 <input type="hidden" name="continue" value="0" />
             </p>
-			<h4><?php _e('标签'); ?></h4>
-			<p><input id="tags" type="text" name="tags" value="" /><span id="tag_list"><a href="#" class="select">design</a> <a href="#">program</a> <a href="#">wordpress</a> </span></p>
 			<h4><?php _e('缩略名'); ?></h4>
-			<p><input id="slug" type="text" name="slug" value="" /></p>
+			<p><input id="slug" type="text" name="slug" value="<?php $page->slug(); ?>" /></p>
 		</div><!-- end #content -->
 
 	</form>
 	</div><!-- end #main -->
-<script type="text/javascript" src="<?php Typecho::widget('Options')->adminUrl('/js/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('/js/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
 tinyMCE.init({
 mode : "exact",

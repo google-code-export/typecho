@@ -5,7 +5,7 @@ require_once 'menu.php';
 ?>
 
 	<div id="main">
-		<h2><?php Typecho::widget('Menu')->title(); ?></h2>
+		<h2><?php $menu->title(); ?></h2>
 		<div id="page">
 			<form method="post" action="">
             <div class="table_nav">

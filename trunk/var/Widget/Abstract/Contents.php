@@ -86,8 +86,8 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
-            'meta'          =>  empty($content['meta']) ? '0' : $content['meta'],
-            'author'        =>  $this->access->uid,
+            'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
+            'author'        =>  Typecho_API::factory('Widget_Users_Current')->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
@@ -120,7 +120,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
     public function update(array $content, Typecho_Db_Query $condition)
     {
         /** 首先验证写入权限 */
-        if(!$this->postIsWriteable($cid))
+        if(!$this->postIsWriteable(clone $condition))
         {
             return false;
         }
@@ -128,7 +128,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         /** 构建更新结构 */
         $preUpdateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'meta'          =>  empty($content['meta']) ? '0' : $content['meta'],
+            'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
@@ -176,6 +176,45 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
     public function delete(Typecho_Db_Query $condition)
     {
         return $this->db->query($condition->delete('table.contents'));
+    }
+    
+    /**
+     * 检测当前用户是否具备修改权限
+     * 
+     * @access public
+     * @param integer $userId 文章的作者id
+     * @return boolean
+     */
+    public function haveContentPermission($userId)
+    {
+        if(!Typecho_API::factory('Widget_Users_Current')->pass('editor', true))
+        {
+            if($userId != Typecho_API::factory('Widget_Users_Current')->uid)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    /**
+     * 内容是否可以被修改
+     * 
+     * @access public
+     * @param Typecho_Db_Query $condition 更新条件
+     * @return mixed
+     */
+    public function postIsWriteable(Typecho_Db_Query $condition)
+    {
+        $post = $this->db->fetchRow($condition->select('table.contents', '`author`')->limit(1));
+
+        if($post && $this->haveContentPermission($post['author']))
+        {
+            return true;
+        }
+        
+        return false;
     }
     
     /**

@@ -81,7 +81,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $this->_currentPage = Typecho_Request::getParameter('page', 1);
         $hasPushed = false;
     
-        $select = $this->select()->where('table.contents.`type` = ?', 'post')
+        $select = $this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'page')
         ->where('table.contents.`created` < ?', $this->options->gmtTime);
 
         switch(Typecho_Router::$current)

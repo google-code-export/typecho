@@ -19,7 +19,7 @@ Typecho_API::factory('Widget_Metas_Link_List')->to($links);
 			</div>
 
 			<table class="latest">
-				<tr class="nodrop">
+				<tr class="nodrop nodrag">
 					<th width="1%"><input type="checkbox" id="" /></th>
 					<th width="20%"><?php _e('名称'); ?></th>
 					<th width="49%"><?php _e('描述'); ?></th>
