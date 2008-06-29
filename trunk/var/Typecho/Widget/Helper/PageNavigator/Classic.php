@@ -39,15 +39,15 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
         //输出下一页
         if($this->_currentPage < $this->_totalPage)
         {
-            echo '<a class="next" href="' . str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) . '">'
-            . $nextWord . '</a>';
+            echo '<a class="next" href="' , str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) , '">'
+            , $nextWord , '</a>';
         }
 
         //输出上一页
         if($this->_currentPage > 1)
         {
-            echo '<a class="prev" href="' . str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) . '">'
-            .$prevWord . '</a>';
+            echo '<a class="prev" href="' , str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) , '">'
+            , $prevWord , '</a>';
         }
     }
 }

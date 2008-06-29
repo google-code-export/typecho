@@ -341,7 +341,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $contents = explode('<!--more-->', $content);
         
         list($abstract) = $contents;
-        echo empty($more) ? $content : Typecho_API::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+        echo empty($more) ? $content : Typecho_API::fixHtml($abstract) , (count($contents) > 1 ? '<p class="more"><a href="'
         . $this->permalink . '">' . $more . '</a></p>' : NULL);
     }
 
@@ -370,8 +370,8 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $args = func_get_args();
         $num = intval($this->commentsNum);
         
-        echo '<a href="' . $this->permalink . '#comments">' . 
-        sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num) . '</a>';
+        echo '<a href="' , $this->permalink , '#comments">' . 
+        sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num) , '</a>';
     }
 
     /**

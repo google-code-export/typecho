@@ -287,7 +287,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
     {
         if($this->url && $autoLink)
         {
-            echo '<a href="' . $this->url . '"' . ($noFollow ? ' rel="external nofollow"' : NULL) . '>' . $this->author . '</a>';
+            echo '<a href="' , $this->url , '"' , ($noFollow ? ' rel="external nofollow"' : NULL) , '>' , $this->author , '</a>';
         }
         else
         {
@@ -314,7 +314,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      */
     public function id()
     {
-        echo 'comments-' . $this->coid;
+        echo 'comments-' , $this->coid;
     }
     
     /**
