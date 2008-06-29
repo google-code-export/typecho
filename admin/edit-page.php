@@ -20,9 +20,9 @@ require_once 'menu.php';
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($page->allow('comment')): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($page->allow('ping')): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
-                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($page->allow('feed')): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
+				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($page->allow('comment') || (!$page->cid && $options->allowComment)): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
+				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($page->allow('ping') || (!$page->cid && $options->allowPing)): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
+                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($page->allow('feed') || (!$page->cid && $options->allowFeed)): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>

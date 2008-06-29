@@ -29,7 +29,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
             </form>
 			</div>
             
-            <form method="post" name="page" id="page" action="<?php $options->index('DoPost.do'); ?>">
+            <form method="post" name="page" id="page" action="<?php $options->index('/Contents/Page/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
 					<th width="2%"><input type="checkbox" /></th>

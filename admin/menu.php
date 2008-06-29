@@ -6,7 +6,7 @@
             <?php _e('你好'); ?>, <a href="#"><?php $access->screenName(); ?></a> | 
             <a title="<?php _e('退出当前登录'); ?>" href="<?php $options->index('Logout.do'); ?>"><?php _e('退出'); ?></a> | 
             <a href="http://www.typecho.org" target="_blank" title="<?php _e('Typecho官方网站'); ?>"><?php _e('支持'); ?></a> | 
-            <a href="http://www.typecho.org" target="_blank" title="<?php _e('向Typecho报告错误以帮助我们更好地完善产品'); ?>"><?php _e('报告错误'); ?></a>
+            <a href="http://code.google.com/p/typecho/issues/entry" target="_blank" title="<?php _e('向Typecho报告错误以帮助我们更好地完善产品'); ?>"><?php _e('报告错误'); ?></a>
             </div>
 			<h1><a title="<?php $options->title(); ?>" href="<?php $options->siteUrl(); ?>"><?php $options->title(); ?></a></h1>
 			<div id="nav-menu">
