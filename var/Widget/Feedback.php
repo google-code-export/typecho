@@ -96,7 +96,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $commentId = $this->insert($comment);
         
         Typecho_Request::deleteCookie('text');
-        Typecho_API::goBack('#comment-' . $commentId);
+        Typecho_API::goBack('#comments-' . $commentId);
     }
     
     /**
