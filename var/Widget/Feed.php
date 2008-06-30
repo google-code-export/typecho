@@ -190,7 +190,22 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         $item->setTitle($value['title']);
         $item->setLink($value['permalink']);
         $item->setDate($value['created'] + idate('Z'));
-        $item->setDescription($value['text']);
+        
+        /** RSS全文输出开关支持 */
+        if($this->options->feedFullArticlesLayout)
+        {
+            $item->setDescription($value['text']);
+        }
+        else
+        {
+            $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
+            $contents = explode('<!--more-->', $content);
+            
+            list($abstract) = $contents;
+            $item->setDescription(Typecho_API::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+            . $this->permalink . '">' . _t('阅读更多...') . '</a></p>' : NULL));
+        }
+        
         $item->setCategory($value['categories']);
         
         if(Typecho_Feed::RSS2 == $this->type)

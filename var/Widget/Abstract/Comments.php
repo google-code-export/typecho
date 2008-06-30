@@ -259,9 +259,9 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      * @param string $format 日期格式
      * @return void
      */
-    public function date($format)
+    public function date($format = NULL)
     {
-        echo date($format, $this->created + $this->options->timezone);
+        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->created + $this->options->timezone);
     }
     
     /**

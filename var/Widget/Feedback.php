@@ -82,7 +82,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $comment['author'] = strip_tags(Typecho_Request::getParameter('author'));
         $comment['mail'] = strip_tags(Typecho_Request::getParameter('mail'));
         $comment['url'] = strip_tags(Typecho_Request::getParameter('url'));
-        $comment['text'] = Typecho_Request::getParameter('text');
+        $comment['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('text'), $this->options->commentsHTMLTagAllowed);
 
         Typecho_Request::setCookie('author', $comment['author']);
         Typecho_Request::setCookie('mail', $comment['mail']);
@@ -118,7 +118,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         
         $trackback['author'] = strip_tags(Typecho_Request::getParameter('blog_name'));
         $trackback['url'] = strip_tags(Typecho_Request::getParameter('url'));
-        $trackback['text'] = Typecho_Request::getParameter('excerpt');
+        $trackback['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('excerpt'), $this->options->commentsHTMLTagAllowed);
         
         /** 生成过滤器 */
         Typecho_Plugin::instance(__FILE__)->filter(__METHOD__, $trackback);
