@@ -8,12 +8,14 @@ require_once 'menu.php';
 		<h2><?php Typecho_API::factory('Widget_Menu')->title(); ?></h2>
         
 		<div id="page">
+            <?php require_once 'notice.php'; ?>
+            
 			<div class="table_nav">
             <form action="<?php $options->adminUrl('comment-list.php'); ?>">
-				<input type="submit" class="submit" value="<?php _e('展现'); ?>" />
-				<input type="submit" class="submit" value="<?php _e('垃圾'); ?>" />
-				<input type="submit" class="submit" value="<?php _e('待审核'); ?>" />
-				<input type="submit" class="submit" value="<?php _e('删除'); ?>" />
+				<input type="button" class="button" onclick="$('input[@name=do]').val('approved');comment.submit();" value="<?php _e('展现'); ?>" />
+				<input type="button" class="button" onclick="$('input[@name=do]').val('spam');comment.submit();" value="<?php _e('垃圾'); ?>" />
+				<input type="button" class="button" onclick="$('input[@name=do]').val('waiting');comment.submit();" value="<?php _e('待审核'); ?>" />
+				<input type="button" class="button" onclick="$('input[@name=do]').val('delete');comment.submit();" value="<?php _e('删除'); ?>" />
 				<input type="text" class="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status" style="width: 160px;">
 					<option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
@@ -33,6 +35,7 @@ require_once 'menu.php';
             </form>
 			</div>
 
+            <form method="post" name="comment" id="comment" action="<?php $options->index('/Comments/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
 					<th width="1%"><input type="checkbox" id="" /></th>
@@ -46,7 +49,7 @@ require_once 'menu.php';
                 <?php if($comments->have()): ?>
 				<?php while($comments->get()): ?>
 				<tr>
-					<td><input type="checkbox" id="" /></td>
+					<td><input type="checkbox" name="coid[]" value="<?php $comments->coid(); ?>" /></td>
 					<td><?php $comments->dateWord(); ?></td>
 					<td><?php $comments->author(false); ?>
                     <sup><?php
@@ -98,6 +101,8 @@ require_once 'menu.php';
                 </tr>
                 <?php endif; ?>
 			</table>
+            <input type="hidden" name="do" value=""/>
+            </form>
 
             <?php if($comments->have()): ?>
 			<div class="table_nav page_nav">
