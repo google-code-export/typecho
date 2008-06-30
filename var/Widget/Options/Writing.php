@@ -37,28 +37,35 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
         $submit->button->setAttribute('class', 'submit');
         $form->addItem($submit->setAttribute('class', 'table_nav'));
         
-        /** 文章日期格式 */
-        $postDateFormat = new Typecho_Widget_Helper_Form_Text('postDateFormat', $this->postDateFormat,
-        _t('文章日期格式'), _t('请参考<a href="http://cn.php.net/manual/zh/function.date.php" target="_blank">PHP日期格式写法</a>.'));
-        $postDateFormat->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
-        $form->addInput($postDateFormat);
+        /** 编辑器大小 */
+        $editorSize = new Typecho_Widget_Helper_Form_Text('editorSize', $this->editorSize,
+        _t('编辑器大小'), _t('所见即所得编辑器的大小.'));
+        $editorSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
+        $form->addInput($editorSize->addRule('isInteger', _t('请填入一个数字')));
         
-        /** 每页文章数目 */
-        $pageSize = new Typecho_Widget_Helper_Form_Text('pageSize', $this->pageSize,
-        _t('每页文章数目'), _t('此数目用于指定文章归档输出时每页显示的文章数目.'));
-        $pageSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
-        $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
+        /** 自动保存 */
+        $autoSave = new Typecho_Widget_Helper_Form_Radio('autoSave',
+        array('0' => _t('关闭'), '1' => _t('打开')),
+        $this->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护您的文章不会丢失.'));
+        $form->addInput($autoSave);
         
-        /** 文章列表数目 */
-        $postsListSize = new Typecho_Widget_Helper_Form_Text('postsListSize', $this->postsListSize,
-        _t('文章列表数目'), _t('此数目用于指定显示在侧边拦中的文章列表数目.'));
-        $postsListSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
-        $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
+        /** 默认允许评论 */
+        $defaultAllowComment = new Typecho_Widget_Helper_Form_Radio('defaultAllowComment',
+        array('0' => _t('不允许'), '1' => _t('允许')),
+        $this->defaultAllowComment, _t('默认允许评论'));
+        $form->addInput($defaultAllowComment);
         
-        /** FEED全文输出 */
-        $feedFullArticlesLayout = new Typecho_Widget_Helper_Form_Radio('feedFullArticlesLayout', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
-        $this->feedFullArticlesLayout, _t('聚合全文输出'));
-        $form->addInput($feedFullArticlesLayout);
+        /** 默认允许广播 */
+        $defaultAllowPing = new Typecho_Widget_Helper_Form_Radio('defaultAllowPing',
+        array('0' => _t('不允许'), '1' => _t('允许')),
+        $this->defaultAllowPing, _t('默认允许广播'));
+        $form->addInput($defaultAllowPing);
+        
+        /** 默认允许聚合*/
+        $defaultAllowFeed = new Typecho_Widget_Helper_Form_Radio('defaultAllowFeed',
+        array('0' => _t('不允许'), '1' => _t('允许')),
+        $this->defaultAllowFeed, _t('默认允许聚合'));
+        $form->addInput($defaultAllowFeed);
         
         /** 动作 */
         $do = new Typecho_Widget_Helper_Form_Hidden('do', 'update');
@@ -81,7 +88,7 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
      */
     public function updateWritingSettings()
     {
-        /**  */
+        /** 验证格式 */
         try
         {
             $this->form()->validate();

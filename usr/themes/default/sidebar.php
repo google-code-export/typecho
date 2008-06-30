@@ -41,9 +41,13 @@
 		<div class="widget">
             <h2>Meta</h2>
             <ul>
-                <li><a href="#">Login</a></li>
+                <?php if($this->widget('Users/Current')->hasLogin()): ?>
+                    <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->widget('Users/Current')->screenName(); ?>)</a></li>
+                <?php else: ?>
+                    <li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>">Login</a></li>
+                <?php endif; ?>
                 <li><a href="#">Valid XHTML</a></li>
-                <li><a href="#">Typecho</a></li>
+                <li><a href="http://www.typecho.org">Typecho</a></li>
             </ul>
         </div>
     </div><!-- end #sidebar -->

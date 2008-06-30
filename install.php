@@ -1,6 +1,5 @@
 <?php
-define('__TYPECHO_INSTALL_VERSION__', 'Typecho Developer Preview');
-
+define('__TYPECHO_INSTALL_VERSION__', 'Typecho开发者预览版');
 
 /** 载入配置文件 */
 if(file_exists('config.inc.php'))
@@ -13,7 +12,6 @@ else
     require_once 'config.sample.php';
     $configured = false;
 }
-
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
@@ -46,6 +44,24 @@ else
 		<div id="i-logo" class="round clearfix" style="text-align:center"><a href="http://typecho.org"><img src="admin/images/logo.png" alt="Typecho" /></a></div>
 		<hr class="space" />
 		<div id="i-main"><h2><?php _e('欢迎使用Typecho'); ?></h2>
+        <?php if('finish' == Typecho_Request::getParameter('step')): ?>
+        <?php
+            $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
+            if(isset($_SERVER["QUERY_STRING"]))
+            {
+                $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
+            }
+            
+            $url = dirname($url);        
+
+            $db = Typecho_Db::get();
+            $db->query($db->sql()->update('table.options')->rows(array('value' => $url))
+            ->where('name = ?', 'siteUrl'));
+        ?>
+        <div class="success">
+            <?php _e('安装成功,后台用户名为admin,密码为12345.<a href="./admin/login.php">点击这里进入</a>'); ?>
+        </div>
+        <?php else: ?>
         <?php if($configured): ?>
         <ul class="rows">
     		<li>
@@ -59,14 +75,15 @@ else
 程序中的BUG,以及期许的新功能,欢迎你在社区中交流或者直接向我们贡献代码.对于贡献突出者,他的名字将出现在贡献者名单中.'); ?></p>
                 <h3><?php _e('此版本贡献者(排名不分先后)'); ?></h3>
                 <ol>
-                    <li><a href="http://www.joyqi.com">Joyqi</a></li>
-                    <li><a href="http://www.luweiqing.com">Sluke</a></li>
-                    <li><a href="http://www.hellowiki.com">Fen</a></li>
+
                 </ol>
                 <p><a href="http://www.typecho.org">查看所有贡献者</a></p>
     		</li>
     	</ul>
-		<input type="button" class="button" value="同意并安装" onclick="" />
+        <form method="get">
+		<input type="submit" class="button" value="同意并安装" />
+        <input type="hidden" name="step" value="finish" />
+        </form>
         <?php else: ?>
             <?php if(is_writable('.')): ?>
             <div class="notice">
@@ -77,6 +94,7 @@ else
                 <?php _e('程序根目录 <sup><a href="#">什么是根目录?</a></sup>无法写入 <sup><a href="#">为何无法写入?</a></sup>,请检查 <sup><a href="#">如何检查?</a></sup>服务器环境.'); ?>
             </div>
             <?php endif; ?>
+        <?php endif; ?>
         <?php endif; ?>
 		</div>
 	</div>

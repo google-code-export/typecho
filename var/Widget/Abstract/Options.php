@@ -36,6 +36,9 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
         $this->pluginUrl = Typecho_API::pathToUrl(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         
+        /** 获取插件列表 */
+        $this->plugins = unserialize($this->plugins);
+        
         /** 初始化Feed地址 */
         $this->feedUrl = Typecho_Router::url('feed', array('feed' => '/'), $this->index);
         $this->feedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);

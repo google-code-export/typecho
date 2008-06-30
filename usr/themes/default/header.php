@@ -49,7 +49,12 @@
 				<li><a href="<?php $this->options->siteUrl(); ?>" class="current">Home</a></li>
 				<?php $this->widget('Contents/Page/List')
                 ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-				<li class="last"><a href="#">Login</a></li>
+                <?php if($this->widget('Users/Current')->hasLogin()): ?>
+                    <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->widget('Users/Current')->screenName(); ?>)</a></li>
+                    <li class="last"><a href="<?php $this->options->adminUrl(); ?>">Admin</a></li>
+                <?php else: ?>
+                    <li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>">Login</a></li>
+                <?php endif; ?>
 			</ul>
 		</div>
 		<div class="grid_9">

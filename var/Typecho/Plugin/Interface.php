@@ -55,6 +55,7 @@ interface Typecho_Plugin_Interface
      * 'homepage'       =>  'http://www.typecho.org',
      * 'check'          =>  'http://www.typecho.org/check.php?{version}',
      * 'version'        =>  '1.0.0',
+     * 'config'         =>  true,
      * 'description'    =>  'This is an example.'
      * );
      * </code>

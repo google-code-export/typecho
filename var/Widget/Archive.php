@@ -81,8 +81,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $this->_currentPage = Typecho_Request::getParameter('page', 1);
         $hasPushed = false;
     
-        $select = $this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'page')
-        ->where('table.contents.`created` < ?', $this->options->gmtTime);
+        $select = $this->select()->where('table.contents.`created` < ?', $this->options->gmtTime);
 
         switch(Typecho_Router::$current)
         {
@@ -90,6 +89,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             case 'page':
             case 'post':
             
+                /** 兼容页面和文章 */
+                $select->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'page');
+                
                 /** 如果是单篇文章或独立页面 */
                 if(NULL !== Typecho_Request::getParameter('cid'))
                 {
@@ -365,6 +367,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             return;
         }
         
+        /** 仅输出文章 */
+        $select->where('table.contents.`type` = ?', 'post');
         $this->_countSql = clone $select;
 
         $select->group('table.contents.`cid`')
