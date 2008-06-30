@@ -129,6 +129,14 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
                     /** 设置归档类型 */
                     $this->options->archiveType = Typecho_Router::$current;
                     
+                    /** 设定HTTP头 */
+                    if(!empty($post['password']) && 
+                    $post['password'] != Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password')))
+                    {
+                        /** 避免被搜索引擎收录 */
+                        header('HTTP/1.1 403 Forbidden');
+                    }
+                    
                     /** 设置密码的cookie记录 */
                     if(!empty($post['password']) && Typecho_Request::getParameter('protect_password'))
                     {
