@@ -64,7 +64,7 @@ color:#fff;
 ul#nav_menu li.last {
 float:right;
 margin-right:0;
-padding:0 0 0 26px;
+padding:0 26px 0 26px;
 background:url(../images/nav_menu.png) left center no-repeat;
 }
 

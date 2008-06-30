@@ -91,7 +91,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
      */
     public function updateDiscussionSettings()
     {
-        /**  */
+        /** 验证格式 */
         try
         {
             $this->form()->validate();

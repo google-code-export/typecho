@@ -19,7 +19,7 @@ require_once 'menu.php';
 			<p><input type="text" class="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" class="button" value="<?php _e('增加'); ?>" onclick="" /></p>
 			<ul id="cat_list">
             <?php Typecho_API::factory('Widget_Metas_Category_List')->to($category);
-            $categories = ($categories = Typecho_API::arrayFlatten(empty($post->categories) ? array() : $post->categories, 'mid')) ? $categories : array($options->defaultCategory); ?>
+            $categories = ($categories = Typecho_API::arrayFlatten(empty($post->categories) ? array() : $post->categories, 'mid')) ? $categories : ($post->cid ? array() : array($options->defaultCategory)); ?>
             <?php if($category->have()): ?>
             <?php while($category->get()): ?>
                 <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>

@@ -36,7 +36,7 @@ class Typecho_Plugin_Adapter_Layout extends Typecho_Plugin_Adapter
         {
             foreach($this->callback[$component] as $callback)
             {
-                call_user_func_array($callback);
+                call_user_func($callback);
             }
         }
     }

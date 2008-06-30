@@ -10,4 +10,5 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
+/** 开始路由分发 */
 Typecho_Router::dispatch();

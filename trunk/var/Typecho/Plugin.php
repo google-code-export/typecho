@@ -43,13 +43,15 @@ class Typecho_Plugin
      * 
      * @access public
      * @param array $plugins 插件列表
+     * @param string $rootPath 插件根目录
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public static function init(array $plugins)
+    public static function init(array $plugins, $rootPath)
     {
-        foreach($plugins as $pluginName => $pluginFileName)
+        foreach($plugins as $pluginName)
         {
+            $pluginFileName = $rootPath . '/' . $pluginName . '/' . $pluginName . '.php';
             if(file_exists($pluginFileName))
             {
                 /** 载入插件主文件 */
