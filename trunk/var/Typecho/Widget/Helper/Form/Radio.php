@@ -1,6 +1,6 @@
 <?php
 /**
- * 下拉选择框帮手
+ * 单选框帮手
  * 
  * @category typecho
  * @package Widget
@@ -13,23 +13,15 @@
 require_once 'Typecho/Widget/Helper/Form/Abstract.php';
 
 /**
- * 下拉选择框帮手类
+ * 单选框帮手类
  * 
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstract
+class Typecho_Widget_Helper_Form_Radio extends Typecho_Widget_Helper_Form_Abstract
 {
-    /**
-     * 选择值
-     * 
-     * @access private
-     * @var array
-     */
-    private $_options = array();
-
     /**
      * 重载构造函数
      * 
@@ -55,19 +47,6 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
         
         /** 设置右边 */
         $this->rightTd = new Typecho_Widget_Helper_Layout('td');
-        $this->input = new Typecho_Widget_Helper_Layout('select');
-        $this->input->setAttribute('name', $inputName)
-        ->setAttribute('id', $inputName)
-        ->appendTo($this->rightTd);
-        
-        /** 如果有错误提示 */
-        $notice = Typecho_Request::getCookie('form_message');
-        if(!empty($notice[$inputName]))
-        {
-            $detail = new Typecho_Widget_Helper_Layout('span');
-            $detail->setAttribute('class', 'detail')->html($notice[$inputName])->appendTo($this->rightTd);
-        }
-        
         $this->addItem($this->rightTd);
         $this->label($label);
         
@@ -75,8 +54,16 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
         {
             foreach($options as $optionValue => $optionLabel)
             {
-                $this->addOption($optionValue, $optionLabel);
+                $this->addRadio($optionValue, $optionLabel);
             }
+        }
+        
+        /** 如果有错误提示 */
+        $notice = Typecho_Request::getCookie('form_message');
+        if(!empty($notice[$inputName]))
+        {
+            $detail = new Typecho_Widget_Helper_Layout('span');
+            $detail->setAttribute('class', 'detail')->html($notice[$inputName])->appendTo($this->rightTd);
         }
         
         if(!empty($description))
@@ -98,10 +85,18 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
      * @param string $label 选择项标题
      * @return Typecho_Widget_Helper_Form_Select
      */
-    public function addOption($value, $label)
+    public function addRadio($value, $label)
     {
-        $this->_options[$value] = new Typecho_Widget_Helper_Layout('option');
-        $this->input->addItem($this->_options[$value]->setAttribute('value', $value)->html($label));
+        $this->input[$value] = new Typecho_Widget_Helper_Layout('input');
+        $this->input[$value]->setAttribute('name', $this->name)
+        ->setAttribute('type', 'radio')
+        ->setAttribute('value', $value)
+        ->setAttribute('id', $this->name . '-' . $value)
+        ->appendTo($this->rightTd);
+        
+        $labelItem = new Typecho_Widget_Helper_Layout('label');
+        $labelItem->setAttribute('for', $this->name . '-' . $value)
+        ->html($label . '&nbsp;')->appendTo($this->rightTd);
         return $this;
     }
     
@@ -114,9 +109,9 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
      */
     public function value($value)
     {
-        if(isset($this->_options[$value]))
+        if(isset($this->input[$value]))
         {
-            $this->_options[$value]->setAttribute('selected', 'true');
+            $this->input[$value]->setAttribute('checked', 'true');
         }
         return $this;
     }

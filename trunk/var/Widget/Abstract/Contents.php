@@ -314,7 +314,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      */
     public function date($format)
     {
-        echo date($format, $this->created + $this->options->timezone);
+        echo date(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
     }
     
     /**
@@ -341,8 +341,8 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
         $contents = explode('<!--more-->', $content);
         
         list($abstract) = $contents;
-        echo empty($more) ? $content : Typecho_API::fixHtml($abstract) , (count($contents) > 1 ? '<p class="more"><a href="'
-        . $this->permalink . '">' . $more . '</a></p>' : NULL);
+        echo empty($more) ? $content : (Typecho_API::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+        . $this->permalink . '">' . $more . '</a></p>' : NULL));
     }
 
     /**

@@ -28,12 +28,12 @@ class Typecho_Request
     public static function getParameter($key, $default = NULL)
     {
         //优先选择GET方式
-        if(!empty($_GET[$key]))
+        if(isset($_GET[$key]))
         {
             return $_GET[$key];
         }
         //其次为POST方式
-        else if(!empty($_POST[$key]))
+        else if(isset($_POST[$key]))
         {
             return $_POST[$key];
         }
@@ -104,7 +104,7 @@ class Typecho_Request
             foreach($postData as $key => $val)
             {
                 $parameter = self::getParameter($key);
-                if(NULL == $parameter || $val != $parameter)
+                if(NULL === $parameter || $val != $parameter)
                 {
                     $doPost = false;
                 }
@@ -131,7 +131,7 @@ class Typecho_Request
      */
     public static function getCookie($key, $default = NULL)
     {
-        return empty($_COOKIE[$key]) ? NULL : $_COOKIE[$key];
+        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
     /**
@@ -215,7 +215,7 @@ class Typecho_Request
      */
     public static function getSession($key, $default = NULL)
     {
-        return empty($_SESSION[$key]) ?  $default : $_SESSION[$key];
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
 
     /**
