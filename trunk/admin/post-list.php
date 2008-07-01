@@ -68,12 +68,12 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
                     <sup><?php $posts->tags(','); ?></sup></td>
                     <td><?php $posts->author(); ?></td>
                     <td><?php $posts->dateWord(); ?></td>
-                    <td><?php $posts->category(' | '); ?></td>
-                    <td><?php $posts->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
+                    <td><?php $posts->category(' | ', true, _t('没有分类')); ?></td>
+                    <td><?php $posts->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                     <td><?php if('post' == $posts->type):
-                    _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
+                    _e('<a class="publish" href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
                     else:
-                    _e('草稿');
+                    _e('<span class="unpublish">草稿</a>');
                     endif;?>
                     <?php if(NULL != $posts->password): ?><sup><strong><?php _e('密码'); ?></strong></sup><?php endif; ?>
                     </td>

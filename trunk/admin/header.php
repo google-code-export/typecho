@@ -8,6 +8,7 @@
     <link href="<?php $options->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
     <!--[if IE]><link rel="stylesheet" href="<?php $options->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
     <script src="<?php $options->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/jquery.curvycorners.packed.js'); ?>" type="text/javascript"></script>
     <script src="<?php $options->adminUrl('/js/typecho.js'); ?>" type="text/javascript"></script>
 </head>
 <body>

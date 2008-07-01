@@ -31,5 +31,11 @@ $(document).ready(function() {
 	$(":password").addClass("password");
 	$(":submit").addClass("submit");
 	$(":button").addClass("button");
+    
+    $(".latest .publish").corner("5px");
+    $(".latest .unpublish").corner("5px");
+    $(".latest .spam").corner("5px");
+    $(".latest .waiting").corner("5px");
+    $(".latest .approved").corner("5px");
+    $("label.table_nav").corner("5px");
 });
-
