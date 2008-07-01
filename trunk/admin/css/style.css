@@ -179,10 +179,13 @@ table.latest .approved,
 table.latest .spam,
 table.latest .waiting,
 table.latest .publish,
-table.latest .unpublish { padding:1px 5px; float:left; font-weight:bold }
-table.latest .approved, table.latest .publish { background: #264409; color: #E6EFC2;}
-table.latest .spam { background: #8a1f11; color: #FBE3E4;}
-table.latest .waiting, table.latest .unpublish { background: #514721; color: #FFF6BF;}
+table.latest .unpublish,
+table.latest .activated,
+table.latest .deactivated,
+table.latest .config { padding:1px 5px; margin-right:3px; float:left; font-weight:bold }
+table.latest .approved, table.latest .publish, table.latest .activated { background: #264409; color: #E6EFC2;}
+table.latest .spam, table.latest .deactivated { background: #8a1f11; color: #FBE3E4;}
+table.latest .waiting, table.latest .unpublish, table.latest .config { background: #514721; color: #FFF6BF;}
 
 table#comment_list {
 background: #fff;

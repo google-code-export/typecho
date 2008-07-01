@@ -26,17 +26,17 @@ Typecho_API::factory('Widget_Plugins_Config')->to($config);
 					<td><?php echo $plugin['description']; ?></td>
 					<td><a target="_blank" href="<?php echo $plugin['homepage']; ?>"><?php echo $plugin['author']; ?></a></td>
 					<td><?php if($plugin['activated']):
-                        _e('已激活');
+                        _e('<span class="activated">已激活</span>');
                     else:
-                        _e('已禁用');
+                        _e('<span class="deactivated">已禁用</span>');
                     endif; ?></td>
 					<td><?php if($plugin['activated']): ?>
-                        <a href="<?php $options->index('/Plugins/Edit.do?do=deactivate&plugin=' . $plugin['name']); ?>"><?php _e('禁用'); ?></a>
+                        <a class="deactivated" href="<?php $options->index('/Plugins/Edit.do?do=deactivate&plugin=' . $plugin['name']); ?>"><?php _e('禁用'); ?></a>
                         <?php if($plugin['config']): ?>
-                            | <a href="<?php $options->adminUrl('plugin.php?do=config&plugin=' . $plugin['name']); ?>#edit"><?php _e('配置'); ?></a>
+                            <a class="config" href="<?php $options->adminUrl('plugin.php?do=config&plugin=' . $plugin['name']); ?>#edit"><?php _e('配置'); ?></a>
                         <?php endif; ?>
                     <?php else: ?>
-                        <a href="<?php $options->index('/Plugins/Edit.do?do=activate&plugin=' . $plugin['name']); ?>"><?php _e('激活'); ?></a>
+                        <a class="activated" href="<?php $options->index('/Plugins/Edit.do?do=activate&plugin=' . $plugin['name']); ?>"><?php _e('激活'); ?></a>
                     <?php endif; ?>
                     </td>
 				</tr>
