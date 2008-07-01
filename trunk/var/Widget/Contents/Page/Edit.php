@@ -181,6 +181,35 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
     }
     
     /**
+     * 页面排序
+     * 
+     * @access public
+     * @return void
+     */
+    public function sortPage()
+    {
+        $pages = Typecho_Request::getParameter('sort');
+        if($pages && is_array($pages))
+        {
+            foreach($pages as $sort => $cid)
+            {
+                $this->db->query($this->db->sql()->update('table.contents')->row('meta', $sort + 1)
+                ->where('`cid` = ?', $cid)->where('`type` = ?', 'page'));
+            }
+        }
+        
+        if(!Typecho_Request::isAjax())
+        {
+            /** 转向原页 */
+            Typecho_API::redirect(Typecho_API::pathToUrl('page-list.php', $this->options->adminUrl));
+        }
+        else
+        {
+            die(_t('页面排序已经完成'));
+        }
+    }
+    
+    /**
      * 绑定动作
      * 
      * @access public
@@ -191,6 +220,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertPage'));
         Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updatePage'));
         Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deletePage'));
+        Typecho_Request::bindParameter(array('do' => 'sort'), array($this, 'sortPage'));
         Typecho_API::redirect($this->options->adminUrl);
     }
 }

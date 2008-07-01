@@ -80,6 +80,14 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
      * @var string
      */
     public $name;
+    
+    /**
+     * 表单值
+     * 
+     * @access public
+     * @var mixed
+     */
+    public $value;
 
     /**
      * 构造函数

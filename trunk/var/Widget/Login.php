@@ -71,7 +71,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_DoW
         }
         
         /** 跳转验证后地址 */
-        if(NULL !== ($referer = Typecho_Request::getParameter('referer')))
+        if(NULL != ($referer = Typecho_Request::getParameter('referer')))
         {
             Typecho_API::redirect($referer);
         }

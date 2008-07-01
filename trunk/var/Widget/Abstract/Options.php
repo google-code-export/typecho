@@ -19,6 +19,20 @@
  */
 class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
 {
+    /**
+     * 缓存的插件配置
+     * 
+     * @access private
+     * @var array
+     */
+    private $_pluginConfig = array();
+
+    /**
+     * 初始化配置信息
+     * 
+     * @access public
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -193,5 +207,30 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
     public function archiveTitle($format = '%s')
     {
         echo sprintf($format, $this->archiveTitle);
+    }
+    
+    /**
+     * 获取插件的配置信息
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return array
+     */
+    public function plugin($pluginName)
+    {
+        if(!isset($this->_pluginConfig[$pluginName]))
+        {
+            if(!empty($this->_row['plugin:' . $pluginName])
+            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName])))
+            {
+                $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
+            }
+            else
+            {
+                throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
+            }
+        }
+
+        return $this->_pluginConfig[$pluginName];
     }
 }

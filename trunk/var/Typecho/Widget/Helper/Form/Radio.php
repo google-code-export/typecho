@@ -23,6 +23,14 @@ require_once 'Typecho/Widget/Helper/Form/Abstract.php';
 class Typecho_Widget_Helper_Form_Radio extends Typecho_Widget_Helper_Form_Abstract
 {
     /**
+     * 选择值
+     * 
+     * @access private
+     * @var array
+     */
+    private $_options = array();
+
+    /**
      * 重载构造函数
      * 
      * @access public
@@ -87,12 +95,13 @@ class Typecho_Widget_Helper_Form_Radio extends Typecho_Widget_Helper_Form_Abstra
      */
     public function addRadio($value, $label)
     {
-        $this->input[$value] = new Typecho_Widget_Helper_Layout('input');
-        $this->input[$value]->setAttribute('name', $this->name)
+        $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
+        $this->_options[$value]->setAttribute('name', $this->name)
         ->setAttribute('type', 'radio')
         ->setAttribute('value', $value)
         ->setAttribute('id', $this->name . '-' . $value)
         ->appendTo($this->rightTd);
+        $this->input = $this->_options[$value];
         
         $labelItem = new Typecho_Widget_Helper_Layout('label');
         $labelItem->setAttribute('for', $this->name . '-' . $value)
@@ -109,9 +118,11 @@ class Typecho_Widget_Helper_Form_Radio extends Typecho_Widget_Helper_Form_Abstra
      */
     public function value($value)
     {
-        if(isset($this->input[$value]))
+        if(isset($this->_options[$value]))
         {
-            $this->input[$value]->setAttribute('checked', 'true');
+            $this->value = $value;
+            $this->_options[$value]->setAttribute('checked', 'true');
+            $this->input = $this->_options[$value];
         }
         return $this;
     }

@@ -54,6 +54,7 @@ class Typecho_Widget_Helper_Form_Submit extends Typecho_Widget_Helper_Layout
      */
     public function value($value)
     {
+        $this->value = $value;
         $this->button->setAttribute('value', $value);
         return $this;
     }

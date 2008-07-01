@@ -69,7 +69,8 @@ interface Typecho_Plugin_Interface
      * 获取插件配置面板
      * 
      * @access public
-     * @return Typecho_Widget_Helper_Form
+     * @param Typecho_Widget_Helper_Form $form 配置面板
+     * @return void
      */
-    public static function config();
+    public static function config(Typecho_Widget_Helper_Form $form);
 }
