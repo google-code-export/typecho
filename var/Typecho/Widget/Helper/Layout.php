@@ -219,7 +219,7 @@ class Typecho_Widget_Helper_Layout
     }
     
     /**
-     * 设置表单属性
+     * 设置属性
      * 
      * @access public
      * @param string $attributeName 属性名称
@@ -229,6 +229,18 @@ class Typecho_Widget_Helper_Layout
     public function __set($name, $value)
     {
         $this->_attributes[$name] = $value;
+    }
+    
+    /**
+     * 获取属性
+     * 
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return void
+     */
+    public function __get($name)
+    {
+        return isset($this->_attributes[$name]) ? $this->_attributes[$name] : NULL;
     }
     
     /**

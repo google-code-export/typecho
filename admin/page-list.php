@@ -31,7 +31,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
             
             <form method="post" name="page" id="page" action="<?php $options->index('/Contents/Page/Edit.do'); ?>">
 			<table class="latest">
-				<tr>
+				<tr class="nodrop nodrag">
 					<th width="2%"><input type="checkbox" /></th>
 					<th width="40%"><?php _e('标题'); ?></th>
 					<th width="20%"><?php _e('作者'); ?></th>
@@ -64,6 +64,24 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                 <?php endif; ?>
 			</table>
             <input type="hidden" name="do" value="delete"/>
+            <script src="<?php $options->adminUrl('/js/jquery.tablednd.js'); ?>" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $(".latest").tableDnD({
+                        onDragClass: "drag",
+                        onDrop: function(table, row) {
+                            $("tr", table).removeClass("alt");
+                            $("tr:even", table).addClass("alt");
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
+                                data: $("input[@type=hidden]", table).serialize() + '&do=sort',
+                                cache: false
+                            });
+                        }
+                    });
+                });
+            </script>
             </form>
 		</div><!-- end #page -->
 	</div><!-- end #main -->

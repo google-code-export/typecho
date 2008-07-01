@@ -46,6 +46,7 @@ class Typecho_Widget_Helper_Form_Textarea extends Typecho_Widget_Helper_Form_Abs
      */
     public function value($value)
     {
+        $this->value = $value;
         $this->input->html($value);
         return $this;
     }

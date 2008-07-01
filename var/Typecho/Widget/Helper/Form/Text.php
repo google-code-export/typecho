@@ -47,6 +47,7 @@ class Typecho_Widget_Helper_Form_Text extends Typecho_Widget_Helper_Form_Abstrac
      */
     public function value($value)
     {
+        $this->value = $value;
         $this->input->setAttribute('value', $value);
         return $this;
     }

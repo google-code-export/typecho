@@ -2,6 +2,7 @@
 require_once 'common.php';
 require_once 'header.php';
 require_once 'menu.php';
+Typecho_API::factory('Widget_Plugins_Config')->to($config);
 ?>
 
 	<div id="main">
@@ -32,7 +33,7 @@ require_once 'menu.php';
 					<td><?php if($plugin['activated']): ?>
                         <a href="<?php $options->index('/Plugins/Edit.do?do=deactivate&plugin=' . $plugin['name']); ?>"><?php _e('禁用'); ?></a>
                         <?php if($plugin['config']): ?>
-                            | <a href="<?php $options->index('/Plugins/Edit.do?do=config&plugin=' . $plugin['name']); ?>"><?php _e('配置'); ?></a>
+                            | <a href="<?php $options->adminUrl('plugin.php?do=config&plugin=' . $plugin['name']); ?>#edit"><?php _e('配置'); ?></a>
                         <?php endif; ?>
                     <?php else: ?>
                         <a href="<?php $options->index('/Plugins/Edit.do?do=activate&plugin=' . $plugin['name']); ?>"><?php _e('激活'); ?></a>
@@ -41,6 +42,9 @@ require_once 'menu.php';
 				</tr>
                 <?php endforeach; ?>
 			</table>
+            <?php if($config->form): ?>
+                <?php $config->form->render(); ?>
+            <?php endif; ?>
 		</div><!-- end #page -->
 	</div><!-- end #main -->
 

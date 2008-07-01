@@ -51,6 +51,7 @@ class Typecho_Widget_Helper_Form_Hidden extends Typecho_Widget_Helper_Form_Abstr
      */
     public function value($value)
     {
+        $this->value = $value;
         $this->setAttribute('value', $value);
         return $this;
     }

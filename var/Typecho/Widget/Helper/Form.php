@@ -170,7 +170,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
-     * 获取此表单的所有输入项
+     * 获取此表单的所有输入项投递值
      * 
      * @access public
      * @return array
@@ -184,6 +184,34 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             $parameters[$name] = Typecho_Request::getParameter($name);
         }
         return $parameters;
+    }
+    
+    /**
+     * 获取此表单的所有输入项固有值
+     * 
+     * @access public
+     * @return array
+     */
+    public function getValues()
+    {
+        $values = array();
+        
+        foreach($this->_inputs as $name => $input)
+        {
+            $values[$name] = $input->value;
+        }
+        return $values;
+    }
+    
+    /**
+     * 获取此表单的所有输入项
+     * 
+     * @access public
+     * @return array
+     */
+    public function getInputs()
+    {
+        return $this->_inputs;
     }
     
     /**

@@ -35,6 +35,7 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
         $select = $this->select();
         
         /** 过滤状态 */
+        $status = Typecho_Request::getParameter('status');
         switch($status)
         {
             case 'draft':

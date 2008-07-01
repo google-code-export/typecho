@@ -116,6 +116,7 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
     {
         if(isset($this->_options[$value]))
         {
+            $this->value = $value;
             $this->_options[$value]->setAttribute('selected', 'true');
         }
         return $this;
