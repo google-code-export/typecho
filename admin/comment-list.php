@@ -76,7 +76,8 @@ require_once 'menu.php';
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
-					<td><?php
+					<td><span class="<?php $comments->status(); ?>">
+                    <?php
                         switch($comments->status)
                         {
                             case 'approved':
@@ -92,7 +93,7 @@ require_once 'menu.php';
                                 echo _t('不明');
                                 break;
                         }
-                    ?></td>
+                    ?></span></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

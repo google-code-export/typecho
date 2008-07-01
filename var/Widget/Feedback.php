@@ -41,7 +41,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  Typecho_Request::getClientIp(),
             'type'      =>  'comment',
-            'status'    =>  'approved'
+            'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
@@ -113,7 +113,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  Typecho_Request::getClientIp(),
             'type'      =>  'trackback',
-            'status'    =>  'approved'
+            'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
         $trackback['author'] = strip_tags(Typecho_Request::getParameter('blog_name'));

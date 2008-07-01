@@ -48,11 +48,11 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                     <sup><?php $page->tags(','); ?></sup></td>
                     <td><?php $page->author(); ?></td>
                     <td><?php $page->dateWord(); ?></td>
-                    <td><?php $page->commentsNum('没有评论', '仅有一条评论', '%d条评论'); ?></td>
+                    <td><?php $page->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                     <td><?php if('page' == $page->type):
-                    _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $page->permalink);
+                    _e('<a class="publish" href="%s" title="在新页面打开" target="_blank">已发布</a>', $page->permalink);
                     else:
-                    _e('草稿');
+                    _e('<span class="unpublish">草稿</span>');
                     endif;?>
                     </td>
                 </tr>

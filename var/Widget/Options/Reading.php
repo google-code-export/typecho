@@ -39,7 +39,9 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         
         /** 文章日期格式 */
         $postDateFormat = new Typecho_Widget_Helper_Form_Text('postDateFormat', $this->postDateFormat,
-        _t('文章日期格式'), _t('请参考<a href="http://cn.php.net/manual/zh/function.date.php" target="_blank">PHP日期格式写法</a>.'));
+        _t('文章日期格式'), _t('此格式用于指定显示在文章归档中的日期默认显示格式.<br />
+        在某些主题中这个格式可能不会生效,因为主题作者可以自定义日期格式.<br />
+        请参考<a href="http://cn.php.net/manual/zh/function.date.php" target="_blank">PHP日期格式写法</a>.'));
         $postDateFormat->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($postDateFormat);
         
@@ -57,7 +59,8 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         
         /** FEED全文输出 */
         $feedFullArticlesLayout = new Typecho_Widget_Helper_Form_Radio('feedFullArticlesLayout', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
-        $this->feedFullArticlesLayout, _t('聚合全文输出'));
+        $this->feedFullArticlesLayout, _t('聚合全文输出'), _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.<br />
+        摘要的文字取决于你在文章中使用分隔符的位置.'));
         $form->addInput($feedFullArticlesLayout);
         
         /** 动作 */
