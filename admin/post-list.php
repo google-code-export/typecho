@@ -12,7 +12,7 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
             
 			<div class="table_nav">
             <form action="<?php $options->adminUrl('post-list.php'); ?>">
-				<input type="button" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
+				<input type="button" id="test-1" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
 				<input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<?php Typecho_API::factory('Widget_Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
                 <select name="category" style="width: 160px;">
