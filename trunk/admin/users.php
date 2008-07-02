@@ -2,10 +2,11 @@
 require_once 'common.php';
 require_once 'header.php';
 require_once 'menu.php';
+Typecho_API::factory('Widget_Users_Admin')->to($users);
 ?>
 
 	<div id="main">
-		<h2>Manage Users</h2>
+		<h2><?php $menu->title(); ?></h2>
 		<div id="page">
 		<form method="post" action="">
 			<div class="table_nav">
@@ -15,21 +16,46 @@ require_once 'menu.php';
 			<table class="latest">
 				<tr>
 					<th width="1%"><input type="checkbox" id="" /></th>
-					<th width="15%">username</th>
-					<th width="25%">website</th>
-					<th width="29%">e-mail</th>
-					<th width="10%">rivileges</th>
-					<th width="10">post</th>
+					<th width="15%"><?php _e('用户名'); ?></th>
+					<th width="25%"><?php _e('个人网站'); ?></th>
+					<th width="20%"><?php _e('电子邮件'); ?></th>
+					<th width="14%"><?php _e('权限'); ?></th>
+					<th width="15%"><?php _e('最后登录'); ?></th>
 				</tr>
-				<?php for($a=0;$a!=5;$a++) echo'
+                
+                <?php if($users->have()): ?>
+				<?php while($users->get()): ?>
 				<tr>
-					<td><input type="checkbox" id="" /></td>
-					<td><a href="#">Admin</a></td>
-					<td><a href="#">http://example.com</a></td>
-					<td><a href="#">admin@admin.com</a></td>
-					<td>Publisher</td>
-					<td><a href="#">10</a></td>
-				</tr>'; ?>
+					<td><input type="checkbox" name="uid[]" value="<?php $users->uid(); ?>" /></td>
+					<td><a href="#"><?php $users->name(); ?></a></td>
+					<td><a target="_blank" href="<?php $users->url(); ?>"><?php $users->url(); ?></a></td>
+					<td><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a></td>
+					<td><?php switch($users->group)
+                    {
+                        case 'visitor':
+                            _e('访问者');
+                            break;
+                        case 'subscriber':
+                            _e('关注者');
+                            break;
+                        case 'contributor':
+                            _e('贡献者');
+                            break;
+                        case 'editor':
+                            _e('编辑');
+                            break;
+                        case 'administrator':
+                        default:
+                            _e('管理员');
+                            break;
+                    }
+                    ?></td>
+					<td><?php echo Typecho_I18n::dateWord($users->logged, $options->gmtTime); ?></td>
+				</tr>
+                <?php endwhile; ?>
+                <?php else: ?>
+                <td colspan="6"><?php _e('没有找到任何用户'); ?></td>
+                <?php endif; ?>
 			</table>
 			<hr class="space" />
 			<h4>Add User</h4>
