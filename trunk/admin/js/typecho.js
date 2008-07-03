@@ -73,7 +73,7 @@ $(document).ready(function() {
         }
         
         var ilabel = $('option:first', e).html();
-        var currentSelect = 0;
+        var ivalue = $('option:first', e).val();
         var selected = false;
         
         $('option', e).each(function(){
@@ -81,12 +81,7 @@ $(document).ready(function() {
             if(true == $(this).attr('selected'))
             {
                 ilabel = $(this).html();
-                selected = true;
-            }
-            
-            if(!selected)
-            {
-                currentSelect ++;
+                ivalue = $(this).val();
             }
         });
 
@@ -96,8 +91,14 @@ $(document).ready(function() {
         box.attr('value', ilabel);
         e.after(box);
         
+        var hidden = $(document.createElement('input'));
+        hidden.attr('name', e.attr('name'));
+        hidden.attr('type', 'hidden');
+        hidden.attr('value', ivalue);
+        e.after(hidden);
+        
         var button = new YAHOO.widget.Button('typecho-button-' + idPointer, 
-                                            {type: 'menu', menu: this, srcelement: this, selectedMenuItem: currentSelect});
+                                            {type: 'menu', menu: this});
         
         button._menu.subscribe("click", function (p_sType, p_aArgs)
         {
@@ -105,6 +106,7 @@ $(document).ready(function() {
             if (oMenuItem)
             {
                 button.set('label', oMenuItem.cfg.getProperty("text"));
+                hidden.remove();
             }
         });
         
