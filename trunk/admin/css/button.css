@@ -60,9 +60,9 @@ version: 2.5.2
 }
 
 .yui-skin-sam .typecho-input {
-	background:#FFF url(../images/sbox-bg.gif) top left no-repeat;
-	border-top-color: #508AC5;
-	border-bottom-color: #A6C4E1;
+	background:#FFF;
+	border-top-color: #A6C4E1;
+	border-bottom-color: #D2E1F0;
 }
 
 .yui-skin-sam .yui-button .first-child {
@@ -77,8 +77,8 @@ version: 2.5.2
 }
 
 .yui-skin-sam .yui-button .typecho-input-first-child {
-	border-left-color: #508AC5;
-	border-right-color: #A6C4E1;
+	border-left-color: #A6C4E1;
+	border-right-color: #D2E1F0;
 }
 
 .yui-skin-sam .yui-button button,
@@ -232,8 +232,12 @@ version: 2.5.2
 .yui-skin-sam .yui-checkbox-button-checked {
     
     border-color: #304369;
-    background: #336699 url(../images/menuitem_checkbox_checked.png) right top no-repeat;
-    
+    background: #336699;
+    font-weight:bold;
+}
+
+.yui-skin-sam .yui-checkbox-button button, .yui-skin-sam .yui-radio-button button {
+	color: #888;
 }
 
 .yui-skin-sam .yui-radio-button-checked .first-child,
