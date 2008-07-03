@@ -307,8 +307,17 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         /** 验证数据 */
         $validator = new Typecho_Validate($this);
         $validator->addRule('merge', 'required', _t('分类主键不存在'));
-        $validator->addRule('merge', 'categoryExists', _t('分类不存在'));
-        $validator->run(Typecho_Request::getParametersFrom('merge'));
+        $validator->addRule('merge', 'categoryExists', _t('请选择需要合并的分类'));
+        
+        try
+        {
+            $validator->run(Typecho_Request::getParametersFrom('merge'));
+        }
+        catch(Typecho_Validate_Exception $e)
+        {
+            Typecho_API::factory('Widget_Notice')->set($e->getMessages(), NULL, 'error');
+            Typecho_API::goBack('#edit');
+        }
         
         $merge = Typecho_Request::getParameter('merge');
         $categories = Typecho_Request::getParameter('mid');
