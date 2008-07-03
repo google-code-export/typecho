@@ -9,3 +9,7 @@ width: 98%;
 input, textarea, select, button {
 vertical-align:baseline
 }
+
+#login button {
+    line-height: 1.5em; /* For IE */
+}
