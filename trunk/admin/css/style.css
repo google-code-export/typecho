@@ -230,7 +230,14 @@ list-style-type: none;
 padding: .5em;
 width: 225px;
 }
-ul#cat_list li {
+
+ul#permission_list {
+list-style-type: none;
+padding: 0;
+width: 225px;
+}
+
+ul#cat_list li, ul#permission_list li {
 padding: 0 .5em 0.2em;
 margin: 0.2em 0;
 }

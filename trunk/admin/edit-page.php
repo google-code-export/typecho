@@ -18,11 +18,12 @@ require_once 'menu.php';
 			<h3><?php _e('页面顺序'); ?></h3>
 			<p><input type="text" id="meta" name="meta" style="width: 240px;" value="<?php echo $post->meta ? $post->meta : 0; ?>" /></p>
 
-			<h3><?php _e('评论,引用和聚合'); ?></h3>
+			<h3><?php _e('评论和引用'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($page->allow('comment') || (!$page->cid && $options->defaultAllowComment)): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($page->allow('ping') || (!$page->cid && $options->defaultAllowPing)): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
-                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($page->allow('feed') || (!$page->cid && $options->defaultAllowFeed)): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
+                <ul id="permission_list">
+				<li><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($page->allow('comment') || (!$page->cid && $options->defaultAllowComment)): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许访问者对此文评论'); ?></label></li>
+				<li><input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($page->allow('ping') || (!$page->cid && $options->defaultAllowPing)): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许其它网站向此文发送广播'); ?></label></li>
+                </ul>
 			</div>
 
 			<h3><?php _e('密码保护'); ?></h3>

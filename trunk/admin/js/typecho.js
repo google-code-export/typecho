@@ -112,4 +112,104 @@ $(document).ready(function() {
         
         idPointer ++;
     });
+    
+    /** 替换输入项样式 */
+    $("input[@type=text], input[@type=password]").each(function(){
+        e = $(this);
+        e.css("border-width", "0");
+        e.css("background-color", "transparent");
+        
+        e1 = $(document.createElement("span"));
+        e1.addClass("yui-button yui-menu-button typecho-input");
+        e.before(e1);
+        
+        e2 = $(document.createElement("span"));
+        e2.addClass("first-child typecho-input-first-child");
+        e2.appendTo(e1);
+        e3 = e.clone();
+        e3.width(e.width());
+        e3.height(e.height());
+        e3.appendTo(e2);
+        e.remove();
+    });
+    
+    /** 替换多行输入项样式 */
+    $("textarea").each(function(){
+        e = $(this);
+        if('text' == e.attr('id'))
+        {
+            return;
+        }
+        
+        e.css("border-width", "0");
+        e.css("background-color", "transparent");
+        
+        e1 = $(document.createElement("span"));
+        e1.addClass("yui-button yui-menu-button typecho-input");
+        e.before(e1);
+        
+        e2 = $(document.createElement("span"));
+        e2.addClass("first-child typecho-input-first-child");
+        e2.appendTo(e1);
+        e3 = e.clone();
+        e3.width(e.width());
+        e3.height(e.height());
+        e3.appendTo(e2);
+        e.remove();
+    });
+    
+    /** 替换单选框 */
+    var radioList = [];
+    var hiddenList = [];
+    $("input[@type=radio]").each(function(){
+        e = $(this);
+        if(!radioList[e.attr('name')])
+        {
+            icontainer = document.createElement("span");
+            e.before(icontainer);
+            radioList[e.attr('name')] = new YAHOO.widget.ButtonGroup({
+                name:  e.attr('name'),
+                container: icontainer
+            });
+            
+            hiddenList[e.attr('name')] = document.createElement("input");
+            hidden = $(hiddenList[e.attr('name')]);
+            hidden.attr('name', e.attr('name'));
+            hidden.attr('type', 'hidden');
+            e.after(hidden);
+        }
+        
+        function onClick(p_aArgs)
+        {
+            $(hiddenList[this.get('name')]).val(this.get('value'));
+        }
+        
+        button = { label: $("label[@for=" + e.attr("id") + "]").html(), name: e.attr('name'),
+        value: e.val() , onclick: {fn: onClick}};
+        if(e.attr('checked')){button.checked = true; hidden.val(e.val());}
+        radioList[e.attr('name')].addButtons([button]);
+        
+        $("label[@for=" + e.attr("id") + "]").remove();
+        e.remove();
+    });
+    
+    /** 替换多选框 */
+    $("input[@type=checkbox]").each(function(){
+        e = $(this);
+        
+        if(!$("label[@for=" + e.attr("id") + "]").html()) return;
+        
+        icontainer = document.createElement("span");
+        e.before(icontainer);
+        
+        var oCheckButton9 = new YAHOO.widget.Button({ 
+                            type: "checkbox", 
+                            label: $("label[@for=" + e.attr("id") + "]").html(), 
+                            name: e.attr("name"), 
+                            value: e.val(), 
+                            container: icontainer, 
+                            checked: e.attr("checked") });
+        $("label[@for=" + e.attr("id") + "]").remove();
+        e.remove();
+    });
 });

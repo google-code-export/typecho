@@ -22,7 +22,7 @@ require_once 'menu.php';
             $categories = ($categories = Typecho_API::arrayFlatten(empty($post->categories) ? array() : $post->categories, 'mid')) ? $categories : ($post->cid ? array() : array($options->defaultCategory)); ?>
             <?php if($category->have()): ?>
             <?php while($category->get()): ?>
-                <li><span class="right"><a href="#">&times;</a></span><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
+                <li><span class="right"><a href="#">&times;</a></span><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
             <?php endwhile; ?>
             <?php else: ?>
                 <li><?php _e('没有任何分类'); ?></li>
@@ -32,10 +32,12 @@ require_once 'menu.php';
 
 			<h3><?php _e('评论,引用和聚合'); ?></h3>
 			<div id="allow_status">
-				<p><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($post->allow('comment') || (!$post->cid && $options->defaultAllowComment)): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许评论'); ?></label><br />
-				<input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($post->allow('ping') || (!$post->cid && $options->defaultAllowPing)): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许引用'); ?></label><br />
-                <input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($post->allow('feed') || (!$post->cid && $options->defaultAllowFeed)): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许聚合'); ?></label></p>
-			</div>
+                <ul id="permission_list">
+                <li><input type="checkbox" id="allowComment" value="1" name="allowComment" <?php if($post->allow('comment') || (!$post->cid && $options->defaultAllowComment)): ?>checked="checked"<?php endif; ?> /><label for="allowComment"><?php _e('允许访问者对此文评论'); ?></label></li>
+				<li><input type="checkbox" id="allowPing" value="1" name="allowPing" <?php if($post->allow('ping') || (!$post->cid && $options->defaultAllowPing)): ?>checked="checked"<?php endif; ?> /><label for="allowPing"><?php _e('允许其它网站向此文发送广播'); ?></label></li>
+                <li><input type="checkbox" id="allowFeed" value="1" name="allowFeed" <?php if($post->allow('feed') || (!$post->cid && $options->defaultAllowFeed)): ?>checked="checked"<?php endif; ?> /><label for="allowFeed"><?php _e('允许在聚合中出现此文'); ?></label></li>
+                </ul>
+            </div>
 
 			<h3><?php _e('密码保护'); ?></h3>
 			<p><input type="text" class="text" name="password" id="password" style="width: 225px;" value="<?php $post->password(); ?>" /></p>

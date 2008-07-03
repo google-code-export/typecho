@@ -316,7 +316,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         catch(Typecho_Validate_Exception $e)
         {
             Typecho_API::factory('Widget_Notice')->set($e->getMessages(), NULL, 'error');
-            Typecho_API::goBack('#edit');
+            Typecho_API::goBack();
         }
         
         $merge = Typecho_Request::getParameter('merge');
