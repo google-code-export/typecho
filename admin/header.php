@@ -6,16 +6,16 @@
     <link href="<?php $options->adminUrl('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php $options->adminUrl('/js/fonts/fonts-min.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php $options->adminUrl('/css/fonts-min.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/js/assets/skins/sam/skin.css'); ?>" rel="stylesheet" type="text/css" />
     <!--[if IE]><link rel="stylesheet" href="<?php $options->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
     <script src="<?php $options->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
     <script src="<?php $options->adminUrl('/js/jquery.curvycorners.packed.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/yahoo-dom-event/yahoo-dom-event.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/container/container_core-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/menu/menu-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/element/element-beta-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/button/button.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/yahoo-dom-event.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/container_core-min.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/menu-min.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/element-beta-min.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/button-min.js'); ?>" type="text/javascript"></script>
     <script src="<?php $options->adminUrl('/js/typecho.js'); ?>" type="text/javascript"></script>
 </head>
 <body class="yui-skin-sam">
