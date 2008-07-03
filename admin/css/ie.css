@@ -5,3 +5,7 @@ padding: 1px 10px 3px;
 #content #title {
 width: 98%;
 }
+
+input, textarea, select, button {
+vertical-align:baseline
+}

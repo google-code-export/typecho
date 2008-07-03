@@ -67,22 +67,47 @@ $(document).ready(function() {
     $("select").each(function(){
         e = $(this);
         
-        var menus = [];
+        function onMenuItemClick(p_oEven) {
+            alert('ddd');
+            button.set("label", p_oItem.cfg.getProperty("text"));
+        }
+        
         var ilabel = $('option:first', e).html();
+        var currentSelect = 0;
+        var selected = false;
+        
         $('option', e).each(function(){
-            imenu = {text: $(this).html(), value: $(this).val()};
-            menus.push(imenu);
+            /** 设置选定值 */
+            if(true == $(this).attr('selected'))
+            {
+                ilabel = $(this).html();
+                selected = true;
+            }
+            
+            if(!selected)
+            {
+                currentSelect ++;
+            }
         });
 
-        box = document.createElement('span');
-        $(box).insertAfter(e);
-
-        var button = new YAHOO.widget.Button({type: 'menu',
-                                            label: ilabel,
-                                            name: e.attr('name'),
-	                                        menu: menus,
-                                            container: box});
-        e.remove();
+        box = $(document.createElement('input'));
+        box.attr('id', 'typecho-button-' + idPointer);
+        box.attr('type', 'button');
+        box.attr('value', ilabel);
+        e.after(box);
+        
+        var button = new YAHOO.widget.Button('typecho-button-' + idPointer, 
+                                            {type: 'menu', menu: this, srcelement: this, selectedMenuItem: currentSelect});
+        
+        button._menu.subscribe("click", function (p_sType, p_aArgs)
+        {
+            var oMenuItem = p_aArgs[1];
+            if (oMenuItem)
+            {
+                button.set('label', oMenuItem.cfg.getProperty("text"));
+            }
+        });
+        
         idPointer ++;
     });
 });
