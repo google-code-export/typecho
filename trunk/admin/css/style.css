@@ -299,7 +299,7 @@ vertical-align: middle;
 /*
  * Forms
  */
-input, textarea, select {
+input, textarea, select, button {
 font-family:verdana,Helvetica,sans-serif; font-size:1em;
 }
 
