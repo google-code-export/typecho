@@ -35,7 +35,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Submit(_t('保存设置'));
         $submit->button->setAttribute('class', 'submit');
-        $form->addItem($submit->setAttribute('class', 'submit_nav'));
+        $form->addItem($submit);
         
         /** 文章日期格式 */
         $postDateFormat = new Typecho_Widget_Helper_Form_Text('postDateFormat', $this->postDateFormat,

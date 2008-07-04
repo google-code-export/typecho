@@ -39,10 +39,13 @@ class Typecho_Widget_Helper_Form_Submit extends Typecho_Widget_Helper_Layout
      */
     public function __construct($title = NULL)
     {
-        parent::__construct('div');
+        parent::__construct('tr');
+        $td = new Typecho_Widget_Helper_Layout('td');
+        $td->setAttribute('colspan', 2)->setAttribute('class', 'submit');
         $this->button = new Typecho_Widget_Helper_Layout('input');
         $this->button->setAttribute('type', 'submit')->setAttribute('value', $title);
-        $this->addItem($this->button);
+        $td->addItem($this->button);
+        $this->addItem($td);
     }
     
     /**

@@ -80,6 +80,27 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 准备formBody元素
+     * 
+     * @access private
+     * @return void
+     */
+    private function prepare()
+    {
+        if(empty($this->_formBody))
+        {
+            $this->_formBody = new Typecho_Widget_Helper_Layout('table');
+            
+            $tr = new Typecho_Widget_Helper_Layout('tr');
+            $tr->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '20%')))
+            ->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '80%')))
+            ->appendTo($this->_formBody);
+            
+            $this->_formBody->setAttribute('class', 'setting')->appendTo($this);
+        }
+    }
+    
+    /**
      * 设置表单编码方案
      * 
      * @access public
@@ -102,20 +123,30 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function addInput(Typecho_Widget_Helper_Form_Abstract $input)
     {
         $this->_inputs[$input->name] = $input;
-        
-        if(empty($this->_formBody))
+        $this->prepare();
+        $this->_formBody->addItem($input);
+        return $this;
+    }
+    
+    /**
+     * 增加元素(重载)
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Layout $item 表单元素
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function addItem(Typecho_Widget_Helper_Layout $item)
+    {
+        if($item instanceof Typecho_Widget_Helper_Form_Submit)
         {
-            $this->_formBody = new Typecho_Widget_Helper_Layout('table');
-            
-            $tr = new Typecho_Widget_Helper_Layout('tr');
-            $tr->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '20%')))
-            ->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '80%')))
-            ->appendTo($this->_formBody);
-            
-            $this->_formBody->setAttribute('class', 'setting')->appendTo($this);
+            $this->prepare();
+            $this->_formBody->addItem($item);
+        }
+        else
+        {
+            parent::addItem($item);
         }
         
-        $this->_formBody->addItem($input);
         return $this;
     }
     
