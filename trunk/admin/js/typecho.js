@@ -32,14 +32,7 @@ $(document).ready(function() {
 	$(":submit").addClass("submit");
 	$(":button").addClass("button");
     
-    $(".latest .publish").corner("5px");
-    $(".latest .unpublish").corner("5px");
-    $(".latest .spam").corner("5px");
-    $(".latest .waiting").corner("5px");
-    $(".latest .approved").corner("5px");
-    $(".latest .activated").corner("5px");
-    $(".latest .deactivated").corner("5px");
-    $(".latest .config").corner("5px");
+    $(".latest .publish,.latest .unpublish,.latest .spam,.latest .waiting,.latest .approved,.latest .activated,.latest .deactivated,.latest .config").corner("5px");
     
     var idPointer = 1;
     
