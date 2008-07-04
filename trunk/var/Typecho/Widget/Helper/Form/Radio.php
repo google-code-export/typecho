@@ -103,6 +103,12 @@ class Typecho_Widget_Helper_Form_Radio extends Typecho_Widget_Helper_Form_Abstra
         ->appendTo($this->rightTd);
         $this->input = $this->_options[$value];
         
+        if(!isset($this->rules['_default']))
+        {
+            $this->rules['_default'] = array('enum', 'ERROR VALUE', array());
+        }
+        $this->rules['_default'][2][] = $value;
+        
         $labelItem = new Typecho_Widget_Helper_Layout('label');
         $labelItem->setAttribute('for', $this->name . '-' . $value)
         ->html($label . '&nbsp;')->appendTo($this->rightTd);

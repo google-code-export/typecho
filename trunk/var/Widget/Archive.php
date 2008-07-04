@@ -55,6 +55,14 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * @var array
      */
     private $_pageRow;
+    
+    /**
+     * 当前登录用户
+     * 
+     * @access public
+     * @var Typecho_Widget
+     */
+    public $user;
 
     /**
      * 入口函数
@@ -66,6 +74,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     public function __construct($pageSize = NULL)
     {
         parent::__construct();
+        
+        /** 初始化用户 */
+        $this->user = Typecho_API::factory('Widget_Users_Current');
     
         /** 处理搜索结果跳转 */
         if(NULL != ($keywords = Typecho_Request::getParameter('keywords')) &&
@@ -561,6 +572,10 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         /** 添加Pingback */
         header('X-Pingback:' . $this->options->xmlRpcUrl);
     
+        /** 输出模板 */
         require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->_themeFile;
+        
+        /** 挂接插件 */
+        _p(__FILE__, 'Action')->render($this);
     }
 }
