@@ -153,7 +153,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Submit();
         $submit->button->setAttribute('class', 'submit');
-        $form->addItem($submit->setAttribute('class', 'submit_nav'));
+        $form->addItem($submit);
 
         if(NULL != Typecho_Request::getParameter('mid'))
         {

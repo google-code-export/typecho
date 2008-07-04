@@ -57,7 +57,7 @@ require_once 'menu.php';
 			<p><input id="title" class="text" type="text" name="title" onfocus="this.select();" value="<?php $post->title(); ?>" /></p>
 			<h4><?php _e('内容'); ?></h4>
 			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $post->text(); ?></textarea></p>
-			<p style="text-align: right;">
+			<p style="text-align: right;" class="submit">
                 <input type="button" class="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
                 <input type="button" class="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" />
                 <input type="submit" class="submit" value="<?php _e('发布'); ?>" />

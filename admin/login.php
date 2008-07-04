@@ -8,17 +8,11 @@ require_once 'common.php';
     <link href="<?php $options->adminUrl('/css/default.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/css/style.css'); ?>" rel="stylesheet" type="text/css" />
     <link href="<?php $options->adminUrl('/css/hack.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php $options->adminUrl('/css/fonts-min.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php $options->adminUrl('/css/button.css'); ?>" rel="stylesheet" type="text/css" />
-    <link href="<?php $options->adminUrl('/css/menu.css'); ?>" rel="stylesheet" type="text/css" />
+    <link href="<?php $options->adminUrl('/css/yui.css'); ?>" rel="stylesheet" type="text/css" />
     <!--[if IE]><link rel="stylesheet" href="<?php $options->adminUrl('/css/ie.css'); ?>" type="text/css" media="screen, projection"><![endif]-->
     <script src="<?php $options->adminUrl('/js/jquery-1.2.3.pack.js'); ?>" type="text/javascript"></script>
     <script src="<?php $options->adminUrl('/js/jquery.curvycorners.packed.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/yahoo-dom-event.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/container_core-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/menu-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/element-beta-min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php $options->adminUrl('/js/button-min.js'); ?>" type="text/javascript"></script>
+    <script src="<?php $options->adminUrl('/js/yui.js'); ?>" type="text/javascript"></script>
     <script src="<?php $options->adminUrl('/js/typecho.js'); ?>" type="text/javascript"></script>
 </head>
 
@@ -37,7 +31,7 @@ require_once 'common.php';
 			<?php endif; ?>
 			<a href="<?php $options->adminUrl('get-password.php'); ?>"><?php _e('忘记密码?'); ?></a><br />
 			<a href="<?php $options->siteUrl(); ?>"><?php _e('返回%s &raquo;', $options->title); ?></a></p>
-			<p class="right"><input type="submit" class="submit" value="<?php _e('登录'); ?>" />
+			<p class="right submit"><input type="submit" class="submit" value="<?php _e('登录'); ?>" />
             <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" /></p>
             <script>
                 document.getElementById("name").focus();
