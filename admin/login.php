@@ -41,6 +41,9 @@ require_once 'common.php';
             <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" /></p>
             <script>
                 document.getElementById("name").focus();
+                $(".yui-button").ready(function(){
+                    document.getElementById("name").focus();
+                });
             </script>
 		</form>
 		<?php else: ?>

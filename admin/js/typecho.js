@@ -114,9 +114,8 @@ $(document).ready(function() {
     });
     
     /** 替换输入项样式 */
-    var focused = false;
     $("input[@type=text], input[@type=password]").each(function(){
-        e = $(this);
+        var e = $(this);
         e.css("border-width", "0");
         e.css("background-color", "transparent");
         
@@ -130,8 +129,6 @@ $(document).ready(function() {
         e.width(e.width());
         e.height(e.height());
         e.appendTo(e2);
-        
-        if(!focused) { this.focus(); focused = true; }
     });
     
     /** 替换多行输入项样式 */
