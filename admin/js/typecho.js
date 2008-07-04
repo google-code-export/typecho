@@ -171,33 +171,39 @@ $(document).ready(function() {
                 name:  e.attr('name'),
                 container: icontainer
             });
-            
+            /*
             hiddenList[e.attr('name')] = document.createElement("input");
             hidden = $(hiddenList[e.attr('name')]);
             hidden.attr('name', e.attr('name'));
             hidden.attr('type', 'hidden');
             e.after(hidden);
-        }
-        
-        function onClick(p_aArgs)
-        {
-            $(hiddenList[this.get('name')]).val(this.get('value'));
+            */
         }
         
         button = { label: $("label[@for=" + e.attr("id") + "]").html(), name: e.attr('name'),
-        value: e.val() , onclick: {fn: onClick}};
-        if(e.attr('checked')){button.checked = true; hidden.val(e.val());}
+        value: e.val(), onclick: {fn: function(e){
+            $("input[@name=" + this.get('name') + "]").removeAttr("checked");
+            var checkedValue = this.get('value');
+            $("input[@name=" + this.get('name') + "]").each(function(){
+                if(checkedValue == $(this).val())
+                {
+                    $(this).attr("checked", true);
+                }
+            });
+        }}};
+        if(e.attr('checked')){button.checked = true;}
         radioList[e.attr('name')].addButtons([button]);
         
         $("label[@for=" + e.attr("id") + "]").remove();
-        e.remove();
+        e.hide();
     });
     
     /** 替换多选框 */
     $("input[@type=checkbox]").each(function(){
         e = $(this);
-        
-        if(!$("label[@for=" + e.attr("id") + "]").html()) return;
+
+        if(!$("label[@for=" + e.attr("id") + "]").html() || "LABEL" == this.parentNode.tagName
+         || "label" == this.parentNode.tagName) return;
         
         icontainer = document.createElement("span");
         e.before(icontainer);
