@@ -167,15 +167,12 @@ class Typecho_Validate
      * 
      * @access public
      * @param string $str 待处理的字符串
-     * @param mixed $param 枚举值
+     * @param array $params 枚举值
      * @return unknown
      */
-    public function enum($str)
+    public function enum($str, array $params)
     {
-        $args = func_get_args();
-        array_shift($args);
-        
-        return in_array($str, $args);
+        return in_array($str, $params);
     }
 
     /**

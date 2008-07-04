@@ -49,10 +49,39 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsListSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
         
+        /** 是否在列表中的评论者处显示其个人主页链接 */
+        $commentsShowUrl = new Typecho_Widget_Helper_Form_Radio('commentsShowUrl', array('0' => _t('不显示'), '1' => _t('显示')),
+        $this->commentsShowUrl, _t('是否在列表中的评论者名称处显示其个人主页链接'));
+        $form->addInput($commentsShowUrl);
+        
+        /** 是否对评论者个人链接使用nofollow属性 */
+        $commentsUrlNofollow = new Typecho_Widget_Helper_Form_Radio('commentsUrlNofollow', array('0' => _t('不启用'), '1' => _t('启用')),
+        $this->commentsUrlNofollow, _t('是否对评论者个人链接使用nofollow属性'));
+        $form->addInput($commentsUrlNofollow);
+        
         /** 评论审核 */
         $commentsRequireModeration = new Typecho_Widget_Helper_Form_Radio('commentsRequireModeration', array('0' => _t('不需要'), '1' => _t('需要')),
         $this->commentsRequireModeration, _t('评论审核'));
         $form->addInput($commentsRequireModeration);
+        
+        /** 在文章发布一段时间后自动关闭评论和广播功能 */
+        $commentsPostTimeout = new Typecho_Widget_Helper_Form_Select('commentsPostTimeout', array('0' => _t('永不关闭'), '86400' => _t('一天后关闭'),
+        '259200' => _t('三天后关闭'), '1296000' => _t('半个月后关闭'), '2592000' => _t('一个月后关闭'), '7776000' => _t('三个月后关闭'),
+        '15552000' => _t('半年后关闭'), '31104000' => _t('一年后关闭')),
+        $this->commentsPostTimeout, _t('在文章发布一段时间后自动关闭评论和广播功能'));
+        $form->addInput($commentsPostTimeout);
+        
+        /** 对单一IP的评论时间间隔限制 */
+        $commentsUniqueIpInterval = new Typecho_Widget_Helper_Form_Select('commentsUniqueIpInterval', array('0' => _t('不限制'), '30' => _t('半分钟'),
+        '60' => _t('一分钟'), '180' => _t('三分钟'), '300' => _t('五分钟'), '900' => _t('一刻钟'), '1800' => _t('半小时'), '3600' => _t('一小时')),
+        $this->commentsUniqueIpInterval, _t('对单一IP的评论时间间隔限制'));
+        $form->addInput($commentsUniqueIpInterval);
+        
+        /** 对访客提交评论时的浏览时长要求 */
+        $commentsBrowseTimeout = new Typecho_Widget_Helper_Form_Select('commentsBrowseTimeout', array('0' => _t('不限制'), '30' => _t('半分钟'),
+        '60' => _t('一分钟'), '180' => _t('三分钟'), '300' => _t('五分钟'), '900' => _t('一刻钟'), '1800' => _t('半小时'), '3600' => _t('一小时')),
+        $this->commentsBrowseTimeout, _t('对访客提交评论时的浏览时长要求'));
+        $form->addInput($commentsBrowseTimeout);
         
         /** 必须填写邮箱 */
         $commentsRequireMail = new Typecho_Widget_Helper_Form_Radio('commentsRequireMail', array('0' => _t('不需要'), '1' => _t('需要')),
@@ -69,6 +98,18 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         _t('允许使用的HTML标签和属性'), _t('站点描述将显示在网页代码的头部.'));
         $commentsHTMLTagAllowed->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
         $form->addInput($commentsHTMLTagAllowed);
+        
+        /** 在评论中禁止出现的词汇 */
+        $commentsStopWords = new Typecho_Widget_Helper_Form_Textarea('commentsStopWords', htmlentities($this->commentsStopWords, ENT_NOQUOTES, $this->charset),
+        _t('在评论中禁止出现的词汇'), _t('站点描述将显示在网页代码的头部.'));
+        $commentsStopWords->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
+        $form->addInput($commentsStopWords);
+        
+        /** 在评论者IP黑名单 */
+        $commentsIpBlackList = new Typecho_Widget_Helper_Form_Textarea('commentsIpBlackList', $this->commentsIpBlackList,
+        _t('在评论者IP黑名单'), _t('站点描述将显示在网页代码的头部.'));
+        $commentsIpBlackList->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
+        $form->addInput($commentsIpBlackList);
         
         /** 动作 */
         $do = new Typecho_Widget_Helper_Form_Hidden('do', 'update');

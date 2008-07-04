@@ -102,6 +102,13 @@ class Typecho_Widget_Helper_Form_Select extends Typecho_Widget_Helper_Form_Abstr
     {
         $this->_options[$value] = new Typecho_Widget_Helper_Layout('option');
         $this->input->addItem($this->_options[$value]->setAttribute('value', $value)->html($label));
+        
+        if(!isset($this->rules['_default']))
+        {
+            $this->rules['_default'] = array('enum', 'ERROR VALUE', array());
+        }
+        $this->rules['_default'][2][] = $value;
+        
         return $this;
     }
     

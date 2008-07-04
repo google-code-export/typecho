@@ -60,16 +60,17 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         
         //检验格式
         $validator = new Typecho_Validate();
+        $user = Typecho_API::factory('Widget_Users_Current');
         $validator->addRule('author', 'required', _t('必须填写用户名'));
 
-        if($this->options->commentsRequireMail)
+        if($this->options->commentsRequireMail && !$user->hasLogin())
         {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
 
-        if($this->options->commentsRequireUrl)
+        if($this->options->commentsRequireUrl && !$user->hasLogin())
         {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
@@ -77,25 +78,36 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $validator->addRule('url', 'url', _t('个人主页地址不合法'));
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $validator->run(Typecho_Request::getParametersFrom('author', 'mail', 'url', 'text'));
-
-        $comment['author'] = strip_tags(Typecho_Request::getParameter('author'));
-        $comment['mail'] = strip_tags(Typecho_Request::getParameter('mail'));
-        $comment['url'] = strip_tags(Typecho_Request::getParameter('url'));
+        $comment['author'] = strip_tags(Typecho_Request::getParameter('author', $user->screenName));
+        $comment['mail'] = strip_tags(Typecho_Request::getParameter('mail', $user->mail));
+        $comment['url'] = strip_tags(Typecho_Request::getParameter('url', $user->url));
         $comment['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('text'), $this->options->commentsHTMLTagAllowed);
 
-        Typecho_Request::setCookie('author', $comment['author']);
-        Typecho_Request::setCookie('mail', $comment['mail']);
-        Typecho_Request::setCookie('url', $comment['url']);
-        Typecho_Request::setCookie('text', $comment['text']);
+        /** 将用户数据保存一个月 */
+        $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
+
+        Typecho_Request::setCookie('author', $comment['author'], $expire);
+        Typecho_Request::setCookie('mail', $comment['mail'], $expire);
+        Typecho_Request::setCookie('url', $comment['url'], $expire);
+        
+        try
+        {
+            $validator->run($comment);
+        }
+        catch(Typecho_Validate_Exception $e)
+        {
+            /** 记录文字 */
+            Typecho_Request::setCookie('text', $comment['text']);
+            throw new Typecho_Widget_Exception($e->getMessages());
+        }
         
         /** 生成过滤器 */
         $comment = _p(__FILE__, 'Filter')->comment($comment);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
-        
         Typecho_Request::deleteCookie('text');
+        
         Typecho_API::goBack('#comments-' . $commentId);
     }
     
