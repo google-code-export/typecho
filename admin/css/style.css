@@ -151,6 +151,8 @@ margin-bottom: 1.5em;
 border: 1px solid #D6E3F1;
 }
 
+.submit_nav { border: none; font-size: 110%; margin-bottom: 1.5em; background:#E6EEF7; padding: .6em .5em; }
+
 .page_nav a, .page_nav span {
 background: url(../images/button.gif) 0% 30% repeat-x;
 padding: 2px 5px;
