@@ -539,6 +539,18 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     }
     
     /**
+     * 输出cookie记忆别名
+     * 
+     * @access public
+     * @param unknown $cookieName
+     * @return unknown
+     */
+    public function remember($cookieName)
+    {
+        echo Typecho_Request::getCookie($cookieName);
+    }
+    
+    /**
      * 输出视图
      * 
      * @access public

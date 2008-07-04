@@ -65,7 +65,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $form->addInput($commentsRequireURL);
         
         /** 允许使用的HTML标签和属性 */
-        $commentsHTMLTagAllowed = new Typecho_Widget_Helper_Form_Textarea('commentsHTMLTagAllowed', $this->commentsHTMLTagAllowed,
+        $commentsHTMLTagAllowed = new Typecho_Widget_Helper_Form_Textarea('commentsHTMLTagAllowed', htmlspecialchars($this->commentsHTMLTagAllowed),
         _t('允许使用的HTML标签和属性'), _t('站点描述将显示在网页代码的头部.'));
         $commentsHTMLTagAllowed->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
         $form->addInput($commentsHTMLTagAllowed);

@@ -261,7 +261,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      */
     public function date($format = NULL)
     {
-        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->created + $this->options->timezone);
+        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
     }
     
     /**
@@ -272,7 +272,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      */
     public function dateWord()
     {
-        echo Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+        echo Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }
     
     /**
