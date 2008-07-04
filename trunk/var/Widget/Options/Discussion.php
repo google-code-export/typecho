@@ -35,7 +35,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Submit(_t('保存设置'));
         $submit->button->setAttribute('class', 'submit');
-        $form->addItem($submit->setAttribute('class', 'table_nav'));
+        $form->addItem($submit->setAttribute('class', 'submit_nav'));
         
         /** 评论日期格式 */
         $commentDateFormat = new Typecho_Widget_Helper_Form_Text('commentDateFormat', $this->commentDateFormat,
@@ -67,7 +67,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 在文章发布一段时间后自动关闭评论和广播功能 */
         $commentsPostTimeout = new Typecho_Widget_Helper_Form_Select('commentsPostTimeout', array('0' => _t('永不关闭'), '86400' => _t('一天后关闭'),
         '259200' => _t('三天后关闭'), '1296000' => _t('半个月后关闭'), '2592000' => _t('一个月后关闭'), '7776000' => _t('三个月后关闭'),
-        '15552000' => _t('半年后关闭'), '31104000' => _t('一年后关闭')),
+        '15552000' => _t('半年后关闭'), '31536000' => _t('一年后关闭')),
         $this->commentsPostTimeout, _t('在文章发布一段时间后自动关闭评论和广播功能'));
         $form->addInput($commentsPostTimeout);
         
@@ -105,9 +105,9 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsStopWords->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
         $form->addInput($commentsStopWords);
         
-        /** 在评论者IP黑名单 */
+        /** 评论者IP黑名单 */
         $commentsIpBlackList = new Typecho_Widget_Helper_Form_Textarea('commentsIpBlackList', $this->commentsIpBlackList,
-        _t('在评论者IP黑名单'), _t('站点描述将显示在网页代码的头部.'));
+        _t('评论者IP黑名单'), _t('站点描述将显示在网页代码的头部.'));
         $commentsIpBlackList->input->setAttribute('style', 'width:90%')->setAttribute('rows', '5');
         $form->addInput($commentsIpBlackList);
         

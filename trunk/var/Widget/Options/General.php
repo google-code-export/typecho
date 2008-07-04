@@ -35,7 +35,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Submit(_t('保存设置'));
         $submit->button->setAttribute('class', 'submit');
-        $form->addItem($submit->setAttribute('class', 'table_nav'));
+        $form->addItem($submit->setAttribute('class', 'submit_nav'));
         
         /** 站点名称 */
         $title = new Typecho_Widget_Helper_Form_Text('title', $this->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));

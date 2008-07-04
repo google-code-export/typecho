@@ -22,7 +22,7 @@ require_once 'menu.php';
             $categories = ($categories = Typecho_API::arrayFlatten(empty($post->categories) ? array() : $post->categories, 'mid')) ? $categories : ($post->cid ? array() : array($options->defaultCategory)); ?>
             <?php if($category->have()): ?>
             <?php while($category->get()): ?>
-                <li><span class="right"><a href="#">&times;</a></span><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
+                <li><label for="category-<?php $category->mid(); ?>"><input type="checkbox" name="category[]" value="<?php $category->mid(); ?>" <?php if(in_array($category->mid, $categories)){echo 'checked="true"';} ?> id="category-<?php $category->mid(); ?>" /> <?php $category->name(); ?></label></li>
             <?php endwhile; ?>
             <?php else: ?>
                 <li><?php _e('没有任何分类'); ?></li>
