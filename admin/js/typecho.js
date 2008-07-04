@@ -114,6 +114,7 @@ $(document).ready(function() {
     });
     
     /** 替换输入项样式 */
+    var focused = false;
     $("input[@type=text], input[@type=password]").each(function(){
         e = $(this);
         e.css("border-width", "0");
@@ -126,11 +127,11 @@ $(document).ready(function() {
         e2 = $(document.createElement("span"));
         e2.addClass("first-child typecho-input-first-child");
         e2.appendTo(e1);
-        e3 = e.clone();
-        e3.width(e.width());
-        e3.height(e.height());
-        e3.appendTo(e2);
-        e.remove();
+        e.width(e.width());
+        e.height(e.height());
+        e.appendTo(e2);
+        
+        if(!focused) { this.focus(); focused = true; }
     });
     
     /** 替换多行输入项样式 */
