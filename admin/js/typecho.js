@@ -162,13 +162,6 @@ $(document).ready(function() {
                 name:  e.attr('name'),
                 container: icontainer
             });
-            /*
-            hiddenList[e.attr('name')] = document.createElement("input");
-            hidden = $(hiddenList[e.attr('name')]);
-            hidden.attr('name', e.attr('name'));
-            hidden.attr('type', 'hidden');
-            e.after(hidden);
-            */
         }
         
         button = { label: $("label[@for=" + e.attr("id") + "]").html(), name: e.attr('name'),
