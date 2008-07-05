@@ -62,6 +62,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $validator = new Typecho_Validate();
         $user = Typecho_API::factory('Widget_Users_Current');
         $validator->addRule('author', 'required', _t('必须填写用户名'));
+        $validator->addRule('author', array($this, 'requireUserLogin'), _t('您所使用的用户名已经被注册,请登录后再次提交'));
 
         if($this->options->commentsRequireMail && !$user->hasLogin())
         {
@@ -83,12 +84,14 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $comment['url'] = strip_tags(Typecho_Request::getParameter('url', $user->url));
         $comment['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('text'), $this->options->commentsHTMLTagAllowed);
 
-        /** 将用户数据保存一个月 */
-        $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
-
-        Typecho_Request::setCookie('author', $comment['author'], $expire);
-        Typecho_Request::setCookie('mail', $comment['mail'], $expire);
-        Typecho_Request::setCookie('url', $comment['url'], $expire);
+        /** 对一般匿名访问者,将用户数据保存一个月 */
+        if(!$user->hasLogin())
+        {
+            $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
+            Typecho_Request::setCookie('author', $comment['author'], $expire);
+            Typecho_Request::setCookie('mail', $comment['mail'], $expire);
+            Typecho_Request::setCookie('url', $comment['url'], $expire);
+        }
         
         try
         {
@@ -137,6 +140,32 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
+    }
+    
+    /**
+     * 对已注册用户的保护性检测
+     * 
+     * @access public
+     * @param string $userName 用户名
+     * @return void
+     */
+    public function requireUserLogin($userName)
+    {
+        $user = Typecho_API::factory('Widget_Users_Current');
+        
+        if($user->hasLogin() && $user->name != $userName)
+        {
+            /** 当前用户名与提交者不匹配 */
+            return false;
+        }
+        else if(!$user->hasLogin() && $this->db->fetchRow($this->db->sql()->select('table.users', '`uid`')
+        ->where('name = ?', $userName)->limit(1)))
+        {
+            /** 此用户名已经被注册 */
+            return false;
+        }
+        
+        return true;
     }
 
     /**
