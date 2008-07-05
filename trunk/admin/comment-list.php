@@ -12,17 +12,17 @@ require_once 'menu.php';
             
 			<div class="table_nav">
             <form action="<?php $options->adminUrl('comment-list.php'); ?>">
-				<input type="button" class="button" onclick="$('input[@name=do]').val('approved');comment.submit();" value="<?php _e('展现'); ?>" />
-				<input type="button" class="button" onclick="$('input[@name=do]').val('spam');comment.submit();" value="<?php _e('垃圾'); ?>" />
-				<input type="button" class="button" onclick="$('input[@name=do]').val('waiting');comment.submit();" value="<?php _e('待审核'); ?>" />
-				<input type="button" class="button" onclick="$('input[@name=do]').val('delete');comment.submit();" value="<?php _e('删除'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/accept.gif'); ?>" type="button" class="button" onclick="$('input[@name=do]').val('approved');comment.submit();" value="<?php _e('呈现'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/exclamation.gif'); ?>" type="button" class="button" onclick="$('input[@name=do]').val('spam');comment.submit();" value="<?php _e('垃圾'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/error.gif'); ?>" type="button" class="button" onclick="$('input[@name=do]').val('waiting');comment.submit();" value="<?php _e('待审核'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="button" class="button" onclick="$('input[@name=do]').val('delete');comment.submit();" value="<?php _e('删除'); ?>" />
 				<input type="text" class="text" id="" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status" style="width: 160px;">
 					<option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
                         <?php _e('所有评论 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid")->num); ?>
                     </option>
 					<option value="approved" <?php Typecho_Request::callParameter('status', 'approved', 'selected="selected"'); ?>>
-                        <?php _e('展现 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=approved")->num); ?>
+                        <?php _e('呈现 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=approved")->num); ?>
                     </option>
 					<option value="waiting" <?php Typecho_Request::callParameter('status', 'waiting', 'selected="selected"'); ?>>
                         <?php _e('待审核 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=waiting")->num); ?>
@@ -31,7 +31,7 @@ require_once 'menu.php';
                         <?php _e('垃圾箱 (%d)', Typecho_API::factory('*Widget_Count', "from=table.comments&count=coid&status=spam")->num); ?>
                     </option>
 				</select>
-				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/filter.gif'); ?>" type="submit" class="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>
 
@@ -76,12 +76,12 @@ require_once 'menu.php';
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
-					<td><span class="<?php $comments->status(); ?>">
+					<td>
                     <?php
                         switch($comments->status)
                         {
                             case 'approved':
-                                echo _t('展现');
+                                echo _t('呈现');
                                 break;
                             case 'spam':
                                 echo _t('垃圾');
@@ -93,7 +93,7 @@ require_once 'menu.php';
                                 echo _t('不明');
                                 break;
                         }
-                    ?></span></td>
+                    ?></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

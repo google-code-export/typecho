@@ -13,8 +13,8 @@ Typecho_API::factory('Widget_Metas_Link_List')->to($links);
         
 		<form method="post" action="<?php $options->index('/Metas/Link/Edit.do'); ?>">
 			<div class="table_nav">
-                <input type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-links.php'); ?>#edit'" value="<?php _e('增加链接'); ?>" />
-				<input type="submit" class="submit" value="<?php _e('删除'); ?>" />
+                <input rel="<?php $options->adminUrl('/images/icons/add.gif'); ?>" type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-links.php'); ?>#edit'" value="<?php _e('增加链接'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="submit" class="submit" value="<?php _e('删除'); ?>" />
                 <input type="hidden" name="do" value="delete" />
 			</div>
 
@@ -33,7 +33,7 @@ Typecho_API::factory('Widget_Metas_Link_List')->to($links);
                     <input type="hidden" name="sort[]" value="<?php $links->mid(); ?>" /></td>
 					<td><a href="<?php $options->adminUrl('/manage-links.php?mid=' . $links->mid); ?>#edit"><?php $links->name(); ?></a></td>
 					<td><?php $links->description(); ?></td>
-					<td><a target="_blank" href="<?php $links->url(); ?>"><?php $links->url(); ?></a></td>
+					<td><a target="_blank" href="<?php $links->url(); ?>"><?php $links->domainPath(); ?></a></td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

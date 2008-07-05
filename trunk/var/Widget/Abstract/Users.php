@@ -26,6 +26,14 @@ class Widget_Abstract_Users extends Typecho_Widget_Abstract_Dataset
      * @var array
      */
     public $groups;
+    
+    /**
+     * 实例化的配置对象
+     *
+     * @access protected
+     * @var TypechoWidget
+     */
+    protected $options;
 
     /**
      * 构造函数,初始化用户组
@@ -36,6 +44,9 @@ class Widget_Abstract_Users extends Typecho_Widget_Abstract_Dataset
     public function __construct()
     {
         parent::__construct();
+    
+        /** 初始化常用widget */
+        $this->options = Typecho_API::factory('Widget_Abstract_Options');
     
         $this->groups = array(
             'administrator' => 0,

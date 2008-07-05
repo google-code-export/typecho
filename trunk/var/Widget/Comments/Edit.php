@@ -147,7 +147,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
         
         /** 设置提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为展现') : _t('没有评论被标记为展现'), NULL,
+        Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被呈现') : _t('没有评论被呈现'), NULL,
         $updateRows > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */

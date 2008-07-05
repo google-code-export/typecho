@@ -153,13 +153,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
     {
         $user = Typecho_API::factory('Widget_Users_Current');
         
-        if($user->hasLogin() && $user->name != $userName)
+        if($user->hasLogin() && $user->screenName != $userName)
         {
             /** 当前用户名与提交者不匹配 */
             return false;
         }
         else if(!$user->hasLogin() && $this->db->fetchRow($this->db->sql()->select('table.users', '`uid`')
-        ->where('name = ?', $userName)->limit(1)))
+        ->where('`screenName` = ? OR `name` = ?', $userName, $userName)->limit(1)))
         {
             /** 此用户名已经被注册 */
             return false;

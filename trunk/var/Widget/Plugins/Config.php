@@ -90,7 +90,7 @@ class Widget_Plugins_Config extends Typecho_Widget
                     /** 提交按钮 */
                     $submit = new Typecho_Widget_Helper_Form_Submit();
                     $submit->button->setAttribute('class', 'submit');
-                    $this->form->addItem($submit->value(_t('保存配置'))->setAttribute('class', 'table_nav'));
+                    $this->form->addItem($submit->value(_t('保存配置')));
                 }
                 catch(Typecho_Plugin_Exception $e)
                 {

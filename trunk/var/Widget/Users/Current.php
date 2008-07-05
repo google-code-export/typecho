@@ -11,14 +11,6 @@
 class Widget_Users_Current extends Widget_Abstract_Users
 {
     /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var Typecho_Widget
-     */
-    protected $options;
-
-    /**
      * 用户
      *
      * @access private
@@ -43,9 +35,6 @@ class Widget_Users_Current extends Widget_Abstract_Users
     public function __construct()
     {
         parent::__construct();
-    
-        /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Abstract_Options');
         
         if($this->hasLogin())
         {

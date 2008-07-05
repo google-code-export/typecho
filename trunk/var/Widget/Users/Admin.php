@@ -85,6 +85,18 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     }
     
     /**
+     * 仅仅输出域名和路径
+     * 
+     * @access public
+     * @return void
+     */
+    public function domainPath()
+    {
+        $parts = parse_url($this->url);
+        echo $parts['host'] . (isset($parts['path']) ? $parts['path'] : NULL);
+    }
+    
+    /**
      * 输出分页
      * 
      * @access public
