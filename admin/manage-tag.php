@@ -13,12 +13,12 @@ require_once 'menu.php';
         
 		<form method="get">
 			<div class="table_nav">
-                <input type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
-				<input type="button" class="button" onclick="$('#tag input[@name=do]').val('delete');tag.submit();" value="<?php _e('删除'); ?>" />
+                <input rel="<?php $options->adminUrl('/images/icons/add.gif'); ?>" type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-tag.php'); ?>#edit'" value="<?php _e('增加标签'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="button" class="button" onclick="$('#tag input[@name=do]').val('delete');tag.submit();" value="<?php _e('删除'); ?>" />
                 <input type="text" class="text" style="width: 120px;" value="<?php _e('请输入合并入的标签'); ?>" onclick="value='';" id="merge" />
-                <input type="button" class="button" onclick="$('#tag input[@name=do]').val('merge');$('#tag input[@name=merge]').val($('#merge').val());tag.submit();" value="<?php _e('合并'); ?>" />
+                <input rel="<?php $options->adminUrl('/images/icons/arrow_join.gif'); ?>" type="button" class="button" onclick="$('#tag input[@name=do]').val('merge');$('#tag input[@name=merge]').val($('#merge').val());tag.submit();" value="<?php _e('合并'); ?>" />
                 <input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
-                <input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
+                <input rel="<?php $options->adminUrl('/images/icons/filter.gif'); ?>" type="submit" class="submit" value="<?php _e('过滤'); ?>" />
 			</div>
         </form>
         

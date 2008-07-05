@@ -20,6 +20,18 @@
 class Widget_Metas_Link_List extends Typecho_Widget
 {
     /**
+     * 仅仅输出域名和路径
+     * 
+     * @access public
+     * @return void
+     */
+    public function domainPath()
+    {
+        $parts = parse_url($this->url);
+        echo $parts['host'] . (isset($parts['path']) ? $parts['path'] : NULL);
+    }
+
+    /**
      * 初始化数据
      * 
      * @access public

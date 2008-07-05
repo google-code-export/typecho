@@ -12,7 +12,7 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
             
 			<div class="table_nav">
             <form action="<?php $options->adminUrl('post-list.php'); ?>">
-				<input type="button" id="test-1" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="button" class="button" value="<?php _e('删除'); ?>" onclick="post.submit();" />
 				<input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<?php Typecho_API::factory('Widget_Query', 'from=table.metas&type=category&order=sort&sort=ASC')->to($category); ?>
                 <select name="category" style="width: 160px;">
@@ -45,7 +45,7 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
                         <?php _e('我的草稿 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&author={$access->uid}&type=draft")->num); ?>
                     </option>
 				</select>
-				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/filter.gif'); ?>" type="submit" class="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>
             
@@ -71,9 +71,9 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
                     <td><?php $posts->category(' | ', true, _t('没有分类')); ?></td>
                     <td><?php $posts->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                     <td><?php if('post' == $posts->type):
-                    _e('<a class="publish" href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
+                    _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
                     else:
-                    _e('<span class="unpublish">草稿</a>');
+                    _e('<span>草稿</a>');
                     endif;?>
                     <?php if(NULL != $posts->password): ?><sup><strong><?php _e('密码'); ?></strong></sup><?php endif; ?>
                     </td>

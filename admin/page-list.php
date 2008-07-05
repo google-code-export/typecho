@@ -12,7 +12,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
             
 			<div class="table_nav">
             <form action="<?php $options->adminUrl('page-list.php'); ?>">
-				<input type="button" class="button" value="<?php _e('删除'); ?>" onclick="page.submit();" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="button" class="button" value="<?php _e('删除'); ?>" onclick="page.submit();" />
 				<input type="text" class="text" style="width: 200px;" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
 				<select name="status">
 					<option value="all" <?php Typecho_Request::callParameter('status', 'all', 'selected="selected"'); ?>>
@@ -25,7 +25,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                         <?php _e('草稿 (%d)', Typecho_API::factory('*Widget_Count', "from=table.contents&count=cid&type=page_draft")->num); ?>
                     </option>
 				</select>
-				<input type="submit" class="submit" value="<?php _e('过滤'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/filter.gif'); ?>" type="submit" class="submit" value="<?php _e('过滤'); ?>" />
             </form>
 			</div>
             
@@ -50,9 +50,9 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                     <td><?php $page->dateWord(); ?></td>
                     <td><?php $page->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                     <td><?php if('page' == $page->type):
-                    _e('<a class="publish" href="%s" title="在新页面打开" target="_blank">已发布</a>', $page->permalink);
+                    _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $page->permalink);
                     else:
-                    _e('<span class="unpublish">草稿</span>');
+                    _e('草稿');
                     endif;?>
                     </td>
                 </tr>

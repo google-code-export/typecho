@@ -12,13 +12,13 @@ require_once 'menu.php';
         
 		<form method="post" id="category" name="category" action="<?php $options->index('/Metas/Category/Edit.do'); ?>">
 			<div class="table_nav">
-                <input type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
-				<input type="button" class="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
+                <input rel="<?php $options->adminUrl('/images/icons/add.gif'); ?>" type="button" class="button" onclick="window.location = '<?php $options->adminUrl('/manage-cat.php'); ?>#edit'" value="<?php _e('增加分类'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/delete.gif'); ?>" type="button" class="button" onclick="$('#category input[@name=do]').val('delete');category.submit();" value="<?php _e('删除'); ?>" />
 				<select name="merge" style="width: 160px;">
                     <?php Typecho_API::factory('Widget_Query', 'from=table.metas&type=category&order=sort&sort=ASC')
                     ->parse('<option value="{mid}">{name}</option>'); ?>
 				</select>
-				<input type="button" class="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
+				<input rel="<?php $options->adminUrl('/images/icons/arrow_join.gif'); ?>" type="button" class="button" onclick="$('#category input[@name=do]').val('merge');category.submit();" value="<?php _e('合并'); ?>" />
                 <input type="hidden" name="do" value="delete" />
 			</div>
 

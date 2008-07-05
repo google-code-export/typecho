@@ -296,6 +296,21 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
     }
     
     /**
+     * 调用gravatar输出用户头像
+     * 
+     * @access public
+     * @param integer $size 头像尺寸
+     * @param string $rating 头像评级
+     * @param string $default 默认输出头像
+     * @return void
+     */
+    public function avatar($size = 40, $rating = 'X', $default = NULL)
+    {
+        echo '<img src="http://www.gravatar.com/avatar.php?gravatar_id=' . md5($this->mail) . '&size=' .
+        $rating . '&default=' . $default . '" alt="' . $this->author . '" width="' . $size . '" height="' . $size . '" />';
+    }
+    
+    /**
      * 输出格式化后的内容
      * 
      * @access public

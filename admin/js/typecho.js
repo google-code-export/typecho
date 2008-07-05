@@ -31,9 +31,7 @@ $(document).ready(function() {
 	$(":password").addClass("password");
 	$(":submit").addClass("submit");
 	$(":button").addClass("button");
-    
-    $(".latest .publish,.latest .unpublish,.latest .spam,.latest .waiting,.latest .approved,.latest .activated,.latest .deactivated,.latest .config").corner("5px");
-    
+
     var idPointer = 1;
     
     /** 替换按钮样式 */
@@ -55,7 +53,25 @@ $(document).ready(function() {
         {
             YAHOO.util.Event.onContentReady(id, function(){
                 b = $(this.firstChild.firstChild);
-                b.css({background: "url(" + rel + ") left center no-repeat", paddingLeft: "2em"});
+                
+                if($.browser.msie)
+                {
+                    b.css({background: "url(" + rel + ") no-repeat",
+                    paddingLeft: "2em",
+                    backgroundPosition: ".3em .2em"});
+                }
+                else if($.browser.opera || $.browser.safari)
+                {
+                    b.css({background: "url(" + rel + ") no-repeat",
+                    paddingLeft: "2em",
+                    backgroundPosition: ".4em .3em"});
+                }
+                else
+                {
+                    b.css({background: "url(" + rel + ") no-repeat",
+                    paddingLeft: "1.8em",
+                    backgroundPosition: ".4em .3em"});
+                }
             });
         }
         
@@ -70,11 +86,6 @@ $(document).ready(function() {
     /** 替换下拉框样式 */
     $("select").each(function(){
         e = $(this);
-        
-        function onMenuItemClick(p_oEven) {
-            alert('ddd');
-            button.set("label", p_oItem.cfg.getProperty("text"));
-        }
         
         var ilabel = $('option:first', e).html();
         var ivalue = $('option:first', e).val();
@@ -130,8 +141,21 @@ $(document).ready(function() {
         e2 = $(document.createElement("span"));
         e2.addClass("first-child typecho-input-first-child");
         e2.appendTo(e1);
+        
         e.width(e.width());
-        e.height(e.height());
+        if($.browser.msie)
+        {
+            e.height(e.height() - 2);
+        }
+        if($.browser.safari)
+        {
+            e.height(e.height() + 1);
+        }
+        else
+        {
+            e.height(e.height());
+        }
+        
         e.appendTo(e2);
     });
     
