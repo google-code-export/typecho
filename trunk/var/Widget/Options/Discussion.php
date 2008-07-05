@@ -85,12 +85,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $this->commentsUniqueIpInterval, _t('对单一IP的评论时间间隔限制'));
         $form->addInput($commentsUniqueIpInterval);
         
-        /** 对访客提交评论时的浏览时长要求 */
-        $commentsBrowseTimeout = new Typecho_Widget_Helper_Form_Select('commentsBrowseTimeout', array('0' => _t('不限制'), '30' => _t('半分钟'),
-        '60' => _t('一分钟'), '180' => _t('三分钟'), '300' => _t('五分钟'), '900' => _t('一刻钟'), '1800' => _t('半小时'), '3600' => _t('一小时')),
-        $this->commentsBrowseTimeout, _t('对访客提交评论时的浏览时长要求'));
-        $form->addInput($commentsBrowseTimeout);
-        
         /** 必须填写邮箱 */
         $commentsRequireMail = new Typecho_Widget_Helper_Form_Radio('commentsRequireMail', array('0' => _t('不需要'), '1' => _t('需要')),
         $this->commentsRequireMail, _t('必须填写邮箱'));

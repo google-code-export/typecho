@@ -40,13 +40,24 @@ $(document).ready(function() {
     $("input[@type=button],input[@type=submit]").each(function(){
         e = $(this);
         id = e.attr('id');
+        var rel = e.attr('rel');
+        
         if(null == id)
         {
-            id = 'typecho-input-' + idPointer;
+            id = 'typecho-button-' + idPointer;
             e.attr('id', id);
         }
         
         button = new YAHOO.widget.Button(id);
+        
+        /** 增加图片效果 */
+        if(null != rel)
+        {
+            YAHOO.util.Event.onContentReady(id, function(){
+                b = $(this.firstChild.firstChild);
+                b.css({background: "url(" + rel + ") left center no-repeat", paddingLeft: "2em"});
+            });
+        }
         
         if('undefined' != typeof(this.onclick) && null != this.onclick)
         {
@@ -79,7 +90,7 @@ $(document).ready(function() {
         });
 
         box = $(document.createElement('input'));
-        box.attr('id', 'typecho-button-' + idPointer);
+        box.attr('id', 'typecho-select-' + idPointer);
         box.attr('type', 'button');
         box.attr('value', ilabel);
         e.after(box);
@@ -90,7 +101,7 @@ $(document).ready(function() {
         hidden.attr('value', ivalue);
         e.after(hidden);
         
-        var button = new YAHOO.widget.Button('typecho-button-' + idPointer, 
+        var button = new YAHOO.widget.Button('typecho-select-' + idPointer, 
                                             {type: 'menu', menu: this});
         
         button._menu.subscribe("click", function (p_sType, p_aArgs)
