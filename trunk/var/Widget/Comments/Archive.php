@@ -33,6 +33,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         
         $this->db->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
         ->where('table.contents.`cid` = ?', $cid)->group('table.comments.`coid`')
-        ->order('table.comments.`created`', Typecho_Db::SORT_DESC), array($this, 'push'));
+        ->order('table.comments.`created`', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }
