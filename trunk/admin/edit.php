@@ -41,11 +41,11 @@ require_once 'menu.php';
 
 			<h3><?php _e('密码保护'); ?></h3>
 			<p><input type="text" class="text" name="password" id="password" style="width: 225px;" value="<?php $post->password(); ?>" /></p>
-			<p style="margin: -1em 1.5em 1.5em 0;"><small>Setting a password will require people who visit your blog to enter the above password to view this post and its comments.</small></p>
+			<p style="margin: -1em 1.5em 1.5em 0;"><?php _e('为这篇日志分配一个密码,访问者需要输入密码才能阅读到日志内容。'); ?></p>
 
 			<h3><?php _e('引用通告'); ?></h3>
 			<p><textarea id="trackback" name="trackback" rows="5" cols="" style="width: 225px;"></textarea></p>
-			<p style="margin: -1em 1.5em 1.5em 0;"><small>Separate multiple Urls with spaces</small></p>
+			<p style="margin: -1em 1.5em 1.5em 0;"><?php _e('每行一个引用地址,用回车隔开'); ?></p>
 		</div><!-- end #sidebar -->
         
 		<div id="content">
@@ -58,7 +58,7 @@ require_once 'menu.php';
 			<h4><?php _e('内容'); ?></h4>
 			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $post->text(); ?></textarea></p>
 			<p style="text-align: right;" class="submit">
-                <input type="button" class="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存'); ?>" /> 
+                <input type="button" class="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存为草稿'); ?>" /> 
                 <input type="button" class="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" />
                 <input type="submit" class="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="<?php echo ($post->cid ? 'update' : 'insert'); ?>" />
