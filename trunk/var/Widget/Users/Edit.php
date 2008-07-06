@@ -132,20 +132,20 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addItem($title->setAttribute('id', 'edit'));
         
         /** 用户名称 */
-        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('用户名称*'), _t('此用户名将作为用户登录时所用的名称.<br />
+        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('用户名*'), _t('此用户名将作为用户登录时所用的名称.<br />
         请不要与系统中现有的用户名重复.'));
         $name->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($name);
 
         /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Text('mail', NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要练习手段.<br />
+        $mail = new Typecho_Widget_Helper_Form_Text('mail', NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
         请不要与系统中现有的电子邮箱地址重复.'));
         $mail->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($mail);
         
         /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Text('screenName', NULL, _t('用户昵称'), _t('用户昵称将在系统中作为此用户的主要显示名称.<br />
-        如果你将此项留空,将默认使用用户名称.'));
+        $screenName = new Typecho_Widget_Helper_Form_Text('screenName', NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同，用于前台显示.<br />
+        如果你将此项留空,将默认使用用户名.'));
         $screenName->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($screenName);
         
