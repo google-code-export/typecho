@@ -283,8 +283,11 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      * @param boolean $noFollow 是否加上nofollow标签
      * @return void
      */
-    public function author($autoLink = true, $noFollow = true)
+    public function author($autoLink = NULL, $noFollow = NULL)
     {
+        $autoLink = (NULL === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
+        $noFollow = (NULL === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
+    
         if($this->url && $autoLink)
         {
             echo '<a href="' , $this->url , '"' , ($noFollow ? ' rel="external nofollow"' : NULL) , '>' , $this->author , '</a>';

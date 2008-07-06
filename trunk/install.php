@@ -1,5 +1,5 @@
 <?php
-define('__TYPECHO_INSTALL_VERSION__', 'Typecho开发者预览版');
+define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.2/8.7.6');
 
 /** 载入配置文件 */
 if(file_exists('config.inc.php'))
@@ -52,11 +52,81 @@ else
                 $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
             }
             
-            $url = dirname($url);        
+            $url = dirname($url);
 
             $db = Typecho_Db::get();
-            $db->query($db->sql()->update('table.options')->rows(array('value' => $url))
-            ->where('name = ?', 'siteUrl'));
+            
+            $scripts = explode(';', file_get_contents('./install/' . Typecho_Config::get('Db')->adapter . '.sql'));
+            
+            /** 初始化结构 */
+            foreach($scripts as $script)
+            {
+                $db->query($script);
+            }
+            
+            /** 全局变量 */
+            $db->query($db->sql()->insert('table.options', array('name' => 'theme', 'user' => 0, 'value' => 'default')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'timezone', 'user' => 0, 'value' => 28800)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'generator', 'user' => 0, 'value' => __TYPECHO_INSTALL_VERSION__)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'attachmentExtensions', 'user' => 0, 'value' => 'zip|rar|jpg|png|gif|txt')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'siteUrl', 'user' => 0, 'value' => $url)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'defaultAllowPing', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'defaultAllowFeed', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'pageSize', 'user' => 0, 'value' => 5)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'postsListSize', 'user' => 0, 'value' => 10)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsListSize', 'user' => 0, 'value' => 10)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsHTMLTagAllowed', 'user' => 0, 'value' => NULL)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'postDateFormat', 'user' => 0, 'value' => 'Y-m-d')));
+            $db->query($db->sql()->insert('table.options', array('name' => 'feedFullArticlesLayout', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'editorSize', 'user' => 0, 'value' => 16)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'autoSave', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsPostTimeout', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsUrlNofollow', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsShowUrl', 'user' => 0, 'value' => 1)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsUniqueIpInterval', 'user' => 0, 'value' => 0)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsStopWords', 'user' => 0, 'value' => NULL)));
+            $db->query($db->sql()->insert('table.options', array('name' => 'commentsIpBlackList', 'user' => 0, 'value' => NULL)));
+            
+            /** 初始分类 */
+            $db->query($db->sql()->insert('table.metas', array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
+            'count' => 1, 'sort' => 1)));
+            
+            /** 初始关系 */
+            $db->query($db->sql()->insert('table.relationships', array('cid' => 1, 'mid' => 1)));
+            
+            /** 初始链接 */
+            $db->query($db->sql()->insert('table.metas', array('name' => _t('Typecho官方网站'), 'slug' => 'http://www.typecho.org', 'type' => 'link', 'description' => _t('Typecho的老巢'),
+            'count' => 0, 'sort' => 1)));
+            
+            /** 初始内容 */
+            $db->query($db->sql()->insert('table.contents', array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
+            'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 'enable',
+            'allowPing' => 'enable', 'allowFeed' => 'enable')));
+            
+            $db->query($db->sql()->insert('table.contents', array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
+            'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 1, 'allowComment' => 'enable',
+            'allowPing' => 'enable', 'allowFeed' => 'enable')));
+            
+            /** 初始评论 */
+            $db->query($db->sql()->insert('table.comments', array('cid' => 1, 'created' => 1211300209, 'author' => 'Typecho', 'url' => 'http://www.typecho.org',
+            'ip' => '127.0.0.1', 'agent' => __TYPECHO_INSTALL_VERSION__, 'text' => '欢迎加入Typecho大家族', 'mode' => 'comment', 'status' => 'approved', 'parent' => 0)));
+            
+            /** 初始用户 */
+            $db->query($db->sql()->insert('table.users', array('name' => 'admin', 'password' => '827ccb0eea8a706c4c34a16891f84e7b', 'mail' => 'example@yourdomain.com', 
+            'url' => 'http://www.typecho.org', 'screenName' => 'admin', 'group' => 'administrator', 'created' => (time() - idate('Z')))));
         ?>
         <div class="success">
             <?php _e('安装成功,后台用户名为admin,密码为12345.<a href="./admin/login.php">点击这里进入</a>'); ?>
