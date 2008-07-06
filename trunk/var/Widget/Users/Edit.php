@@ -311,6 +311,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         {
             unset($user['password']);
         }
+        else
+        {
+            $user['password'] = md5($user['password']);
+        }
     
         /** 更新数据 */
         $this->update($user, $this->db->sql()->where('uid = ?', Typecho_Request::getParameter('uid')));
