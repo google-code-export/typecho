@@ -243,7 +243,7 @@ class Widget_Metas_Link_Edit extends Widget_Abstract_Metas implements Widget_Int
     {
         try
         {
-            $this->form('insert')->validate();
+            $this->form('update')->validate();
         }
         catch(Typecho_Widget_Exception $e)
         {

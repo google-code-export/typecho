@@ -69,6 +69,10 @@ width: 100%;
 #nav-menu ul.level-2 li {
 float: left;
 }
+#nav-menu ul.level-2 li.last {
+background: url(../images/level-2-bg.png) top right no-repeat;
+padding-right:2px;
+}
 
 #nav-menu ul.level-2 li a {
 background: url(../images/level-2-bg.png) top left no-repeat;

@@ -297,7 +297,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         {
             foreach($this->_inputs as $name => $input)
             {
-                $input->value(isset($record[$name]) ? $record[$name] : NULL);
+                $input->value(isset($record[$name]) ? $record[$name] : $input->value);
             }
             
             Typecho_Request::deleteCookie('form_record');

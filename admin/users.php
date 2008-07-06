@@ -34,8 +34,12 @@ Typecho_API::factory('Widget_Users_Admin')->to($users);
                 <?php if($users->have()): ?>
 				<?php while($users->get()): ?>
 				<tr>
-					<td><input type="checkbox" name="uid[]" value="<?php $users->uid(); ?>" /></td>
-					<td><a href="<?php $options->adminUrl('users.php?uid=' . $users->uid); ?>#edit"><?php $users->name(); ?></a></td>
+					<td>
+                    <?php if(1 != $users->uid): ?>
+                    <input type="checkbox" name="uid[]" value="<?php $users->uid(); ?>" />
+                    <?php endif; ?>
+                    </td>
+					<td><a href="<?php $options->adminUrl('users.php?uid=' . $users->uid); ?>#edit"><?php $users->name(); ?></a><?php if(1 == $users->uid): ?> <sup><?php _e('初始用户'); ?></sup><?php endif; ?></td>
 					<td><a target="_blank" href="<?php $users->url(); ?>"><?php $users->domainPath(); ?></a></td>
 					<td><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a></td>
 					<td><?php switch($users->group)
@@ -58,7 +62,13 @@ Typecho_API::factory('Widget_Users_Admin')->to($users);
                             break;
                     }
                     ?></td>
-					<td><?php echo Typecho_I18n::dateWord($users->logged, $options->gmtTime); ?></td>
+					<td>
+                    <?php if($users->logged > 0): ?>
+                    <?php echo Typecho_I18n::dateWord($users->logged + $options->timezone, $options->gmtTime + $options->timezone); ?>
+                    <?php else: ?>
+                    <?php _e('从未'); ?>
+                    <?php endif; ?>
+                    </td>
 				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>

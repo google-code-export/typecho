@@ -102,7 +102,7 @@ class Widget_Abstract_Users extends Typecho_Widget_Abstract_Dataset
      */
     public function update(array $rows, Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->update('table.comments')->rows($options));
+        return $this->db->query($condition->update('table.users')->rows($rows));
     }
     
     /**
@@ -114,6 +114,6 @@ class Widget_Abstract_Users extends Typecho_Widget_Abstract_Dataset
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->delete('table.comments'));
+        return $this->db->query($condition->delete('table.users'));
     }
 }
