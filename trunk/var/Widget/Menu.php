@@ -156,17 +156,21 @@ class Widget_Menu extends Typecho_Widget
     public function outputChild($tag = NULL, $class = 'current-2')
     {
         $adminUrl = Typecho_API::factory('Widget_Abstract_Options')->siteUrl;
+        $num = count($this->_childMenu[$this->_currentParent]) - 1;
+        $i = 0;
         
         foreach($this->_childMenu[$this->_currentParent] as $key => $menu)
         {
             if(Typecho_API::factory('Widget_Users_Current')->pass($menu[3], true))
             {
                 $link = Typecho_API::pathToUrl($menu[2], $adminUrl);
-                echo (NULL === $tag ? NULL  : "<{$tag}>")
+                echo (NULL === $tag ? NULL  : "<{$tag}" . (($i == $num) ? ' class="last"' : NULL) . ">")
                 . "<a href=\"{$link}\"" . ($key == $this->_currentChild ? ' class="' . $class . '"' : NULL) 
                 . " title=\"{$menu[0]}\">{$menu[0]}</a>"
                 . (NULL === $tag ? NULL  : "</{$tag}>");
             }
+            
+            $i ++;
         }
     }
 }

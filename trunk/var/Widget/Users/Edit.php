@@ -71,6 +71,28 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     }
     
     /**
+     * 判断电子邮件是否存在
+     * 
+     * @access public
+     * @param string $mail 电子邮件
+     * @return boolean
+     */
+    public function mailExists($mail)
+    {
+        $select = $this->db->sql()->select('table.users')
+        ->where('`mail` = ?', $mail)
+        ->limit(1);
+        
+        if(Typecho_Request::getParameter('uid'))
+        {
+            $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
+        }
+
+        $user = $this->db->fetchRow($select);
+        return $user ? false : true;
+    }
+    
+    /**
      * 判断用户昵称是否存在
      * 
      * @access public
@@ -110,39 +132,44 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addItem($title->setAttribute('id', 'edit'));
         
         /** 用户名称 */
-        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('用户名称*'));
+        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('用户名称*'), _t('此用户名将作为用户登录时所用的名称.<br />
+        请不要与系统中现有的用户名重复.'));
         $name->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($name);
+
+        /** 电子邮箱地址 */
+        $mail = new Typecho_Widget_Helper_Form_Text('mail', NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要练习手段.<br />
+        请不要与系统中现有的电子邮箱地址重复.'));
+        $mail->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
+        $form->addInput($mail);
         
         /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Text('screenName', NULL, _t('用户昵称'));
+        $screenName = new Typecho_Widget_Helper_Form_Text('screenName', NULL, _t('用户昵称'), _t('用户昵称将在系统中作为此用户的主要显示名称.<br />
+        如果你将此项留空,将默认使用用户名称.'));
         $screenName->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($screenName);
         
         /** 用户密码 */
-        $password = new Typecho_Widget_Helper_Form_Password('password', NULL, _t('用户密码'), _t('此用户的网址,请用<strong>http://</strong>开头.'));
+        $password = new Typecho_Widget_Helper_Form_Password('password', NULL, _t('用户密码'), _t('为此用户分配一个密码.<br />
+        建议使用特殊字符与字母的混编样式,以增加系统安全性.'));
         $password->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($password);
         
         /** 用户密码确认 */
-        $confirm = new Typecho_Widget_Helper_Form_Password('confirm', NULL, _t('用户密码确认'), _t('此用户的网址,请用<strong>http://</strong>开头.'));
+        $confirm = new Typecho_Widget_Helper_Form_Password('confirm', NULL, _t('用户密码确认'), _t('请确认你的密码,与上面输入的密码保持一致.'));
         $confirm->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($confirm);
         
         /** 个人主页地址 */
-        $url = new Typecho_Widget_Helper_Form_Text('url', NULL, _t('个人主页地址'));
+        $url = new Typecho_Widget_Helper_Form_Text('url', NULL, _t('个人主页地址'), _t('此用户的个人主页地址,请用<strong>http://</strong>开头.'));
         $url->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
         $form->addInput($url);
-        
-        /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Text('mail', NULL, _t('电子邮箱地址'));
-        $mail->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
-        $form->addInput($mail);
         
         /** 用户组 */
         $group =  new Typecho_Widget_Helper_Form_Select('group', array('visitor' => _t('访问者'),
         'subscriber' => _t('关注者'), 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
-        NULL, _t('用户组'), _t('用简短的语言描述此用户,在某些模板中它将被显示.'));
+        NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.<br />
+        具体的权限分配表请<a href="#">参考这里</a>.'));
         $form->addInput($group);
         
         /** 用户动作 */
@@ -180,6 +207,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $mail->value($user['mail']);
             $group->value($user['group']);
             $do->value('update');
+            $uid->value($user['uid']);
             $_action = 'update';
         }
         else
@@ -199,16 +227,18 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         /** 给表单增加规则 */
         if('insert' == $action || 'update' == $action)
         {
-            $name->addRule('required', _t('必须填写用户名称'));
-            $name->addRule(array($this, 'nameExists'), _t('用户名称已经存在'));
             $screenName->addRule(array($this, 'screenNameExists'), _t('昵称已经存在'));
             $url->addRule('url', _t('个人主页地址格式错误'));
-            $mail->addRule('mail', _t('电子邮箱格式错误'));
+            $mail->addRule('required', _t('必须填写电子邮箱'));
+            $mail->addRule(array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
+            $mail->addRule('email', _t('电子邮箱格式错误'));
             $confirm->addRule('confirm', _t('两次输入的密码不一致'), 'password');
         }
         
         if('insert' == $action)
         {
+            $name->addRule('required', _t('必须填写用户名称'));
+            $name->addRule(array($this, 'nameExists'), _t('用户名称已经存在'));
             $password->label(_t('用户密码*'));
             $confirm->label(_t('用户密码确认*'));
             $password->addRule('required', _t('必须填写密码'));
@@ -216,6 +246,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         
         if('update' == $action)
         {
+            $name->input->setAttribute('disabled', 'disabled');
             $uid->addRule('required', _t('用户主键不存在'));
             $uid->addRule(array($this, 'userExists'), _t('用户不存在'));
         }
@@ -241,17 +272,16 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         }
         
         /** 取出数据 */
-        $user = Typecho_Request::getParametersFrom('name', 'slug', 'description');
-        $user['slug'] = $user['slug'];
-        $user['type'] = 'link';
+        $user = Typecho_Request::getParametersFrom('name', 'mail', 'screenName', 'password', 'url', 'group');
+        $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
+        $user['password'] = md5($user['password']);
+        $user['created'] = $this->options->gmtTime;
     
         /** 插入数据 */
         $user['uid'] = $this->insert($user);
-        $this->push($user);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("用户 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被增加",
-        $this->slug, $this->name), NULL, 'success');
+        Typecho_API::factory('Widget_Notice')->set(_t("用户 '%s' 已经被增加", $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
         Typecho_API::redirect(Typecho_API::pathToUrl('users.php', $this->options->adminUrl));
@@ -267,7 +297,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     {
         try
         {
-            $this->form('insert')->validate();
+            $this->form('update')->validate();
         }
         catch(Typecho_Widget_Exception $e)
         {
@@ -275,18 +305,18 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         }
     
         /** 取出数据 */
-        $user = Typecho_Request::getParametersFrom('name', 'slug', 'description');
-        $user['slug'] = $user['slug'];
-        $user['type'] = 'link';
+        $user = Typecho_Request::getParametersFrom('mail', 'screenName', 'password', 'url', 'group');
+        $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
+        if(empty($user['password']))
+        {
+            unset($user['password']);
+        }
     
         /** 更新数据 */
         $this->update($user, $this->db->sql()->where('uid = ?', Typecho_Request::getParameter('uid')));
-        $user['uid'] = Typecho_Request::getParameter('uid');
-        $this->push($user);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("用户 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新",
-        $this->slug, $this->name), NULL, 'success');
+        Typecho_API::factory('Widget_Notice')->set(_t("用户 '%s' 已经被更新", $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
         Typecho_API::redirect(Typecho_API::pathToUrl('users.php', $this->options->adminUrl));
@@ -307,6 +337,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         {
             foreach($users as $user)
             {
+                if(1 == $user)
+                {
+                    continue;
+                }
+                
                 if($this->delete($this->db->sql()->where('uid = ?', $user)))
                 {
                     $deleteCount ++;

@@ -73,13 +73,26 @@ class Widget_Users_Current extends Widget_Abstract_Users
         Typecho_Request::setCookie('uid', $uid, $expire, $this->options->siteUrl);
         Typecho_Request::setCookie('password', sha1($password), $expire, $this->options->siteUrl);
         Typecho_Request::setCookie('authCode', $authCode, $expire, $this->options->siteUrl);
-
-        //更新最后登录时间以及验证码
-        $this->db->query($this->db->sql()
-        ->update('table.users')
-        ->row('logged', '`activated`')
-        ->rows(array('authCode' => $authCode))
-        ->where('`uid` = ?', $uid));
+        
+        if($this->db->fetchObject($this->select()
+                ->where('`uid` = ?', $uid)
+                ->limit(1))->activated > 0)
+        {
+            //更新最后登录时间以及验证码
+            $this->db->query($this->db->sql()
+            ->update('table.users')
+            ->row('logged', '`activated`')
+            ->rows(array('authCode' => $authCode))
+            ->where('`uid` = ?', $uid));
+        }
+        else
+        {
+            //第一次登录
+            $this->db->query($this->db->sql()
+            ->update('table.users')
+            ->rows(array('authCode' => $authCode, 'logged' => $this->options->gmtTime))
+            ->where('`uid` = ?', $uid));
+        }
     }
     
     /**
