@@ -75,6 +75,14 @@ $(document).ready(function() {
             });
         }
         
+        /** 修正FF2 inline-box bug */
+        YAHOO.util.Event.onContentReady(id, function(){
+            if($.browser.mozilla)
+            {
+                $(this).css({display: "-moz-inline-box"});
+            }
+        });
+        
         if('undefined' != typeof(this.onclick) && null != this.onclick)
         {
             button.on("click", this.onclick);
@@ -125,6 +133,14 @@ $(document).ready(function() {
             }
         });
         
+        YAHOO.util.Event.onContentReady('typecho-select-' + idPointer, function(){
+            /** 修正FF2 inline-box bug */
+            if($.browser.mozilla)
+            {
+                $(this).css({display: "-moz-inline-box"});
+            }
+        });
+        
         idPointer ++;
     });
     
@@ -157,6 +173,12 @@ $(document).ready(function() {
         }
         
         e.appendTo(e2);
+        
+        /** 修正FF2 inline-box bug */
+        if($.browser.mozilla)
+        {
+            e1.css({display: "-moz-inline-box"});
+        }
     });
     
     /** 替换多行输入项样式 */
@@ -177,11 +199,15 @@ $(document).ready(function() {
         e2 = $(document.createElement("span"));
         e2.addClass("first-child typecho-input-first-child");
         e2.appendTo(e1);
-        e3 = e.clone();
-        e3.width(e.width());
-        e3.height(e.height());
-        e3.appendTo(e2);
-        e.remove();
+        e.width(e.width());
+        e.height(e.height());
+        e.appendTo(e2);
+        
+        /** 修正FF2 inline-box bug */
+        if($.browser.mozilla)
+        {
+            e1.css({display: "-moz-inline-box"});
+        }
     });
     
     /** 替换单选框 */
@@ -217,6 +243,12 @@ $(document).ready(function() {
         e.hide();
     });
     
+    /** 修正FF2 inline-box bug */
+    if($.browser.mozilla)
+    {
+        $(".yui-radio-button").css({display: "-moz-inline-box"});
+    }
+    
     /** 替换多选框 */
     $("input[@type=checkbox]").each(function(){
         e = $(this);
@@ -241,6 +273,6 @@ $(document).ready(function() {
     /** 修正FF2 inline-box bug */
     if($.browser.mozilla)
     {
-        $(".yui-button").css({display: "-moz-inline-box"});
+        $(".yui-checkbox-button").css({display: "-moz-inline-box"});
     }
 });
