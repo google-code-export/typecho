@@ -179,6 +179,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $permalink = Typecho_Request::getParameter('permalink');
         $callback = Typecho_Request::getParameter('type');
 
+        /** 判断内容是否存在 */
         if(false !== Typecho_Router::match($permalink) && 
         ('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current) &&
         Typecho_API::factory('Widget_Archive', 1)->have() && 
@@ -192,8 +193,24 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
                 throw new Typecho_Widget_Exception(_t('来源页不合法'));
             }
             
+            /** 判断评论间隔 */
+            if($this->options->commentsUniqueIpInterval > 0)
+            {
+                $recent = $this->db->fetchObject($this->db->sql()->select('table.comments', '`created`')
+                ->where('table.comments.`ip` = ?', Typecho_Request::getClientIp())
+                ->order('table.comments.`created`', Typecho_Db::SORT_DESC)->limit(1));
+
+                if($recent)
+                {
+                    if($this->options->gmtTime - $recent->created < $this->options->commentsUniqueIpInterval)
+                    {
+                        throw new Typecho_Widget_Exception(_t('对不起,您的发言速度太快.'), Typecho_Exception::FORBIDDEN);
+                    }
+                }
+            }
+            
             /** 如果文章允许反馈 */
-            if(!$this->content->allow('Comment'))
+            if(!$this->content->allow('comment'))
             {
                 throw new Typecho_Widget_Exception(_t('对不起,此内容的评论被关闭.'), Typecho_Exception::FORBIDDEN);
             }

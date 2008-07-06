@@ -388,6 +388,17 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
 
         foreach($permissions as $permission)
         {
+            $permission = strtolower($permission);
+
+            /** 对自动关闭反馈功能的支持 */
+            if(('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0)
+            {
+                if($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout)
+                {
+                    return false;
+                }
+            }
+            
             $allow &= ($this->_row['allow' . ucfirst($permission)] == 'enable');
         }
 

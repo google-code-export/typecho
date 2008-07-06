@@ -56,6 +56,12 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $timezone = new Typecho_Widget_Helper_Form_Select('timezone', array('28800' => _t('中华人民共和国')), $this->timezone, _t('时区'));
         $form->addInput($timezone);
         
+        /** 是否使用地址重写功能 */
+        $rewrite = new Typecho_Widget_Helper_Form_Radio('rewrite', array('0' => _t('不启用'), '1' => _t('启用')),
+        $this->rewrite, _t('是否使用地址重写功能'), _t('地址重写即rewrite功能是某些服务器软件提供的优化内部连接的功能.<br />
+        打开此功能可以让你的链接看上去完全是静态地址.'));
+        $form->addInput($rewrite);
+        
         /** 动作 */
         $do = new Typecho_Widget_Helper_Form_Hidden('do', 'update');
         $form->addInput($do);
