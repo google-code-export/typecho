@@ -248,10 +248,10 @@ background: #CEE1EF;
 }
 
 img.theme {
-width: 160px;
-height:120px;
-padding: 1px;
-border: 1px solid #C5D8EB;
+width:120px;
+height:90px;
+padding:1px;
+border:1px solid #C5D8EB;
 }
 
 /* Sidebar */
