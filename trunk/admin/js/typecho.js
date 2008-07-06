@@ -237,4 +237,10 @@ $(document).ready(function() {
         $("label[@for=" + e.attr("id") + "]").remove();
         e.remove();
     });
+    
+    /** 修正FF2 inline-box bug */
+    if($.browser.mozilla)
+    {
+        $(".yui-button").css({display: "-moz-inline-box"});
+    }
 });
