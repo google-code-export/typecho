@@ -109,7 +109,3 @@ Typecho_API::setDefaultTimezone();
 
 /** 设置输出类型 */
 Typecho_API::setContentType();
-
-/** 初始化插件 */
-Typecho_Plugin::init(Typecho_API::factory('Widget_Abstract_Options')->plugins,
-__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
