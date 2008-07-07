@@ -6,6 +6,10 @@ padding: 1px 10px 3px;
 width: 98%;
 }
 
+#content #tags, #content #slug {
+width: 98%;
+}
+
 input, textarea, select, button {
 vertical-align:baseline
 }

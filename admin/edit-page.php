@@ -45,8 +45,8 @@ require_once 'menu.php';
 			<h4><?php _e('内容'); ?></h4>
 			<p><textarea id="text" name="text" style="height:300px" cols="40"><?php $page->text(); ?></textarea></p>
 			<p style="text-align: right;" class="submit">
-                <input type="button" onclick="$('input[@name=draft]').val(1);post.submit();" value="<?php _e('保存为草稿'); ?>" /> 
-                <input type="button" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);post.submit();" value="<?php _e('保存并继续编辑'); ?>" /> 
+                <input type="submit" onclick="$('input[@name=draft]').val(1);" value="<?php _e('保存为草稿'); ?>" /> 
+                <input type="submit" onclick="$('input[@name=draft]').val(1);$('input[@name=continue]').val(1);" value="<?php _e('保存并继续编辑'); ?>" /> 
                 <input type="submit" value="<?php _e('发布'); ?>" />
                 <input type="hidden" name="do" value="<?php echo ($page->cid ? 'update' : 'insert'); ?>" />
                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
