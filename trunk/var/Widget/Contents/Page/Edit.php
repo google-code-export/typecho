@@ -218,7 +218,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
             foreach($pages as $sort => $cid)
             {
                 $this->db->query($this->db->sql()->update('table.contents')->row('meta', $sort + 1)
-                ->where('`cid` = ?', $cid)->where('`type` = ?', 'page'));
+                ->where('`cid` = ?', $cid));
             }
         }
         

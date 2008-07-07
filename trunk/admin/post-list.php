@@ -62,7 +62,7 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
 				</tr>
                 <?php if($posts->have()): ?>
                 <?php while($posts->get()): ?>
-                <tr>
+                <tr class="<?php $posts->type(); ?>">
                     <td><input type="checkbox" name="cid[]" value="<?php $posts->cid(); ?>" /></td>
                     <td><a href="<?php $options->adminUrl('/edit.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                     <sup><?php $posts->tags(','); ?></sup></td>

@@ -48,31 +48,28 @@ require_once 'menu.php';
                 <?php Typecho_API::factory('Widget_Comments_Admin')->to($comments); ?>
                 <?php if($comments->have()): ?>
 				<?php while($comments->get()): ?>
-				<tr>
+				<tr class="<?php $comments->status(); ?>">
 					<td><input type="checkbox" name="coid[]" value="<?php $comments->coid(); ?>" /></td>
-					<td><?php $comments->dateWord(); ?></td>
-					<td><?php $comments->author(false); ?>
-                    <sup><?php
+					<td><img alt="<?php $comments->mode(); ?>" src="<?php
                         switch($comments->mode)
                         {
                             case 'pingback':
-                                echo _t('广播');
+                                $options->adminUrl('/images/icons/pingback.gif');
                                 break;
                             case 'trackback':
-                                echo _t('引用');
+                                $options->adminUrl('/images/icons/trackback.gif');
                                 break;
                             case 'comment':
-                                echo _t('评论');
-                                break;
                             default:
-                                echo _t('不明');
+                                $options->adminUrl('/images/icons/comment.gif');
                                 break;
                         }
-                    ?></sup>
-                    <sub>
-                        <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>">网址</a><?php endif; ?>
-                        <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>">邮件</a><?php endif; ?>
-                    </sub>
+                    ?>" />
+                    <?php $comments->dateWord(); ?></td>
+					<td>
+                    <?php $comments->author(false); ?>
+                    <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>"><img src="<?php $options->adminUrl('/images/icons/homepage.gif'); ?>" alt="homepage" /></a><?php endif; ?>
+                    <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>"><img src="<?php $options->adminUrl('/images/icons/email.gif'); ?>" alt="email" /></a><?php endif; ?>
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
@@ -81,16 +78,16 @@ require_once 'menu.php';
                         switch($comments->status)
                         {
                             case 'approved':
-                                echo _t('呈现');
+                                _e('呈现');
                                 break;
                             case 'spam':
-                                echo _t('垃圾');
+                                _e('垃圾');
                                 break;
                             case 'waiting':
-                                echo _t('待审核');
+                                _e('待审核');
                                 break;
                             default:
-                                echo _t('不明');
+                                _e('不明');
                                 break;
                         }
                     ?></td>
