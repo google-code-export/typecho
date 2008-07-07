@@ -319,7 +319,7 @@ class Widget_Metas_Link_Edit extends Widget_Abstract_Metas implements Widget_Int
         }
         else
         {
-            die(_t('链接排序已经完成'));
+            Typecho_API::throwAjaxResponse(_t('链接排序已经完成'), $this->options->charset);
         }
     }
     

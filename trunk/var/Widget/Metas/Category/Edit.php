@@ -231,6 +231,35 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     }
     
     /**
+     * ajax增加分类
+     * 
+     * @access public
+     * @return void
+     */
+    public function ajaxInsertCategory()
+    {
+        try
+        {
+            $this->form('insert')->validate();
+        }
+        catch(Typecho_Widget_Exception $e)
+        {
+            Typecho_API::throwAjaxResponse(implode(',', $e->getMessages()));
+        }
+        
+        /** 取出数据 */
+        $category = Typecho_Request::getParametersFrom('name');
+        $category['slug'] = Typecho_API::slugName($category['name']);
+        $category['type'] = 'category';
+        $category['description'] = $category['name'];
+        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(`sort`) AS `maxSort`')
+        ->where('`type` = ?', 'category'))->maxSort + 1;
+    
+        /** 插入数据 */
+        Typecho_API::throwAjaxResponse($this->insert($category), $this->options->charset);
+    }
+    
+    /**
      * 更新分类
      * 
      * @access public
@@ -359,7 +388,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
         else
         {
-            die(_t('分类排序已经完成'));
+            Typecho_API::throwAjaxResponse(_t('分类排序已经完成'), $this->options->charset);
         }
     }
     
@@ -401,6 +430,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     {
         Typecho_API::factory('Widget_Users_Current')->pass('editor');
         Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertCategory'));
+        Typecho_Request::bindParameter(array('do' => 'ajaxInsert'), array($this, 'ajaxInsertCategory'));
         Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updateCategory'));
         Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deleteCategory'));
         Typecho_Request::bindParameter(array('do' => 'merge'), array($this, 'mergeCategory'));

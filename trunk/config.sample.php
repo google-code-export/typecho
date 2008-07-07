@@ -108,4 +108,4 @@ Typecho_API::obStart(__TYPECHO_GZIP_ENABLE__);
 Typecho_API::setDefaultTimezone();
 
 /** 设置输出类型 */
-Typecho_API::setContentType();
+Typecho_API::setContentType('text/html', __TYPECHO_CHARSET__);

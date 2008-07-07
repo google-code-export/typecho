@@ -101,6 +101,29 @@ class Typecho_API
     }
     
     /**
+     * 抛出ajax的回执信息
+     * 
+     * @access public
+     * @param string $message 消息体
+     * @param string $charset 信息编码
+     * @return void
+     */
+    public static function throwAjaxResponse($message, $charset = 'UTF-8')
+    {
+        /** 设置http头信息 */
+        self::setContentType('text/xml', $charset);
+        
+        /** 构建消息体 */
+        echo '<?xml version="1.0" encoding="' . $charset . '"?>';
+        echo '<response><![CDATA[';
+        echo $message;
+        echo ']]></response>';
+        
+        /** 终止后续输出 */
+        die;
+    }
+    
+    /**
      * 工厂方法,将类静态化放置到列表中
      * 
      * @access public
