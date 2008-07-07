@@ -28,7 +28,7 @@ Typecho_API::factory('Widget_Users_Admin')->to($users);
 					<th width="25%"><?php _e('个人网站'); ?></th>
 					<th width="20%"><?php _e('电子邮件'); ?></th>
 					<th width="14%"><?php _e('权限'); ?></th>
-					<th width="15%"><?php _e('最后登录'); ?></th>
+					<th width="15%"><?php _e('最后活动'); ?></th>
 				</tr>
                 
                 <?php if($users->have()): ?>
@@ -64,7 +64,7 @@ Typecho_API::factory('Widget_Users_Admin')->to($users);
                     ?></td>
 					<td>
                     <?php if($users->logged > 0): ?>
-                    <?php echo Typecho_I18n::dateWord($users->logged + $options->timezone, $options->gmtTime + $options->timezone); ?>
+                    <?php echo Typecho_I18n::dateWord($users->activated + $options->timezone, $options->gmtTime + $options->timezone); ?>
                     <?php else: ?>
                     <?php _e('从未'); ?>
                     <?php endif; ?>
