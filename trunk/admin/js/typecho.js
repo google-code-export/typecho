@@ -39,6 +39,12 @@ $(document).ready(function() {
         e = $(this);
         id = e.attr('id');
         var rel = e.attr('rel');
+        var buttonOnclick;
+        
+        if('undefined' != typeof(this.onclick) && null != this.onclick)
+        {
+            buttonOnclick = this.onclick;
+        }
         
         if(null == id)
         {
@@ -81,12 +87,12 @@ $(document).ready(function() {
             {
                 $(this).css({display: "-moz-inline-box"});
             }
+            
+            if('undefined' != typeof(buttonOnclick) && null != buttonOnclick)
+            {
+                $("button", this).click(buttonOnclick);
+            }
         });
-        
-        if('undefined' != typeof(this.onclick) && null != this.onclick)
-        {
-            button.on("click", this.onclick);
-        }
         
         idPointer ++;
     });
