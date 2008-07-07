@@ -20,7 +20,7 @@ Typecho_API::factory('Widget_Plugins_Config')->to($config);
 				</tr>
                 <?php Typecho_API::factory('Widget_Plugins_List')->to($plugins); ?>
                 <?php foreach($plugins as $plugin): ?>
-				<tr>
+				<tr <?php if($plugin['activated']): ?>class="activated"<?php endif; ?>>
 					<td><?php echo $plugin['title']; ?></td>
 					<td><a target="_blank" href="<?php echo $plugin['check']; ?>"><?php echo $plugin['version']; ?></a></td>
 					<td><?php echo $plugin['description']; ?></td>

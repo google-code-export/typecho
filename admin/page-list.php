@@ -41,7 +41,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
 				</tr>
                 <?php if($page->have()): ?>
                 <?php while($page->get()): ?>
-                <tr>
+                <tr class="<?php $page->type(); ?>">
                     <td><input type="checkbox" name="cid[]" value="<?php $page->cid(); ?>" />
                     <input type="hidden" name="sort[]" value="<?php $page->cid(); ?>" /></td>
                     <td><a href="<?php $options->adminUrl('/edit-page.php?cid=' . $page->cid); ?>"><?php $page->title(); ?></a>
