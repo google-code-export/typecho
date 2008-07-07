@@ -42,6 +42,27 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
     }
     
     /**
+     * 获取创建GMT时间戳
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getCreated()
+    {
+        if(!($date = Typecho_Request::getParameter('date')))
+        {
+            $date = date('Y-m-d');
+        }
+        
+        if(!($time = Typecho_Request::getParameter('time')))
+        {
+            $time = date('g:i A');
+        }
+        
+        return strtotime($date . ' ' . $time) - $this->options->timezone;
+    }
+    
+    /**
      * 新增页面
      * 
      * @access public
@@ -54,6 +75,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         $contents['type'] = (1 == Typecho_Request::getParameter('draft')) ? 'page_draft' : 'page';
         $contents['title'] = (NULL == Typecho_Request::getParameter('title')) ? 
         _t('未命名文档') : Typecho_Request::getParameter('title');
+        $contents['created'] = $this->getCreated();
     
         $insertId = $this->insert($contents);
         
@@ -115,6 +137,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         $contents['type'] = (1 == Typecho_Request::getParameter('draft')) ? 'page_draft' : 'page';
         $contents['title'] = (NULL == Typecho_Request::getParameter('title')) ? 
         _t('未命名文档') : Typecho_Request::getParameter('title');
+        $contents['created'] = $this->getCreated();
     
         $updateRows = $this->update($contents, $this->db->sql()->where('`cid` = ?', Typecho_Request::getParameter('cid')));
         $this->db->fetchRow($select, array($this, 'push'));
@@ -189,6 +212,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
     public function sortPage()
     {
         $pages = Typecho_Request::getParameter('sort');
+        
         if($pages && is_array($pages))
         {
             foreach($pages as $sort => $cid)
@@ -205,7 +229,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         }
         else
         {
-            die(_t('页面排序已经完成'));
+            Typecho_API::throwAjaxResponse(_t('页面排序已经完成'), $this->options->charset);
         }
     }
     

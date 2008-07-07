@@ -3,6 +3,15 @@ require_once 'common.php';
 Typecho_API::factory('Widget_Contents_Page_Edit')->to($page);
 require_once 'header.php';
 require_once 'menu.php';
+
+if($page->cid)
+{
+    $created = $page->created + $options->timezone;
+}
+else
+{
+    $created = $options->gmtTime + $options->timezone;
+}
 ?>
 
 	<div id="main" class="clearfix">
@@ -11,12 +20,12 @@ require_once 'menu.php';
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
 			<div id="publishing">
-				<p><label><?php _e('发布日期'); ?></label><input type="text" name="test" value="<?php echo date('Y-m-d');?>" /></p>
-				<p><label><?php _e('发布时间'); ?></label><input type="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
+				<p><label><?php _e('发布日期'); ?></label><input type="text" class="text" readonly="readonly" id="date" name="date" value="<?php echo date('Y-m-d', $created);?>" /></p>
+				<p><label><?php _e('发布时间'); ?></label><input type="text" class="text" readonly="readonly" id="time" name="time" value="<?php echo date('g:i A', $created);?>" /></p>
 			</div>
 
 			<h3><?php _e('页面顺序'); ?></h3>
-			<p><input type="text" id="meta" name="meta" style="width: 240px;" value="<?php echo $post->meta ? $post->meta : 0; ?>" /></p>
+			<p><input type="text" id="meta" name="meta" style="width: 240px;" value="<?php echo $page->meta ? $page->meta : 0; ?>" /></p>
 
 			<h3><?php _e('评论和引用'); ?></h3>
 			<div id="allow_status">
@@ -59,8 +68,13 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
+<script type="text/javascript" src="<?php $options->adminUrl('/js/jquery-ui-personalized-1.5.1.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('/js/jquery.clockpick.1.2.3.pack.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('/js/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
+$("#date").datepicker({dateFormat: "yy-mm-dd"});
+$("#time").clockpick({starthour: 0, endhour : 23});
+
 tinyMCE.init({
 mode : "exact",
 elements : "text",

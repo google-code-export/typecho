@@ -3,6 +3,15 @@ require_once 'common.php';
 Typecho_API::factory('Widget_Contents_Post_Edit')->to($post);
 require_once 'header.php';
 require_once 'menu.php';
+
+if($post->cid)
+{
+    $created = $post->created + $options->timezone;
+}
+else
+{
+    $created = $options->gmtTime + $options->timezone;
+}
 ?>
 
 	<div id="main" class="clearfix">
@@ -11,13 +20,16 @@ require_once 'menu.php';
         <div id="sidebar">
 			<h3><?php _e('发布'); ?></h3>
 			<div id="publishing">
-				<p><label><?php _e('发布日期'); ?></label><input type="text" class="text" name="test" value="<?php echo date('Y-m-d');?>" /></p>
-				<p><label><?php _e('发布时间'); ?></label><input type="text" class="text" name="test" value="<?php echo date('H:i:s');?>" /></p>
+				<p><label><?php _e('发布日期'); ?></label><input type="text" class="text" readonly="readonly" id="date" name="date" value="<?php echo date('Y-m-d', $created);?>" /></p>
+				<p><label><?php _e('发布时间'); ?></label><input type="text" class="text" readonly="readonly" id="time" name="time" value="<?php echo date('g:i A', $created);?>" /></p>
 			</div>
 
 			<h3><?php _e('分类'); ?></h3>
-			<p><input type="text" class="text" id="" style="color: #666; width: 155px; margin-right: 15px;" value="Add New Category" onclick="value=''" /><input type="button" class="button" value="<?php _e('增加'); ?>" onclick="" /></p>
-			<ul id="cat_list">
+            <?php if($access->pass('editor', true)): ?>
+			<p><input type="text" class="text" style="color: #666; width: 155px; margin-right: 15px;" value="<?php _e('增加新分类'); ?>" onclick="value='';id='category';" />
+            <input type="button" class="button" value="<?php _e('增加'); ?>" onclick="ajaxInsertCategory('undefined' == typeof($('#category').val()) ? '' : $('#category').val());" /></p>
+			<?php endif; ?>
+            <ul id="cat_list">
             <?php Typecho_API::factory('Widget_Metas_Category_List')->to($category);
             $categories = ($categories = Typecho_API::arrayFlatten(empty($post->categories) ? array() : $post->categories, 'mid')) ? $categories : ($post->cid ? array() : array($options->defaultCategory)); ?>
             <?php if($category->have()): ?>
@@ -82,8 +94,51 @@ require_once 'menu.php';
 
 	</form>
 	</div><!-- end #main -->
+<script type="text/javascript" src="<?php $options->adminUrl('/js/jquery-ui-personalized-1.5.1.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('/js/jquery.clockpick.1.2.3.pack.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('/js/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
+function ajaxInsertCategory(category) {
+    var icategory = category;
+
+    $.ajax({
+        type: 'POST',
+        url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
+        data: 'name=' + category + '&do=ajaxInsert',
+        dataType: "xml",
+        cache: false,
+        success: function(xml){
+            data = $("response", xml).text();
+        
+            if(!isNaN(data))
+            {
+                li = $(document.createElement('li'));
+                li.html('<label for="category-' + data + '"><input type="checkbox" name="category[]" value="' + data +
+                '" id="category-' + data + '" /> ' + icategory + '</label>');
+                li.hide();
+                
+                $("#cat_list").append(li);
+                li.fadeIn();
+            }
+            else
+            {
+                document.cookie = "form_record[name]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                document.cookie = "form_record[slug]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                document.cookie = "form_record[name]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                document.cookie = "form_record[description]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                document.cookie = "form_record[mid]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                document.cookie = "form_message[name]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+                alert(data);
+            }
+            
+            document.cookie = "form_record[do]=deleted; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+        }
+    });
+};
+
+$("#date").datepicker({dateFormat: "yy-mm-dd"});
+$("#time").clockpick({starthour: 0, endhour : 23});
+
 tinyMCE.init({
 mode : "exact",
 elements : "text",

@@ -42,6 +42,27 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
     
     /**
+     * 获取创建GMT时间戳
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getCreated()
+    {
+        if(!($date = Typecho_Request::getParameter('date')))
+        {
+            $date = date('Y-m-d');
+        }
+        
+        if(!($time = Typecho_Request::getParameter('time')))
+        {
+            $time = date('g:i A');
+        }
+        
+        return strtotime($date . ' ' . $time) - $this->options->timezone;
+    }
+    
+    /**
      * 设置内容标签
      * 
      * @access public
@@ -231,6 +252,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['type'] = (1 == Typecho_Request::getParameter('draft') || !Typecho_API::factory('Widget_Users_Current')->pass('editor', true)) ? 'draft' : 'post';
         $contents['title'] = (NULL == Typecho_Request::getParameter('title')) ? 
         _t('未命名文档') : Typecho_Request::getParameter('title');
+        $contents['created'] = $this->getCreated();
     
         $insertId = $this->insert($contents);
         
@@ -302,6 +324,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['type'] = (1 == Typecho_Request::getParameter('draft') || !Typecho_API::factory('Widget_Users_Current')->pass('editor', true)) ? 'draft' : 'post';
         $contents['title'] = (NULL == Typecho_Request::getParameter('title')) ? 
         _t('未命名文档') : Typecho_Request::getParameter('title');
+        $contents['created'] = $this->getCreated();
     
         $updateRows = $this->update($contents, $this->db->sql()->where('`cid` = ?', Typecho_Request::getParameter('cid')));
         $this->db->fetchRow($select, array($this, 'push'));
