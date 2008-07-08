@@ -50,7 +50,7 @@ require_once 'menu.php';
 				<?php while($comments->get()): ?>
 				<tr class="<?php $comments->status(); ?>">
 					<td><input type="checkbox" name="coid[]" value="<?php $comments->coid(); ?>" /></td>
-					<td><img alt="<?php $comments->mode(); ?>" src="<?php
+					<td><img width="16" height="16" alt="<?php $comments->mode(); ?>" src="<?php
                         switch($comments->mode)
                         {
                             case 'pingback':
@@ -68,8 +68,8 @@ require_once 'menu.php';
                     <?php $comments->dateWord(); ?></td>
 					<td>
                     <?php $comments->author(false); ?>
-                    <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>"><img src="<?php $options->adminUrl('/images/icons/homepage.gif'); ?>" alt="homepage" /></a><?php endif; ?>
-                    <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>"><img src="<?php $options->adminUrl('/images/icons/email.gif'); ?>" alt="email" /></a><?php endif; ?>
+                    <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>"><img width="16" height="16" src="<?php $options->adminUrl('/images/icons/homepage.gif'); ?>" alt="homepage" /></a><?php endif; ?>
+                    <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>"><img width="16" height="16" src="<?php $options->adminUrl('/images/icons/email.gif'); ?>" alt="email" /></a><?php endif; ?>
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
