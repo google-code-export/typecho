@@ -100,18 +100,14 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      * 输出分页
      * 
      * @access public
-     * @param string $prevWord 上一页文字
-     * @param string $nextWord 下一页文字
-     * @param int $splitPage 分割范围
-     * @param string $splitWord 分割字符
      * @return void
      */
-    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
+    public function pageNav()
     {
         $query = Typecho_API::pathToUrl('users.php?' . http_build_query($this->_filterQuery) . '&page={page}', $this->options->adminUrl);
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
-        $nav->render($prev, $next, $splitPage, $splitWord);
+        $nav->render(_t('上一页'), _t('下一页'));
     }
 }

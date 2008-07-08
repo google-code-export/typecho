@@ -165,6 +165,7 @@ margin-right:2px;
 }
 
 .page_nav span.current {
+border: 1px solid #7D98B8;
 background-position: 0% 40%;
 }
 

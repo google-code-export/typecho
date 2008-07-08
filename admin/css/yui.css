@@ -178,6 +178,13 @@ version: 2.5.2
 
 }
 
+.submit .yui-button-focus button, 
+.submit .yui-button-focus a {
+
+    color: #FFF;
+
+}
+
 .yui-skin-sam .yui-split-button-focus button {
 
     background-image: url(../images/split-button-arrow-focus.png);
