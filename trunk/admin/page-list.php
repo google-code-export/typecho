@@ -73,7 +73,7 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
                             $("tr", table).removeClass("alt");
                             $("tr:even", table).addClass("alt");
                             $.ajax({
-                                type: 'POST',
+                                type: 'GET',
                                 url: '<?php $options->index('/Contents/Page/Edit.do'); ?>',
                                 data: $("input[@type=hidden]", table).serialize() + '&do=sort',
                                 cache: false

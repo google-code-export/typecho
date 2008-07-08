@@ -62,7 +62,7 @@ require_once 'menu.php';
                             $("tr", table).removeClass("alt");
                             $("tr:even", table).addClass("alt");
                             $.ajax({
-                                type: 'POST',
+                                type: 'GET',
                                 url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
                                 data: $("input[@type=hidden]", table).serialize() + '&do=sort',
                                 cache: false

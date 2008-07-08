@@ -102,7 +102,7 @@ function ajaxInsertCategory(category) {
     var icategory = category;
 
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
         data: 'name=' + category + '&do=ajaxInsert',
         dataType: "xml",

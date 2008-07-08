@@ -307,7 +307,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
      * @param string $default 默认输出头像
      * @return void
      */
-    public function avatar($size = 40, $rating = 'X', $default = NULL)
+    public function gravatar($size = 40, $rating = 'X', $default = NULL)
     {
         echo '<img src="http://www.gravatar.com/avatar.php?gravatar_id=' . md5($this->mail) . '&size=' .
         $rating . '&default=' . $default . '" alt="' . $this->author . '" width="' . $size . '" height="' . $size . '" />';

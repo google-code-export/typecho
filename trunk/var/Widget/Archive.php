@@ -99,9 +99,6 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             /** 单篇内容 */
             case 'page':
             case 'post':
-            
-                /** 兼容页面和文章 */
-                $select->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'page');
                 
                 /** 如果是单篇文章或独立页面 */
                 if(NULL !== Typecho_Request::getParameter('cid'))
@@ -505,6 +502,63 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         echo NULL == $this->password || 
         $this->password == Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password'))
         ? $this->title : _t('此文章被密码保护');
+    }
+    
+    /**
+     * 显示下一个内容的标题链接
+     * 
+     * @access public
+     * @param string $format 格式
+     * @param string $default 如果没有下一篇,显示的默认文字
+     * @return void
+     */
+    public function theNext($format = '%s', $default = NULL)
+    {
+        $content = $this->db->fetchRow($this->select()->where('table.contents.`created` > ? AND table.contents.`created` < ?',
+        $this->created, $this->options->gmtTime)
+        ->where('table.contents.`type` = ?', $this->type)
+        ->group('table.contents.`cid`')
+        ->order('table.contents.`created`', Typecho_Db::SORT_ASC)
+        ->limit(1));
+        
+        if($content)
+        {
+            $content = $this->filter($content);
+            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+            printf($format, $link);
+        }
+        else
+        {
+            echo $default;
+        }
+    }
+    
+    /**
+     * 显示上一个内容的标题链接
+     * 
+     * @access public
+     * @param string $format 格式
+     * @param string $default 如果没有上一篇,显示的默认文字
+     * @return void
+     */
+    public function thePrev($format = '%s', $default = NULL)
+    {
+        $content = $this->db->fetchRow($this->select()->where('table.contents.`created` < ?', $this->created)
+        ->where('table.contents.`type` = ?', $this->type)
+        ->group('table.contents.`cid`')
+        ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
+        ->limit(1));
+        
+        if($content)
+        {
+            $content = $this->filter($content);
+            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+            printf($format, $link);
+        }
+        else
+        {
+            echo $default;
+        }
     }
     
     /**
