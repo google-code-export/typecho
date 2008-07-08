@@ -114,10 +114,10 @@ class Typecho_API
         self::setContentType('text/xml', $charset);
         
         /** 构建消息体 */
-        echo '<?xml version="1.0" encoding="' . $charset . '"?>';
-        echo '<response><![CDATA[';
-        echo $message;
-        echo ']]></response>';
+        echo '<?xml version="1.0" encoding="' . $charset . '"?>',
+        '<response><![CDATA[',
+        $message,
+        ']]></response>';
         
         /** 终止后续输出 */
         die;
