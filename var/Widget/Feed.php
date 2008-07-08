@@ -158,7 +158,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
                 $item = $this->feed->createNewItem();
                 $item->setTitle($comments->author);
                 $item->setLink($comments->permalink);
-                $item->setDate($comments->created + idate('Z'));
+                $item->setDate($comments->date + $this->options->timezone);
                 $item->setDescription($comments->text);
 
                 if(Typecho_Feed::RSS2 == $this->type)
@@ -189,7 +189,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
         $item = $this->feed->createNewItem();
         $item->setTitle($value['title']);
         $item->setLink($value['permalink']);
-        $item->setDate($value['created'] + idate('Z'));
+        $item->setDate($value['created'] + $this->options->timezone);
         
         /** RSS全文输出开关支持 */
         if($this->options->feedFullArticlesLayout)

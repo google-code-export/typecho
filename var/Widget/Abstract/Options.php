@@ -57,6 +57,11 @@ class Widget_Abstract_Options extends Typecho_Widget_Abstract_Dataset
         $this->feedUrl = Typecho_Router::url('feed', array('feed' => '/'), $this->index);
         $this->feedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
         $this->feedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
+        
+        /** 初始化评论Feed地址 */
+        $this->commentsFeedUrl = Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
+        $this->commentsFeedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
+        $this->commentsFeedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
 
         /** 初始化常用地址 */
         $this->xmlRpcUrl = Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
