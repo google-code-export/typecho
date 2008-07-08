@@ -607,8 +607,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * 输出cookie记忆别名
      * 
      * @access public
-     * @param unknown $cookieName
-     * @return unknown
+     * @param string $cookieName 已经记忆的cookie名称
+     * @return string
      */
     public function remember($cookieName)
     {
