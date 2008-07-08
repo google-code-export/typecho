@@ -6,7 +6,12 @@ $(document).ready(function() {
 	$("table.latest tr").mouseover(function() {  
 		 $(this).addClass("over"); }).mouseout(function() { 
 			 $(this).removeClass("over"); });
-	$("table.latest tr:even").addClass("alt");
+	$("table.latest tr:even").each(function(){
+        classes = $(this).attr('class');
+        $(this).removeAttr("class");
+        $(this).addClass("alt");
+        $(this).addClass(classes);
+    });
 	$("table.setting tr:odd").addClass("alt");
     
     $("table.latest tr:first th:first input").click(function() {

@@ -182,8 +182,9 @@ table.latest tr td { padding: 5px 10px; }
 table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) left bottom repeat-x; border-bottom-color: #B0CAE6; text-transform: capitalize; }
 table.latest img{ margin: 0 0 -4px 0; }
 
-table.latest .spam, table.latest .deactivated { font-style: italic; font-size: .95em; }
-table.latest .activated, table.latest .waiting, table.latest .draft, table.latest .page_draft { font-weight: bold; }
+table.latest tr.activated { background-color:#E6EFC2; }
+table.latest tr.spam { background-color:#FBE3E4; }
+table.latest tr.waiting, table.latest tr.draft, table.latest tr.page_draft { background-color: #FFF6BF; }
 
 table#comment_list {
 background: #fff;
