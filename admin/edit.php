@@ -102,9 +102,10 @@ function ajaxInsertCategory(category) {
     var icategory = category;
 
     $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '<?php $options->index('/Metas/Category/Edit.do'); ?>',
         data: 'name=' + encodeURIComponent(category) + '&do=ajaxInsert',
+        contentType: "application/x-www-form-urlencoded; charset=<?php $options->charset(); ?>",
         dataType: "xml",
         cache: false,
         success: function(xml){

@@ -49,9 +49,10 @@ Typecho_API::factory('Widget_Metas_Link_List')->to($links);
                             $("tr", table).removeClass("alt");
                             $("tr:even", table).addClass("alt");
                             $.ajax({
-                                type: 'GET',
+                                type: 'POST',
                                 url: '<?php $options->index('/Metas/Link/Edit.do'); ?>',
                                 data: $("input[@type=hidden]", table).serialize() + '&do=sort',
+                                contentType: "application/x-www-form-urlencoded; charset=<?php $options->charset(); ?>",
                                 cache: false
                             });
                         }
