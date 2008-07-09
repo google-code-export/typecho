@@ -20,6 +20,34 @@
 class Typecho_API
 {
     /**
+     * 解析ajax回执的内部函数
+     * 
+     * @access private
+     * @param mixed $message 格式化数据
+     * @return string
+     */
+    private static function _parseAjaxResponse($message)
+    {
+        /** 对于数组型则继续递归 */
+        if(is_array($message))
+        {
+            $result = '';
+            
+            foreach($message as $key => $val)
+            {
+                $tagName = is_int($key) ? 'item' : $key;
+                $result .= '<' . $tagName . '>' . self::_parseAjaxResponse($val) . '</' . $tagName . '>';
+            }
+            
+            return $result;
+        }
+        else
+        {
+            return '<![CDATA[' . $message . ']]>';
+        }
+    }
+
+    /**
      * 注册自动载入函数
      * 
      * @access public
@@ -115,9 +143,9 @@ class Typecho_API
         
         /** 构建消息体 */
         echo '<?xml version="1.0" encoding="' . $charset . '"?>',
-        '<response><![CDATA[',
-        $message,
-        ']]></response>';
+        '<response>',
+        self::_parseAjaxResponse($message),
+        '</response>';
         
         /** 终止后续输出 */
         die;

@@ -47,6 +47,14 @@ class Typecho_Validate
      * @var array
      */
     private $_rules = array();
+    
+    /**
+     * 中断模式,一旦出现验证错误即抛出而不再继续执行
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_break = false;
 
     /**
      * 增加验证规则
@@ -71,6 +79,17 @@ class Typecho_Validate
         }
         
         return $this;
+    }
+    
+    /**
+     * 设置为中断模式
+     * 
+     * @access public
+     * @return void
+     */
+    public function setBreak()
+    {
+        $this->_break = true;
     }
 
     /**
@@ -113,6 +132,12 @@ class Typecho_Validate
                     $result[$key] = $message;
                     break;
                 }
+            }
+            
+            /** 开启中断 */
+            if($this->_break && $result)
+            {
+                break;
             }
         }
 

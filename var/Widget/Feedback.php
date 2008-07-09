@@ -135,8 +135,26 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $trackback['url'] = strip_tags(Typecho_Request::getParameter('url'));
         $trackback['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('excerpt'), $this->options->commentsHTMLTagAllowed);
         
+        //检验格式
+        $validator = new Typecho_Validate();
+        $validator->addRule('url', 'required', 'We require all Trackbacks to provide an url.')
+        ->addRule('url', 'url', 'Your url is not valid.')
+        ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
+        ->addRule('blog_name', 'required', 'We require all Trackbacks to provide an blog name.');
+        
+        try
+        {
+            $validator->setBreak();
+            $validator->run($trackback);
+        }
+        catch(Typecho_Validate_Exception $e)
+        {
+            $message = array('success' => 1, 'message' => $e->getMessage());
+            Typecho_API::throwAjaxResponse($message);
+        }
+        
         /** 生成过滤器 */
-        Typecho_Plugin::instance(__FILE__)->filter(__METHOD__, $trackback);
+        _p(__FILE__, 'Filter')->trackback($trackback);
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
