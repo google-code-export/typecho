@@ -46,7 +46,7 @@
                 <?php else: ?>
                     <li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>">Login</a></li>
                 <?php endif; ?>
-                <li><a href="#">Valid XHTML</a></li>
+                <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
                 <li><a href="http://www.typecho.org">Typecho</a></li>
             </ul>
         </div>

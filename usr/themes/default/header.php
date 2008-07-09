@@ -62,6 +62,10 @@
 			<span><?php $this->options->description() ?></span>
 		</div>
 		<div class="grid_7">
-			<div id="search"><form method="post"><input type="text" name="keywords" class="text" size="40" /> <input type="submit" class="submit" value="Search" /></form></div>
+			<div id="search">
+                <form method="post" action="">
+                <p><input type="text" name="keywords" class="text" size="40" /> <input type="submit" class="submit" value="Search" /></p>
+                </form>
+            </div>
 		</div>
     </div><!-- end #header -->

@@ -284,14 +284,15 @@ class Typecho_API
             foreach($startTags[1] as $key => $tag)
             {
                 $attrLength = strlen($startTags[2][$key]);
-                if($attrLength > 0 && "/" == $startTags[2][$key][$attrLength - 1])
+                if($attrLength > 0 && "/" == trim($startTags[2][$key][$attrLength - 1]))
                 {
                     continue;
                 }
                 if(!empty($closeTags[1]) && $closeTagsIsArray)
                 {
-                    if(in_array($tag, $closeTags[1]))
+                    if(false !== ($index = array_search($tag, $closeTags[1])))
                     {
+                        unset($closeTags[1][$index]);
                         continue;
                     }
                 }
@@ -299,7 +300,7 @@ class Typecho_API
             }
         }
 
-        return $string;
+        return preg_replace("/\<br\s*\/\>\s*\<\/p\>/is", '</p>', $string);
     }
 
     /**

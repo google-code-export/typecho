@@ -574,7 +574,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options->keywords)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
         'href' => Typecho_API::pathToUrl('wlwmanifest.xml', $this->options->adminUrl))))
