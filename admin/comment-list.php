@@ -66,10 +66,9 @@ require_once 'menu.php';
                         }
                     ?>" />
                     <?php $comments->dateWord(); ?></td>
-					<td>
-                    <?php $comments->author(false); ?>
-                    <?php if($comments->url): ?><a target="_blank" href="<?php $comments->url(); ?>"><img width="16" height="16" src="<?php $options->adminUrl('/images/icons/homepage.gif'); ?>" alt="homepage" /></a><?php endif; ?>
+					<td class="showline">
                     <?php if($comments->mail): ?><a href="mailto:<?php $comments->mail(); ?>"><img width="16" height="16" src="<?php $options->adminUrl('/images/icons/email.gif'); ?>" alt="email" /></a><?php endif; ?>
+                    <?php $comments->author(); ?>
                     </td>
 					<td><?php $comments->excerpt(30); ?></td>
 					<td><a target="_blank" href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>

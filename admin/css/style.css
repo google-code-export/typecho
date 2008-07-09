@@ -183,6 +183,8 @@ table.latest tr th, table.latest tr td { text-align: left; padding: 2px 10px; ve
 table.latest tr td { padding: 5px 10px; }
 table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) left bottom repeat-x; border-bottom-color: #B0CAE6; text-transform: capitalize; }
 table.latest img{ margin: 0 0 -4px 0; }
+table.latest tr td.showline a{ text-decoration:underline; }
+table.latest tr td.showline a:hover{ text-decoration: none; }
 
 table.latest tr.activated { background-color:#E6EFC2; }
 table.latest tr.spam { background-color:#FBE3E4; }
