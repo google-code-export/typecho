@@ -123,18 +123,6 @@ abstract class Typecho_Widget implements Iterator
     }
     
     /**
-     * 如果是第一个则输出字符串
-     * 
-     * @access public
-     * @param string $string
-     * @return void
-     */
-    public function first($string)
-    {
-        echo (0 === key($this->_stack)) ? $string : NULL;
-    }
-    
-    /**
      * 输出顺序值
      * 
      * @access public

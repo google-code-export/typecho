@@ -34,14 +34,17 @@ class Widget_Contents_Related extends Widget_Abstract_Contents
     {
         parent::__construct();
     
-        $tagsGroup = implode(',', Typecho_API::arrayFlatten($tags, 'mid'));
-        $this->db->fetchAll($this->select()->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
-        ->where('table.relationships.`mid` in (' . $tagsGroup . ')')
-        ->where('table.contents.`cid` <> ?', $cid)
-        ->where('table.contents.`password` IS NULL')
-        ->where('table.contents.`created` < ?', $this->options->gmtTime)
-        ->where('table.contents.`type` = ?', $type)
-        ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
-        ->group('table.contents.`cid`')->limit($limit), array($this, 'push'));
+        if($tags)
+        {
+            $tagsGroup = implode(',', Typecho_API::arrayFlatten($tags, 'mid'));
+            $this->db->fetchAll($this->select()->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
+            ->where('table.relationships.`mid` in (' . $tagsGroup . ')')
+            ->where('table.contents.`cid` <> ?', $cid)
+            ->where('table.contents.`password` IS NULL')
+            ->where('table.contents.`created` < ?', $this->options->gmtTime)
+            ->where('table.contents.`type` = ?', $type)
+            ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
+            ->group('table.contents.`cid`')->limit($limit), array($this, 'push'));
+        }
     }
 }
