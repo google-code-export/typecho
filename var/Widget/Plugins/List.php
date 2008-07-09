@@ -32,16 +32,16 @@ class Widget_Plugins_List extends Typecho_Widget
             $pluginName = basename($pluginDir);
         
             /** 获取插件主文件 */
-            $pluginFileName = $pluginDir . '/' . $pluginName . '.php';
+            $pluginFileName = $pluginDir . '/Plugin.php';
             
             if(file_exists($pluginFileName))
             {
                 require_once $pluginFileName;
                 
                 /** 获取插件信息 */
-                if(is_callable(array('Plugin_' . $pluginName, 'information')))
+                if(is_callable(array($pluginName . '_Plugin', 'information')))
                 {
-                    $information = call_user_func(array('Plugin_' . $pluginName, 'information'));
+                    $information = call_user_func(array($pluginName . '_Plugin', 'information'));
                     $information['name'] = $pluginName;
                     $information['check'] = isset($information['check']) ? 
                     str_replace('{version}', $information['version'], $information['check']) : $information['homepage'];

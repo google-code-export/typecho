@@ -1,5 +1,5 @@
 <?php
-class Plugin_HelloWorld implements Typecho_Plugin_Interface
+class HelloWorld_Plugin implements Typecho_Plugin_Interface
 {
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
@@ -35,7 +35,7 @@ class Plugin_HelloWorld implements Typecho_Plugin_Interface
     {
         /** 注册一个Layout插件 */
         _p(__TYPECHO_ROOT_DIR__ . '/admin/menu.php', 'Layout')->navBar 
-        = array('Plugin_HelloWorld', 'render');     //将其注册到自身的render函数
+        = array('HelloWorld_Plugin', 'render');     //将其注册到自身的render函数
     }
     
     /**

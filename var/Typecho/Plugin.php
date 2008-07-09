@@ -51,14 +51,14 @@ class Typecho_Plugin
     {
         foreach($plugins as $pluginName)
         {
-            $pluginFileName = $rootPath . '/' . $pluginName . '/' . $pluginName . '.php';
+            $pluginFileName = $rootPath . '/' . $pluginName . '/Plugin.php';
             if(file_exists($pluginFileName))
             {
                 /** 载入插件主文件 */
                 require_once $pluginFileName;
                 
                 /** 运行初始化方法 */
-                call_user_func(array('Plugin_' . $pluginName, 'init'));
+                call_user_func(array($pluginName . '_Plugin', 'init'));
             }
             else
             {

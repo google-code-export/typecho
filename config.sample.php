@@ -10,9 +10,6 @@
 /** 定义根目录 */
 define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
-/** 设置包含路径 */
-@set_include_path(__TYPECHO_ROOT_DIR__ . '/var');
-
 /** 定义插件目录(相对路径) */
 define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
 
@@ -30,6 +27,11 @@ define('__TYPECHO_CHARSET__', 'UTF-8');
 
 /** 定义gzip支持 **/
 define('__TYPECHO_GZIP_ENABLE__', false);
+
+/** 设置包含路径 */
+@set_include_path(get_include_path() . PATH_SEPARATOR . 
+__TYPECHO_ROOT_DIR__ . '/var' . PATH_SEPARATOR . 
+__TYPECHO_ROOT_DIR__ . __TYPECHO_PLUGIN_DIR__);
 
 /** 载入API支持 */
 require_once 'Typecho/API.php';
@@ -108,4 +110,4 @@ Typecho_API::obStart(__TYPECHO_GZIP_ENABLE__);
 Typecho_API::setDefaultTimezone();
 
 /** 设置输出类型 */
-Typecho_API::setContentType('text/html', __TYPECHO_CHARSET__);
+Typecho_API::setContentType();
