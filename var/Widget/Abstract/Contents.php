@@ -446,16 +446,16 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      */
     public function tags($split = ',', $link = true, $default = NULL)
     {
-        $tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db->sql()
+        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db->sql()
         ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $this->cid)
         ->where('table.metas.`type` = ?', 'tag')
         ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
 
-        if($tags)
+        if($this->tags)
         {
             $result = array();
-            foreach($tags as $tag)
+            foreach($this->tags as $tag)
             {
                 $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
                 . $tag['name'] . '</a>' : $tag['name'];

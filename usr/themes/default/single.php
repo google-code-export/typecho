@@ -11,11 +11,12 @@
 					<div class="single_data clearfix">
 						<h3>Related Articles</h3>
 						<ul id="related_post">
-							<li><a href="#">MySpace, a Virtual Mirror of Society</a></li>
-							<li><a href="#">Religion in the Modern world</a></li>
-							<li><a href="#">A 13-Year-Old is Not a Playboy Bunny</a></li>
-							<li><a href="#">Truth Behind the Mask</a></li>
-							<li><a href="#">The Business of Blogging and How It is Mostly Rubbish</a></li>
+							<?php $this->related(5)->to($related); ?>
+                            <?php if($related->have()): ?>
+                                <?php $related->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
+                            <?php else: ?>
+                                There are no related articles.
+                            <?php endif; ?>
 						</ul>
 					</div>
 		        </div>

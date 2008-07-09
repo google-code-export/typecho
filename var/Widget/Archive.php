@@ -517,6 +517,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         $content = $this->db->fetchRow($this->select()->where('table.contents.`created` > ? AND table.contents.`created` < ?',
         $this->created, $this->options->gmtTime)
         ->where('table.contents.`type` = ?', $this->type)
+        ->where('table.contents.`password` IS NULL')
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_ASC)
         ->limit(1));
@@ -545,6 +546,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.`created` < ?', $this->created)
         ->where('table.contents.`type` = ?', $this->type)
+        ->where('table.contents.`password` IS NULL')
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
         ->limit(1));
@@ -559,6 +561,24 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
         {
             echo $default;
         }
+    }
+    
+    /**
+     * 获取关联内容组件
+     * 
+     * @access public
+     * @param integer $limit 输出数量
+     * @return Typecho_Widget
+     */
+    public function related($limit = 5)
+    {
+        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db->sql()
+        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
+        ->where('table.relationships.`cid` = ?', $this->cid)
+        ->where('table.metas.`type` = ?', 'tag')
+        ->group('table.metas.`mid`'), array($this->abstractMetasWidget, 'filter'));
+        
+        return Typecho_API::factory('Widget_Contents_Related', $this->cid, $this->type, $this->tags, $limit);
     }
     
     /**
@@ -593,13 +613,13 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * 根据别名获取widget对象
      * 
      * @access public
-     * @param string $alias
+     * @param string $alias 组件别名
      * @return Typecho_Widget
      */
     public function widget($alias)
     {
         $args = func_get_args();
-        $args[0] = 'Widget_' . str_replace('/', '_', $alias);
+        $args[0] = str_replace('/', '_', $alias);
         return call_user_func_array(array('Typecho_API', 'factory'), $args);
     }
     
