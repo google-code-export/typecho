@@ -8,16 +8,6 @@
 		        </div>
 			    <div class="entry_text">
 				    <?php $this->content(); ?>
-					<div class="single_data clearfix">
-						<h3>Related Articles</h3>
-						<ul id="related_post">
-							<li><a href="#">MySpace, a Virtual Mirror of Society</a></li>
-							<li><a href="#">Religion in the Modern world</a></li>
-							<li><a href="#">A 13-Year-Old is Not a Playboy Bunny</a></li>
-							<li><a href="#">Truth Behind the Mask</a></li>
-							<li><a href="#">The Business of Blogging and How It is Mostly Rubbish</a></li>
-						</ul>
-					</div>
 		        </div>
 				<div class="entry_data"><?php $this->author(); ?> on <?php $this->date('F j, Y'); ?> 
                 | Filed Under <?php $this->category(','); ?> | <?php $this->commentsNum('%d Comments'); ?>.<br />

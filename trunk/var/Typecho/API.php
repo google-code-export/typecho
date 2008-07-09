@@ -177,16 +177,7 @@ class Typecho_API
         
         if(!isset($classStack[$className]))
         {
-            $fileName = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
-            
-            /** 如果文件不存在 */
-            if(!file_exists($fileName))
-            {
-                /** Typecho_Exception */
-                require_once 'Typecho/Exception.php';
-                throw new Typecho_Exception($fileName, Typecho_Exception::NOTFOUND);
-            }
-            
+            $fileName = str_replace('_', '/', $className) . '.php';            
             require_once $fileName;
             
             /** 如果类不存在 */
