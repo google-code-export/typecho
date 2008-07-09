@@ -29,7 +29,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
     public function activatePlugin()
     {
         $pluginName = Typecho_Request::getParameter('plugin');
-        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
@@ -39,12 +39,12 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array('Plugin_' . $pluginName, 'activate')) && 
+            if(is_callable(array($pluginName . '_Plugin', 'activate')) && 
             !in_array($pluginName, $activatedPlugins))
             {
                 try
                 {
-                    call_user_func(array('Plugin_' . $pluginName, 'activate'));
+                    call_user_func(array($pluginName . '_Plugin', 'activate'));
                 }
                 catch(Typecho_Plugin_Exception $e)
                 {
@@ -58,7 +58,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
                 Typecho_Db::get()->sql()->where('`name` = ?', 'plugins'));
                 
                 /** 获取插件信息 */
-                if(is_callable(array('Plugin_' . $pluginName, 'config')))
+                if(is_callable(array($pluginName . '_Plugin', 'config')))
                 {
                     try
                     {
@@ -69,7 +69,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
                         Typecho_Widget_Helper_Form::POST_METHOD);
                         
                         /** 配置插件面板 */
-                        call_user_func(array('Plugin_' . $pluginName, 'config'), $this->form);
+                        call_user_func(array($pluginName . '_Plugin', 'config'), $this->form);
                         Typecho_API::factory('Widget_Abstract_Options')->insert(array('value' => serialize($this->form->getValues()),
                         'name' => 'plugin:' . $pluginName));
                     }
@@ -99,7 +99,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
     public function deactivatePlugin()
     {
         $pluginName = Typecho_Request::getParameter('plugin');
-        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
@@ -109,12 +109,12 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_DoW
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array('Plugin_' . $pluginName, 'deactivate')) && 
+            if(is_callable(array($pluginName . '_Plugin', 'deactivate')) && 
             in_array($pluginName, $activatedPlugins))
             {
                 try
                 {
-                    call_user_func(array('Plugin_' . $pluginName, 'deactivate'));
+                    call_user_func(array($pluginName . '_Plugin', 'deactivate'));
                 }
                 catch(Typecho_Plugin_Exception $e)
                 {
