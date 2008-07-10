@@ -192,7 +192,7 @@ class Typecho_Widget_Helper_Layout
     public function start()
     {
         /** 输出标签 */
-        echo "<{$this->_tagName}";
+        echo $this->_tagName ? "<{$this->_tagName}" : NULL;
         
         /** 输出属性 */
         foreach($this->_attributes as $attributeName => $attributeValue)
@@ -201,7 +201,7 @@ class Typecho_Widget_Helper_Layout
         }
         
         /** 支持自闭合 */
-        if(!$this->_close)
+        if(!$this->_close && $this->_tagName)
         {
             echo ">\n";
         }
@@ -215,7 +215,10 @@ class Typecho_Widget_Helper_Layout
      */
     public function end()
     {
-        echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
+        if($this->_tagName)
+        {
+            echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
+        }
     }
     
     /**

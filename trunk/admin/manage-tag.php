@@ -23,21 +23,39 @@ require_once 'menu.php';
         </form>
         
         <form method="post" name="tag" id="tag" action="<?php $options->index('/Metas/Tag/Edit.do'); ?>">
-            <p>
-                <?php Typecho_API::factory('Widget_Metas_Tag_Cloud')->to($tags); ?>
+			<table class="latest">
+				<tr>
+					<th width="1%"><input type="checkbox" id="" /></th>
+					<th width="40%"><?php _e('标签名称'); ?></th>
+					<th width="20%"><?php _e('文章'); ?></th>
+					<th width="39%"><?php _e('标签缩略名'); ?></th>
+				</tr>
+                <?php Typecho_API::factory('Widget_Metas_Tag_Admin')->to($tags); ?>
                 <?php if($tags->have()): ?>
-				<?php while($tags->get()): ?>
-				<label class="table_nav" for="tag-<?php $tags->mid(); ?>">
-					<input type="checkbox" name="mid[]" id="tag-<?php $tags->mid(); ?>" value="<?php $tags->mid(); ?>" />
-					<a style="<?php $tags->split('font-size:8pt', 'font-size:11pt', 'font-size:13pt;font-weight:bold'); ?>" href="<?php $options->adminUrl('/manage-tag.php?mid=' . $tags->mid); ?>#edit"><?php $tags->name(); ?></a>
-					<sup><a href="<?php $tags->permalink(); ?>" target="_blank"><?php $tags->count(); ?></a></sup>
-				</label>&nbsp;&nbsp;
+                <?php while($tags->get()): ?>
+                <tr>
+					<td><input type="checkbox" name="mid[]" value="<?php $tags->mid(); ?>" />
+                    <input type="hidden" name="sort[]" value="<?php $tags->mid(); ?>" /></td>
+					<td><a href="<?php $tags->adminUrl('/manage-tag.php?mid=' . $categories->mid); ?>#edit">
+                    <?php $tags->name(); ?></a>
+                    </td>
+					<td><a href="<?php $tags->permalink(); ?>">
+                    <?php _e('%d篇', $tags->count); ?></a></td>
+					<td><?php $tags->slug(); ?></td>
+				</tr>
                 <?php endwhile; ?>
                 <?php else: ?>
-                <span><?php if(NULL === Typecho_Request::getParameter('keywords')){ _e('没有任何标签,请在下方添加'); }
-                else{ _e('没有找到匹配的标签'); } ?></span>
+                <tr>
+                    <td colspan="5"><?php _e('没有任何标签,请在下方添加'); ?></td>
+                </tr>
                 <?php endif; ?>
-            </p>
+			</table>
+            
+            <?php if($tags->have()): ?>
+			<div class="table_nav page_nav">
+				<?php _e('分页:'); ?> <?php $tags->pageNav(); ?>
+			</div>
+            <?php endif; ?>
             
             <input type="hidden" name="do" value="delete" />
             <input type="hidden" name="merge" value="" />
