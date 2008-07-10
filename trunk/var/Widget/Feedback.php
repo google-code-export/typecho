@@ -41,7 +41,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  Typecho_Request::getClientIp(),
             'type'      =>  'comment',
-            'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
@@ -128,7 +128,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  Typecho_Request::getClientIp(),
             'type'      =>  'trackback',
-            'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
         $trackback['author'] = strip_tags(Typecho_Request::getParameter('blog_name'));
@@ -212,7 +212,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             }
             
             /** 判断评论间隔 */
-            if($this->options->commentsUniqueIpInterval > 0)
+            if(!$this->content->postIsWriteable() && $this->options->commentsUniqueIpInterval > 0)
             {
                 $recent = $this->db->fetchObject($this->db->sql()->select('table.comments', '`created`')
                 ->where('table.comments.`ip` = ?', Typecho_Request::getClientIp())

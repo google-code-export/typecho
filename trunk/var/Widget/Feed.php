@@ -232,7 +232,7 @@ class Widget_Feed extends Widget_Archive implements Typecho_Widget_Interface_Vie
     public function singlePush(array $value)
     {
         $value = parent::singlePush($value);
-        $this->pushCommentElement($this->comments());
+        $this->pushCommentElement($this->comments(NULL, true));
         return $value;
     }
     

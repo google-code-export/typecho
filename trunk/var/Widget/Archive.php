@@ -436,9 +436,10 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      * 
      * @access public
      * @param string $mode 评论模式
+     * @param boolean $desc 是否倒序输出
      * @return Widget_Abstract_Comments
      */
-    public function comments($mode = NULL)
+    public function comments($mode = NULL, $desc = false)
     {
         if(NULL == $this->password || 
         $this->password == Typecho_Request::getParameter('protect_password', Typecho_Request::getCookie('protect_password')))
@@ -447,13 +448,13 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             switch($mode)
             {
                 case 'comment':
-                    return Typecho_API::factory('Widget_Comments_Archive_Comment', $this->cid);
+                    return Typecho_API::factory('Widget_Comments_Archive_Comment', $this->cid, $desc);
                 case 'trackback':
-                    return Typecho_API::factory('Widget_Comments_Archive_Trackback', $this->cid);
+                    return Typecho_API::factory('Widget_Comments_Archive_Trackback', $this->cid, $desc);
                 case 'pingback':
-                    return Typecho_API::factory('Widget_Comments_Archive_Pingback', $this->cid);
+                    return Typecho_API::factory('Widget_Comments_Archive_Pingback', $this->cid, $desc);
                 default:
-                    return Typecho_API::factory('Widget_Comments_Archive', $this->cid);
+                    return Typecho_API::factory('Widget_Comments_Archive', $this->cid, $desc);
             }
         }
         else

@@ -24,9 +24,10 @@ class Widget_Comments_Archive_Trackback extends Widget_Abstract_Comments
      * 
      * @access public
      * @param integer $cid 内容主键
+     * @param boolean $desc 是否倒序输出
      * @return void
      */
-    public function __construct($cid)
+    public function __construct($cid, $desc = false)
     {
         /** 初始化评论 */
         parent::__construct();
@@ -34,6 +35,6 @@ class Widget_Comments_Archive_Trackback extends Widget_Abstract_Comments
         $this->db->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
         ->where('table.comments.`mode` = ?', 'trackback')
         ->where('table.contents.`cid` = ?', $cid)->group('table.comments.`coid`')
-        ->order('table.comments.`created`', TypechoDb::SORT_ASC), array($this, 'push'));
+        ->order('table.comments.`created`', $desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }
