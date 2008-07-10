@@ -205,13 +205,23 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
      * @param Typecho_Db_Query $condition 更新条件
      * @return mixed
      */
-    public function postIsWriteable(Typecho_Db_Query $condition)
+    public function postIsWriteable(Typecho_Db_Query $condition = NULL)
     {
-        $post = $this->db->fetchRow($condition->select('table.contents', '`author`')->limit(1));
-
-        if($post && $this->haveContentPermission($post['author']))
+        if(empty($condition))
         {
-            return true;
+            if($this->have() && $this->haveContentPermission($this->author))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            $post = $this->db->fetchRow($condition->select('table.contents', '`author`')->limit(1));
+
+            if($post && $this->haveContentPermission($post['author']))
+            {
+                return true;
+            }
         }
         
         return false;
