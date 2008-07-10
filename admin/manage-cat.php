@@ -43,7 +43,7 @@ require_once 'menu.php';
                     </td>
 					<td><?php $categories->description(); ?></td>
 					<td><a href="<?php $categories->permalink(); ?>">
-                    <?php $categories->count(); ?></a></td>
+                    <?php _e('%d篇', $categories->count); ?></a></td>
 					<td><?php $categories->slug(); ?></td>
 				</tr>
                 <?php endwhile; ?>
