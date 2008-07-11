@@ -64,7 +64,8 @@ else
             {
                 if(trim($script))
                 {
-                    $db->query($script);
+                    /** 替换前缀 */
+                    $db->query(str_replace('typecho_', Typecho_Config::get('Db')->prefix, $script));
                 }
             }
             
