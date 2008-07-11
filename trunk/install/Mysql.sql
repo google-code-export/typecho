@@ -7,8 +7,6 @@
 -- 服务器版本: 5.0.51
 -- PHP 版本: 5.2.5
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
 --
 -- 数据库: `typecho`
 --
