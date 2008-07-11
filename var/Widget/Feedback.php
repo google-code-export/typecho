@@ -79,9 +79,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
         $validator->addRule('url', 'url', _t('个人主页地址不合法'));
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['author'] = strip_tags(Typecho_Request::getParameter('author', $user->screenName));
-        $comment['mail'] = strip_tags(Typecho_Request::getParameter('mail', $user->mail));
-        $comment['url'] = strip_tags(Typecho_Request::getParameter('url', $user->url));
+        $comment['author'] = trim(strip_tags(Typecho_Request::getParameter('author', $user->screenName)));
+        $comment['mail'] = trim(strip_tags(Typecho_Request::getParameter('mail', $user->mail)));
+        $comment['url'] = trim(strip_tags(Typecho_Request::getParameter('url', $user->url)));
         $comment['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('text'), $this->options->commentsHTMLTagAllowed);
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
@@ -131,8 +131,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget
             'status'    =>  !$this->content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
-        $trackback['author'] = strip_tags(Typecho_Request::getParameter('blog_name'));
-        $trackback['url'] = strip_tags(Typecho_Request::getParameter('url'));
+        $trackback['author'] = trim(strip_tags(Typecho_Request::getParameter('blog_name')));
+        $trackback['url'] = trim(strip_tags(Typecho_Request::getParameter('url')));
         $trackback['text'] = Typecho_API::stripTags(Typecho_Request::getParameter('excerpt'), $this->options->commentsHTMLTagAllowed);
         
         //检验格式
