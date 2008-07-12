@@ -46,7 +46,7 @@ class Widget_Plugins_Config extends Typecho_Widget
     public function configPlugin()
     {
         $pluginName = Typecho_Request::getParameter('plugin');
-        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/' . $pluginName . '.php';
+        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
@@ -56,7 +56,7 @@ class Widget_Plugins_Config extends Typecho_Widget
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array('Plugin_' . $pluginName, 'config')) && 
+            if(is_callable(array($pluginName . '_Plugin', 'config')) && 
             in_array($pluginName, $activatedPlugins))
             {
                 try
@@ -69,13 +69,13 @@ class Widget_Plugins_Config extends Typecho_Widget
                     Typecho_Widget_Helper_Form::POST_METHOD);
                     
                     /** 增加一个标题 */
-                    $information = call_user_func(array('Plugin_' . $pluginName, 'information'));
+                    $information = call_user_func(array($pluginName . '_Plugin', 'information'));
                     $title = new Typecho_Widget_Helper_Layout('h4');
                     $this->form->addItem($title->html(_t('配置%s', $information['title']))
                     ->setAttribute('id', 'edit'));
                     
                     /** 配置插件面板 */
-                    call_user_func(array('Plugin_' . $pluginName, 'config'), $this->form);
+                    call_user_func(array($pluginName . '_Plugin', 'config'), $this->form);
                     
                     /** 对面板赋值 */
                     $inputs = $this->form->getInputs();

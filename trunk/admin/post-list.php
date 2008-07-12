@@ -52,8 +52,8 @@ Typecho_API::factory('Widget_Contents_Post_Admin')->to($posts);
             <form method="post" name="post" id="post" action="<?php $options->index('/Contents/Post/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
-					<th width="2%"><input type="checkbox" /></th>
-					<th width="30%"><?php _e('标题'); ?></th>
+					<th width="5%"><input type="checkbox" /></th>
+					<th width="27%"><?php _e('标题'); ?></th>
 					<th width="10%"><?php _e('作者'); ?></th>
 					<th width="15%"><?php _e('发布日期'); ?></th>
 					<th width="20%"><?php _e('分类'); ?></th>

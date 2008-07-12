@@ -177,8 +177,6 @@ text-decoration: none;
 table.latest { width: 100%; margin-bottom:2em; border: 1px solid #D6E3F1; table-layout: fixed; }
 table.latest tr.alt { background-color: #F3F6F9; }
 table.latest tr.over { background-color: #EBEFF5; }
-table.latest tr.drag { background-color: #336699; color: #FFF; }
-table.latest tr.drag a { color: #FFF; }
 table.latest tr th, table.latest tr td { text-align: left; padding: 2px 10px; vertical-align: middle; border-bottom: 1px solid #D6E3F1; white-space: nowrap; overflow: hidden; }
 table.latest tr td { padding: 5px 10px; }
 table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) left bottom repeat-x; border-bottom-color: #B0CAE6; text-transform: capitalize; }
@@ -189,6 +187,9 @@ table.latest tr td.showline a:hover{ text-decoration: none; }
 table.latest tr.activated { background-color:#E6EFC2; }
 table.latest tr.spam { background-color:#FBE3E4; }
 table.latest tr.waiting, table.latest tr.draft, table.latest tr.page_draft { background-color: #FFF6BF; }
+
+table.latest tr.drag { background-color: #336699; color: #FFF; }
+table.latest tr.drag a { color: #FFF; }
 
 table#comment_list {
 background: #fff;
