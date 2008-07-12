@@ -20,8 +20,8 @@ Typecho_API::factory('Widget_Metas_Link_List')->to($links);
 
 			<table class="latest">
 				<tr class="nodrop nodrag">
-					<th width="5%"><input type="checkbox" id="" /></th>
-					<th width="20%"><?php _e('名称'); ?></th>
+					<th width="1%"><input type="checkbox" id="" /></th>
+					<th width="24%"><?php _e('名称'); ?></th>
 					<th width="45%"><?php _e('描述'); ?></th>
 					<th width="30%"><?php _e('地址'); ?></th>
 				</tr>

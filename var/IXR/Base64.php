@@ -12,12 +12,32 @@
  *
  * @package IXR
  */
-class IXR_Base64 {
-    var $data;
-    function IXR_Base64($data) {
+class IXR_Base64
+{
+	/**
+	 * 编码数据
+	 *
+	 * @var string
+	 */
+    private $data;
+    
+    /**
+     * 初始化数据
+     *
+     * @param string $data
+     */
+    public function __construct($data)
+    {
         $this->data = $data;
     }
-    function getXml() {
-        return '<base64>'.base64_encode($this->data).'</base64>';
+    
+    /**
+     * 获取XML数据
+     *
+     * @return string
+     */
+    public function getXml()
+    {
+        return '<base64>' . base64_encode($this->data) . '</base64>';
     }
 }

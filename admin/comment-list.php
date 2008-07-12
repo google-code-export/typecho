@@ -38,10 +38,10 @@ require_once 'menu.php';
             <form method="post" name="comment" id="comment" action="<?php $options->index('/Comments/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
-					<th width="5%"><input type="checkbox" id="" /></th>
+					<th width="1%"><input type="checkbox" id="" /></th>
 					<th width="15%"><?php _e('日期'); ?></th>
 					<th width="20%"><?php _e('作者'); ?></th>
-					<th width="31%"><?php _e('摘要'); ?></th>
+					<th width="35%"><?php _e('摘要'); ?></th>
 					<th width="22%"><?php _e('文章'); ?></th>
 					<th width="7%"><?php _e('状态'); ?></th>
 				</tr>
