@@ -23,9 +23,9 @@ Typecho_API::factory('Widget_Users_Admin')->to($users);
             <form id="users" name="users" action="<?php $options->index('/Users/Edit.do'); ?>" method="post">
 			<table class="latest">
 				<tr>
-					<th width="1%"><input type="checkbox" id="" /></th>
+					<th width="5%"><input type="checkbox" id="" /></th>
 					<th width="15%"><?php _e('用户名'); ?></th>
-					<th width="25%"><?php _e('个人网站'); ?></th>
+					<th width="21%"><?php _e('个人网站'); ?></th>
 					<th width="20%"><?php _e('电子邮件'); ?></th>
 					<th width="14%"><?php _e('权限'); ?></th>
 					<th width="15%"><?php _e('最后活动'); ?></th>
