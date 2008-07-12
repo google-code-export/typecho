@@ -24,8 +24,8 @@ require_once 'menu.php';
 
 			<table class="latest">
 				<tr class="nodrop nodrag">
-					<th width="5%"><input type="checkbox" id="" /></th>
-					<th width="20%"><?php _e('分类名称'); ?></th>
+					<th width="1%"><input type="checkbox" id="" /></th>
+					<th width="24%"><?php _e('分类名称'); ?></th>
 					<th width="46%"><?php _e('分类描述'); ?></th>
 					<th width="10%"><?php _e('文章'); ?></th>
 					<th width="19%"><?php _e('分类缩略名'); ?></th>

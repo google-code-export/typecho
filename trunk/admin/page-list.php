@@ -32,8 +32,8 @@ Typecho_API::factory('Widget_Contents_Page_Admin')->to($page);
             <form method="post" name="page" id="page" action="<?php $options->index('/Contents/Page/Edit.do'); ?>">
 			<table class="latest">
 				<tr class="nodrop nodrag">
-					<th width="5%"><input type="checkbox" /></th>
-					<th width="37%"><?php _e('标题'); ?></th>
+					<th width="1%"><input type="checkbox" /></th>
+					<th width="41%"><?php _e('标题'); ?></th>
 					<th width="20%"><?php _e('作者'); ?></th>
 					<th width="15%"><?php _e('发布日期'); ?></th>
 					<th width="13%"><?php _e('评论'); ?></th>

@@ -25,8 +25,8 @@ require_once 'menu.php';
         <form method="post" name="tag" id="tag" action="<?php $options->index('/Metas/Tag/Edit.do'); ?>">
 			<table class="latest">
 				<tr>
-					<th width="5%"><input type="checkbox" id="" /></th>
-					<th width="36%"><?php _e('标签名称'); ?></th>
+					<th width="1%"><input type="checkbox" id="" /></th>
+					<th width="40%"><?php _e('标签名称'); ?></th>
 					<th width="20%"><?php _e('文章'); ?></th>
 					<th width="39%"><?php _e('标签缩略名'); ?></th>
 				</tr>
