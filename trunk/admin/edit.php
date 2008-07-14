@@ -88,7 +88,7 @@ else
             </span>
             </p>
 			
-            <h4><?php _e('缩略名'); ?></h4>
+            <h4><?php _e('缩略名(用于自定义链接)'); ?></h4>
 			<p><input id="slug" type="text" class="text" name="slug" value="<?php $post->slug(); ?>" /></p>
 		</div><!-- end #content -->
 

@@ -62,7 +62,7 @@ else
                 <input type="hidden" name="draft" value="0" />
                 <input type="hidden" name="continue" value="0" />
             </p>
-			<h4><?php _e('缩略名'); ?></h4>
+			<h4><?php _e('缩略名(用于自定义链接)'); ?></h4>
 			<p><input id="slug" type="text" name="slug" value="<?php $page->slug(); ?>" /></p>
 		</div><!-- end #content -->
 

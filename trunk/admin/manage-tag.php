@@ -28,7 +28,7 @@ require_once 'menu.php';
 					<th width="1%"><input type="checkbox" id="" /></th>
 					<th width="40%"><?php _e('标签名称'); ?></th>
 					<th width="20%"><?php _e('文章'); ?></th>
-					<th width="39%"><?php _e('标签缩略名'); ?></th>
+					<th width="39%"><?php _e('标签缩略名(用于自定义链接)'); ?></th>
 				</tr>
                 <?php Typecho_API::factory('Widget_Metas_Tag_Admin')->to($tags); ?>
                 <?php if($tags->have()): ?>
