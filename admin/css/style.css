@@ -174,13 +174,14 @@ background-position: 0% 40%;
 text-decoration: none;
 }
 
-table.latest { width: 100%; margin-bottom:2em; border: 1px solid #D6E3F1; }
+table.latest { width: 100%; margin-bottom:2em; border: 1px solid #D6E3F1; table-layout: fixed; }
 table.latest tr.alt { background-color: #F3F6F9; }
 table.latest tr.over { background-color: #EBEFF5; }
-table.latest tr th, table.latest tr td { text-align: left; padding: 2px 10px; vertical-align: middle; border-bottom: 1px solid #D6E3F1; }
+table.latest tr th, table.latest tr td { text-align: left; padding: 2px 10px; vertical-align: middle; border-bottom: 1px solid #D6E3F1; empty-cells: show; }
 table.latest tr td { padding: 5px 10px; }
 table.latest tr th { color: #369; background: #E6EEF7 url(../images/table-th.png) left bottom repeat-x; border-bottom-color: #B0CAE6; text-transform: capitalize; }
 table.latest img{ margin: 0 0 -4px 0; }
+table.latest tr td.overflow { white-space: nowrap; overflow: hidden; }
 table.latest tr td.showline a{ text-decoration:underline; }
 table.latest tr td.showline a:hover{ text-decoration: none; }
 
