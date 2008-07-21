@@ -28,7 +28,7 @@ class Typecho_Plugin_Adapter_Action extends Typecho_Plugin_Adapter
      * @access public
      * @param string $component 元件名称
      * @param string $args 参数
-     * @return mixed
+     * @return boolean
      */
     public function __call($component, $args)
     {
@@ -38,6 +38,10 @@ class Typecho_Plugin_Adapter_Action extends Typecho_Plugin_Adapter
             {
                 call_user_func_array($callback, $args);
             }
+            
+            return true;
         }
+        
+        return false;
     }
 }
