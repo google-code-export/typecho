@@ -333,7 +333,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             case 'search_page':
     
                 /** 增加自定义搜索引擎接口 */
-                _p(__FILE__, 'Action')->search($keywords);
+                $hasPushed = _p(__FILE__, 'Action')->search($keywords, $this);
     
                 $keywords = Typecho_API::filterSearchQuery($keywords);
                 $searchQuery = '%' . $keywords . '%';
@@ -401,13 +401,16 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        $query = Typecho_Router::url(Typecho_Router::$current . 
-        (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
-        $this->_pageRow, $this->options->index);
+        if(!_p(__FILE__, 'Action')->pageNav($prev, $next, $splitPage, $splitWord))
+        {
+            $query = Typecho_Router::url(Typecho_Router::$current . 
+            (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
+            $this->_pageRow, $this->options->index);
 
-        /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
-        $nav->render($prev, $next, $splitPage, $splitWord);
+            /** 使用盒状分页 */
+            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->size($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
+            $nav->render($prev, $next, $splitPage, $splitWord);
+        }
     }
     
     /**
@@ -637,6 +640,18 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
     public function remember($cookieName)
     {
         echo Typecho_Request::getCookie($cookieName);
+    }
+    
+    /**
+     * 设置主题文件
+     * 
+     * @access public
+     * @param string $fileName 主题文件
+     * @return void
+     */
+    public function setTheme($fileName)
+    {
+        $this->_themeFile = $fileName;
     }
     
     /**
