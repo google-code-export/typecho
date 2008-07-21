@@ -332,6 +332,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
             case 'search':
             case 'search_page':
     
+                /** 增加自定义搜索引擎接口 */
+                _p(__FILE__, 'Action')->search($keywords);
+    
                 $keywords = Typecho_API::filterSearchQuery($keywords);
                 $searchQuery = '%' . $keywords . '%';
                 
