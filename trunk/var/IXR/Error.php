@@ -12,14 +12,46 @@
  *
  * @package IXR
  */
-class IXR_Error {
-    var $code;
-    var $message;
-    function IXR_Error($code, $message) {
+class IXR_Error
+{
+    /**
+     * 错误代码
+     * 
+     * @access private
+     * @var integer
+     */
+    private $code;
+    
+    /**
+     * 错误消息
+     * 
+     * @access private
+     * @var string
+     */
+    private $message;
+    
+    /**
+     * 构造函数
+     * 
+     * @access public
+     * @param integer $code 错误代码
+     * @param string $message 错误消息
+     * @return void
+     */
+    public function __construct($code, $message)
+    {
         $this->code = $code;
         $this->message = $message;
     }
-    function getXml() {
+    
+    /**
+     * 获取xml
+     * 
+     * @access public
+     * @return string
+     */
+    public function getXml()
+    {
         $xml = <<<EOD
 <methodResponse>
   <fault>
