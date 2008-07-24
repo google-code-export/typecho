@@ -47,7 +47,7 @@
 				<p><input type="text" name="mail" class="text" size="50" value="<?php $this->remember('mail'); ?>" /><label>E-mail (Required *will not be published)</label></p>
 				<p><input type="text" name="url" class="text" size="50" value="<?php $this->remember('url'); ?>" /><label>Website</label></p>
                 <?php endif; ?>
-				<p><textarea rows="12" name="text"><?php $this->remember('text'); ?></textarea></p>
+				<p><textarea rows="12" cols="10" name="text"><?php $this->remember('text'); ?></textarea></p>
 				<p><input type="submit" value="Submit Comment" class="submit" /></p>
 			</form>
 		</div>
