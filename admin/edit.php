@@ -80,7 +80,7 @@ else
             </p>
 			<h4><?php _e('标签'); ?></h4>
             <?php Typecho_API::factory('Widget_Query', 'from=table.metas&type=tag&order=count&sort=DESC&limit=8')->to($tags); ?>
-			<p><input id="tags" type="text" class="text" name="tags" value="<?php $post->tags(',', false); ?>" />
+			<p><input id="tags" type="text" class="text" name="tags" value="<?php if($post->cid) $post->tags(',', false); ?>" />
             <span id="tag_list">
             <?php while($tags->get()): ?>
                 <a href="#" class="select"><?php $tags->name(); ?></a> 

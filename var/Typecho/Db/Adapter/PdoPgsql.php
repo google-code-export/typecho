@@ -141,7 +141,7 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
         $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        $sql['where'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 
     /**
@@ -176,6 +176,6 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
      */
     public function lastInsertId($resource)
     {
-        return $this->_object->lastInsertId($this->_lastInsertTable);
+        return $this->_object->lastInsertId();
     }
 }
