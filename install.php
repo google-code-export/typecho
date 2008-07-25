@@ -57,7 +57,26 @@ else
 
             $db = Typecho_Db::get();
             
-            $scripts = explode(';', file_get_contents('./install/' . Typecho_Config::get('Db')->adapter . '.sql'));
+            $adaper = Typecho_Config::get('Db')->adapter;
+            $sqlFiles = glob('./install/*.sql');
+            $selectAdapter = '';
+            $maxMatch = 0;
+            
+            foreach($sqlFiles as $file)
+            {
+                $file = substr(basename($file), 0, -4);
+                
+                if(false != strpos($adaper, $file))
+                {
+                    $selectAdapter = $file;
+                    if($file == $adaper)
+                    {
+                        break;
+                    }
+                }
+            }
+            
+            $scripts = explode(';', file_get_contents('./install/' . $selectAdapter . '.sql'));
             
             /** 初始化结构 */
             foreach($scripts as $script)
