@@ -28,7 +28,7 @@ require_once 'menu.php';
 					<th width="24%"><?php _e('分类名称'); ?></th>
 					<th width="46%"><?php _e('分类描述'); ?></th>
 					<th width="10%"><?php _e('文章'); ?></th>
-					<th width="19%"><?php _e('分类缩略名(用于自定义链接)'); ?></th>
+					<th width="19%"><?php _e('分类缩略名'); ?></th>
 				</tr>
                 <?php Typecho_API::factory('Widget_Metas_Category_List')->to($categories); ?>
                 <?php if($categories->have()): ?>
