@@ -19,6 +19,9 @@ define('__TYPECHO_THEME_DIR__', '/usr/themes');
 /** 附件存储目录(相对路径) */
 define('__TYPECHO_ATTACHMENT_DIR__', '/usr/attachment');
 
+/** 后台路径(相对路径) */
+define('__TYPECHO_ADMIN_DIR__', '/admin/');
+
 /** 定义调试开关 **/
 define('__TYPECHO_DEBUG__', true);
 
