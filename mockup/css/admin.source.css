@@ -1,0 +1,94 @@
+body {
+
+}
+
+.typecho-head-guid {
+    height: 30px;
+    background: #333;
+    color: #fff;
+    position: relative;
+}
+
+
+.typecho-head-guid dl {
+    overflow: hidden;
+    zoom: 1;
+}
+
+.typecho-head-guid dt {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    background: #333 url(../images/1.png) no-repeat top right;
+    padding-right: 15px;
+    font-size: 12px;
+    margin-left: 25px;
+    zoom: 1;
+}
+
+.typecho-head-guid dt:hover {
+    cursor: pointer;
+}
+
+.typecho-head-guid dd {
+    display: none;
+}
+
+.typecho-head-guid dd.show {
+    display: block;
+    position: absolute;
+    background: #333;
+    font-size: 12px;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;
+}
+
+.typecho-head-guid dd.show ul {
+    position: relative;
+    list-style: none;
+    top: -1px;
+}
+
+.typecho-head-guid dd.show li {
+    border-top: 1px solid #5f6159;
+    margin-bottom: 3px;
+    padding: 5px 8px;
+    margin: 0px 8px;
+}
+
+.typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
+    text-decoration: none;
+    color: #fff;
+}
+
+.typecho-head-guid dd.show a:hover {
+
+}
+
+.typecho-head-guid p.operate {
+    position:absolute;
+    font-size: 12px;
+    top: 0px;
+    right: 5px;
+    *right: 25px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.typecho-head-guid p.operate a.exit {
+    display: inline-block;
+    background: url(../images/2.png) no-repeat top left;
+    width: 20px;
+    height: 20px;
+    text-indent: -999px;
+    outline: none;
+    overflow: hidden;
+    position:relative;
+    *position:absolute;
+    top: 5px;
+}
+
+.typecho-head-guid p.operate span.author {
+    padding-right: 8px;
+}
