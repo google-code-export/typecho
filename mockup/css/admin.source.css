@@ -1,14 +1,21 @@
+/**
+ *
+ *
+ */
 body {
-
+    background: #f7fbe9;
+    font-family:"Microsoft YaHei","微软雅黑","Microsoft JhengHei","华文黑体",STHeiti,Georgia,"Times New Roman",Times,serif;
 }
 
+/**
+ * 头部导航
+ */
 .typecho-head-guid {
     height: 30px;
     background: #333;
     color: #fff;
     position: relative;
 }
-
 
 .typecho-head-guid dl {
     overflow: hidden;
@@ -92,3 +99,120 @@ body {
 .typecho-head-guid p.operate span.author {
     padding-right: 8px;
 }
+
+
+/**
+ *
+ */
+.typecho-container {
+    background: #f7fbe9;
+    width: 950px;
+    margin: 0px auto;
+}
+
+/**
+ *
+ */
+.typecho-page-title {
+    margin-top: 30px;
+    position: relative;
+    background: #f7fbe9 url(../images/3.png) repeat-x center;
+    height: 30px;
+    overflow: hidden;
+}
+
+.typecho-page-title h2 {
+    background: #f7fbe9;
+    padding-right: 10px;
+    font-size: 16px;
+    line-height: 30px;
+    height: 30px;
+    float: left;
+}
+
+.typecho-page-title p {
+    height: 30px;
+    float: right;
+    background: #f7fbe9;
+    padding-left: 5px;
+}
+
+.typecho-page-title a:link, .typecho-page-title a:visited {
+    line-height: 30px;
+    color: #e68d1c;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.typecho-page-title a:hover {
+    text-decoration: underline;
+}
+
+
+/**
+ *
+ */
+.typecho-pager {
+    font-family: arial,sans-serif;
+    text-align: center;
+    overflow: hidden;
+    height: 15px;
+    position:relative;
+}
+
+.typecho-pager div.cetner-fullwidth {
+    text-align: center;
+    position:relative;
+    left: 50%;
+}
+
+.typecho-pager div.cetner-fullwidth h4 {
+    float: left;
+    _position:relative;
+}
+
+.typecho-pager div.cetner-fullwidth ul {
+    _position:relative;
+    float: left;
+}
+
+.typecho-pager h4 {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: normal;
+}
+
+.typecho-pager ul {
+    list-style: none;
+    height: 15px;
+    line-height: 15px;
+}
+
+.typecho-pager li {
+    margin-right: 3px;
+    font-size: 12px;
+    float: left;
+    height: 15px;
+    line-height: 15px;
+    width: 15px;
+}
+
+.typecho-pager a:link, .typecho-pager a:visited {
+    text-decoration: none;
+    color: #000;
+    display: block;
+    height: 15px;
+    width: 15px;
+}
+
+.typecho-pager li.current {
+    background: #e68d1c;
+}
+
+.typecho-pager li.current a {
+    color: #fff;
+}
+
+
+
+
