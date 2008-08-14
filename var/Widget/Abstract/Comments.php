@@ -79,7 +79,7 @@ class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
     {
         return $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
         table.comments.`coid`, table.comments.`created` AS `date`, table.comments.`author`, table.comments.`mail`, table.comments.`url`, table.comments.`ip`,
-        table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`')
+        table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`, COUNT(table.comments.`cid`) AS `commentsGroupCount`')
         ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`');
     }
     

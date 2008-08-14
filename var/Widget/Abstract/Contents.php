@@ -67,7 +67,7 @@ class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
     {
         return $this->db->sql()->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
         table.contents.`modified`, table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.contents.`meta`, table.contents.`template`, table.contents.`author` AS `authorId`,
-        table.contents.`password`, table.contents.`allowComment`, table.contents.`allowPing`, table.contents.`allowFeed`, table.users.`screenName` AS `author`')
+        table.contents.`password`, table.contents.`allowComment`, table.contents.`allowPing`, table.contents.`allowFeed`, table.users.`screenName` AS `author`, COUNT(table.contents.`cid`) AS `contentsGroupCount`')
         ->join('table.users', 'table.contents.`author` = table.users.`uid`', Typecho_Db::LEFT_JOIN);
     }
     
