@@ -4,7 +4,7 @@
  */
 body {
     background: #f7fbe9;
-    font-family:"Microsoft YaHei","微软雅黑","Microsoft JhengHei","华文黑体",STHeiti,Georgia,"Times New Roman",Times,serif;
+    font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
 }
 
 /**
@@ -15,10 +15,12 @@ body {
     background: #333;
     color: #fff;
     position: relative;
+	border-bottom:2px solid #72B601;
 }
 
 .typecho-head-guid dl {
     overflow: hidden;
+	margin-left:10px;
     zoom: 1;
 }
 
@@ -27,14 +29,15 @@ body {
     height: 30px;
     line-height: 30px;
     background: #333 url(../images/1.png) no-repeat top right;
-    padding-right: 15px;
-    font-size: 12px;
-    margin-left: 25px;
+    padding: 0 15px;
+    font-size: 13px;
     zoom: 1;
 }
 
 .typecho-head-guid dt:hover {
     cursor: pointer;
+	background:#C3D9FF;
+	color:#333;
 }
 
 .typecho-head-guid dd {
@@ -44,33 +47,43 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #333;
-    font-size: 12px;
+    background: #C3D9FF;
+    font-size: 13px;
     overflow: hidden;
-    top: 0px;
-    left: 0px;
+    top: 30px;
+    left: 9px;
+	width:205px;
+	z-index:100;
+	border:1px solid #AAA;
+	border-top:none;
 }
 
 .typecho-head-guid dd.show ul {
     position: relative;
     list-style: none;
-    top: -1px;
+	top:-1px;
 }
 
 .typecho-head-guid dd.show li {
-    border-top: 1px solid #5f6159;
+    border-top: 1px solid #E8EEF7;
     margin-bottom: 3px;
-    padding: 5px 8px;
     margin: 0px 8px;
+}
+
+.typecho-head-guid dd.show a {
+	display:block;
+	padding: 5px 8px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
-    color: #fff;
+    color: #333;
 }
 
 .typecho-head-guid dd.show a:hover {
-
+	background-color:#E8EEF7;
+	text-decoration: underline;
+	color:#333;
 }
 
 .typecho-head-guid p.operate {
