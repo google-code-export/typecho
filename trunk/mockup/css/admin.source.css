@@ -257,33 +257,37 @@ body {
  *
  */
 table.typecho-list  {
-    font-size: 14px;
     width: 100%;
     margin-bottom: 25px;
+	border: 1px solid #6699CC;
+	background:#E8EDFF;
 }
 
 table.typecho-list thead {
-    background: #e5ead1;
+	background: #fff;
 }
 
 table.typecho-list th {
+	font-size: 14px;
     text-align: left;
-    padding: 2px 0;
+    padding: 15px 10px 10px;
+	color: #003399;
+	font-weight: bold;
 }
 
 table.typecho-list tr {
-
+	color:#666699;
 }
 
 table.typecho-list td {
-    font-size: 14px;
-    height: 30px;
-    line-height: 30px;
-    border-bottom: 1px dashed #ccc;
+    font-size: 12px;
+    padding: 10px;
+	border-bottom: 1px dashed #fff;
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
-    background: #ffffd9;
+    background: #D0DAFD;
+	color: #003399;
     cursor: pointer;
 }
 
@@ -292,17 +296,21 @@ table.typecho-list h4 {
 }
 
 table.typecho-list sup {
-    font-size: 12px;
+    font-size: 11px;
     margin-left: 5px;
 }
 
 table.typecho-list a:link , table.typecho-list a:visited {
-    color: #e68d1c;
+    color: #666699;
     text-decoration: none;
 }
 
+table.typecho-list a:hover, table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
+	color: #003399;
+}
+
 table.typecho-list a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 table.typecho-list span.important {
