@@ -33,3 +33,27 @@ blockquote, q { quotes: "" ""; }
 
 /* Remove annoying border on linked images. */
 a img { border: none; }
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+* html>body .clearfix {
+	display: inline-block;
+	width: 100%;
+}
+
+* html .clearfix {
+	/* Hides from IE-mac \*/
+	height: 1%;
+	/* End hide from IE-mac */
+}
+
+/* ie7 hack*/
+*+html .clearfix {
+	min-height: 1% ;
+}
