@@ -5,6 +5,7 @@
 body {
     background: #f7fbe9;
     font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+	color: #474A51;
 }
 
 /**
@@ -257,37 +258,35 @@ body {
  *
  */
 table.typecho-list  {
+    font-size: 14px;
     width: 100%;
-    margin: 25px 0;
-	border: 1px solid #6699CC;
-	background:#E8EDFF;
+    margin-bottom: 25px;
 }
 
 table.typecho-list thead {
-	background: #fff;
+    background: #e5ead1;
 }
 
 table.typecho-list th {
-	font-size: 14px;
     text-align: left;
-    padding: 15px 10px 10px;
-	color: #003399;
-	font-weight: bold;
+    padding: 5px 0;
+	font-weight:bold;
+	border-top: 1px solid #9BC14A;
 }
 
 table.typecho-list tr {
-	color:#666699;
+
 }
 
 table.typecho-list td {
-    font-size: 12px;
-    padding: 10px;
-	border-bottom: 1px dashed #fff;
+    font-size: 13px;
+    height: 32px;
+    line-height: 32px;
+    border-bottom: 1px dashed #ccc;
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
-    background: #D0DAFD;
-	color: #003399;
+    background: #ffffd9;
     cursor: pointer;
 }
 
@@ -296,21 +295,17 @@ table.typecho-list h4 {
 }
 
 table.typecho-list sup {
-    font-size: 11px;
+    font-size: 12px;
     margin-left: 5px;
 }
 
 table.typecho-list a:link , table.typecho-list a:visited {
-    color: #666699;
+    color: #e68d1c;
     text-decoration: none;
 }
 
-table.typecho-list a:hover, table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
-	color: #003399;
-}
-
 table.typecho-list a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 table.typecho-list span.important {
