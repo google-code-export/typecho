@@ -258,7 +258,7 @@ body {
  */
 table.typecho-list  {
     width: 100%;
-    margin-bottom: 25px;
+    margin: 25px 0;
 	border: 1px solid #6699CC;
 	background:#E8EDFF;
 }
