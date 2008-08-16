@@ -280,10 +280,13 @@ table.typecho-list td {
 	padding: 0 5px;
 }
 
+table.typecho-list tbody tr.even {
+	background: #ECF5CB;
+}
+
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
     color: #000;
     cursor: pointer;
-	background: #e5ead1;
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
