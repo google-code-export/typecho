@@ -5,7 +5,7 @@
 body {
     background: #f7fbe9;
     font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-	color: #474A51;
+    color: #474A51;
 }
 
 /**
@@ -16,12 +16,12 @@ body {
     background: #333;
     color: #fff;
     position: relative;
-	border-bottom:2px solid #72B601;
+    border-bottom:2px solid #72B601;
 }
 
 .typecho-head-guid dl {
     overflow: hidden;
-	margin-left:10px;
+    margin-left:10px;
     zoom: 1;
 }
 
@@ -37,8 +37,8 @@ body {
 
 .typecho-head-guid dt:hover {
     cursor: pointer;
-	background:#C3D9FF;
-	color:#333;
+    background:#C3D9FF;
+    color:#333;
 }
 
 .typecho-head-guid dd {
@@ -53,16 +53,16 @@ body {
     overflow: hidden;
     top: 30px;
     left: 9px;
-	width:205px;
-	z-index:100;
-	border:1px solid #AAA;
-	border-top:none;
+    width:205px;
+    z-index:100;
+    border:1px solid #AAA;
+    border-top:none;
 }
 
 .typecho-head-guid dd.show ul {
     position: relative;
     list-style: none;
-	top:-1px;
+    top:-1px;
 }
 
 .typecho-head-guid dd.show li {
@@ -72,8 +72,8 @@ body {
 }
 
 .typecho-head-guid dd.show a {
-	display:block;
-	padding: 5px 8px;
+    display:block;
+    padding: 5px 8px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
@@ -82,9 +82,9 @@ body {
 }
 
 .typecho-head-guid dd.show a:hover {
-	background-color:#E8EEF7;
-	text-decoration: underline;
-	color:#333;
+    background-color:#E8EEF7;
+    text-decoration: underline;
+    color:#333;
 }
 
 .typecho-head-guid p.operate {
@@ -92,9 +92,9 @@ body {
     font-size: 12px;
     top: 0px;
     right: 5px;
-    *right: 25px;
-    height: 30px;
-    line-height: 30px;
+           *right: 25px;
+           height: 30px;
+           line-height: 30px;
 }
 
 .typecho-head-guid p.operate a.exit {
@@ -106,8 +106,8 @@ body {
     outline: none;
     overflow: hidden;
     position:relative;
-    *position:absolute;
-    top: 5px;
+             *position:absolute;
+             top: 5px;
 }
 
 .typecho-head-guid p.operate span.author {
@@ -264,35 +264,33 @@ table.typecho-list  {
 }
 
 table.typecho-list thead {
-	background: #DAE7B4;
 }
 
 table.typecho-list th {
     text-align: left;
     padding: 5px;
-	font-weight:bold;
-	border-top: 1px solid #9BC14A;
+    font-weight:bold;
+    border-bottom: 2px solid #9BC14A;
 }
 
 table.typecho-list td {
     font-size: 13px;
     height: 32px;
     line-height: 32px;
-	padding: 0 5px;
-	border-bottom: 1px dashed #DEE4C5;
+    padding: 0 5px;
 }
 
 table.typecho-list tbody tr.even {
+
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
     color: #000;
     cursor: pointer;
-	background: #ECF5CB;
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
-	color: #000;
+    color: #000;
 }
 
 table.typecho-list h4 {
@@ -306,13 +304,13 @@ table.typecho-list sup {
 
 table.typecho-list a:link , table.typecho-list a:visited {
     color: #474A51;
-	border-bottom: 1px solid #DAE7B4;
+    border-bottom: 1px solid #DAE7B4;
     text-decoration: none;
 }
 
 table.typecho-list a:hover {
     text-decoration: none;
-	border-bottom: 1px solid #9BC14A;
+    border-bottom: 1px solid #9BC14A;
 }
 
 table.typecho-list span.important {
@@ -351,7 +349,7 @@ table.typecho-list span.important {
     font-size: 12px;
 }
 
-.typecho-option-item p.summary {
+.typecho-write-unit-small p.summary, .typecho-option-item p.summary {
     color: #999;
 }
 
@@ -369,3 +367,214 @@ table.typecho-list span.important {
     padding-top: 10px;
     border: 0px;
 }
+
+/**
+ *
+ */
+
+.typecho-write-plain {
+    margin-top: 25px;
+}
+
+/**
+ *
+ */
+.typecho-write-unit {
+
+}
+
+.typecho-write-unit {
+    margin-bottom: 20px;
+}
+
+.typecho-write-unit h4 {
+    background: #e5ead1;
+    font-size: 12px;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+
+.typecho-write-unit-fullwidth input[type='text'], .typecho-write-unit-fullwidth textarea {
+    border: 1px solid #dee4c5;
+    width: 944px;
+    padding: 2px;
+    font-size: 18px;
+}
+
+.typecho-write-unit-fullwidth textarea {
+    font-size: 14px;
+}
+
+.typecho-write-unit-small {
+    margin-top: 10px;
+    padding:  0px 5px;
+}
+
+.typecho-write-unit-small h4 {
+    margin-bottom: 15px;
+}
+
+.typecho-write-unit-small input {
+    border: 1px solid #dee4c5;
+    padding: 2px;
+    font-size: 16px;
+}
+
+.typecho-write-unit-small input.fullwidth,
+.typecho-write-unit-small textarea {
+    width: 300px;
+}
+
+.typecho-write-unit-small input.medium  {
+    width: 210px;
+}
+
+.typecho-write-unit-small input.small {
+    width: 80px;
+}
+
+.typecho-write-unit-small textarea {
+    overflow: auto;
+    height: 50px;
+ }
+
+ .typecho-write-unit-small p {
+     font-size: 12px;
+}
+
+.typecho-write-plain-post {
+    text-align: right;
+    margin: -10px 0px 25px;
+}
+
+/**
+ *
+ */
+ul.tag-list {
+    font-size: 12px;
+    overflow: hidden;
+    list-style: none;
+    text-align: justify;
+}
+
+ul.tag-list li {
+    float: left;
+    padding-right: 5px;
+}
+
+ul.tag-list a:link, ul.tag-list a:visited {
+    text-decoration: none;
+    outline: none;
+    color: #e68d1c;
+}
+
+ul.tag-list a:hover {
+    color: #fff;
+    background: #e68d1c;
+}
+
+/**
+ * typecho grid
+ */
+.typecho-grid  {
+    overflow: hidden;
+}
+
+.typecho-grid-3 div.grid {
+    width: 33.3%;
+    float: left;
+    overflow: hidden;
+    zoom: 1;
+}
+
+.typecho-grid div.last {
+    clear: right;
+}
+
+/**
+ *
+ */
+
+div.unit-small-list {
+    font-size: 12px;
+}
+
+div.unit-small-list p {
+    line-height: 16px;
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+div.unit-small-list span {
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+div.unit-small-list p select {
+    width: 220px;
+}
+
+div.unit-small-list a.select-date {
+    display: inline-block;
+    outline: none;
+    background: url(../images/4.png);
+    width: 15px;
+    height: 15px;
+    overflow: hidden;
+    text-indent: -999px;
+    margin: 0px 5px;
+}
+
+/**
+ *
+ */
+
+.typecho-write-unit-small ul.option-list {
+    font-size: 12px;
+}
+
+.typecho-write-unit-small ul.option-list li {
+    margin-bottom: 2px;
+}
+
+/**
+ *
+ */
+.typecho-write-unit-small ul.select-cate {
+    margin: 10px 0px;
+    background: #fff;
+    font-size: 12px;
+    width: 300px;
+}
+
+.typecho-write-unit-small ul.select-cate li {
+    position: relative;
+    height: 20px;
+    line-height: 20px;
+}
+
+.typecho-write-unit-small ul.select-cate li a {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    display: inline-block;
+    background: #ccc url(../images/5.png) no-repeat top left;
+    outline: none;
+    text-indent: -999px;
+    overflow: hidden;
+    width: 7px;
+    height: 7px;
+    visibility: hidden;
+}
+
+.typecho-write-unit-small ul.select-cate li:hover {
+    background: #e6e6e6;
+    cursor: pointer;
+}
+
+.typecho-write-unit-small ul.select-cate li:hover a {
+    visibility: inherit;
+}
+
