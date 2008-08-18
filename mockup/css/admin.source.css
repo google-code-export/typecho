@@ -264,13 +264,14 @@ table.typecho-list  {
 }
 
 table.typecho-list thead {
+	background: #DAE7B4;
 }
 
 table.typecho-list th {
     text-align: left;
     padding: 5px;
 	font-weight:bold;
-	border-bottom: 2px solid #9BC14A;
+	border-top: 1px solid #9BC14A;
 }
 
 table.typecho-list td {
@@ -278,15 +279,16 @@ table.typecho-list td {
     height: 32px;
     line-height: 32px;
 	padding: 0 5px;
+	border-bottom: 1px dashed #DEE4C5;
 }
 
 table.typecho-list tbody tr.even {
-	background: #ECF5CB;
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
     color: #000;
     cursor: pointer;
+	background: #ECF5CB;
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
