@@ -316,3 +316,54 @@ table.typecho-list a:hover {
 table.typecho-list span.important {
     color: #e68d1c;
 }
+
+/**
+ *
+ */
+.typecho-option-list {
+    position: relative;
+    overflow: hidden;
+    zoom: 1;
+    margin-top: 25px;
+}
+
+.typecho-option-item {
+    border-top: 1px dashed #dee4c5;
+    position: relative;
+    padding: 10px 0px;
+    margin: 0px;
+    top: -1px;
+}
+
+.typecho-option-item h4 {
+    position: absolute;
+    top: 12px;
+    left: 0px;
+    width: 120px;
+    text-align: right;
+    font-size: 12px;
+}
+
+.typecho-option-item p {
+    padding-left: 130px;
+    font-size: 12px;
+}
+
+.typecho-option-item p.summary {
+    color: #999;
+}
+
+.typecho-option-item input[type='text'], .typecho-option-item textarea {
+    width: 600px;
+    border: 1px solid #dee4c5;
+    padding: 2px;
+}
+
+.typecho-option-item textarea {
+    height: 200px;
+}
+
+.typecho-option-submit {
+    padding-top: 10px;
+    border: 0px;
+}
