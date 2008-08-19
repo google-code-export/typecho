@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_Interface_DoWidget
+class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_Interface_Action_Widget
 {
     /**
      * 输出表单结构

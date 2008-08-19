@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Logout extends Typecho_Widget implements Widget_Interface_DoWidget
+class Widget_Logout extends Typecho_Widget implements Widget_Interface_Action_Widget
 {
     /**
      * 开始用户登出

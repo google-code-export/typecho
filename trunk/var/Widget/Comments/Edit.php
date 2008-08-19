@@ -16,7 +16,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_Interface_DoWidget
+class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_Interface_Action_Widget
 {
     /**
      * 标记评论状态

@@ -15,15 +15,15 @@ require_once 'Typecho/Db/Adapter.php';
  *
  * @package Db
  */
-class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
+abstract class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
 {
     /**
      * 数据库对象
      *
-     * @access private
+     * @access protected
      * @var PDO
      */
-    private $_object;
+    protected $_object;
 
     /**
      * 数据库连接函数
@@ -36,9 +36,8 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
     {
         try
         {
-            $this->_object = new PDO("pgsql:dbname={$config->database};host={$config->host};port={$config->port}", $config->user, $config->password);
+            $this->_object = $this->init($config);
             $this->_object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->_object->exec("SET NAMES '{$config->charset}'");
         }
         catch(PDOException $e)
         {
@@ -47,6 +46,16 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
             throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::UNVAILABLE);
         }
     }
+
+    /**
+     * 初始化数据库 
+     * 
+     * @param Typecho_Config $config 数据库配置
+     * @abstract
+     * @access public
+     * @return PDO
+     */
+    abstract public function init(Typecho_Config $config);
 
     /**
      * 执行数据库查询
@@ -114,10 +123,7 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
      * @param string $string
      * @return string
      */
-    public function quoteColumn($string)
-    {
-        return '"' . $string . '"';
-    }
+    public function quoteColumn($string){}
 
     /**
      * 合成查询语句
@@ -126,23 +132,7 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
      * @param array $sql 查询对象词法数组
      * @return string
      */
-    public function parseSelect(array $sql)
-    {
-        if(!empty($sql['join']))
-        {
-            foreach($sql['join'] as $val)
-            {
-                list($table, $condition, $op) = $val;
-                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
-            }
-        }
-    
-        $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
-
-        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
-    }
+    public function parseSelect(array $sql){}
 
     /**
      * 取出最后一次查询影响的行数
@@ -161,12 +151,7 @@ class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
      * @access public
      * @return unknown
      */
-    public function version()
-    {
-        $resource = $this->query('SELECT VERSION() AS version');
-        $rows = $this->fetch($resource);
-        return 'PostgreSQL ' . $rows['version'];
-    }
+    public function version(){}
 
     /**
      * 取出最后一次插入返回的主键值

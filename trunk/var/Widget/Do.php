@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-class Widget_Do extends Typecho_Widget implements Typecho_Widget_Interface_Action
+class Widget_Do extends Typecho_Widget implements Widget_Interface_Action
 {
     /**
      * 入口函数,初始化路由器
@@ -34,7 +34,7 @@ class Widget_Do extends Typecho_Widget implements Typecho_Widget_Interface_Actio
             if(class_exists($widgetName))
             {
                 $reflectionWidget =  new ReflectionClass($widgetName);
-                if($reflectionWidget->implementsInterface('Widget_Interface_Do' . $prefix))
+                if($reflectionWidget->implementsInterface('Widget_Interface_Action_' . $prefix))
                 {
                     Typecho_API::factory($widgetName)->action();
                     return;

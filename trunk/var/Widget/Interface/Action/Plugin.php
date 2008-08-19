@@ -17,5 +17,5 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-interface Widget_Interface_DoWidget extends Typecho_Widget_Interface_Action
+interface Widget_Interface_Action_Plugin extends Widget_Interface_Action
 {}
