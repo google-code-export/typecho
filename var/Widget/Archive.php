@@ -623,7 +623,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      * @param string $alias 组件别名
      * @return Typecho_Widget
      */
-    public function widget($alias)
+    public function load($alias)
     {
         $args = func_get_args();
         $args[0] = str_replace('/', '_', $alias);
