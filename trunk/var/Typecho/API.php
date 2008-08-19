@@ -19,6 +19,17 @@
  */
 class Typecho_API
 {
+    /** 默认不解析的标签列表 */
+    const LOCKED_HTML_TAG = 'code|script';
+
+    /**
+     * 锁定的代码块
+     *
+     * @access private
+     * @var array
+     */
+    private static $_lockedBlocks = array();
+    
     /**
      * 解析ajax回执的内部函数
      * 
@@ -45,6 +56,20 @@ class Typecho_API
         {
             return '<![CDATA[' . $message . ']]>';
         }
+    }
+
+    /**
+     * 锁定标签回调函数
+     * 
+     * @access public
+     * @param array $matches 匹配的值
+     * @return string
+     */
+    public static function __lockHTML(array $matches)
+    {
+        $guid = uniqid(time());
+        $this->_lockedBlocks[$guid] = $matches[0];
+        return $guid;
     }
 
     /**
@@ -492,18 +517,15 @@ class Typecho_API
      */
     public static function cutParagraph($string)
     {
-        $string = "\n\n" . $string . "\n\n";
+        /** 锁定自闭合标签 */
+        $string = preg_replace_callback("/\<(" . LOCKED_HTML_TAG . ")[^\>]*\/\>/is", array('Typecho_API', '__lockHTML'), $string);
         
-        //过滤非转义分段
-        $string = preg_replace("/<\/*(div|blockquote|pre|table|tr|th|td|li|ol|ul)[^>]*>/i", "\n\n\\0\n\n", $string);
-        
-        //过滤code
-        $string = preg_replace("/<code[^>]*>/i", "\n\n\\0", $string);
-        $string = preg_replace("/<\/code[^>]*>/i", "\\0\n\n", $string);
-        $string = preg_replace("/<code[^>]*\/>/i", "\\0\n\n", $string);
-        
-        //区分段落
-        $rows = explode("\n\n", trim($string));
+        /** 锁定开标签 */
+        $string = preg_replace_callback("/\<(" . LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_API', '__lockHTML'), $string);
+
+        /** 区分段落 */
+        $this->text = preg_replace("/(\r\n|\n|\n)/", "\n", $this->text);
+        $rows = explode("\n\n", trim($this->text));
         
         $finalRows = array();
         
@@ -515,15 +537,16 @@ class Typecho_API
             if($row)
             {
                 $result = '';
-                if(!preg_match("/^<\/*(div|code|blockquote|pre|table|tr|th|td|li|ol|ul)(.*)$/i", $row))
+                if(!preg_match("/^<\/*(div|code|blockquote|pre|table|tr|th|td|li|ol|ul)(.*)$/is", $row))
                 {
                     $row = '<p>' . $row . '</p>';
                 }
                 
-                $finalRows[] = str_replace("\n", '<br />', $row);
+                $finalRows[] = preg_replace("/(\w)\n(\w)/", '\\1<br />\\2', $row);
             }
         }
-        
+
+        $this->text = str_replace(array_keys($this->_blocks), array_values($this->_blocks), $this->text);
         return implode('', $finalRows);
     }
     
