@@ -264,13 +264,14 @@ table.typecho-list  {
 }
 
 table.typecho-list thead {
+   background: #E5EAD1;
 }
 
 table.typecho-list th {
     text-align: left;
     padding: 5px;
     font-weight:bold;
-    border-bottom: 2px solid #9BC14A;
+    border-top: 1px solid #9BC14A;
 }
 
 table.typecho-list td {
@@ -278,6 +279,7 @@ table.typecho-list td {
     height: 32px;
     line-height: 32px;
     padding: 0 5px;
+    border-bottom: 1px dashed #DEE4C5;
 }
 
 table.typecho-list tbody tr.even {
