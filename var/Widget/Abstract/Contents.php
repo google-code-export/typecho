@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-class Widget_Abstract_Contents extends Typecho_Widget_Abstract_Dataset
+class Widget_Abstract_Contents extends Widget_Abstract
 {
     /**
      * 实例化的抽象Meta类

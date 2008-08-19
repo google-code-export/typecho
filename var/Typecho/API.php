@@ -68,7 +68,7 @@ class Typecho_API
     public static function __lockHTML(array $matches)
     {
         $guid = uniqid(time());
-        $this->_lockedBlocks[$guid] = $matches[0];
+        self::$_lockedBlocks[$guid] = $matches[0];
         return $guid;
     }
 
@@ -524,30 +524,17 @@ class Typecho_API
         $string = preg_replace_callback("/\<(" . LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_API', '__lockHTML'), $string);
 
         /** 区分段落 */
-        $this->text = preg_replace("/(\r\n|\n|\n)/", "\n", $this->text);
-        $rows = explode("\n\n", trim($this->text));
+        $string = preg_replace("/(\r\n|\n|\r)/", "\n", $string);
+        $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
+        $string = str_replace("\n", '<br />', $string);
         
-        $finalRows = array();
-        
-        //去掉空段落
-        foreach($rows as $row)
-        {
-            $row = trim($row);
-            
-            if($row)
-            {
-                $result = '';
-                if(!preg_match("/^<\/*(div|code|blockquote|pre|table|tr|th|td|li|ol|ul)(.*)$/is", $row))
-                {
-                    $row = '<p>' . $row . '</p>';
-                }
-                
-                $finalRows[] = preg_replace("/(\w)\n(\w)/", '\\1<br />\\2', $row);
-            }
-        }
+        /** 去掉不需要的 */
+        $string = preg_replace("/\<p\>\s*\<h([1-6])\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1>\\2</h\\1>\n", $string);
+        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>(.*)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1>\\2</\\1>\n", $string);
+        $string = preg_replace("/\<\/(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>\s*\<br\s?\/?\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>/is",
+        "</\\1>\n<\\2>", $string);
 
-        $this->text = str_replace(array_keys($this->_blocks), array_values($this->_blocks), $this->text);
-        return implode('', $finalRows);
+        return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }
     
     /**

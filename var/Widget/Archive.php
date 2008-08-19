@@ -14,7 +14,7 @@
  *
  * @package Widget
  */
-class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_Interface_ViewRenderer
+class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interface_ViewRenderer
 {
     /**
      * 调用的风格文件
@@ -596,7 +596,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Typecho_Widget_
      */
     public function header()
     {
-        $header = new Typecho_Widget_Helper_HtmlHeader();
+        $header = new Typecho_Widget_Helper_Decorator_Header();
         $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->options->description)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options->keywords)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))

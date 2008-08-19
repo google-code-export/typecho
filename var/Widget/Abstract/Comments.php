@@ -15,7 +15,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Abstract_Comments extends Typecho_Widget_Abstract_Dataset
+class Widget_Abstract_Comments extends Widget_Abstract
 {
     /**
      * 实例化的抽象Meta类

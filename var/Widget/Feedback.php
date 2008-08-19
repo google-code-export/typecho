@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Feedback extends Widget_Abstract_Comments implements Typecho_Widget_Interface_Action
+class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interface_Action
 {
     /**
      * 内容组件
