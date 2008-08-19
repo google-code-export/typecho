@@ -5,6 +5,7 @@
 测试pgsql和sqlite的sql92兼容性问题
 修复install脚本安装问题,新增变量支持
 Q3需要完成的路线图
+Archive中widget方法更改为load
 
 2008.8.14 by qining
 
