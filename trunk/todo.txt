@@ -1,3 +1,9 @@
+2008.8.19 by qining
+
+更新分段处理函数
+以及表单构建器的修饰器
+测试pgsql和sqlite的sql92兼容性问题
+
 2008.8.14 by qining
 
 测试pgsql和sqlite的sql92兼容性问题
