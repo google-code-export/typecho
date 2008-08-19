@@ -287,12 +287,11 @@ table.typecho-list tbody tr.even {
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
-    color: #000;
     cursor: pointer;
 }
 
-table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover a {
-    color: #000;
+table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
+    border-bottom: 1px dashed #9BC14A;
 }
 
 table.typecho-list h4 {
