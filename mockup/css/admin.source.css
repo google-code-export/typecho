@@ -37,7 +37,7 @@ body {
 
 .typecho-head-guid dt:hover {
     cursor: pointer;
-    background:#C3D9FF;
+    background:#E5EAD1;
     color:#333;
 }
 
@@ -48,14 +48,14 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #C3D9FF;
+    background: #E5EAD1;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
     left: 9px;
     width:205px;
     z-index:100;
-    border:1px solid #AAA;
+    border:1px solid #9BC14A;
     border-top:none;
 }
 
@@ -66,7 +66,7 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    border-top: 1px solid #E8EEF7;
+    border-top: 1px dashed #ccc;
     margin-bottom: 3px;
     margin: 0px 8px;
 }
@@ -82,7 +82,7 @@ body {
 }
 
 .typecho-head-guid dd.show a:hover {
-    background-color:#E8EEF7;
+    background-color:#f7fbe9;
     text-decoration: underline;
     color:#333;
 }
