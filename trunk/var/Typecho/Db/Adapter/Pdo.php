@@ -15,7 +15,7 @@ require_once 'Typecho/Db/Adapter.php';
  *
  * @package Db
  */
-abstract class Typecho_Db_Adapter_PdoPgsql implements Typecho_Db_Adapter
+abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
 {
     /**
      * 数据库对象

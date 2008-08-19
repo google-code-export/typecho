@@ -88,7 +88,7 @@ class Typecho_Db
         Typecho_Config::need('Db');
     
         /** 数据库适配器 */
-        require_once 'Typecho/Db/Adapter/' . Typecho_Config::get('Db')->adapter . '.php';
+        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', Typecho_Config::get('Db')->adapter) . '.php';
         $adapter = 'Typecho_Db_Adapter_' . Typecho_Config::get('Db')->adapter;
 
         //实例化适配器对象
