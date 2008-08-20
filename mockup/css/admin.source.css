@@ -579,3 +579,120 @@ div.unit-small-list a.select-date {
     visibility: inherit;
 }
 
+.typecho-dashboard-container {
+    margin-top: 25px;
+    width: 950px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.typecho-dashboard-left {
+    float: left;
+    width: 200px;
+}
+
+.typecho-dashboard-left div.dashboard-item {
+    width: 150px;
+    background: #e5ead1;
+    padding: 15px;
+    list-style: none;
+}
+
+.typecho-dashboard-left div.dashboard-item ul {
+    overflow: hidden;
+    zoom: 1;
+    position: relative;
+}
+
+.typecho-dashboard-left div.dashboard-item li {
+    border-top: 1px dashed #c0cc93;
+    height: 30px;
+    line-height: 30px;
+    top: -1px;
+    position: relative;
+}
+
+
+.typecho-dashboard-left div.dashboard-item li a:link,
+.typecho-dashboard-left div.dashboard-item li a:visited {
+    text-decoration: none;
+    color: #333;
+}
+
+.typecho-dashboard-left div.dashboard-item li a:hover {
+    text-decoration: underline;
+}
+
+.typecho-dashboard-main {
+    width: 550px;
+    float: left;
+}
+
+.typecho-dashboard-main div.main-item {
+    width: 515px;
+    margin: 0px auto 25px auto;
+    border: 1px solid #e5ead1;
+    padding: 1px;
+    overflow: hidden;
+}
+
+
+.typecho-dashboard-main div.main-item h4 {
+    background: #e5ead1;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 5px;
+}
+
+.typecho-dashboard-main div.main-item p {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px dashed #e5ead1;
+    position: relative;
+    bottom: -2px;
+    margin: 0px 5px;
+}
+
+.typecho-dashboard-main div.main-item p a:link,
+.typecho-dashboard-main div.main-item p a:visited {
+    text-decoration: none;
+    color: #e68d1c;
+}
+
+.typecho-dashboard-main div.main-item p a:hover {
+    text-decoration: underline;
+}
+
+.typecho-dashboard-right {
+    width: 200px;
+    float: left;
+    overflow: hidden;
+}
+
+.typecho-dashboard-right div.dashboard-item {
+    float: right;
+    width: 150px;
+    background: #e5ead1;
+    padding: 15px;
+}
+
+.typecho-dashboard-right div.dashboard-item h4 {
+    position: relative;
+    padding-top: 70px;
+    margin-bottom: 6px;
+}
+
+.typecho-dashboard-right div.dashboard-item h4 img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 64px;
+    height: 64px;
+}
+
+.typecho-dashboard-right div.dashboard-item p {
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 5px;
+}
+
