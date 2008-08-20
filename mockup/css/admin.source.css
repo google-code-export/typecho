@@ -66,7 +66,7 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    border-top: 1px dashed #ccc;
+    border-top: 1px dashed #C9D59F;
     margin-bottom: 3px;
     margin: 0px 8px;
 }
@@ -156,6 +156,7 @@ body {
     color: #e68d1c;
     text-decoration: none;
     font-size: 14px;
+	font-weight: bold;
 }
 
 .typecho-page-title a:hover {
