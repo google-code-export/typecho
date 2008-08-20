@@ -57,7 +57,7 @@ else
 
             $db = Typecho_Db::get();
             
-            $adaper = Typecho_Config::get('Db')->adapter;
+            $adapter = Typecho_Config::get('Db')->adapter;
             $sqlFiles = glob('./install/*.sql');
             $selectAdapter = '';
             $maxMatch = 0;
@@ -66,7 +66,7 @@ else
             {
                 $file = substr(basename($file), 0, -4);
                 
-                if(false != strpos($adaper, $file))
+                if(false !== strpos($adapter, $file))
                 {
                     $selectAdapter = $file;
                     if($file == $adaper)
