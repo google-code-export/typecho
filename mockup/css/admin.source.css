@@ -16,7 +16,7 @@ body {
     background: #333;
     color: #fff;
     position: relative;
-    border-bottom:2px solid #72B601;
+    /*border-bottom:2px solid #72B601;*/
 }
 
 .typecho-head-guid dl {
@@ -53,9 +53,9 @@ body {
     overflow: hidden;
     top: 30px;
     left: 9px;
-    width:205px;
+    width:165px;
     z-index:100;
-    border:1px solid #9BC14A;
+    border:1px solid #D1DAAD;
     border-top:none;
 }
 
@@ -153,7 +153,7 @@ body {
 
 .typecho-page-title a:link, .typecho-page-title a:visited {
     line-height: 30px;
-    color: #e68d1c;
+    color: #E47E00;
     text-decoration: none;
     font-size: 14px;
 	font-weight: bold;
@@ -221,7 +221,7 @@ body {
 }
 
 .typecho-pager li.current {
-    background: #e68d1c;
+    background: #E47E00;
 }
 
 .typecho-pager li.current a {
@@ -270,9 +270,10 @@ table.typecho-list thead {
 
 table.typecho-list th {
     text-align: left;
-    padding: 5px;
+    padding: 3px 5px;
     font-weight:bold;
-    border-top: 1px solid #9BC14A;
+    /*border-top: 1px solid #9BC14A;*/
+	border-bottom: 1px solid #D1DAAD;
 }
 
 table.typecho-list td {
@@ -292,7 +293,8 @@ table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
-    border-bottom: 1px dashed #9BC14A;
+    /*border-bottom: 1px dashed #9BC14A;*/
+	background: #F1F9DD;
 }
 
 table.typecho-list h4 {
@@ -310,12 +312,13 @@ table.typecho-list a:link , table.typecho-list a:visited {
 }
 
 table.typecho-list a:hover {
-    text-decoration: none;
-    border-bottom: 1px solid #9BC14A;
+    text-decoration: underline;
+   /* border-bottom: 1px solid #9BC14A;*/
+    color: #E47E00;
 }
 
 table.typecho-list span.important {
-    color: #e68d1c;
+    color: #E47E00;
 }
 
 /**
@@ -466,12 +469,12 @@ ul.tag-list li {
 ul.tag-list a:link, ul.tag-list a:visited {
     text-decoration: none;
     outline: none;
-    color: #e68d1c;
+    color: #E47E00;
 }
 
 ul.tag-list a:hover {
     color: #fff;
-    background: #e68d1c;
+    background: #E47E00;
 }
 
 /**
@@ -545,7 +548,6 @@ div.unit-small-list a.select-date {
  */
 .typecho-write-unit-small ul.select-cate {
     margin: 10px 0px;
-    background: #fff;
     font-size: 12px;
     width: 300px;
 }
@@ -656,7 +658,7 @@ div.unit-small-list a.select-date {
 .typecho-dashboard-main div.main-item p a:link,
 .typecho-dashboard-main div.main-item p a:visited {
     text-decoration: none;
-    color: #e68d1c;
+    color: #E47E00;
 }
 
 .typecho-dashboard-main div.main-item p a:hover {
