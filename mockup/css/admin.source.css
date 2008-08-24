@@ -12,6 +12,7 @@ body {
  * 头部导航
  */
 .typecho-head-guid {
+    border-bottom: 1px solid #ccc;
     height: 30px;
     background: #333;
     color: #fff;
@@ -29,7 +30,7 @@ body {
     float: left;
     height: 30px;
     line-height: 30px;
-    background: #333 url(../images/1.png) no-repeat top right;
+    background: #333;
     padding: 0 15px;
     font-size: 13px;
     zoom: 1;
@@ -37,8 +38,7 @@ body {
 
 .typecho-head-guid dt:hover {
     cursor: pointer;
-    background:#E5EAD1;
-    color:#333;
+    background:#E47E00;
 }
 
 .typecho-head-guid dd {
@@ -48,15 +48,16 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #E5EAD1;
+    background: #333;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
     left: 9px;
     width:165px;
     z-index:100;
-    border:1px solid #D1DAAD;
-    border-top:none;
+    border:1px solid #222;
+	border-top: 1px solid #444;
+	border-left: 1px solid #444;
 }
 
 .typecho-head-guid dd.show ul {
@@ -66,7 +67,8 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    border-top: 1px dashed #C9D59F;
+    border-top: 1px solid #444;
+	border-bottom: 1px solid #222;
     margin-bottom: 3px;
     margin: 0px 8px;
 }
@@ -78,13 +80,11 @@ body {
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
-    color: #333;
+    color: #fff;
 }
 
 .typecho-head-guid dd.show a:hover {
-    background-color:#f7fbe9;
-    text-decoration: underline;
-    color:#333;
+    color:#E47E00;
 }
 
 .typecho-head-guid p.operate {
