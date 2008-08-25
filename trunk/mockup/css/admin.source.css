@@ -12,12 +12,10 @@ body {
  * 头部导航
  */
 .typecho-head-guid {
-    border-bottom: 1px solid #ccc;
     height: 30px;
     background: #333;
     color: #fff;
     position: relative;
-    /*border-bottom:2px solid #72B601;*/
 }
 
 .typecho-head-guid dl {
@@ -38,9 +36,10 @@ body {
 	-moz-border-radius: 3px 3px 0 0;
 }
 
-.typecho-head-guid dt:hover {
+.typecho-head-guid dt:hover, .typecho-head-guid dt.current {
     cursor: pointer;
-    background:#E47E00;
+    background:#E8ECD5 url(../images/nav-menu.png) repeat-x;
+	color: #333;
 }
 
 .typecho-head-guid dd {
@@ -50,41 +49,45 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #FFF;
+    background: #EFF5D9;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
     left: 9px;
-    width:165px;
+    width:160px;
     z-index:100;
-    padding: 7px 2px;
+    /*padding: 7px 2px;
     border-left:1px solid #ddd;
     border-right:1px solid #777;
-    border-bottom:1px solid #777;
+    border-bottom:1px solid #777;*/
+	border-left: 1px solid #DDE3C1;
+	border-right: 1px solid #DDE4C1;
 }
 
 .typecho-head-guid dd.show ul {
     position: relative;
     list-style: none;
-    top:-1px;
+    /*top: -1px;*/
 }
 
 .typecho-head-guid dd.show li {
-    margin: 0px 8px;
+    /*margin: 0px 8px;*/
 }
 
 .typecho-head-guid dd.show a {
     display:block;
-    padding: 3px 8px;
+    padding: 3px 15px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
     color: #222;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #DDE3C1;
 }
 
 .typecho-head-guid dd.show a:hover {
-    background:#f4f4f4;
+    background: #E8ECD5;
 }
 
 .typecho-head-guid p.operate {
@@ -291,7 +294,6 @@ table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
-    /*border-bottom: 1px dashed #9BC14A;*/
 	background: #EFF5D9;
 }
 
