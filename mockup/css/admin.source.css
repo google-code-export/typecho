@@ -13,8 +13,7 @@ body {
  */
 .typecho-head-guid {
     border-bottom: 1px solid #ccc;
-    height: 25px;
-    padding: 5px 0;
+    height: 30px;
     background: #333;
     color: #fff;
     position: relative;
@@ -32,9 +31,11 @@ body {
     height: 25px;
     line-height: 25px;
     background: #333;
+	margin: 5px 5px 0 0;
     padding: 0 15px;
     font-size: 13px;
     zoom: 1;
+	-moz-border-radius: 3px 3px 0 0;
 }
 
 .typecho-head-guid dt:hover {
@@ -147,7 +148,7 @@ body {
     height: 30px;
     float: right;
     background: #f7fbe9;
-    padding-left: 5px;
+    padding-left: 10px;
 }
 
 .typecho-page-title a:link, .typecho-page-title a:visited {
@@ -271,7 +272,6 @@ table.typecho-list th {
     text-align: left;
     padding: 3px 5px;
     font-weight:bold;
-    /*border-top: 1px solid #9BC14A;*/
 	border-bottom: 1px solid #D1DAAD;
 }
 
@@ -280,11 +280,10 @@ table.typecho-list td {
     height: 32px;
     line-height: 32px;
     padding: 0 5px;
-    border-bottom: 1px dashed #DEE4C5;
 }
 
 table.typecho-list tbody tr.even {
-
+    background: #F4F8E3;
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
@@ -293,7 +292,7 @@ table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
     /*border-bottom: 1px dashed #9BC14A;*/
-	background: #F1F9DD;
+	background: #EFF5D9;
 }
 
 table.typecho-list h4 {
