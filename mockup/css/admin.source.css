@@ -26,19 +26,18 @@ body {
 
 .typecho-head-guid dt {
     float: left;
-    height: 25px;
-    line-height: 25px;
+    height: 26px;
+    line-height: 26px;
+	margin: 4px 4px 0 0;
     background: #333;
-	margin: 5px 5px 0 0;
     padding: 0 15px;
     font-size: 13px;
     zoom: 1;
-	-moz-border-radius: 3px 3px 0 0;
 }
 
 .typecho-head-guid dt:hover, .typecho-head-guid dt.current {
     cursor: pointer;
-    background:#E8ECD5 url(../images/nav-menu.png) repeat-x;
+    background:#E4E9CF url(../images/nav-menu.png) bottom left repeat-x;
 	color: #333;
 }
 
@@ -56,10 +55,6 @@ body {
     left: 9px;
     width:160px;
     z-index:100;
-    /*padding: 7px 2px;
-    border-left:1px solid #ddd;
-    border-right:1px solid #777;
-    border-bottom:1px solid #777;*/
 	border-left: 1px solid #DDE3C1;
 	border-right: 1px solid #DDE4C1;
 }
@@ -71,7 +66,6 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    /*margin: 0px 8px;*/
 }
 
 .typecho-head-guid dd.show a {
