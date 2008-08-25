@@ -49,14 +49,17 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: url(../images/dropdown_pane.png) left bottom no-repeat;
+    background: #FFF;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
-    left: 4px;
-    width:170px;
+    left: 9px;
+    width:165px;
     z-index:100;
-    padding:7px 5px 12px 5px;
+    padding: 7px 2px;
+    border-left:1px solid #ddd;
+    border-right:1px solid #777;
+    border-bottom:1px solid #777;
 }
 
 .typecho-head-guid dd.show ul {
@@ -66,7 +69,7 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    margin: 0px 17px 0px 8px;
+    margin: 0px 8px;
 }
 
 .typecho-head-guid dd.show a {
