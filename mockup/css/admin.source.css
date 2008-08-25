@@ -13,7 +13,8 @@ body {
  */
 .typecho-head-guid {
     border-bottom: 1px solid #ccc;
-    height: 30px;
+    height: 25px;
+    padding: 5px 0;
     background: #333;
     color: #fff;
     position: relative;
@@ -28,8 +29,8 @@ body {
 
 .typecho-head-guid dt {
     float: left;
-    height: 30px;
-    line-height: 30px;
+    height: 25px;
+    line-height: 25px;
     background: #333;
     padding: 0 15px;
     font-size: 13px;
@@ -48,16 +49,14 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #333;
+    background: url(../images/dropdown_pane.png) left bottom no-repeat;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
-    left: 9px;
-    width:165px;
+    left: 4px;
+    width:170px;
     z-index:100;
-    border:1px solid #222;
-	border-top: 1px solid #444;
-	border-left: 1px solid #444;
+    padding:7px 5px 12px 5px;
 }
 
 .typecho-head-guid dd.show ul {
@@ -67,24 +66,21 @@ body {
 }
 
 .typecho-head-guid dd.show li {
-    border-top: 1px solid #444;
-	border-bottom: 1px solid #222;
-    margin-bottom: 3px;
-    margin: 0px 8px;
+    margin: 0px 17px 0px 8px;
 }
 
 .typecho-head-guid dd.show a {
     display:block;
-    padding: 5px 8px;
+    padding: 3px 8px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
-    color: #fff;
+    color: #222;
 }
 
 .typecho-head-guid dd.show a:hover {
-    color:#E47E00;
+    background:#f4f4f4;
 }
 
 .typecho-head-guid p.operate {
