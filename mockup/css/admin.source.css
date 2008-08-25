@@ -37,8 +37,8 @@ body {
 
 .typecho-head-guid dt:hover, .typecho-head-guid dt.current {
     cursor: pointer;
-    background:#E4E9CF url(../images/nav-menu.png) bottom left repeat-x;
-	color: #333;
+    background:#e47e00 url(../images/nav-menu.gif) bottom repeat-x;
+	color: #fff;
 }
 
 .typecho-head-guid dd {
@@ -48,21 +48,22 @@ body {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #EFF5D9;
+    background: #e3e8cd;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
     left: 9px;
     width:160px;
     z-index:100;
-	border-left: 1px solid #DDE3C1;
-	border-right: 1px solid #DDE4C1;
+	border: 1px solid #d1ddad;
+    border-top: none;
+    padding:0 5px;
 }
 
 .typecho-head-guid dd.show ul {
     position: relative;
     list-style: none;
-    /*top: -1px;*/
+    top: -1px;
 }
 
 .typecho-head-guid dd.show li {
@@ -70,18 +71,17 @@ body {
 
 .typecho-head-guid dd.show a {
     display:block;
-    padding: 3px 15px;
+    padding: 5px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
     color: #222;
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #DDE3C1;
+    border-top:1px solid #d1ddad;
 }
 
 .typecho-head-guid dd.show a:hover {
-    background: #E8ECD5;
+    text-decoration: underline;
 }
 
 .typecho-head-guid p.operate {
