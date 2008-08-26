@@ -8,6 +8,10 @@ body {
     color: #474A51;
 }
 
+input, select, textarea, button {
+    font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+}
+
 /**
  * 头部导航
  */
@@ -37,7 +41,7 @@ body {
 
 .typecho-head-guid dt:hover, .typecho-head-guid dt.current {
     cursor: pointer;
-    background:#e47e00 url(../images/nav-menu.gif) bottom repeat-x;
+    background:#e47e00 url(../images/nav-menu.png) bottom repeat-x;
 	color: #fff;
 }
 
@@ -280,7 +284,7 @@ table.typecho-list td {
 }
 
 table.typecho-list tbody tr.even {
-    background: #F4F8E3;
+    background: #EFF5D9;
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
@@ -288,7 +292,7 @@ table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
-	background: #EFF5D9;
+	background: #E4EEC4;
 }
 
 table.typecho-list h4 {
@@ -307,7 +311,6 @@ table.typecho-list a:link , table.typecho-list a:visited {
 
 table.typecho-list a:hover {
     text-decoration: underline;
-   /* border-bottom: 1px solid #9BC14A;*/
     color: #E47E00;
 }
 
@@ -326,24 +329,25 @@ table.typecho-list span.important {
 }
 
 .typecho-option-item {
-    border-top: 1px dashed #dee4c5;
+    border-top: 1px solid #F7FBE9;
+	background: #EFF5D9;
     position: relative;
-    padding: 10px 0px;
+    padding: 15px 0;
     margin: 0px;
     top: -1px;
 }
 
 .typecho-option-item h4 {
     position: absolute;
-    top: 12px;
+    top: 18px;
     left: 0px;
-    width: 120px;
+    width: 150px;
     text-align: right;
     font-size: 12px;
 }
 
 .typecho-option-item p {
-    padding-left: 130px;
+    padding-left: 160px;
     font-size: 12px;
 }
 
@@ -353,8 +357,9 @@ table.typecho-list span.important {
 
 .typecho-option-item input[type='text'], .typecho-option-item textarea {
     width: 600px;
-    border: 1px solid #dee4c5;
-    padding: 2px;
+    border: 1px solid #D7DEB8;
+	border-width: 1px 0 0 1px;
+    padding: 3px;
 }
 
 .typecho-option-item textarea {
@@ -393,9 +398,9 @@ table.typecho-list span.important {
 }
 
 .typecho-write-unit-fullwidth input[type='text'], .typecho-write-unit-fullwidth textarea {
-    border: 1px solid #dee4c5;
+    border: 1px solid #D7DEB8;
     width: 944px;
-    padding: 2px;
+    padding: 3px;
     font-size: 18px;
 }
 
