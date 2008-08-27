@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-abstract class Typecho_Widget implements Iterator
+abstract class Typecho_Widget
 {
     /**
      * 内部数据堆栈
@@ -221,60 +221,5 @@ abstract class Typecho_Widget implements Iterator
     public function __isset($name)
     {
         return isset($this->_row[$name]);
-    }
-    
-    /**
-     * 重设指针
-     *
-     * @access public
-     * @return void
-     */
-    public function rewind()
-    {
-        reset($this->_stack);
-    }
-
-    /**
-     * 返回当前值
-     *
-     * @access public
-     * @return mixed
-     */
-    public function current()
-    {
-        return current($this->_stack);
-    }
-
-    /**
-     * 指针后移一位
-     *
-     * @access public
-     * @return void
-     */
-    public function next()
-    {
-        next($this->_stack);
-    }
-    
-    /**
-     * 获取当前指针
-     * 
-     * @access public
-     * @return void
-     */
-    public function key()
-    {
-        return key($this->_stack);
-    }
-
-    /**
-     * 验证当前值是否到达最后
-     *
-     * @access public
-     * @return boolean
-     */
-    public function valid()
-    {
-        return false === current($this->_stack) ? false : true;
     }
 }
