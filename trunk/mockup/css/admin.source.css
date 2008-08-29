@@ -359,6 +359,9 @@ table.typecho-list span.important {
     border: 1px solid #D7DEB8;
     padding: 3px;
 }
+.typecho-option-item input[type='text']:focus, .typecho-option-item textarea:focus {
+    background-color: #EEF0DD;
+}
 
 .typecho-option-item textarea {
     height: 200px;
