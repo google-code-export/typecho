@@ -33,6 +33,8 @@ require_once 'IXR/Base64.php';
  */
 class IXR_Client
 {
+    const DEFAULT_USERAGENT = 'The Incutio XML-RPC PHP Library(Reload By Typecho)';
+
     /**
      * 服务端地址
      * 
@@ -110,7 +112,7 @@ class IXR_Client
      * @param string $useragent 客户端
      * @return void
      */
-    public function __construct($server, $path = false, $port = 80, $useragent = 'The Incutio XML-RPC PHP Library', $prefix = NULL)
+    public function __construct($server, $path = false, $port = 80, $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
     {
         if (!$path)
         {
