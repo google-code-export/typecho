@@ -9,8 +9,8 @@
  * @version $Id$
  */
 
-/** Typecho_Widget_Helper_Layout */
-require_once 'Typecho/Widget/Helper/Layout.php';
+/** Typecho_Widget_Helper_Decorator_Form_Default */
+require_once 'Typecho/Widget/Helper/Decorator/Form/Default.php';
 
 /** Typecho_Request */
 require_once 'Typecho/Request.php';
@@ -23,7 +23,7 @@ require_once 'Typecho/Request.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper_Layout
+abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper_Decorator_Form_Default
 {
     /**
      * 标题组件
@@ -145,32 +145,6 @@ abstract class Typecho_Widget_Helper_Form_Abstract extends Typecho_Widget_Helper
      * @return Typecho_Widget_Helper_Form_Abstract
      */
     abstract public function value($value);
-    
-    /**
-     * 设置标题
-     * 
-     * @access public
-     * @param string $labelName 标题
-     * @return string
-     */
-    public function label($labelName)
-    {
-        $this->label->html($labelName);
-    }
-    
-    /**
-     * 设置描述语句
-     * 
-     * @access public
-     * @param string $description 描述语句
-     * @return string
-     */
-    public function description($description)
-    {
-        $this->description = new Typecho_Widget_Helper_Layout('small');
-        $this->description->html($description)->appendTo($this->rightTd);
-        return $this;
-    }
     
     /**
      * 增加验证器

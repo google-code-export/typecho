@@ -263,6 +263,9 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         
         /** 表单值 */
         $formData = Typecho_Request::getParametersFrom(array_keys($rules));
+        
+        /** 载入异常支持 */
+        require_once 'Typecho/Validate/Exception.php';
 
         try
         {
@@ -271,10 +274,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         catch(Typecho_Validate_Exception $e)
         {
             /** 利用cookie记录错误 */
-            Typecho_Request::setCookie('form_message', $e->getMessages());
+            Typecho_Request::setCookie('__typecho_form_message', $e->getMessages());
             
             /** 利用cookie记录表单值 */
-            Typecho_Request::setCookie('form_record', $formData);
+            Typecho_Request::setCookie('__typecho_form_record', $formData);
 
             /** 载入异常支持 */
             require_once 'Typecho/Widget/Exception.php';
@@ -293,17 +296,24 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function render()
     {
         /** 恢复表单值 */
-        if($record = Typecho_Request::getCookie('form_record'))
+        if($record = Typecho_Request::getCookie('__typecho_form_record'))
         {
+            $message = Typecho_Request::getCookie('__typecho_form_message');
             foreach($this->_inputs as $name => $input)
             {
                 $input->value(isset($record[$name]) ? $record[$name] : $input->value);
+                
+                /** 显示错误消息 */
+                if(isset($message[$name]))
+                {
+                    $input->message($message[$name]);
+                }
             }
             
-            Typecho_Request::deleteCookie('form_record');
+            Typecho_Request::deleteCookie('__typecho_form_record');
         }
     
         parent::render();
-        Typecho_Request::deleteCookie('form_message');
+        Typecho_Request::deleteCookie('__typecho_form_message');
     }
 }
