@@ -52,40 +52,44 @@ input, select, textarea, button {
 .typecho-head-guid dd.show {
     display: block;
     position: absolute;
-    background: #e3e8cd;
+    background: url(../images/dropdown_pane.png) bottom no-repeat;
     font-size: 13px;
     overflow: hidden;
     top: 30px;
-    left: 9px;
+    left: 5px;
     width:160px;
     z-index:100;
-	border: 1px solid #d1ddad;
     border-top: none;
-    padding:0 5px;
+    padding: 10px 10px 20px;
 }
 
 .typecho-head-guid dd.show ul {
     position: relative;
     list-style: none;
-    top: -1px;
+    top: 0;
 }
 
 .typecho-head-guid dd.show li {
 }
 
 .typecho-head-guid dd.show a {
-    display:block;
-    padding: 5px;
+    display: block;
+    padding: 3px 10px;
+	margin-bottom: 1px;
 }
 
 .typecho-head-guid dd.show a:link, .typecho-head-guid dd.show a:visited {
     text-decoration: none;
-    color: #222;
-    border-top:1px solid #d1ddad;
+    color: #333;
 }
 
 .typecho-head-guid dd.show a:hover {
-    text-decoration: underline;
+	background: #E5EAD1;
+}
+
+.typecho-head-guid dd.show a.current {
+	background: #E68A17;
+	color: #fff;
 }
 
 .typecho-head-guid p.operate {
