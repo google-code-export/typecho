@@ -22,7 +22,7 @@ interface Typecho_Widget_Helper_Decorator_Form
      * 
      * @access public
      * @param string $value 标题字符串
-     * @return void
+     * @return Typecho_Widget_Helper_Decorator_Form
      */
     public function label($value);
     
@@ -31,7 +31,7 @@ interface Typecho_Widget_Helper_Decorator_Form
      * 
      * @access public
      * @param Typecho_Widget_Helper_Layout $item 表单容器
-     * @return unknown
+     * @return void
      */
     public function container(Typecho_Widget_Helper_Layout $item);
     
@@ -40,7 +40,7 @@ interface Typecho_Widget_Helper_Decorator_Form
      * 
      * @access public
      * @param string $message 提示信息
-     * @return void
+     * @return Typecho_Widget_Helper_Decorator_Form
      */
     public function message($message);
     
@@ -49,7 +49,7 @@ interface Typecho_Widget_Helper_Decorator_Form
      * 
      * @access public
      * @param string $description 描述信息
-     * @return void
+     * @return Typecho_Widget_Helper_Decorator_Form
      */
     public function description($description);
 }
