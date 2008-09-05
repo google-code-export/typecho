@@ -163,18 +163,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
-     * 获取输入项
-     * 
-     * @access public
-     * @param string $name 输入项名称
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        return $this->getInput($name);
-    }
-    
-    /**
      * 设置表单提交方法
      * 
      * @access public
