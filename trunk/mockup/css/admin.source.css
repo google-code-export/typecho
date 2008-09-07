@@ -4,7 +4,7 @@
  */
 body {
     background: #f7fbe9;
-    font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+    font-family:"Lucida Grande",Tahoma,Verdana,"Lucida Sans Unicode";
     color: #474A51;
 }
 
@@ -13,7 +13,7 @@ body.dark {
 }
 
 input, select, textarea, button {
-    font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+    font-family:"Lucida Grande",Tahoma,Verdana,"Lucida Sans Unicode";
 }
 
 /**
@@ -708,10 +708,17 @@ div.unit-small-list a.select-date {
     margin-bottom: 5px;
 }
 
+.typecho-login-wrap {
+	position: absolute;
+	top:50%;
+	left:50%;
+}
+
 .typecho-login-form {
     width: 250px;
     height: 260px;
-    margin: 20px auto;
+	position: relative;
+    margin: -150px auto auto -125px;
 }
 
 .typecho-login-form .logo {
@@ -719,7 +726,7 @@ div.unit-small-list a.select-date {
     overflow: hidden;
     text-indent: -9999px;
     background: url(../images/typecho.png) no-repeat center center;
-    margin: 5px auto;
+    margin: 0 auto 15px;
 }
 
 .typecho-login-form form {
@@ -734,6 +741,7 @@ div.unit-small-list a.select-date {
 
 .typecho-login-form label {
     display: block;
+	font-weight: bold;
 }
 
 .typecho-login-form input.input {
@@ -762,14 +770,14 @@ div.unit-small-list a.select-date {
 
 .typecho-login-form .more-link {
     font-size: 12px;
-    margin: 5px auto;
+    margin: 10px auto 0;
     clear: both;
     overflow: hidden;
 }
 
 .typecho-login-form .more-link a:link, .typecho-login-form .more-link a:visited {
     text-decoration: none;
-    color: #BD6800;
+    color: #E47E00;
 }
 
 .typecho-login-form .more-link .back-to-site {
