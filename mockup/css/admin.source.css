@@ -603,20 +603,27 @@ div.unit-small-list a.select-date {
     width: 200px;
 }
 
-.typecho-dashboard-left div.dashboard-item {
+.typecho-dashboard-left h3, .typecho-dashboard-right h3 {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 16px;
+}
+
+.dashboard-item {
     width: 150px;
     background: #e5ead1;
     padding: 15px;
     list-style: none;
 }
 
-.typecho-dashboard-left div.dashboard-item ul {
+.dashboard-item ul {
     overflow: hidden;
     zoom: 1;
     position: relative;
 }
 
-.typecho-dashboard-left div.dashboard-item li {
+.dashboard-item li {
     border-top: 1px dashed #c0cc93;
     height: 30px;
     line-height: 30px;
@@ -625,14 +632,64 @@ div.unit-small-list a.select-date {
 }
 
 
-.typecho-dashboard-left div.dashboard-item li a:link,
-.typecho-dashboard-left div.dashboard-item li a:visited {
+.dashboard-item a:link,
+.dashboard-item a:visited {
     text-decoration: none;
     color: #333;
 }
 
-.typecho-dashboard-left div.dashboard-item li a:hover {
+.dashboard-item a:hover {
     text-decoration: underline;
+}
+
+.dashboard-intro-link {
+    background: none;
+    padding: 0px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.dashboard-intro-link ul {
+    background: none;
+    padding: 0px;
+}
+
+.dashboard-intro-link li {
+    height: 18px;
+    line-height: 18px;
+    border: none;
+    margin: 2px 0px;
+}
+
+.dashboard-intro-link li span.date {
+    padding-left: 5px;
+}
+
+.dashboard-intro-link em {
+    background:#E47E00;
+    color: #F7FBE9;
+    font-size: small;
+    font-style: normal;
+    padding: 2px;
+    margin-left: 5px;
+}
+
+.dashboard-intro-link a:link,
+.dashboard-intro-link a:visited {
+    color:#E47E00;
+}
+
+.dashboard-status {
+    font-size: 12px;
+}
+
+.dashboard-status p {
+    margin-bottom: 5px;
+}
+
+.dashboard-status em {
+    color:#E47E00;
+    font-style: normal;
 }
 
 .typecho-dashboard-main {
@@ -640,7 +697,7 @@ div.unit-small-list a.select-date {
     float: left;
 }
 
-.typecho-dashboard-main div.main-item {
+.typecho-dashboard-main .main-item {
     width: 515px;
     margin: 0px auto 25px auto;
     border: 1px solid #e5ead1;
@@ -649,14 +706,14 @@ div.unit-small-list a.select-date {
 }
 
 
-.typecho-dashboard-main div.main-item h4 {
+.typecho-dashboard-main .main-item h4 {
     background: #e5ead1;
     height: 25px;
     line-height: 25px;
     padding-left: 5px;
 }
 
-.typecho-dashboard-main div.main-item p {
+.typecho-dashboard-main .main-item p {
     height: 30px;
     line-height: 30px;
     border-bottom: 1px dashed #e5ead1;
@@ -665,14 +722,31 @@ div.unit-small-list a.select-date {
     margin: 0px 5px;
 }
 
-.typecho-dashboard-main div.main-item p a:link,
-.typecho-dashboard-main div.main-item p a:visited {
+.typecho-dashboard-main .main-item p a:link,
+.typecho-dashboard-main .main-item p a:visited {
     text-decoration: none;
     color: #E47E00;
 }
 
-.typecho-dashboard-main div.main-item p a:hover {
+.typecho-dashboard-main .main-item p a:hover {
     text-decoration: underline;
+}
+
+.typecho-dashboard-main-v2 .main-item {
+    border: none;
+    margin-bottom: 10px;
+}
+
+.typecho-dashboard-main-v2 .main-item h4 {
+    background: none;
+    font-size: 12px;
+}
+
+.typecho-dashboard-main-v2 .main-item p {
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+    border: none;
 }
 
 .typecho-dashboard-right {
@@ -681,20 +755,30 @@ div.unit-small-list a.select-date {
     overflow: hidden;
 }
 
-.typecho-dashboard-right div.dashboard-item {
+.typecho-dashboard-right .notice {
+    width: 155px;
+    background: #e5ead1;
+    padding: 10px;
+    color: #E47E00;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+/*
+.typecho-dashboard-right .dashboard-item {
     float: right;
     width: 150px;
     background: #e5ead1;
     padding: 15px;
 }
 
-.typecho-dashboard-right div.dashboard-item h4 {
+.typecho-dashboard-right .dashboard-item h4 {
     position: relative;
     padding-top: 70px;
     margin-bottom: 6px;
 }
 
-.typecho-dashboard-right div.dashboard-item h4 img {
+.typecho-dashboard-right .dashboard-item h4 img {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -702,11 +786,12 @@ div.unit-small-list a.select-date {
     height: 64px;
 }
 
-.typecho-dashboard-right div.dashboard-item p {
+.typecho-dashboard-right .dashboard-item p {
     font-size: 12px;
     line-height: 14px;
     margin-bottom: 5px;
 }
+    */
 
 .typecho-login-wrap {
 	position: absolute;
