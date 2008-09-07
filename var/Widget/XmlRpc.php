@@ -16,7 +16,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_XmlRpc extends Typecho_Widget implements Widget_Interface_Action_Widget
+class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface_Action_Widget
 {
     /**
      * 入口执行方法
@@ -26,6 +26,26 @@ class Widget_XmlRpc extends Typecho_Widget implements Widget_Interface_Action_Wi
      */
     public function action()
     {
-        
+        if(isset($_GET['rsd']))
+        {
+            echo '<?xml version="1.0" encoding="' . $this->options->charset .'"?>'; ?>
+            <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
+            <service>
+            <engineName>Typecho</engineName>
+            <engineLink>http://www.typecho.org/</engineLink>
+            <homePageLink><?php echo $this->options->siteUrl; ?></homePageLink>
+            <apis>
+            <api name="WordPress" blogID="1" preferred="true" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
+            <api name="Movable Type" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
+            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
+            <api name="Blogger" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
+            </apis>
+            </service>
+            </rsd><?php
+        }
+        else
+        {
+            new Ixr_Server($methods);
+        }
     }
 }

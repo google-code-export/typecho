@@ -24,7 +24,7 @@ class Widget_Plugins_List extends Typecho_Widget
         $pluginDirs = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/*');
 
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
+        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
         foreach($pluginDirs as $pluginDir)
         {

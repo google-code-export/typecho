@@ -50,7 +50,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         parent::__construct();
         
         /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Abstract_Options');
+        $this->options = Typecho_API::factory('Widget_Options');
         $this->abstractMetasWidget = Typecho_API::factory('Widget_Abstract_Metas');
         
         /** 初始化插件 */

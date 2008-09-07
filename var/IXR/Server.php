@@ -225,6 +225,15 @@ class IXR_Server
      */
     private function serve($data = false)
     {
+        if(!isset($GLOBALS['HTTP_RAW_POST_DATA']))
+        {
+            $GLOBALS['HTTP_RAW_POST_DATA'] = file_get_contents("php://input");
+        }
+        if(isset($GLOBALS['HTTP_RAW_POST_DATA']))
+        {
+            $GLOBALS['HTTP_RAW_POST_DATA'] = trim($GLOBALS['HTTP_RAW_POST_DATA']);
+        }
+    
         if (!$data) {
             global $HTTP_RAW_POST_DATA;
             if (!$HTTP_RAW_POST_DATA) {

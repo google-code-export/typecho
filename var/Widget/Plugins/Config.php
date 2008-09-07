@@ -49,7 +49,7 @@ class Widget_Plugins_Config extends Typecho_Widget
         $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
+        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
         if(file_exists($pluginFileName))
         {
@@ -61,7 +61,7 @@ class Widget_Plugins_Config extends Typecho_Widget
             {
                 try
                 {
-                    $options = Typecho_API::factory('Widget_Abstract_Options');
+                    $options = Typecho_API::factory('Widget_Options');
                     
                     /** 初始化表单 */
                     $this->form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Plugins/Edit.do?do=config&plugin=' .

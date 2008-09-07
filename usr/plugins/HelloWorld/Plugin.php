@@ -90,6 +90,6 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
     public static function render()
     {
         echo '<span style="border:1px solid #999;padding:2px;background:#E37400;color:#222">' . 
-        Typecho_API::factory('Widget_Abstract_Options')->plugin('HelloWorld')->word . '</span>';
+        Typecho_API::factory('Widget_Options')->plugin('HelloWorld')->word . '</span>';
     }
 }

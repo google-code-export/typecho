@@ -28,8 +28,8 @@ class Widget_Notice extends Typecho_Widget
         {
             $this->noticeType = Typecho_Request::getCookie('noticeType');
             $this->push(Typecho_Request::getCookie('notice'));
-            Typecho_Request::deleteCookie('notice', Typecho_API::factory('Widget_Abstract_Options')->siteUrl);
-            Typecho_Request::deleteCookie('noticeType', Typecho_API::factory('Widget_Abstract_Options')->siteUrl);
+            Typecho_Request::deleteCookie('notice', Typecho_API::factory('Widget_Options')->siteUrl);
+            Typecho_Request::deleteCookie('noticeType', Typecho_API::factory('Widget_Options')->siteUrl);
         }
     }
     
@@ -104,9 +104,9 @@ class Widget_Notice extends Typecho_Widget
             }
         }
         
-        Typecho_Request::setCookie('notice', $notice, Typecho_API::factory('Widget_Abstract_Options')->gmtTime + Typecho_API::factory('Widget_Abstract_Options')->timezone + 86400,
-        Typecho_API::factory('Widget_Abstract_Options')->siteUrl);
-        Typecho_Request::setCookie('noticeType', $type, Typecho_API::factory('Widget_Abstract_Options')->gmtTime + Typecho_API::factory('Widget_Abstract_Options')->timezone + 86400,
-        Typecho_API::factory('Widget_Abstract_Options')->siteUrl);
+        Typecho_Request::setCookie('notice', $notice, Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 86400,
+        Typecho_API::factory('Widget_Options')->siteUrl);
+        Typecho_Request::setCookie('noticeType', $type, Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 86400,
+        Typecho_API::factory('Widget_Options')->siteUrl);
     }
 }

@@ -13,12 +13,12 @@
 require_once '../config.inc.php';
 
 /** 初始化插件 */
-Typecho_Plugin::init(Typecho_API::factory('Widget_Abstract_Options')->plugins,
+Typecho_Plugin::init(Typecho_API::factory('Widget_Options')->plugins,
 __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
 /** 注册一个初始化插件 */
 _p(__FILE__, 'Action')->init();
 
-$options = Typecho_API::factory('Widget_Abstract_Options');
+$options = Typecho_API::factory('Widget_Options');
 $access = Typecho_API::factory('Widget_Users_Current');
 $notice = Typecho_API::factory('Widget_Notice');

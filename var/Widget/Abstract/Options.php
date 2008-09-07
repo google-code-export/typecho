@@ -20,53 +20,26 @@
 class Widget_Abstract_Options extends Widget_Abstract
 {
     /**
-     * 缓存的插件配置
-     * 
-     * @access private
-     * @var array
+     * 实例化的配置对象
+     *
+     * @access protected
+     * @var TypechoWidget
      */
-    private $_pluginConfig = array();
-
+    protected $options;
+    
     /**
-     * 初始化配置信息
-     * 
+     * 构造函数,初始化数据库
+     *
      * @access public
      * @return void
      */
     public function __construct()
     {
+        /** 初始化数据库 */
         parent::__construct();
-
-        $this->db->fetchAll($this->select()
-        ->where('`user` = 0'), array($this, 'push'));
-        $this->_stack[] = &$this->_row;
-
-        /** 初始化站点信息 */
-        $this->charset = __TYPECHO_CHARSET__;
-        $this->siteUrl = Typecho_API::pathToUrl(NULL, $this->siteUrl);
-        $this->index = $this->rewrite ? $this->siteUrl : Typecho_API::pathToUrl('/index.php', $this->siteUrl);
-        $this->themeUrl = Typecho_API::pathToUrl(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
-        $this->attachmentUrl = Typecho_API::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
-        $this->pluginUrl = Typecho_API::pathToUrl(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
-        $this->gmtTime = time() - idate('Z');
         
-        /** 获取插件列表 */
-        $this->plugins = unserialize($this->plugins);
-        
-        /** 初始化Feed地址 */
-        $this->feedUrl = Typecho_Router::url('feed', array('feed' => '/'), $this->index);
-        $this->feedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
-        $this->feedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
-        
-        /** 初始化评论Feed地址 */
-        $this->commentsFeedUrl = Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
-        $this->commentsFeedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
-        $this->commentsFeedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
-
-        /** 初始化常用地址 */
-        $this->xmlRpcUrl = Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
-        $this->adminUrl = Typecho_API::pathToUrl(defined('__TYPECHO_ADMIN_DIR__') ? 
-        __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
+        /** 初始化常用widget */
+        $this->options = Typecho_API::factory('Widget_Options');
     }
     
     /**
@@ -127,116 +100,5 @@ class Widget_Abstract_Options extends Widget_Abstract
     public function size(Typecho_Db_Query $condition)
     {
         return $this->db->fetchObject($condition->select('table.options', 'COUNT(`name`) AS `num`'))->num;
-    }
-
-    /**
-     * 重载父类push函数,将所有变量值压入堆栈
-     *
-     * @access public
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function push(array $value)
-    {
-        //将行数据按顺序置位
-        $this->_row[$value['name']] = $value['value'];
-        return $value;
-    }
-    
-    /**
-     * 输出网站路径
-     * 
-     * @access public
-     * @param string $path 子路径
-     * @return void
-     */
-    public function siteUrl($path = NULL)
-    {
-        echo Typecho_API::pathToUrl($path, $this->siteUrl);
-    }
-    
-    /**
-     * 输出解析地址
-     * 
-     * @access public
-     * @param string $path 子路径
-     * @return void
-     */
-    public function index($path = NULL)
-    {
-        echo Typecho_API::pathToUrl($path, $this->index);
-    }
-    
-    /**
-     * 输出模板路径
-     * 
-     * @access public
-     * @param string $path 子路径
-     * @return void
-     */
-    public function themeUrl($path = NULL)
-    {
-        echo Typecho_API::pathToUrl($path, $this->themeUrl);
-    }
-    
-    /**
-     * 输出插件路径
-     * 
-     * @access public
-     * @param string $path 子路径
-     * @return void
-     */
-    public function pluginUrl($path = NULL)
-    {
-        echo Typecho_API::pathToUrl($path, $this->pluginUrl);
-    }
-    
-    /**
-     * 输出后台路径
-     * 
-     * @access public
-     * @param string $path 子路径
-     * @return void
-     */
-    public function adminUrl($path = NULL)
-    {
-        echo Typecho_API::pathToUrl($path, $this->adminUrl);
-    }
-    
-    /**
-     * 归档标题
-     * 
-     * @access public
-     * @param string $format 标题格式
-     * @return void
-     */
-    public function archiveTitle($format = '%s')
-    {
-        echo sprintf($format, $this->archiveTitle);
-    }
-    
-    /**
-     * 获取插件的配置信息
-     * 
-     * @access public
-     * @param string $pluginName 插件名称
-     * @return array
-     */
-    public function plugin($pluginName)
-    {
-        if(!isset($this->_pluginConfig[$pluginName]))
-        {
-            if(!empty($this->_row['plugin:' . $pluginName])
-            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName])))
-            {
-                $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
-            }
-            else
-            {
-                throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
-            }
-        }
-
-        return $this->_pluginConfig[$pluginName];
     }
 }

@@ -31,7 +31,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         if(Typecho_API::factory('Widget_Users_Current')->hasLogin())
         {
             /** 直接返回 */
-            Typecho_API::redirect(Typecho_API::factory('Widget_Abstract_Options')->index);
+            Typecho_API::redirect(Typecho_API::factory('Widget_Options')->index);
         }
         
         /** 初始化验证类 */
@@ -60,12 +60,12 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         if($user && $user['password'] == md5(Typecho_Request::getParameter('password')))
         {
             Typecho_API::factory('Widget_Users_Current')->login($user['uid'], $user['password'], sha1(Typecho_API::randString(20)),
-            1 == Typecho_Request::getParameter('remember') ? Typecho_API::factory('Widget_Abstract_Options')->gmtTime + Typecho_API::factory('Widget_Abstract_Options')->timezone + 30*24*3600 : 0);
+            1 == Typecho_Request::getParameter('remember') ? Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 30*24*3600 : 0);
         }
         else
         {
             Typecho_API::factory('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
-            Typecho_API::redirect(Typecho_API::pathToUrl('login.php', Typecho_API::factory('Widget_Abstract_Options')->adminUrl)
+            Typecho_API::redirect(Typecho_API::pathToUrl('login.php', Typecho_API::factory('Widget_Options')->adminUrl)
             . (NULL === ($referer = Typecho_Request::getParameter('referer')) ? 
             NULL : '?referer=' . urlencode($referer)));
         }
@@ -77,7 +77,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         }
         else
         {
-            Typecho_API::redirect(Typecho_API::pathToUrl('index.php', Typecho_API::factory('Widget_Abstract_Options')->adminUrl));
+            Typecho_API::redirect(Typecho_API::pathToUrl('index.php', Typecho_API::factory('Widget_Options')->adminUrl));
         }
     }
 }

@@ -61,7 +61,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         parent::__construct();
         
         /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Abstract_Options');
+        $this->options = Typecho_API::factory('Widget_Options');
         $this->access = Typecho_API::factory('Widget_Users_Current');
         $this->abstractContentsWidget = Typecho_API::factory('Widget_Abstract_Contents');
         
