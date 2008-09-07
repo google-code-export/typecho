@@ -28,6 +28,6 @@ class Widget_Logout extends Typecho_Widget implements Widget_Interface_Action_Wi
     public function action()
     {
         Typecho_API::factory('Widget_Users_Current')->logout();
-        Typecho_API::redirect(Typecho_API::factory('Widget_Abstract_Options')->index);
+        Typecho_API::redirect(Typecho_API::factory('Widget_Options')->index);
     }
 }

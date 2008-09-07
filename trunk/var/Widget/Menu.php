@@ -92,7 +92,7 @@ class Widget_Menu extends Typecho_Widget
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
-        $adminUrl = Typecho_API::factory('Widget_Abstract_Options')->siteUrl;
+        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
         $childMenu = $this->_childMenu;
         $match = 0;
         
@@ -131,7 +131,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function outputParent($tag = NULL, $class = 'current')
     {
-        $adminUrl = Typecho_API::factory('Widget_Abstract_Options')->siteUrl;
+        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
         
         foreach($this->_parentMenu as $key => $title)
         {
@@ -155,7 +155,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function outputChild($tag = NULL, $class = 'current-2')
     {
-        $adminUrl = Typecho_API::factory('Widget_Abstract_Options')->siteUrl;
+        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
         $num = count($this->_childMenu[$this->_currentParent]) - 1;
         $i = 0;
         

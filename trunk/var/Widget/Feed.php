@@ -74,7 +74,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         /** 处理评论聚合 */
         if('/comments' == $feedQuery || '/comments/' == $feedQuery)
         {
-            $this->options = Typecho_API::factory('Widget_Abstract_Options');
+            $this->options = Typecho_API::factory('Widget_Options');
             Typecho_API::factory('Widget_Comments_Recent', 20)->to($comments);
             $this->pushCommentElement($comments);
             

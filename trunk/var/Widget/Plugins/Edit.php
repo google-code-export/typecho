@@ -32,7 +32,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
+        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
         if(file_exists($pluginFileName))
         {
@@ -54,7 +54,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                 }
                 
                 $activatedPlugins[] = $pluginName;
-                Typecho_API::factory('Widget_Abstract_Options')->update(array('value' => serialize($activatedPlugins)),
+                Typecho_API::factory('Widget_Options')->update(array('value' => serialize($activatedPlugins)),
                 Typecho_Db::get()->sql()->where('`name` = ?', 'plugins'));
                 
                 /** 获取插件信息 */
@@ -62,7 +62,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                 {
                     try
                     {
-                        $options = Typecho_API::factory('Widget_Abstract_Options');
+                        $options = Typecho_API::factory('Widget_Options');
                         
                         /** 初始化表单 */
                         $this->form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Plugins/Edit.do', $options->index),
@@ -70,7 +70,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                         
                         /** 配置插件面板 */
                         call_user_func(array($pluginName . '_Plugin', 'config'), $this->form);
-                        Typecho_API::factory('Widget_Abstract_Options')->insert(array('value' => serialize($this->form->getValues()),
+                        Typecho_API::factory('Widget_Options')->insert(array('value' => serialize($this->form->getValues()),
                         'name' => 'plugin:' . $pluginName));
                     }
                     catch(Typecho_Plugin_Exception $e)
@@ -102,7 +102,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
         
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Abstract_Options')->plugins;
+        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
         if(file_exists($pluginFileName))
         {
@@ -124,10 +124,10 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                 }
             
                 unset($activatedPlugins[array_search($pluginName, $activatedPlugins)]);
-                Typecho_API::factory('Widget_Abstract_Options')->update(array('value' => serialize($activatedPlugins)),
+                Typecho_API::factory('Widget_Options')->update(array('value' => serialize($activatedPlugins)),
                 Typecho_Db::get()->sql()->where('`name` = ?', 'plugins'));
                 
-                Typecho_API::factory('Widget_Abstract_Options')->delete(Typecho_Db::get()->sql()->where('`name` = ?', 'plugin:' . $pluginName));
+                Typecho_API::factory('Widget_Options')->delete(Typecho_Db::get()->sql()->where('`name` = ?', 'plugin:' . $pluginName));
                 
                 /** 提示信息 */
                 Typecho_API::factory('Widget_Notice')->set(_t("插件已经被禁用"), NULL, 'success');
@@ -160,14 +160,14 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         
         $pluginName = Typecho_Request::getParameter('plugin');
         $settings = $form->getParameters();
-        Typecho_API::factory('Widget_Abstract_Options')->update(array('value' => serialize($settings),
+        Typecho_API::factory('Widget_Options')->update(array('value' => serialize($settings),
         'name' => 'plugin:' . $pluginName), Typecho_Db::get()->sql()->where('`name` = ?', 'plugin:' . $pluginName));
         
         /** 提示信息 */
         Typecho_API::factory('Widget_Notice')->set(_t("插件配置已经保存"), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('plugin.php', Typecho_API::factory('Widget_Abstract_Options')->adminUrl));
+        Typecho_API::redirect(Typecho_API::pathToUrl('plugin.php', Typecho_API::factory('Widget_Options')->adminUrl));
     }
 
     /**
@@ -182,6 +182,6 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         Typecho_Request::bindParameter(array('do' => 'activate'), array($this, 'activatePlugin'));
         Typecho_Request::bindParameter(array('do' => 'deactivate'), array($this, 'deactivatePlugin'));
         Typecho_Request::bindParameter(array('do' => 'config'), array($this, 'configPlugin'));
-        Typecho_API::redirect(Typecho_API::factory('Widget_Abstract_Options')->adminUrl);
+        Typecho_API::redirect(Typecho_API::factory('Widget_Options')->adminUrl);
     }
 }

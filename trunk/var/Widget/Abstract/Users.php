@@ -46,7 +46,7 @@ class Widget_Abstract_Users extends Widget_Abstract
         parent::__construct();
     
         /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Abstract_Options');
+        $this->options = Typecho_API::factory('Widget_Options');
     
         $this->groups = array(
             'administrator' => 0,

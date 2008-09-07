@@ -35,7 +35,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     
         $posts = $db->fetchAll($db->sql()->select('table.contents', '`created`')
         ->where('type = ?', 'post')
-        ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Abstract_Options')->gmtTime)
+        ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Options')->gmtTime)
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC));
         
         $result = array();
@@ -58,7 +58,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         
         foreach($result as $row)
         {
-            $row['permalink'] = Typecho_Router::url('archive_' . $type, $row, Typecho_API::factory('Widget_Abstract_Options')->index);
+            $row['permalink'] = Typecho_Router::url('archive_' . $type, $row, Typecho_API::factory('Widget_Options')->index);
             $this->push($row);
         }
     }

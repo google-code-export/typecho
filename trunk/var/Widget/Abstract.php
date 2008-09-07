@@ -20,6 +20,14 @@
 abstract class Widget_Abstract extends Typecho_Widget
 {
     /**
+     * 实例化的配置对象
+     *
+     * @access protected
+     * @var TypechoWidget
+     */
+    protected $options;
+    
+    /**
      * 数据库对象
      * 
      * @access protected

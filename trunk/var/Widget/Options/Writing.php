@@ -29,7 +29,7 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Options/Writing.do', $this->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Options/Writing.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 提交按钮 */
@@ -38,7 +38,7 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
         $form->addItem($submit);
         
         /** 编辑器大小 */
-        $editorSize = new Typecho_Widget_Helper_Form_Text('editorSize', $this->editorSize,
+        $editorSize = new Typecho_Widget_Helper_Form_Text('editorSize', $this->options->editorSize,
         _t('编辑器大小'), _t('所见即所得编辑器的大小.'));
         $editorSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($editorSize->addRule('isInteger', _t('请填入一个数字')));
@@ -46,25 +46,25 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Radio('autoSave',
         array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护您的文章不会丢失.'));
+        $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护您的文章不会丢失.'));
         $form->addInput($autoSave);
         
         /** 默认允许评论 */
         $defaultAllowComment = new Typecho_Widget_Helper_Form_Radio('defaultAllowComment',
         array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->defaultAllowComment, _t('默认允许评论'));
+        $this->options->defaultAllowComment, _t('默认允许评论'));
         $form->addInput($defaultAllowComment);
         
         /** 默认允许广播 */
         $defaultAllowPing = new Typecho_Widget_Helper_Form_Radio('defaultAllowPing',
         array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->defaultAllowPing, _t('默认允许广播'));
+        $this->options->defaultAllowPing, _t('默认允许广播'));
         $form->addInput($defaultAllowPing);
         
         /** 默认允许聚合*/
         $defaultAllowFeed = new Typecho_Widget_Helper_Form_Radio('defaultAllowFeed',
         array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->defaultAllowFeed, _t('默认允许聚合'));
+        $this->options->defaultAllowFeed, _t('默认允许聚合'));
         $form->addInput($defaultAllowFeed);
         
         /** 动作 */
