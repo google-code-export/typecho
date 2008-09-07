@@ -764,21 +764,20 @@ div.unit-small-list a.select-date {
     margin-bottom: 25px;
 }
 
-/*
-.typecho-dashboard-right .dashboard-item {
+.dashboard-auth-info {
     float: right;
     width: 150px;
     background: #e5ead1;
     padding: 15px;
 }
 
-.typecho-dashboard-right .dashboard-item h4 {
+.dashboard-auth-info h4 {
     position: relative;
     padding-top: 70px;
     margin-bottom: 6px;
 }
 
-.typecho-dashboard-right .dashboard-item h4 img {
+.dashboard-auth-info h4 img {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -786,12 +785,11 @@ div.unit-small-list a.select-date {
     height: 64px;
 }
 
-.typecho-dashboard-right .dashboard-item p {
+.dashboard-auth-info p {
     font-size: 12px;
     line-height: 14px;
     margin-bottom: 5px;
 }
-    */
 
 .typecho-login-wrap {
 	position: absolute;
