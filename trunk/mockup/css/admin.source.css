@@ -875,3 +875,31 @@ div.unit-small-list a.select-date {
 .typecho-login-form .more-link .forgot-password {
     float: right;
 }
+
+.typecho-option-tabs {
+    height: 30px;
+    overflow: hidden;
+    list-style: none;
+    background: #E5EAD1;
+    zoom: 1;
+}
+
+.typecho-option-tabs li {
+    float: left;
+    height: 30px;
+    line-height: 22px;
+    margin: 5px;
+    font-size: 12px;
+}
+
+.typecho-option-tabs li:hover, .typecho-option-tabs li.current {
+    background: #F7FBE9;
+}
+
+.typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
+    outline: none;
+    padding: 2px 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
