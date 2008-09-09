@@ -31,15 +31,19 @@ class Widget_Abstract_Options extends Widget_Abstract
      * 构造函数,初始化数据库
      *
      * @access public
+     * @param boolean $init 是否初始化options对象
      * @return void
      */
-    public function __construct()
+    public function __construct($initInstance = true)
     {
         /** 初始化数据库 */
         parent::__construct();
         
         /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Options');
+        if($initInstance)
+        {
+            $this->options = Typecho_API::factory('Widget_Options');
+        }
     }
     
     /**
