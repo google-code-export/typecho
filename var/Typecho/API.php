@@ -628,10 +628,7 @@ class Typecho_API
      */
     public static function pathToUrl($path, $prefix)
     {
-        $prefixLength = strLen($prefix) - 1;
-        $prefix = ($prefixLength == strrpos($prefix, '/')) ? $prefix : $prefix . '/';
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
-        $path = (0 === strpos($path, '/')) ? substr($path, 1) : $path;
-        return $prefix . str_replace('//', '/', $path);
+        return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
     }
 }

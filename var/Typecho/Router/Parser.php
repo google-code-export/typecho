@@ -114,11 +114,7 @@ class Typecho_Router_Parser
             preg_quote(str_replace(array('[', ']', ':'), array('%', '%', ' '), $route['url'])));
             
             /** 处理斜线 */
-            $regx = $route['regx'];
-            if('/' == $regx[strlen($route['regx']) - 1])
-            {
-                $route['regx'] = substr($route['regx'], 0, -1);
-            }
+            $route['regx'] = rtrim($route['regx'], '/');
             $route['regx'] = '|^' . $route['regx'] . '[/]?$|';
             
             $route['format'] = preg_replace("/\[([^\]]+)\]/", "%s", $route['url']);

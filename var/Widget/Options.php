@@ -35,7 +35,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(false);
 
         $this->db->fetchAll($this->select()
         ->where('`user` = 0'), array($this, 'push'));
