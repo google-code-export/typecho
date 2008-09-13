@@ -120,7 +120,8 @@ input, select, textarea, button {
 }
 
 .typecho-head-guid p.operate span.author {
-    padding-right: 8px;
+    margin-right: 8px;
+	text-decoration: underline;
 }
 
 
@@ -296,11 +297,10 @@ table.typecho-list tbody tr.even {
 }
 
 table.typecho-list tbody tr.hover, table.typecho-list tbody tr:hover {
-    cursor: pointer;
 }
 
 table.typecho-list tbody tr.hover a, table.typecho-list tbody tr:hover td {
-    background: #E4EEC4;
+    background: #E8EDD2;
 }
 
 table.typecho-list h4 {
