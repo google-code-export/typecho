@@ -13,7 +13,7 @@ body.dark {
 }
 
 input, select, textarea, button {
-    font-family:"Lucida Grande",Tahoma,Verdana,"Lucida Sans Unicode";
+    font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
 }
 
 /**
