@@ -32,46 +32,34 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Options/Reading.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
-        /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Submit(_t('保存设置'));
-        $submit->button->setAttribute('class', 'submit');
-        $form->addItem($submit);
-        
         /** 文章日期格式 */
-        $postDateFormat = new Typecho_Widget_Helper_Form_Text('postDateFormat', $this->options->postDateFormat,
+        $postDateFormat = new Typecho_Widget_Helper_Form_Element_Text('postDateFormat', NULL, $this->options->postDateFormat,
         _t('文章日期格式'), _t('此格式用于指定显示在文章归档中的日期默认显示格式.<br />
         在某些主题中这个格式可能不会生效,因为主题作者可以自定义日期格式.<br />
         请参考<a href="http://cn.php.net/manual/zh/function.date.php" target="_blank">PHP日期格式写法</a>.'));
-        $postDateFormat->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($postDateFormat);
         
         /** 每页文章数目 */
-        $pageSize = new Typecho_Widget_Helper_Form_Text('pageSize', $this->options->pageSize,
+        $pageSize = new Typecho_Widget_Helper_Form_Element_Text('pageSize', NULL, $this->options->pageSize,
         _t('每页文章数目'), _t('此数目用于指定文章归档输出时每页显示的文章数目.'));
-        $pageSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** 文章列表数目 */
-        $postsListSize = new Typecho_Widget_Helper_Form_Text('postsListSize', $this->options->postsListSize,
+        $postsListSize = new Typecho_Widget_Helper_Form_Element_Text('postsListSize', NULL, $this->options->postsListSize,
         _t('文章列表数目'), _t('此数目用于指定显示在侧边拦中的文章列表数目.'));
-        $postsListSize->input->setAttribute('class', 'text')->setAttribute('style', 'width:40%');
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** FEED全文输出 */
-        $feedFullArticlesLayout = new Typecho_Widget_Helper_Form_Radio('feedFullArticlesLayout', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
+        $feedFullArticlesLayout = new Typecho_Widget_Helper_Form_Element_Radio('feedFullArticlesLayout', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
         $this->options->feedFullArticlesLayout, _t('聚合全文输出'), _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.<br />
         摘要的文字取决于你在文章中使用分隔符的位置.'));
         $form->addInput($feedFullArticlesLayout);
         
         /** 动作 */
-        $do = new Typecho_Widget_Helper_Form_Hidden('do', 'update');
-        $form->addInput($do);
-        
-        /** 空格 */
-        $form->addItem(new Typecho_Widget_Helper_Layout('hr', array('class' => 'space')));
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'update'));
         
         /** 提交按钮 */
-        $form->addItem($submit);
+        $form->addItem(new Typecho_Widget_Helper_Form_Element_Submit(_t('保存设置')));
         
         return $form;
     }
