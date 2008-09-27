@@ -217,6 +217,7 @@ input.focus, input:focus {
 
 .typecho-install em {
     color: #e47e00;
+    font-style: normal;
 }
 
 .typecho-install .session {
