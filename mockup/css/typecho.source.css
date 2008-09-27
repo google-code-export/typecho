@@ -49,6 +49,10 @@ input {
     padding: 2px;
 }
 
+input.focus, input:focus {
+    background: #f7fbe9;
+}
+
 /**
  * 典型配置选项
  */
