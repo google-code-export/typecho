@@ -390,6 +390,14 @@ margin-top: 25px;
     margin-bottom: 2px;
 }
 
+.typecho-head-guid dd li.current {
+    background: #E68A17;
+}
+
+.typecho-head-guid dd li.current a {
+    color: #fff;
+}
+
 .typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
     text-decoration: none;
     color: #333;
@@ -402,17 +410,13 @@ margin-top: 25px;
     background: #E5EAD1;
 }
 
-.typecho-head-guid dd a.current {
-    background: #E68A17;
-    color: #fff;
-}
-
 .typecho-head-guid .operate {
     color: #fff;
     position:absolute;
     font-size: 12px;
     top: 0px;
     right: 5px;
+    /* review IE */
    *right: 25px;
    height: 30px;
    line-height: 30px;
