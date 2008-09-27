@@ -127,7 +127,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         }
         
         /** 增加插件接口 */
-        _p(__FILE__, 'Action')->render($this->feed, $feedType);
+        _p('Widget_Feed', 'Action')->render($this->feed, $feedType);
     }
     
     /**
@@ -169,7 +169,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
                     $item->addElement('dc:creator', $comments->author);
                 }
                 
-                _p(__FILE__, 'Action')->pushCommentElement($item, $comments, $this->type);
+                _p('Widget_Feed', 'Action')->pushCommentElement($item, $comments, $this->type);
                 $this->feed->addItem($item);
             }
         }
@@ -218,7 +218,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
             $item->addElement('wfw:commentRss', $value['feedUrl']);
         }
         
-        _p(__FILE__, 'Action')->push($item, $value, $this->type);
+        _p('Widget_Feed', 'Action')->push($item, $value, $this->type);
         $this->feed->addItem($item);
     }
     

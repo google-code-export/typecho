@@ -1,3 +1,6 @@
+2008.9.27 by qining
+plugin缓存机制改进
+
 2008.8.21 by qining
 
 改进数据库抽象机制(改进abstract widget的抽象方法中的过滤器为静态方法)

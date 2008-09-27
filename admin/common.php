@@ -17,7 +17,7 @@ Typecho_Plugin::init(Typecho_API::factory('Widget_Options')->plugins,
 __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
 /** 注册一个初始化插件 */
-_p(__FILE__, 'Action')->init();
+_p('admin/common.php', 'Action')->init();
 
 $options = Typecho_API::factory('Widget_Options');
 $access = Typecho_API::factory('Widget_Users_Current');

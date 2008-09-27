@@ -11,13 +11,13 @@
  * Typecho_Plugin::instance别名
  * 
  * @access public
- * @param string $fileName 文件名
+ * @param string $fileName 句柄
  * @return TypechoPlugin
  * @throws TypechoPluginException
  */
-function _p($fileName, $adapterName)
+function _p($handle, $adapterName)
 {
-    return Typecho_Plugin::instance($fileName, ucfirst($adapterName));
+    return Typecho_Plugin::instance($handle, ucfirst($adapterName));
 }
 
 /**
@@ -74,20 +74,20 @@ class Typecho_Plugin
      * 根据唯一的文件名初始化一个plugin实例
      * 
      * @access public
-     * @param string $fileName 文件名
+     * @param string $handle 句柄
      * @return TypechoPlugin
      * @throws TypechoPluginException
      */
-    public static function instance($fileName, $adapterName)
+    public static function instance($handle, $adapterName)
     {
-        $realPath = realpath($fileName);
-        if(empty(self::$_adapters[$realPath]))
+        $handle = trim($handle, '/ ');
+        if(empty(self::$_adapters[$handle]))
         {
             require_once 'Typecho/Plugin/Adapter/' . $adapterName . '.php';
             $adapterName = 'Typecho_Plugin_Adapter_' . $adapterName;
-            self::$_adapters[$realPath] = new $adapterName();
+            self::$_adapters[$handle] = new $adapterName();
         }
         
-        return self::$_adapters[$realPath];
+        return self::$_adapters[$handle];
     }
 }

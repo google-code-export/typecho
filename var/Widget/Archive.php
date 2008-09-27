@@ -333,7 +333,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'search_page':
     
                 /** 增加自定义搜索引擎接口 */
-                $hasPushed = _p(__FILE__, 'Action')->search($keywords, $this);
+                $hasPushed = _p('Widget_Archive', 'Action')->search($keywords, $this);
     
                 $keywords = Typecho_API::filterSearchQuery($keywords);
                 $searchQuery = '%' . $keywords . '%';
@@ -401,7 +401,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        if(!_p(__FILE__, 'Action')->pageNav($prev, $next, $splitPage, $splitWord))
+        if(!_p('Widget_Archive', 'Action')->pageNav($prev, $next, $splitPage, $splitWord))
         {
             $query = Typecho_Router::url(Typecho_Router::$current . 
             (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
@@ -610,7 +610,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl)));
         
         /** 插件支持 */
-        _p(__FILE__, 'Action')->header($header);
+        _p('Widget_Archive', 'Action')->header($header);
         
         /** 输出header */
         $header->render();
@@ -669,6 +669,6 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->_themeFile;
         
         /** 挂接插件 */
-        _p(__FILE__, 'Action')->render($this);
+        _p('Widget_Archive', 'Action')->render($this);
     }
 }

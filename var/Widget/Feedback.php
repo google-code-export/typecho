@@ -105,7 +105,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $comment = _p(__FILE__, 'Filter')->comment($comment);
+        $comment = _p('Widget_Feedback', 'Filter')->comment($comment);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
@@ -154,7 +154,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        _p(__FILE__, 'Filter')->trackback($trackback);
+        _p('Widget_Feedback', 'Filter')->trackback($trackback);
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
