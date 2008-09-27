@@ -44,6 +44,70 @@ a:hover {
     text-decoration: underline;
 }
 
+input {
+    border: 1px solid #dee4c5;
+    padding: 2px;
+}
+
+/**
+ * 典型配置选项
+ */
+.typecho-option {
+
+}
+
+.typecho-option li {
+    padding-left: 110px;
+}
+
+.typecho-option label {
+    float: left;
+    width: 110px;
+    text-align: right;
+    margin-left: -120px;
+    font-size: 14px;
+}
+
+.typecho-option .desption {
+    color: #555;
+}
+
+
+/**
+ * 提示信息框
+ */
+
+.message {
+    padding: 2px;
+    font-size: 12px;
+    color: #333;
+}
+
+.message a:link, .message a:visited {
+    color: #333;
+    text-decoration: underline;
+}
+
+.error {
+    border: 1px solid #fbc2c4;
+    background: #fbe3e4;
+}
+
+.notice {
+    background: #fff6bf;
+    border: 1px solid  #ffd324;
+}
+
+.success {
+    background: #e6efc2;
+    border: 1px solid #c6d880;
+}
+
+
+/**
+ * 安装样式开始
+ */
+
 /**
  * 安装向导
  */
@@ -79,6 +143,7 @@ a:hover {
     color: #fff;
 }
 
+
 /**
  * 安装主体内容
  */
@@ -109,16 +174,60 @@ a:hover {
 }
 
 .typecho-install .typecho-install-body p {
-    text-indent: 24px;
     line-height: 18px;
     margin-top: 5px;
     text-align: justify;
 }
 
+.typecho-install em {
+    color: #e47e00;
+}
+
+.typecho-install .session {
+    margin-bottom: 20px;
+}
+
+.typecho-install .session ul {
+    font-size: 12px;
+    list-style: none;
+    margin-left: 24px;
+}
+
+.typecho-install .session a:link, .typecho-install .session a:hover {
+    text-decoration: underline;
+    line-height: 20px;
+}
+
+.typecho-install .typecho-option {
+    margin: 10px 0px;
+}
+
+.typecho-install .typecho-option li {
+    margin-bottom: 5px;
+}
+
+.typecho-install .typecho-option .message {
+    margin: 2px 0px;
+    overflow: hidden;
+}
+
+.typecho-install .typecho-option .message,
+.typecho-install .typecho-option input {
+    width: 325px;
+}
+
+.typecho-install .typecho-option input.mini {
+    width: 125px;
+}
+
 /*
 .typecho-install .submit {
-    margin-top: 25px;
+margin-top: 25px;
 }
+ */
+
+/**
+ * 安装样式结束
  */
 
 
