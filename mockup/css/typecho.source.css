@@ -46,6 +46,7 @@ a:hover {
 input {
     border: 1px solid #dee4c5;
     padding: 2px;
+    font-size: 14px;
 }
 
 input.focus, input:focus {
