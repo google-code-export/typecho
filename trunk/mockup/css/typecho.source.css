@@ -323,3 +323,116 @@ margin-top: 25px;
 .typecho-login .more-link .forgot-password {
     float: right;
 }
+
+
+/**
+ * 后台头部导航
+ */
+.typecho-head-guid {
+    height: 30px;
+    background: #333;
+    color: #fff;
+    position: relative;
+    z-index: 250; /* IE 是个 250 */
+}
+
+.typecho-head-guid dl {
+    overflow: hidden;
+    margin-left:10px;
+    zoom: 1;
+}
+
+.typecho-head-guid dt {
+    float: left;
+    margin: 4px 4px 0 0;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.typecho-head-guid dt a:link, .typecho-head-guid dt a:visited {
+    float: left;
+    color: #fff;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 15px;
+    background: #333;
+    display: block;
+    outline: none;
+}
+
+.typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
+.typecho-head-guid dt a:hover {
+    background: #e47e00;
+    text-decoration: none;
+}
+
+.typecho-head-guid dd {
+    display:none;
+    position:absolute;
+    background: #f7fbe9 url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
+    font-size: 13px;
+    overflow: hidden;
+    width:160px;
+    z-index:100;
+    border-top: none;
+    padding:10px 10px 20px;
+    z-index: 250;
+    top: 30px;
+}
+
+.typecho-head-guid ul {
+    position: relative;
+    list-style: none;
+    top: 0;
+}
+
+.typecho-head-guid li {
+    margin-bottom: 2px;
+}
+
+.typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 4px 10px;
+    zoom: 1;
+}
+
+.typecho-head-guid dd a:hover {
+    background: #E5EAD1;
+}
+
+.typecho-head-guid dd a.current {
+    background: #E68A17;
+    color: #fff;
+}
+
+.typecho-head-guid .operate {
+    color: #fff;
+    position:absolute;
+    font-size: 12px;
+    top: 0px;
+    right: 5px;
+   *right: 25px;
+   height: 30px;
+   line-height: 30px;
+}
+
+.typecho-head-guid .operate a.exit {
+    display: inline-block;
+    background: url(../images/sprite.png) no-repeat scroll 0px -223px;
+    width: 20px;
+    height: 20px;
+    text-indent: -999px;
+    outline: none;
+    overflow: hidden;
+    position:relative;
+    *position:absolute;
+    top: 5px;
+}
+
+.typecho-head-guid .operate .author {
+    margin-right: 8px;
+	text-decoration: underline;
+}
+
