@@ -14,6 +14,10 @@ body {
     background: #f7fbe9;
 }
 
+body.dark {
+    background: #333;
+}
+
 h1, h2, h3, h4, h5, h6, p {
     color: #333;
 }
@@ -43,6 +47,10 @@ a:hover {
     text-decoration: underline;
 }
 
+a.important {
+    color: #fff;
+}
+
 input {
     border: 1px solid #dee4c5;
     padding: 2px;
@@ -52,6 +60,27 @@ input {
 input.focus, input:focus {
     background: #eef1e0;
 }
+
+
+/**
+ * logo 的样式
+ */
+.logo {
+    height: 20px;
+    width: 92px;
+    overflow: hidden;
+    text-indent: -9999px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -78px;
+}
+
+.logo-dark {
+    height: 20px;
+    width: 92px;
+    overflow: hidden;
+    text-indent: -9999px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -150px;
+}
+
 
 /**
  * 典型配置选项
@@ -232,3 +261,64 @@ input.focus, input:focus {
 margin-top: 25px;
 }
  */
+
+
+/**
+ * 登录框
+ */
+.typecho-login {
+	position: relative;
+    margin: 15% auto;
+}
+
+.typecho-login .logo, .typecho-login .logo-dark {
+    margin: 10px auto;
+}
+
+.typecho-login form {
+    background: #e5ead1;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.typecho-login legend {
+    display: none;
+}
+
+.typecho-login label {
+    display: block;
+	font-weight: bold;
+}
+
+.typecho-login input.text {
+    width: 200px;
+}
+
+.typecho-login form p {
+    margin-bottom:20px;
+}
+
+.typecho-login form p.submit {
+    margin: 5px 0px 0px 0px;
+    position: relative;
+}
+
+.typecho-login form p.submit button {
+    position: absolute;
+    right: 0px; top: 0px;
+}
+
+.typecho-login .more-link {
+    font-size: 12px;
+    margin: 10px auto;
+    clear: both;
+    overflow: hidden;
+}
+
+.typecho-login .more-link .back-to-site {
+    float: left;
+}
+
+.typecho-login .more-link .forgot-password {
+    float: right;
+}
