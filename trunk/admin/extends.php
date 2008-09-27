@@ -15,6 +15,6 @@ require_once 'header.php';
 require_once 'menu.php';
 
 /** 调用插件 */
-_p(__FILE__, 'Layout')->display();
+_p('admin/extends.php', 'Layout')->display();
 
 require_once 'footer.php';

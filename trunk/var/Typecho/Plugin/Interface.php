@@ -39,14 +39,6 @@ interface Typecho_Plugin_Interface
     public static function deactivate();
     
     /**
-     * 插件初始化方法
-     * 
-     * @access public
-     * @return void
-     */
-    public static function init();
-    
-    /**
      * 获取插件信息方法
      * <code>
      * return array(

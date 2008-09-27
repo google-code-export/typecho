@@ -66,7 +66,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $this->abstractContentsWidget = Typecho_API::factory('Widget_Abstract_Contents');
         
         /** 初始化插件 */
-        $this->plugin = _p(__FILE__, 'Filter');
+        $this->plugin = _p('Widget_Abstract_Comments', 'Filter');
     }
     
     /**

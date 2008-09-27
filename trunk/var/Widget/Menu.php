@@ -87,8 +87,8 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
         ));
         
-        $this->_parentMenu = _p(__FILE__, 'Filter')->parentMenu($this->_parentMenu);
-        $this->_childMenu = _p(__FILE__, 'Filter')->childMenu($this->_childMenu);
+        $this->_parentMenu = _p('Widget_Menu', 'Filter')->parentMenu($this->_parentMenu);
+        $this->_childMenu = _p('Widget_Menu', 'Filter')->childMenu($this->_childMenu);
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
