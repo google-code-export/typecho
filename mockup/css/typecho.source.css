@@ -1,0 +1,127 @@
+/* vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8 */
+/**
+ * Typecho 后台样式
+ *
+ * @author  i.feelinglucky@gmail.com
+ * @since   2008-09-26
+ * @link    http://www.typecho.net/
+ * @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
+ */
+
+/**
+ * 全局样式
+ */
+body {
+    background: #f7fbe9;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+p {
+    font-size: 12px;
+}
+
+a:link, a:visited {
+    color: #e47e00;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/**
+ * 安装向导
+ */
+.typecho-install-patch {
+    height: 30px;
+    line-height: 30px;
+    background: #333;
+}
+
+.typecho-install-patch ol {
+    list-style: none;
+    position: relative;
+    overflow: hidden;
+    margin-left: 20px; /* 给第一个位置流出 20px */
+    zoom: 1;
+}
+
+.typecho-install-patch li {
+    font-weight: 600;
+    float: left;
+    color: #999;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 20px;
+    left: -20px;
+    position: relative;
+    margin-right: 15px;
+    background: #333 url(../images/sprite.png) no-repeat scroll 0px 0px; 
+}
+
+.typecho-install-patch li.current {
+    color: #fff;
+}
+
+/**
+ * 安装主体内容
+ */
+.typecho-install {
+    margin: 30px auto;
+}
+
+.typecho-install .typecho-install-title, .typecho-install .typecho-install-body {
+    padding: 0px 0px 10px 0px;;
+    margin: 0px 0px 10px 0px;
+    border-bottom: 1px solid #dee4c5;
+}
+
+.typecho-install .typecho-install-title {
+    line-height: 25px;
+    height: 25px;
+    padding-left: 100px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -75px; 
+}
+
+.typecho-install .typecho-install-body {
+
+}
+
+.typecho-install .typecho-install-body h2 {
+    margin-top: 10px;
+    color: #e47e00;
+}
+
+.typecho-install .typecho-install-body p {
+    text-indent: 24px;
+    line-height: 18px;
+    margin-top: 5px;
+    text-align: justify;
+}
+
+/*
+.typecho-install .submit {
+    margin-top: 25px;
+}
+ */
+
+
+
+
+
