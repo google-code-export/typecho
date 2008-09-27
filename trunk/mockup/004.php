@@ -3,8 +3,8 @@
 <div class="body body-950">
     <div class="container">
         <div class="column-14 start-06 typecho-install">
-            <h1 class="typecho-install-title">开始安装</h1>
-                <?php include 'slice/typecho-install-body.inc.html'; ?>
+            <h1 class="typecho-install-title">安装成功！</h1>
+                <?php include 'slice/typecho-install-success.inc.html'; ?>
         </div>
     </div>
 </div>
