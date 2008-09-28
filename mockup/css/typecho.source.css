@@ -275,6 +275,64 @@ margin-top: 25px;
 
 
 /**
+ * 后台分页
+ */
+.typecho-pager {
+    text-align: center;
+    height: 15px;
+}
+
+.typecho-pager .typecho-pager-content {
+    display: inline-block;
+}
+
+.typecho-pager h5 {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: normal;
+    float: left;
+}
+
+.typecho-pager ul {
+    list-style: none;
+    line-height: 15px;
+    height: 15px;
+    overflow: hidden;
+    float: left;
+    zoom: 1;
+}
+
+.typecho-pager li {
+    font-family: arial,sans-serif;
+    margin-right: 3px;
+    font-size: 12px;
+    float: left;
+    height: 15px;
+    line-height: 15px;
+    width: 15px;
+}
+
+.typecho-pager a:link, .typecho-pager a:visited {
+    display: block;
+    height: 15px;
+    width: 15px;
+    outline: none;
+}
+
+.typecho-pager a:hover {
+    text-decoration: none;
+}
+
+.typecho-pager li.current {
+    background: #e47e00;
+}
+
+.typecho-pager li.current a {
+    color: #fff;
+}
+
+
+/**
  * 登录框
  */
 .typecho-login {
@@ -703,8 +761,8 @@ margin-top: 25px;
 
 .typecho-option-tabs li {
     float: left;
-    margin: 5px 5px 0px 5px;
-    height: 25px;
+    margin: 4px 5px 0px 5px;
+    height: 26px;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
@@ -717,4 +775,80 @@ margin-top: 25px;
     color: #333;
     text-decoration: none;
     padding: 0px 15px;
+}
+
+/**
+ * 表格列表页
+ */
+.typecho-article-list {
+    margin-top: 25px;
+}
+
+/**
+ * 列表页选项
+ */
+.typecho-list-operate {
+    height: 30px;
+    overflow: hidden;
+    zoom: 1;
+}
+
+.typecho-list-operate p.operate{
+    float: left;
+}
+
+.typecho-list-operate p.search {
+    float: right;
+}
+
+
+/**
+ * 列表表格
+ */
+.typecho-list-table  {
+    width: 100%;
+    margin: 10px 0 30px 0;
+    font-size: 14px;
+}
+
+.typecho-list-table thead {
+    background: #dee4c5;
+}
+
+.typecho-list-table th {
+    text-align: left;
+    padding: 3px 5px;
+    font-weight: bold;
+    border-bottom: 1px solid #d1daad;
+}
+
+.typecho-list-table td {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 5px;
+}
+
+.typecho-list-table tbody tr.even {
+    background: #eff5d9;
+}
+
+.typecho-list-table tbody tr.hover, .typecho-list-table tbody tr:hover {
+
+}
+
+.typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td {
+    background: #E8EDD2;
+}
+
+.typecho-list-table h4 {
+    font-weight: normal;
+}
+
+.typecho-list-table sup {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.typecho-list-table .important {
+    color: #e47e00;
 }
