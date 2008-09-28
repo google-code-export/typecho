@@ -67,7 +67,7 @@ input:hover {
 }
 
 input.focus, input:focus, textarea.focus, textarea:focus {
-    border: 1px solid red;
+    border: 1px solid #e47e00;
 }
 
 
@@ -284,6 +284,8 @@ margin-top: 25px;
 
 .typecho-pager .typecho-pager-content {
     display: inline-block;
+     *display: inline;
+     *zoom: 1;
 }
 
 .typecho-pager h5 {
@@ -787,6 +789,11 @@ margin-top: 25px;
 /**
  * 列表页选项
  */
+
+.typecho-list .typecho-pager {
+    margin: 10px 0px;
+}
+
 .typecho-list-operate {
     height: 30px;
     overflow: hidden;
@@ -807,8 +814,13 @@ margin-top: 25px;
  */
 .typecho-list-table  {
     width: 100%;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 20px 0;
     font-size: 14px;
+    border-collapse: collapse;
+}
+
+.typecho-list-table input {
+    border: none; /* 重置 input */
 }
 
 .typecho-list-table thead {
@@ -837,7 +849,7 @@ margin-top: 25px;
 }
 
 .typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td {
-    background: #E8EDD2;
+    background: #e8edd2;
 }
 
 .typecho-list-table h4 {
