@@ -522,3 +522,149 @@ margin-top: 25px;
 .typecho-foot-v2 .resource ul {
     text-align: left;
 }
+
+/**
+ * 标题
+ */
+.typecho-page-title {
+    margin-top: 30px;
+    position: relative;
+    background: url(../images/sprite.png) repeat-x scroll 0px -1485px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.typecho-page-title h2 {
+    background: #f7fbe9;
+    padding-right: 10px;
+    font-size: 16px;
+    line-height: 30px;
+    height: 30px;
+    float: left;
+}
+
+.typecho-page-title p {
+    height: 30px;
+    float: right;
+    background: #f7fbe9;
+    padding-left: 10px;
+}
+
+.typecho-page-title a:link, .typecho-page-title a:visited {
+    font-size: 14px;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.typecho-page-title a:hover {
+    text-decoration: underline;
+}
+
+
+/**
+ * 后台页面主体
+ */
+.typecho-page-main {
+    margin: 10px auto;
+}
+
+
+/**
+ * 后台主页左侧导航列表
+ */
+.typecho-dashboard-nav h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 16px;
+}
+
+.typecho-dashboard-nav h3.intro {
+    font-size: 12px;
+}
+
+.typecho-dashboard-nav .intro-link {
+    background: none;
+    padding: 0px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.typecho-dashboard-nav .intro-link ul {
+    list-style: none;
+}
+
+.typecho-dashboard-nav .intro-link li {
+    height: 18px;
+    line-height: 18px;
+    border: none;
+    margin: 2px 0px;
+}
+
+.typecho-dashboard-nav .intro-link .date {
+    padding-left: 5px;
+}
+
+.typecho-dashboard-nav .dashboard-status {
+    font-size: 12px;
+}
+
+.typecho-dashboard-nav .status p {
+    margin-bottom: 5px;
+}
+
+.typecho-dashboard-nav .status em {
+    color:#e47e00;
+    font-style: normal;
+}
+
+.typecho-dashboard-nav .update-check {
+    background: #dee4c5;
+    color:#e47e00;
+    font-style:italic;
+    margin-bottom:25px;
+    padding: 10px;
+}
+
+/**
+ * 主页主体
+ */
+.typecho-dashboard-main {
+
+}
+
+.typecho-dashboard-main .section {
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.typecho-dashboard-main .section h4 {
+    font-size: 14px;
+}
+
+.typecho-dashboard-main .section ul {
+    list-style: none;
+}
+
+.typecho-dashboard-main .section li {
+    text-align: justify;
+    line-height: 26px;
+}
+
+.typecho-dashboard-main .section .tags {
+    margin: 0px 5px;
+}
+
+.typecho-dashboard-main .section .title {
+
+}
+
+.typecho-dashboard-main .section .date {
+
+}
+
+.typecho-dashboard-main .section .category {
+
+}
+
+
