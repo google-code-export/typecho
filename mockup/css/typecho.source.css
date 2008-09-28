@@ -51,6 +51,11 @@ a.important {
     color: #fff;
 }
 
+em {
+    color: #e47e00;
+    font-weight: normal;
+}
+
 input {
     border: 1px solid #dee4c5;
     padding: 2px;
@@ -219,11 +224,6 @@ input.focus, input:focus {
     line-height: 18px;
     margin-top: 5px;
     text-align: justify;
-}
-
-.typecho-install em {
-    color: #e47e00;
-    font-style: normal;
 }
 
 .typecho-install .session {
@@ -468,7 +468,6 @@ margin-top: 25px;
 
 .typecho-foot em {
     color: #fff;
-    font-style: normal;
 }
 
 /*
@@ -613,17 +612,35 @@ margin-top: 25px;
     margin-bottom: 5px;
 }
 
-.typecho-dashboard-nav .status em {
-    color:#e47e00;
-    font-style: normal;
-}
-
 .typecho-dashboard-nav .update-check {
     background: #dee4c5;
     color:#e47e00;
-    font-style:italic;
-    margin-bottom:25px;
+    margin-bottom: 25px;
     padding: 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.typecho-dashboard-nav .update-check p {
+
+}
+
+.typecho-dashboard-nav .update-check .current {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.typecho-dashboard-nav .update-check .current em {
+    font-weight: bold;
+}
+
+.typecho-dashboard-nav .update-check .latest {
+    font-size: 12px;
+}
+
+.typecho-dashboard-nav .update-check .latest a,
+.typecho-dashboard-nav .update-check .latest em {
+    color: #999;
 }
 
 /**
