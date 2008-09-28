@@ -8,7 +8,7 @@
  */
 
 /** 配置管理 */
-require_once 'Typecho/Config.php';
+require_once 'Typecho/Config/Able.php';
 
 /**
  * I18n function
@@ -47,9 +47,23 @@ function _e()
  *
  * @package I18n
  */
-class Typecho_I18n
+class Typecho_I18n implements Typecho_Config_Able
 {
+    /**
+     * 是否已经载入的标志位
+     * 
+     * @access private
+     * @var boolean
+     */
     private $_loaded = false;
+    
+    /**
+     * 默认配置
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private static $_config;
 
     /**
      * 翻译文字
@@ -60,13 +74,13 @@ class Typecho_I18n
      */
     public static function translate($string)
     {
-        if(Typecho_Config::get('I18n'))
+        if(self::$_config->lang)
         {
             if(!self::$_loaded)
             {
                 /** GetText支持 */
                 require_once 'Typecho/I18n/GetText.php';
-                Typecho_I18n_GetText::init(Typecho_Config::get('I18n'));
+                Typecho_I18n_GetText::init(self::$_config->lang);
                 self::$_loaded = true;
             }
 
@@ -150,5 +164,28 @@ class Typecho_I18n
         }
         
         return date(_t('Y年m月d日'), $from);
+    }
+    
+    /**
+     * 设置数据库默认配置
+     * 
+     * @access public
+     * @param Typecho_Config $config 配置信息
+     * @return void
+     */
+    public static function setConfig(Typecho_Config $config)
+    {
+        self::$_config = $config;
+    }
+    
+    /**
+     * 获取数据库默认配置
+     * 
+     * @access public
+     * @return Typecho_Config
+     */
+    public static function getConfig()
+    {
+        return self::$_config;
     }
 }

@@ -6,13 +6,16 @@
  * @license    GNU General Public License 2.0
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
+ 
+/** 配置管理 */
+require_once 'Typecho/Config/Able.php';
 
 /**
  * Typecho组件基类
  *
  * @package Route
  */
-class Typecho_Router
+class Typecho_Router implements Typecho_Config_Able
 {
     /**
      * 当前路由名称
@@ -39,6 +42,14 @@ class Typecho_Router
     private static $_routes = false;
     
     /**
+     * 默认配置
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private static $_config;
+    
+    /**
      * 解析路由
      * 
      * @access private
@@ -47,15 +58,9 @@ class Typecho_Router
     private static function _parseRoute()
     {
         if(false === self::$_routes)
-        {
-            /** 配置管理 */
-            require_once 'Typecho/Config.php';
-        
-            /** 判断是否定义配置 */
-            Typecho_Config::need('Router');
-            
+        {            
             /** 获取路由配置 */
-            $config = Typecho_Config::get('Router');
+            $config = self::$_config;
             
             /** 载入路由解析支持 */
             require_once 'Typecho/Router/Parser.php';
@@ -148,5 +153,28 @@ class Typecho_Router
         }
 
         return Typecho_API::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
+    }
+    
+    /**
+     * 设置数据库默认配置
+     * 
+     * @access public
+     * @param Typecho_Config $config 配置信息
+     * @return void
+     */
+    public static function setConfig(Typecho_Config $config)
+    {
+        self::$_config = $config;
+    }
+    
+    /**
+     * 获取数据库默认配置
+     * 
+     * @access public
+     * @return Typecho_Config
+     */
+    public static function getConfig()
+    {
+        return self::$_config;
     }
 }

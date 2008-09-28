@@ -7,6 +7,9 @@
  * @version    $Id: DbQuery.php 97 2008-04-04 04:39:54Z magike.net $
  */
 
+/** Typecho_Config */
+require_once 'Typecho/Config.php';
+
 /**
  * Typecho数据库查询语句构建类
  * 使用方法:
@@ -36,16 +39,26 @@ class Typecho_Db_Query
      * @var array
      */
     private $_sqlPreBuild;
+    
+    /**
+     * 数据库配置
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private $_config;
 
     /**
      * 构造函数,引用数据库适配器作为内部数据
      *
      * @param Typecho_Db_Adapter $adapter 数据库适配器
+     * @param Typecho_Config $config 默认配置
      * @return void
      */
-    public function __construct(Typecho_Db_Adapter $adapter)
+    public function __construct(Typecho_Db_Adapter $adapter, Typecho_Config $config)
     {
         $this->_adapter = &$adapter;
+        $this->_config = $config;
         
         $this->_sqlPreBuild = array(
             'action' => NULL,
@@ -70,7 +83,7 @@ class Typecho_Db_Query
     private function filterPrefix($string)
     {
         return substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i",
-        "\\1" . Typecho_Config::get('Db')->prefix . "\\2", ' ' . $string), 1);
+        "\\1" . $this->_config->prefix . "\\2", ' ' . $string), 1);
     }
 
     /**
