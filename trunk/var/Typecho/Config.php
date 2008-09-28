@@ -20,14 +20,6 @@
 class Typecho_Config implements Iterator
 {
     /**
-     * 配置列表
-     *
-     * @access private
-     * @var array
-     */
-    private static $_config = array();
-
-    /**
      * 当前配置
      *
      * @access private
@@ -49,47 +41,17 @@ class Typecho_Config implements Iterator
             $this->_currentConfig[$name] = $value;
         }
     }
-
-    /**
-     * 获取一个配置
-     *
-     * @access public
-     * @param string $name 配置名称
-     * @return mixed
-     */
-    public static function get($name)
-    {
-        return isset(self::$_config[$name]) ? self::$_config[$name] : NULL;
-    }
-
-    /**
-     * 设置一个配置
-     *
-     * @access public
-     * @param string $name 配置名称
-     * @param mixed $value 配置值
-     * @return void
-     */
-    public static function set($name, $value)
-    {
-        self::$_config[$name] = is_array($value) ? new Typecho_Config($value) : $value;
-    }
     
     /**
-     * 判断必须配置是否已经定义
-     * 
+     * 工厂模式实例化一个当前配置
+     *
      * @access public
-     * @param string $name 配置名称
+     * @param array $config 配置列表
      * @return void
      */
-    public static function need($name)
+    public static function factory(array $config)
     {
-        if(!isset(self::$_config[$name]))
-        {
-            /** 载入配置异常 */
-            require_once 'Typecho/Config/Exception.php';
-            throw new Typecho_Config_Exception("Configure '{$name}' not found", Typecho_Exception::RUNTIME);
-        }
+        return new Typecho_Config($config);
     }
 
     /**

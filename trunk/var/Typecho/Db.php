@@ -8,7 +8,7 @@
  */
 
 /** 配置管理 */
-require_once 'Typecho/Config.php';
+require_once 'Typecho/Config/Able.php';
 
 /** sql构建器 */
 require_once 'Typecho/Db/Query.php';
@@ -20,7 +20,7 @@ require_once 'Typecho/Db/Query.php';
  *
  * @package Db
  */
-class Typecho_Db
+class Typecho_Db implements Typecho_Config_Able
 {
     /** 读取数据库 */
     const READ = true;
@@ -75,6 +75,14 @@ class Typecho_Db
      * @var Typecho_Db
      */
     private static $_instance;
+    
+    /**
+     * 默认配置
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private static $_config;
 
     /**
      * 数据库类构造函数
@@ -83,19 +91,17 @@ class Typecho_Db
      * @throws Typecho_Db_Exception
      */
     public function __construct()
-    {
-        /** 判断是否定义配置 */
-        Typecho_Config::need('Db');
-    
+    {    
         /** 数据库适配器 */
-        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', Typecho_Config::get('Db')->adapter) . '.php';
-        $adapter = 'Typecho_Db_Adapter_' . Typecho_Config::get('Db')->adapter;
+        $config = self::$_config;
+        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $config->adapter) . '.php';
+        $adapter = 'Typecho_Db_Adapter_' . $config->adapter;
 
         //实例化适配器对象
         $this->_adapter = new $adapter();
 
         //连接数据库
-        $this->_adapter->connect(Typecho_Config::get('Db'));
+        $this->_adapter->connect($config);
     }
 
     /**
@@ -105,7 +111,7 @@ class Typecho_Db
      */
     public function sql()
     {
-        return new Typecho_Db_Query($this->_adapter);
+        return new Typecho_Db_Query($this->_adapter, self::$_config);
     }
 
     /**
@@ -123,6 +129,29 @@ class Typecho_Db
         }
 
         return self::$_instance;
+    }
+    
+    /**
+     * 设置数据库默认配置
+     * 
+     * @access public
+     * @param Typecho_Config $config 配置信息
+     * @return void
+     */
+    public static function setConfig(Typecho_Config $config)
+    {
+        self::$_config = $config;
+    }
+    
+    /**
+     * 获取数据库默认配置
+     * 
+     * @access public
+     * @return Typecho_Config
+     */
+    public static function getConfig()
+    {
+        return self::$_config;
     }
 
     /**

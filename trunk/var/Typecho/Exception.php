@@ -8,7 +8,7 @@
  */
 
 /** 配置管理 */
-require_once 'Typecho/Config.php';
+require_once 'Typecho/Config/Able.php';
 
 /**
  * Typecho异常基类
@@ -16,7 +16,7 @@ require_once 'Typecho/Config.php';
  *
  * @package Exception
  */
-class Typecho_Exception extends Exception
+class Typecho_Exception extends Exception implements Typecho_Config_Able
 {
     /** 权限异常 */
     const FORBIDDEN = 403;
@@ -37,6 +37,14 @@ class Typecho_Exception extends Exception
      * @var array
      */
     private $_messages;
+    
+    /**
+     * 默认配置
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private static $_config;
 
     /**
      * 异常基类构造函数,重载以增加$code的默认参数
@@ -123,6 +131,29 @@ class Typecho_Exception extends Exception
             . $this->code . ' : ' . $this->message . '</h1>';
             return self::parse(parent::__toString()) . errorHandler() . '</body></html>';
     }
+    
+    /**
+     * 设置数据库默认配置
+     * 
+     * @access public
+     * @param Typecho_Config $config 配置信息
+     * @return void
+     */
+    public static function setConfig(Typecho_Config $config)
+    {
+        self::$_config = $config;
+    }
+    
+    /**
+     * 获取数据库默认配置
+     * 
+     * @access public
+     * @return Typecho_Config
+     */
+    public static function getConfig()
+    {
+        return self::$_config;
+    }
 }
 
 /**
@@ -147,7 +178,7 @@ function exceptionHandler($exception)
 {
     @ob_clean();
 
-    if(!Typecho_Config::get('Exception'))
+    if(!Typecho_Exception::getConfig())
     {    
         if($exception instanceof Typecho_Exception)
         {
@@ -185,7 +216,7 @@ function exceptionHandler($exception)
                 break;
         }
 
-        require_once Typecho_Config::get('Exception')->{$handle};
+        require_once Typecho_Exception::getConfig()->{$handle};
         die();
     }
 }
@@ -214,7 +245,7 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
         $errors = array();
     }
 
-    if(!Typecho_Config::get('Exception'))
+    if(!Typecho_Exception::getConfig())
     {
         $errorWord = array (
             E_ERROR              => 'Error',
