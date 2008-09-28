@@ -527,10 +527,11 @@ margin-top: 25px;
  */
 .typecho-page-title {
     margin-top: 30px;
-    position: relative;
-    background: url(../images/sprite.png) repeat-x scroll 0px -1485px;
+}
+
+.typecho-page-title div {
     height: 30px;
-    overflow: hidden;
+    background: url(../images/sprite.png) repeat-x scroll 0px -1485px;
 }
 
 .typecho-page-title h2 {
