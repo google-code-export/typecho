@@ -315,6 +315,7 @@ margin-top: 25px;
 }
 
 .typecho-pager a:link, .typecho-pager a:visited {
+    color: #333;
     display: block;
     height: 15px;
     width: 15px;
@@ -322,7 +323,9 @@ margin-top: 25px;
 }
 
 .typecho-pager a:hover {
+    color: #333;
     text-decoration: none;
+    background: #dee4c5;
 }
 
 .typecho-pager li.current {
@@ -797,10 +800,15 @@ margin-top: 25px;
 .typecho-list-operate {
     height: 30px;
     overflow: hidden;
+    font-size: 12px;
     zoom: 1;
 }
 
-.typecho-list-operate p.operate{
+.typecho-list-operate input, .typecho-list-operate select {
+    font-size: 12px;
+}
+
+.typecho-list-operate p.operate {
     float: left;
 }
 
