@@ -66,6 +66,7 @@ input.focus, input:focus {
  * logo 的样式
  */
 .logo {
+    display: block;
     height: 20px;
     width: 92px;
     overflow: hidden;
@@ -74,6 +75,7 @@ input.focus, input:focus {
 }
 
 .logo-dark {
+    display: block;
     height: 20px;
     width: 92px;
     overflow: hidden;
@@ -85,9 +87,11 @@ input.focus, input:focus {
 /**
  * 典型配置选项
  */
+/*
 .typecho-option {
 
 }
+ */
 
 .typecho-option li {
     padding-left: 110px;
@@ -200,9 +204,11 @@ input.focus, input:focus {
     background: url(../images/sprite.png) no-repeat scroll 0px -75px; 
 }
 
+/*
 .typecho-install .typecho-install-body {
 
 }
+ */
 
 .typecho-install .typecho-install-body h2 {
     margin-top: 10px;
@@ -268,7 +274,7 @@ margin-top: 25px;
  * 登录框
  */
 .typecho-login {
-	position: relative;
+    position: relative;
     margin: 15% auto;
 }
 
@@ -288,7 +294,7 @@ margin-top: 25px;
 
 .typecho-login label {
     display: block;
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .typecho-login input.text {
@@ -417,9 +423,9 @@ margin-top: 25px;
     top: 0px;
     right: 5px;
     /* review IE */
-   *right: 25px;
-   height: 30px;
-   line-height: 30px;
+           *right: 25px;
+           height: 30px;
+           line-height: 30px;
 }
 
 .typecho-head-guid .operate a.exit {
@@ -431,12 +437,88 @@ margin-top: 25px;
     outline: none;
     overflow: hidden;
     position:relative;
-    *position:absolute;
-    top: 5px;
+             *position:absolute;
+             top: 5px;
 }
 
 .typecho-head-guid .operate .author {
     margin-right: 8px;
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
+
+/**
+ * 注脚
+ */
+.typecho-foot {
+    background: #333333;
+    padding: 15px 25px 80px 25px;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+}
+
+.typecho-foot h4 {
+    margin: 5px auto;
+}
+
+.typecho-foot h4 a {
+    margin: 0px auto;
+}
+
+.typecho-foot em {
+    color: #fff;
+    font-style: normal;
+}
+
+/*
+.typecho-foot .copyright {
+
+}
+
+    .typecho-foot .resource {
+
+}
+ */
+
+.typecho-foot .resource ul {
+    list-style: none;
+    margin: 5px auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+             *display: inline;
+             *zoom: 1;
+}
+
+.typecho-foot .resource li {
+    font-size: 12px;
+    left: -6px;
+    position: relative;
+    float: left;
+    padding: 0px 5px;
+    line-height: 12px;
+    border-left: 1px solid #999;
+}
+
+.typecho-foot .resource li a:link, .typecho-foot .resource li a:visited {
+    color: #999;
+}
+
+.typecho-foot-v2 {
+    text-align: left;
+}
+
+.typecho-foot-v2 h4 {
+    float: left;
+    margin-right: 10px;
+}
+
+.typecho-foot-v2 h4 a {
+    margin: 0px;
+}
+
+.typecho-foot-v2 .resource ul {
+    text-align: left;
+}
