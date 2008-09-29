@@ -34,6 +34,10 @@ h2 {
     font-size: 16px;
 }
 
+ul, ol {
+    list-style: none;
+}
+
 p {
     font-size: 12px;
 }
@@ -167,7 +171,6 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 }
 
 .typecho-install-patch ol {
-    list-style: none;
     position: relative;
     overflow: hidden;
     margin-left: 20px; /* 给第一个位置流出 20px */
@@ -236,7 +239,6 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 
 .typecho-install .session ul {
     font-size: 12px;
-    list-style: none;
     margin-left: 24px;
 }
 
@@ -296,7 +298,6 @@ margin-top: 25px;
 }
 
 .typecho-pager ul {
-    list-style: none;
     line-height: 15px;
     height: 15px;
     overflow: hidden;
@@ -455,7 +456,6 @@ margin-top: 25px;
 
 .typecho-head-guid ul {
     position: relative;
-    list-style: none;
     top: 0;
 }
 
@@ -548,7 +548,6 @@ margin-top: 25px;
  */
 
 .typecho-foot .resource ul {
-    list-style: none;
     margin: 5px auto;
     text-align: center;
     position: relative;
@@ -635,6 +634,9 @@ margin-top: 25px;
     margin: 10px auto;
 }
 
+.typecho-page-main .typecho-option-tabs {
+    font-size: 14px;
+}
 
 /**
  * 后台主页左侧导航列表
@@ -658,7 +660,6 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .intro-link ul {
-    list-style: none;
 }
 
 .typecho-dashboard-nav .intro-link li {
@@ -728,7 +729,6 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-main .section ul {
-    list-style: none;
 }
 
 .typecho-dashboard-main .section li {
@@ -760,7 +760,6 @@ margin-top: 25px;
     background: #dee4c5;
     height: 30px;
     overflow: hidden;
-    list-style: none;
     zoom: 1;
 }
 
@@ -871,4 +870,77 @@ margin-top: 25px;
 
 .typecho-list-table .important {
     color: #e47e00;
+}
+
+/**
+ * 图片列表
+ */
+.typecho-thumb-list {
+    overflow: hidden;
+    clear: both;
+    width: 960px;
+    margin-bottom: 70px;
+}
+
+.typecho-thumb-list a:link, .typecho-thumb-list a:visited {
+    color: #333;
+}
+
+.typecho-thumb-list a:hover {
+    text-decoration: none;
+}
+
+.typecho-thumb-list p {
+    line-height: 16px;
+}
+
+.typecho-thumb-list li {
+    text-align: center;
+    width: 230px;
+    float: left;
+    position: relative;
+    padding-top: 175px;
+    height: 55px;
+    margin: 20px 10px 00px 0px;
+}
+
+.typecho-thumb-list .title {
+    font-size: 12px;
+    color: #e47e00;
+    font-size: 14px;
+}
+
+.typecho-thumb-list .title a {
+    color: #e47e00;
+    display: block;
+}
+
+.typecho-thumb-list .thumb {
+    border: 1px solid #dee4c5;
+    background: #fff;
+    padding: 1px;
+    position: absolute;
+    top:25px;
+    left:15px;
+}
+
+.typecho-thumb-list .thumb img {
+    background: #f7fbe9;
+    width: 195px;
+    height: 145px;
+}
+
+.typecho-thumb-list .desption {
+
+}
+
+.typecho-thumb-list .current {
+    background: #e47e00;
+    color: #fff;
+    height: 20px;
+    line-height: 20px;
+    width: 200px;
+    position: absolute;
+    top:0px;
+    left:15px;
 }
