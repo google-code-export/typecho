@@ -973,13 +973,12 @@ margin-top: 25px;
 .typecho-page-main .typecho-option textarea {
     width: 475px;
     height: 150px;
+}
 
- }
-
- .typecho-page-main .typecho-option .desption {
-     line-height:18px;
-     margin-top:5px;
-     text-align:justify;
+.typecho-page-main .typecho-option .desption {
+    line-height:18px;
+    margin-top:5px;
+    text-align:justify;
 }
 
 .typecho-page-main .typecho-option-submit {
