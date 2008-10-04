@@ -20,75 +20,36 @@
 abstract class Widget_Abstract extends Typecho_Widget
 {
     /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-    
-    /**
-     * 数据库对象
-     * 
-     * @access protected
-     * @var Typecho_Db
-     */
-    protected $db;
-
-    /**
-     * 构造函数,向dataset中注入数据
+     * 获取数据对象
      * 
      * @access public
      * @return void
      */
-    public function __construct()
+    protected static function db()
     {
-        $this->db = Typecho_Db::get();
+        return Typecho_Db::get();
     }
     
     /**
-     * 查询方法
+     * 获取选项对象
      * 
      * @access public
-     * @return Typecho_Db_Query
+     * @return void
      */
-    abstract public function select();
+    protected static function options()
+    {
+        return Typecho_API::factory('Widget_Options');
+    }
     
     /**
-     * 获得所有记录数
+     * 获取用户对象
      * 
      * @access public
-     * @param Typecho_Db_Query $condition 查询对象
-     * @return integer
+     * @return void
      */
-    abstract public function size(Typecho_Db_Query $condition);
-    
-    /**
-     * 增加记录方法
-     * 
-     * @access public
-     * @param array $rows 字段对应值
-     * @return integer
-     */
-    abstract public function insert(array $rows);
-    
-    /**
-     * 更新记录方法
-     * 
-     * @access public
-     * @param array $rows 字段对应值
-     * @param Typecho_Db_Query $condition 查询对象
-     * @return integer
-     */
-    abstract public function update(array $rows, Typecho_Db_Query $condition);
-    
-    /**
-     * 删除记录方法
-     * 
-     * @access public
-     * @param Typecho_Db_Query $condition 查询对象
-     * @return integer
-     */
-    abstract public function delete(Typecho_Db_Query $condition);
+    protected static function user()
+    {
+        return Typecho_API::factory('Widget_Users_Current');
+    }
 }
 
