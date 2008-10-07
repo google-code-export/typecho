@@ -985,3 +985,79 @@ margin-top: 25px;
     margin: 15px 0px;
     padding-left: 200px;
 }
+
+/**
+ * 编辑模板
+ */
+.typecho-select-theme {
+    overflow: hidden;
+    height: 25px;
+    line-height: 25px;
+    margin: 15px 0px;
+}
+
+.typecho-select-theme h5 {
+    color: #E47E00;
+    font-weight: bold;
+    float: left;
+    font-size: 14px;
+    width: 120px;
+    margin-right: 10px;
+}
+
+.typecho-select-theme select {
+    width: 150px;
+}
+
+/**
+ * 编辑模板（编辑详情）
+ */
+.typecho-edit-theme {
+    overflow: hidden;
+}
+
+.typecho-edit-theme ul {
+    width: 120px;
+    float: left;
+    overflow: hidden;
+    padding: 10px 0px 10px 10px;
+}
+
+.typecho-edit-theme li {
+    line-height: 25px;
+    height: 25px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    padding: 0px 0px 0px 10px;
+}
+
+.typecho-edit-theme li a:link, .typecho-edit-theme li a:visited {
+    color: #333;
+    display: block;
+}
+
+.typecho-edit-theme li a:hover {
+    text-decoration: none;
+}
+
+.typecho-edit-theme .current {
+    background: #DEE4C5;
+}
+
+.typecho-edit-theme .content {
+    width: 810px;
+    float: left;
+    overflow: hidden;
+    padding: 10px 10px 10px 0px;
+}
+
+.typecho-edit-theme .submit {
+    margin: 130px;
+    width: 810px;
+    text-align: center;
+}
+
+.typecho-edit-theme textarea {
+    width: 800px;
+    height: 500px;
+}
