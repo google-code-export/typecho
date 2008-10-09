@@ -32,16 +32,16 @@ class Widget_Metas_Link_List extends Typecho_Widget
     }
 
     /**
-     * 初始化数据
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        $db = Typecho_Db::get();
-        $select = $db->sql()->select('table.metas', '`mid`, `slug` AS `url`, `name`, `description`');
-        
-        $db->fetchAll($select->where('`type` = ?', 'link')->order('`sort`', Typecho_Db::SORT_ASC), array($this, 'push'));
+        $select = $this->db()->sql()->select('table.metas', '`mid`, `slug` AS `url`, `name`, `description`');
+        $this->db()->fetchAll($select->where('`type` = ?', 'link')->order('`sort`', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

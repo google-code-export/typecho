@@ -21,27 +21,24 @@
 class Widget_Contents_Post_Date extends Typecho_Widget
 {
     /**
-     * 构造函数,设置日期
+     * 初始化函数
      * 
      * @access public
-     * @param string $type 归档类型
-     * @param string $format 日期格式
-     * @param imteger $pageSize 输出个数
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct($type = 'month', $format = 'Y-m', $pageSize = NULL)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        $db = Typecho_Db::get();
-    
-        $posts = $db->fetchAll($db->sql()->select('table.contents', '`created`')
+        $posts = $this->db()->fetchAll($this->db()->sql()->select('table.contents', '`created`')
         ->where('type = ?', 'post')
-        ->where('table.contents.`created` < ?', Typecho_API::factory('Widget_Options')->gmtTime)
+        ->where('table.contents.`created` < ?', $this->widget('Widget_Options')->gmtTime)
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC));
         
         $result = array();
         foreach($posts as $post)
         {
-            $date = date($format, $post['created']);
+            $date = date($this->parameter()->format, $post['created']);
             if(isset($result[$date]))
             {
                 $result[$date]['count'] ++;
@@ -58,7 +55,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         
         foreach($result as $row)
         {
-            $row['permalink'] = Typecho_Router::url('archive_' . $type, $row, Typecho_API::factory('Widget_Options')->index);
+            $row['permalink'] = Typecho_Router::url('archive_' . $this->parameter()->type, $row, $this->widget('Widget_Options')->index);
             $this->push($row);
         }
     }
