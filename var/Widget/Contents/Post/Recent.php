@@ -20,20 +20,19 @@
 class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
 {
     /**
-     * 入口函数
+     * 初始化函数
      * 
      * @access public
-     * @param integer $pageSize 文章数量
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct($pageSize = NULL)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        parent::__construct();
-        
-        $pageSize = empty($pageSize) ? $this->options->postsListSize : $pageSize;
+        $pageSize = isset($this->parameter()->pageSize) ? $this->options()->postsListSize : $this->parameter()->pageSize;
     
-        $this->db->fetchAll($this->select()->where('table.contents.`password` IS NULL')
-        ->where('table.contents.`created` < ?', $this->options->gmtTime)
+        $this->db()->fetchAll($this->select()->where('table.contents.`password` IS NULL')
+        ->where('table.contents.`created` < ?', $this->options()->gmtTime)
         ->where('table.contents.`type` = ?', 'post')
         ->group('table.contents.`cid`')
         ->order('table.contents.`created`', Typecho_Db::SORT_DESC)

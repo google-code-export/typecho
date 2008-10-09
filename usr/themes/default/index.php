@@ -1,7 +1,7 @@
 <?php include('header.php'); ?>
 
     <div class="grid_11" id="content">
-	<?php while($this->get()): ?>
+	<?php while($this->next()): ?>
         <div class="post">
 			<div class="entry_main">
 				<div class="entry_title">

@@ -118,7 +118,7 @@ class Typecho_Config implements Iterator
      */
     public function __get($name)
     {
-        return $this->_currentConfig[$name];
+        return isset($this->_currentConfig[$name]) ? $this->_currentConfig[$name] : NULL;
     }
 
     /**

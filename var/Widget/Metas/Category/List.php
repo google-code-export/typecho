@@ -20,16 +20,16 @@
 class Widget_Metas_Category_List extends Widget_Abstract_Metas
 {    
     /**
-     * 初始化数据
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        parent::__construct();
-        
-        $this->db->fetchAll($this->select()->where('`type` = ?', 'category')
+        $this->db()->fetchAll($this->select()->where('`type` = ?', 'category')
         ->order('table.metas.`sort`', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }
