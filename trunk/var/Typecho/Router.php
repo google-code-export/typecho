@@ -123,7 +123,11 @@ class Typecho_Router implements Typecho_Config_Able
         /** 遍历路由 */
         if(false !== ($route = self::match($pathInfo)))
         {
-            Typecho_API::factory($route['widget'])->{$route['action']}();
+            $widget = new $route['widget'];
+            if(isset($route['action']))
+            {
+                $widget->{$route['action']}();
+            }
             return;
         }
 

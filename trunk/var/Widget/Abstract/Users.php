@@ -25,37 +25,13 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @access public
      * @var array
      */
-    public $groups;
-    
-    /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-
-    /**
-     * 构造函数,初始化用户组
-     * 
-     * @access public
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    
-        /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Options');
-    
-        $this->groups = array(
+    public $groups = array(
             'administrator' => 0,
             'editor'		=> 1,
             'contributor'	=> 2,
             'subscriber'	=> 3,
             'visitor'		=> 4
-        );
-    }
+            );
 
     /**
      * 查询方法
@@ -65,7 +41,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->sql()->select('table.users');
+        return $this->db()->sql()->select('table.users');
     }
     
     /**
@@ -75,9 +51,9 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    public function size(Typecho_Db_Query $condition)
+    public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.users', 'COUNT(`uid`) AS `num`'))->num;
+        return $this->db()->fetchObject($condition->select('table.users', 'COUNT(`uid`) AS `num`'))->num;
     }
     
     /**
@@ -89,7 +65,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function insert(array $rows)
     {
-        return $this->db->query($this->db->sql()->insert('table.users')->rows($rows));
+        return $this->db()->query($this->db()->sql()->insert('table.users')->rows($rows));
     }
     
     /**
@@ -102,7 +78,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function update(array $rows, Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->update('table.users')->rows($rows));
+        return $this->db()->query($condition->update('table.users')->rows($rows));
     }
     
     /**
@@ -114,6 +90,6 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->delete('table.users'));
+        return $this->db()->query($condition->delete('table.users'));
     }
 }

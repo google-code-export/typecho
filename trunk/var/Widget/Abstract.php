@@ -18,32 +18,38 @@
  * @license GNU General Public License 2.0
  */
 abstract class Widget_Abstract extends Typecho_Widget
-{
+{    
     /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-    
-    /**
-     * 数据库对象
-     * 
-     * @access protected
-     * @var Typecho_Db
-     */
-    protected $db;
-
-    /**
-     * 构造函数,向dataset中注入数据
+     * 获取全局选项
      * 
      * @access public
-     * @return void
+     * @return Widget_Options
      */
-    public function __construct()
+    public function options()
     {
-        $this->db = Typecho_Db::get();
+        return $this->widget('Widget_Options');
+    }
+    
+    /**
+     * 获取notice组件
+     * 
+     * @access public
+     * @return Widget_Notice
+     */
+    public function notice()
+    {
+        return $this->widget('Widget_Notice');
+    }
+    
+    /**
+     * 获取用户支持
+     * 
+     * @access public
+     * @return Widget_User
+     */
+    public function user()
+    {
+        return $this->widget('Widget_User');
     }
     
     /**
@@ -61,7 +67,7 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    abstract public function size(Typecho_Db_Query $condition);
+    abstract public function count(Typecho_Db_Query $condition);
     
     /**
      * 增加记录方法

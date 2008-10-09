@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Users_Current extends Widget_Abstract_Users
+class Widget_User extends Widget_Abstract_Users
 {
     /**
      * 用户
@@ -27,18 +27,18 @@ class Widget_Users_Current extends Widget_Abstract_Users
     private $_hasLogin = NULL;
 
     /**
-     * 构造函数
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        parent::__construct();
-        
         if($this->hasLogin())
         {
-            $rows = $this->db->fetchAll($this->db->sql()
+            $rows = $this->db()->fetchAll($this->db()->sql()
             ->select('table.options')
             ->where('`user` = ?', $this->_user['uid']));
 
@@ -46,13 +46,13 @@ class Widget_Users_Current extends Widget_Abstract_Users
 
             foreach($rows as $row)
             {
-                $this->options->__set($row['name'], $row['value']);
+                $this->options()->__set($row['name'], $row['value']);
             }
 
             //更新最后活动时间
-            $this->db->query($this->db->sql()
+            $this->db()->query($this->db()->sql()
             ->update('table.users')
-            ->rows(array('activated' => $this->options->gmtTime))
+            ->rows(array('activated' => $this->options()->gmtTime))
             ->where('`uid` = ?', $this->_user['uid']));
         }
     }
@@ -70,16 +70,16 @@ class Widget_Users_Current extends Widget_Abstract_Users
     public function login($uid, $password, $authCode, $expire = 0)
     {
         /** 保存登录信息,对密码采用sha1和md5双重加密 */
-        Typecho_Request::setCookie('uid', $uid, $expire, $this->options->siteUrl);
-        Typecho_Request::setCookie('password', sha1($password), $expire, $this->options->siteUrl);
-        Typecho_Request::setCookie('authCode', $authCode, $expire, $this->options->siteUrl);
+        $this->request()->setCookie('uid', $uid, $expire, $this->options()->siteUrl);
+        $this->request()->setCookie('password', sha1($password), $expire, $this->options()->siteUrl);
+        $this->request()->setCookie('authCode', $authCode, $expire, $this->options()->siteUrl);
         
-        if($this->db->fetchObject($this->select()
+        if($this->db()->fetchObject($this->select()
                 ->where('`uid` = ?', $uid)
                 ->limit(1))->activated > 0)
         {
             //更新最后登录时间以及验证码
-            $this->db->query($this->db->sql()
+            $this->db()->query($this->db()->sql()
             ->update('table.users')
             ->row('logged', '`activated`')
             ->rows(array('authCode' => $authCode))
@@ -88,9 +88,9 @@ class Widget_Users_Current extends Widget_Abstract_Users
         else
         {
             //第一次登录
-            $this->db->query($this->db->sql()
+            $this->db()->query($this->db()->sql()
             ->update('table.users')
-            ->rows(array('authCode' => $authCode, 'logged' => $this->options->gmtTime))
+            ->rows(array('authCode' => $authCode, 'logged' => $this->options()->gmtTime))
             ->where('`uid` = ?', $uid));
         }
     }
@@ -103,10 +103,10 @@ class Widget_Users_Current extends Widget_Abstract_Users
      */
     public function logout()
     {
-        Typecho_Request::deleteCookie('uid', $this->options->siteUrl);
-        Typecho_Request::deleteCookie('password', $this->options->siteUrl);
-        Typecho_Request::deleteCookie('authCode', $this->options->siteUrl);
-        Typecho_Request::deleteCookie('protect_password', $this->options->siteUrl);
+        $this->request()->deleteCookie('uid', $this->options()->siteUrl);
+        $this->request()->deleteCookie('password', $this->options()->siteUrl);
+        $this->request()->deleteCookie('authCode', $this->options()->siteUrl);
+        $this->request()->deleteCookie('protect_password', $this->options()->siteUrl);
     }
     
     /**
@@ -123,15 +123,15 @@ class Widget_Users_Current extends Widget_Abstract_Users
         }
         else
         {
-            if(NULL !== Typecho_Request::getCookie('uid') && NULL !== Typecho_Request::getCookie('password'))
+            if(NULL !== $this->request()->getCookie('uid') && NULL !== $this->request()->getCookie('password'))
             {
                 /** 验证登陆 */
-                $user = $this->db->fetchRow($this->select()
-                ->where('`uid` = ?', Typecho_Request::getCookie('uid'))
+                $user = $this->db()->fetchRow($this->select()
+                ->where('`uid` = ?', $this->request()->getCookie('uid'))
                 ->limit(1));
 
-                if($user && sha1($user['password']) == Typecho_Request::getCookie('password')
-                && $user['authCode'] == Typecho_Request::getCookie('authCode'))
+                if($user && sha1($user['password']) == $this->request()->getCookie('password')
+                && $user['authCode'] == $this->request()->getCookie('authCode'))
                 {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
@@ -170,7 +170,7 @@ class Widget_Users_Current extends Widget_Abstract_Users
             }
             else
             {
-                Typecho_API::redirect(Typecho_API::pathToUrl('/login.php', $this->options->adminUrl)
+                $this->response()->redirect(Typecho_Common::pathToUrl('/login.php', $this->options()->adminUrl)
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }

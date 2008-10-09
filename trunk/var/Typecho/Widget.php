@@ -7,6 +7,15 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
+/** Typecho_Widget_Request */
+require_once 'Typecho/Widget/Request.php';
+
+/** Typecho_Widget_Response */
+require_once 'Typecho/Widget/Response.php';
+
+/** Typecho_Config */
+require_once 'Typecho/Config.php';
+
 /**
  * Typecho组件基类
  *
@@ -14,6 +23,22 @@
  */
 abstract class Typecho_Widget
 {
+    /**
+     * widget对象池
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_widgetPool = array();
+    
+    /**
+     * 配置信息
+     * 
+     * @access private
+     * @var Typecho_Config
+     */
+    private $_parameter;
+
     /**
      * 内部数据堆栈
      *
@@ -37,6 +62,167 @@ abstract class Typecho_Widget
      * @var integer
      */
     public $sequence = 0;
+    
+    /**
+     * 构造函数
+     * 
+     * @access public
+     * @param mixed $params 传递的参数
+     * @return void
+     */
+    public function __construct($args = array())
+    {
+        /** 初始化参数 */
+        if(is_string($args))
+        {
+            parse_str($args, $params);
+        }
+        else
+        {
+            $params = $args;
+        }
+    
+        $this->_parameter = new Typecho_Config($params);
+        $this->init($this->request(), $this->response());
+    }
+    
+    /**
+     * 初始化函数
+     * 
+     * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
+     * @return void
+     */
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    {}
+    
+    /**
+     * 获取请求对象
+     * 
+     * @access public
+     * @return Typecho_Widget_Request
+     */
+    public function request()
+    {
+        return Typecho_Widget_Request::getInstance();
+    }
+    
+    /**
+     * request事件触发
+     * 
+     * @access public
+     * @param string $name 触发条件名
+     * @param string $value 触发条件值
+     * @return mixed
+     */
+    public function onRequest($name, $value = NULL)
+    {
+        $request = $this->request()->{$name};
+        
+        if((!empty($value) && $request == $value) || 
+        (empty($value) && !empty($name)))
+        {
+            return $this;
+        }
+        else
+        {
+            /** Typecho_Widget_Helper_Null */
+            require_once 'Typecho/Widget/Helper/Null.php';
+            return new Typecho_Widget_Helper_Null();
+        }
+    }
+    
+    /**
+     * 获取回执对象
+     * 
+     * @access public
+     * @return Typecho_Widget_Response
+     */
+    public function response()
+    {
+        return Typecho_Widget_Response::getInstance();
+    }
+    
+    /**
+     * 获取配置信息
+     * 
+     * @access public
+     * @return Typecho_Config
+     */
+    public function parameter()
+    {
+        return $this->_parameter;
+    }
+    
+    /**
+     * 获取数据库支持
+     * 
+     * @access public
+     * @return Typecho_Db
+     */
+    public function db()
+    {
+        /** Typecho_Db */
+        require_once 'Typecho/Db.php';
+        return Typecho_Db::get();
+    }
+    
+    /**
+     * 获取对象插件句柄
+     * 
+     * @access public
+     * @param string $adapter 适配器类型
+     * @return Typecho_Plugin
+     */
+    public function plugin($adapter)
+    {
+        /** Typecho_Plugin */
+        require_once 'Typecho/Plugin.php';
+        return _p(get_class($this), $adapter);
+    }
+
+    /**
+     * 工厂方法,将类静态化放置到列表中
+     * 
+     * @access public
+     * @param string $className
+     * @return object
+     * @throws Typecho_Exception
+     */
+    public static function widget($className)
+    {
+        /** 支持缓存禁用 */
+        if(0 === strpos($className, '*'))
+        {
+            $className = subStr($className, 1);
+            
+            /** 清除缓存 */
+            if(isset(self::$_widgetPool[$className]))
+            {
+                unset(self::$_widgetPool[$className]);
+            }
+        }
+        
+        if(!isset(self::$_widgetPool[$className]))
+        {
+            $fileName = str_replace('_', '/', $className) . '.php';            
+            require_once $fileName;
+            
+            /** 如果类不存在 */
+            if(!class_exists($className))
+            {
+                /** Typecho_Exception */
+                require_once 'Typecho/Widget/Exception.php';
+                throw new Typecho_Widget_Exception($className);
+            }
+            
+            $params = array_slice(func_get_args(), 1);
+            self::$_widgetPool[$className] = call_user_func_array(array(new ReflectionClass($className), 'newInstance'), $params);
+        }
+        
+        return self::$_widgetPool[$className];
+    }
 
     /**
      * 将类本身赋值
@@ -148,7 +334,7 @@ abstract class Typecho_Widget
      *
      * @return array
      */
-    public function get()
+    public function next()
     {
         $this->_row = &$this->_stack[key($this->_stack)];
         next($this->_stack);
@@ -162,16 +348,6 @@ abstract class Typecho_Widget
         }
         
         return $this->_row;
-    }
-    
-    /**
-     * 重置堆栈
-     *
-     * @return void
-     */
-    public function reset()
-    {
-        reset($this->_stack);
     }
 
     /**

@@ -28,7 +28,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     private function mark($coid, $status)
     {
-        $comment = $this->db->fetchRow($this->db->sql()->select('table.comments')
+        $comment = $this->db()->fetchRow($this->db()->sql()->select('table.comments')
         ->where('`coid` = ?', $coid)->limit(1));
         
         if($comment)
@@ -40,18 +40,18 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             }
         
             /** 更新评论 */
-            $this->db->query($this->db->sql()->update('table.comments')
+            $this->db()->query($this->db()->sql()->update('table.comments')
             ->rows(array('status' => $status))->where('`coid` = ?', $coid));
         
             /** 更新相关内容的评论数 */
             if('approved' == $comment['status'] && 'approved' != $status)
             {
-                $this->db->query($this->db->sql()->update('table.contents')
+                $this->db()->query($this->db()->sql()->update('table.contents')
                 ->row('commentsNum', '`commentsNum` - 1')->where('`cid` = ?', $comment['cid']));
             }
             else if('approved' != $comment['status'] && 'approved' == $status)
             {
-                $this->db->query($this->db->sql()->update('table.contents')
+                $this->db()->query($this->db()->sql()->update('table.contents')
                 ->row('commentsNum', '`commentsNum` + 1')->where('`cid` = ?', $comment['cid']));
             }
             
@@ -69,7 +69,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     private function getCoidAsArray()
     {
-        $coid = Typecho_Request::getParameter('coid');
+        $coid = $this->request()->coid;
         return $coid ? (is_array($coid) ? $coid : array($coid)) : array();
     }
 
@@ -93,11 +93,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
         
         /** 设置提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'), NULL,
+        $this->notice()->set($updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'), NULL,
         $updateRows > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-        Typecho_API::goBack();
+        $this->response()->goBack();
     }
     
     /**
@@ -120,11 +120,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
         
         /** 设置提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'), NULL,
+        $this->notice()->set($updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'), NULL,
         $updateRows > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-        Typecho_API::goBack();
+        $this->response()->goBack();
     }
     
     /**
@@ -147,11 +147,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
         
         /** 设置提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被呈现') : _t('没有评论被呈现'), NULL,
+        $this->notice()->set($updateRows > 0 ? _t('评论已经被呈现') : _t('没有评论被呈现'), NULL,
         $updateRows > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-        Typecho_API::goBack();
+        $this->response()->goBack();
     }
     
     /**
@@ -167,23 +167,23 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         
         foreach($comments as $coid)
         {
-            $comment = $this->db->fetchRow($this->db->sql()->select('table.comments')
+            $comment = $this->db()->fetchRow($this->db()->sql()->select('table.comments')
             ->where('`coid` = ?', $coid)->limit(1));
             
             if($comment)
             {
                 /** 删除评论 */
-                $this->db->query($this->db->sql()->delete('table.comments')->where('`coid` = ?', $coid));
+                $this->db()->query($this->db()->sql()->delete('table.comments')->where('`coid` = ?', $coid));
             
                 /** 更新相关内容的评论数 */
                 if('approved' == $comment['status'])
                 {
-                    $this->db->query($this->db->sql()->update('table.contents')
+                    $this->db()->query($this->db()->sql()->update('table.contents')
                     ->row('commentsNum', '`commentsNum` - 1')->where('`cid` = ?', $comment['cid']));
                 }
                 else if('approved' != $comment['status'])
                 {
-                    $this->db->query($this->db->sql()->update('table.contents')
+                    $this->db()->query($this->db()->sql()->update('table.contents')
                     ->row('commentsNum', '`commentsNum` + 1')->where('`cid` = ?', $comment['cid']));
                 }
                 
@@ -192,26 +192,29 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
         
         /** 设置提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'), NULL,
+        $this->notice()->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'), NULL,
         $deleteRows > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-        Typecho_API::goBack();
+        $this->response()->goBack();
     }
 
     /**
-     * 绑定动作
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function action()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        Typecho_API::factory('Widget_Users_Current')->pass('editor');
-        Typecho_Request::bindParameter(array('do' => 'waiting'), array($this, 'waitingComment'));
-        Typecho_Request::bindParameter(array('do' => 'spam'), array($this, 'spamComment'));
-        Typecho_Request::bindParameter(array('do' => 'approved'), array($this, 'approvedComment'));
-        Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deleteComment'));
-        Typecho_API::redirect($this->options->adminUrl);
+        $this->user()->pass('editor');
+        $this->onRequest('do', 'waiting')->waitingComment();
+        $this->onRequest('do', 'spam')->spamComment();
+        $this->onRequest('do', 'approved')->approvedComment();
+        $this->onRequest('do', 'delete')->deleteComment();
+        
+        $response->redirect($this->options()->adminUrl);
     }
 }

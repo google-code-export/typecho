@@ -20,18 +20,20 @@
 class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Action_Widget
 {
     /**
-     * 开始用户登录
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function action()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
         /** 如果已经登录 */
-        if(Typecho_API::factory('Widget_Users_Current')->hasLogin())
+        if($this->user()->hasLogin())
         {
             /** 直接返回 */
-            Typecho_API::redirect(Typecho_API::factory('Widget_Options')->index);
+            $response->redirect($this->options()->index);
         }
         
         /** 初始化验证类 */
@@ -42,42 +44,42 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         /** 截获验证异常 */
         try
         {
-            $validator->run(Typecho_Request::getParametersFrom('name', 'password'));
+            $validator->run($request->from('name', 'password'));
         }
         catch(Typecho_Validate_Exception $e)
         {
             /** 设置提示信息 */
-            Typecho_API::factory('Widget_Notice')->set($e->getMessages());
-            Typecho_API::goBack();
+            $this->notice()->set($e->getMessages());
+            $response->goBack();
         }
         
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->select()
-        ->where('`name` = ?', Typecho_Request::getParameter('name'))
+        ->where('`name` = ?', $request->name)
         ->limit(1));
         
         /** 比对密码 */
-        if($user && $user['password'] == md5(Typecho_Request::getParameter('password')))
+        if($user && $user['password'] == md5($request->password))
         {
-            Typecho_API::factory('Widget_Users_Current')->login($user['uid'], $user['password'], sha1(Typecho_API::randString(20)),
-            1 == Typecho_Request::getParameter('remember') ? Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 30*24*3600 : 0);
+            $this->user()->login($user['uid'], $user['password'], sha1(Typecho_Common::randString(20)),
+            1 == $request->remember ? $this->options()->gmtTime + $this->options()->timezone + 30*24*3600 : 0);
         }
         else
         {
-            Typecho_API::factory('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
-            Typecho_API::redirect(Typecho_API::pathToUrl('login.php', Typecho_API::factory('Widget_Options')->adminUrl)
-            . (NULL === ($referer = Typecho_Request::getParameter('referer')) ? 
-            NULL : '?referer=' . urlencode($referer)));
+            $this->notice()->set(_t('无法找到匹配的用户'), NULL, 'error');
+            $response->redirect(Typecho_Common::pathToUrl('login.php', $this->options()->adminUrl)
+            . (NULL === $request->referer) ? 
+            NULL : '?referer=' . urlencode($request->referer));
         }
         
         /** 跳转验证后地址 */
-        if(NULL != ($referer = Typecho_Request::getParameter('referer')))
+        if(NULL != $request->referer)
         {
-            Typecho_API::redirect($referer);
+            $response->redirect($request->referer);
         }
         else
         {
-            Typecho_API::redirect(Typecho_API::pathToUrl('index.php', Typecho_API::factory('Widget_Options')->adminUrl));
+            $response->redirect(Typecho_API::pathToUrl('index.php', $this->options()->adminUrl));
         }
     }
 }

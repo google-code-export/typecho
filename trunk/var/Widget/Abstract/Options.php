@@ -18,34 +18,7 @@
  * @license GNU General Public License 2.0
  */
 class Widget_Abstract_Options extends Widget_Abstract
-{
-    /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-    
-    /**
-     * 构造函数,初始化数据库
-     *
-     * @access public
-     * @param boolean $init 是否初始化options对象
-     * @return void
-     */
-    public function __construct($initInstance = true)
-    {
-        /** 初始化数据库 */
-        parent::__construct();
-        
-        /** 初始化常用widget */
-        if($initInstance)
-        {
-            $this->options = Typecho_API::factory('Widget_Options');
-        }
-    }
-    
+{    
     /**
      * 获取原始查询对象
      * 
@@ -54,7 +27,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->sql()->select('table.options');
+        return $this->db()->sql()->select('table.options');
     }
     
     /**
@@ -66,7 +39,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function insert(array $options)
     {
-        return $this->db->query($this->db->sql()->insert('table.options')->rows($options));
+        return $this->db()->query($this->db()->sql()->insert('table.options')->rows($options));
     }
     
     /**
@@ -79,7 +52,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function update(array $options, Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->update('table.options')->rows($options));
+        return $this->db()->query($condition->update('table.options')->rows($options));
     }
     
     /**
@@ -91,7 +64,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->delete('table.options'));
+        return $this->db()->query($condition->delete('table.options'));
     }
     
     /**
@@ -101,8 +74,8 @@ class Widget_Abstract_Options extends Widget_Abstract
      * @param Typecho_Db_Query $condition 计算条件
      * @return integer
      */
-    public function size(Typecho_Db_Query $condition)
+    public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.options', 'COUNT(`name`) AS `num`'))->num;
+        return $this->db()->fetchObject($condition->select('table.options', 'COUNT(`name`) AS `num`'))->num;
     }
 }
