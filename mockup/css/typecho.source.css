@@ -66,14 +66,63 @@ input, textarea {
     font-size: 14px;
 }
 
+textarea {
+    overflow: auto;
+}
+
 input:hover {
+    /*
     cursor: pointer;
+     */
 }
 
 input.focus, input:focus, textarea.focus, textarea:focus {
     border: 1px solid #e47e00;
 }
 
+/**
+ * 弹出层
+ */
+.typecho-popup {
+    background: #333;
+    height:100%;
+    left:0;
+    overflow:hidden;
+    position:absolute;
+    top:0;
+    width:100%;
+    z-index:999;
+    filter: Alpha(opacity=95);   
+    opacity:.95;   
+}
+
+.typecho-popup-content {
+    background: #e5ead1;
+    padding: 10px;
+    position: relative;
+    width: 800px;
+    border: 1px solid #dee4c5;
+    margin: 15% auto;
+}
+
+.typecho-popup-content .submit button {
+    margin-right: 5px;
+}
+
+
+/**
+ * 选择日历
+ */
+.select-date {
+    display: inline-block;
+    outline: none;
+    background: url(../images/sprite.png) no-repeat scroll 0px -293px;
+    width: 15px;
+    height: 15px;
+    overflow: hidden;
+    text-indent: -999px;
+    margin: 0px 7px;
+}
 
 /**
  * logo 的样式
@@ -970,6 +1019,10 @@ margin-top: 25px;
     width: 475px;
 }
 
+.typecho-page-main .typecho-option input.mini {
+    width: 115px;
+}
+
 .typecho-page-main .typecho-option textarea {
     width: 475px;
     height: 150px;
@@ -1060,4 +1113,138 @@ margin-top: 25px;
 .typecho-edit-theme textarea {
     width: 800px;
     height: 500px;
+}
+
+/**
+ * 编写页面
+ */
+
+.typecho-post-area {
+    margin-bottom: 15px;
+}
+
+.typecho-post-area label {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0px;
+    display: block;
+}
+
+.typecho-post-area .submit {
+    text-align: right;
+    margin: 5px 0px;
+}
+
+.column-24 .typecho-post-area input {
+    font-size: 14px;
+    width: 942px;
+}
+
+.column-24 .typecho-post-area textarea {
+    font-size: 14px;
+    width: 942px;
+}
+
+.typecho-post-option .typecho-option {
+    border: 0px;
+    margin: 0px;
+}
+
+.typecho-post-option .typecho-option select {
+    width: 120px;
+}
+
+.typecho-post-option .typecho-option .message {
+    margin: 5px 0px;
+    width: 475px;
+}
+
+/*
+.typecho-post-option .typecho-option {
+
+}
+ */
+
+.typecho-post-option .post-option-content {
+    clear: both;
+    zoom: 1;
+}
+
+.typecho-post-option .post-option-content textarea {
+    width: 505px;
+    height: 75px;
+    clear: both;
+}
+
+/**
+ * 标签列表
+ */
+.tag-list {
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.tag-list li {
+    float: left;
+}
+
+.typecho-page-main .tag-list li {
+    padding: 0px;
+    margin: 0px;
+}
+
+.tag-list a:link, .tag-list a:visited {
+    outline: none;
+    padding: 0px 2px;
+}
+
+.tag-list a:hover {
+    color: #fff;
+    background: #E47E00;
+    text-decoration: none;
+}
+
+/**
+ * 查看留言回复
+ */
+.typecho-view-comment {
+
+}
+
+.typecho-view-comment ul {
+    overflow: hidden;
+    zoom: 1;
+    width: 100%
+}
+
+.typecho-view-comment li {
+    float: left;
+    width: 33.3%;
+}
+
+.typecho-view-comment li input {
+    width: 250px;
+}
+
+.typecho-view-comment li label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.typecho-view-comment h4 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 0px 5px 0px;
+}
+
+.typecho-view-comment .status {
+    text-align: right;
+    margin: 5px 0px;
+}
+
+
+.typecho-view-comment textarea {
+    width: 785px;
+    height: 200px;
 }
