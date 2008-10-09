@@ -18,18 +18,18 @@
 class Widget_Comments_Recent_Comment extends Widget_Abstract_Comments
 {
     /**
-     * 入口函数
-     *
+     * 初始化函数
+     * 
      * @access public
-     * @param integer $pageSize 评论数量
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct($pageSize = NULL)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        parent::__construct();
-        $pageSize = empty($pageSize) ? $this->options->commentsListSize : $pageSize;
+        $pageSize = isset($this->parameter()->pageSize) ? $this->options->commentsListSize : $this->parameter()->pageSize;
         
-        $this->db->fetchAll($this->select()->limit($pageSize)
+        $this->db()->fetchAll($this->select()->limit($pageSize)
         ->where('table.contents.`password` IS NULL')
         ->where('table.comments.`type` = ?', 'comment')
         ->where('table.comments.`status` = ?', 'approved')

@@ -11,7 +11,7 @@
 require_once 'config.inc.php';
 
 /** 初始化插件 */
-Typecho_Plugin::init(Typecho_API::factory('Widget_Options')->plugins,
+Typecho_Plugin::init(array(),
 __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
 /** 开始路由分发 */

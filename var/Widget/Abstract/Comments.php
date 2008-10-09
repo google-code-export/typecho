@@ -18,58 +18,6 @@
 class Widget_Abstract_Comments extends Widget_Abstract
 {
     /**
-     * 实例化的抽象Meta类
-     * 
-     * @access protected
-     * @var MetasWidget
-     */
-    protected $abstractContentsWidget;
-
-    /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $options;
-
-    /**
-     * 实例化的权限对象
-     *
-     * @access protected
-     * @var TypechoWidget
-     */
-    protected $access;
-
-    /**
-     * 插件
-     *
-     * @access protected
-     * @var TypechoPlugin
-     */
-    protected $plugin;
-
-    /**
-     * 构造函数,初始化数据库
-     *
-     * @access public
-     * @return void
-     */
-    public function __construct()
-    {
-        /** 初始化数据库 */
-        parent::__construct();
-        
-        /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Options');
-        $this->access = Typecho_API::factory('Widget_Users_Current');
-        $this->abstractContentsWidget = Typecho_API::factory('Widget_Abstract_Contents');
-        
-        /** 初始化插件 */
-        $this->plugin = _p('Widget_Abstract_Comments', 'Filter');
-    }
-    
-    /**
      * 获取查询对象
      * 
      * @access public
@@ -77,7 +25,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
+        return $this->db()->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
         table.comments.`coid`, table.comments.`created` AS `date`, table.comments.`author`, table.comments.`mail`, table.comments.`url`, table.comments.`ip`,
         table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`, COUNT(table.comments.`cid`) AS `commentsGroupCount`')
         ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`');
@@ -95,11 +43,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
-            'created'   =>  $this->options->gmtTime,
+            'created'   =>  $this->options()->gmtTime,
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'ip'        =>  empty($comment['ip']) ? Typecho_Request::getClientIp() : $comment['ip'],
+            'ip'        =>  empty($comment['ip']) ? $this->request()->getClientIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
             'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],
@@ -108,13 +56,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db->query($this->db->sql()->insert('table.comments')->rows($insertStruct));
+        $insertId = $this->db()->query($this->db()->sql()->insert('table.comments')->rows($insertStruct));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
         ->where('`status` = ? AND `cid` = ?', 'approved', $comment['cid']))->num;
         
-        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('`cid` = ?', $comment['cid']));
         
         return $insertId;
@@ -132,7 +80,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $updateCondition = clone $condition;
-        $updateComment = $this->db->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
+        $updateComment = $this->db()->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
         
         if($updateComment)
         {
@@ -162,13 +110,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
         
         /** 更新评论数据 */
-        $updateRows = $this->db->query($updateCondition->update('table.comments')->rows($updateStruct));
+        $updateRows = $this->db()->query($updateCondition->update('table.comments')->rows($updateStruct));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
         ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
         
-        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('`cid` = ?', $cid));
         
         return $updateRows;
@@ -185,7 +133,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $deleteCondition = clone $condition;
-        $deleteComment = $this->db->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
+        $deleteComment = $this->db()->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
         
         if($deleteComment)
         {
@@ -197,13 +145,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
         
         /** 删除评论数据 */
-        $deleteRows = $this->db->query($deleteCondition->delete('table.comments'));
+        $deleteRows = $this->db()->query($deleteCondition->delete('table.comments'));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
+        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
         ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
         
-        $this->db->query($this->db->sql()->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('`cid` = ?', $cid));
         
         return $deleteRows;
@@ -216,9 +164,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    public function size(Typecho_Db_Query $condition)
+    public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.comments', 'COUNT(table.comments.`coid`) AS `num`'))->num;
+        return $this->db()->fetchObject($condition->select('table.comments', 'COUNT(table.comments.`coid`) AS `num`'))->num;
     }
     
     /**
@@ -231,11 +179,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function filter(array $value)
     {
         /** 取出所有分类 */
-        $value = $this->abstractContentsWidget->filter($value);
+        $value = $this->widget('Widget_Abstract_Contents')->filter($value);
         
         $value['permalink'] = $value['permalink'] . '#comments-' . $value['coid'];
         
-        $value = $this->plugin->filter($value);
+        $value = $this->plugin('Filter')->filter($value);
         return $value;
     }
 
@@ -261,7 +209,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
+        echo date(empty($format) ? $this->options()->commentDateFormat : $format, $this->date + $this->options()->timezone);
     }
     
     /**
@@ -272,7 +220,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function dateWord()
     {
-        echo Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+        echo Typecho_I18n::dateWord($this->date + $this->options()->timezone, $this->options()->gmtTime + $this->options()->timezone);
     }
     
     /**
@@ -285,8 +233,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function author($autoLink = NULL, $noFollow = NULL)
     {
-        $autoLink = (NULL === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
-        $noFollow = (NULL === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
+        $autoLink = (NULL === $autoLink) ? $this->options()->commentsShowUrl : $autoLink;
+        $noFollow = (NULL === $noFollow) ? $this->options()->commentsUrlNofollow : $noFollow;
     
         if($this->url && $autoLink)
         {
@@ -321,7 +269,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function content()
     {
-        echo Typecho_API::cutParagraph($this->text);
+        echo Typecho_Common::cutParagraph($this->text);
     }
     
     /**
@@ -345,6 +293,6 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_API::subStr(Typecho_API::stripTags($this->text), 0, $length, $trim);
+        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, $length, $trim);
     }
 }

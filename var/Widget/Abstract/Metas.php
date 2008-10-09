@@ -20,55 +20,6 @@
 class Widget_Abstract_Metas extends Widget_Abstract
 {
     /**
-     * 分页数目
-     *
-     * @access protected
-     * @var integer
-     */
-    protected $pageSize;
-
-    /**
-     * 当前页
-     *
-     * @access protected
-     * @var integer
-     */
-    protected $currentPage;
-
-    /**
-     * 实例化的配置对象
-     *
-     * @access protected
-     * @var Typecho_Widget
-     */
-    protected $options;
-
-    /**
-     * 插件
-     *
-     * @access protected
-     * @var Typecho_Plugin
-     */
-    protected $plugin;
-    
-    /**
-     * 构造函数,初始化数据库
-     *
-     * @access public
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        
-        /** 初始化常用widget */
-        $this->options = Typecho_API::factory('Widget_Options');
-        
-        /** 初始插件 */
-        $this->plugin = _p('Widget_Abstract_Metas', 'Filter');
-    }
-    
-    /**
      * 获取原始查询对象
      * 
      * @access public
@@ -76,7 +27,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->sql()->select('table.metas');
+        return $this->db()->sql()->select('table.metas');
     }
     
     /**
@@ -88,7 +39,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function insert(array $options)
     {
-        return $this->db->query($this->db->sql()->insert('table.metas')->rows($options));
+        return $this->db()->query($this->db()->sql()->insert('table.metas')->rows($options));
     }
     
     /**
@@ -101,7 +52,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function update(array $options, Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->update('table.metas')->rows($options));
+        return $this->db()->query($condition->update('table.metas')->rows($options));
     }
     
     /**
@@ -113,7 +64,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db->query($condition->delete('table.metas'));
+        return $this->db()->query($condition->delete('table.metas'));
     }
     
     /**
@@ -123,9 +74,9 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * @param Typecho_Db_Query $condition 计算条件
      * @return integer
      */
-    public function size(Typecho_Db_Query $condition)
+    public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.metas', 'COUNT(`mid`) AS `num`'))->num;
+        return $this->db()->fetchObject($condition->select('table.metas', 'COUNT(`mid`) AS `num`'))->num;
     }
     
     /**
@@ -144,21 +95,21 @@ class Widget_Abstract_Metas extends Widget_Abstract
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
         
-        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->index) : '#';
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedUrl) : '#';
         
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
         
-        $value = $this->plugin->filter($value);
+        $value = $this->plugin('Filter')->filter($value);
         return $value;
     }
     
@@ -187,7 +138,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
     {
         foreach($metas as $sort => $mid)
         {
-            $this->db->query($this->db->sql()->update('table.metas')->row('sort', $sort + 1)
+            $this->db()->query($this->db()->sql()->update('table.metas')->row('sort', $sort + 1)
             ->where('`mid` = ?', $mid)->where('`type` = ?', $type));
         }
     }
@@ -203,23 +154,23 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function merge($mid, $type, array $metas)
     {
-        $contents = Typecho_API::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
+        $contents = Typecho_Common::arrayFlatten($this->db()->fetchAll($this->db()->sql()->select('table.relationships', '`cid`')
         ->where('`mid` = ?', $mid)), 'cid');
     
         foreach($metas as $meta)
         {
             if($mid != $meta)
             {
-                $existsContents = Typecho_API::arrayFlatten($this->db->fetchAll($this->db->sql()->select('table.relationships', '`cid`')
+                $existsContents = Typecho_Common::arrayFlatten($this->db()->fetchAll($this->db()->sql()->select('table.relationships', '`cid`')
                 ->where('`mid` = ?', $meta)), 'cid');
                 
-                $where = $this->db->sql()->where('`mid` = ? AND `type` = ?', $meta, $type);
+                $where = $this->db()->sql()->where('`mid` = ? AND `type` = ?', $meta, $type);
                 $this->delete($where);
                 $diffContents = array_diff($existsContents, $contents);
                 
                 foreach($diffContents as $content)
                 {
-                    $this->db->query($this->db->sql()->insert('table.relationships')
+                    $this->db()->query($this->db()->sql()->insert('table.relationships')
                     ->rows(array('mid' => $mid, 'cid' => $content)));
                 }
                 
@@ -227,11 +178,11 @@ class Widget_Abstract_Metas extends Widget_Abstract
             }
         }
         
-        $num = $this->db->fetchObject($this->db->sql()
+        $num = $this->db()->fetchObject($this->db()->sql()
         ->select('table.relationships', 'COUNT(table.relationships.`cid`) AS `num`')
         ->where('table.relationships.`mid` = ?', $mid))->num;
         
-        $this->db->query($this->db->sql()->update('table.metas')
+        $this->db()->query($this->db()->sql()->update('table.metas')
         ->row('count', $num)
         ->where('`mid` = ?', $mid));
     }

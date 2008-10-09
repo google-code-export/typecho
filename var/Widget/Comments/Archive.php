@@ -20,20 +20,17 @@
 class Widget_Comments_Archive extends Widget_Abstract_Comments
 {
     /**
-     * 构造函数,根据内容归档评论
+     * 初始化函数
      * 
      * @access public
-     * @param integer $cid 内容主键
-     * @param boolean $desc 是否倒序输出
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct($cid, $desc = false)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        /** 初始化评论 */
-        parent::__construct();
-        
-        $this->db->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
-        ->where('table.contents.`cid` = ?', $cid)->group('table.comments.`coid`')
-        ->order('table.comments.`created`', $desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
+        $this->db()->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
+        ->where('table.contents.`cid` = ?', $this->parameter()->cid)->group('table.comments.`coid`')
+        ->order('table.comments.`created`', $this->parameter()->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

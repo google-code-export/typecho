@@ -20,14 +20,16 @@
 class Widget_Logout extends Typecho_Widget implements Widget_Interface_Action_Widget
 {
     /**
-     * 开始用户登出
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function action()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        Typecho_API::factory('Widget_Users_Current')->logout();
-        Typecho_API::redirect(Typecho_API::factory('Widget_Options')->index);
+        $this->user()->logout();
+        $response->redirect($this->options()->index);
     }
 }

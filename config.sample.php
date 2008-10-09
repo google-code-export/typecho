@@ -37,7 +37,10 @@ __TYPECHO_ROOT_DIR__ . '/var' . PATH_SEPARATOR .
 __TYPECHO_ROOT_DIR__ . __TYPECHO_PLUGIN_DIR__);
 
 /** 载入API支持 */
-require_once 'Typecho/API.php';
+require_once 'Typecho/Common.php';
+
+/** 载入Response支持 */
+require_once 'Typecho/Response.php';
 
 /** 载入配置支持 */
 require_once 'Typecho/Config.php';
@@ -112,16 +115,16 @@ Typecho_Router::setConfig(Typecho_Config::factory(array(
 )));
 
 /** 注册自动加载函数 */
-Typecho_API::registerAutoLoad();
+Typecho_Common::registerAutoLoad();
 
 /** 关闭魔术引号 */
-Typecho_API::forceDisableMagicQuotesGPC();
+Typecho_Common::forceDisableMagicQuotesGPC();
 
 /** 开始监视缓冲区 */
-Typecho_API::obStart(__TYPECHO_GZIP_ENABLE__);
+Typecho_Response::obStart(__TYPECHO_GZIP_ENABLE__);
 
 /** 设置默认时区 */
-Typecho_API::setDefaultTimezone();
+Typecho_Common::setDefaultTimezone();
 
 /** 设置输出类型 */
-Typecho_API::setContentType('text/html', __TYPECHO_CHARSET__);
+Typecho_Response::setContentType('text/html', __TYPECHO_CHARSET__);

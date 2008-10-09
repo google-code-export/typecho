@@ -28,26 +28,26 @@ class Widget_Options extends Widget_Abstract_Options
     private $_pluginConfig = array();
 
     /**
-     * 初始化配置信息
+     * 初始化函数
      * 
      * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function __construct()
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        parent::__construct(false);
-
-        $this->db->fetchAll($this->select()
+        $this->db()->fetchAll($this->select()
         ->where('`user` = 0'), array($this, 'push'));
         $this->_stack[] = &$this->_row;
 
         /** 初始化站点信息 */
         $this->charset = __TYPECHO_CHARSET__;
-        $this->siteUrl = Typecho_API::pathToUrl(NULL, $this->siteUrl);
-        $this->index = $this->rewrite ? $this->siteUrl : Typecho_API::pathToUrl('/index.php', $this->siteUrl);
-        $this->themeUrl = Typecho_API::pathToUrl(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
-        $this->attachmentUrl = Typecho_API::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
-        $this->pluginUrl = Typecho_API::pathToUrl(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
+        $this->siteUrl = Typecho_Common::pathToUrl(NULL, $this->siteUrl);
+        $this->index = $this->rewrite ? $this->siteUrl : Typecho_Common::pathToUrl('/index.php', $this->siteUrl);
+        $this->themeUrl = Typecho_Common::pathToUrl(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
+        $this->attachmentUrl = Typecho_Common::pathToUrl(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
+        $this->pluginUrl = Typecho_Common::pathToUrl(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         
         /** 获取插件列表 */
@@ -65,7 +65,7 @@ class Widget_Options extends Widget_Abstract_Options
 
         /** 初始化常用地址 */
         $this->xmlRpcUrl = Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
-        $this->adminUrl = Typecho_API::pathToUrl(defined('__TYPECHO_ADMIN_DIR__') ? 
+        $this->adminUrl = Typecho_Common::pathToUrl(defined('__TYPECHO_ADMIN_DIR__') ? 
         __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
     }
 
@@ -92,7 +92,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function siteUrl($path = NULL)
     {
-        echo Typecho_API::pathToUrl($path, $this->siteUrl);
+        echo Typecho_Common::pathToUrl($path, $this->siteUrl);
     }
     
     /**
@@ -104,7 +104,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function index($path = NULL)
     {
-        echo Typecho_API::pathToUrl($path, $this->index);
+        echo Typecho_Common::pathToUrl($path, $this->index);
     }
     
     /**
@@ -116,7 +116,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function themeUrl($path = NULL)
     {
-        echo Typecho_API::pathToUrl($path, $this->themeUrl);
+        echo Typecho_Common::pathToUrl($path, $this->themeUrl);
     }
     
     /**
@@ -128,7 +128,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function pluginUrl($path = NULL)
     {
-        echo Typecho_API::pathToUrl($path, $this->pluginUrl);
+        echo Typecho_Common::pathToUrl($path, $this->pluginUrl);
     }
     
     /**
@@ -140,7 +140,7 @@ class Widget_Options extends Widget_Abstract_Options
      */
     public function adminUrl($path = NULL)
     {
-        echo Typecho_API::pathToUrl($path, $this->adminUrl);
+        echo Typecho_Common::pathToUrl($path, $this->adminUrl);
     }
     
     /**

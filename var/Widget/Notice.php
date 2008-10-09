@@ -22,14 +22,22 @@ class Widget_Notice extends Typecho_Widget
      */
     public $noticeType = 'notice';
     
-    public function __construct()
+    /**
+     * 初始化函数
+     * 
+     * @access public
+     * @param Typecho_Widget_Request $request 请求对象
+     * @param Typecho_Widget_Response $response 回执对象
+     * @return void
+     */
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        if(NULL !== Typecho_Request::getCookie('notice'))
+        if(NULL !== $request->getCookie('notice'))
         {
-            $this->noticeType = Typecho_Request::getCookie('noticeType');
-            $this->push(Typecho_Request::getCookie('notice'));
-            Typecho_Request::deleteCookie('notice', Typecho_API::factory('Widget_Options')->siteUrl);
-            Typecho_Request::deleteCookie('noticeType', Typecho_API::factory('Widget_Options')->siteUrl);
+            $this->noticeType = $request->getCookie('noticeType');
+            $this->push($request->getCookie('notice'));
+            $request->deleteCookie('notice', $this->options()->siteUrl);
+            $request->deleteCookie('noticeType', $this->options()->siteUrl);
         }
     }
     
@@ -104,9 +112,9 @@ class Widget_Notice extends Typecho_Widget
             }
         }
         
-        Typecho_Request::setCookie('notice', $notice, Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 86400,
-        Typecho_API::factory('Widget_Options')->siteUrl);
-        Typecho_Request::setCookie('noticeType', $type, Typecho_API::factory('Widget_Options')->gmtTime + Typecho_API::factory('Widget_Options')->timezone + 86400,
-        Typecho_API::factory('Widget_Options')->siteUrl);
+        $this->request()->setCookie('notice', $notice, $this->options()->gmtTime + $this->options()->timezone + 86400,
+        $this->options()->siteUrl);
+        $this->request()->setCookie('noticeType', $type, $this->options()->gmtTime + $this->options()->timezone + 86400,
+        $this->options()->siteUrl);
     }
 }

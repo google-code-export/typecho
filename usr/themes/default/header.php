@@ -47,9 +47,9 @@
 		<div class="grid_16">
 			<ul class="clearfix" id="nav_menu">
 				<li><a href="<?php $this->options->siteUrl(); ?>" class="current">Home</a></li>
-				<?php $this->load('Widget/Contents/Page/List')
+				<?php $this->widget('Widget_Contents_Page_List')
                 ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-                <?php if($this->load('Widget/Users/Current')->hasLogin()): ?>
+                <?php if($this->user->hasLogin()): ?>
                     <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->load('Widget/Users/Current')->screenName(); ?>)</a></li>
                     <li class="last"><a href="<?php $this->options->adminUrl(); ?>">Admin</a></li>
                 <?php else: ?>
