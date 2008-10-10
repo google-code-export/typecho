@@ -1,3 +1,6 @@
+2008.10.10 by qining
+测试
+
 2008.9.27 by qining
 plugin缓存机制改进
 
