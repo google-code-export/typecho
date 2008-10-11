@@ -64,19 +64,8 @@ em {
 }
 
 input, textarea {
-    border: 1px solid #dee4c5;
-    padding: 3px;
     font-size: 13px;
-}
-
-select {
-	font-size: 13px;
-}
-
-input[type=button], button {
-	padding: 0 3px;
-	height: 24px;
-	overflow: visible;
+	*padding:2px;
 }
 
 textarea {
@@ -89,12 +78,14 @@ input:hover {
      */
 }
 
-input.focus, input:focus, textarea.focus, textarea:focus {
-    border: 1px solid #e47e00;
-}
-
 input, select, textarea {
 	font-family: Verdana, Geneva, sans-serif;
+}
+
+button {
+	*height:24px;
+	*padding:0 8px;
+	overflow:visible;
 }
 
 /**
@@ -878,6 +869,10 @@ margin-top: 25px;
     font-size: 12px;
 }
 
+.typecho-list-operate select {
+    font-size: 13px;
+}
+
 .typecho-list-operate p.operate {
     float: left;
 }
@@ -1264,21 +1259,4 @@ margin-top: 25px;
 .typecho-view-comment textarea {
     width: 780px;
     height: 200px;
-}
-
-
-/**
- * CSS3 圆角
- */
-input,
-textarea,
-.typecho-login form,
-.update-check,
-.message,
-.typecho-popup-content,
-.typecho-thumb-list .current {
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
 }
