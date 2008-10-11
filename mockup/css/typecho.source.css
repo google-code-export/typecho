@@ -1117,7 +1117,7 @@ margin-top: 25px;
 }
 
 .typecho-edit-theme .submit {
-    margin: 130px;
+    margin: 0 130px 130px 130px;
     width: 810px;
     text-align: center;
 }
