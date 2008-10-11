@@ -72,6 +72,10 @@ textarea {
     overflow: auto;
 }
 
+em {
+	font-style: normal;
+}
+
 input:hover {
     /*
     cursor: pointer;
