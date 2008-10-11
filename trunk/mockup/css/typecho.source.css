@@ -69,6 +69,16 @@ input, textarea {
     font-size: 13px;
 }
 
+select {
+	font-size: 13px;
+}
+
+input[type=button], button {
+	padding: 0 3px;
+	height: 24px;
+	overflow: visible;
+}
+
 textarea {
     overflow: auto;
 }
