@@ -13,6 +13,8 @@
  */
 body {
     background: #f7fbe9;
+	color: #333;
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 body.dark {
@@ -44,7 +46,7 @@ p {
 }
 
 a:link, a:visited {
-    color: #e47e00;
+    color: #BD6800;
     text-decoration: none;
 }
 
@@ -63,8 +65,8 @@ em {
 
 input, textarea {
     border: 1px solid #dee4c5;
-    padding: 2px;
-    font-size: 14px;
+    padding: 3px 2px;
+    font-size: 13px;
 }
 
 textarea {
@@ -79,6 +81,10 @@ input:hover {
 
 input.focus, input:focus, textarea.focus, textarea:focus {
     border: 1px solid #e47e00;
+}
+
+input, select, textarea {
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 /**
@@ -99,7 +105,7 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 
 .typecho-popup-content {
     background: #e5ead1;
-    padding: 10px;
+    padding: 10px 0px 10px 10px;
     position: relative;
     width: 800px;
     border: 1px solid #dee4c5;
@@ -139,7 +145,7 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 
 .logo-dark {
     display: block;
-    height: 20px;
+    height: 21px;
     width: 92px;
     overflow: hidden;
     text-indent: -9999px;
@@ -164,8 +170,8 @@ input.focus, input:focus, textarea.focus, textarea:focus {
     float: left;
     width: 110px;
     text-align: right;
-    margin-left: -120px;
-    font-size: 14px;
+    margin: 1px 5px 0 -120px;
+    font-size: 13px;
 }
 
 .typecho-option .desption {
@@ -177,7 +183,7 @@ input.focus, input:focus, textarea.focus, textarea:focus {
  * 提示信息框
  */
 .message {
-    padding: 2px;
+    padding: 2px 5px;
     font-size: 12px;
     color: #333;
 }
@@ -190,16 +196,19 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 .error {
     border: 1px solid #fbc2c4;
     background: #fbe3e4;
+	color: #8A1F11;
 }
 
 .notice {
     background: #fff6bf;
     border: 1px solid  #ffd324;
+	color: #514721;
 }
 
 .success {
     background: #e6efc2;
     border: 1px solid #c6d880;
+	color: #264409;
 }
 
 
@@ -286,13 +295,11 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 }
 
 .typecho-install .session ul {
-    font-size: 12px;
-    margin-left: 24px;
+    font-size: 13px;
+    margin: 15px 0px 0px 20px;
 }
 
 .typecho-install .session a:link, .typecho-install .session a:hover {
-    text-decoration: underline;
-    line-height: 20px;
 }
 
 .typecho-install .typecho-option {
@@ -380,7 +387,7 @@ margin-top: 25px;
     background: #dee4c5;
 }
 
-.typecho-pager li.current {
+.typecho-pager li.current, .typecho-pager li.current a {
     background: #e47e00;
 }
 
@@ -398,12 +405,13 @@ margin-top: 25px;
 }
 
 .typecho-login .logo, .typecho-login .logo-dark {
-    margin: 10px auto;
+    margin: 0px auto 15px;
 }
 
 .typecho-login form {
     background: #e5ead1;
-    padding: 10px;
+	margin: 0 10px;
+    padding: 25px 20px;
     font-size: 12px;
 }
 
@@ -417,11 +425,12 @@ margin-top: 25px;
 }
 
 .typecho-login input.text {
-    width: 200px;
+    width: 205px;
+	font-size: 18px;
 }
 
 .typecho-login form p {
-    margin-bottom:20px;
+    margin-bottom:15px;
 }
 
 .typecho-login form p.submit {
@@ -437,6 +446,7 @@ margin-top: 25px;
 .typecho-login .more-link {
     font-size: 12px;
     margin: 10px auto;
+	padding: 0 10px;
     clear: both;
     overflow: hidden;
 }
@@ -470,7 +480,7 @@ margin-top: 25px;
 .typecho-head-guid dt {
     float: left;
     margin: 4px 4px 0 0;
-    font-size: 12px;
+    font-size: 13px;
     overflow: hidden;
 }
 
@@ -487,20 +497,20 @@ margin-top: 25px;
 
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
-    background: #e47e00;
+    background: #e47e00 url(../images/typecho-head-guid-shadow.png) repeat-x;
     text-decoration: none;
 }
 
 .typecho-head-guid dd {
     display:none;
     position:absolute;
-    background: #f7fbe9 url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
+    background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
     font-size: 13px;
     overflow: hidden;
     width:160px;
     z-index:100;
     border-top: none;
-    padding:10px 10px 20px;
+    padding: 6px 10px 15px;
     z-index: 250;
     top: 30px;
 }
@@ -514,11 +524,8 @@ margin-top: 25px;
     margin-bottom: 2px;
 }
 
-.typecho-head-guid dd li.current {
+.typecho-head-guid dd li.current a, .typecho-head-guid dd li.current a:hover {
     background: #E68A17;
-}
-
-.typecho-head-guid dd li.current a {
     color: #fff;
 }
 
@@ -535,7 +542,7 @@ margin-top: 25px;
 }
 
 .typecho-head-guid .operate {
-    color: #fff;
+    color: #ccc;
     position:absolute;
     font-size: 12px;
     top: 0px;
@@ -614,12 +621,16 @@ margin-top: 25px;
     position: relative;
     float: left;
     padding: 0px 5px;
-    line-height: 12px;
-    border-left: 1px solid #999;
+    line-height: 13px;
+    border-left: 1px solid #505050;
 }
 
 .typecho-foot .resource li a:link, .typecho-foot .resource li a:visited {
     color: #999;
+}
+
+.typecho-foot .resource li a:hover, .typecho-foot .resource li a:active {
+    color: #fff;
 }
 
 .typecho-foot-v2 {
@@ -651,6 +662,10 @@ margin-top: 25px;
     background: url(../images/sprite.png) repeat-x scroll 0px -1485px;
 }
 
+.typecho-page-title div a {
+	color: #E47E00;
+}
+
 .typecho-page-title h2 {
     background: #f7fbe9;
     padding-right: 10px;
@@ -668,7 +683,7 @@ margin-top: 25px;
 }
 
 .typecho-page-title a:link, .typecho-page-title a:visited {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 30px;
     font-weight: bold;
 }
@@ -686,7 +701,8 @@ margin-top: 25px;
 }
 
 .typecho-page-main .typecho-option-tabs {
-    font-size: 14px;
+    font-size: 13px;
+	font-weight: bold;
 }
 
 /**
@@ -695,33 +711,27 @@ margin-top: 25px;
 .typecho-dashboard-nav h3 {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 15px;
-    line-height: 16px;
+    margin-bottom: 10px;
 }
 
 .typecho-dashboard-nav h3.intro {
-    font-size: 12px;
+    font-size: 13px;
+	font-weight: normal;
 }
 
 .typecho-dashboard-nav .intro-link {
     background: none;
     padding: 0px;
-    font-size: 12px;
-    margin-bottom: 10px;
+    font-size: 13px;
+    margin-bottom: 20px;
 }
 
 .typecho-dashboard-nav .intro-link ul {
 }
 
 .typecho-dashboard-nav .intro-link li {
-    height: 18px;
-    line-height: 18px;
     border: none;
     margin: 2px 0px;
-}
-
-.typecho-dashboard-nav .intro-link .date {
-    padding-left: 5px;
 }
 
 .typecho-dashboard-nav .dashboard-status {
@@ -746,7 +756,7 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .update-check .current {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
 }
 
@@ -760,7 +770,7 @@ margin-top: 25px;
 
 .typecho-dashboard-nav .update-check .latest a,
 .typecho-dashboard-nav .update-check .latest em {
-    color: #999;
+    color: #666;
 }
 
 /**
@@ -771,12 +781,13 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-main .section {
-    font-size: 14px;
-    margin-bottom: 30px;
+    font-size: 13px;
+    margin-bottom: 20px;
 }
 
 .typecho-dashboard-main .section h4 {
     font-size: 14px;
+	margin-bottom: 10px;
 }
 
 .typecho-dashboard-main .section ul {
@@ -816,7 +827,7 @@ margin-top: 25px;
 
 .typecho-option-tabs li {
     float: left;
-    margin: 4px 5px 0px 5px;
+    margin: 4px 0px 0px 5px;
     height: 26px;
 }
 
@@ -829,7 +840,7 @@ margin-top: 25px;
     outline: none;
     color: #333;
     text-decoration: none;
-    padding: 0px 15px;
+    padding: 3px 15px;
 }
 
 /**
@@ -843,7 +854,7 @@ margin-top: 25px;
  * 列表页选项
  */
 .typecho-list .typecho-pager {
-    margin: 10px 0px;
+    margin: 10px 0px 20px;
 }
 
 .typecho-list-operate {
@@ -872,7 +883,7 @@ margin-top: 25px;
 .typecho-list-table  {
     width: 100%;
     margin: 10px 0 20px 0;
-    font-size: 14px;
+    font-size: 13px;
     border-collapse: collapse;
 }
 
@@ -906,7 +917,7 @@ margin-top: 25px;
 }
 
 .typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td {
-    background: #e8edd2;
+    background: #E3EEBD;
 }
 
 .typecho-list-table h4 {
@@ -932,16 +943,7 @@ margin-top: 25px;
     margin-bottom: 70px;
 }
 
-.typecho-thumb-list a:link, .typecho-thumb-list a:visited {
-    color: #333;
-}
-
 .typecho-thumb-list a:hover {
-    text-decoration: none;
-}
-
-.typecho-thumb-list p {
-    line-height: 16px;
 }
 
 .typecho-thumb-list li {
@@ -975,7 +977,7 @@ margin-top: 25px;
 }
 
 .typecho-thumb-list .thumb img {
-    background: #f7fbe9;
+    background: #E5EAD1;
     width: 195px;
     height: 145px;
 }
@@ -1002,7 +1004,7 @@ margin-top: 25px;
     position: relative;
     top: -1px;
     font-size: 12px;
-    border-bottom: 1px solid #DEE4C5;
+    border-bottom: 1px solid #EBEFDA;
     border-top: 1px solid #fff;
 }
 
@@ -1125,7 +1127,7 @@ margin-top: 25px;
 }
 
 .typecho-post-area label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     margin: 5px 0px;
     display: block;
@@ -1133,16 +1135,20 @@ margin-top: 25px;
 
 .typecho-post-area .submit {
     text-align: right;
-    margin: 5px 0px;
+    margin: 15px 0px 20px;
 }
 
 .column-24 .typecho-post-area input {
-    font-size: 14px;
+    font-size: 13px;
     width: 942px;
 }
 
+.column-24 .typecho-post-area input.title {
+	font-size: 20px; /* 撰写页面标题input */
+}
+
 .column-24 .typecho-post-area textarea {
-    font-size: 14px;
+    font-size: 13px;
     width: 942px;
 }
 
@@ -1157,7 +1163,7 @@ margin-top: 25px;
 
 .typecho-post-option .typecho-option .message {
     margin: 5px 0px;
-    width: 475px;
+    width: 60%;
 }
 
 /*
@@ -1229,7 +1235,7 @@ margin-top: 25px;
 
 .typecho-view-comment li label {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
 }
 
@@ -1241,11 +1247,28 @@ margin-top: 25px;
 
 .typecho-view-comment .status {
     text-align: right;
-    margin: 5px 0px;
+    margin: 5px 15px;
 }
 
 
 .typecho-view-comment textarea {
-    width: 785px;
+    width: 780px;
     height: 200px;
+}
+
+
+/**
+ * CSS3 圆角
+ */
+input,
+textarea,
+.typecho-login form,
+.update-check,
+.message,
+.typecho-popup-content,
+.typecho-thumb-list .current {
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
