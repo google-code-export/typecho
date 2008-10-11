@@ -65,9 +65,7 @@ em {
 
 input, textarea {
     font-size: 13px;
-	*padding:2px;
-	border:1px solid #ccc;
-	padding:3px;
+	padding: 2px;
 }
 
 textarea {
@@ -88,10 +86,16 @@ input, select, textarea {
 	font-family: Verdana, Geneva, sans-serif;
 }
 
+select {
+	font-size:13px;
+}
+
 button {
 	*height:24px;
 	*padding:0 8px;
 	overflow:visible;
+	line-height: 14px;
+	*line-height: 20px;
 }
 
 /**
@@ -628,7 +632,7 @@ margin-top: 25px;
     position: relative;
     float: left;
     padding: 0px 5px;
-    line-height: 13px;
+    line-height: 14px;
     border-left: 1px solid #505050;
 }
 
