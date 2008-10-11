@@ -7,8 +7,9 @@
  * @link    http://www.typecho.net/
  * @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
  */
+
 /**
- * 全局样式
+ * Typecho 全局样式
  */
 body {
     background: #f7fbe9;
@@ -175,7 +176,6 @@ input.focus, input:focus, textarea.focus, textarea:focus {
 /**
  * 提示信息框
  */
-
 .message {
     padding: 2px;
     font-size: 12px;
@@ -201,7 +201,6 @@ input.focus, input:focus, textarea.focus, textarea:focus {
     background: #e6efc2;
     border: 1px solid #c6d880;
 }
-
 
 
 /** 
@@ -324,6 +323,9 @@ margin-top: 25px;
 }
  */
 
+/**
+ * @安装样式结束
+ */
 
 /**
  * 后台分页
@@ -840,7 +842,6 @@ margin-top: 25px;
 /**
  * 列表页选项
  */
-
 .typecho-list .typecho-pager {
     margin: 10px 0px;
 }
