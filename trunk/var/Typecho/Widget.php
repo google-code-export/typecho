@@ -70,20 +70,10 @@ abstract class Typecho_Widget
      * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($args = array())
+    public function __construct($params = array())
     {
-        /** 初始化参数 */
-        if(is_string($args))
-        {
-            parse_str($args, $params);
-        }
-        else
-        {
-            $params = $args;
-        }
-    
         $this->_parameter = new Typecho_Config($params);
-        $this->init($this->request(), $this->response());
+        $this->init($this->request(), $this->response(), $this->_parameter);
     }
     
     /**
@@ -92,9 +82,10 @@ abstract class Typecho_Widget
      * @access public
      * @param Typecho_Widget_Request $request 请求对象
      * @param Typecho_Widget_Response $response 回执对象
+     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
     {}
     
     /**
