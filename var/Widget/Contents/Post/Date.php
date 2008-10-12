@@ -26,10 +26,14 @@ class Widget_Contents_Post_Date extends Typecho_Widget
      * @access public
      * @param Typecho_Widget_Request $request 请求对象
      * @param Typecho_Widget_Response $response 回执对象
+     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
     {
+        /** 设置参数默认值 */
+        $parameter->setDefault('format=Y-m&type=month');
+    
         $posts = $this->db()->fetchAll($this->db()->sql()->select('table.contents', '`created`')
         ->where('type = ?', 'post')
         ->where('table.contents.`created` < ?', $this->widget('Widget_Options')->gmtTime)
@@ -38,7 +42,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         $result = array();
         foreach($posts as $post)
         {
-            $date = date($this->parameter()->format, $post['created']);
+            $date = date($parameter->format, $post['created']);
             if(isset($result[$date]))
             {
                 $result[$date]['count'] ++;
@@ -55,7 +59,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         
         foreach($result as $row)
         {
-            $row['permalink'] = Typecho_Router::url('archive_' . $this->parameter()->type, $row, $this->widget('Widget_Options')->index);
+            $row['permalink'] = Typecho_Router::url('archive_' . $parameter->type, $row, $this->widget('Widget_Options')->index);
             $this->push($row);
         }
     }

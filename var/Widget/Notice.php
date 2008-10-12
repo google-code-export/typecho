@@ -28,9 +28,10 @@ class Widget_Notice extends Typecho_Widget
      * @access public
      * @param Typecho_Widget_Request $request 请求对象
      * @param Typecho_Widget_Response $response 回执对象
+     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
     {
         if(NULL !== $request->getCookie('notice'))
         {

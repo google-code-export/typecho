@@ -26,9 +26,10 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
      * @access public
      * @param Typecho_Widget_Request $request 请求对象
      * @param Typecho_Widget_Response $response 回执对象
+     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
     {
         $this->db()->fetchAll($this->select()->where('table.contents.`type` = ?', 'page')
         ->group('table.contents.`cid`')->order('table.contents.`meta`', Typecho_Db::SORT_ASC), array($this, 'push'));
