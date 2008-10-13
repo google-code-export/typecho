@@ -118,11 +118,11 @@ Typecho_Common::registerAutoLoad();
 /** 关闭魔术引号 */
 Typecho_Common::forceDisableMagicQuotesGPC();
 
-/** 开始监视缓冲区 */
-Typecho_Response::obStart(__TYPECHO_GZIP_ENABLE__);
-
 /** 设置默认时区 */
 Typecho_Common::setDefaultTimezone();
+
+/** 开始监视缓冲区 */
+Typecho_Response::obStart(__TYPECHO_GZIP_ENABLE__);
 
 /** 设置编码类型 */
 Typecho_Response::setDefaultCharset(__TYPECHO_CHARSET__);
