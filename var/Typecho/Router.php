@@ -163,12 +163,12 @@ class Typecho_Router implements Typecho_Config_Able
      * 设置数据库默认配置
      * 
      * @access public
-     * @param Typecho_Config $config 配置信息
+     * @param mixed $config 配置信息
      * @return void
      */
-    public static function setConfig(Typecho_Config $config)
+    public static function setConfig($config)
     {
-        self::$_config = $config;
+        self::$_config = Typecho_Config::factory($config);
     }
     
     /**
