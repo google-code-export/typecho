@@ -19,6 +19,8 @@
  */
 class Typecho_Response
 {
+    private static $_defaultCharset = 'UTF-8';
+
     /**
      * 解析ajax回执的内部函数
      * 
@@ -69,6 +71,18 @@ class Typecho_Response
     }
     
     /**
+     * 设置默认回执编码
+     * 
+     * @access public
+     * @param string $charset 字符集
+     * @return void
+     */
+    public static function setDefaultCharset($charset)
+    {
+        self::$_defaultCharset = $charset;
+    }
+    
+    /**
      * 在http头部请求中声明类型和字符集
      * 
      * @access public
@@ -76,9 +90,9 @@ class Typecho_Response
      * @param string $charset 字符集
      * @return void
      */
-    public static function setContentType($contentType = 'text/html', $charset = 'UTF-8')
+    public static function setContentType($contentType = 'text/html', $charset = NULL)
     {
-        header('content-Type: ' . $contentType . ';charset= ' . $charset, true);
+        header('content-Type: ' . $contentType . ';charset= ' . (empty($charset) ? self::$_defaultCharset : $charset), true);
     }
     
     /**
@@ -103,7 +117,7 @@ class Typecho_Response
      * @param string $charset 信息编码
      * @return void
      */
-    public static function throwXml($message, $charset = 'UTF-8')
+    public static function throwXml($message, $charset = NULL)
     {
         /** 设置http头信息 */
         self::setContentType('text/xml', $charset);
@@ -113,6 +127,27 @@ class Typecho_Response
         '<response>',
         self::_parseXml($message),
         '</response>';
+        
+        /** 终止后续输出 */
+        exit;
+    }
+    
+    /**
+     * 抛出json回执信息
+     * 
+     * @access public
+     * @param string $message 消息体
+     * @param string $charset 信息编码
+     * @return void
+     */
+    public static function throwJson($message, $charset = NULL)
+    {
+        /** 设置http头信息 */
+        self::setContentType('application/json', $charset);
+        
+        /** Typecho_Json */
+        require_once 'Typecho/Json.php';
+        echo Typecho_Json::encode($message);
         
         /** 终止后续输出 */
         exit;

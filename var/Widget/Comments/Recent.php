@@ -23,13 +23,14 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
      * @access public
      * @param Typecho_Widget_Request $request 请求对象
      * @param Typecho_Widget_Response $response 回执对象
+     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
     {
-        $pageSize = isset($this->parameter()->pageSize) ? $this->options->commentsListSize : $this->parameter()->pageSize;
+        $parameter->setDefault(array('pageSize' => $this->options()->postsListSize));
         
-        $this->db()->fetchAll($this->select()->limit($pageSize)
+        $this->db()->fetchAll($this->select()->limit($parameter->pageSize)
         ->where('table.contents.`password` IS NULL')
         ->where('table.comments.`status` = ?', 'approved')
         ->group('table.comments.`coid`')
