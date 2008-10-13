@@ -61,7 +61,7 @@ require_once 'Typecho/Db.php';
 require_once 'Typecho/Router.php';
 
 /** 定义数据库参数 */
-Typecho_Db::setConfig(Typecho_Config::factory(array(
+Typecho_Db::setConfig(array(
     'host'          =>  'localhost',
     'port'          =>  '3306',
     'user'          =>  'root',
@@ -70,28 +70,26 @@ Typecho_Db::setConfig(Typecho_Config::factory(array(
     'prefix'        =>  'typecho_',
     'charset'       =>  'utf8',
     'adapter'       =>  'Mysql'
-)));
+));
 
 /** 定义语言项 */
-Typecho_I18n::setConfig(Typecho_Config::factory(array(
-    'lang' => NULL
-)));
+Typecho_I18n::setConfig(array('lang' => NULL));
 
 /** 自定义错误页面 */
 if(!__TYPECHO_DEBUG__)
 {
-    Typecho_Exception::setConfig(Typecho_Config::factory(array(
+    Typecho_Exception::setConfig(array(
         '_403'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         '_404'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         '_500'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         '_501'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         '_503'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         '_error'        =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-    )));
+    ));
 }
 
 /** 定义路由参数 */
-Typecho_Router::setConfig(Typecho_Config::factory(array(
+Typecho_Router::setConfig(array(
     'index'             =>  array('url' => '/', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'post'              =>  array('url' => '/archives/[cid:digital]/', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'category'          =>  array('url' => '/category/[slug]/', 'widget' => 'Widget_Archive', 'action' => 'render'),
@@ -112,7 +110,7 @@ Typecho_Router::setConfig(Typecho_Config::factory(array(
     'do'                =>  array('url' => '/[widget:alphaslash].do', 'widget' => 'Widget_Do', 'action' => 'action'),
     'plugin'            =>  array('url' => '/[plugin:alphaslash].plugin', 'widget' => 'Widget_Do', 'action' => 'action'),
     'page'              =>  array('url' => '/[slug].html', 'widget' => 'Widget_Archive', 'action' => 'render'),
-)));
+));
 
 /** 注册自动加载函数 */
 Typecho_Common::registerAutoLoad();

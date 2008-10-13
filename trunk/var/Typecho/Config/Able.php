@@ -9,10 +9,10 @@ interface Typecho_Config_Able
      * 设置配置
      * 
      * @access public
-     * @param Typecho_Config $config 配置对象
+     * @param mixed $config 配置数据
      * @return void
      */
-    public static function setConfig(Typecho_Config $config);
+    public static function setConfig($config);
     
     /**
      * 获取配置
