@@ -126,5 +126,8 @@ Typecho_Response::obStart(__TYPECHO_GZIP_ENABLE__);
 /** 设置默认时区 */
 Typecho_Common::setDefaultTimezone();
 
+/** 设置编码类型 */
+Typecho_Response::setDefaultCharset(__TYPECHO_CHARSET__);
+
 /** 设置输出类型 */
-Typecho_Response::setContentType('text/html', __TYPECHO_CHARSET__);
+Typecho_Response::setContentType('text/html');

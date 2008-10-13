@@ -70,56 +70,6 @@ class Typecho_Request
 
         return $parameters;
     }
-    
-    /**
-     * 参数条件输出
-     * 
-     * @access public
-     * @param string $name 参数名
-     * @param string $value 参数值
-     * @param string $string 输出值
-     * @return void
-     */
-    public static function callParameter($name, $value, $string)
-    {
-        if($value == self::getParameter($name))
-        {
-            echo $string;
-        }
-    }
-
-    /**
-     * 提交表单触发函数
-     *
-     * @access protected
-     * @param mixed $postData 表单触发值
-     * @param string $functionName 触发的函数名
-     * @return void
-     */
-    public static function bindParameter($postData, $functionName)
-    {
-        if(is_array($postData))
-        {
-            $doPost = true;
-            foreach($postData as $key => $val)
-            {
-                $parameter = self::getParameter($key);
-                if(NULL === $parameter || $val != $parameter)
-                {
-                    $doPost = false;
-                }
-            }
-
-            if($doPost)
-            {
-                call_user_func($functionName);
-            }
-        }
-        else if(NULL !== self::getParameter($postData))
-        {
-            call_user_func($functionName);
-        }
-    }
 
     /**
      * 获取指定的COOKIE值
