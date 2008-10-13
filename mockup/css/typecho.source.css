@@ -66,6 +66,7 @@ em {
 input, textarea {
     font-size: 13px;
 	padding: 2px;
+	border: 1px solid #dee4c5;
 }
 
 textarea {
