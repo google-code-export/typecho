@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_User extends Widget_Abstract_Users
+class Widget_User extends Typecho_Widget
 {
     /**
      * 用户
@@ -30,12 +30,9 @@ class Widget_User extends Widget_Abstract_Users
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
         if($this->hasLogin())
         {
@@ -47,13 +44,13 @@ class Widget_User extends Widget_Abstract_Users
 
             foreach($rows as $row)
             {
-                $this->options()->__set($row['name'], $row['value']);
+                $this->widget('Widget_Options')->__set($row['name'], $row['value']);
             }
 
             //更新最后活动时间
             $this->db()->query($this->db()->sql()
             ->update('table.users')
-            ->rows(array('activated' => $this->options()->gmtTime))
+            ->rows(array('activated' => $this->widget('Widget_Options')->gmtTime))
             ->where('`uid` = ?', $this->_user['uid']));
         }
     }
@@ -71,9 +68,9 @@ class Widget_User extends Widget_Abstract_Users
     public function login($uid, $password, $authCode, $expire = 0)
     {
         /** 保存登录信息,对密码采用sha1和md5双重加密 */
-        $this->request()->setCookie('uid', $uid, $expire, $this->options()->siteUrl);
-        $this->request()->setCookie('password', sha1($password), $expire, $this->options()->siteUrl);
-        $this->request()->setCookie('authCode', $authCode, $expire, $this->options()->siteUrl);
+        $this->request()->setCookie('uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
+        $this->request()->setCookie('password', sha1($password), $expire, $this->widget('Widget_Options')->siteUrl);
+        $this->request()->setCookie('authCode', $authCode, $expire, $this->widget('Widget_Options')->siteUrl);
         
         if($this->db()->fetchObject($this->select()
                 ->where('`uid` = ?', $uid)
@@ -91,7 +88,7 @@ class Widget_User extends Widget_Abstract_Users
             //第一次登录
             $this->db()->query($this->db()->sql()
             ->update('table.users')
-            ->rows(array('authCode' => $authCode, 'logged' => $this->options()->gmtTime))
+            ->rows(array('authCode' => $authCode, 'logged' => $this->widget('Widget_Options')->gmtTime))
             ->where('`uid` = ?', $uid));
         }
     }
@@ -104,10 +101,10 @@ class Widget_User extends Widget_Abstract_Users
      */
     public function logout()
     {
-        $this->request()->deleteCookie('uid', $this->options()->siteUrl);
-        $this->request()->deleteCookie('password', $this->options()->siteUrl);
-        $this->request()->deleteCookie('authCode', $this->options()->siteUrl);
-        $this->request()->deleteCookie('protect_password', $this->options()->siteUrl);
+        $this->request()->deleteCookie('uid', $this->widget('Widget_Options')->siteUrl);
+        $this->request()->deleteCookie('password', $this->widget('Widget_Options')->siteUrl);
+        $this->request()->deleteCookie('authCode', $this->widget('Widget_Options')->siteUrl);
+        $this->request()->deleteCookie('protect_password', $this->widget('Widget_Options')->siteUrl);
     }
     
     /**
@@ -171,7 +168,7 @@ class Widget_User extends Widget_Abstract_Users
             }
             else
             {
-                $this->response()->redirect(Typecho_Common::pathToUrl('/login.php', $this->options()->adminUrl)
+                $this->response()->redirect(Typecho_Common::pathToUrl('/login.php', $this->widget('Widget_Options')->adminUrl)
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }

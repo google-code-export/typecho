@@ -18,38 +18,38 @@
  * @license GNU General Public License 2.0
  */
 abstract class Widget_Abstract extends Typecho_Widget
-{    
+{
     /**
-     * 获取全局选项
+     * 全局选项
      * 
-     * @access public
-     * @return Widget_Options
+     * @access protected
+     * @var Widget_Options
      */
-    public function options()
-    {
-        return $this->widget('Widget_Options');
-    }
+    protected $options;
+
+    /**
+     * 用户对象
+     * 
+     * @access protected
+     * @var Widget_User
+     */
+    protected $user;
     
     /**
-     * 获取notice组件
+     * 构造函数
      * 
      * @access public
-     * @return Widget_Notice
+     * @param mixed $params 传递的参数
+     * @return void
      */
-    public function notice()
+    public function __construct($params = array())
     {
-        return $this->widget('Widget_Notice');
-    }
+        /** 初始化常用组件 */
+        $this->options = $this->widget('Widget_Options');
+        $this->user = $this->widget('Widget_User');
     
-    /**
-     * 获取用户支持
-     * 
-     * @access public
-     * @return Widget_User
-     */
-    public function user()
-    {
-        return $this->widget('Widget_User');
+        /** 初始化参数 */
+        parent::__construct($params);
     }
     
     /**
