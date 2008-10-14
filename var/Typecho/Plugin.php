@@ -17,7 +17,7 @@
  */
 function _p($handle, $adapterName)
 {
-    return Typecho_Plugin::instance($handle, ucfirst($adapterName));
+    return Typecho_Plugin::factory($handle, ucfirst($adapterName));
 }
 
 /**
@@ -78,7 +78,7 @@ class Typecho_Plugin
      * @return TypechoPlugin
      * @throws TypechoPluginException
      */
-    public static function instance($handle, $adapterName)
+    public static function factory($handle, $adapterName)
     {
         $handle = trim($handle, '/ ');
         if(empty(self::$_adapters[$handle]))

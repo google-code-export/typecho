@@ -30,14 +30,6 @@ abstract class Typecho_Widget
      * @var array
      */
     private static $_widgetPool = array();
-    
-    /**
-     * 配置信息
-     * 
-     * @access private
-     * @var Typecho_Config
-     */
-    private $_parameter;
 
     /**
      * 内部数据堆栈
@@ -56,6 +48,30 @@ abstract class Typecho_Widget
     protected $_row = array();
     
     /**
+     * 配置信息
+     * 
+     * @access protected
+     * @var Typecho_Config
+     */
+    protected $parameter;
+    
+    /**
+     * 请求信息
+     * 
+     * @access protected
+     * @var Typecho_Widget_Request
+     */
+    protected $request;
+    
+    /**
+     * 回执信息
+     * 
+     * @access protected
+     * @var Typecho_Widget_Response
+     */
+    protected $response;
+    
+    /**
      * 当前堆栈指针顺序值,从1开始
      * 
      * @access public
@@ -72,32 +88,23 @@ abstract class Typecho_Widget
      */
     public function __construct($params = array())
     {
-        $this->_parameter = new Typecho_Config($params);
-        $this->init($this->request(), $this->response(), $this->_parameter);
+        /** 初始化参数 */
+        $this->parameter = Typecho_Config::factory($params);
+        $this->request = Typecho_Widget_Request::getInstance();
+        $this->response = Typecho_Widget_Response::getInstance();
+        
+        /** 初始化 */
+        $this->init();
     }
     
     /**
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {}
-    
-    /**
-     * 获取请求对象
-     * 
-     * @access public
-     * @return Typecho_Widget_Request
-     */
-    public function request()
-    {
-        return Typecho_Widget_Request::getInstance();
-    }
     
     /**
      * request事件触发
@@ -109,7 +116,7 @@ abstract class Typecho_Widget
      */
     public function onRequest($name, $value = NULL)
     {
-        $request = $this->request()->{$name};
+        $request = $this->request->{$name};
         
         if((!empty($value) && $request == $value) || 
         (empty($value) && !empty($name)))
@@ -119,31 +126,9 @@ abstract class Typecho_Widget
         else
         {
             /** Typecho_Widget_Helper_Null */
-            require_once 'Typecho/Widget/Helper/Null.php';
-            return new Typecho_Widget_Helper_Null();
+            require_once 'Typecho/Widget/Helper/Empty.php';
+            return new Typecho_Widget_Helper_Empty();
         }
-    }
-    
-    /**
-     * 获取回执对象
-     * 
-     * @access public
-     * @return Typecho_Widget_Response
-     */
-    public function response()
-    {
-        return Typecho_Widget_Response::getInstance();
-    }
-    
-    /**
-     * 获取配置信息
-     * 
-     * @access public
-     * @return Typecho_Config
-     */
-    public function parameter()
-    {
-        return $this->_parameter;
     }
     
     /**
@@ -170,7 +155,7 @@ abstract class Typecho_Widget
     {
         /** Typecho_Plugin */
         require_once 'Typecho/Plugin.php';
-        return _p(get_class($this), $adapter);
+        return Typecho_Plugin::factory(get_class($this), $adapter);
     }
 
     /**
@@ -183,18 +168,6 @@ abstract class Typecho_Widget
      */
     public static function widget($className)
     {
-        /** 支持缓存禁用 */
-        if(0 === strpos($className, '*'))
-        {
-            $className = subStr($className, 1);
-            
-            /** 清除缓存 */
-            if(isset(self::$_widgetPool[$className]))
-            {
-                unset(self::$_widgetPool[$className]);
-            }
-        }
-        
         if(!isset(self::$_widgetPool[$className]))
         {
             $fileName = str_replace('_', '/', $className) . '.php';            
