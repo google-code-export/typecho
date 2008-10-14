@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Null
+class Typecho_Widget_Helper_Empty
 {
     /**
      * 所有方法请求直接返回
