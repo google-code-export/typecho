@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options extends Widget_Abstract_Options
+class Widget_Options extends Typecho_Widget
 {
     /**
      * 缓存的插件配置
@@ -31,14 +31,11 @@ class Widget_Options extends Widget_Abstract_Options
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
-        $this->db()->fetchAll($this->select()
+        $this->db()->fetchAll($this->db()->sql()->select('table.options')
         ->where('`user` = 0'), array($this, 'push'));
         $this->_stack[] = &$this->_row;
 
