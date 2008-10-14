@@ -65,8 +65,8 @@ em {
 
 input, textarea {
     font-size: 13px;
-	padding: 2px;
-	border: 1px solid #dee4c5;
+	padding: 1px;
+	*padding: 2px;
 }
 
 textarea {
@@ -97,6 +97,12 @@ button {
 	*height:24px;
 	*padding:0 8px;
 	*line-height: 20px;
+}
+
+/** just for ie6 */
+*html button {
+	line-height:17px;
+	height:17px;
 }
 
 /**
