@@ -8,7 +8,7 @@
  */
 
 /** 载入api支持 */
-require_once 'Typecho/API.php';
+require_once 'Typecho/Common.php';
 
 /**
  * 服务器请求处理类
@@ -85,77 +85,6 @@ class Typecho_Request
     }
 
     /**
-     * 设置指定的COOKIE值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param mixed $value 设置的值
-     * @param integer $ttl 过期时间,默认为0,表示随会话时间结束
-     * @return void
-     */
-    public static function setCookie($key, $value, $expire = 0, $url = NULL)
-    {
-        $path = '/';
-        if(!empty($url))
-        {
-            $parsed = parse_url($url);
-            
-            /** 在路径后面强制加上斜杠 */
-            $path = empty($parsed['path']) ? '/' : Typecho_API::pathToUrl(NULL, $parsed['path']);
-        }
-        
-        /** 对数组型COOKIE的写入支持 */
-        if(is_array($value))
-        {
-            foreach($value as $name => $val)
-            {
-                setcookie("{$key}[{$name}]", $val, $expire, $path);
-            }
-        }
-        else
-        {
-            setcookie($key, $value, $expire, $path);
-        }
-    }
-
-    /**
-     * 删除指定的COOKIE值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @return void
-     */
-    public static function deleteCookie($key, $url = NULL)
-    {
-        if(!isset($_COOKIE[$key]))
-        {
-            return;
-        }
-
-        $path = '/';
-        if(!empty($url))
-        {
-            $parsed = parse_url($url);
-            
-            /** 在路径后面强制加上斜杠 */
-            $path = empty($parsed['path']) ? '/' : Typecho_API::pathToUrl(NULL, $parsed['path']);
-        }
-
-        /** 对数组型COOKIE的删除支持 */
-        if(is_array($_COOKIE[$key]))
-        {
-            foreach($_COOKIE[$key] as $name => $val)
-            {
-                setcookie("{$key}[{$name}]", '', time() - 2592000, $path);
-            }
-        }
-        else
-        {
-            setcookie($key, '', time() - 2592000, $path);
-        }
-    }
-
-    /**
      * 获取指定的SESSION值
      *
      * @access public
@@ -166,42 +95,6 @@ class Typecho_Request
     public static function getSession($key, $default = NULL)
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
-    }
-
-    /**
-     * 设置指定的SESSION值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param string $value 设置的值
-     * @return void
-     */
-    public static function setSession($key, $value)
-    {
-        $_SESSION[$key] = $value;
-    }
-
-    /**
-     * 删除指定的SESSION值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @return void
-     */
-    public static function deleteSession($key)
-    {
-        session_unregister($key);
-    }
-
-    /**
-     * 销毁所有SESSION值
-     *
-     * @access public
-     * @return void
-     */
-    public static function destorySession()
-    {
-        session_unset();
     }
     
     /**

@@ -9,6 +9,9 @@
  * @version $Id$
  */
 
+/** 载入api支持 */
+require_once 'Typecho/Common.php';
+
 /**
  * Typecho公用方法
  *
@@ -19,6 +22,12 @@
  */
 class Typecho_Response
 {
+    /**
+     * 默认的字符编码
+     * 
+     * @access private
+     * @var string
+     */
     private static $_defaultCharset = 'UTF-8';
 
     /**
@@ -203,5 +212,112 @@ class Typecho_Response
         {
             self::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
         }
+    }
+    
+    /**
+     * 设置指定的COOKIE值
+     *
+     * @access public
+     * @param string $key 指定的参数
+     * @param mixed $value 设置的值
+     * @param integer $ttl 过期时间,默认为0,表示随会话时间结束
+     * @return void
+     */
+    public static function setCookie($key, $value, $expire = 0, $url = NULL)
+    {
+        $path = '/';
+        if(!empty($url))
+        {
+            $parsed = parse_url($url);
+            
+            /** 在路径后面强制加上斜杠 */
+            $path = empty($parsed['path']) ? '/' : Typecho_Common::pathToUrl(NULL, $parsed['path']);
+        }
+        
+        /** 对数组型COOKIE的写入支持 */
+        if(is_array($value))
+        {
+            foreach($value as $name => $val)
+            {
+                setcookie("{$key}[{$name}]", $val, $expire, $path);
+            }
+        }
+        else
+        {
+            setcookie($key, $value, $expire, $path);
+        }
+    }
+    
+    /**
+     * 删除指定的COOKIE值
+     *
+     * @access public
+     * @param string $key 指定的参数
+     * @return void
+     */
+    public static function deleteCookie($key, $url = NULL)
+    {
+        if(!isset($_COOKIE[$key]))
+        {
+            return;
+        }
+
+        $path = '/';
+        if(!empty($url))
+        {
+            $parsed = parse_url($url);
+            
+            /** 在路径后面强制加上斜杠 */
+            $path = empty($parsed['path']) ? '/' : Typecho_Common::pathToUrl(NULL, $parsed['path']);
+        }
+
+        /** 对数组型COOKIE的删除支持 */
+        if(is_array($_COOKIE[$key]))
+        {
+            foreach($_COOKIE[$key] as $name => $val)
+            {
+                setcookie("{$key}[{$name}]", '', time() - 2592000, $path);
+            }
+        }
+        else
+        {
+            setcookie($key, '', time() - 2592000, $path);
+        }
+    }
+    
+    /**
+     * 设置指定的SESSION值
+     *
+     * @access public
+     * @param string $key 指定的参数
+     * @param string $value 设置的值
+     * @return void
+     */
+    public static function setSession($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    /**
+     * 删除指定的SESSION值
+     *
+     * @access public
+     * @param string $key 指定的参数
+     * @return void
+     */
+    public static function deleteSession($key)
+    {
+        session_unregister($key);
+    }
+
+    /**
+     * 销毁所有SESSION值
+     *
+     * @access public
+     * @return void
+     */
+    public static function destorySession()
+    {
+        session_unset();
     }
 }

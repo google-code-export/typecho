@@ -6,7 +6,10 @@
  * @license    GNU General Public License 2.0
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
- 
+
+/** 载入api支持 */
+require_once 'Typecho/Common.php';
+
 /** 配置管理 */
 require_once 'Typecho/Config/Able.php';
 
@@ -111,9 +114,6 @@ class Typecho_Router implements Typecho_Config_Able
      */
     public static function dispatch()
     {
-        /** 载入api支持 */
-        require_once 'Typecho/API.php';
-        
         /** 载入request支持 */
         require_once 'Typecho/Request.php';
         
@@ -156,7 +156,7 @@ class Typecho_Router implements Typecho_Config_Able
             $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
         }
 
-        return Typecho_API::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
+        return Typecho_Common::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
     }
     
     /**
