@@ -93,9 +93,21 @@ abstract class Typecho_Widget
         $this->request = Typecho_Widget_Request::getInstance();
         $this->response = Typecho_Widget_Response::getInstance();
         
+        /** 准备 */
+        $this->prepare();
+        
         /** 初始化 */
         $this->init();
     }
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {}
     
     /**
      * 初始化函数
@@ -137,7 +149,7 @@ abstract class Typecho_Widget
      * @access public
      * @return Typecho_Db
      */
-    public function db()
+    public function getDb()
     {
         /** Typecho_Db */
         require_once 'Typecho/Db.php';
@@ -151,7 +163,7 @@ abstract class Typecho_Widget
      * @param string $adapter 适配器类型
      * @return Typecho_Plugin
      */
-    public function plugin($adapter)
+    public function getPlugin($adapter)
     {
         /** Typecho_Plugin */
         require_once 'Typecho/Plugin.php';
