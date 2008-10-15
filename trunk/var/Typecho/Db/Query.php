@@ -26,6 +26,9 @@ require_once 'Typecho/Config.php';
  */
 class Typecho_Db_Query
 {
+    /** 数据库关键字 */
+    const KEYWORD = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|COUNT|MAX|SUM|AS|IN';
+
     /**
      * 数据库适配器
      *
@@ -82,35 +85,19 @@ class Typecho_Db_Query
      */
     private function filterPrefix($string)
     {
-        return substr(preg_replace("/([^_a-zA-Z0-9]+)table\.([_0-9a-zA-Z]+)/i",
-        "\\1" . $this->_config->prefix . "\\2", ' ' . $string), 1);
+        return (0 === strpos($string, 'table.')) ? $this->_config->prefix . substr($string, 0, 6) : $string;
     }
 
     /**
      * 过滤数组键值
      *
      * @access private
-     * @param mixed $string
-     * @param string $type
+     * @param string $string 待处理字段值
      * @return string
      */
-    private function filterColumn($string, $force = false)
+    private function filterColumn($string)
     {
-        if($force)
-        {
-            if(false === strpos($string, '`'))
-            {
-                return $this->_adapter->quoteColumn(preg_replace("/^[`|'|\"]?([^`]*)[`|'|\"]?$/i", "\\1", $string));
-            }
-            else
-            {
-                return preg_replace_callback("/`([^`]*)`/", array($this, 'filterColumnCallback'), $string);
-            }
-        }
-        else
-        {
-            return preg_replace_callback("/`([^`]*)`/", array($this, 'filterColumnCallback'), $string);
-        }
+        return preg_replace_callback("/(_a-zA-Z\.)+/", array($this, 'filterColumnCallback'), $string);
     }
 
     /**
@@ -121,8 +108,17 @@ class Typecho_Db_Query
      * @return string
      */
     public function filterColumnCallback(array $matches)
-    {
-        return $this->_adapter->quoteColumn($matches[1]);
+    {        
+        if(!preg_match('/(' . self::KEYWORD . ')/i', $matches[1]) && $matches[1] != strtoupper($matches[1]))
+        {
+            $pos = strrpos($matches[1], '.') + 1;
+            $column = substr($matches[1], $pos);
+            return $this->filterPrefix(substr_replace($matches[1], $column, $pos));
+        }
+        else
+        {
+            return $matches[1];
+        }
     }
 
     /**
@@ -147,7 +143,7 @@ class Typecho_Db_Query
      */
     public function join($table, $condition, $op = Typecho_Db::INNER_JOIN)
     {
-        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterColumn($this->filterPrefix($condition)), $op);
+        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterColumn($condition), $op);
         return $this;
     }
 
@@ -161,7 +157,7 @@ class Typecho_Db_Query
     public function where()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterColumn($this->filterPrefix(str_replace('?', "%s", $condition)));
+        $condition = $this->filterColumn(str_replace('?', "%s", $condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
 
         if(func_num_args() <= 1)
@@ -188,7 +184,7 @@ class Typecho_Db_Query
     public function orWhere()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterColumn($this->filterPrefix(str_replace('?', "%s", $condition), 'condition'));
+        $condition = $this->filterColumn(str_replace('?', "%s", $condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
 
         if(func_num_args() <= 1)
@@ -254,7 +250,7 @@ class Typecho_Db_Query
     {
         foreach($rows as $key => $row)
         {
-            $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = empty($row) 
+            $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = empty($row) 
             && 0 !== $row && '0' !== $row && false !== $row ? 'NULL' : $this->_adapter->quoteValue($row);
         }
         return $this;
@@ -268,9 +264,9 @@ class Typecho_Db_Query
      * @param mixed $value 指定的值
      * @return Typecho_Db_Query
      */
-    public function row($key, $value)
+    public function expression($key, $value)
     {
-        $this->_sqlPreBuild['rows'][$this->filterColumn($this->filterPrefix($key), true)] = $this->filterColumn($value);
+        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $this->filterColumn($value);
         return $this;
     }
 
@@ -283,7 +279,7 @@ class Typecho_Db_Query
      */
     public function order($orderby, $sort = Typecho_Db::SORT_ASC)
     {
-        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterColumn($this->filterPrefix($orderby), true) . (empty($sort) ? NULL : ' ' . $sort);
+        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterColumn($orderby) . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
     }
 
@@ -295,7 +291,7 @@ class Typecho_Db_Query
      */
     public function group($key)
     {
-        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($this->filterPrefix($key), true);
+        $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($key);
         return $this;
     }
 
@@ -303,15 +299,44 @@ class Typecho_Db_Query
      * 查询记录操作(SELECT)
      *
      * @param string $table 查询的表
-     * @param string $fields 需要查询的栏目
      * @return Typecho_Db_Query
      */
-    public function select($table, $fields = '*')
+    public function select($table)
     {
         $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
-        $this->_sqlPreBuild['fields'] = $this->filterColumn($this->filterPrefix($fields));
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
+    }
+    
+    /**
+     * description...
+     * 
+     * @access public
+     * @param mixed $field 查询字段
+     * @return Typecho_Db_Query
+     */
+    public function from($field = '*')
+    {
+        $args = func_get_args();
+        $fields = array();
+        
+        foreach($args as $value)
+        {
+            if(is_array($value))
+            {
+                foreach($value as $key => $val)
+                {
+                    $fields[] = $key . ' AS ' . $val; 
+                }
+            }
+            else
+            {
+                 $fields[] = $value;
+            }
+            
+        }
+        
+        $this->_sqlPreBuild['fields'] = $this->filterColumn(implode(',', $fields));
     }
 
     /**
