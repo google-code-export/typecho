@@ -27,7 +27,7 @@ require_once 'Typecho/Config.php';
 class Typecho_Db_Query
 {
     /** 数据库关键字 */
-    const KEYWORD = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|COUNT|MAX|SUM|AS|IN';
+    const KEYWORDS = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN';
 
     /**
      * 数据库适配器
@@ -85,7 +85,7 @@ class Typecho_Db_Query
      */
     private function filterPrefix($string)
     {
-        return (0 === strpos($string, 'table.')) ? $this->_config->prefix . substr($string, 0, 6) : $string;
+        return (0 === strpos($string, 'table.')) ? substr_replace($string, $this->_config->prefix, 0, 6) : $string;
     }
 
     /**
@@ -97,7 +97,7 @@ class Typecho_Db_Query
      */
     private function filterColumn($string)
     {
-        return preg_replace_callback("/(_a-zA-Z\.)+/", array($this, 'filterColumnCallback'), $string);
+        return preg_replace_callback("/([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
     }
 
     /**
@@ -108,16 +108,17 @@ class Typecho_Db_Query
      * @return string
      */
     public function filterColumnCallback(array $matches)
-    {        
-        if(!preg_match('/(' . self::KEYWORD . ')/i', $matches[1]) && $matches[1] != strtoupper($matches[1]))
+    {
+        if(!preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[1]) && empty($matches[2]))
         {
-            $pos = strrpos($matches[1], '.') + 1;
-            $column = substr($matches[1], $pos);
+            $pos = strrpos($matches[1], '.');
+            $pos = (false === $pos) ? 0 : $pos + 1;
+            $column = $this->_adapter->quoteColumn(substr($matches[1], $pos));
             return $this->filterPrefix(substr_replace($matches[1], $column, $pos));
         }
         else
         {
-            return $matches[1];
+            return $matches[1] . $matches[2];
         }
     }
 
@@ -157,7 +158,7 @@ class Typecho_Db_Query
     public function where()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterColumn(str_replace('?', "%s", $condition));
+        $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
 
         if(func_num_args() <= 1)
@@ -184,7 +185,7 @@ class Typecho_Db_Query
     public function orWhere()
     {
         $condition = func_get_arg(0);
-        $condition = $this->filterColumn(str_replace('?', "%s", $condition));
+        $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
 
         if(func_num_args() <= 1)
@@ -336,7 +337,8 @@ class Typecho_Db_Query
             
         }
         
-        $this->_sqlPreBuild['fields'] = $this->filterColumn(implode(',', $fields));
+        $this->_sqlPreBuild['fields'] = $this->filterColumn(implode(' , ', $fields));
+        return $this;
     }
 
     /**
