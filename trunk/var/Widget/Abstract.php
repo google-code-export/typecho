@@ -36,20 +36,27 @@ abstract class Widget_Abstract extends Typecho_Widget
     protected $user;
     
     /**
-     * 构造函数
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 准备函数
      * 
      * @access public
-     * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($params = array())
+    public function prepare()
     {
+        /** 初始化数据库 */
+        $this->db = $this->getDb();
+    
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
-    
-        /** 初始化参数 */
-        parent::__construct($params);
     }
     
     /**
