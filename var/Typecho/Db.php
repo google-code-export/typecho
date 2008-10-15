@@ -113,7 +113,7 @@ class Typecho_Db implements Typecho_Config_Able
     {
         return new Typecho_Db_Query($this->_adapter, self::$_config);
     }
-
+    
     /**
      * 获取数据库实例化对象
      * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
@@ -129,6 +129,50 @@ class Typecho_Db implements Typecho_Config_Able
         }
 
         return self::$_instance;
+    }
+    
+    /**
+     * 查询记录操作(SELECT)
+     *
+     * @param string $table 查询的表
+     * @return Typecho_Db_Query
+     */
+    public function select($table)
+    {
+        return $this->sql()->select($table);
+    }
+    
+    /**
+     * 更新记录操作(UPDATE)
+     *
+     * @param string $table 需要更新记录的表
+     * @return Typecho_Db_Query
+     */
+    public function update($table)
+    {
+        return $this->sql()->update($table);
+    }
+
+    /**
+     * 删除记录操作(DELETE)
+     *
+     * @param string $table 需要删除记录的表
+     * @return Typecho_Db_Query
+     */
+    public function delete($table)
+    {
+        return $this->sql()->delete($table);
+    }
+
+    /**
+     * 插入记录操作(INSERT)
+     *
+     * @param string $table 需要插入记录的表
+     * @return Typecho_Db_Query
+     */
+    public function insert($table)
+    {
+        return $this->sql()->insert($table);
     }
     
     /**
