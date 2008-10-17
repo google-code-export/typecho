@@ -57,13 +57,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db()->query($this->db()->sql()->insert('table.contents')->rows($insertStruct));
+        $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
         
         /** 更新缩略名 */
         $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
-        $this->db()->query($this->db()->sql()->update('table.contents')
+        $this->db->query($this->db->update('table.contents')
         ->rows(array('slug' => $slug))
-        ->where('`cid` = ?', $insertId));
+        ->where('cid = ?', $insertId));
 
         return $insertId;
     }
@@ -112,15 +112,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $updateStruct['created'] = $content['created'];
         }
         
-        $updateStruct['modified'] = $this->options()->gmtTime;
+        $updateStruct['modified'] = $this->options->gmtTime;
         
         /** 首先插入部分数据 */
         $updateCondition = clone $condition;
-        $updateRows = $this->db()->query($condition->update('table.contents')->rows($updateStruct));
+        $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
         
         /** 更新缩略名 */
         $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $cid);
-        $this->db()->query($updateCondition->update('table.contents')->rows(array('slug' => $slug)));
+        $this->db->query($updateCondition->update('table.contents')->rows(array('slug' => $slug)));
 
         return $updateRows;
     }
@@ -134,7 +134,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db()->query($condition->delete('table.contents'));
+        return $this->db->query($condition->delete('table.contents'));
     }
     
     /**
@@ -146,9 +146,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function haveContentPermission($userId)
     {
-        if(!$this->user()->pass('editor', true))
+        if(!$this->user->pass('editor', true))
         {
-            if($userId != Typecho_Common::factory('Widget_Users_Current')->uid)
+            if($userId != $this->user->uid)
             {
                 return false;
             }
@@ -175,7 +175,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
         else
         {
-            $post = $this->db()->fetchRow($condition->select('table.contents', '`author`')->limit(1));
+            $post = $this->db->fetchRow($condition->select('table.contents')->from('author')->limit(1));
 
             if($post && $this->haveContentPermission($post['author']))
             {
@@ -195,7 +195,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db()->fetchObject($condition->select('table.contents', 'COUNT(table.contents.`cid`) AS `num`'))->num;
+        return $this->db->fetchObject($condition->select('table.contents')->from(array('COUNT(table.contents.cid)' => 'num')))->num;
     }
     
     /**
@@ -208,7 +208,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function filter(array $value)
     {
         /** 取出所有分类 */
-        $value['categories'] = $this->db()->fetchAll($this->db()->sql()
+        $value['categories'] = $this->db->fetchAll($this->db
         ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $value['cid'])
         ->where('table.metas.`type` = ?', 'category')
@@ -219,9 +219,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
 
         /** 生成日期 */
-        $value['year'] = date('Y', $value['created'] + $this->options()->timezone);
-        $value['month'] = date('m', $value['created'] + $this->options()->timezone);
-        $value['day'] = date('d', $value['created'] + $this->options()->timezone);
+        $value['year'] = date('Y', $value['created'] + $this->options->timezone);
+        $value['month'] = date('m', $value['created'] + $this->options->timezone);
+        $value['day'] = date('d', $value['created'] + $this->options->timezone);
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
@@ -236,24 +236,24 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 生成反馈地址 */
         /** 评论 */
         $value['commentUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'comment', 'permalink' => $linkPath), $this->options()->index);
+        array('type' => 'comment', 'permalink' => $linkPath), $this->options->index);
         
         /** trackback */
         $value['trackbackUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'trackback', 'permalink' => $linkPath), $this->options()->index);
+        array('type' => 'trackback', 'permalink' => $linkPath), $this->options->index);
         
         /** 生成静态链接 */
-        $value['permalink'] = Typecho_Common::pathToUrl($linkPath, $this->options()->index);
+        $value['permalink'] = Typecho_Common::pathToUrl($linkPath, $this->options->index);
         
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
         
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
         
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options()->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
         
@@ -283,7 +283,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function date($format)
     {
-        echo date(empty($format) ? $this->options()->postDateFormat : $format, $this->created + $this->options()->timezone);
+        echo date(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
     }
     
     /**
@@ -294,7 +294,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function dateWord()
     {
-        echo Typecho_I18n::dateWord($this->created + $this->options()->timezone, $this->options()->gmtTime + $this->options()->timezone);
+        echo Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }
 
     /**
@@ -360,9 +360,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $permission = strtolower($permission);
 
             /** 对自动关闭反馈功能的支持 */
-            if(('ping' == $permission || 'comment' == $permission) && $this->options()->commentsPostTimeout > 0)
+            if(('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0)
             {
-                if($this->options()->gmtTime - $this->created > $this->options()->commentsPostTimeout)
+                if($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout)
                 {
                     return false;
                 }
@@ -415,7 +415,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function tags($split = ',', $link = true, $default = NULL)
     {
-        $this->tags = isset($this->tags) ? $this->tags : $this->db()->fetchAll($this->db()->sql()
+        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
         ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
         ->where('table.relationships.`cid` = ?', $this->cid)
         ->where('table.metas.`type` = ?', 'tag')

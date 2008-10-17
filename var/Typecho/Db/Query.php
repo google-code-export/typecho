@@ -66,7 +66,7 @@ class Typecho_Db_Query
         $this->_sqlPreBuild = array(
             'action' => NULL,
             'table'  => NULL,
-            'fields' => NULL,
+            'fields' => '*',
             'join'   => array(),
             'where'  => NULL,
             'limit'  => NULL,
