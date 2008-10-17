@@ -1,5 +1,6 @@
 2008.10.10 by qining
 再来测试
+测试邮件系统
 
 2008.9.27 by qining
 plugin缓存机制改进
