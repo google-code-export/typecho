@@ -22,10 +22,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db()->sql()->select('table.contents', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`,
-        table.contents.`modified`, table.contents.`type`, table.contents.`text`, table.contents.`commentsNum`, table.contents.`meta`, table.contents.`template`, table.contents.`author` AS `authorId`,
-        table.contents.`password`, table.contents.`allowComment`, table.contents.`allowPing`, table.contents.`allowFeed`, table.users.`screenName` AS `author`, COUNT(table.contents.`cid`) AS `contentsGroupCount`')
-        ->join('table.users', 'table.contents.`author` = table.users.`uid`', Typecho_Db::LEFT_JOIN);
+        return $this->db->select('table.contents')
+        ->from('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
+        'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
+        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
+        array('table.users.screenName' => 'author', 'COUNT(table.contents.cid)' => 'contentsGroupCount', 'table.contents.author' => 'authorId'))
+        ->join('table.users', 'table.contents.author = table.users.uid', Typecho_Db::LEFT_JOIN);
     }
     
     /**
@@ -40,11 +42,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'created'       =>  empty($content['created']) ? $this->options()->gmtTime : $content['created'],
-            'modified'      =>  $this->options()->gmtTime,
+            'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
+            'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
-            'author'        =>  Typecho_Common::factory('Widget_Users_Current')->uid,
+            'author'        =>  $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
