@@ -13,9 +13,19 @@
  */
 body {
     background: #f7fbe9;
-	color: #333;
+    color: #333;
 	font-family: Verdana, Geneva, sans-serif;
+    /*
+    overflow-x: hidden;
+    */
 }
+
+/*
+body > div {
+    background: #f7fbe9;
+    color: #333;
+}
+*/
 
 body.dark {
     background: #333;
@@ -599,6 +609,11 @@ margin-top: 25px;
     font-size: 12px;
     text-align: center;
     color: #999;
+    /*
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    */
 }
 
 .typecho-foot h4 {
