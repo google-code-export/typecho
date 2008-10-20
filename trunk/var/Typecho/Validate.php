@@ -17,6 +17,9 @@
  * @version    $Id: Validation.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
+/** Typecho_Common */
+require_once 'Typecho/Common.php';
+
 /**
  * 验证类
  *
@@ -159,7 +162,7 @@ class Typecho_Validate
      */
     public function minLength($str, $length)
     {
-        return (typechoStrLen($str) > $length);
+        return (Typecho_Common::strLen($str) > $length);
     }
 
     /**
@@ -209,7 +212,7 @@ class Typecho_Validate
      */
     public function maxLength($str, $length)
     {
-        return (typechoStrLen($str) < $length);
+        return (Typecho_Common::strLen($str) < $length);
     }
 
     /**

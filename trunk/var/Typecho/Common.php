@@ -67,17 +67,22 @@ class Typecho_Common
      */
     public static function forceDisableMagicQuotesGPC()
     {
-        $_GET = self::stripslashesDeep($_GET);
-        $_POST = self::stripslashesDeep($_POST);
-        $_COOKIE = self::stripslashesDeep($_COOKIE);
+        /** 兼容php6 */
+        if(function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc())
+        {
+            $_GET = self::stripslashesDeep($_GET);
+            $_POST = self::stripslashesDeep($_POST);
+            $_COOKIE = self::stripslashesDeep($_COOKIE);
 
-        reset($_GET);
-        reset($_POST);
-        reset($_COOKIE);
+            reset($_GET);
+            reset($_POST);
+            reset($_COOKIE);
+        }
     }
     
     /**
      * 如果时区不存在,设置一个默认时区
+     * 此方法用于修正某些未设置时区的错误
      * 
      * @access public
      * @param string $timezone 时区名称
@@ -109,7 +114,7 @@ class Typecho_Common
      * <code>
      * <?php
      * $fruit = array(array('apple' => 2, 'banana' => 3), array('apple' => 10, 'banana' => 12));
-     * $banana = Typecho_API::arrayFlatten($fruit, 'banana');
+     * $banana = Typecho_Common::arrayFlatten($fruit, 'banana');
      * print_r($banana);
      * //outputs: array(0 => 3, 1 => 12);
      * ?>
@@ -144,6 +149,12 @@ class Typecho_Common
 
     /**
      * 自闭合html修复函数
+     * 使用方法:
+     * <code>
+     * $input = '这是一段被截断的html文本<a href="#"';
+     * echo Typecho_Common::fixHtml($input);
+     * //output: 这是一段被截断的html文本
+     * </code>
      *
      * @access public
      * @param string $string 需要修复处理的字符串
@@ -195,7 +206,7 @@ class Typecho_Common
      * 使用方法:
      * <code>
      * $input = '<a href="http://test/test.php" title="example">hello</a>';
-     * $output = Typecho_API::stripTags($input, <a href="">);
+     * $output = Typecho_Common::stripTags($input, <a href="">);
      * echo $output;
      * //display: '<a href="http://test/test.php">hello</a>'
      * </code>

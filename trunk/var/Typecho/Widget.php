@@ -144,19 +144,6 @@ abstract class Typecho_Widget
     }
     
     /**
-     * 获取数据库支持
-     * 
-     * @access public
-     * @return Typecho_Db
-     */
-    public function getDb()
-    {
-        /** Typecho_Db */
-        require_once 'Typecho/Db.php';
-        return Typecho_Db::get();
-    }
-    
-    /**
      * 获取对象插件句柄
      * 
      * @access public
