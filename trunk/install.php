@@ -69,7 +69,7 @@ else
                 if(false !== strpos($adapter, $file))
                 {
                     $selectAdapter = $file;
-                    if($file == $adaper)
+                    if($file == $adapter)
                     {
                         break;
                     }
