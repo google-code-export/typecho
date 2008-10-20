@@ -52,7 +52,7 @@ abstract class Widget_Abstract extends Typecho_Widget
     public function prepare()
     {
         /** 初始化数据库 */
-        $this->db = $this->getDb();
+        $this->db = Typecho_Db::get();
     
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
