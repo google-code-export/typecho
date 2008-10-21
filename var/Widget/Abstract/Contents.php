@@ -209,11 +209,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db
-        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
-        ->where('table.relationships.`cid` = ?', $value['cid'])
-        ->where('table.metas.`type` = ?', 'category')
-        ->group('table.metas.`mid`')
-        ->order('`sort`', 'ASC'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        ->select('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $value['cid'])
+        ->where('table.metas.type = ?', 'category')
+        ->group('table.metas.mid')
+        ->order('sort', 'ASC'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
         
         /** 取出第一个分类作为slug条件 */
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
@@ -416,10 +416,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function tags($split = ',', $link = true, $default = NULL)
     {
         $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
-        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
-        ->where('table.relationships.`cid` = ?', $this->cid)
-        ->where('table.metas.`type` = ?', 'tag')
-        ->group('table.metas.`mid`'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        ->select('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $this->cid)
+        ->where('table.metas.type = ?', 'tag')
+        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
 
         if($this->tags)
         {

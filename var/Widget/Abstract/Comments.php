@@ -25,10 +25,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db()->sql()->select('table.comments', 'table.contents.`cid`, table.contents.`title`, table.contents.`slug`, table.contents.`created`, table.contents.`type`,
-        table.comments.`coid`, table.comments.`created` AS `date`, table.comments.`author`, table.comments.`mail`, table.comments.`url`, table.comments.`ip`,
-        table.comments.`agent`, table.comments.`text`, table.comments.`mode`, table.comments.`status`, table.comments.`parent`, COUNT(table.comments.`cid`) AS `commentsGroupCount`')
-        ->join('table.contents', 'table.comments.`cid` = table.contents.`cid`');
+        return $this->select('table.comments', 'table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
+        'table.comments.coid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
+        'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent',
+        array('COUNT(table.comments.cid)' => 'commentsGroupCount', 'table.comments.created' => 'date'))
+        ->join('table.contents', 'table.comments.cid = table.contents.cid');
     }
     
     /**
@@ -43,11 +44,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
-            'created'   =>  $this->options()->gmtTime,
+            'created'   =>  $this->options->gmtTime,
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'ip'        =>  empty($comment['ip']) ? $this->request()->getClientIp() : $comment['ip'],
+            'ip'        =>  empty($comment['ip']) ? $this->request->getClientIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
             'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],
@@ -56,14 +57,14 @@ class Widget_Abstract_Comments extends Widget_Abstract
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db()->query($this->db()->sql()->insert('table.comments')->rows($insertStruct));
+        $insertId = $this->db->query($this->insert('table.comments')->rows($insertStruct));
         
         /** 更新评论数 */
-        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
-        ->where('`status` = ? AND `cid` = ?', 'approved', $comment['cid']))->num;
+        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        ->where('status = ? AND cid = ?', 'approved', $comment['cid']))->num;
         
-        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('`cid` = ?', $comment['cid']));
+        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('cid = ?', $comment['cid']));
         
         return $insertId;
     }
@@ -80,7 +81,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $updateCondition = clone $condition;
-        $updateComment = $this->db()->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
+        $updateComment = $this->db->fetchObject($condition->select('table.comments')->from('cid')->limit(1));
         
         if($updateComment)
         {
@@ -110,14 +111,14 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
         
         /** 更新评论数据 */
-        $updateRows = $this->db()->query($updateCondition->update('table.comments')->rows($updateStruct));
+        $updateRows = $this->db->query($updateCondition->update('table.comments')->rows($updateStruct));
         
         /** 更新评论数 */
-        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
-        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        ->where('status = ? AND cid = ?', 'approved', $cid))->num;
         
-        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('`cid` = ?', $cid));
+        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('cid = ?', $cid));
         
         return $updateRows;
     }
@@ -133,7 +134,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $deleteCondition = clone $condition;
-        $deleteComment = $this->db()->fetchObject($condition->select('table.comments', '`cid`')->limit(1));
+        $deleteComment = $this->db->fetchObject($condition->select('table.comments')->from('cid')->limit(1));
         
         if($deleteComment)
         {
@@ -145,14 +146,14 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
         
         /** 删除评论数据 */
-        $deleteRows = $this->db()->query($deleteCondition->delete('table.comments'));
+        $deleteRows = $this->db->query($deleteCondition->delete('table.comments'));
         
         /** 更新评论数 */
-        $num = $this->db()->fetchObject($this->db()->sql()->select('table.comments', 'COUNT(`coid`) AS `num`')
-        ->where('`status` = ? AND `cid` = ?', 'approved', $cid))->num;
+        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        ->where('status = ? AND cid = ?', 'approved', $cid))->num;
         
-        $this->db()->query($this->db()->sql()->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('`cid` = ?', $cid));
+        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        ->where('cid = ?', $cid));
         
         return $deleteRows;
     }
@@ -166,7 +167,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db()->fetchObject($condition->select('table.comments', 'COUNT(table.comments.`coid`) AS `num`'))->num;
+        return $this->db->fetchObject($condition->select('table.comments')->from(array('COUNT(coid)' => 'num')))->num;
     }
     
     /**
@@ -209,7 +210,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo date(empty($format) ? $this->options()->commentDateFormat : $format, $this->date + $this->options()->timezone);
+        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
     }
     
     /**
@@ -220,7 +221,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function dateWord()
     {
-        echo Typecho_I18n::dateWord($this->date + $this->options()->timezone, $this->options()->gmtTime + $this->options()->timezone);
+        echo Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }
     
     /**
@@ -233,8 +234,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function author($autoLink = NULL, $noFollow = NULL)
     {
-        $autoLink = (NULL === $autoLink) ? $this->options()->commentsShowUrl : $autoLink;
-        $noFollow = (NULL === $noFollow) ? $this->options()->commentsUrlNofollow : $noFollow;
+        $autoLink = (NULL === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
+        $noFollow = (NULL === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
     
         if($this->url && $autoLink)
         {
