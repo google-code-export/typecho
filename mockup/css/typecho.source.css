@@ -12,9 +12,13 @@
  * Typecho 全局样式
  */
 body {
+    /*
     background: #f7fbe9;
     color: #333;
+    */
 	font-family: Verdana, Geneva, sans-serif;
+    background: #333;
+    color: #f7fbe9;
     /*
     overflow-x: hidden;
     */
@@ -26,6 +30,12 @@ body > div {
     color: #333;
 }
 */
+
+body.bright, .main {
+    background: #f7fbe9;
+    color: #333;
+}
+
 
 body.dark {
     background: #333;
