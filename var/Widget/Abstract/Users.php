@@ -41,7 +41,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function select()
     {
-        return $this->select('table.users');
+        return $this->db->select()->from('table.users');
     }
     
     /**
@@ -53,7 +53,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.users')->from(array('COUNT(uid)' => 'num')))->num;
+        return $this->db->fetchObject($condition->select(array('COUNT(uid)' => 'num'))->from('table.users'))->num;
     }
     
     /**
@@ -65,7 +65,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function insert(array $rows)
     {
-        return $this->db->query($this->insert('table.users')->rows($rows));
+        return $this->db->query($this->db->insert('table.users')->rows($rows));
     }
     
     /**

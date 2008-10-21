@@ -27,7 +27,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function select()
     {
-        return $this->select('table.metas');
+        return $this->db->select()->from('table.metas');
     }
     
     /**
@@ -39,7 +39,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function insert(array $options)
     {
-        return $this->db->query($this->insert('table.metas')->rows($options));
+        return $this->db->query($this->db->insert('table.metas')->rows($options));
     }
     
     /**
@@ -76,7 +76,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.metas')->from(array('COUNT(mid)' => 'num')))->num;
+        return $this->db->fetchObject($condition->select(array('COUNT(mid)' => 'num'))->from('table.metas'))->num;
     }
     
     /**
@@ -154,14 +154,14 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function merge($mid, $type, array $metas)
     {
-        $contents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('table.relationships')->from('cid')
+        $contents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')->from('table.relationships')
         ->where('mid = ?', $mid)), 'cid');
     
         foreach($metas as $meta)
         {
             if($mid != $meta)
             {
-                $existsContents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('table.relationships')->from('cid')
+                $existsContents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')->from('table.relationships')
                 ->where('mid = ?', $meta)), 'cid');
                 
                 $where = $this->where('mid = ? AND type = ?', $meta, $type);
@@ -179,7 +179,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
         }
         
         $num = $this->db->fetchObject($this
-        ->select('table.relationships')->from(array('COUNT(mid)' => 'num'))
+        ->select(array('COUNT(mid)' => 'num'))->from('table.relationships')
         ->where('table.relationships.mid = ?', $mid))->num;
         
         $this->db->query($this->update('table.metas')

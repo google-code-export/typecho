@@ -21,28 +21,45 @@
 class Widget_Contents_Post_Date extends Typecho_Widget
 {
     /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {
+        /** 初始化数据库 */
+        $this->db = Typecho_Db::get();
+    }
+
+    /**
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
         /** 设置参数默认值 */
-        $parameter->setDefault('format=Y-m&type=month');
+        $this->parameter->setDefault('format=Y-m&type=month');
     
-        $posts = $this->db()->fetchAll($this->db()->sql()->select('table.contents', '`created`')
+        $posts = $this->db->fetchAll($this->db->select('created')->from('table.contents')
         ->where('type = ?', 'post')
-        ->where('table.contents.`created` < ?', $this->widget('Widget_Options')->gmtTime)
-        ->order('table.contents.`created`', Typecho_Db::SORT_DESC));
+        ->where('table.contents.created < ?', $this->widget('Widget_Options')->gmtTime)
+        ->order('table.contents.created', Typecho_Db::SORT_DESC));
         
         $result = array();
         foreach($posts as $post)
         {
-            $date = date($parameter->format, $post['created']);
+            $date = date($this->parameter->format, $post['created']);
             if(isset($result[$date]))
             {
                 $result[$date]['count'] ++;
@@ -59,7 +76,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         
         foreach($result as $row)
         {
-            $row['permalink'] = Typecho_Router::url('archive_' . $parameter->type, $row, $this->widget('Widget_Options')->index);
+            $row['permalink'] = Typecho_Router::url('archive_' . $this->parameter->type, $row, $this->widget('Widget_Options')->index);
             $this->push($row);
         }
     }

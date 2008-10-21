@@ -28,6 +28,26 @@ class Widget_Options extends Typecho_Widget
     private $_pluginConfig = array();
 
     /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {
+        /** 初始化数据库 */
+        $this->db = Typecho_Db::get();
+    }
+
+    /**
      * 初始化函数
      * 
      * @access public
@@ -35,8 +55,8 @@ class Widget_Options extends Typecho_Widget
      */
     public function init()
     {
-        $this->db()->fetchAll($this->db()->sql()->select('table.options')
-        ->where('`user` = 0'), array($this, 'push'));
+        $this->db->fetchAll($this->db->select()->from('table.options')
+        ->where('user = 0'), array($this, 'push'));
         $this->_stack[] = &$this->_row;
 
         /** 初始化站点信息 */

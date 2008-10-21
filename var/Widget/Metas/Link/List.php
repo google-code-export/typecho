@@ -20,6 +20,26 @@
 class Widget_Metas_Link_List extends Typecho_Widget
 {
     /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {
+        /** 初始化数据库 */
+        $this->db = Typecho_Db::get();
+    }
+
+    /**
      * 仅仅输出域名和路径
      * 
      * @access public
@@ -35,14 +55,11 @@ class Widget_Metas_Link_List extends Typecho_Widget
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
-        $select = $this->db()->sql()->select('table.metas', '`mid`, `slug` AS `url`, `name`, `description`');
-        $this->db()->fetchAll($select->where('`type` = ?', 'link')->order('`sort`', Typecho_Db::SORT_ASC), array($this, 'push'));
+        $select = $this->db->select('mid', 'name', 'description', array('slug' => 'url'))->from('table.metas');
+        $this->db->fetchAll($select->where('type = ?', 'link')->order('sort', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

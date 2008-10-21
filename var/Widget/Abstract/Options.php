@@ -27,7 +27,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function select()
     {
-        return $this->select('table.options');
+        return $this->db->select()->from('table.options');
     }
     
     /**
@@ -39,7 +39,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function insert(array $options)
     {
-        return $this->db->query($this->insert('table.options')->rows($options));
+        return $this->db->query($this->db->insert('table.options')->rows($options));
     }
     
     /**
@@ -76,6 +76,6 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.options')->from(array('COUNT(name)' => 'num')))->num;
+        return $this->db->fetchObject($condition->select(array('COUNT(name)' => 'num'))->from('table.options'))->num;
     }
 }

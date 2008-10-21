@@ -25,10 +25,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function select()
     {
-        return $this->select('table.comments', 'table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
+        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
         'table.comments.coid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
         'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent',
         array('COUNT(table.comments.cid)' => 'commentsGroupCount', 'table.comments.created' => 'date'))
+        ->from('table.comments')
         ->join('table.contents', 'table.comments.cid = table.contents.cid');
     }
     
@@ -57,13 +58,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
         );
         
         /** 首先插入部分数据 */
-        $insertId = $this->db->query($this->insert('table.comments')->rows($insertStruct));
+        $insertId = $this->db->query($this->db->insert('table.comments')->rows($insertStruct));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
         ->where('status = ? AND cid = ?', 'approved', $comment['cid']))->num;
         
-        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('cid = ?', $comment['cid']));
         
         return $insertId;
@@ -81,7 +82,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $updateCondition = clone $condition;
-        $updateComment = $this->db->fetchObject($condition->select('table.comments')->from('cid')->limit(1));
+        $updateComment = $this->db->fetchObject($condition->select('cid')->from('table.comments')->limit(1));
         
         if($updateComment)
         {
@@ -114,7 +115,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $updateRows = $this->db->query($updateCondition->update('table.comments')->rows($updateStruct));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
         ->where('status = ? AND cid = ?', 'approved', $cid))->num;
         
         $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
@@ -134,7 +135,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         /** 获取内容主键 */
         $deleteCondition = clone $condition;
-        $deleteComment = $this->db->fetchObject($condition->select('table.comments')->from('cid')->limit(1));
+        $deleteComment = $this->db->fetchObject($condition->select('cid')->from('table.comments')->limit(1));
         
         if($deleteComment)
         {
@@ -149,10 +150,10 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $deleteRows = $this->db->query($deleteCondition->delete('table.comments'));
         
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->select('table.comments')->from(array('COUNT(coid)' => 'num'))
+        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
         ->where('status = ? AND cid = ?', 'approved', $cid))->num;
         
-        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('cid = ?', $cid));
         
         return $deleteRows;
@@ -167,7 +168,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.comments')->from(array('COUNT(coid)' => 'num')))->num;
+        return $this->db->fetchObject($condition->select(array('COUNT(coid)' => 'num'))->from('table.comments'))->num;
     }
     
     /**
