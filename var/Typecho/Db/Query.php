@@ -97,7 +97,7 @@ class Typecho_Db_Query
      */
     private function filterColumn($string)
     {
-        return preg_replace_callback("/([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
+        return preg_replace_callback("/(['\"]?)\s*([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
     }
 
     /**
@@ -109,12 +109,13 @@ class Typecho_Db_Query
      */
     public function filterColumnCallback(array $matches)
     {
-        if(!preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[1]) && empty($matches[2]))
+        if(empty($matches[1]) && empty($matches[3]) && !is_numeric($matches[2][0]) &&
+        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[2]))
         {
-            $pos = strrpos($matches[1], '.');
+            $pos = strrpos($matches[2], '.');
             $pos = (false === $pos) ? 0 : $pos + 1;
-            $column = $this->_adapter->quoteColumn(substr($matches[1], $pos));
-            return $this->filterPrefix(substr_replace($matches[1], $column, $pos));
+            $column = $this->_adapter->quoteColumn(substr($matches[2], $pos));
+            return $this->filterPrefix(substr_replace($matches[2], $column, $pos));
         }
         else
         {
