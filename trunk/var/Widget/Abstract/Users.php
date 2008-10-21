@@ -41,7 +41,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db()->sql()->select('table.users');
+        return $this->select('table.users');
     }
     
     /**
@@ -53,7 +53,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db()->fetchObject($condition->select('table.users', 'COUNT(`uid`) AS `num`'))->num;
+        return $this->db->fetchObject($condition->select('table.users')->from(array('COUNT(uid)' => 'num')))->num;
     }
     
     /**
@@ -65,7 +65,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function insert(array $rows)
     {
-        return $this->db()->query($this->db()->sql()->insert('table.users')->rows($rows));
+        return $this->db->query($this->insert('table.users')->rows($rows));
     }
     
     /**
@@ -78,7 +78,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function update(array $rows, Typecho_Db_Query $condition)
     {
-        return $this->db()->query($condition->update('table.users')->rows($rows));
+        return $this->db->query($condition->update('table.users')->rows($rows));
     }
     
     /**
@@ -90,6 +90,6 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function delete(Typecho_Db_Query $condition)
     {
-        return $this->db()->query($condition->delete('table.users'));
+        return $this->db->query($condition->delete('table.users'));
     }
 }
