@@ -22,11 +22,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->select('table.contents')
-        ->from('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
+        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
         'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
         'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
         array('table.users.screenName' => 'author', 'COUNT(table.contents.cid)' => 'contentsGroupCount', 'table.contents.author' => 'authorId'))
+        ->from('table.contents')
         ->join('table.users', 'table.contents.author = table.users.uid', Typecho_Db::LEFT_JOIN);
     }
     
@@ -175,7 +175,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
         else
         {
-            $post = $this->db->fetchRow($condition->select('table.contents')->from('author')->limit(1));
+            $post = $this->db->fetchRow($condition->select('author')->from('table.contents')->limit(1));
 
             if($post && $this->haveContentPermission($post['author']))
             {
@@ -195,7 +195,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function count(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select('table.contents')->from(array('COUNT(table.contents.cid)' => 'num')))->num;
+        return $this->db->fetchObject($condition->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents'))->num;
     }
     
     /**
@@ -209,7 +209,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db
-        ->select('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $value['cid'])
         ->where('table.metas.type = ?', 'category')
         ->group('table.metas.mid')
@@ -416,7 +416,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function tags($split = ',', $link = true, $default = NULL)
     {
         $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
-        ->select('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $this->cid)
         ->where('table.metas.type = ?', 'tag')
         ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));

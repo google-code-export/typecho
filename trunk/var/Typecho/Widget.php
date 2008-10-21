@@ -150,7 +150,7 @@ abstract class Typecho_Widget
      * @param string $adapter 适配器类型
      * @return Typecho_Plugin
      */
-    public function getPlugin($adapter)
+    public function plugin($adapter)
     {
         /** Typecho_Plugin */
         require_once 'Typecho/Plugin.php';

@@ -76,28 +76,25 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
-     * @param Typecho_Config $parameter 个体参数
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
         /** 处理搜索结果跳转 */
-        if(NULL != ($keywords = $request->keywords) &&
+        if(NULL != ($keywords = $this->request->keywords) &&
         'search' != Typecho_Router::$current && 'search_page' != Typecho_Router::$current)
         {
             /** 跳转到搜索页 */
             Typecho_Common::redirect(Typecho_Router::url('search', 
-            array('keywords' => urlencode(Typecho_Common::filterSearchQuery($keywords))), $this->options()->index));
+            array('keywords' => urlencode(Typecho_Common::filterSearchQuery($keywords))), $this->options->index));
         }
     
         /** 初始化分页变量 */
-        $this->_pageSize = empty($pageSize) ? $this->options()->pageSize : $pageSize;
-        $this->_currentPage = $request->page or 1;
+        $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
+        $this->_currentPage = $this->request->page or 1;
         $hasPushed = false;
     
-        $select = $this->select()->where('table.contents.`created` < ?', $this->options()->gmtTime);
+        $select = $this->select()->where('table.contents.created < ?', $this->options->gmtTime);
 
         switch(Typecho_Router::$current)
         {
@@ -106,54 +103,54 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'post':
                 
                 /** 如果是单篇文章或独立页面 */
-                if(NULL !== $request->cid)
+                if(NULL !== $this->request->cid)
                 {
-                    $select->where('table.contents.`cid` = ?', $request->cid);
+                    $select->where('table.contents.cid = ?', $this->request->cid);
                 }
             
-                if(NULL !== $request->slug)
+                if(NULL !== $this->request->slug)
                 {
-                    $select->where('table.contents.`slug` = ?', $request->slug);
+                    $select->where('table.contents.slug = ?', $this->request->slug);
                 }
                 
-                $select->where('table.contents.`type` = ?', Typecho_Router::$current)
-                ->group('table.contents.`cid`')->limit(1);
-                $post = $this->db()->fetchRow($select, array($this, 'singlePush'));
+                $select->where('table.contents.type = ?', Typecho_Router::$current)
+                ->group('table.contents.cid')->limit(1);
+                $post = $this->db->fetchRow($select, array($this, 'singlePush'));
 
-                if($post && $post['category'] == ($request->category or $post['category'])
-                && $post['year'] == ($request->year or $post['year'])
-                && $post['month'] == ($request->month or $post['month'])
-                && $post['day'] == ($request->day or $post['day']))
+                if($post && $post['category'] == ($this->request->category or $post['category'])
+                && $post['year'] == ($this->request->year or $post['year'])
+                && $post['month'] == ($this->request->month or $post['month'])
+                && $post['day'] == ($this->request->day or $post['day']))
                 {
                     /** 设置关键词 */
-                    $this->options()->keywords = implode(',', Typecho_Common::arrayFlatten($post['tags'], 'name'));
+                    $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($post['tags'], 'name'));
                     
                     /** 设置头部feed */
                     /** RSS 2.0 */
-                    $this->options()->feedUrl = $post['feedUrl'];
+                    $this->options->feedUrl = $post['feedUrl'];
                     
                     /** RSS 1.0 */
-                    $this->options()->feedRssUrl = $post['feedRssUrl'];
+                    $this->options->feedRssUrl = $post['feedRssUrl'];
                     
                     /** ATOM 1.0 */
-                    $this->options()->feedAtomUrl = $post['feedAtomUrl'];
+                    $this->options->feedAtomUrl = $post['feedAtomUrl'];
                     
                     /** 设置标题 */
-                    $this->options()->archiveTitle = $post['title'];
+                    $this->options->archiveTitle = $post['title'];
                     
                     /** 设置归档类型 */
-                    $this->options()->archiveType = Typecho_Router::$current;
+                    $this->options->archiveType = Typecho_Router::$current;
                     
                     /** 设定HTTP头 */
                     if(!empty($post['password']))
                     {
-                        if($request->protect_password == $post['password'])
+                        if($this->request->protectPassword == $post['password'])
                         {
                             throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), Typecho_Exception::FORBIDDEN);
                         }
                         else
                         {
-                            $request->setCookie('protect_password', $request->protect_password, 0, $this->options()->siteUrl);
+                            $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
                         }
                     }
                 }
@@ -172,9 +169,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'category_page':
             
                 /** 如果是分类 */
-                $category = $this->db()->fetchRow($this->db()->sql()->select('table.metas')
-                ->where('`type` = ?', 'category')
-                ->where('`slug` = ?', $request->slug)->limit(1),
+                $category = $this->db->fetchRow($this->select('table.metas')
+                ->where('type = ?', 'category')
+                ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if(!$category)
@@ -182,30 +179,30 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
                     throw new Typecho_Widget_Exception(_t('分类不存在'), Typecho_Exception::NOTFOUND);
                 }
             
-                $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
-                ->where('table.relationships.`mid` = ?', $category['mid']);
+                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $category['mid']);
                 
                 /** 设置分页 */
                 $this->_pageRow = $category;
                 
                 /** 设置关键词 */
-                $this->options()->keywords = $category['name'];
+                $this->options->keywords = $category['name'];
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options()->feedUrl = $category['feedUrl'];
+                $this->options->feedUrl = $category['feedUrl'];
                 
                 /** RSS 1.0 */
-                $this->options()->feedRssUrl = $category['feedRssUrl'];
+                $this->options->feedRssUrl = $category['feedRssUrl'];
                 
                 /** ATOM 1.0 */
-                $this->options()->feedAtomUrl = $category['feedAtomUrl'];
+                $this->options->feedAtomUrl = $category['feedAtomUrl'];
                 
                 /** 设置标题 */
-                $this->options()->archiveTitle = $category['name'];
+                $this->options->archiveTitle = $category['name'];
                 
                 /** 设置归档类型 */
-                $this->options()->archiveType = 'category';
+                $this->options->archiveType = 'category';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -216,40 +213,40 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'tag_page':
 
                 /** 如果是标签 */
-                $tag = $this->db()->fetchRow($this->db()->sql()->select('table.metas')
-                ->where('`type` = ?', 'tag')
-                ->where('`slug` = ?', $request->slug)->limit(1),
+                $tag = $this->db->fetchRow($this->select('table.metas')
+                ->where('type = ?', 'tag')
+                ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if(!$tag)
                 {
-                    throw new Typecho_Widget_Exception(_t('标签%s不存在', $request->slug), Typecho_Exception::NOTFOUND);
+                    throw new Typecho_Widget_Exception(_t('标签%s不存在', $this->request->slug), Typecho_Exception::NOTFOUND);
                 }
             
-                $select->join('table.relationships', 'table.contents.`cid` = table.relationships.`cid`')
-                ->where('table.relationships.`mid` = ?', $tag['mid']);
+                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $tag['mid']);
                 
                 /** 设置分页 */
                 $this->_pageRow = $tag;
                 
                 /** 设置关键词 */
-                $this->options()->keywords = $tag['name'];
+                $this->options->keywords = $tag['name'];
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options()->feedUrl = $tag['feedUrl'];
+                $this->options->feedUrl = $tag['feedUrl'];
                 
                 /** RSS 1.0 */
-                $this->options()->feedRssUrl = $tag['feedRssUrl'];
+                $this->options->feedRssUrl = $tag['feedRssUrl'];
                 
                 /** ATOM 1.0 */
-                $this->options()->feedAtomUrl = $tag['feedAtomUrl'];
+                $this->options->feedAtomUrl = $tag['feedAtomUrl'];
                 
                 /** 设置标题 */
-                $this->options()->archiveTitle = $tag['name'];
+                $this->options->archiveTitle = $tag['name'];
                 
                 /** 设置归档类型 */
-                $this->options()->archiveType = 'tag';
+                $this->options->archiveType = 'tag';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -264,43 +261,43 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'archive_day_page':
 
                 /** 如果是按日期归档 */
-                $year = $request->year;
-                $month = $request->month;
-                $day = $request->day;
+                $year = $this->request->year;
+                $month = $this->request->month;
+                $day = $this->request->day;
                 
                 /** 如果按日归档 */
                 if(!empty($year) && !empty($month) && !empty($day))
                 {
-                    $from = mktime(0, 0, 0, $month, $day, $year) - $this->options()->timezone;
-                    $to = mktime(23, 59, 59, $month, $day, $year) - $this->options()->timezone;
+                    $from = mktime(0, 0, 0, $month, $day, $year) - $this->options->timezone;
+                    $to = mktime(23, 59, 59, $month, $day, $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options()->archiveTitle = $year . '-' . $month . '-' . $day;
+                    $this->options->archiveTitle = $year . '-' . $month . '-' . $day;
                 }
                 /** 如果按月归档 */
                 else if(!empty($year) && !empty($month))
                 {
-                    $from = mktime(0, 0, 0, $month, 1, $year) - $this->options()->timezone;
-                    $to = mktime(23, 59, 59, $month, idate('t', $from), $year) - $this->options()->timezone;
+                    $from = mktime(0, 0, 0, $month, 1, $year) - $this->options->timezone;
+                    $to = mktime(23, 59, 59, $month, idate('t', $from), $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options()->archiveTitle = $year . '-' . $month;
+                    $this->options->archiveTitle = $year . '-' . $month;
                 }
                 /** 如果按年归档 */
                 else if(!empty($year))
                 {
-                    $from = mktime(0, 0, 0, 1, 1, $year) - $this->options()->timezone;
-                    $to = mktime(23, 59, 59, 12, 31, $year) - $this->options()->timezone;
+                    $from = mktime(0, 0, 0, 1, 1, $year) - $this->options->timezone;
+                    $to = mktime(23, 59, 59, 12, 31, $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options()->archiveTitle = $year;
+                    $this->options->archiveTitle = $year;
                 }
                 
-                $select->where('table.contents.`created` >= ?', $from)
-                ->where('table.contents.`created` <= ?', $to);
+                $select->where('table.contents.created >= ?', $from)
+                ->where('table.contents.created <= ?', $to);
                 
                 /** 设置归档类型 */
-                $this->options()->archiveType = 'date';
+                $this->options->archiveType = 'date';
                 
                 /** 设置头部feed */
                 $value = array('year' => $year, 'month' => $month, 'day' => $day);
@@ -312,13 +309,13 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
                 $currentRoute = str_replace('_page', '', Typecho_Router::$current);
                 
                 /** RSS 2.0 */
-                $this->options()->feedUrl = Typecho_Router::url($currentRoute, $value, $this->options()->feedUrl);
+                $this->options->feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
                 
                 /** RSS 1.0 */
-                $this->options()->feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options()->feedRssUrl);
+                $this->options->feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedRssUrl);
                 
                 /** ATOM 1.0 */
-                $this->options()->feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options()->feedAtomUrl);
+                $this->options->feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -335,30 +332,30 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
                 $searchQuery = '%' . $keywords . '%';
                 
                 /** 搜索无法进入隐私项保护归档 */
-                $select->where('table.contents.`password` IS NULL')
-                ->where('table.contents.`title` LIKE ? OR table.contents.`text` LIKE ?', $searchQuery, $searchQuery);
+                $select->where('table.contents.password IS NULL')
+                ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery);
                 
                 /** 设置关键词 */
-                $this->options()->keywords = $keywords;
+                $this->options->keywords = $keywords;
                 
                 /** 设置分页 */
                 $this->_pageRow = array('keywords' => $keywords);
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options()->feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options()->feedUrl);
+                $this->options->feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedUrl);
                 
                 /** RSS 1.0 */
-                $this->options()->feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options()->feedAtomUrl);
+                $this->options->feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
                 
                 /** ATOM 1.0 */
-                $this->options()->feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options()->feedAtomUrl);
+                $this->options->feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
                 
                 /** 设置标题 */
-                $this->options()->archiveTitle = $keywords;
+                $this->options->archiveTitle = $keywords;
                 
                 /** 设置归档类型 */
-                $this->options()->archiveType = 'search';
+                $this->options->archiveType = 'search';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -375,14 +372,14 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         }
         
         /** 仅输出文章 */
-        $select->where('table.contents.`type` = ?', 'post');
+        $select->where('table.contents.type = ?', 'post');
         $this->_countSql = clone $select;
 
-        $select->group('table.contents.`cid`')
-        ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
+        $select->group('table.contents.cid')
+        ->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->_pageSize);
         
-        $this->db()->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, array($this, 'push'));
     }
     
     /**
@@ -401,7 +398,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         {
             $query = Typecho_Router::url(Typecho_Router::$current . 
             (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
-            $this->_pageRow, $this->options()->index);
+            $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
             $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
@@ -418,11 +415,11 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function singlePush($value)
     {
-        $value['tags'] = $this->db()->fetchAll($this->db()->sql()
-        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
-        ->where('table.relationships.`cid` = ?', $value['cid'])
-        ->where('table.metas.`type` = ?', 'tag')
-        ->group('table.metas.`mid`'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        $value['tags'] = $this->db->fetchAll($this
+        ->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $value['cid'])
+        ->where('table.metas.type = ?', 'tag')
+        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
         
         if(!empty($value['template']))
         {
@@ -444,7 +441,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function comments($mode = NULL, $desc = false)
     {
         if(NULL == $this->password || 
-        $this->password == $this->request()->protect_password)
+        $this->password == $this->request->protectPassword)
         {
             $mode = strtolower($mode);
             $parameter = array('cid' => $this->cid, 'desc' => $desc);
@@ -477,7 +474,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function content($more = NULL)
     {
         if(NULL == $this->password || 
-        $this->password == $this->request()->protect_password)
+        $this->password == $this->request->protectPassword)
         {
             $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
             $contents = explode('<!--more-->', $content);
@@ -490,7 +487,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         {
             echo '<form class="protected" action="' . $this->permalink . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
-            '<p><input type="password" class="text" name="protect_password" />
+            '<p><input type="password" class="text" name="protectPassword" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
             '</form>';
         }
@@ -505,7 +502,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function title()
     {
         echo NULL == $this->password || 
-        $this->password == $this->request()->protect_password
+        $this->password == $this->request->protectPassword
         ? $this->title : _t('此文章被密码保护');
     }
     
@@ -519,12 +516,12 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function theNext($format = '%s', $default = NULL)
     {
-        $content = $this->db()->fetchRow($this->select()->where('table.contents.`created` > ? AND table.contents.`created` < ?',
-        $this->created, $this->options()->gmtTime)
-        ->where('table.contents.`type` = ?', $this->type)
-        ->where('table.contents.`password` IS NULL')
-        ->group('table.contents.`cid`')
-        ->order('table.contents.`created`', Typecho_Db::SORT_ASC)
+        $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
+        $this->created, $this->options->gmtTime)
+        ->where('table.contents.type = ?', $this->type)
+        ->where('table.contents.password IS NULL')
+        ->group('table.contents.cid')
+        ->order('table.contents.created', Typecho_Db::SORT_ASC)
         ->limit(1));
         
         if($content)
@@ -549,11 +546,11 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function thePrev($format = '%s', $default = NULL)
     {
-        $content = $this->db()->fetchRow($this->select()->where('table.contents.`created` < ?', $this->created)
-        ->where('table.contents.`type` = ?', $this->type)
-        ->where('table.contents.`password` IS NULL')
-        ->group('table.contents.`cid`')
-        ->order('table.contents.`created`', Typecho_Db::SORT_DESC)
+        $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
+        ->where('table.contents.type = ?', $this->type)
+        ->where('table.contents.password IS NULL')
+        ->group('table.contents.cid')
+        ->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->limit(1));
         
         if($content)
@@ -577,11 +574,12 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function related($limit = 5)
     {
-        $this->tags = isset($this->tags) ? $this->tags : $this->db()->fetchAll($this->db()->sql()
-        ->select('table.metas')->join('table.relationships', 'table.relationships.`mid` = table.metas.`mid`')
-        ->where('table.relationships.`cid` = ?', $this->cid)
-        ->where('table.metas.`type` = ?', 'tag')
-        ->group('table.metas.`mid`'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this
+        ->select()->from('table.metas')
+        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $this->cid)
+        ->where('table.metas.type = ?', 'tag')
+        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
         
         return $this->widget('Widget_Contents_Related', $this->cid, $this->type, $this->tags, $limit);
     }
@@ -595,17 +593,17 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function header()
     {
         $header = new Typecho_Widget_Helper_Decorator_Header();
-        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->options()->description)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options()->keywords)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options()->generator)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options()->theme)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options()->xmlRpcUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options()->xmlRpcUrl . '?rsd')))
+        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->options->description)))
+        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options->keywords)))
+        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))
+        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
-        'href' => Typecho_Common::pathToUrl('wlwmanifest.xml', $this->options()->adminUrl))))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options()->feedUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->options()->feedRssUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options()->feedAtomUrl)));
+        'href' => Typecho_Common::pathToUrl('wlwmanifest.xml', $this->options->adminUrl))))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options->feedUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->options->feedRssUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl)));
         
         /** 插件支持 */
         $this->plugin('Action')->header($header);
@@ -623,7 +621,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function remember($cookieName)
     {
-        echo $this->request()->getCookie($cookieName);
+        echo $this->request->getCookie($cookieName);
     }
     
     /**
@@ -647,10 +645,10 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function render()
     {    
         /** 添加Pingback */
-        $this->response()->setHeader('X-Pingback', $this->options()->xmlRpcUrl);
+        $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
     
         /** 输出模板 */
-        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options()->theme . '/' . $this->_themeFile;
+        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->_themeFile;
         
         /** 挂接插件 */
         $this->plugin('Action')->render($this);

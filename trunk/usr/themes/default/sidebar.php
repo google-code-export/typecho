@@ -41,10 +41,10 @@
 		<div class="widget">
             <h2>Meta</h2>
             <ul>
-                <?php if($this->user()->hasLogin()): ?>
-                    <li class="last"><a href="<?php $this->options()->index('Logout.do'); ?>">Logout (<?php $this->user()->screenName(); ?>)</a></li>
+                <?php if($this->user->hasLogin()): ?>
+                    <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->user->screenName(); ?>)</a></li>
                 <?php else: ?>
-                    <li class="last"><a href="<?php $this->options()->adminUrl('login.php'); ?>">Login</a></li>
+                    <li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>">Login</a></li>
                 <?php endif; ?>
                 <li><a href="http://validator.w3.org/check/referer">Valid XHTML</a></li>
                 <li><a href="http://www.typecho.org">Typecho</a></li>

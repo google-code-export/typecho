@@ -27,7 +27,7 @@ require_once 'Typecho/Config.php';
 class Typecho_Db_Query
 {
     /** 数据库关键字 */
-    const KEYWORDS = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN';
+    const KEYWORDS = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
 
     /**
      * 数据库适配器
@@ -97,7 +97,7 @@ class Typecho_Db_Query
      */
     private function filterColumn($string)
     {
-        return preg_replace_callback("/(['\"]?)\s*([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
+        return preg_replace_callback("/(['\"]?)(\s*)([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
     }
 
     /**
@@ -109,17 +109,17 @@ class Typecho_Db_Query
      */
     public function filterColumnCallback(array $matches)
     {
-        if(empty($matches[1]) && empty($matches[3]) && !is_numeric($matches[2][0]) &&
-        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[2]))
+        if(empty($matches[1]) && empty($matches[4]) && !is_numeric($matches[3][0]) &&
+        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[3]))
         {
-            $pos = strrpos($matches[2], '.');
+            $pos = strrpos($matches[3], '.');
             $pos = (false === $pos) ? 0 : $pos + 1;
-            $column = $this->_adapter->quoteColumn(substr($matches[2], $pos));
-            return $this->filterPrefix(substr_replace($matches[2], $column, $pos));
+            $column = $this->_adapter->quoteColumn(substr($matches[3], $pos));
+            return $matches[2] . $this->filterPrefix(substr_replace($matches[3], $column, $pos));
         }
         else
         {
-            return $matches[1] . $matches[2];
+            return $matches[1] . $matches[2] . $matches[3] . $matches[4];
         }
     }
 
@@ -296,28 +296,15 @@ class Typecho_Db_Query
         $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($key);
         return $this;
     }
-
+     
     /**
-     * 查询记录操作(SELECT)
-     *
-     * @param string $table 查询的表
-     * @return Typecho_Db_Query
-     */
-    public function select($table)
-    {
-        $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
-        $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
-        return $this;
-    }
-    
-    /**
-     * description...
+     * 选择查询字段
      * 
      * @access public
      * @param mixed $field 查询字段
      * @return Typecho_Db_Query
      */
-    public function from($field = '*')
+    public function select($field = '*')
     {
         $args = func_get_args();
         $fields = array();
@@ -339,6 +326,19 @@ class Typecho_Db_Query
         }
         
         $this->_sqlPreBuild['fields'] = $this->filterColumn(implode(' , ', $fields));
+        return $this;
+    }
+    
+    /**
+     * 查询记录操作(SELECT)
+     *
+     * @param string $table 查询的表
+     * @return Typecho_Db_Query
+     */
+    public function from($table)
+    {
+        $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
+        $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }
 

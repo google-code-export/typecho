@@ -132,14 +132,16 @@ class Typecho_Db implements Typecho_Config_Able
     }
     
     /**
-     * 查询记录操作(SELECT)
-     *
-     * @param string $table 查询的表
+     * 选择查询字段
+     * 
+     * @access public
+     * @param mixed $field 查询字段
      * @return Typecho_Db_Query
      */
-    public function select($table)
+    public function select()
     {
-        return $this->sql()->select($table);
+        $args = func_get_args();
+        return call_user_func_array(array($this->sql(), 'select'), empty($args) ? array('*') : $args);
     }
     
     /**

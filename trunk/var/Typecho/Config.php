@@ -59,7 +59,7 @@ class Typecho_Config implements Iterator
      * @param array $config 配置列表
      * @return void
      */
-    public static function factory(array $config)
+    public static function factory($config)
     {
         return new Typecho_Config($config);
     }
