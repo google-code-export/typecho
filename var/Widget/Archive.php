@@ -81,17 +81,16 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function init()
     {
         /** 处理搜索结果跳转 */
-        if(NULL != ($keywords = $this->request->keywords) &&
-        'search' != Typecho_Router::$current && 'search_page' != Typecho_Router::$current)
+        if(NULL != $this->request->s)
         {
             /** 跳转到搜索页 */
-            Typecho_Common::redirect(Typecho_Router::url('search', 
-            array('keywords' => urlencode(Typecho_Common::filterSearchQuery($keywords))), $this->options->index));
+            $this->response->redirect(Typecho_Router::url('search', 
+            array('keywords' => urlencode(Typecho_Common::filterSearchQuery($this->request->s))), $this->options->index));
         }
     
         /** 初始化分页变量 */
         $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
-        $this->_currentPage = $this->request->page or 1;
+        $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
         $hasPushed = false;
     
         $select = $this->select()->where('table.contents.created < ?', $this->options->gmtTime);
@@ -117,10 +116,10 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
                 ->group('table.contents.cid')->limit(1);
                 $post = $this->db->fetchRow($select, array($this, 'singlePush'));
 
-                if($post && $post['category'] == ($this->request->category or $post['category'])
-                && $post['year'] == ($this->request->year or $post['year'])
-                && $post['month'] == ($this->request->month or $post['month'])
-                && $post['day'] == ($this->request->day or $post['day']))
+                if($post && $post['category'] == (isset($this->request->category) ? $this->request->category : $post['category'])
+                && $post['year'] == (isset($this->request->year) ? $this->request->year : $post['year'])
+                && $post['month'] == (isset($this->request->month) ? $this->request->month : $post['month'])
+                && $post['day'] == (isset($this->request->day) ? $this->request->day : $post['day']))
                 {
                     /** 设置关键词 */
                     $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($post['tags'], 'name'));
@@ -167,9 +166,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             /** 分类归档 */
             case 'category':
             case 'category_page':
-            
                 /** 如果是分类 */
-                $category = $this->db->fetchRow($this->select('table.metas')
+                $category = $this->db->fetchRow($this->db->select()
+                ->from('table.metas')
                 ->where('type = ?', 'category')
                 ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
@@ -213,7 +212,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'tag_page':
 
                 /** 如果是标签 */
-                $tag = $this->db->fetchRow($this->select('table.metas')
+                $tag = $this->db->fetchRow($this->db->select()->from('table.metas')
                 ->where('type = ?', 'tag')
                 ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
@@ -326,9 +325,9 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
             case 'search_page':
     
                 /** 增加自定义搜索引擎接口 */
-                $hasPushed = $this->plugin('Action')->search($keywords, $this);
+                $hasPushed = $this->plugin('Action')->search($this->request->keywords, $this);
     
-                $keywords = Typecho_Common::filterSearchQuery($keywords);
+                $keywords = Typecho_Common::filterSearchQuery($this->request->keywords);
                 $searchQuery = '%' . $keywords . '%';
                 
                 /** 搜索无法进入隐私项保护归档 */
@@ -416,7 +415,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     public function singlePush($value)
     {
         $value['tags'] = $this->db->fetchAll($this
-        ->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->db->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $value['cid'])
         ->where('table.metas.type = ?', 'tag')
         ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
@@ -581,7 +580,7 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         ->where('table.metas.type = ?', 'tag')
         ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
         
-        return $this->widget('Widget_Contents_Related', $this->cid, $this->type, $this->tags, $limit);
+        return $this->widget('Widget_Contents_Related', array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
     }
     
     /**

@@ -257,7 +257,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         $value['slug'] = $tmpSlug;
         
-        $value = $this->plugin('Filter')->filter($value);
+        $value = _p('Widget_Abstract_Contents', 'Filter')->filter($value);
         return $value;
     }
 

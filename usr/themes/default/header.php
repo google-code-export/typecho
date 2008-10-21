@@ -64,7 +64,7 @@
 		<div class="grid_7">
 			<div id="search">
                 <form method="post" action="">
-                <p><input type="text" name="keywords" class="text" size="40" /> <input type="submit" class="submit" value="Search" /></p>
+                <p><input type="text" name="s" class="text" size="40" /> <input type="submit" class="submit" value="Search" /></p>
                 </form>
             </div>
 		</div>
