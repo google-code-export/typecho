@@ -23,14 +23,14 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init()
     {
-        $this->db()->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
-        ->where('table.contents.`cid` = ?', $this->parameter()->cid)->group('table.comments.`coid`')
-        ->order('table.comments.`created`', $this->parameter()->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
+        $this->parameter->setDefault('desc=0');
+    
+        $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
+        ->where('table.contents.cid = ?', $this->parameter->cid)->group('table.comments.coid')
+        ->order('table.comments.created', $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

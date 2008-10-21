@@ -185,7 +185,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         
         $value['permalink'] = $value['permalink'] . '#comments-' . $value['coid'];
         
-        $value = $this->plugin('Filter')->filter($value);
+        $value = _p('Widget_Abstract_Comments', 'Filter')->filter($value);
         return $value;
     }
 

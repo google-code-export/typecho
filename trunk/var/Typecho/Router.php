@@ -94,8 +94,8 @@ class Typecho_Router implements Typecho_Config_Able
                 if(!empty($route['params']))
                 {
                     unset($matches[0]);
-                    $_GET = array_merge($_GET, array_combine($route['params'], $matches));
-                    reset($_GET);
+                    $_REQUEST = array_merge($_REQUEST, array_combine($route['params'], $matches));
+                    reset($_REQUEST);
                 }
                 
                 return $route;
