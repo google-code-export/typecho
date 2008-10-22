@@ -23,10 +23,28 @@ require_once 'Typecho/Widget/Helper/Decorator/Form.php';
  */
 abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widget_Helper_Layout implements Typecho_Widget_Helper_Decorator_Form
 {
+    /**
+     * 表单标题
+     * 
+     * @access private
+     * @var string
+     */
     private $_label;
     
+    /**
+     * 表单描述
+     * 
+     * @access private
+     * @var string
+     */
     private $_description;
     
+    /**
+     * 表单消息
+     * 
+     * @access private
+     * @var string
+     */
     private $_message;
 
     /**
