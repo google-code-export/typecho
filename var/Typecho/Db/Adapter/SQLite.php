@@ -88,13 +88,14 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      * 执行数据库查询
      *
      * @param string $sql 查询字符串
+     * @param mixed $handle 连接对象
      * @param boolean $op 查询读写开关
      * @throws Typecho_Db_Exception
      * @return resource
      */
-    public function query($query, $op = Typecho_Db::READ, $action = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        if($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $this->_dbHandle))
+        if($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle))
         {
             return $resource;
         }
@@ -177,33 +178,24 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     /**
      * 取出最后一次查询影响的行数
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function affectedRows($resource)
+    public function affectedRows($resource, $handle)
     {
-        return sqlite_changes($this->_dbHandle);
-    }
-    
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return unknown
-     */
-    public function version()
-    {
-        return 'SQLite ' . sqlite_libversion();
+        return sqlite_changes($handle);
     }
 
     /**
      * 取出最后一次插入返回的主键值
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function lastInsertId($resource)
+    public function lastInsertId($resource, $handle)
     {
-        return sqlite_last_insert_rowid($this->_dbHandle);
+        return sqlite_last_insert_rowid($handle);
     }
 }

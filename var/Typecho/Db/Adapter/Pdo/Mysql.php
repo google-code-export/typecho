@@ -67,17 +67,4 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
         $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
-
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return unknown
-     */
-    public function version()
-    {
-        $resource = $this->query('SELECT VERSION() AS version');
-        $rows = $this->fetch($resource);
-        return 'Mysql ' . $rows['version'];
-    }
 }

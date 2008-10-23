@@ -27,10 +27,12 @@ interface Typecho_Db_Adapter
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串
-     * @param boolean $op 数据库读写状态
+     * @param mixed $handle 连接对象
+     * @param integer $op 数据库读写状态
+     * @param string $action 数据库动作
      * @return resource
      */
-    public function query($query, $op = Typecho_Db::READ, $action = NULL);
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL);
 
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
@@ -78,23 +80,17 @@ interface Typecho_Db_Adapter
      * 取出最后一次查询影响的行数
      *
      * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function affectedRows($resource);
-    
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return string
-     */
-    public function version();
+    public function affectedRows($resource, $handle);
 
     /**
      * 取出最后一次插入返回的主键值
      *
      * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function lastInsertId($resource);
+    public function lastInsertId($resource, $handle);
 }
