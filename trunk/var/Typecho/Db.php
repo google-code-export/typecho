@@ -269,7 +269,7 @@ class Typecho_Db
             $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
             $other = (self::READ == $op) ? self::WRITE : self::READ;
             
-            if(in_array($selectConnection, $this->_pool[$other]))
+            if(!empty($this->_pool[$other]) && in_array($selectConnection, $this->_pool[$other]))
             {
                 $this->_connectedPool[$other] = &$selectConnectionHandle;
             }
