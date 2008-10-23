@@ -40,7 +40,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
             {
                 if($config->charset)
                 {
-                    $this->query("SET NAMES '{$config->charset}'");
+                    mysql_query("SET NAMES '{$config->charset}'", $this->_dbLink);
                 }
                 return $this->_dbLink;
             }
@@ -54,14 +54,16 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     /**
      * 执行数据库查询
      *
-     * @param string $sql 查询字符串
-     * @param boolean $op 查询读写开关
+     * @param string $query 数据库查询SQL字符串
+     * @param mixed $handle 连接对象
+     * @param integer $op 数据库读写状态
+     * @param string $action 数据库动作
      * @throws Typecho_Db_Exception
      * @return resource
      */
-    public function query($query, $op = Typecho_Db::READ, $action = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        if($resource = @mysql_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query))
+        if($resource = @mysql_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle))
         {
             return $resource;
         }
@@ -144,35 +146,24 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     /**
      * 取出最后一次查询影响的行数
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function affectedRows($resource)
+    public function affectedRows($resource, $handle)
     {
-        return mysql_affected_rows($this->_dbLink);
-    }
-    
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return unknown
-     */
-    public function version()
-    {
-        $resource = $this->query('SELECT VERSION() AS version');
-        $rows = $this->fetch($resource);
-        return 'Mysql ' . $rows['version'];
+        return mysql_affected_rows($handle);
     }
 
     /**
      * 取出最后一次插入返回的主键值
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function lastInsertId($resource)
+    public function lastInsertId($resource, $handle)
     {
-        return mysql_insert_id($this->_dbLink);
+        return mysql_insert_id($handle);
     }
 }

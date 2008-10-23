@@ -38,6 +38,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
         {
             $this->_object = $this->init($config);
             $this->_object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $this->_object;
         }
         catch(PDOException $e)
         {
@@ -60,17 +61,19 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     /**
      * 执行数据库查询
      *
-     * @param string $sql 查询字符串
-     * @param boolean $op 查询读写开关
+     * @param string $query 数据库查询SQL字符串
+     * @param mixed $handle 连接对象
+     * @param integer $op 数据库读写状态
+     * @param string $action 数据库动作
      * @throws Typecho_Db_Exception
      * @return resource
      */
-    public function query($query, $op = Typecho_Db::READ, $action = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
         try
         {
             $this->_lastInsertTable = (!empty($action) && 'INSERT' == $action) ? $query->getAttribute('table') : NULL;
-            $resource = $this->_object->prepare($query instanceof Typecho_Db_Query ? $query->__toString() : $query);
+            $resource = $handle->prepare($query instanceof Typecho_Db_Query ? $query->__toString() : $query);
             $resource->execute();
         }
         catch(PDOException $e)
@@ -137,30 +140,24 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     /**
      * 取出最后一次查询影响的行数
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function affectedRows($resource)
+    public function affectedRows($resource, $handle)
     {
         return $resource->rowCount();
     }
-    
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return unknown
-     */
-    public function version(){}
 
     /**
      * 取出最后一次插入返回的主键值
      *
-     * @param resource $resource 查询返回资源标识
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
      * @return integer
      */
-    public function lastInsertId($resource)
+    public function lastInsertId($resource, $handle)
     {
-        return $this->_object->lastInsertId();
+        return $handle->lastInsertId();
     }
 }

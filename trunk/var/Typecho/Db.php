@@ -8,7 +8,7 @@
  */
 
 /** 配置管理 */
-require_once 'Typecho/Config/Able.php';
+require_once 'Typecho/Config.php';
 
 /** sql构建器 */
 require_once 'Typecho/Db/Query.php';
@@ -20,13 +20,13 @@ require_once 'Typecho/Db/Query.php';
  *
  * @package Db
  */
-class Typecho_Db implements Typecho_Config_Able
+class Typecho_Db
 {
     /** 读取数据库 */
-    const READ = true;
+    const READ = 1;
     
     /** 写入数据库 */
-    const WRITE = false;
+    const WRITE = 2;
     
     /** 升序方式 */
     const SORT_ASC = 'ASC';
@@ -69,39 +69,66 @@ class Typecho_Db implements Typecho_Config_Able
      * @var Typecho_Db_Query
      */
     private $_query;
+    
+    /**
+     * 默认配置
+     *  
+     * @access private
+     * @var Typecho_Config
+     */
+    private $_config;
+    
+    /**
+     * 连接池
+     * 
+     * @access private
+     * @var array
+     */
+    private $_pool;
+    
+    /**
+     * 已经连接
+     * 
+     * @access private
+     * @var array
+     */
+    private $_connectedPool;
+    
+    /**
+     * 前缀
+     * 
+     * @access private
+     * @var string
+     */
+    private $_prefix;
 
     /**
      * 实例化的数据库对象
      * @var Typecho_Db
      */
     private static $_instance;
-    
-    /**
-     * 默认配置
-     * 
-     * @access private
-     * @var Typecho_Config
-     */
-    private static $_config;
 
     /**
      * 数据库类构造函数
      *
+     * @param mixed $adapterName 适配器名称
+     * @param string $prefix 前缀
      * @return void
-     * @throws Typecho_Db_Exception
      */
-    public function __construct()
+    public function __construct($adapterName, $prefix = 'typecho_')
     {    
         /** 数据库适配器 */
-        $config = self::$_config;
-        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $config->adapter) . '.php';
-        $adapter = 'Typecho_Db_Adapter_' . $config->adapter;
+        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $adapterName) . '.php';
+        $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
+        $this->_prefix = $prefix;
+        
+        /** 初始化内部变量 */
+        $this->_pool = array();
+        $this->_connectedPool = array();
+        $this->_config = array();
 
         //实例化适配器对象
-        $this->_adapter = new $adapter();
-
-        //连接数据库
-        $this->_adapter->connect($config);
+        $this->_adapter = new $adapterName();
     }
 
     /**
@@ -111,7 +138,46 @@ class Typecho_Db implements Typecho_Config_Able
      */
     public function sql()
     {
-        return new Typecho_Db_Query($this->_adapter, self::$_config);
+        return new Typecho_Db_Query($this->_adapter, $this->_prefix);
+    }
+    
+    /**
+     * 为多数据库提供支持
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库实例
+     * @param integer $op 数据库操作
+     * @return void
+     */
+    public function addServer($config, $op)
+    {
+        $this->_config[] = Typecho_Config::factory($config);
+        $key = key($this->_config);
+        
+        /** 将连接放入池中 */
+        switch ($op)
+        {
+            case self::READ:
+            case self::WRITE:
+                $this->_pool[$op][] = $key;
+                break;
+            default:
+                $this->_pool[self::READ][] = $key;
+                $this->_pool[self::WRITE][] = $key;
+                break;
+        }
+    }
+    
+    /**
+     * 设置默认数据库对象
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @return void
+     */
+    public static function set(Typecho_Db $db)
+    {
+        self::$_instance = $db;
     }
     
     /**
@@ -119,13 +185,15 @@ class Typecho_Db implements Typecho_Config_Able
      * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
      *
      * @return Typecho_Db
+     * @throws Typecho_Db_Exception
      */
     public static function get()
     {
         if(empty(self::$_instance))
         {
-            //实例化数据库对象
-            self::$_instance = new Typecho_Db();
+            /** Typecho_Db_Exception */
+            require_once 'Typecho/Db/Exception.php';
+            throw new Typecho_Db_Exception('Missing Database Object');
         }
 
         return self::$_instance;
@@ -176,29 +244,6 @@ class Typecho_Db implements Typecho_Config_Able
     {
         return $this->sql()->insert($table);
     }
-    
-    /**
-     * 设置数据库默认配置
-     * 
-     * @access public
-     * @param mixed $config 配置信息
-     * @return void
-     */
-    public static function setConfig($config)
-    {
-        self::$_config = Typecho_Config::factory($config);
-    }
-    
-    /**
-     * 获取数据库默认配置
-     * 
-     * @access public
-     * @return Typecho_Config
-     */
-    public static function getConfig()
-    {
-        return self::$_config;
-    }
 
     /**
      * 执行查询语句
@@ -210,6 +255,28 @@ class Typecho_Db implements Typecho_Config_Able
      */
     public function query($query, $op = self::READ, $action = self::SELECT)
     {
+        if(!isset($this->_connectedPool[$op]))
+        {
+            if(empty($this->_pool[$op]))
+            {
+                /** Typecho_Db_Exception */
+                require_once 'Typecho/Db/Exception.php';
+                throw new Typecho_Db_Exception('Missing Database Connection');
+            }
+            
+            $selectConnection = rand(0, count($this->_pool[$op]) - 1);
+            $selectConnectionConfig = $this->_config[$selectConnection];
+            $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
+            $other = (self::READ == $op) ? self::WRITE : self::READ;
+            
+            if(in_array($selectConnection, $this->_pool[$other]))
+            {
+                $this->_connectedPool[$other] = &$selectConnectionHandle;
+            }
+            $this->_connectedPool[$op] = &$selectConnectionHandle;
+        }
+        $handle = $this->_connectedPool[$op];
+    
         //在适配器中执行查询
         if($query instanceof Typecho_Db_Query)
         {
@@ -218,7 +285,7 @@ class Typecho_Db implements Typecho_Config_Able
             || self::INSERT == $action) ? self::WRITE : self::READ;
         }
 
-        $resource = $this->_adapter->query($query, $op, $action);
+        $resource = $this->_adapter->query($query, $handle, $op, $action);
 
         if($action)
         {
@@ -227,9 +294,9 @@ class Typecho_Db implements Typecho_Config_Able
             {
                 case self::UPDATE:
                 case self::DELETE:
-                    return $this->_adapter->affectedRows($resource);
+                    return $this->_adapter->affectedRows($resource, $handle);
                 case self::INSERT:
-                    return $this->_adapter->lastInsertId($resource);
+                    return $this->_adapter->lastInsertId($resource, $handle);
                 case self::SELECT:
                 default:
                     return $resource;
@@ -303,16 +370,5 @@ class Typecho_Db implements Typecho_Config_Able
     {
         $resource = $this->query($query, self::READ);
         return $this->_adapter->fetchObject($resource);
-    }
-    
-    /**
-     * 获取数据库版本
-     * 
-     * @access public
-     * @return string
-     */
-    public function version()
-    {
-        return $this->_adapter->version();
     }
 }

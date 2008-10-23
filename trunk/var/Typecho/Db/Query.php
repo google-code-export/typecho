@@ -44,24 +44,24 @@ class Typecho_Db_Query
     private $_sqlPreBuild;
     
     /**
-     * 数据库配置
+     * 前缀
      * 
      * @access private
-     * @var Typecho_Config
+     * @var string
      */
-    private $_config;
+    private $_prefix;
 
     /**
      * 构造函数,引用数据库适配器作为内部数据
      *
      * @param Typecho_Db_Adapter $adapter 数据库适配器
-     * @param Typecho_Config $config 默认配置
+     * @param string $prefix 前缀
      * @return void
      */
-    public function __construct(Typecho_Db_Adapter $adapter, Typecho_Config $config)
+    public function __construct(Typecho_Db_Adapter $adapter, $prefix)
     {
         $this->_adapter = &$adapter;
-        $this->_config = $config;
+        $this->_prefix = $prefix;
         
         $this->_sqlPreBuild = array(
             'action' => NULL,
@@ -85,7 +85,7 @@ class Typecho_Db_Query
      */
     private function filterPrefix($string)
     {
-        return (0 === strpos($string, 'table.')) ? substr_replace($string, $this->_config->prefix, 0, 6) : $string;
+        return (0 === strpos($string, 'table.')) ? substr_replace($string, $this->_prefix, 0, 6) : $string;
     }
 
     /**

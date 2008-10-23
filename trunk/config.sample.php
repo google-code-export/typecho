@@ -57,20 +57,20 @@ require_once 'Typecho/I18n.php';
 /** 载入数据库支持 */
 require_once 'Typecho/Db.php';
 
-/** 载入数据库支持 */
+/** 载入路由器支持 */
 require_once 'Typecho/Router.php';
 
 /** 定义数据库参数 */
-Typecho_Db::setConfig(array(
+$db = new Typecho_Db('Mysql', 'typecho_');
+$db->addServer(array(
     'host'          =>  'localhost',
     'port'          =>  '3306',
     'user'          =>  'root',
     'password'      =>  '',
     'database'      =>  'typecho',
-    'prefix'        =>  'typecho_',
-    'charset'       =>  'utf8',
-    'adapter'       =>  'Mysql'
-));
+    'charset'       =>  'utf8'
+), Typecho_Db::READ | Typecho_Db::WRITE);
+Typecho_Db::set($db);
 
 /** 定义语言项 */
 Typecho_I18n::setConfig(array('lang' => NULL));

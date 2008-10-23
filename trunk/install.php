@@ -1,5 +1,5 @@
 <?php
-define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.2/8.7.6');
+define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.3/8.10.23');
 
 /** 载入配置文件 */
 if(file_exists('config.inc.php'))
@@ -57,7 +57,7 @@ else
 
             $db = Typecho_Db::get();
             
-            $adapter = Typecho_Config::get('Db')->adapter;
+            $adapter = Typecho_Config::getConfig()->adapter;
             $sqlFiles = glob('./install/*.sql');
             $selectAdapter = '';
             $maxMatch = 0;
@@ -84,72 +84,72 @@ else
                 if(trim($script))
                 {
                     /** 替换前缀 */
-                    $db->query(str_replace('typecho_', Typecho_Config::get('Db')->prefix, $script));
+                    $db->query(str_replace('typecho_', Typecho_Config::getConfig()->prefix, $script));
                 }
             }
             
             /** 全局变量 */
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => 28800)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => __TYPECHO_INSTALL_VERSION__)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'attachmentExtensions', 'user' => 0, 'value' => 'zip|rar|jpg|png|gif|txt')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => $url)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'defaultAllowPing', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'defaultAllowFeed', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'pageSize', 'user' => 0, 'value' => 5)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'postsListSize', 'user' => 0, 'value' => 10)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsListSize', 'user' => 0, 'value' => 10)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsHTMLTagAllowed', 'user' => 0, 'value' => NULL)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'postDateFormat', 'user' => 0, 'value' => 'Y-m-d')));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'feedFullArticlesLayout', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'editorSize', 'user' => 0, 'value' => 16)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'autoSave', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsPostTimeout', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsUrlNofollow', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsShowUrl', 'user' => 0, 'value' => 1)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsUniqueIpInterval', 'user' => 0, 'value' => 0)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsStopWords', 'user' => 0, 'value' => NULL)));
-            $db->query($db->sql()->insert('table.options')->rows(array('name' => 'commentsIpBlackList', 'user' => 0, 'value' => NULL)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => 28800)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => __TYPECHO_INSTALL_VERSION__)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'attachmentExtensions', 'user' => 0, 'value' => 'zip|rar|jpg|png|gif|txt')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => $url)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'defaultAllowPing', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'defaultAllowFeed', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'pageSize', 'user' => 0, 'value' => 5)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'postsListSize', 'user' => 0, 'value' => 10)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsListSize', 'user' => 0, 'value' => 10)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsHTMLTagAllowed', 'user' => 0, 'value' => NULL)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'postDateFormat', 'user' => 0, 'value' => 'Y-m-d')));
+            $db->query($db->insert('table.options')->rows(array('name' => 'feedFullArticlesLayout', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'editorSize', 'user' => 0, 'value' => 16)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'autoSave', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsPostTimeout', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsUrlNofollow', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsShowUrl', 'user' => 0, 'value' => 1)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsUniqueIpInterval', 'user' => 0, 'value' => 0)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsStopWords', 'user' => 0, 'value' => NULL)));
+            $db->query($db->insert('table.options')->rows(array('name' => 'commentsIpBlackList', 'user' => 0, 'value' => NULL)));
             
             /** 初始分类 */
-            $db->query($db->sql()->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
+            $db->query($db->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
             'count' => 1, 'sort' => 1)));
             
             /** 初始关系 */
-            $db->query($db->sql()->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
+            $db->query($db->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
             
             /** 初始链接 */
-            $db->query($db->sql()->insert('table.metas')->rows(array('name' => _t('Typecho官方网站'), 'slug' => 'http://www.typecho.org', 'type' => 'link', 'description' => _t('Typecho的老巢'),
+            $db->query($db->insert('table.metas')->rows(array('name' => _t('Typecho官方网站'), 'slug' => 'http://www.typecho.org', 'type' => 'link', 'description' => _t('Typecho的老巢'),
             'count' => 0, 'sort' => 1)));
             
             /** 初始内容 */
-            $db->query($db->sql()->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
+            $db->query($db->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
             'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 'enable',
             'allowPing' => 'enable', 'allowFeed' => 'enable')));
             
-            $db->query($db->sql()->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
+            $db->query($db->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => 1211300209, 'modified' => 1211300209,
             'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 1, 'allowComment' => 'enable',
             'allowPing' => 'enable', 'allowFeed' => 'enable')));
             
             /** 初始评论 */
-            $db->query($db->sql()->insert('table.comments')->rows(array('cid' => 1, 'created' => 1211300209, 'author' => 'Typecho', 'url' => 'http://www.typecho.org',
+            $db->query($db->insert('table.comments')->rows(array('cid' => 1, 'created' => 1211300209, 'author' => 'Typecho', 'url' => 'http://www.typecho.org',
             'ip' => '127.0.0.1', 'agent' => __TYPECHO_INSTALL_VERSION__, 'text' => '欢迎加入Typecho大家族', 'mode' => 'comment', 'status' => 'approved', 'parent' => 0)));
             
             /** 初始用户 */
-            $db->query($db->sql()->insert('table.users')->rows(array('name' => 'admin', 'password' => '827ccb0eea8a706c4c34a16891f84e7b', 'mail' => 'example@yourdomain.com', 
+            $db->query($db->insert('table.users')->rows(array('name' => 'admin', 'password' => '827ccb0eea8a706c4c34a16891f84e7b', 'mail' => 'example@yourdomain.com', 
             'url' => 'http://www.typecho.org', 'screenName' => 'admin', 'group' => 'administrator', 'created' => (time() - idate('Z')))));
         ?>
         <div class="success">
