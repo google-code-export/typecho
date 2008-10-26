@@ -28,14 +28,14 @@ class Widget_Notice extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response, Typecho_Config $parameter)
+    public function init()
     {
-        if(NULL !== $request->getCookie('notice'))
+        if(NULL !== $this->request->getCookie('notice'))
         {
-            $this->noticeType = $request->getCookie('noticeType');
-            $this->push($request->getCookie('notice'));
-            $request->deleteCookie('notice', $this->options()->siteUrl);
-            $request->deleteCookie('noticeType', $this->options()->siteUrl);
+            $this->noticeType = $this->request->getCookie('noticeType');
+            $this->push($this->request->getCookie('notice'));
+            $this->response->deleteCookie('notice', $this->widget('Widget_Options')->siteUrl);
+            $this->response->deleteCookie('noticeType', $this->widget('Widget_Options')->siteUrl);
         }
     }
     
@@ -110,9 +110,9 @@ class Widget_Notice extends Typecho_Widget
             }
         }
         
-        $this->request()->setCookie('notice', $notice, $this->options()->gmtTime + $this->options()->timezone + 86400,
-        $this->options()->siteUrl);
-        $this->request()->setCookie('noticeType', $type, $this->options()->gmtTime + $this->options()->timezone + 86400,
-        $this->options()->siteUrl);
+        $this->response->setCookie('notice', $notice, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->widget('Widget_Options')->siteUrl);
+        $this->response->setCookie('noticeType', $type, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->widget('Widget_Options')->siteUrl);
     }
 }

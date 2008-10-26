@@ -306,6 +306,7 @@ class Typecho_Db_Query
      */
     public function select($field = '*')
     {
+        $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
         $args = func_get_args();
         $fields = array();
         
@@ -337,7 +338,6 @@ class Typecho_Db_Query
      */
     public function from($table)
     {
-        $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
     }

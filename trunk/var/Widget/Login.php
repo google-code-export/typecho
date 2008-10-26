@@ -23,17 +23,15 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init()
     {
         /** 如果已经登录 */
-        if($this->user()->hasLogin())
+        if($this->user->hasLogin())
         {
             /** 直接返回 */
-            $response->redirect($this->options()->index);
+            $this->response->redirect($this->options->index);
         }
         
         /** 初始化验证类 */
@@ -44,42 +42,42 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         /** 截获验证异常 */
         try
         {
-            $validator->run($request->from('name', 'password'));
+            $validator->run($this->request->from('name', 'password'));
         }
         catch(Typecho_Validate_Exception $e)
         {
             /** 设置提示信息 */
-            $this->notice()->set($e->getMessages());
-            $response->goBack();
+            $this->widget('Widget_Notice')->set($e->getMessages());
+            $this->response->goBack();
         }
         
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->select()
-        ->where('`name` = ?', $request->name)
+        ->where('name = ?', $this->request->name)
         ->limit(1));
         
         /** 比对密码 */
-        if($user && $user['password'] == md5($request->password))
+        if($user && $user['password'] == md5($this->request->password))
         {
-            $this->user()->login($user['uid'], $user['password'], sha1(Typecho_Common::randString(20)),
-            1 == $request->remember ? $this->options()->gmtTime + $this->options()->timezone + 30*24*3600 : 0);
+            $this->user->login($user['uid'], $user['password'], sha1(Typecho_Common::randString(20)),
+            1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         }
         else
         {
-            $this->notice()->set(_t('无法找到匹配的用户'), NULL, 'error');
-            $response->redirect(Typecho_Common::pathToUrl('login.php', $this->options()->adminUrl)
-            . (NULL === $request->referer) ? 
-            NULL : '?referer=' . urlencode($request->referer));
+            $this->widget('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
+            $this->response->redirect(Typecho_Common::pathToUrl('login.php', $this->options->adminUrl)
+            . ((NULL === $this->request->referer) ? 
+            NULL : '?referer=' . urlencode($this->request->referer)));
         }
         
         /** 跳转验证后地址 */
-        if(NULL != $request->referer)
+        if(NULL != $this->request->referer)
         {
-            $response->redirect($request->referer);
+            $this->response->redirect($this->request->referer);
         }
         else
         {
-            $response->redirect(Typecho_API::pathToUrl('index.php', $this->options()->adminUrl));
+            $this->response->redirect(Typecho_Common::pathToUrl('index.php', $this->options->adminUrl));
         }
     }
 }
