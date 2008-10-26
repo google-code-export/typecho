@@ -56,9 +56,8 @@ class Widget_User extends Typecho_Widget
     {
         if($this->hasLogin())
         {
-            $rows = $this->db->fetchAll($this
-            ->db->select()->from('table.options')
-            ->where('user = ?', $this->_user['uid']));
+            $rows = $this->db->fetchAll($this->db->select()
+            ->from('table.options')->where('user = ?', $this->_user['uid']));
 
             $this->push($this->_user);
 
@@ -68,7 +67,7 @@ class Widget_User extends Typecho_Widget
             }
 
             //更新最后活动时间
-            $this->db->query($this
+            $this->db->query($this->db
             ->update('table.users')
             ->rows(array('activated' => $this->widget('Widget_Options')->gmtTime))
             ->where('uid = ?', $this->_user['uid']));
@@ -92,21 +91,22 @@ class Widget_User extends Typecho_Widget
         $this->response->setCookie('password', sha1($password), $expire, $this->widget('Widget_Options')->siteUrl);
         $this->response->setCookie('authCode', $authCode, $expire, $this->widget('Widget_Options')->siteUrl);
         
-        if($this->db->fetchObject($this->select()
+        if($this->db->fetchObject($this->db->select()
+                ->from('table.users')
                 ->where('uid = ?', $uid)
                 ->limit(1))->activated > 0)
         {
             //更新最后登录时间以及验证码
-            $this->db->query($this
+            $this->db->query($this->db
             ->update('table.users')
-            ->row('logged', 'activated')
+            ->expression('logged', 'activated')
             ->rows(array('authCode' => $authCode))
             ->where('uid = ?', $uid));
         }
         else
         {
             //第一次登录
-            $this->db->query($this
+            $this->db->query($this->db
             ->update('table.users')
             ->rows(array('authCode' => $authCode, 'logged' => $this->widget('Widget_Options')->gmtTime))
             ->where('uid = ?', $uid));
@@ -144,7 +144,7 @@ class Widget_User extends Typecho_Widget
             if(NULL !== $this->request->getCookie('uid') && NULL !== $this->request->getCookie('password'))
             {
                 /** 验证登陆 */
-                $user = $this->db->fetchRow($this->select()
+                $user = $this->db->fetchRow($this->db->select()->from('table.users')
                 ->where('uid = ?', $this->request->getCookie('uid'))
                 ->limit(1));
 

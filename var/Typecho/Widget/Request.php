@@ -49,7 +49,8 @@ class Typecho_Widget_Request
      */
     public function from()
     {
-        return call_user_func_array(array('Typecho_Request', 'getParametersFrom'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array('Typecho_Request', 'getParametersFrom'), $args);
     }
 
     /**

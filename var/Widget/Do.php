@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-class Widget_Do extends Typecho_Widget implements Widget_Interface_Action
+class Widget_Do extends Typecho_Widget
 {
     /**
      * 入口函数,初始化路由器
@@ -20,12 +20,12 @@ class Widget_Do extends Typecho_Widget implements Widget_Interface_Action
      * @access public
      * @return void
      */
-    public function action()
+    public function init()
     {
         /** 验证路由地址 **/
         $prefix = 'plugin' == Typecho_Router::$current ? 'Plugin' : 'Widget';
-        $widgetName = $prefix . '_' . str_replace('/', '_', Typecho_Request::getParameter('widget'));
-        $fileName = __TYPECHO_ROOT_DIR__ . '/var/' . $prefix . '/' . Typecho_Request::getParameter('widget') . '.php';
+        $widgetName = $prefix . '_' . str_replace('/', '_', $this->request->widget);
+        $fileName = __TYPECHO_ROOT_DIR__ . '/var/' . $prefix . '/' . $this->request->widget . '.php';
 
         if(file_exists($fileName))
         {
@@ -36,7 +36,7 @@ class Widget_Do extends Typecho_Widget implements Widget_Interface_Action
                 $reflectionWidget =  new ReflectionClass($widgetName);
                 if($reflectionWidget->implementsInterface('Widget_Interface_Action_' . $prefix))
                 {
-                    Typecho_API::factory($widgetName)->action();
+                    Typecho_Widget::widget($widgetName);
                     return;
                 }
             }

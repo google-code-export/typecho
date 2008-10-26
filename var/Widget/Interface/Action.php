@@ -18,7 +18,4 @@
  * @license GNU General Public License 2.0
  */
 interface Widget_Interface_Action
-{
-    public function action();
-}
-
+{}

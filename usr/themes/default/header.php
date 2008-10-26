@@ -50,7 +50,7 @@
 				<?php $this->widget('Widget_Contents_Page_List')
                 ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
                 <?php if($this->user->hasLogin()): ?>
-                    <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->load('Widget/Users/Current')->screenName(); ?>)</a></li>
+                    <li class="last"><a href="<?php $this->options->index('Logout.do'); ?>">Logout (<?php $this->user->screenName(); ?>)</a></li>
                     <li class="last"><a href="<?php $this->options->adminUrl(); ?>">Admin</a></li>
                 <?php else: ?>
                     <li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>">Login</a></li>
