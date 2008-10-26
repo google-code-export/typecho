@@ -85,8 +85,11 @@ em {
 
 input, textarea {
     font-size: 13px;
-	padding: 1px;
-	*padding: 2px;
+	padding: 2px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input, textarea { padding: 1px; }
 }
 
 textarea {

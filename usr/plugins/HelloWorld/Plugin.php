@@ -1,5 +1,5 @@
 <?php
-class HelloWorld_Plugin implements Typecho_Plugin_Interface
+class HelloWorld_Plugin extends Widget_Abstract implements Typecho_Plugin_Interface
 {
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
@@ -90,6 +90,6 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
     public static function render()
     {
         echo '<span style="border:1px solid #999;padding:2px;background:#E37400;color:#222">' . 
-        Typecho_API::factory('Widget_Options')->plugin('HelloWorld')->word . '</span>';
+        $this->options->plugin('HelloWorld')->word . '</span>';
     }
 }
