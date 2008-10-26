@@ -10,9 +10,11 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
-/** 初始化插件 */
-Typecho_Plugin::init(array(),
-__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+/** 注册一个初始化插件 */
+_p('index.php', 'Action')->begin();
 
 /** 开始路由分发 */
 Typecho_Router::dispatch();
+
+/** 注册一个结束插件 */
+_p('index.php', 'Action')->end();

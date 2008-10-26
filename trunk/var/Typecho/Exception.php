@@ -133,7 +133,7 @@ class Typecho_Exception extends Exception implements Typecho_Config_Able
     }
     
     /**
-     * 设置数据库默认配置
+     * 设置默认配置
      * 
      * @access public
      * @param mixed $config 配置信息
@@ -145,7 +145,7 @@ class Typecho_Exception extends Exception implements Typecho_Config_Able
     }
     
     /**
-     * 获取数据库默认配置
+     * 获取默认配置
      * 
      * @access public
      * @return Typecho_Config
