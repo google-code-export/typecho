@@ -83,9 +83,14 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         /** 处理搜索结果跳转 */
         if(NULL != $this->request->s)
         {
+            $filterKeywords = Typecho_Common::filterSearchQuery($this->request->s);
+            
             /** 跳转到搜索页 */
-            $this->response->redirect(Typecho_Router::url('search', 
-            array('keywords' => urlencode(Typecho_Common::filterSearchQuery($this->request->s))), $this->options->index));
+            if(NULL != $filterKeywords)
+            {
+                $this->response->redirect(Typecho_Router::url('search', 
+                array('keywords' => urlencode($filterKeywords)), $this->options->index));
+            }
         }
     
         /** 初始化分页变量 */
