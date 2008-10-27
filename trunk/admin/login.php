@@ -33,7 +33,7 @@ include 'header.php';
                 </p>
                 <p class="forgot-password">
                 <?php if(!$user->hasLogin()): ?>
-                <a href="http://www.typecho.net/admin/get-password.php"><?php _e('忘记密码 &raquo;'); ?></a>
+                <a href="<?php $options->adminUrl('get-password.php'); ?>"><?php _e('忘记密码 &raquo;'); ?></a>
                 <?php else: ?>
                 <a href="<?php $options->adminUrl(); ?>"><?php _e('进入后台 &raquo;'); ?></a>
                 <?php endif; ?>
