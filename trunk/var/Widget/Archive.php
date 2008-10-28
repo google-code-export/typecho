@@ -642,4 +642,15 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 挂接插件 */
         $this->plugin('Action')->render($this);
     }
+
+    /**
+     * 输出feed 
+     * 
+     * @access public
+     * @return void
+     */
+    public function feed()
+    {
+        
+    }
 }
