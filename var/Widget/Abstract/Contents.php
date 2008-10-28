@@ -273,6 +273,22 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value = $this->filter($value);
         return parent::push($value);
     }
+    
+    /**
+     * 将tags取出
+     * 
+     * @access public
+     * @return void
+     */
+    public function getTags()
+    {
+        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
+        ->select()->from('table.metas')
+        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $this->cid)
+        ->where('table.metas.type = ?', 'tag')
+        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+    }
 
     /**
      * 输出文章发布日期
@@ -415,11 +431,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function tags($split = ',', $link = true, $default = NULL)
     {
-        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
-        ->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $this->cid)
-        ->where('table.metas.type = ?', 'tag')
-        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        /** 取出tags */
+        $this->getTags();
 
         if($this->tags)
         {

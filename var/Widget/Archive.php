@@ -14,7 +14,7 @@
  *
  * @package Widget
  */
-class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interface_ViewRenderer
+class Widget_Archive extends Widget_Abstract_Contents
 {
     /**
      * 调用的风格文件
@@ -119,15 +119,25 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
                 
                 $select->where('table.contents.type = ?', Typecho_Router::$current)
                 ->group('table.contents.cid')->limit(1);
-                $post = $this->db->fetchRow($select, array($this, 'singlePush'));
+                $post = $this->db->fetchRow($select, array($this, 'push'));
 
                 if($post && $post['category'] == (isset($this->request->category) ? $this->request->category : $post['category'])
                 && $post['year'] == (isset($this->request->year) ? $this->request->year : $post['year'])
                 && $post['month'] == (isset($this->request->month) ? $this->request->month : $post['month'])
                 && $post['day'] == (isset($this->request->day) ? $this->request->day : $post['day']))
                 {
+                    /** 取出tags */
+                    $this->getTags();
+                    
                     /** 设置关键词 */
-                    $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($post['tags'], 'name'));
+                    $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+                    
+                    /** 设置模板 */
+                    if(!empty($post['template']))
+                    {
+                        /** 应用自定义模板 */
+                        $this->_themeFile = $post['template'];
+                    }
                     
                     /** 设置头部feed */
                     /** RSS 2.0 */
@@ -411,27 +421,31 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
     }
     
     /**
-     * 将每行的值压入堆栈
-     *
+     * 重载filter,加入对权限的判断
+     * 
      * @access public
      * @param array $value 每行的值
      * @return array
      */
-    public function singlePush($value)
+    public function filter(array $value)
     {
-        $value['tags'] = $this->db->fetchAll($this
-        ->db->select()->from('table.metas')->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $value['cid'])
-        ->where('table.metas.type = ?', 'tag')
-        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        $value = parent::filter($value);
         
-        if(!empty($value['template']))
+        if(!empty($value['password']) && 
+        $value['password'] == $this->request->protectPassword)
         {
-            /** 应用自定义模板 */
-            $this->_themeFile = $value['template'];
+            $value['content'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
+            '<p class="word">' . _t('请输入密码访问') . '</p>' .
+            '<p><input type="password" class="text" name="protectPassword" />
+            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
+            '</form>';
+            
+            $value['title'] = _t('此文章被密码保护');
+            
+            $value['tags'] = array();
         }
         
-        return parent::push($value);
+        return $value;
     }
     
     /**
@@ -466,48 +480,6 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
         {
             return $this->widget('Widget_Abstract_Comments');
         }
-    }
-    
-    /**
-     * 输出文章内容,支持隐私项输出
-     *
-     * @access public
-     * @param string $more 文章截取后缀
-     * @return void
-     */
-    public function content($more = NULL)
-    {
-        if(NULL == $this->password || 
-        $this->password == $this->request->protectPassword)
-        {
-            $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
-            $contents = explode('<!--more-->', $content);
-            
-            list($abstract) = $contents;
-            echo empty($more) ? $content : Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
-            . $this->permalink . '">' . $more . '</a></p>' : NULL);
-        }
-        else
-        {
-            echo '<form class="protected" action="' . $this->permalink . '" method="post">' .
-            '<p class="word">' . _t('请输入密码访问') . '</p>' .
-            '<p><input type="password" class="text" name="protectPassword" />
-            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
-            '</form>';
-        }
-    }
-    
-    /**
-     * 输出标题,支持隐私项输出
-     * 
-     * @access public
-     * @return void
-     */
-    public function title()
-    {
-        echo NULL == $this->password || 
-        $this->password == $this->request->protectPassword
-        ? $this->title : _t('此文章被密码保护');
     }
     
     /**
@@ -578,13 +550,8 @@ class Widget_Archive extends Widget_Abstract_Contents implements Widget_Interfac
      */
     public function related($limit = 5)
     {
-        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this
-        ->select()->from('table.metas')
-        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $this->cid)
-        ->where('table.metas.type = ?', 'tag')
-        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
-        
+        /** 取出tags */
+        $this->getTags();
         return $this->widget('Widget_Contents_Related', array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
     }
     
