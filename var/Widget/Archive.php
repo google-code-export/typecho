@@ -33,14 +33,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_countSql;
     
     /**
-     * 分页大小
-     * 
-     * @access private
-     * @var integer
-     */
-    private $_pageSize;
-    
-    /**
      * 当前页
      * 
      * @access private
@@ -57,20 +49,46 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_pageRow;
     
     /**
-     * Widget_Options
+     * prepare 
      * 
      * @access public
-     * @var Widget_Options
+     * @return void
      */
-    public $options;
-    
+    public function prepare()
+    {
+        parent::prepare();
+
+        /** 处理feed模式 **/
+        if('feed' == Typecho_Router::$current)
+        {
+            if(!Typecho_Router::match($feedQuery))
+            {
+                throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
+            }
+            
+            /** 默认输出10则文章 **/
+            $this->parameter->pageSize = 10;
+        }
+    }
+
     /**
-     * Widget_User
+     * 重载select 
      * 
      * @access public
-     * @var Widget_User
+     * @return void
      */
-    public $user;
+    public function select()
+    {
+        if('feed' == Typecho_Router::$current)
+        {
+            return parent::select()->where('table.contents.`allowFeed` = ?', 'enable')
+            ->where('table.contents.`password` IS NULL');
+        }
+        else
+        {
+            return parent::select();
+        }
+    }
 
     /**
      * 初始化函数
@@ -94,7 +112,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
     
         /** 初始化分页变量 */
-        $this->_pageSize = empty($pageSize) ? $this->options->pageSize : $pageSize;
+        $this->parameter->setDefault(array('pageSize' => $this->options->pageSize));
         $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
         $hasPushed = false;
     
@@ -391,7 +409,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         $select->group('table.contents.cid')
         ->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->page($this->_currentPage, $this->_pageSize);
+        ->page($this->_currentPage, $this->parameter->pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));
     }
@@ -415,7 +433,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
-            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->_countSql), $this->_currentPage, $this->_pageSize, $query);
+            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->_countSql), $this->_currentPage, $this->parameter->pageSize, $query);
             $nav->render($prev, $next, $splitPage, $splitWord);
         }
     }
