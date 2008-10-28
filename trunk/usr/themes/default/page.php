@@ -27,6 +27,7 @@
 				</li>
 			<?php endwhile; ?>
 			</ol>
+            <?php if($this->allow('comment')): ?>
 			<h4 id="response">Leave a Reply</h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
@@ -39,6 +40,7 @@
 				<p><textarea rows="12" name="text"><?php $this->remember('text'); ?></textarea></p>
 				<p><input type="submit" value="Submit Comment" class="submit" /></p>
 			</form>
+            <?php endif; ?>
 		</div>
     </div><!-- end #content-->
 	<?php include('sidebar.php'); ?>
