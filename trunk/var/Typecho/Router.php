@@ -10,15 +10,12 @@
 /** 载入api支持 */
 require_once 'Typecho/Common.php';
 
-/** 配置管理 */
-require_once 'Typecho/Config/Able.php';
-
 /**
  * Typecho组件基类
  *
  * @package Route
  */
-class Typecho_Router implements Typecho_Config_Able
+class Typecho_Router
 {
     /**
      * 当前路由名称
@@ -29,51 +26,13 @@ class Typecho_Router implements Typecho_Config_Able
     public static $current;
 
     /**
-     * 路径解析值列表
-     *
-     * @access private
-     * @var array
-     */
-    private static $_parameters = array();
-    
-    /**
      * 已经解析完毕的路由配置
      * 
      * @access private
      * @var mixed
      */
-    private static $_routes = false;
+    private static $_routes = array();
     
-    /**
-     * 默认配置
-     * 
-     * @access private
-     * @var Typecho_Config
-     */
-    private static $_config;
-    
-    /**
-     * 解析路由
-     * 
-     * @access private
-     * @return void
-     */
-    private static function _parseRoute()
-    {
-        if(false === self::$_routes)
-        {            
-            /** 获取路由配置 */
-            $config = self::$_config;
-            
-            /** 载入路由解析支持 */
-            require_once 'Typecho/Router/Parser.php';
-            
-            /** 解析路由配置 */
-            $parser = new Typecho_Router_Parser($config);
-            self::$_routes = $parser->parse($config);
-        }
-    }
-
     /**
      * 解析路径
      * 
@@ -83,8 +42,6 @@ class Typecho_Router implements Typecho_Config_Able
      */
     public static function match($pathInfo)
     {
-        self::_parseRoute();
-    
         foreach(self::$_routes as $key => $route)
         {
             if(preg_match($route['regx'], $pathInfo, $matches))
@@ -146,7 +103,6 @@ class Typecho_Router implements Typecho_Config_Able
      */
     public static function url($name, array $value = NULL, $prefix = NULL)
     {
-        self::_parseRoute();
         $route = self::$_routes[$name];
        
         //交换数组键值
@@ -163,22 +119,29 @@ class Typecho_Router implements Typecho_Config_Able
      * 设置数据库默认配置
      * 
      * @access public
-     * @param mixed $config 配置信息
+     * @param mixed $routes 配置信息
      * @return void
      */
-    public static function setConfig($config)
+    public static function setRoutes($routes)
     {
-        self::$_config = Typecho_Config::factory($config);
+        /** 载入路由解析支持 */
+        require_once 'Typecho/Router/Parser.php';
+
+        /** 解析路由配置 */
+        $parser = new Typecho_Router_Parser($routes);
+        self::$_routes = $parser->parse($routes);
     }
-    
+
     /**
-     * 获取数据库默认配置
+     * 获取路由信息 
      * 
+     * @param string $routeName 路由名称 
+     * @static
      * @access public
-     * @return Typecho_Config
+     * @return void
      */
-    public static function getConfig()
+    public static function get($routeName)
     {
-        return self::$_config;
+        return isset(self::$_routes[$routeName]) ? self::$_routes[$routeName] : NULL;
     }
 }

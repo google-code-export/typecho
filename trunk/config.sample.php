@@ -72,24 +72,21 @@ $db->addServer(array(
 ), Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set($db);
 
-/** 定义语言项 */
-Typecho_I18n::setConfig(array('lang' => NULL));
-
 /** 自定义错误页面 */
 if(!__TYPECHO_DEBUG__)
 {
-    Typecho_Exception::setConfig(array(
-        '_403'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '_404'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '_500'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '_501'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '_503'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '_error'        =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+    Typecho_Exception::setHandles(array(
+        '403'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        '404'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        '500'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        '501'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        '503'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        'error'        =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
     ));
 }
 
 /** 定义路由参数 */
-Typecho_Router::setConfig(array(
+Typecho_Router::setRoutes(array(
     'index'             =>  array('url' => '/', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'post'              =>  array('url' => '/archives/[cid:digital]/', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'category'          =>  array('url' => '/category/[slug]/', 'widget' => 'Widget_Archive', 'action' => 'render'),

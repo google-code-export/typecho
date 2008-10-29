@@ -225,7 +225,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
-        $routeExists = isset(Typecho_Router::getConfig()->{$type});
+        $routeExists = (NULL != Typecho_Router::get($type));
         
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);

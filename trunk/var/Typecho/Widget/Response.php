@@ -13,6 +13,7 @@ require_once 'Typecho/Response.php';
 /**
  * 从属于控制器的服务器回执处理类
  *
+ * @todo 增加对404,500的跳转支持
  * @package Controller
  */
 class Typecho_Widget_Response

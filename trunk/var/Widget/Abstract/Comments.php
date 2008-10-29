@@ -280,7 +280,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access public
      * @return void
      */
-    public function id()
+    public function theId()
     {
         echo 'comments-' , $this->coid;
     }

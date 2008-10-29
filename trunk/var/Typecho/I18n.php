@@ -7,9 +7,6 @@
  * @version    $Id: I18n.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
-/** 配置管理 */
-require_once 'Typecho/Config/Able.php';
-
 /**
  * I18n function
  *
@@ -47,7 +44,7 @@ function _e()
  *
  * @package I18n
  */
-class Typecho_I18n implements Typecho_Config_Able
+class Typecho_I18n
 {
     /**
      * 是否已经载入的标志位
@@ -55,15 +52,15 @@ class Typecho_I18n implements Typecho_Config_Able
      * @access private
      * @var boolean
      */
-    private $_loaded = false;
+    private static $_loaded = false;
     
     /**
-     * 默认配置
-     * 
+     * 语言文件
+     *
      * @access private
-     * @var Typecho_Config
+     * @var string
      */
-    private static $_config;
+    private static $_lang = NULL;
 
     /**
      * 翻译文字
@@ -74,13 +71,13 @@ class Typecho_I18n implements Typecho_Config_Able
      */
     public static function translate($string)
     {
-        if(self::$_config->lang)
+        if(self::$_lang)
         {
             if(!self::$_loaded)
             {
                 /** GetText支持 */
                 require_once 'Typecho/I18n/GetText.php';
-                Typecho_I18n_GetText::init(self::$_config->lang);
+                Typecho_I18n_GetText::init(self::$_lang);
                 self::$_loaded = true;
             }
 
@@ -167,25 +164,14 @@ class Typecho_I18n implements Typecho_Config_Able
     }
     
     /**
-     * 设置数据库默认配置
+     * 设置语言项
      * 
      * @access public
-     * @param mixed $config 配置信息
+     * @param string $lang 配置信息
      * @return void
      */
-    public static function setConfig($config)
+    public static function setLang($lang)
     {
-        self::$_config = Typecho_Config::factory($config);
-    }
-    
-    /**
-     * 获取数据库默认配置
-     * 
-     * @access public
-     * @return Typecho_Config
-     */
-    public static function getConfig()
-    {
-        return self::$_config;
+        self::$_lang = $lang;
     }
 }

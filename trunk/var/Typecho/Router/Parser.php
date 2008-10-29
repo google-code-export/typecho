@@ -34,7 +34,7 @@ class Typecho_Router_Parser
      * 路由器映射表
      * 
      * @access private
-     * @var Typecho_Config
+     * @var array
      */
     private $_routeMap;
     
@@ -50,10 +50,10 @@ class Typecho_Router_Parser
      * 设置路由表
      * 
      * @access public
-     * @param Typecho_Config $routeMap 路由器映射表
+     * @param array $routeMap 路由器映射表
      * @return void
      */
-    public function __construct(Typecho_Config $routeMap)
+    public function __construct(array $routeMap)
     {
         $this->_routeMap = $routeMap;
         
