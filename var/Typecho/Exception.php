@@ -7,16 +7,13 @@
  * @version    $Id: Exception.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
-/** 配置管理 */
-require_once 'Typecho/Config/Able.php';
-
 /**
  * Typecho异常基类
  * 主要重载异常打印函数
  *
  * @package Exception
  */
-class Typecho_Exception extends Exception implements Typecho_Config_Able
+class Typecho_Exception extends Exception
 {
     /** 权限异常 */
     const FORBIDDEN = 403;
@@ -42,9 +39,9 @@ class Typecho_Exception extends Exception implements Typecho_Config_Able
      * 默认配置
      * 
      * @access private
-     * @var Typecho_Config
+     * @var array
      */
-    private static $_config;
+    private static $_handles = array();
 
     /**
      * 异常基类构造函数,重载以增加$code的默认参数
@@ -136,23 +133,23 @@ class Typecho_Exception extends Exception implements Typecho_Config_Able
      * 设置默认配置
      * 
      * @access public
-     * @param mixed $config 配置信息
+     * @param array $handles 配置信息
      * @return void
      */
-    public static function setConfig($config)
+    public static function setHandles($handles)
     {
-        self::$_config = Typecho_Config::factory($config);
+        self::$_handles = $handles;
     }
     
     /**
      * 获取默认配置
      * 
      * @access public
-     * @return Typecho_Config
+     * @return array
      */
-    public static function getConfig()
+    public static function getHandles()
     {
-        return self::$_config;
+        return self::$_handles;
     }
 }
 
@@ -178,7 +175,7 @@ function exceptionHandler($exception)
 {
     @ob_clean();
 
-    if(!Typecho_Exception::getConfig())
+    if(!Typecho_Exception::getHandles())
     {    
         if($exception instanceof Typecho_Exception)
         {
@@ -196,28 +193,32 @@ function exceptionHandler($exception)
         {
             case Typecho_Exception::FORBIDDEN:
                 header('HTTP/1.1 403 Forbidden');
-                $handle = '_403';
+                $handle = '403';
                 break;
             case Typecho_Exception::NOTFOUND:
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
-                $handle = '_404';
+                $handle = '404';
                 break;
             case Typecho_Exception::RUNTIME:
                 header('HTTP/1.1 500 Internal Server Error');
-                $handle = '_500';
+                $handle = '500';
                 break;
             case Typecho_Exception::UNVAILABLE:
                 header('HTTP/1.1 503 Service Unvailable');
-                $handle = '_503';
+                $handle = '503';
                 break;
             default:
-                $handle = '_error';
+                $handle = 'error';
                 break;
         }
 
-        require_once Typecho_Exception::getConfig()->{$handle};
-        die();
+        $handles = Typecho_Exception::getHandles();
+        if(isset($handles[$handle]))
+        {
+            require $handles[$handle];
+            exit;
+        }
     }
 }
 
@@ -245,7 +246,7 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
         $errors = array();
     }
 
-    if(!Typecho_Exception::getConfig())
+    if(!Typecho_Exception::getHandles())
     {
         $errorWord = array (
             E_ERROR              => 'Error',

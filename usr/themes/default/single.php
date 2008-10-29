@@ -30,7 +30,7 @@
 			<ol id="comment_list">
 			<?php $this->comments()->to($comments); ?>
             <?php while($comments->next()): ?>
-				<li id="<?php $comments->id(); ?>">
+				<li id="<?php $comments->theId(); ?>">
 					<div class="c_user"><?php echo $comments->sequence(); ?> | <strong><?php $comments->author(); ?></strong> at <?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> </div>
 					<div class="c_text">
 						<?php $comments->content(); ?>
