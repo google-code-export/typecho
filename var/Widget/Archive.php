@@ -450,7 +450,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $value = parent::filter($value);
         
         if(!empty($value['password']) && 
-        $value['password'] == $this->request->protectPassword)
+        $value['password'] != $this->request->protectPassword)
         {
             $value['content'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
