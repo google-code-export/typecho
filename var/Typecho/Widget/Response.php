@@ -54,4 +54,29 @@ class Typecho_Widget_Response
     {
         return call_user_func_array(array('Typecho_Response', $method), $args);
     }
+
+    /**
+     * 跳转到异常页面
+     * 
+     * @param string $message 出错消息
+     * @param integer $code http出错码
+     * @access public
+     * @return void
+     * @throws Typecho_Widget_Exception
+     */
+    public function throwExceptionResponseByCode($message = NULL, $code = NULL)
+    {
+        /** Typecho_Widget_Exception */
+        require_once 'Typecho/Widget/Exception.php';
+        $availableCode = array(Typecho_Exception::FORBIDDEN, Typecho_Exception::NOTFOUND,
+                Typecho_Exception::RUNTIME, Typecho_Exception::UNVAILABLE);
+
+        /** 判断不合法的http response code */
+        if(!empty($code) && !in_array($code))
+        {
+            throw new Typecho_Widget_Exception('Invalid HTTP response code');
+        }
+
+        throw new Typecho_Widget_Exception($message, $code);
+    }
 }

@@ -63,7 +63,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         {
             if(!Typecho_Router::match($feedQuery))
             {
-                throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
+                $this->response->throwExceptionResponseByCode(_t('聚合页不存在'), 404);
             }
             
             /** 默认输出10则文章 **/
@@ -178,7 +178,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     {
                         if($this->request->protectPassword == $post['password'])
                         {
-                            throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), Typecho_Exception::FORBIDDEN);
+                            $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
                         }
                         else
                         {
@@ -188,7 +188,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
                 else
                 {
-                    throw new Typecho_Widget_Exception('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), Typecho_Exception::NOTFOUND);
+                    $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
                 
                 /** 设置风格文件 */
@@ -208,7 +208,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 if(!$category)
                 {
-                    throw new Typecho_Widget_Exception(_t('分类不存在'), Typecho_Exception::NOTFOUND);
+                    $this->response->throwExceptionResponseByCode(_t('分类不存在'), 404);
                 }
             
                 $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
@@ -252,7 +252,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 if(!$tag)
                 {
-                    throw new Typecho_Widget_Exception(_t('标签%s不存在', $this->request->slug), Typecho_Exception::NOTFOUND);
+                    $this->response->throwExceptionResponseByCode(_t('标签%s不存在', $this->request->slug), 404);
                 }
             
                 $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')

@@ -76,12 +76,12 @@ Typecho_Db::set($db);
 if(!__TYPECHO_DEBUG__)
 {
     Typecho_Exception::setHandles(array(
-        '403'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '404'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '500'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '501'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        '503'          =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
-        'error'        =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        0              =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        403            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        404            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        500            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        501            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
+        503            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php'
     ));
 }
 
