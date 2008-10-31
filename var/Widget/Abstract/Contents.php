@@ -14,6 +14,8 @@
  */
 class Widget_Abstract_Contents extends Widget_Abstract
 {
+    protected $ignorePassword = false;
+
     /**
      * 获取查询对象
      * 
@@ -224,7 +226,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['day'] = date('d', $value['created'] + $this->options->timezone);
         
         /** 生成访问权限 */
-        $value['allow'] = true;
+        $value['hidden'] = false;
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
@@ -260,7 +262,38 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         $value['slug'] = $tmpSlug;
         
+        /** 处理密码保护流程 */
+        if(!empty($value['password']) &&
+        $value['password'] != $this->request->protectPassword &&
+        !$this->ignorePassword && 
+        ($this->authorId != $this->user->id
+        || !$this->user->pass('editor', true)))  //如果用户的权限允许
+        {
+            $value['hidden'] = true;
+        
+            /** 抛出错误 */
+            if($this->request->isPost())
+            {
+                $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
+            }
+        }
+        
         $value = $this->plugin(__CLASS__)->filter($value);
+        
+        /** 如果访问权限被禁止 */
+        if($value['hidden'])
+        {
+            $value['text'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
+            '<p class="word">' . _t('请输入密码访问') . '</p>' .
+            '<p><input type="password" class="text" name="protectPassword" />
+            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
+            '</form>';
+            
+            $value['title'] = _t('此内容被密码保护');
+            $value['tags'] = array();
+            $value['commentsNum'] = 0;
+        }
+        
         return $value;
     }
 
@@ -358,8 +391,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $args = func_get_args();
         $num = intval($this->commentsNum);
         
-        echo '<a href="' , $this->permalink , '#comments">' . 
-        sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num) , '</a>';
+        echo sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num);
     }
 
     /**
@@ -390,7 +422,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $allow &= ($this->_row['allow' . ucfirst($permission)] == 'enable');
         }
 
-        return $allow and $this->allow;
+        return $allow and !$this->hidden;
     }
 
     /**
