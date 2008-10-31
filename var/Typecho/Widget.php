@@ -16,6 +16,9 @@ require_once 'Typecho/Widget/Response.php';
 /** Typecho_Config */
 require_once 'Typecho/Config.php';
 
+/** Typecho_Plugin */
+require_once 'Typecho/Plugin.php';
+
 /**
  * Typecho组件基类
  *
@@ -147,14 +150,11 @@ abstract class Typecho_Widget
      * 获取对象插件句柄
      * 
      * @access public
-     * @param string $adapter 适配器类型
      * @return Typecho_Plugin
      */
-    public function plugin($adapter)
+    public function plugin()
     {
-        /** Typecho_Plugin */
-        require_once 'Typecho/Plugin.php';
-        return Typecho_Plugin::factory(get_class($this), $adapter);
+        return Typecho_Plugin::factory(get_class($this));
     }
 
     /**
