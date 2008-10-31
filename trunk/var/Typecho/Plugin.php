@@ -208,6 +208,7 @@ class Typecho_Plugin
     {
         $handle = $this->_handle . ':' . $handle;
         $last = count($args);
+        $args[$last] = $last > 0 ? $args[0] : false;
         
         if(isset($this->_required[$handle]) && isset(self::$_plugins['files'][$handle]))
         {

@@ -3,7 +3,7 @@
 require_once '../config.inc.php';
 
 /** 注册一个初始化插件 */
-_p('admin/header.php', 'Action')->begin();
+Typecho_Plugin::factory('admin/header.php')->begin();
 
 $options = Typecho_Widget::widget('Widget_Options');
 $user = Typecho_Widget::widget('Widget_User');
