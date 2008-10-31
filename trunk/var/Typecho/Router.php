@@ -50,9 +50,16 @@ class Typecho_Router
                 
                 if(!empty($route['params']))
                 {
+                    /** Typecho_Ruquest */
+                    require_once 'Typecho/Request.php';
+                    
                     unset($matches[0]);
-                    $_REQUEST = array_merge($_REQUEST, array_combine($route['params'], $matches));
-                    reset($_REQUEST);
+                    $params = array_combine($route['params'], $matches);
+                    
+                    foreach($params as $key => $val)
+                    {
+                        Typecho_Request::setParameter($key, $val);
+                    }
                 }
                 
                 return $route;

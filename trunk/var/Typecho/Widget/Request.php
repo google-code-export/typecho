@@ -90,4 +90,16 @@ class Typecho_Widget_Request
     {
         Typecho_Request::setParameter($name, $value);
     }
+    
+    /**
+     * 判断当前配置值是否存在
+     *
+     * @access public
+     * @param string $name 配置名称
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return Typecho_Request::isSetParameter($name);
+    }
 }

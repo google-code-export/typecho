@@ -150,11 +150,12 @@ abstract class Typecho_Widget
      * 获取对象插件句柄
      * 
      * @access public
+     * @param string $handle 句柄
      * @return Typecho_Plugin
      */
-    public function plugin()
+    public function plugin($handle = NULL)
     {
-        return Typecho_Plugin::factory(get_class($this));
+        return Typecho_Plugin::factory(empty($handle) ? get_class($this) : $handle);
     }
 
     /**

@@ -222,6 +222,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['year'] = date('Y', $value['created'] + $this->options->timezone);
         $value['month'] = date('m', $value['created'] + $this->options->timezone);
         $value['day'] = date('d', $value['created'] + $this->options->timezone);
+        
+        /** 生成访问权限 */
+        $value['allow'] = true;
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
@@ -257,7 +260,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         $value['slug'] = $tmpSlug;
         
-        $value = $this->plugin()->filter($value);
+        $value = $this->plugin(__CLASS__)->filter($value);
         return $value;
     }
 
@@ -387,7 +390,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $allow &= ($this->_row['allow' . ucfirst($permission)] == 'enable');
         }
 
-        return $allow;
+        return $allow and $this->allow;
     }
 
     /**

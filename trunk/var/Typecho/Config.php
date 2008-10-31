@@ -193,7 +193,7 @@ class Typecho_Config implements Iterator
      * @param string $name 配置名称
      * @return boolean
      */
-    public function __isset($name)
+    public function __isSet($name)
     {
         return isset($this->_currentConfig[$name]);
     }
