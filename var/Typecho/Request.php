@@ -18,6 +18,14 @@ require_once 'Typecho/Common.php';
 class Typecho_Request
 {
     /**
+     * 内部参数
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_params = array();
+
+    /**
      * 获取指定的http传递参数
      *
      * @access public
@@ -27,7 +35,19 @@ class Typecho_Request
      */
     public static function getParameter($key, $default = NULL)
     {
-        return isset($_REQUEST[$key]) ? $_REQUEST[$key] : $default;
+        switch (true)
+        {
+            case isset(self::$_params[$key]):
+                return self::$_params[$key];
+            case isset($_GET[$key]):
+                return $_GET[$key];
+            case isset($_POST[$key]):
+                return $_POST[$key];
+            case isset($_COOKIE[$key]):
+                return $_COOKIE[$key];
+            default:
+                return $default;
+        }
     }
     
     /**
@@ -40,8 +60,31 @@ class Typecho_Request
      */
     public static function setParameter($name, $value)
     {
-        $_REQUEST[$name] = $value;
-        reset($_REQUEST);
+        self::$_params[$name] = $value;
+    }
+    
+    /**
+     * 参数是否存在
+     * 
+     * @access public
+     * @param string $key 指定的参数
+     * @return boolean
+     */
+    public static function isSetParameter($key)
+    {
+        switch (true)
+        {
+            case isset(self::$_params[$key]):
+                return true;
+            case isset($_GET[$key]):
+                return true;
+            case isset($_POST[$key]):
+                return true;
+            case isset($_COOKIE[$key]):
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -198,5 +241,35 @@ class Typecho_Request
         }
 
         return addslashes($ip);
+    }
+    
+    /**
+     * 请求方法是否为POST
+     *
+     * @return boolean
+     */
+    public static function isPost()
+    {
+        return ('POST' == $_SERVER['REQUEST_METHOD']);
+    }
+
+    /**
+     * 请求方法是否为GET
+     *
+     * @return boolean
+     */
+    public static function isGet()
+    {
+        return ('GET' == $_SERVER['REQUEST_METHOD']);
+    }
+
+    /**
+     * 请求方法是否为PUT
+     *
+     * @return boolean
+     */
+    public static function isPut()
+    {
+        return ('PUT' == $_SERVER['REQUEST_METHOD']);
     }
 }

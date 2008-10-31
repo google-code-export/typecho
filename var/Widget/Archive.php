@@ -49,6 +49,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_pageRow;
     
     /**
+     * 是否为单独文章或页面
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_isSingle = false;
+    
+    /**
      * prepare 
      * 
      * @access public
@@ -129,20 +137,27 @@ class Widget_Archive extends Widget_Abstract_Contents
                 {
                     $select->where('table.contents.cid = ?', $this->request->cid);
                 }
-            
-                if(NULL !== $this->request->slug)
+                else if(NULL !== $this->request->slug)
                 {
                     $select->where('table.contents.slug = ?', $this->request->slug);
                 }
+                else
+                {
+                    /** 对没有索引情况下的判断 */
+                    $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
+                }
+                
+                /** 设置标志位 */
+                $this->_isSingle = true;
                 
                 $select->where('table.contents.type = ?', Typecho_Router::$current)
                 ->group('table.contents.cid')->limit(1);
                 $post = $this->db->fetchRow($select, array($this, 'push'));
 
-                if($post && $post['category'] == (isset($this->request->category) ? $this->request->category : $post['category'])
-                && $post['year'] == (isset($this->request->year) ? $this->request->year : $post['year'])
-                && $post['month'] == (isset($this->request->month) ? $this->request->month : $post['month'])
-                && $post['day'] == (isset($this->request->day) ? $this->request->day : $post['day']))
+                if($post && $post['category'] == $this->request->getParameter('category', $post['category'])
+                && $post['year'] == $this->request->getParameter('year', $post['year'])
+                && $post['month'] == $this->request->getParameter('month', $post['month'])
+                && $post['day'] == $this->request->getParameter('day', $post['day']))
                 {
                     /** 取出tags */
                     $this->getTags();
@@ -172,19 +187,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** 设置归档类型 */
                     $this->options->archiveType = Typecho_Router::$current;
-                    
-                    /** 设定HTTP头 */
-                    if(!empty($post['password']))
-                    {
-                        if($this->request->protectPassword == $post['password'])
-                        {
-                            $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
-                        }
-                        else
-                        {
-                            $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
-                        }
-                    }
                 }
                 else
                 {
@@ -449,10 +451,32 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         $value = parent::filter($value);
         
-        if(!empty($value['password']) && 
-        $value['password'] != $this->request->protectPassword)
+        if(!empty($value['password']))
         {
-            $value['content'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
+            if($value['password'] == $this->request->protectPassword)
+            {
+                /** 保存密码至cookie */
+                if($this->request->isPost())
+                {
+                    $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
+                }
+            }
+            else
+            {
+                $value['allow'] = false;
+            
+                /** 抛出错误 */
+                if($this->request->isPost())
+                {
+                    $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
+                }
+            }
+        }
+        
+        /** 如果访问权限被禁止 */
+        if(!$value['allow'])
+        {
+            $value['text'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
             '<p><input type="password" class="text" name="protectPassword" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
@@ -476,8 +500,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments($mode = NULL, $desc = false)
     {
-        if(NULL == $this->password || 
-        $this->password == $this->request->protectPassword)
+        if($this->allow)
         {
             $mode = strtolower($mode);
             $parameter = array('cid' => $this->cid, 'desc' => $desc);
@@ -570,6 +593,8 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         /** 取出tags */
         $this->getTags();
+        
+        /** 如果访问权限被设置为禁止,则tag会被置为空 */
         return $this->widget('Widget_Contents_Related', array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
     }
     

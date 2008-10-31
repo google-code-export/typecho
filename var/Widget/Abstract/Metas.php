@@ -109,7 +109,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
         
         $value['slug'] = $tmpSlug;
         
-        $value = $this->plugin()->filter($value);
+        $value = $this->plugin(__CLASS__)->filter($value);
         return $value;
     }
     
