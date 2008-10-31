@@ -49,14 +49,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_pageRow;
     
     /**
-     * 是否为单独文章或页面
-     * 
-     * @access private
-     * @var boolean
-     */
-    private $_isSingle = false;
-    
-    /**
      * prepare 
      * 
      * @access public
@@ -146,9 +138,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                     /** 对没有索引情况下的判断 */
                     $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
-                
-                /** 设置标志位 */
-                $this->_isSingle = true;
+
+                /** 保存密码至cookie */
+                if($this->request->isPost() && isset($this->request->protectPassword))
+                {
+                    $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
+                }
                 
                 $select->where('table.contents.type = ?', Typecho_Router::$current)
                 ->group('table.contents.cid')->limit(1);
@@ -187,6 +182,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** 设置归档类型 */
                     $this->options->archiveType = Typecho_Router::$current;
+                    
+                    /** 设置403头 */
+                    if($post['hidden'])
+                    {
+                        header('HTTP/1.1 403 Forbidden', true);
+                    }
                 }
                 else
                 {
@@ -441,56 +442,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
-     * 重载filter,加入对权限的判断
-     * 
-     * @access public
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function filter(array $value)
-    {
-        $value = parent::filter($value);
-        
-        if(!empty($value['password']))
-        {
-            if($value['password'] == $this->request->protectPassword)
-            {
-                /** 保存密码至cookie */
-                if($this->request->isPost())
-                {
-                    $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
-                }
-            }
-            else
-            {
-                $value['allow'] = false;
-            
-                /** 抛出错误 */
-                if($this->request->isPost())
-                {
-                    $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
-                }
-            }
-        }
-        
-        /** 如果访问权限被禁止 */
-        if(!$value['allow'])
-        {
-            $value['text'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
-            '<p class="word">' . _t('请输入密码访问') . '</p>' .
-            '<p><input type="password" class="text" name="protectPassword" />
-            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
-            '</form>';
-            
-            $value['title'] = _t('此文章被密码保护');
-            
-            $value['tags'] = array();
-        }
-        
-        return $value;
-    }
-    
-    /**
      * 获取评论归档对象
      * 
      * @access public
@@ -500,7 +451,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments($mode = NULL, $desc = false)
     {
-        if($this->allow)
+        if(!$this->hidden)
         {
             $mode = strtolower($mode);
             $parameter = array('cid' => $this->cid, 'desc' => $desc);
