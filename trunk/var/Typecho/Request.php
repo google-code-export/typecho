@@ -7,12 +7,10 @@
  * @version    $Id$
  */
 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
-
 /**
  * 服务器请求处理类
  *
+ * @todo getSiteUrl
  * @package Request
  */
 class Typecho_Request
@@ -219,28 +217,19 @@ class Typecho_Request
      */
     public static function getClientIp()
     {
-        if(getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
+        switch(true)
         {
-            $ip = getenv("HTTP_CLIENT_IP");
+            case getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'):
+                return getenv('HTTP_CLIENT_IP');
+            case getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'): 
+                return getenv('HTTP_X_FORWARDED_FOR');
+            case getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'):
+                return getenv('REMOTE_ADDR');
+            case isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'):
+                return $_SERVER['REMOTE_ADDR'];
+            default:
+                return 'unknown';
         }
-        else if(getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown"))
-        {
-            $ip = getenv("HTTP_X_FORWARDED_FOR");
-        }
-        else if(getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown"))
-        {
-            $ip = getenv("REMOTE_ADDR");
-        }
-        else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown"))
-        {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        else
-        {
-            $ip = "unknown";
-        }
-
-        return addslashes($ip);
     }
     
     /**
