@@ -90,9 +90,10 @@ class Typecho_Plugin
      * 
      * @access public
      * @param array $plugins 插件列表
+     * @param mixed $callback 获取插件系统变量的代理函数
      * @return void
      */
-    public static function init(array $plugins)
+    public static function init(array $plugins, $callback)
     {
         $plugins['activated'] = array_key_exists('activated', $plugins) ? $plugins['activated'] : array();
         $plugins['handles'] = array_key_exists('handles', $plugins) ? $plugins['handles'] : array();
@@ -100,6 +101,7 @@ class Typecho_Plugin
         
         /** 初始化变量 */
         self::$_plugins = $plugins;
+        self::$_callback = $callback;
     }
     
     /**
@@ -160,17 +162,6 @@ class Typecho_Plugin
     public static function export()
     {
         return self::$_plugins;
-    }
-    
-    /**
-     * 设置获取插件系统变量的代理函数
-     * 
-     * @param mixed $callback
-     * @return void
-     */
-    public static function setOptionCallback($callback)
-    {
-        self::$_callback = $callback;
     }
     
     /**
