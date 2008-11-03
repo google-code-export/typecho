@@ -174,20 +174,20 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
-     * 获取插件的配置信息
+     * 获取插件系统参数
      * 
-     * @access public
      * @param string $pluginName 插件名称
-     * @return array
+     * @param string $optionName 参数名称
+     * @return void
      */
-    public function plugin($pluginName)
+    public function getPluginOption($pluginName, $optionName)
     {
         if(!isset($this->_pluginConfig[$pluginName]))
         {
             if(!empty($this->_row['plugin:' . $pluginName])
             && false !== ($options = unserialize($this->_row['plugin:' . $pluginName])))
             {
-                $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
+                $this->_pluginConfig[$pluginName] = $options;
             }
             else
             {
@@ -195,6 +195,6 @@ class Widget_Options extends Typecho_Widget
             }
         }
 
-        return $this->_pluginConfig[$pluginName];
+        return $this->_pluginConfig[$pluginName][$optionName];
     }
 }

@@ -1,5 +1,14 @@
 <?php
-class HelloWorld_Plugin extends Widget_Abstract implements Typecho_Plugin_Interface
+/**
+ * Hello World
+ * 
+ * @desc This is an example.
+ * @author qining
+ * @config yes
+ * @version 1.0.0
+ * @link http://www.typecho.org
+ */
+class HelloWorld_Plugin extends Typecho_Plugin_Abstract
 {
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
@@ -10,32 +19,7 @@ class HelloWorld_Plugin extends Widget_Abstract implements Typecho_Plugin_Interf
      */
     public static function activate()
     {
-        return;
-    }
-    
-    /**
-     * 禁用插件方法,如果禁用失败,直接抛出异常
-     * 
-     * @access public
-     * @return void
-     * @throws Typecho_Plugin_Exception
-     */
-    public static function deactivate()
-    {
-        return;
-    }
-    
-    /**
-     * 插件初始化方法
-     * 
-     * @access public
-     * @return void
-     */
-    public static function init()
-    {
-        /** 注册一个Layout插件 */
-        _p('admin/menu.php', 'Layout')->navBar 
-        = array('HelloWorld_Plugin', 'render');     //将其注册到自身的render函数
+        Typecho_Plugin::factory('admin/menu.php')->navBar->need('HelloWorld/mymenu.php');
     }
     
     /**
