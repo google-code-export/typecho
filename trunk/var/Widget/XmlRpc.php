@@ -28,20 +28,23 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         if(isset($_GET['rsd']))
         {
-            echo '<?xml version="1.0" encoding="' . $this->options->charset .'"?>'; ?>
-            <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
-            <service>
-            <engineName>Typecho</engineName>
-            <engineLink>http://www.typecho.org/</engineLink>
-            <homePageLink><?php echo $this->options->siteUrl; ?></homePageLink>
-            <apis>
-            <api name="WordPress" blogID="1" preferred="true" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
-            <api name="Movable Type" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
-            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
-            <api name="Blogger" blogID="1" preferred="false" apiLink="<?php echo $this->options->xmlRpcUrl; ?>" />
-            </apis>
-            </service>
-            </rsd><?php
+            echo 
+<<<EOF
+<?xml version="1.0" encoding="{$this->options->charset}"?>
+<rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
+    <service>
+        <engineName>Typecho</engineName>
+        <engineLink>http://www.typecho.org/</engineLink>
+        <homePageLink>{$this->options->siteUrl}</homePageLink>
+        <apis>
+            <api name="WordPress" blogID="1" preferred="true" apiLink="{$this->options->xmlRpcUrl}" />
+            <api name="Movable Type" blogID="1" preferred="false" apiLink="{$this->options->xmlRpcUrl}" />
+            <api name="MetaWeblog" blogID="1" preferred="false" apiLink="{$this->options->xmlRpcUrl}" />
+            <api name="Blogger" blogID="1" preferred="false" apiLink="{$this->options->xmlRpcUrl}" />
+        </apis>
+    </service>
+</rsd>
+EOF
         }
         else
         {
