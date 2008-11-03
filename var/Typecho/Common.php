@@ -105,7 +105,7 @@ class Typecho_Common
      */
     public static function stripslashesDeep($value)
     {
-        return is_array($value) ? array_map(array('Typecho_API', 'stripslashesDeep'), $value) : stripslashes($value);
+        return is_array($value) ? array_map(array('Typecho_Common', 'stripslashesDeep'), $value) : stripslashes($value);
     }
 
     /**
@@ -400,10 +400,10 @@ class Typecho_Common
     public static function cutParagraph($string)
     {
         /** 锁定自闭合标签 */
-        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\/\>/is", array('Typecho_API', '__lockHTML'), $string);
+        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\/\>/is", array('Typecho_Common', '__lockHTML'), $string);
         
         /** 锁定开标签 */
-        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_API', '__lockHTML'), $string);
+        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         /** 区分段落 */
         $string = preg_replace("/(\r\n|\n|\r)/", "\n", $string);

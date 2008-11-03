@@ -132,7 +132,7 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
         /** 创建描述元素 */
         if(empty($this->_description))
         {
-            $this->_description = new Typecho_Widget_Helper_Layout('p', array('class' => 'summary')) : $this->_description;
+            $this->_description = new Typecho_Widget_Helper_Layout('p', array('class' => 'summary'));
             $this->container->addItem($this->_description);
         }
         

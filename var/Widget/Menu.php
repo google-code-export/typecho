@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-class Widget_Menu extends Typecho_Widget
+class Widget_Menu extends Widget_Abstract
 {
     /**
      * 父菜单列表
@@ -52,7 +52,7 @@ class Widget_Menu extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function __construct()
+    public function init()
     {
         $this->_parentMenu = array(_t('控制台'), _t('创建'), _t('管理'), _t('设置'));
         
@@ -87,8 +87,8 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
         ));
         
-        $this->_parentMenu = _p('Widget_Menu', 'Filter')->parentMenu($this->_parentMenu);
-        $this->_childMenu = _p('Widget_Menu', 'Filter')->childMenu($this->_childMenu);
+        $this->_parentMenu = $this->plugin()->parentMenu($this->_parentMenu);
+        $this->_childMenu = $this->plugin()->childMenu($this->_childMenu);
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
