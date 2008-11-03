@@ -128,7 +128,5 @@ Typecho_Response::setDefaultCharset(__TYPECHO_CHARSET__);
 Typecho_Response::setContentType('text/html');
 
 /** 初始化插件 */
-Typecho_Plugin::init(Typecho_Widget::widget('Widget_Options')->plugins);
-
-/** 设置插件参数获取代理 */
-Typecho_Plugin::setOptionCallback(array(Typecho_Widget::widget('Widget_Options'), 'getPluginOption'));
+Typecho_Plugin::init(Typecho_Widget::widget('Widget_Options')->plugins,
+array(Typecho_Widget::widget('Widget_Options'), 'getPluginOption'));
