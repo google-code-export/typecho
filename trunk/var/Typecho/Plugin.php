@@ -50,6 +50,13 @@ class Typecho_Plugin
     private static $_tmp = array();
     
     /**
+     * 获取插件系统变量代理方法
+     * 
+     * @var mixed
+     */
+    private static $_callback;
+    
+    /**
      * 唯一句柄
      * 
      * @access private
@@ -153,6 +160,29 @@ class Typecho_Plugin
     public static function export()
     {
         return self::$_plugins;
+    }
+    
+    /**
+     * 设置获取插件系统变量的代理函数
+     * 
+     * @param mixed $callback
+     * @return void
+     */
+    public static function setOptionCallback($callback)
+    {
+        self::$_callback = $callback;
+    }
+    
+    /**
+     * 获取系统参数
+     * 
+     * @param string $pluginName 插件名称
+     * @param string $optionName 参数名称
+     * @return mixed
+     */
+    public static function getOption($pluginName, $optionName)
+    {
+        return call_user_func($callback, $pluginName, $optionName);
     }
     
     /**
