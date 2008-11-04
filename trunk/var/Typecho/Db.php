@@ -63,12 +63,6 @@ class Typecho_Db
      * @var Typecho_Db_Adapter
      */
     private $_adapter;
-
-    /**
-     * sql词法构建器
-     * @var Typecho_Db_Query
-     */
-    private $_query;
     
     /**
      * 默认配置
@@ -255,6 +249,20 @@ class Typecho_Db
      */
     public function query($query, $op = self::READ, $action = self::SELECT)
     {
+        /** 在适配器中执行查询 */
+        if($query instanceof Typecho_Db_Query)
+        {
+            $action = $query->getAttribute('action');
+            $op = (self::UPDATE == $action || self::DELETE == $action 
+            || self::INSERT == $action) ? self::WRITE : self::READ;
+        }
+        else if(!is_string($query))
+        {
+            /** 如果query不是对象也不是字符串,那么将其判断为查询资源句柄,直接返回 */
+            return $query;
+        }
+        
+        /** 选择连接池 */
         if(!isset($this->_connectedPool[$op]))
         {
             if(empty($this->_pool[$op]))
@@ -276,15 +284,8 @@ class Typecho_Db
             $this->_connectedPool[$op] = &$selectConnectionHandle;
         }
         $handle = $this->_connectedPool[$op];
-    
-        //在适配器中执行查询
-        if($query instanceof Typecho_Db_Query)
-        {
-            $action = $query->getAttribute('action');
-            $op = (self::UPDATE == $action || self::DELETE == $action 
-            || self::INSERT == $action) ? self::WRITE : self::READ;
-        }
 
+        /** 提交查询 */
         $resource = $this->_adapter->query($query, $handle, $op, $action);
 
         if($action)
@@ -350,13 +351,13 @@ class Typecho_Db
         $resource = $this->query($query, self::READ);
         
         /** 取出过滤器 */
-        if(!empty($filter))
+        if($filter)
         {
             list($object, $method) = $filter;
         }
 
         return ($rows = $this->_adapter->fetch($resource)) ?
-        ($filter ? call_user_func(array(&$object, $method), $rows) : $rows) :
+        ($filter ? $object->$method($rows) : $rows) :
         array();
     }
     
@@ -364,11 +365,21 @@ class Typecho_Db
      * 一次取出一个对象
      *
      * @param mixed $query 查询对象
+     * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      * @return array
      */
-    public function fetchObject($query)
+    public function fetchObject($query, array $filter = NULL)
     {
         $resource = $this->query($query, self::READ);
-        return $this->_adapter->fetchObject($resource);
+
+        /** 取出过滤器 */
+        if($filter)
+        {
+            list($object, $method) = $filter;
+        }
+        
+        return ($rows = $this->_adapter->fetchObject($resource)) ?
+        ($filter ? $object->$method($rows) : $rows) :
+        new stdClass();
     }
 }
