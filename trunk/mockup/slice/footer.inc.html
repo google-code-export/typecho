@@ -1,2 +1,38 @@
+    <script type="text/javascript" src="javascript/mootools-1.2.1-core-yc.js"></script>
+    <script type="text/javascript"> 
+        (function () {
+            var typechoGuid = function (el, config) {
+                var _dl = $(el);
+                var _dt = _dl.getElements('dt');
+                var _dd = _dl.getElements('dd');
+
+                var handle = {
+                   reSet: function() {
+                        _dt.removeClass('current');
+                        _dd.setStyle('display', 'none');
+                   }
+                }
+
+                _dt.addEvent('click', function(event){
+                    handle.reSet();
+                    if (event.target.tagName.toLowerCase() == 'a') {
+                        event.target = event.target.getParent('dt');
+                    }
+                    event.target.addClass('current'); // 高亮当前状态
+                    event.target.getNext('dd').setStyle('left', event.target.getPosition().x - 5).setStyle('display', 'block');
+                    event.stop();
+                });
+
+                $(document).addEvent('click', handle.reSet);
+                return handle;
+            };
+
+            window.addEvent('domready', function() {
+                var handle = new typechoGuid('typecho:guid');
+                handle.reSet();
+            });
+        })();
+
+    </script> 
     </body>
 </html>
