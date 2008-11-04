@@ -8,3 +8,5 @@ Typecho_Plugin::factory('admin/header.php')->begin();
 $options = Typecho_Widget::widget('Widget_Options');
 $user = Typecho_Widget::widget('Widget_User');
 $notice = Typecho_Widget::widget('Widget_Notice');
+$menu = Typecho_Widget::widget('Widget_Menu');
+$title = _t('%s - Powered by Typecho', $menu->title);

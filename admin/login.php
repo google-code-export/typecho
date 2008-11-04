@@ -1,6 +1,5 @@
 <?php
 include 'common.php';
-$title = _t('登录到%s - Powered by Typecho', $options->title);
 include 'header.php';
 ?>
 <div class="body body-950">

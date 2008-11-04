@@ -19,7 +19,7 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
      */
     public static function activate()
     {
-        Typecho_Plugin::factory('admin/menu.php')->navBar->need('HelloWorld/mymenu.php');
+        Typecho_Plugin::factory('admin/menu.php')->navBar = array('HelloWorld_Plugin', 'render');
     }
     
     /**
@@ -74,6 +74,6 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
     public static function render()
     {
         echo '<span style="border:1px solid #999;padding:2px;background:#E37400;color:#222">' . 
-        $this->options->plugin('HelloWorld')->word . '</span>';
+        Typecho_Plugin::getOption('HelloWorld', 'word') . '</span>';
     }
 }

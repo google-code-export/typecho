@@ -12,7 +12,7 @@
  *
  * @package Widget
  */
-class Widget_Menu extends Widget_Abstract
+class Widget_Menu extends Typecho_Widget
 {
     /**
      * 父菜单列表
@@ -47,6 +47,41 @@ class Widget_Menu extends Widget_Abstract
     private $_currentChild = 0;
     
     /**
+     * 全局选项
+     * 
+     * @access protected
+     * @var Widget_Options
+     */
+    protected $options;
+
+    /**
+     * 用户对象
+     * 
+     * @access protected
+     * @var Widget_User
+     */
+    protected $user;
+    
+    /**
+     * 当前菜单标题
+     * @var string
+     */
+    public $title;
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {
+        /** 初始化常用组件 */
+        $this->options = $this->widget('Widget_Options');
+        $this->user = $this->widget('Widget_User');
+    }
+    
+    /**
      * 构造函数,初始化菜单
      * 
      * @access public
@@ -54,9 +89,13 @@ class Widget_Menu extends Widget_Abstract
      */
     public function init()
     {
-        $this->_parentMenu = array(_t('控制台'), _t('创建'), _t('管理'), _t('设置'));
+        $this->_parentMenu = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
         
-        $this->_childMenu =  array(array(
+        $this->_childMenu =  array(
+        array(
+            array(_t('登录'), _t('登录到%s', $this->options->title), '/admin/login.php', 'visitor'),
+        ),
+        array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
             array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
@@ -92,22 +131,22 @@ class Widget_Menu extends Widget_Abstract
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
-        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
         $childMenu = $this->_childMenu;
         $match = 0;
+        $adminUrl = $this->options->siteUrl;
         
         foreach($childMenu as $parentKey => $parentVal)
         {
             foreach($parentVal as $childKey => $childVal)
             {
-                $link = Typecho_API::pathToUrl($childVal[2], $adminUrl);
+                $link = Typecho_Common::pathToUrl($childVal[2], $adminUrl);
                 if(0 === strpos($url, $link) && strlen($link) > $match)
                 {
                     $this->_currentParent =  $parentKey;
                     $this->_currentChild =  $childKey;
                 }
                 
-                if(!Typecho_API::factory('Widget_Users_Current')->pass($childVal[3], true))
+                if('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true))
                 {
                     unset($this->_childMenu[$parentKey][$childKey]);
                 }
@@ -119,8 +158,15 @@ class Widget_Menu extends Widget_Abstract
             }
         }
 
-        Typecho_API::factory('Widget_Users_Current')->pass($this->_childMenu[$this->_currentParent][$this->_currentChild][3]);
+        if('visitor' != $this->_childMenu[$this->_currentParent][$this->_currentChild][3])
+        {
+            $this->user->pass($this->_childMenu[$this->_currentParent][$this->_currentChild][3]);
+        }
+        
         $this->title = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
+        array_shift($this->_parentMenu);
+        array_shift($this->_childMenu);
+        $this->_currentParent --;
     }
 
     /**
@@ -129,48 +175,25 @@ class Widget_Menu extends Widget_Abstract
      * @access public
      * @return string
      */
-    public function outputParent($tag = NULL, $class = 'current')
+    public function output($class = 'current', $childClass = 'current')
     {
-        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
+        $adminUrl = $this->options->siteUrl;
         
         foreach($this->_parentMenu as $key => $title)
         {
             $current = reset($this->_childMenu[$key]);
-            $link = Typecho_API::pathToUrl($current[2], $adminUrl);
+            $link = Typecho_Common::pathToUrl($current[2], $adminUrl);
+
+            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\r\n";
             
-            echo (NULL === $tag ? NULL  : "<{$tag}>")
-            . "<a href=\"{$link}\"" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) 
-            . " title=\"{$title}\"><span>{$title}</span></a>"
-            . (NULL === $tag ? NULL  : "</{$tag}>");
-        }
-    }
-    
-    /**
-     * 输出子菜单
-     * 
-     * @access public
-     * @param string $tag HTML标签
-     * @param string $class 当前菜单css类
-     * @return string
-     */
-    public function outputChild($tag = NULL, $class = 'current-2')
-    {
-        $adminUrl = Typecho_API::factory('Widget_Options')->siteUrl;
-        $num = count($this->_childMenu[$this->_currentParent]) - 1;
-        $i = 0;
-        
-        foreach($this->_childMenu[$this->_currentParent] as $key => $menu)
-        {
-            if(Typecho_API::factory('Widget_Users_Current')->pass($menu[3], true))
+            echo "<dd><ul>\r\n";
+            foreach($this->_childMenu[$key] as $inkey => $menu)
             {
-                $link = Typecho_API::pathToUrl($menu[2], $adminUrl);
-                echo (NULL === $tag ? NULL  : "<{$tag}" . (($i == $num) ? ' class="last"' : NULL) . ">")
-                . "<a href=\"{$link}\"" . ($key == $this->_currentChild ? ' class="' . $class . '"' : NULL) 
-                . " title=\"{$menu[0]}\">{$menu[0]}</a>"
-                . (NULL === $tag ? NULL  : "</{$tag}>");
+                $link = Typecho_Common::pathToUrl($menu[2], $adminUrl);
+                echo "<li><a href=\"{$link}\"" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) 
+                . " title=\"{$menu[0]}\">{$menu[0]}</a></li>\r\n";
             }
-            
-            $i ++;
+            echo "</ul></dd>\r\n";
         }
     }
 }
