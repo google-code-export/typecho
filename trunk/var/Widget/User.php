@@ -35,6 +35,20 @@ class Widget_User extends Typecho_Widget
     protected $db;
     
     /**
+     * 用户组
+     *
+     * @access public
+     * @var array
+     */
+    public $groups = array(
+            'administrator' => 0,
+            'editor'		=> 1,
+            'contributor'	=> 2,
+            'subscriber'	=> 3,
+            'visitor'		=> 4
+            );
+    
+    /**
      * 准备函数
      * 
      * @access public

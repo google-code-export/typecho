@@ -147,6 +147,25 @@ abstract class Typecho_Widget
     }
     
     /**
+     * post事件触发
+     * 
+     * @return mixed
+     */
+    public function onPost()
+    {
+        if($this->request->isPost())
+        {
+            return $this;
+        }
+        else
+        {
+            /** Typecho_Widget_Helper_Null */
+            require_once 'Typecho/Widget/Helper/Empty.php';
+            return new Typecho_Widget_Helper_Empty();
+        }
+    }
+    
+    /**
      * 获取对象插件句柄
      * 
      * @access public

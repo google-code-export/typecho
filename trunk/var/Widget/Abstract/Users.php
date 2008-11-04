@@ -20,20 +20,6 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
-     * 用户组
-     *
-     * @access public
-     * @var array
-     */
-    public $groups = array(
-            'administrator' => 0,
-            'editor'		=> 1,
-            'contributor'	=> 2,
-            'subscriber'	=> 3,
-            'visitor'		=> 4
-            );
-
-    /**
      * 查询方法
      * 
      * @access public
