@@ -544,7 +544,9 @@ margin-top: 25px;
 }
 
 .typecho-head-guid dd {
+    /*
     display:none;
+    */
     position:absolute;
     background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
     font-size: 13px;
