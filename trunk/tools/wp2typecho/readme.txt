@@ -1,0 +1,1 @@
+链接数据转换(wp2typecho.link.php)程序要在meta(wp2typecho.term.php)转换之后再运行

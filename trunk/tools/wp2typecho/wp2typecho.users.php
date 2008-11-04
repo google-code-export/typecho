@@ -1,6 +1,6 @@
 <?php
 /**
- *wordpress×ªtypechoÓÃ»§Êý¾Ý×ª»»(users)³ÌÐò  
+ *wordpressè½¬typechoç”¨æˆ·æ•°æ®è½¬æ¢(users)ç¨‹åº
  */
 
 $res = mysql_connect("localhost", "root", "123456");
@@ -13,7 +13,7 @@ while($userInfo = mysql_fetch_array($userQuery)) {
     $uid = $userInfo['ID'];
     $name = $userInfo['user_login'];
     /**
-     * ´ËÓÃÃÜÂë×ª»»ÔÝÊ±¿ÕÈ± 
+     * æ­¤ç”¨å¯†ç è½¬æ¢æš‚æ—¶ç©ºç¼º
      */
     $password = $userInfo[''];
     $mail = $userInfo['user_email'] ;
@@ -23,7 +23,7 @@ while($userInfo = mysql_fetch_array($userQuery)) {
     $activated = $created;
     $logged = $created;
 /**
- * »ñÈ¡ÓÃ»§×éÐÅÏ¢ 
+ * èŽ·å–ç”¨æˆ·ç»„ä¿¡æ¯
  */
     $userMeta = mysql_fetch_array(mysql_query("SELECT meta_value FROM {$tablepre}usermeta WHERE meta_key='wp_capabilities' AND user_id = $userInfo[ID]"));
     if($userMeta['meta_value']) {
