@@ -1,6 +1,6 @@
 <?php
 /**
- *wordpress×ªtypechoÎÄÕÂÊý¾Ý×ª»»(contents)³ÌÐò  
+ *wordpressè½¬typechoæ–‡ç« æ•°æ®è½¬æ¢(contents)ç¨‹åº
  */
 
 $res = mysql_connect("localhost", "root", "123456");
@@ -18,7 +18,7 @@ while($articleInfo = mysql_fetch_array($articleQuery)) {
     $modified = strtotime($articleInfo['post_modified_gmt']);
     $text =  addslashes($articleInfo['post_content']);
 /**
- * Ô¤Áô×Ö¶Î
+ * é¢„ç•™å­—æ®µ
  */
 
     $meta = $cid;
