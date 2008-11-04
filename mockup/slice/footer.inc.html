@@ -14,16 +14,17 @@
                 }
 
                 _dt.addEvent('click', function(event){
-                    handle.reSet();
-                    if (event.target.tagName.toLowerCase() == 'a') {
-                        event.target = event.target.getParent('dt');
+                    handle.reSet(); // 重置菜单
+                    if (event.target.nodeName.toLowerCase() == 'a') {
+                        event.target = $(event.target).getParent('dt');
                     }
                     event.target.addClass('current'); // 高亮当前状态
                     event.target.getNext('dd').setStyle('left', event.target.getPosition().x - 5).setStyle('display', 'block');
-                    event.stop();
+                    event.stop(); // 停止事件传播
                 });
 
                 $(document).addEvent('click', handle.reSet);
+
                 return handle;
             };
 
