@@ -86,6 +86,7 @@ if(!__TYPECHO_DEBUG__)
 }
 
 /** 定义路由参数 */
+//TODO 将路由信息存放至数据库中
 Typecho_Router::setRoutes(array(
     'index'             =>  array('url' => '/', 'widget' => 'Widget_Archive', 'action' => 'render'),
     'post'              =>  array('url' => '/archives/[cid:digital]/', 'widget' => 'Widget_Archive', 'action' => 'render'),
