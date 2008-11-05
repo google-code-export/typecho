@@ -203,7 +203,7 @@ class Typecho_Db
     public function select()
     {
         $args = func_get_args();
-        return call_user_func_array(array($this->sql(), 'select'), empty($args) ? array('*') : $args);
+        return call_user_func_array(array($this->sql(), 'select'), $args ? $args : array('*'));
     }
     
     /**

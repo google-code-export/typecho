@@ -100,7 +100,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function init()
     {
         /** 处理搜索结果跳转 */
-        if(NULL != $this->request->s)
+        if($this->request->isSetParameter('s'))
         {
             $filterKeywords = Typecho_Common::filterSearchQuery($this->request->s);
             
