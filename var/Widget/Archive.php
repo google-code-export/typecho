@@ -12,7 +12,7 @@
  * 定义的css类
  * p.more:阅读全文链接所属段落
  *
- * @todo 增加feed支持
+ * TODO 增加feed支持
  * @package Widget
  */
 class Widget_Archive extends Widget_Abstract_Contents
