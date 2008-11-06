@@ -10,7 +10,7 @@
 /**
  * 服务器请求处理类
  *
- * @todo getSiteUrl
+ * TODO getSiteUrl
  * @package Request
  */
 class Typecho_Request
