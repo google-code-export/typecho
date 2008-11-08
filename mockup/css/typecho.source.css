@@ -537,6 +537,8 @@ margin-top: 25px;
     outline: none;
 }
 
+/** 增加focus类用来标示当前的菜单项 by 70 */
+.typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
     background: #e47e00 url(../images/typecho-head-guid-shadow.png) repeat-x;
@@ -544,9 +546,7 @@ margin-top: 25px;
 }
 
 .typecho-head-guid dd {
-    /*
     display:none;
-    */
     position:absolute;
     background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
     font-size: 13px;
@@ -568,7 +568,7 @@ margin-top: 25px;
     margin-bottom: 2px;
 }
 
-.typecho-head-guid dd li.current a, .typecho-head-guid dd li.current a:hover {
+.typecho-head-guid dd li.focus a, .typecho-head-guid dd li.focus a:hover {
     background: #E68A17;
     color: #fff;
 }

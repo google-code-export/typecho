@@ -15,7 +15,7 @@ include 'header.php';
                     <p><label for="password"><?php _e('密码'); ?>:</label> <input type="password" name="password" class="text" /></p>
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" id="remember" /> <?php _e('记住我'); ?></label>
-                    <button><?php _e('登录'); ?></button>
+                    <button type="submit"><?php _e('登录'); ?></button>
                     </p>
                     <?php else: ?>
                     <div class="message notice">
