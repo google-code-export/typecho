@@ -8,7 +8,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-06 start-01 typecho-dashboard-nav">
-                <h3 class="intro"> 欢迎使用 Typecho，您可以使用下面的链接开始您的 Blog 之旅：</h3>
+                <h3 class="intro"><?php _e('欢迎使用 Typecho,您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
             
                 <div class="intro-link">
                     <ul>
@@ -24,30 +24,31 @@ include 'menu.php';
             
                 <h3>Blog Stats</h3>
                 <div class="status">
-                    <p>目前有 <em>100</em> 篇 Blog，并有 <em>56600</em> 条留言在已设定的 <em>5</em> 个分类中。</p>
-                    <p>最后登录：2008-09-07 星期日 </p>
+                	<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?>
+                    <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条留言在已设定的 <em>%s</em> 个分类中.', 
+                    $stat->myPublishedPostsNum, $stat->publishedCommentsNum, $stat->categoriesNum); ?></p>
+                    <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>
                 </div>
             </div>
 
             <div class="column-12 start-07 typecho-dashboard-main">
                 <div class="section">
-                    <h4>最近发表的文章</h4>
+                    <h4><?php _e('最近发表的文章'); ?></h4>
+                    <?php Typecho_Widget::widget('Widget_Contents_Post_Recent')->to($posts); ?>
                     <ul>
-                        <li><a href="#" class="title">杭州杭州院成立研究院成立</a> 发布于
-                        <a href="#" class="category">开发相关</a>，<a href="#" class="category">新闻动态</a> - <span class="date">8月7日</span></li>
-            			<li><a href="#" class="title">Some Big Sites Are Using Google Trends To Direct Editorial</a> 发布于
-                        <a href="#" class="category">开发相关</a>，<a href="#" class="category">新闻动态</a> - <span class="date">8月7日</span></li>
-            			<li><a href="#" class="title">上面的是随便在TechCrunch里找到的一个英长文标题测试</a> 发布于
-                        <a href="#" class="category">开发相关</a>，<a href="#" class="category">新闻动态</a> - <span class="date">8月7日</span></li>
+                    <?php while($posts->next()): ?>
+                        <li><a href="<?php $posts->permalink(); ?>" class="title"><?php $posts->title(); ?></a> <?php _e('发布于'); ?>
+                        <?php $posts->category(', '); ?> - <span class="date"><?php $posts->dateWord(); ?></span></li>
+                    <?php endwhile; ?>
                     </ul>
                 </div>
             	<div class="section">
-                    <h4>最新得到的回复</h4>
+                    <h4><?php _e('最新得到的回复'); ?></h4>
                     <ul>
-                        <?php for ($i = 0; $i < 5; $i++) { ?>
-                        <li><a href="#">Micheal Scofield</a> 发表在 <a href="#" class="title">越狱4里的 Shut up 科技男</a> - <span class="date">8月7日</span></li>
-                        <?php } ?>
-            			<li><a href="#">Micheal Scofield</a> 发表在 <a href="#" class="title">Some Big Sites Are Using Google Trends To Direct Editorial</a> - <span class="date">8月7日</span></li>
+                        <?php Typecho_Widget::widget('Widget_Comments_Recent')->to($comments); ?>
+                        <?php while($comments->next()): ?>
+                        <li><?php $comments->author(true); ?> <?php _e('发布于'); ?> <a href="<?php $comments->permalink(); ?>" class="title"><?php $comments->title(); ?></a> - <span class="date"><?php $comments->dateWord(); ?></span></li>
+                        <?php endwhile; ?>
                     </ul>
                 </div>
             </div>
@@ -73,4 +74,5 @@ include 'menu.php';
         </div>
     </div>
 </div>
+<?php include 'common-js.php'; ?>
 <?php include 'copyright.php'; ?>

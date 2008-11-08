@@ -175,7 +175,7 @@ class Widget_Menu extends Typecho_Widget
      * @access public
      * @return string
      */
-    public function output($class = 'current', $childClass = 'current')
+    public function output($class = 'focus', $childClass = 'focus')
     {
         $adminUrl = $this->options->siteUrl;
         
@@ -190,8 +190,8 @@ class Widget_Menu extends Typecho_Widget
             foreach($this->_childMenu[$key] as $inkey => $menu)
             {
                 $link = Typecho_Common::pathToUrl($menu[2], $adminUrl);
-                echo "<li><a href=\"{$link}\"" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) 
-                . " title=\"{$menu[0]}\">{$menu[0]}</a></li>\r\n";
+                echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
+                "><a href=\"{$link}\" title=\"{$menu[0]}\">{$menu[0]}</a></li>\r\n";
             }
             echo "</ul></dd>\r\n";
         }

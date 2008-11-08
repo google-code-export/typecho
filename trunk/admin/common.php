@@ -1,6 +1,6 @@
 <?php
 /** 载入配置文件 */
-require_once '../config.inc.php';
+require_once dirname(__FILE__) . '/../config.inc.php';
 
 /** 注册一个初始化插件 */
 Typecho_Plugin::factory('admin/header.php')->begin();
