@@ -550,7 +550,7 @@ margin-top: 25px;
     position:absolute;
 	/* 替换下拉菜单背景 by fen (2008-11-09) */
     /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat; */
-	background: #E5EAD1;
+	background: #EFF5D9;
     font-size: 13px;
     overflow: hidden;
     /* width:160px; */
@@ -568,7 +568,7 @@ margin-top: 25px;
     top: -1px;
 	/* 给ul添加背景和边框 */
 	background: #F7FBE9;
-	border: 1px solid #CBCB96;
+	border: 1px solid #D1DAAD;
 	padding: 5px;
 }
 
