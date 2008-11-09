@@ -531,7 +531,7 @@ margin-top: 25px;
     color: #fff;
     height: 26px;
     line-height: 26px;
-    padding: 0 15px;
+    padding: 0 20px;
     background: #333;
     display: block;
     outline: none;
@@ -541,36 +541,56 @@ margin-top: 25px;
 .typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
-    background: #e47e00 url(../images/typecho-head-guid-shadow.png) repeat-x;
+    background: #e47e00 url(../images/sprite.png) 0 -360px repeat-x;
     text-decoration: none;
 }
 
 .typecho-head-guid dd {
     display:none;
     position:absolute;
-    background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
+	/* 替换下拉菜单背景 by fen (2008-11-09) */
+    /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat; */
+	background: #E5EAD1;
     font-size: 13px;
     overflow: hidden;
-    width:160px;
+    /* width:160px; */
     z-index:100;
     border-top: none;
-    padding: 6px 10px 15px;
+    /*padding: 6px 10px 15px;*/
+	padding: 0 2px 1px 1px;
     z-index: 250;
     top: 30px;
+	*+width: 240px; /* IE下需要这个宽度，不知道有没有非hack的解决方案 */
 }
 
 .typecho-head-guid ul {
     position: relative;
-    top: 0;
+    top: -1px;
+	/* 给ul添加背景和边框 */
+	background: #F7FBE9;
+	border: 1px solid #CBCB96;
+	padding: 5px;
 }
 
 .typecho-head-guid li {
-    margin-bottom: 2px;
+	margin-bottom: 1px;
 }
 
 .typecho-head-guid dd li.focus a, .typecho-head-guid dd li.focus a:hover {
     background: #E68A17;
     color: #fff;
+}
+
+/* 快捷键 */
+.typecho-head-guid dd a span {
+	float: right;
+	margin: 2px 0 0 30px;
+	font-size: 11px;
+	color: #666;
+}
+
+.typecho-head-guid dd li.focus a span, .typecho-head-guid dd li.focus a:hover span {
+	color: #fff;
 }
 
 .typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
