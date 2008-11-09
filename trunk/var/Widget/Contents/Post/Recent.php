@@ -30,7 +30,6 @@ class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
         $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
     
         $this->db->fetchAll($this->select()
-        ->where('table.contents.password IS NULL')
         ->where('table.contents.created < ?', $this->options->gmtTime)
         ->where('table.contents.type = ?', 'post')
         ->group('table.contents.cid')

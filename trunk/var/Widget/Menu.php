@@ -36,7 +36,7 @@ class Widget_Menu extends Typecho_Widget
      * @access private
      * @var integer
      */
-    private $_currentParent = 0;
+    private $_currentParent = 1;
     
     /**
      * 当前子菜单

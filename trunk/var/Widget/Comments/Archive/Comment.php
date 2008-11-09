@@ -29,9 +29,9 @@ class Widget_Comments_Archive_Comment extends Widget_Abstract_Comments
      */
     public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
     {
-        $this->db->fetchAll($this->select()->where('table.comments.`status` = ?', 'approved')
-        ->where('table.comments.`mode` = ?', 'comment')
-        ->where('table.contents.`cid` = ?', $this->parameter()->cid)->group('table.comments.`coid`')
-        ->order('table.comments.`created`', $this->parameter()->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
+        $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
+        ->where('table.comments.mode = ?', 'comment')
+        ->where('table.contents.cid = ?', $this->parameter()->cid)->group('table.comments.coid')
+        ->order('table.comments.created', $this->parameter()->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

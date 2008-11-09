@@ -22,7 +22,7 @@ include 'menu.php';
                     </ul>
                 </div>
             
-                <h3>Blog Stats</h3>
+                <h3><?php _e('统计信息'); ?></h3>
                 <div class="status">
                 	<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?>
                     <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条留言在已设定的 <em>%s</em> 个分类中.', 
@@ -36,19 +36,27 @@ include 'menu.php';
                     <h4><?php _e('最近发表的文章'); ?></h4>
                     <?php Typecho_Widget::widget('Widget_Contents_Post_Recent')->to($posts); ?>
                     <ul>
+                    <?php if($posts->have()): ?>
                     <?php while($posts->next()): ?>
                         <li><a href="<?php $posts->permalink(); ?>" class="title"><?php $posts->title(); ?></a> <?php _e('发布于'); ?>
                         <?php $posts->category(', '); ?> - <span class="date"><?php $posts->dateWord(); ?></span></li>
                     <?php endwhile; ?>
+                    <?php else: ?>
+                        <li><em><?php _e('暂时没有文章'); ?></em></li>
+                    <?php endif; ?>
                     </ul>
                 </div>
             	<div class="section">
                     <h4><?php _e('最新得到的回复'); ?></h4>
                     <ul>
                         <?php Typecho_Widget::widget('Widget_Comments_Recent')->to($comments); ?>
+                        <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
                         <li><?php $comments->author(true); ?> <?php _e('发布于'); ?> <a href="<?php $comments->permalink(); ?>" class="title"><?php $comments->title(); ?></a> - <span class="date"><?php $comments->dateWord(); ?></span></li>
                         <?php endwhile; ?>
+                        <?php else: ?>
+                        <li><em><?php _e('暂时没有回复'); ?></em></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>

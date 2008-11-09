@@ -18,7 +18,7 @@
 			<h4><?php $this->commentsNum('No Response', 'One Response to"' . $this->title . '"', '%d Responses to "' . $this->title . '"'); ?></h4>
 			<ol id="comment_list">
 			<?php $this->comments()->to($comments); ?>
-            <?php while($comments->get()): ?>
+            <?php while($comments->next()): ?>
 				<li id="<?php $comments->theId(); ?>">
 					<div class="c_user"><?php echo $comments->sequence(); ?> | <strong><?php $comments->author(); ?></strong> at <?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> </div>
 					<div class="c_text">

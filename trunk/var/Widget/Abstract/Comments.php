@@ -25,12 +25,26 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
+        $select = $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
         'table.comments.coid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
         'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent',
         array('COUNT(table.comments.cid)' => 'commentsGroupCount', 'table.comments.created' => 'date'))
         ->from('table.comments')
         ->join('table.contents', 'table.comments.cid = table.contents.cid');
+        
+        if($this->user->hasLogin() && !$this->user->pass('editor', true))
+        {
+            /** 没有达到编辑权限的用户只能访问其所属的文章 */
+            $select->where('table.contents.password IS NULL OR table.contents.author = ? OR table.contents.password = ?', 
+            $this->user->uid, $this->request->protectPassword);
+        }
+        else if(!$this->user->hasLogin())
+        {
+            /** 普通访问者没有任何访问隐私文章评论的权限 */
+            $select->where('table.contents.password IS NULL OR table.contents.password = ?', $this->request->protectPassword);
+        }
+        
+        return $select;
     }
     
     /**
