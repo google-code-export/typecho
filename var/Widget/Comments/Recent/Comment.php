@@ -30,10 +30,9 @@ class Widget_Comments_Recent_Comment extends Widget_Abstract_Comments
         $pageSize = isset($this->parameter()->pageSize) ? $this->options->commentsListSize : $this->parameter()->pageSize;
         
         $this->db()->fetchAll($this->select()->limit($pageSize)
-        ->where('table.contents.`password` IS NULL')
-        ->where('table.comments.`type` = ?', 'comment')
-        ->where('table.comments.`status` = ?', 'approved')
-        ->group('table.comments.`coid`')
-        ->order('table.comments.`created`', Typecho_Db::SORT_DESC), array($this, 'push'));
+        ->where('table.comments.type = ?', 'comment')
+        ->where('table.comments.status = ?', 'approved')
+        ->group('table.comments.coid')
+        ->order('table.comments.created', Typecho_Db::SORT_DESC), array($this, 'push'));
     }
 }

@@ -452,26 +452,19 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments($mode = NULL, $desc = false)
     {
-        if(!$this->hidden)
+        $mode = strtolower($mode);
+        $parameter = array('cid' => $this->cid, 'desc' => $desc);
+        
+        switch($mode)
         {
-            $mode = strtolower($mode);
-            $parameter = array('cid' => $this->cid, 'desc' => $desc);
-            
-            switch($mode)
-            {
-                case 'comment':
-                    return $this->widget('Widget_Comments_Archive_Comment', $parameter);
-                case 'trackback':
-                    return $this->widget('Widget_Comments_Archive_Trackback', $parameter);
-                case 'pingback':
-                    return $this->widget('Widget_Comments_Archive_Pingback', $parameter);
-                default:
-                    return $this->widget('Widget_Comments_Archive', $parameter);
-            }
-        }
-        else
-        {
-            return $this->widget('Widget_Abstract_Comments');
+            case 'comment':
+                return $this->widget('Widget_Comments_Archive_Comment', $parameter);
+            case 'trackback':
+                return $this->widget('Widget_Comments_Archive_Trackback', $parameter);
+            case 'pingback':
+                return $this->widget('Widget_Comments_Archive_Pingback', $parameter);
+            default:
+                return $this->widget('Widget_Comments_Archive', $parameter);
         }
     }
     
