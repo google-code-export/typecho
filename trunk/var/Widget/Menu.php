@@ -96,28 +96,28 @@ class Widget_Menu extends Typecho_Widget
             array(_t('登录'), _t('登录到%s', $this->options->title), '/admin/login.php', 'visitor'),
         ),
         array(
-            array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
+            array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber', 'Alt+H'),
             array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
             array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
         ),
         array(
-            array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
-            array(_t('创建页面'), _t('创建新页面'), '/admin/edit-page.php', 'editor'),
+            array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor', 'Alt+N'),
+            array(_t('创建页面'), _t('创建新页面'), '/admin/edit-page.php', 'editor', 'Alt+Shift+N'),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
-            array(_t('文章'), _t('管理文章'), '/admin/post-list.php', 'contributor'),
-            array(_t('页面'), _t('管理页面'), '/admin/page-list.php', 'editor'),
-            array(_t('评论'), _t('管理评论'), '/admin/comment-list.php', 'contributor'),
+            array(_t('文章'), _t('管理文章'), '/admin/post-list.php', 'contributor', 'Alt+P'),
+            array(_t('独立页面'), _t('管理独立页面'), '/admin/page-list.php', 'editor', 'Alt+Shift+P'),
+            array(_t('评论'), _t('管理评论'), '/admin/comment-list.php', 'contributor', 'Alt+C'),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
-            array(_t('分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
+            array(_t('文章分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
             array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
             array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
-            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
+            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator', 'Alt+O'),
             array(_t('评论'), _t('评论设置'), '/admin/discussion.php', 'administrator'),
             array(_t('文章'), _t('文章设置'), '/admin/reading.php', 'administrator'),
             array(_t('撰写'), _t('撰写习惯设置'), '/admin/writing.php', 'contributor'),
@@ -191,7 +191,7 @@ class Widget_Menu extends Typecho_Widget
             {
                 $link = Typecho_Common::pathToUrl($menu[2], $adminUrl);
                 echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
-                "><a href=\"{$link}\" title=\"{$menu[0]}\">{$menu[0]}</a></li>\r\n";
+                "><a href=\"{$link}\" title=\"{$menu[0]}\">" . (isset($menu[4]) ? "<span class=\"hotkey\">{$menu[4]}</span>" : NULL) . "{$menu[0]}</a></li>\r\n";
             }
             echo "</ul></dd>\r\n";
         }
