@@ -108,6 +108,23 @@ input:hover {
 
 input, select, textarea {
 	font-family: Verdana, Geneva, sans-serif;
+	margin: 1px;
+}
+
+/** 新input样式 by 70 */
+input, textarea {
+	border: 1px solid #DDD;
+	border-top: 1px solid #999;
+	padding: 2px;
+	*padding: 3px;
+}
+
+input:focus, textarea:focus {
+	border: 2px solid #E47E00;
+	outline-color:-moz-use-text-color !important;
+	outline-style:none !important;
+	outline-width:0 !important;
+	margin:0 !important;
 }
 
 select {
@@ -117,6 +134,7 @@ select {
 button {
 	overflow:visible;
 	line-height: 16px;
+	margin: 1px;
 	*height:24px;
 	*padding:0 8px;
 	*line-height: 20px;
@@ -582,14 +600,14 @@ margin-top: 25px;
 }
 
 /* 快捷键 */
-.typecho-head-guid dd a span {
+.typecho-head-guid dd a span.hotkey {
 	float: right;
 	margin: 2px -40px 0 0;
 	font-size: 11px;
 	color: #666;
 }
 
-.typecho-head-guid dd li.focus a span, .typecho-head-guid dd li.focus a:hover span {
+.typecho-head-guid dd li.focus a span.hotkey, .typecho-head-guid dd li.focus a:hover span.hotkey {
 	color: #fff;
 }
 
