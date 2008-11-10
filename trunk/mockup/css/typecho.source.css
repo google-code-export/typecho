@@ -560,7 +560,7 @@ margin-top: 25px;
 	padding: 0 2px 1px 1px;
     z-index: 250;
     top: 30px;
-	*+width: 240px; /* IE下需要这个宽度，不知道有没有非hack的解决方案 */
+	width: 240px; /* IE下需要这个宽度，不知道有没有非hack的解决方案 */
 }
 
 .typecho-head-guid ul {
@@ -584,7 +584,7 @@ margin-top: 25px;
 /* 快捷键 */
 .typecho-head-guid dd a span {
 	float: right;
-	margin: 2px 0 0 30px;
+	margin: 2px -40px 0 0;
 	font-size: 11px;
 	color: #666;
 }
@@ -597,7 +597,7 @@ margin-top: 25px;
     text-decoration: none;
     color: #333;
     display: block;
-    padding: 4px 10px;
+    padding: 4px 50px 4px 10px;
     zoom: 1;
 }
 
