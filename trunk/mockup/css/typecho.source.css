@@ -568,14 +568,15 @@ margin-top: 25px;
     position:absolute;
 	/* 替换下拉菜单背景 by fen (2008-11-09) */
     /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat; */
-	background: #EFF5D9;
+	background: #C3C7B2;
+	border: 1px solid #E5EAD1;
+    border-top: none;
     font-size: 13px;
     overflow: hidden;
     /* width:160px; */
     z-index:100;
-    border-top: none;
     /*padding: 6px 10px 15px;*/
-	padding: 0 2px 1px 1px;
+	padding: 0 1px 0 0;
     z-index: 250;
     top: 30px;
 	width: 240px; /* IE下需要这个宽度，不知道有没有非hack的解决方案 */
@@ -586,8 +587,9 @@ margin-top: 25px;
     top: -1px;
 	/* 给ul添加背景和边框 */
 	background: #F7FBE9;
-	border: 1px solid #D1DAAD;
-	padding: 5px;
+	border: 1px solid #ACB09D;
+	border-top: none;
+	padding: 7px 0;
 }
 
 .typecho-head-guid li {
