@@ -109,7 +109,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             
             foreach($keywordsList as $keyword)
             {
-                $args[] = '%' . Typecho_API::filterSearchQuery($keyword) . '%';
+                $args[] = '%' . Typecho_Common::filterSearchQuery($keyword) . '%';
             }
             
             call_user_func_array(array($select, 'where'), $args);
