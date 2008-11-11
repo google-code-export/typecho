@@ -319,9 +319,12 @@ abstract class Typecho_Widget
      */
     public function next()
     {
-        $this->_row = &$this->_stack[key($this->_stack)];
-        next($this->_stack);
-        $this->sequence ++;
+        if($this->_stack)
+        {
+            $this->_row = &$this->_stack[key($this->_stack)];
+            next($this->_stack);
+            $this->sequence ++;
+        }
         
         if(!$this->_row)
         {

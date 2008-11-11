@@ -312,6 +312,7 @@ button {
  */
 .typecho-install {
     margin: 30px auto;
+    *padding-bottom: 30px;
 }
 
 .typecho-install .typecho-install-title, .typecho-install .typecho-install-body {
