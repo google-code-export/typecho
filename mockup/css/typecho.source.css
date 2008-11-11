@@ -108,42 +108,36 @@ input:hover {
 
 input, select, textarea {
 	font-family: Verdana, Geneva, sans-serif;
-	margin: 1px;
 }
 
-/** 新input样式 by 70 */
-input, textarea {
-	border: 1px solid #DDD;
-	border-top: 1px solid #999;
-	padding: 2px;
-	*padding: 3px;
-}
-
-input:focus, textarea:focus {
-	border: 2px solid #E47E00;
-	outline-color:-moz-use-text-color !important;
-	outline-style:none !important;
-	outline-width:0 !important;
-	margin:0 !important;
+/** hack webkit border by 70 */
+input:focus, textarea:focus, select:focus {
+	outline: 0 !important;
 }
 
 select {
-	font-size:13px;
+	font-size: 13px;
+	padding: 1px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select { padding: 0; }
 }
 
 button {
 	overflow:visible;
 	line-height: 16px;
-	margin: 1px;
 	*height:24px;
 	*padding:0 8px;
 	*line-height: 20px;
+	*margin-bottom: -1px; 
 }
 
 /** just for ie6 */
 *html button {
 	line-height:17px;
 	height:17px;
+	margin-bottom:-1px;
 }
 
 /**
