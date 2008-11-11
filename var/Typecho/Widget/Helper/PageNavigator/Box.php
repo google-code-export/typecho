@@ -44,46 +44,38 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出上一页
         if($this->_currentPage > 1)
         {
-            echo '<a class="prev" href="' , str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) , '">'
-            , $prevWord , '</a>';
+            echo '<li><a class="prev" href="' . str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) . '">'
+            . $prevWord . '</a></li>';
         }
 
         //输出第一页
         if($from > 1)
         {
-            echo '<a href="' , str_replace('{page}', 1, $this->_pageTemplate) , '">1</a>';
+            echo '<li><a href="' . str_replace('{page}', 1, $this->_pageTemplate) . '">1</a></li>';
             //输出省略号
-            echo '<span>' , $splitWord , '</span>';
+            echo '<li>' . $splitWord . '</li>';
         }
 
         //输出中间页
         for($i = $from; $i <= $to; $i ++)
         {
-            if($i != $this->_currentPage)
-            {
-                echo '<a href="' , str_replace('{page}', $i, $this->_pageTemplate) , '">'
-                , $i , '</a>';
-            }
-            else
-            {
-                //当前页
-                echo '<span class="current">' , $i , '</span>';
-            }
+                echo '<li' . ($i != $this->_currentPage ? '' : ' class="current"') . '><a href="' . str_replace('{page}', $i, $this->_pageTemplate) . '">'
+                . $i . '</a></li>';
         }
 
         //输出最后页
         if($to < $this->_totalPage)
         {
-            echo '<span>' , $splitWord , '</span>';
-            echo '<a href="' , str_replace('{page}', $this->_totalPage, $this->_pageTemplate) , '">'
-            , $this->_totalPage , '</a>';
+            echo '<li>' . $splitWord . '</li>';
+            echo '<li><a href="' . str_replace('{page}', $this->_totalPage, $this->_pageTemplate) , '">'
+            . $this->_totalPage . '</a></li>';
         }
 
         //输出下一页
         if($this->_currentPage < $this->_totalPage)
         {
-            echo '<a class="next" href="' , str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) , '">'
-            , $nextWord , '</a>';
+            echo '<li><a class="next" href="' . str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) . '">'
+            . $nextWord . '</a></li>';
         }
     }
 }
