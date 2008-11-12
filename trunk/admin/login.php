@@ -6,7 +6,7 @@ include 'header.php';
     <div class="container">
         <div class="column-07 start-09 typecho-login">
             <h2 class="logo-dark">typecho</h2>
-            <form action="<?php $options->index('Login.do'); ?>" method="post">
+            <form action="<?php $options->index('Login.do'); ?>" method="post" name="login">
                 <fieldset>
                     <?php if(!$user->hasLogin()): ?>
                     <?php include 'notice.php'; ?>
@@ -16,6 +16,7 @@ include 'header.php';
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('登录'); ?></button>
+                    <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" />
                     </p>
                     <?php else: ?>
                     <div class="message notice">
@@ -26,6 +27,11 @@ include 'header.php';
                     <?php endif; ?>
                 </fieldset>
             </form>
+            
+            <script type="text/javascript">
+            document.login.name.focus();
+            </script>
+            
             <div class="more-link">
                 <p class="back-to-site">
                 <a href="<?php $options->siteUrl(); ?>" class="important"><?php _e('&laquo; 返回%s', $options->title); ?></a>
