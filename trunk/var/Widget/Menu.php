@@ -108,7 +108,7 @@ class Widget_Menu extends Typecho_Widget
         array(
             array(_t('文章'), _t('管理文章'), '/admin/manage-posts.php', 'contributor'),
             array(_t('独立页面'), _t('管理独立页面'), '/admin/manage-pages.php', 'editor'),
-            array(_t('评论'), _t('管理评论'), '/admin/comment-list.php', 'contributor'),
+            array(_t('评论'), _t('管理评论'), '/admin/manage-comments.php', 'contributor'),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('文章分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
             array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),

@@ -140,6 +140,6 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->countSql), $this->currentPage, $this->parameter->pageSize, $query);
-        $nav->render(_t('上一页'), _t('下一页'));
+        $nav->render(_t('&laquo;'), _t('&raquo;'));
     }
 }
