@@ -524,6 +524,7 @@ margin-top: 25px;
     color: #fff;
     position: relative;
     z-index: 250; /* IE 是个 250 */
+	border-bottom: 3px solid #DCE2C0;
 }
 
 .typecho-head-guid dl {
@@ -534,7 +535,7 @@ margin-top: 25px;
 
 .typecho-head-guid dt {
     float: left;
-    margin: 4px 4px 0 0;
+    margin: 0;
     font-size: 13px;
     overflow: hidden;
 }
@@ -542,9 +543,9 @@ margin-top: 25px;
 .typecho-head-guid dt a:link, .typecho-head-guid dt a:visited {
     float: left;
     color: #fff;
-    height: 26px;
-    line-height: 26px;
-    padding: 0 20px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 30px;
     background: #333;
     display: block;
     outline: none;
@@ -554,49 +555,53 @@ margin-top: 25px;
 .typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
-    background: #e47e00 url(../images/sprite.png) 0 -360px repeat-x;
-    text-decoration: none;
+    background: #404040 /*url(../images/sprite.png) 0 -360px repeat-x*/;
+    /*text-decoration: none;*/
 }
 
 .typecho-head-guid dd {
     display:none;
     position:absolute;
-	/* 替换下拉菜单背景 by fen (2008-11-09) */
-    /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat; */
-	background: #C3C7B2;
+	/* 替换下拉菜单背景 by fen (2008-11-12) */
+    /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
 	border: 1px solid #E5EAD1;
-    border-top: none;
+    border-top: none;*/
+	border: 1px solid #CED7A8;
+	border-top: none;
+	background: #DCE2C0;
     font-size: 13px;
     overflow: hidden;
-    /* width:160px; */
     z-index:100;
-    /*padding: 6px 10px 15px;*/
-	padding: 0 1px 0 0;
+	padding: 10px;
     z-index: 250;
     top: 30px;
-	width: 240px; /* IE下需要这个宽度，不知道有没有非hack的解决方案 */
+	width: 140px; /* IE需要这个宽度 */
 }
 
 .typecho-head-guid ul {
     position: relative;
-    top: -1px;
-	/* 给ul添加背景和边框 */
-	background: #F7FBE9;
-	border: 1px solid #ACB09D;
-	border-top: none;
-	padding: 7px 0;
+    top: 0;
+	padding: 0;
 }
 
 .typecho-head-guid li {
-	margin-bottom: 1px;
+	/*margin-bottom: 1px;*/
+	background: url(../images/sprite.png) 0px -370px repeat-x;
+	padding-top: 2px;
+}
+
+.typecho-head-guid dd li.first {
+	background: none;
+	padding-top: 0;
 }
 
 .typecho-head-guid dd li.focus a, .typecho-head-guid dd li.focus a:hover {
-    background: #E68A17;
-    color: #fff;
+    /*background: #E68A17;
+    color: #fff;*/
+	background: #EDF0DF url(../images/sprite.png) right -412px no-repeat;
 }
 
-/* 快捷键 */
+/* 快捷键
 .typecho-head-guid dd a span.hotkey {
 	float: right;
 	margin: 2px -40px 0 0;
@@ -606,18 +611,18 @@ margin-top: 25px;
 
 .typecho-head-guid dd li.focus a span.hotkey, .typecho-head-guid dd li.focus a:hover span.hotkey {
 	color: #fff;
-}
+}*/
 
 .typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
     text-decoration: none;
     color: #333;
     display: block;
-    padding: 4px 50px 4px 10px;
+    padding: 5px 37px 5px 7px;
     zoom: 1;
 }
 
 .typecho-head-guid dd a:hover {
-    background: #E5EAD1;
+    background: #EDF0DF;
 }
 
 .typecho-head-guid .operate {
