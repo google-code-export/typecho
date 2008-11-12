@@ -575,7 +575,15 @@ margin-top: 25px;
 	padding: 10px;
     z-index: 250;
     top: 30px;
-	width: 140px; /* IE需要这个宽度 */
+	width: 180px; /* IE需要这个宽度 */
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	
+	/* hope IE support border radius, God save me! */
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 }
 
 .typecho-head-guid ul {
