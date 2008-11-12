@@ -17,19 +17,17 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Logout extends Typecho_Widget implements Widget_Interface_Action_Widget
+class Widget_Logout extends Widget_Abstract_Users implements Widget_Interface_Action_Widget
 {
     /**
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init()
     {
-        $this->user()->logout();
-        $response->redirect($this->options()->index);
+        $this->user->logout();
+        $this->response->redirect($this->options->index);
     }
 }

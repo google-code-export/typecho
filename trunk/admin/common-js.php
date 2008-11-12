@@ -84,7 +84,7 @@
         };
 
         window.addEvent('domready', function() {
-            var handle = new typechoGuid('typecho:guid', {offset: 2, type: 'mouse'});
+            var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});
             handle.reSet();
         });
     })();

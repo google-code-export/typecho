@@ -117,7 +117,7 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
-            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator', 'Alt+O'),
+            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), '/admin/discussion.php', 'administrator'),
             array(_t('文章'), _t('文章设置'), '/admin/reading.php', 'administrator'),
             array(_t('撰写'), _t('撰写习惯设置'), '/admin/writing.php', 'contributor'),
