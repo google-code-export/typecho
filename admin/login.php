@@ -11,8 +11,8 @@ include 'header.php';
                     <?php if(!$user->hasLogin()): ?>
                     <?php include 'notice.php'; ?>
                     <legend><?php _e('后台登录'); ?></legend>
-                    <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" name="name" class="text" /></p>
-                    <p><label for="password"><?php _e('密码'); ?>:</label> <input type="password" name="password" class="text" /></p>
+                    <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" id="name" name="name" class="text" /></p>
+                    <p><label for="password"><?php _e('密码'); ?>:</label> <input type="password" id="password" name="password" class="text" /></p>
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('登录'); ?></button>

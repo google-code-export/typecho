@@ -1005,6 +1005,29 @@ margin-top: 25px;
     height: 32px;
     line-height: 32px;
     padding: 0 5px;
+    vertical-align: top;
+}
+
+.typecho-list-table td p, .typecho-list-table td ul {
+    margin: 6px 0;
+    line-height: 20px;
+}
+
+.typecho-list-table td ul li {
+	padding: 0;
+	margin: 0;
+	font-weight: bold;
+}
+
+.typecho-list-table td ul li.small {
+	line-height: 12px;
+	font-size: 11px;
+	font-family: Corbel,Verdana,Arial,Helvetica,sans-serif;
+}
+
+.typecho-list-table td input {
+	margin-top: 10px;
+	*margin-top: 6px;
 }
 
 .typecho-list-table tbody tr.even {
