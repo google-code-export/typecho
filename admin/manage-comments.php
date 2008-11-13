@@ -51,7 +51,7 @@ include 'menu.php';
                             <td><input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/></td>
                             <td><?php $comments->author(true); ?></td>
                             <td><?php $comments->dateWord(); ?></td>
-                            <td><?php $comments->excerpt(30); ?></td>
+                            <td><?php $comments->excerpt(20); ?></td>
                             <td><a href="<?php $comments->permalink(); ?>" target="_blank"><?php $comments->title(); ?></a></td>
                             <td>
                             <?php if('approved' == $comments->status):
