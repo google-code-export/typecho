@@ -54,7 +54,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
         'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
-        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed', array('table.contents.author' => 'authorId'))
+        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
+        array('table.contents.author' => 'authorId'))
         ->from('table.contents');
     }
     

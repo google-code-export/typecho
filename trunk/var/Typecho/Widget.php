@@ -359,7 +359,7 @@ abstract class Typecho_Widget
     public function __get($name)
     {
         return isset($this->_row[$name]) ? $this->_row[$name] : (method_exists($this, $method = '_' . $name)
-        ? $this->$method() : NULL);
+        ? $this->_row[$name] = $this->$method() : NULL);
     }
     
     /**
