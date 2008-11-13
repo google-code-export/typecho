@@ -426,15 +426,14 @@ margin-top: 25px;
     float: left;
     height: 15px;
     line-height: 15px;
-    width: 15px;
 }
 
 .typecho-pager a:link, .typecho-pager a:visited {
     color: #333;
     display: block;
     height: 15px;
-    width: 15px;
     outline: none;
+	padding: 0 4px;
 }
 
 .typecho-pager a:hover {

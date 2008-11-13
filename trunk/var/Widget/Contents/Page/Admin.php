@@ -61,8 +61,7 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
         }
         
         /** 提交查询 */
-        $select->group('table.contents.cid')
-        ->order('table.contents.meta', Typecho_Db::SORT_ASC);
+        $select->order('table.contents.meta', Typecho_Db::SORT_ASC);
         
         $this->db->fetchAll($select, array($this, 'push'));
     }

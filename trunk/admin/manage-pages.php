@@ -56,9 +56,8 @@ include 'menu.php';
                             <td><?php if('page' == $pages->type):
                         _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $pages->permalink);
                         else:
-                        _e('<span>草稿</a>');
-                        endif;?>
-                        <?php if(NULL != $pages->password): ?><sup><strong><?php _e('密码'); ?></strong></sup><?php endif; ?></td>
+                        _e('草稿');
+                        endif;?></td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>

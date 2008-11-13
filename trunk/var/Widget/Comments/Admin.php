@@ -68,8 +68,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     
         $this->_countSql = clone $select;
         
-        $select->group('table.comments.coid')
-        ->order('table.comments.created', Typecho_Db::SORT_DESC)
+        $select->order('table.comments.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));

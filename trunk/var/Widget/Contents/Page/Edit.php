@@ -36,7 +36,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         {
             $this->db->fetchRow($this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'page', 'page_draft')
             ->where('table.contents.`cid` = ?', Typecho_Request::getParameter('cid'))
-            ->group('table.contents.`cid`')->limit(1), array($this, 'push'));
+            ->limit(1), array($this, 'push'));
             Typecho_API::factory('Widget_Menu')->title = _t('编辑页面');
         }
     }

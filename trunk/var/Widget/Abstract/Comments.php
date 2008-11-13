@@ -18,6 +18,41 @@
 class Widget_Abstract_Comments extends Widget_Abstract
 {
     /**
+     * 获取当前内容结构
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function _parentContent()
+    {
+        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+        ->where('table.contents.cid = ?', $this->cid)
+        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
+    }
+    
+    /**
+     * 获取当前评论标题
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _title()
+    {
+        return $this->parentContent['title'];
+    }
+    
+    /**
+     * 获取当前评论链接
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _permalink()
+    {
+        return $this->parentContent['permalink'] . '#comments-' . $this->coId;
+    }
+
+    /**
      * 获取查询对象
      * 
      * @access public
@@ -25,26 +60,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function select()
     {
-        $select = $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.type',
-        'table.comments.coid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
-        'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent',
-        array('COUNT(table.comments.cid)' => 'commentsGroupCount', 'table.comments.created' => 'date'))
-        ->from('table.comments')
-        ->join('table.contents', 'table.comments.cid = table.contents.cid');
-        
-        if($this->user->hasLogin() && !$this->user->pass('editor', true))
-        {
-            /** 没有达到编辑权限的用户只能访问其所属的文章 */
-            $select->where('table.contents.password IS NULL OR table.contents.author = ? OR table.contents.password = ?', 
-            $this->user->uid, $this->request->protectPassword);
-        }
-        else if(!$this->user->hasLogin())
-        {
-            /** 普通访问者没有任何访问隐私文章评论的权限 */
-            $select->where('table.contents.password IS NULL OR table.contents.password = ?', $this->request->protectPassword);
-        }
-        
-        return $select;
+        return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
+        'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent', array('table.comments.created' => 'date'))
+        ->from('table.comments');
     }
     
     /**
@@ -194,11 +212,6 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function filter(array $value)
     {
-        /** 取出所有分类 */
-        $value = $this->widget('Widget_Abstract_Contents')->filter($value);
-        
-        $value['permalink'] = $value['permalink'] . '#comments-' . $value['coid'];
-        
         $value = $this->plugin(__CLASS__)->filter($value);
         return $value;
     }

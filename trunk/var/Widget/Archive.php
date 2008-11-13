@@ -146,8 +146,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
                 }
                 
-                $select->where('table.contents.type = ?', Typecho_Router::$current)
-                ->group('table.contents.cid')->limit(1);
+                $select->where('table.contents.type = ?', Typecho_Router::$current)->limit(1);
                 $post = $this->db->fetchRow($select, array($this, 'push'));
 
                 if($post && $post['category'] == $this->request->getParameter('category', $post['category'])
@@ -155,9 +154,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 && $post['month'] == $this->request->getParameter('month', $post['month'])
                 && $post['day'] == $this->request->getParameter('day', $post['day']))
                 {
-                    /** 取出tags */
-                    $this->getTags();
-                    
                     /** 设置关键词 */
                     $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
                     
@@ -411,8 +407,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $select->where('table.contents.type = ?', 'post');
         $this->_countSql = clone $select;
 
-        $select->group('table.contents.cid')
-        ->order('table.contents.created', Typecho_Db::SORT_DESC)
+        $select->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));
@@ -482,7 +477,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->created, $this->options->gmtTime)
         ->where('table.contents.type = ?', $this->type)
         ->where('table.contents.password IS NULL')
-        ->group('table.contents.cid')
         ->order('table.contents.created', Typecho_Db::SORT_ASC)
         ->limit(1));
         
@@ -511,7 +505,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
         ->where('table.contents.type = ?', $this->type)
         ->where('table.contents.password IS NULL')
-        ->group('table.contents.cid')
         ->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->limit(1));
         
@@ -536,9 +529,6 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function related($limit = 5)
     {
-        /** 取出tags */
-        $this->getTags();
-        
         /** 如果访问权限被设置为禁止,则tag会被置为空 */
         return $this->widget('Widget_Contents_Related', array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
     }
