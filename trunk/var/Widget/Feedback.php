@@ -29,17 +29,17 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         $comment = array(
             'cid'       =>  $this->widget('Widget_Archive')->cid,
-            'created'   =>  $this->options()->gmtTime,
+            'created'   =>  $this->options->gmtTime,
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
-            'ip'        =>  $this->request()->getClientIp(),
+            'ip'        =>  $this->request->getClientIp(),
             'type'      =>  'comment',
-            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options()->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
-        if($parentId = $this->request()->parent)
+        if($parentId = $this->request->parent)
         {
-            if(($parent = $this->db()->fetchRow($this->db()->sql()->select('table.comments', '`coid`')
+            if(($parent = $this->db->fetchRow($this->db->select('table.comments', '`coid`')
             ->where('`coid` = ?', $parentId))) && $this->content->cid == $parent['cid'])
             {
                 $comment['parent'] = $parentId;
@@ -52,37 +52,46 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         //检验格式
         $validator = new Typecho_Validate();
-        $user = $this->user();
         $validator->addRule('author', 'required', _t('必须填写用户名'));
         $validator->addRule('author', array($this, 'requireUserLogin'), _t('您所使用的用户名已经被注册,请登录后再次提交'));
 
-        if($this->options()->commentsRequireMail && !$user->hasLogin())
+        if($this->options->commentsRequireMail && !$user->hasLogin())
         {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
 
-        if($this->options()->commentsRequireUrl && !$user->hasLogin())
+        if($this->options->commentsRequireUrl && !$user->hasLogin())
         {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
 
-        $validator->addRule('url', 'url', _t('个人主页地址不合法'));
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['author'] = trim(strip_tags($this->request()->author or $user->screenName));
-        $comment['mail'] = trim(strip_tags($this->request()->mail or $user->mail));
-        $comment['url'] = trim(strip_tags($this->request()->url or $user->url));
-        $comment['text'] = Typecho_API::stripTags($this->request()->text, $this->options()->commentsHTMLTagAllowed);
+        $comment['author'] = trim(strip_tags($this->request->getParameter('author', $this->user->screenName)));
+        $comment['mail'] = trim(strip_tags($this->request->getParameter('mail', $this->user->mail)));
+        $comment['url'] = trim(strip_tags($this->request->getParameter('url', $this->user->url)));
+        
+        /** 修正用户提交的url */
+        if(!empty($comment['url']))
+        {
+            $urlParams = parse_url($comment['url']);
+            if(!isset($urlParams['scheme']))
+            {
+                $comment['url'] = 'http://' . $comment['url'];
+            }
+        }
+        
+        $comment['text'] = Typecho_API::stripTags($this->request->text, $this->options->commentsHTMLTagAllowed);
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if(!$user->hasLogin())
         {
-            $expire = $this->options()->gmtTime + $this->options()->timezone + 30*24*3600;
-            $this->request()->setCookie('author', $comment['author'], $expire);
-            $this->request()->setCookie('mail', $comment['mail'], $expire);
-            $this->request()->setCookie('url', $comment['url'], $expire);
+            $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
+            $this->request->setCookie('author', $comment['author'], $expire);
+            $this->request->setCookie('mail', $comment['mail'], $expire);
+            $this->request->setCookie('url', $comment['url'], $expire);
         }
         
         try
@@ -101,7 +110,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
-        $this->request()->deleteCookie('text');
+        $this->request->deleteCookie('text');
         
         Typecho_API::goBack('#comments-' . $commentId);
     }
@@ -116,16 +125,16 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         $trackback = array(
             'cid'       =>  $this->widget('Widget_Archive')->cid,
-            'created'   =>  $this->options()->gmtTime,
+            'created'   =>  $this->options->gmtTime,
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
-            'ip'        =>  $this->request()->getClientIp(),
+            'ip'        =>  $this->request->getClientIp(),
             'type'      =>  'trackback',
-            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options()->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
-        $trackback['author'] = trim(strip_tags($this->request()->blog_name));
-        $trackback['url'] = trim(strip_tags($this->request()->url));
-        $trackback['text'] = Typecho_API::stripTags($this->request()->excerpt, $this->options()->commentsHTMLTagAllowed);
+        $trackback['author'] = trim(strip_tags($this->request->blog_name));
+        $trackback['url'] = trim(strip_tags($this->request->url));
+        $trackback['text'] = Typecho_API::stripTags($this->request->excerpt, $this->options->commentsHTMLTagAllowed);
         
         //检验格式
         $validator = new Typecho_Validate();
@@ -161,12 +170,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      */
     public function requireUserLogin($userName)
     {
-        if($this->user()->hasLogin() && $this->user()->screenName != $userName)
+        if($this->user->hasLogin() && $this->user->screenName != $userName)
         {
             /** 当前用户名与提交者不匹配 */
             return false;
         }
-        else if(!$this->user()->hasLogin() && $this->db()->fetchRow($this->db()->sql()->select('table.users', '`uid`')
+        else if(!$this->user->hasLogin() && $this->db->fetchRow($this->db->select('table.users', '`uid`')
         ->where('`screenName` = ? OR `name` = ?', $userName, $userName)->limit(1)))
         {
             /** 此用户名已经被注册 */
@@ -201,13 +210,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** 判断评论间隔 */
             if(!$this->widget('Widget_Archive')->postIsWriteable() && $this->widget('Widget_Archive')->commentsUniqueIpInterval > 0)
             {
-                $recent = $this->db()->fetchObject($this->db()->sql()->select('table.comments', '`created`')
+                $recent = $this->db->fetchObject($this->db->select('table.comments', '`created`')
                 ->where('table.comments.`ip` = ?', $request->getClientIp())
                 ->order('table.comments.`created`', Typecho_Db::SORT_DESC)->limit(1));
 
                 if($recent)
                 {
-                    if($this->options()->gmtTime - $recent->created < $this->options()->commentsUniqueIpInterval)
+                    if($this->options->gmtTime - $recent->created < $this->options->commentsUniqueIpInterval)
                     {
                         throw new Typecho_Widget_Exception(_t('对不起,您的发言速度太快.'), Typecho_Exception::FORBIDDEN);
                     }
