@@ -99,6 +99,35 @@ class Typecho_Db_Query
     {
         return preg_replace_callback("/(['\"]?)(\s*)([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
     }
+    
+    /**
+     * 从参数中合成查询字段
+     * 
+     * @access private
+     * @param array $parameters
+     * @return string
+     */
+    private function getColumnFromParameters(array $parameters)
+    {
+        $fields = array();
+        
+        foreach($parameters as $value)
+        {
+            if(is_array($value))
+            {
+                foreach($value as $key => $val)
+                {
+                    $fields[] = $key . ' AS ' . $val; 
+                }
+            }
+            else
+            {
+                 $fields[] = $value;
+            }
+        }
+        
+        return $this->filterColumn(implode(' , ', $fields));
+    }
 
     /**
      * 数组正则匹配回调函数
@@ -308,25 +337,23 @@ class Typecho_Db_Query
     {
         $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
         $args = func_get_args();
-        $fields = array();
         
-        foreach($args as $value)
-        {
-            if(is_array($value))
-            {
-                foreach($value as $key => $val)
-                {
-                    $fields[] = $key . ' AS ' . $val; 
-                }
-            }
-            else
-            {
-                 $fields[] = $value;
-            }
-            
-        }
+        $this->_sqlPreBuild['fields'] = $this->getColumnFromParameters($args);
+        return $this;
+    }
+    
+    /**
+     * 在不破坏原字段的情况下,查询下列字段
+     * 
+     * @access public
+     * @param mixed $field 查询字段
+     * @return Typecho_Db_Query
+     */
+    public function selectAlso($field)
+    {
+        $args = func_get_args();
         
-        $this->_sqlPreBuild['fields'] = $this->filterColumn(implode(' , ', $fields));
+        $this->_sqlPreBuild['fields'] = $this->_sqlPreBuild['fields'] . ' , ' . $this->getColumnFromParameters($args);
         return $this;
     }
     

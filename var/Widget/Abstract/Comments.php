@@ -49,7 +49,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function _permalink()
     {
-        return $this->parentContent['permalink'] . '#comments-' . $this->coId;
+        return $this->parentContent['permalink'] . '#comments-' . $this->coid;
     }
 
     /**
@@ -302,18 +302,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
     
     /**
-     * 输出锚点id
-     * 
-     * @access public
-     * @return void
-     */
-    public function theId()
-    {
-        echo 'comments-' , $this->coid;
-    }
-    
-    /**
-     * 输出文章摘要
+     * 输出评论摘要
      *
      * @access public
      * @param integer $length 摘要截取长度
@@ -323,5 +312,16 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function excerpt($length = 100, $trim = '...')
     {
         echo Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, $length, $trim);
+    }
+    
+    /**
+     * 输出锚点id
+     * 
+     * @access public
+     * @return void
+     */
+    public function theId()
+    {
+        echo 'comments-' , $this->coid;
     }
 }

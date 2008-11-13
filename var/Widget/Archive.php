@@ -211,8 +211,11 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->response->throwExceptionResponseByCode(_t('分类不存在'), 404);
                 }
             
-                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $category['mid']);
+                /** fix sql92 by 70 */
+                $select->selectAlso(array('COUNT(table.contents.cid)' => 'contentsNum'))
+                ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $category['mid'])
+                ->group('table.contents.cid');
                 
                 /** 设置分页 */
                 $this->_pageRow = $category;
@@ -255,8 +258,11 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->response->throwExceptionResponseByCode(_t('标签%s不存在', $this->request->slug), 404);
                 }
             
-                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $tag['mid']);
+                /** fix sql92 by 70 */
+                $select->selectAlso(array('COUNT(table.contents.cid)' => 'contentsNum'))
+                ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $tag['mid'])
+                ->group('table.contents.cid');
                 
                 /** 设置分页 */
                 $this->_pageRow = $tag;
@@ -448,7 +454,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function comments($mode = NULL, $desc = false)
     {
         $mode = strtolower($mode);
-        $parameter = array('cid' => $this->cid, 'desc' => $desc);
+        $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc);
         
         switch($mode)
         {

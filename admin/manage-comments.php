@@ -27,10 +27,11 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
-                        <col width="150"/>
                         <col width="125"/>
-                        <col width="550"/>
-                        <col width="150"/>
+                        <col width="125"/>
+                        <col width="350"/>
+                        <col width="250"/>
+                        <col width="125"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -38,6 +39,7 @@ include 'menu.php';
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('日期'); ?></th>
                             <th><?php _e('内容'); ?></th>
+                            <th><?php _e('文章'); ?></th>
                             <th><?php _e('状态'); ?></th>
                         </tr>
                     </thead>
@@ -47,28 +49,18 @@ include 'menu.php';
                         <?php while($comments->next()): ?>
                         <tr<?php $comments->alt('', ' class="even"'); ?>>
                             <td><input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/></td>
-                            <td>
-                            <ul>
-                            <li><?php $comments->author(); ?></li>
-                            <?php if($comments->url): ?>
-                            <li class="small"><a href="<?php $comments->url(); ?>" target="_blank"><?php $comments->url(); ?></a></li>
-                            <?php endif; ?>
-                            <?php if($comments->mail): ?>
-                            <li class="small"><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></li>
-                            <?php endif; ?>
-                            <li class="small"><?php $comments->ip(); ?></li>
-                            </ul>
-                            </td>
+                            <td><?php $comments->author(true); ?></td>
                             <td><?php $comments->dateWord(); ?></td>
+                            <td><?php $comments->excerpt(30); ?></td>
+                            <td><a href="<?php $comments->permalink(); ?>" target="_blank"><?php $comments->title(); ?></a></td>
                             <td>
-                            <h6><a href="<?php $comments->permalink(); ?>" target="_blank"><?php $comments->title(); ?></a></h6>
-                            <?php $comments->content(); ?>
-                            </td>
-                            <td>
-                            <ul>
-                            <li><a href="#"><?php _e('编辑'); ?></a></li>
-                            <li><a href="#"><?php _e('标记为垃圾'); ?></a></li>
-                            </ul>
+                            <?php if('approved' == $comments->status):
+                            _e('展现');
+                            elseif('waiting' == $comments->status):
+                            _e('待审核');
+                            elseif('spam' == $comments->status):
+                            _e('垃圾');
+                            endif; ?>
                             </td>
                         </tr>
                         <?php endwhile; ?>

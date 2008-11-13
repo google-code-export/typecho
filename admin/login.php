@@ -18,6 +18,9 @@ include 'header.php';
                     <button type="submit"><?php _e('登录'); ?></button>
                     <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" />
                     </p>
+                    <script type="text/javascript">
+                    var _form = document.login.name; _form.focus();
+                    </script>
                     <?php else: ?>
                     <div class="message notice">
                         <ul>
@@ -27,10 +30,6 @@ include 'header.php';
                     <?php endif; ?>
                 </fieldset>
             </form>
-            
-            <script type="text/javascript">
-            document.login.name.focus();
-            </script>
             
             <div class="more-link">
                 <p class="back-to-site">
