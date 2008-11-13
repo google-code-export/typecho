@@ -17,6 +17,34 @@ class Widget_Abstract_Contents extends Widget_Abstract
     protected $ignorePassword = false;
 
     /**
+     * 将tags取出
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function _tags()
+    {
+        return $this->db->fetchAll($this->db
+        ->select()->from('table.metas')
+        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+        ->where('table.relationships.cid = ?', $this->cid)
+        ->where('table.metas.type = ?', 'tag')
+        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+    }
+    
+    /**
+     * 文章作者
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _author()
+    {
+        return $this->db->fetchObject($this->db->select('screenName')->from('table.users')
+        ->where('uid = ?', $this->authorId))->screenName;
+    }
+
+    /**
      * 获取查询对象
      * 
      * @access public
@@ -26,10 +54,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
         'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
-        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
-        array('table.users.screenName' => 'author', 'COUNT(table.contents.cid)' => 'contentsGroupCount', 'table.contents.author' => 'authorId'))
-        ->from('table.contents')
-        ->join('table.users', 'table.contents.author = table.users.uid', Typecho_Db::LEFT_JOIN);
+        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed', array('table.contents.author' => 'authorId'))
+        ->from('table.contents');
     }
     
     /**
@@ -309,22 +335,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value = $this->filter($value);
         return parent::push($value);
     }
-    
-    /**
-     * 将tags取出
-     * 
-     * @access public
-     * @return void
-     */
-    public function getTags()
-    {
-        $this->tags = isset($this->tags) ? $this->tags : $this->db->fetchAll($this->db
-        ->select()->from('table.metas')
-        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $this->cid)
-        ->where('table.metas.type = ?', 'tag')
-        ->group('table.metas.mid'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
-    }
 
     /**
      * 输出文章发布日期
@@ -467,8 +477,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function tags($split = ',', $link = true, $default = NULL)
     {
         /** 取出tags */
-        $this->getTags();
-
         if($this->tags)
         {
             $result = array();

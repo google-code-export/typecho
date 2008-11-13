@@ -29,7 +29,6 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
         
         $this->db->fetchAll($this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.status = ?', 'approved')
-        ->group('table.comments.coid')
         ->order('table.comments.created', Typecho_Db::SORT_DESC), array($this, 'push'));
     }
 }
