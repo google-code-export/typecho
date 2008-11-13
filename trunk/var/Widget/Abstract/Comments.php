@@ -51,6 +51,17 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         return $this->parentContent['permalink'] . '#comments-' . $this->coid;
     }
+    
+    /**
+     * 获取当前评论内容
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _content()
+    {
+        return $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
+    }
 
     /**
      * 获取查询对象
@@ -298,7 +309,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function content()
     {
-        echo Typecho_Common::cutParagraph($this->text);
+        echo Typecho_Common::cutParagraph($this->content);
     }
     
     /**
@@ -311,7 +322,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, $length, $trim);
+        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->content), 0, $length, $trim);
     }
     
     /**

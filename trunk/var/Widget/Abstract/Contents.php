@@ -14,8 +14,6 @@
  */
 class Widget_Abstract_Contents extends Widget_Abstract
 {
-    protected $ignorePassword = false;
-
     /**
      * 将tags取出
      * 
@@ -288,12 +286,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
-        
+
         /** 处理密码保护流程 */
         if(!empty($value['password']) &&
         $value['password'] != $this->request->protectPassword &&
-        !$this->ignorePassword && 
-        ($this->authorId != $this->user->id
+        ($value['authorId'] != $this->user->uid
         || !$this->user->pass('editor', true)))  //如果用户的权限允许
         {
             $value['hidden'] = true;
@@ -306,7 +303,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
         
         $value = $this->plugin(__CLASS__)->filter($value);
-        
+
         /** 如果访问权限被禁止 */
         if($value['hidden'])
         {
