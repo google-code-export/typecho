@@ -69,9 +69,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['author'] = trim(strip_tags($this->request->getParameter('author', $this->user->screenName)));
-        $comment['mail'] = trim(strip_tags($this->request->getParameter('mail', $this->user->mail)));
-        $comment['url'] = trim(strip_tags($this->request->getParameter('url', $this->user->url)));
+        $comment['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('author', $this->user->screenName))));
+        $comment['mail'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('mail', $this->user->mail))));
+        $comment['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('url', $this->user->url))));
         
         /** 修正用户提交的url */
         if(!empty($comment['url']))
@@ -83,7 +83,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             }
         }
         
-        $comment['text'] = Typecho_API::stripTags($this->request->text, $this->options->commentsHTMLTagAllowed);
+        $comment['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->text, $this->options->commentsHTMLTagAllowed));
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if(!$user->hasLogin())
@@ -112,7 +112,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $commentId = $this->insert($comment);
         $this->request->deleteCookie('text');
         
-        Typecho_API::goBack('#comments-' . $commentId);
+        Typecho_Common::goBack('#comments-' . $commentId);
     }
     
     /**
@@ -132,9 +132,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
-        $trackback['author'] = trim(strip_tags($this->request->blog_name));
-        $trackback['url'] = trim(strip_tags($this->request->url));
-        $trackback['text'] = Typecho_API::stripTags($this->request->excerpt, $this->options->commentsHTMLTagAllowed);
+        $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
+        $trackback['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->url)));
+        $trackback['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->excerpt, $this->options->commentsHTMLTagAllowed));
         
         //检验格式
         $validator = new Typecho_Validate();
