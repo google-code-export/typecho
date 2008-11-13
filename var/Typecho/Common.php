@@ -291,7 +291,7 @@ class Typecho_Common
      * @param string $val 需要处理的字符串
      * @return string
      */
-    public function removeXSS($val)
+    public static function removeXSS($val)
     { 
        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed 
        // this prevents some character re-spacing such as <java\0script> 
