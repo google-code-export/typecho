@@ -20,14 +20,6 @@
 class Widget_Stat extends Typecho_Widget
 {
     /**
-     * 全局选项
-     * 
-     * @access protected
-     * @var Widget_Options
-     */
-    protected $options;
-
-    /**
      * 用户对象
      * 
      * @access protected
@@ -55,61 +47,59 @@ class Widget_Stat extends Typecho_Widget
         $this->db = Typecho_Db::get();
     
         /** 初始化常用组件 */
-        $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
     }
     
     /**
-     * (non-PHPdoc)
-     * @see var/Typecho/Typecho_Widget#__get()
+     * 获取已发布的文章数目
+     * 
+     * @access protected
+     * @return integer
      */
-    public function __get($name)
+    protected function _publishedPostsNum()
     {
-        if(isset($this->_row[$name]))
-        {
-            return $this->_row[$name];
-        }
-        else
-        {
-            $value = NULL;
-            
-            switch($name)
-            {
-                case 'publishedPostsNum':
-                    $value = $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
                     ->from('table.contents')
                     ->where('table.contents.type = ?', 'post'))->num;
-                    break;
-                case 'myPublishedPostsNum':
-                    $value = $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post')
-                    ->where('table.contents.author = ?', $this->user->uid))->num;
-                    break;
-                case 'publishedCommentsNum':
-                    $value = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'approved'))->num;
-                    break;
-                case 'categoriesNum':
-                    $value = $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
-                    ->from('table.metas')
-                    ->where('table.metas.type = ?', 'category'))->num;
-                    break;
-                default:
-                    break;
-            }
-            
-            return $value;
-        }
     }
     
     /**
-     * (non-PHPdoc)
-     * @see var/Typecho/Typecho_Widget#__call()
+     * 获取当前用户已发布的文章数目
+     * 
+     * @access protected
+     * @return integer
      */
-    public function __call($name, $args)
+    protected function _myPublishedPostsNum()
     {
-        echo isset($this->{$name}) ? $this->{$name} : NULL;
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.author = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取当前显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function _publishedCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'approved'))->num;
+    }
+    
+    /**
+     * 获取分类数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function _categoriesNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
+                    ->from('table.metas')
+                    ->where('table.metas.type = ?', 'category'))->num;
     }
 }
