@@ -59,7 +59,7 @@ CREATE TABLE `typecho_contents` (
   `allowPing` enum('enable','disable') default 'disable' COMMENT '是否允许ping',
   `allowFeed` enum('enable','disable') default 'disable' COMMENT '允许出现在聚合中',
   PRIMARY KEY  (`cid`),
-  KEY `slug` (`slug`),
+  UNIQUE KEY `slug` (`slug`),
   KEY `created` (`created`),
   KEY `author` (`author`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

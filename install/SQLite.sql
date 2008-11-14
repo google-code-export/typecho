@@ -3,7 +3,7 @@ CREATE INDEX typecho_comments_cid ON typecho_comments (cid);
 CREATE INDEX typecho_comments_created ON typecho_comments (created);
 
 CREATE TABLE typecho_contents ( cid INTEGER NOT NULL PRIMARY KEY, title varchar(200) default NULL , slug varchar(128) default NULL , uri varchar(200) default NULL , created int(10) default '0' , modified int(10) default '0' , text text , meta int(10) default '0' , author int(10) default '0' , template varchar(32) default NULL , type varchar(32) default NULL , password varchar(32) default NULL , commentsNum int(10) default '0' , allowComment varchar(7) default 'disable' , allowPing varchar(7) default 'disable' , allowFeed varchar(7) default 'disable' );
-CREATE INDEX typecho_contents_slug ON typecho_contents (slug);
+CREATE UNIQUE INDEX typecho_contents_slug ON typecho_contents (slug);
 CREATE INDEX typecho_contents_created ON typecho_contents (created);
 CREATE INDEX typecho_contents_author ON typecho_contents (author);
 
