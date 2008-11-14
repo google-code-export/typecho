@@ -45,9 +45,9 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "allowComment" VARCHAR(16) NULL DEFAULT 'disable',
   "allowPing" VARCHAR(16) NULL DEFAULT 'disable',
   "allowFeed" VARCHAR(16) NULL DEFAULT 'disable',
-  PRIMARY KEY ("cid")
+  PRIMARY KEY ("cid"),
+  UNIQUE ("slug")
 ); 
-CREATE INDEX "typecho_contents_slug" ON "typecho_contents" ("slug");
 CREATE INDEX "typecho_contents_created" ON "typecho_contents" ("created");
 CREATE INDEX "typecho_contents_author" ON "typecho_contents" ("author");
 
