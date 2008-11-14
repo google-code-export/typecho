@@ -15,7 +15,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Recent_Pingback extends Widget_Abstract_Comments
+class Widget_Comments_Recent_Pingback extends Widget_Comments_Recent
 {
     /**
      * 初始化函数
@@ -25,8 +25,6 @@ class Widget_Comments_Recent_Pingback extends Widget_Abstract_Comments
      */
     public function init()
     {
-        $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
-        
         $this->db()->fetchAll($this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.type = ?', 'pingback')
         ->where('table.comments.status = ?', 'approved')
