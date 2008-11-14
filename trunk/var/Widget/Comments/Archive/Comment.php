@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Archive_Comment extends Widget_Abstract_Comments
+class Widget_Comments_Archive_Comment extends Widget_Comments_Archive
 {
     /**
      * 初始化函数
@@ -27,8 +27,6 @@ class Widget_Comments_Archive_Comment extends Widget_Abstract_Comments
      */
     public function init()
     {
-        $this->parameter->setDefault('desc=0');
-    
         $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
         ->where('table.comments.mode = ?', 'comment')
         ->where('table.comments.cid = ?', $this->parameter->cid)

@@ -454,7 +454,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function comments($mode = NULL, $desc = false)
     {
         $mode = strtolower($mode);
-        $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc);
+        $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc, 'parentContent' => $this->_row);
         
         switch($mode)
         {
