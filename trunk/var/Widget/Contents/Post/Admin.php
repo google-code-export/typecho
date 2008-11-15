@@ -25,7 +25,15 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * @access private
      * @var Typecho_Db_Query
      */
-    private $countSql;
+    private $_countSql;
+    
+    /**
+     * 所有文章个数
+     * 
+     * @access private
+     * @var integer
+     */
+    private $_total = false;
     
     /**
      * 用于过滤的条件
@@ -117,7 +125,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
         
         /** 给计算数目对象赋值,克隆对象 */
-        $this->countSql = clone $select;
+        $this->_countSql = clone $select;
         
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
@@ -138,7 +146,8 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->options->adminUrl);
         
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->countSql), $this->currentPage, $this->parameter->pageSize, $query);
+        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
+        $this->currentPage, $this->parameter->pageSize, $query);
         $nav->render(_t('&laquo;'), _t('&raquo;'));
     }
 }

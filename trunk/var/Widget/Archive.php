@@ -34,6 +34,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_countSql;
     
     /**
+     * 所有文章个数
+     * 
+     * @access private
+     * @var integer
+     */
+    private $_total = false;
+    
+    /**
      * 当前页
      * 
      * @access private
@@ -438,7 +446,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
-            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->_countSql), $this->_currentPage, $this->parameter->pageSize, $query);
+            $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
+            $this->_currentPage, $this->parameter->pageSize, $query);
             $nav->render($prev, $next, $splitPage, $splitWord);
         }
     }
