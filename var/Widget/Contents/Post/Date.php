@@ -12,14 +12,21 @@
 /**
  * 按日期归档列表组件
  * 
+ * @fixme 交给缓存
  * @author qining
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
  */
 class Widget_Contents_Post_Date extends Typecho_Widget
 {
+    /**
+     * 全局选项
+     * 
+     * @access protected
+     * @var Widget_Options
+     */
+    protected $options;
+
     /**
      * 数据库对象
      * 
@@ -38,6 +45,9 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     {
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
+        
+        /** 初始化常用组件 */
+        $this->options = $this->widget('Widget_Options');
     }
 
     /**
@@ -51,13 +61,12 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         /** 设置参数默认值 */
         $this->parameter->setDefault('format=Y-m&type=month');
     
-        $posts = $this->db->fetchAll($this->db->select('created')->from('table.contents')
+        $resource = $this->db->query($this->db->select('created')->from('table.contents')
         ->where('type = ?', 'post')
-        ->where('table.contents.created < ?', $this->widget('Widget_Options')->gmtTime)
-        ->order('table.contents.created', Typecho_Db::SORT_DESC));
+        ->where('table.contents.created < ?', $this->options->gmtTime));
         
         $result = array();
-        foreach($posts as $post)
+        while($post = $this->db->fetchRow($resource))
         {
             $date = date($this->parameter->format, $post['created']);
             if(isset($result[$date]))

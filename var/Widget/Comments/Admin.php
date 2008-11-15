@@ -43,6 +43,14 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     private $_currentPage;
     
     /**
+     * 所有文章个数
+     * 
+     * @access private
+     * @var integer
+     */
+    private $_total = false;
+    
+    /**
      * 初始化函数
      * 
      * @access public
@@ -85,7 +93,8 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $query = Typecho_Common::pathToUrl('manage-comments.php?' . http_build_query($this->_filterQuery) . '&page={page}', $this->options->adminUrl);
 
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->count($this->_countSql), $this->_currentPage, $this->parameter->pageSize, $query);
+        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
+        $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render(_t('&laquo;'), _t('&raquo;'));
     }
 }
