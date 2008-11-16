@@ -61,8 +61,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         ->where('`name` = ?', $name)
         ->limit(1);
         
-        if(Typecho_Request::getParameter('uid'))
-        {
+        if (Typecho_Request::getParameter('uid')) {
             $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
         }
 
@@ -83,8 +82,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         ->where('`mail` = ?', $mail)
         ->limit(1);
         
-        if(Typecho_Request::getParameter('uid'))
-        {
+        if (Typecho_Request::getParameter('uid')) {
             $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
         }
 
@@ -105,8 +103,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         ->where('`screenName` = ?', $screenName)
         ->limit(1);
         
-        if(Typecho_Request::getParameter('uid'))
-        {
+        if (Typecho_Request::getParameter('uid')) {
             $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
         }
     
@@ -178,14 +175,12 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
         $form->addItem($submit);
 
-        if(NULL != Typecho_Request::getParameter('uid'))
-        {
+        if (NULL != Typecho_Request::getParameter('uid')) {
             /** 更新模式 */
             $user = $this->db->fetchRow($this->select()
             ->where('`uid` = ?', Typecho_Request::getParameter('uid'))->limit(1));
             
-            if(!$user)
-            {
+            if (!$user) {
                 throw new Typecho_Widget_Exception(_t('用户不存在'), Typecho_Exception::NOTFOUND);
             }
             
@@ -199,9 +194,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $do->value('update');
             $uid->value($user['uid']);
             $_action = 'update';
-        }
-        else
-        {
+        } else {
             $title->html(_t('增加用户'));
             $submit->value(_t('增加用户'));
             $url->value('http://');
@@ -209,14 +202,12 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $_action = 'insert';
         }
         
-        if(empty($action))
-        {
+        if (empty($action)) {
             $action = $_action;
         }
         
         /** 给表单增加规则 */
-        if('insert' == $action || 'update' == $action)
-        {
+        if ('insert' == $action || 'update' == $action) {
             $screenName->addRule(array($this, 'screenNameExists'), _t('昵称已经存在'));
             $url->addRule('url', _t('个人主页地址格式错误'));
             $mail->addRule('required', _t('必须填写电子邮箱'));
@@ -225,8 +216,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $confirm->addRule('confirm', _t('两次输入的密码不一致'), 'password');
         }
         
-        if('insert' == $action)
-        {
+        if ('insert' == $action) {
             $name->addRule('required', _t('必须填写用户名称'));
             $name->addRule(array($this, 'nameExists'), _t('用户名称已经存在'));
             $password->label(_t('用户密码*'));
@@ -234,8 +224,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $password->addRule('required', _t('必须填写密码'));
         }
         
-        if('update' == $action)
-        {
+        if ('update' == $action) {
             $name->input->setAttribute('disabled', 'disabled');
             $uid->addRule('required', _t('用户主键不存在'));
             $uid->addRule(array($this, 'userExists'), _t('用户不存在'));
@@ -252,12 +241,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function insertUser()
     {
-        try
-        {
+        try {
             $this->form('insert')->validate();
         }
-        catch(Typecho_Widget_Exception $e)
-        {
+         catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack('#edit');
         }
         
@@ -285,24 +272,19 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function updateUser()
     {
-        try
-        {
+        try {
             $this->form('update')->validate();
         }
-        catch(Typecho_Widget_Exception $e)
-        {
+         catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack('#edit');
         }
     
         /** 取出数据 */
         $user = Typecho_Request::getParametersFrom('mail', 'screenName', 'password', 'url', 'group');
         $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
-        if(empty($user['password']))
-        {
+        if (empty($user['password'])) {
             unset($user['password']);
-        }
-        else
-        {
+        } else {
             $user['password'] = md5($user['password']);
         }
     
@@ -327,17 +309,13 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $users = Typecho_Request::getParameter('uid');
         $deleteCount = 0;
         
-        if($users && is_array($users))
-        {
-            foreach($users as $user)
-            {
-                if(1 == $user)
-                {
+        if ($users && is_array($users)) {
+            foreach ($users as $user) {
+                if (1 == $user) {
                     continue;
                 }
                 
-                if($this->delete($this->db->sql()->where('uid = ?', $user)))
-                {
+                if ($this->delete($this->db->sql()->where('uid = ?', $user))) {
                     $deleteCount ++;
                 }
             }

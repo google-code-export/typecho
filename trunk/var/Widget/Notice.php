@@ -30,8 +30,7 @@ class Widget_Notice extends Typecho_Widget
      */
     public function init()
     {
-        if(NULL !== $this->request->getCookie('notice'))
-        {
+        if (NULL !== $this->request->getCookie('notice')) {
             $this->noticeType = $this->request->getCookie('noticeType');
             $this->push($this->request->getCookie('notice'));
             $this->response->deleteCookie('notice', $this->widget('Widget_Options')->siteUrl);
@@ -59,8 +58,7 @@ class Widget_Notice extends Typecho_Widget
      */
     public function lists($tag = 'li')
     {
-        foreach($this->_row as $row)
-        {
+        foreach ($this->_row as $row) {
             echo "<$tag>" . $row . "</$tag>";
         }
     }
@@ -91,21 +89,14 @@ class Widget_Notice extends Typecho_Widget
     {
         $notice = array();
         
-        if(is_array($name))
-        {
-            foreach($name as $key => $row)
-            {
+        if (is_array($name)) {
+            foreach ($name as $key => $row) {
                 $notice[$key] = $row;
             }
-        }
-        else
-        {
-            if(empty($value))
-            {
+        } else {
+            if (empty($value)) {
                 $notice[] = $name;
-            }
-            else
-            {
+            } else {
                 $notice[$name] = $value;
             }
         }

@@ -66,15 +66,11 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         ->where('table.contents.created < ?', $this->options->gmtTime));
         
         $result = array();
-        while($post = $this->db->fetchRow($resource))
-        {
+        while ($post = $this->db->fetchRow($resource)) {
             $date = date($this->parameter->format, $post['created']);
-            if(isset($result[$date]))
-            {
+            if (isset($result[$date])) {
                 $result[$date]['count'] ++;
-            }
-            else
-            {
+            } else {
                 $result[$date]['year'] = date('Y', $post['created']);
                 $result[$date]['month'] = date('m', $post['created']);
                 $result[$date]['day'] = date('d', $post['created']);
@@ -83,8 +79,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
             }
         }
         
-        foreach($result as $row)
-        {
+        foreach ($result as $row) {
             $row['permalink'] = Typecho_Router::url('archive_' . $this->parameter->type, $row, $this->widget('Widget_Options')->index);
             $this->push($row);
         }

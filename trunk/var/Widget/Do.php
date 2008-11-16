@@ -27,15 +27,12 @@ class Widget_Do extends Typecho_Widget
         $widgetName = $prefix . '_' . str_replace('/', '_', $this->request->widget);
         $fileName = __TYPECHO_ROOT_DIR__ . '/var/' . $prefix . '/' . $this->request->widget . '.php';
 
-        if(file_exists($fileName))
-        {
+        if (file_exists($fileName)) {
             require_once $fileName;
             
-            if(class_exists($widgetName))
-            {
+            if (class_exists($widgetName)) {
                 $reflectionWidget =  new ReflectionClass($widgetName);
-                if($reflectionWidget->implementsInterface('Widget_Interface_Action_' . $prefix))
-                {
+                if ($reflectionWidget->implementsInterface('Widget_Interface_Action_' . $prefix)) {
                     Typecho_Widget::widget($widgetName);
                     return;
                 }

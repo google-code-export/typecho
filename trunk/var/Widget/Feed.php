@@ -55,14 +55,11 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         $feedType = Typecho_Feed::RSS2;
         
         /** 过滤路径 */
-        if(0 === strpos($feedQuery, '/rss/') || '/rss' == $feedQuery)
-        {
+        if (0 === strpos($feedQuery, '/rss/') || '/rss' == $feedQuery) {
             /** 如果是RSS1标准 */
             $feedQuery = substr($feedQuery, 4);
             $feedType = Typecho_Feed::RSS1;
-        }
-        else if(0 === strpos($feedQuery, '/atom/') || '/atom' == $feedQuery)
-        {
+        } else if (0 === strpos($feedQuery, '/atom/') || '/atom' == $feedQuery) {
             /** 如果是ATOM标准 */
             $feedQuery = substr($feedQuery, 5);
             $feedType = Typecho_Feed::ATOM1;
@@ -72,8 +69,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         $this->type = $feedType;
         
         /** 处理评论聚合 */
-        if('/comments' == $feedQuery || '/comments/' == $feedQuery)
-        {
+        if ('/comments' == $feedQuery || '/comments/' == $feedQuery) {
             $this->options = Typecho_API::factory('Widget_Options');
             Typecho_API::factory('Widget_Comments_Recent', 20)->to($comments);
             $this->pushCommentElement($comments);
@@ -81,46 +77,37 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
             $this->options->feedUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedUrl);
             $this->options->feedRssUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedRssUrl);
             $this->options->feedAtomUrl = Typecho_API::pathToUrl('/comments/', $this->options->feedAtomUrl);
-        }
-        /** 解析路径 */
-        else if(false !== Typecho_Router::match($feedQuery))
-        {
+        } else if (false !== Typecho_Router::match($feedQuery)) {
+            /** 解析路径 */
             parent::__construct(10);
-        }
-        else
-        {
+        } else {
             throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
         }
         
         $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
         $this->feed->setSubTitle($this->options->description);
 
-        if(Typecho_Feed::RSS2 == $feedType)
-        {
+        if (Typecho_Feed::RSS2 == $feedType) {
             $this->feed->setChannelElement('language', _t('zh-cn'));
             $this->feed->setLink($this->options->feedUrl);
         }
         
-        if(Typecho_Feed::RSS1 == $feedType)
-        {
+        if (Typecho_Feed::RSS1 == $feedType) {
             /** 如果是RSS1标准 */
             $this->feed->setChannelAbout($this->options->feedRssUrl);
             $this->feed->setLink($this->options->feedRssUrl);
         }
         
-        if(Typecho_Feed::ATOM1 == $feedType)
-        {
+        if (Typecho_Feed::ATOM1 == $feedType) {
             /** 如果是ATOM标准 */
             $this->feed->setLink($this->options->feedAtomUrl);
         }
 
-        if(Typecho_Feed::RSS1 == $feedType || Typecho_Feed::RSS2 == $feedType)
-        {
+        if (Typecho_Feed::RSS1 == $feedType || Typecho_Feed::RSS2 == $feedType) {
             $this->feed->setDescription($this->options->description);
         }
 
-        if(Typecho_Feed::RSS2 == $feedType || Typecho_Feed::ATOM1 == $feedType)
-        {
+        if (Typecho_Feed::RSS2 == $feedType || Typecho_Feed::ATOM1 == $feedType) {
             $this->feed->setChannelElement(Typecho_Feed::RSS2 == $feedType ? 'pubDate' : 'updated',
             date(Typecho_Feed::dateFormat($feedType), 
             $this->options->gmtTime + $this->options->timezone));
@@ -151,18 +138,15 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
      */
     public function pushCommentElement($comments)
     {
-        if($comments->have())
-        {
-            while($comments->get())
-            {
+        if ($comments->have()) {
+            while ($comments->get()) {
                 $item = $this->feed->createNewItem();
                 $item->setTitle($comments->author);
                 $item->setLink($comments->permalink);
                 $item->setDate($comments->date + $this->options->timezone);
                 $item->setDescription($comments->text);
 
-                if(Typecho_Feed::RSS2 == $this->type)
-                {
+                if (Typecho_Feed::RSS2 == $this->type) {
                     $item->addElement('guid', $comments->permalink);
                     $item->addElement('content:encoded', Typecho_API::subStr(Typecho_API::stripTags($comments->text), 0, 100, '...'));
                     $item->addElement('author', $comments->author);
@@ -192,12 +176,9 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         $item->setDate($value['created'] + $this->options->timezone);
         
         /** RSS全文输出开关支持 */
-        if($this->options->feedFullArticlesLayout)
-        {
+        if ($this->options->feedFullArticlesLayout) {
             $item->setDescription($value['text']);
-        }
-        else
-        {
+        } else {
             $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
             $contents = explode('<!--more-->', $content);
             
@@ -208,8 +189,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
         
         $item->setCategory($value['categories']);
         
-        if(Typecho_Feed::RSS2 == $this->type)
-        {
+        if (Typecho_Feed::RSS2 == $this->type) {
             $item->addElement('guid', $value['permalink']);
             $item->addElement('comments', $value['permalink'] . '#comments');
             $item->addElement('content:encoded', Typecho_API::subStr(Typecho_API::stripTags($value['text']), 0, 100, '...'));

@@ -74,12 +74,9 @@ class Typecho_Feed
      */
     public static function dateFormat($type = self::RSS2)
     {
-        if(self::RSS1 == $type || self::RSS2 == $type)
-        {
+        if (self::RSS1 == $type || self::RSS2 == $type) {
             return self::DATE_RSS;
-        }
-        else
-        {
+        } else {
             return self::DATE_ATOM;
         }
     }

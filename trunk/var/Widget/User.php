@@ -68,15 +68,13 @@ class Widget_User extends Typecho_Widget
      */
     public function init()
     {
-        if($this->hasLogin())
-        {
+        if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()
             ->from('table.options')->where('user = ?', $this->_user['uid']));
 
             $this->push($this->_user);
 
-            foreach($rows as $row)
-            {
+            foreach ($rows as $row) {
                 $this->widget('Widget_Options')->__set($row['name'], $row['value']);
             }
 
@@ -105,20 +103,17 @@ class Widget_User extends Typecho_Widget
         $this->response->setCookie('password', sha1($password), $expire, $this->widget('Widget_Options')->siteUrl);
         $this->response->setCookie('authCode', $authCode, $expire, $this->widget('Widget_Options')->siteUrl);
         
-        if($this->db->fetchObject($this->db->select()
+        if ($this->db->fetchObject($this->db->select()
                 ->from('table.users')
                 ->where('uid = ?', $uid)
-                ->limit(1))->activated > 0)
-        {
+                ->limit(1))->activated > 0) {
             //更新最后登录时间以及验证码
             $this->db->query($this->db
             ->update('table.users')
             ->expression('logged', 'activated')
             ->rows(array('authCode' => $authCode))
             ->where('uid = ?', $uid));
-        }
-        else
-        {
+        } else {
             //第一次登录
             $this->db->query($this->db
             ->update('table.users')
@@ -149,22 +144,17 @@ class Widget_User extends Typecho_Widget
      */
     public function hasLogin()
     {
-        if(NULL !== $this->_hasLogin)
-        {
+        if (NULL !== $this->_hasLogin) {
             return $this->_hasLogin;
-        }
-        else
-        {
-            if(NULL !== $this->request->getCookie('uid') && NULL !== $this->request->getCookie('password'))
-            {
+        } else {
+            if (NULL !== $this->request->getCookie('uid') && NULL !== $this->request->getCookie('password')) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
                 ->where('uid = ?', $this->request->getCookie('uid'))
                 ->limit(1));
 
-                if($user && sha1($user['password']) == $this->request->getCookie('password')
-                && $user['authCode'] == $this->request->getCookie('authCode'))
-                {
+                if ($user && sha1($user['password']) == $this->request->getCookie('password')
+                && $user['authCode'] == $this->request->getCookie('authCode')) {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }
@@ -187,32 +177,22 @@ class Widget_User extends Typecho_Widget
      */
     public function pass($group, $return = false)
     {
-        if($this->hasLogin())
-        {
-            if(array_key_exists($group, $this->groups) && $this->groups[$this->group] <= $this->groups[$group])
-            {
+        if ($this->hasLogin()) {
+            if (array_key_exists($group, $this->groups) && $this->groups[$this->group] <= $this->groups[$group]) {
                 return true;
             }
-        }
-        else
-        {
-            if($return)
-            {
+        } else {
+            if ($return) {
                 return false;
-            }
-            else
-            {
+            } else {
                 $this->response->redirect(Typecho_Common::pathToUrl('/login.php', $this->widget('Widget_Options')->adminUrl)
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }
 
-        if($return)
-        {
+        if ($return) {
             return false;
-        }
-        else
-        {
+        } else {
             throw new Typecho_Widget_Exception(_t('禁止访问'), Typecho_Exception::FORBIDDEN);
         }
     }

@@ -73,8 +73,7 @@ $db->addServer(array(
 Typecho_Db::set($db);
 
 /** 自定义错误页面 */
-if(!__TYPECHO_DEBUG__)
-{
+if (!__TYPECHO_DEBUG__) {
     Typecho_Exception::setHandles(array(
         0              =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',
         403            =>  __TYPECHO_ROOT_DIR__ . '/admin/error.php',

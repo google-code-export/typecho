@@ -63,14 +63,12 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $this->_currentPage = $this->request->getParameter('page', 1);
     
         /** 过滤标题 */
-        if(NULL != ($keywords = $this->request->keywords))
-        {
+        if (NULL != ($keywords = $this->request->keywords)) {
             $select->where('table.comments.text LIKE ?', '%' . Typecho_Common::filterSearchQuery($keywords) . '%');
             $this->_filterQuery['keywords'] = $keywords;
         }
         
-        if(in_array($this->request->status, array('approved', 'waiting', 'spam')))
-        {
+        if (in_array($this->request->status, array('approved', 'waiting', 'spam'))) {
             $select->where('table.comments.status = ?', $this->request->status);
         }
     

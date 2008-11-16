@@ -43,22 +43,18 @@ class Typecho_Router
      */
     public static function match($pathInfo)
     {
-        foreach(self::$_routes as $key => $route)
-        {
-            if(preg_match($route['regx'], $pathInfo, $matches))
-            {
+        foreach (self::$_routes as $key => $route) {
+            if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
                 
-                if(!empty($route['params']))
-                {
+                if (!empty($route['params'])) {
                     /** Typecho_Ruquest */
                     require_once 'Typecho/Request.php';
                     
                     unset($matches[0]);
                     $params = array_combine($route['params'], $matches);
                     
-                    foreach($params as $key => $val)
-                    {
+                    foreach ($params as $key => $val) {
                         Typecho_Request::setParameter($key, $val);
                     }
                 }
@@ -86,11 +82,9 @@ class Typecho_Router
         $pathInfo = Typecho_Request::getPathInfo();
 
         /** 遍历路由 */
-        if(false !== ($route = self::match($pathInfo)))
-        {
+        if (false !== ($route = self::match($pathInfo))) {
             $widget = new $route['widget'];
-            if(isset($route['action']))
-            {
+            if (isset($route['action'])) {
                 $widget->{$route['action']}();
             }
             return;
@@ -115,8 +109,7 @@ class Typecho_Router
        
         //交换数组键值
         $pattern = array();
-        foreach($route['params'] as $row)
-        {
+        foreach ($route['params'] as $row) {
             $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
         }
 

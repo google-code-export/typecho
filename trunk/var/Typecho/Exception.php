@@ -70,22 +70,16 @@ class Typecho_Exception extends Exception
         $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:8pt;font-family:verdana,Helvetica,sans-serif">';
         $i = 0;
 
-        foreach($rows as $row)
-        {
-            if(0 == $i)
-            {
+        foreach ($rows as $row) {
+            if (0 == $i) {
                 $items = explode(' ', $row);
                 array_shift($items);
                 $message = implode(' ', $items);
 
                 $str .= '<tr><td width=5% style="background:#777;color:#FFF">&nbsp</td><td style="background:#777;color:#FFF">' . $row . '</td></tr>';
-            }
-            else if(1 == $i)
-            {
+            } else if (1 == $i) {
                 $str .= '<tr><td style="background:#FFFFAA"><strong>Trace</strong></td><td align="center" style="background:#FFFFAA">Message</td></tr>';
-            }
-            else
-            {
+            } else {
                 $items = explode(' ', $row);
                 $num = $items[0];
                 array_shift($items);
@@ -175,22 +169,15 @@ function exceptionHandler($exception)
 {
     @ob_clean();
 
-    if(!Typecho_Exception::getHandles())
-    {    
-        if($exception instanceof Typecho_Exception)
-        {
+    if (!Typecho_Exception::getHandles()) {    
+        if ($exception instanceof Typecho_Exception) {
             /** 显示调用__toString,修正PHP 5.2之前的bug */
             die($exception->__toString());
-        }
-        else
-        {
+        } else {
             die(Typecho_Exception::parse($exception->__toString()));
         }
-    }
-    else
-    {
-        switch($exception->getCode())
-        {
+    } else {
+        switch ($exception->getCode()) {
             case Typecho_Exception::FORBIDDEN:
                 header('HTTP/1.1 403 Forbidden');
                 $handle = '403';
@@ -214,8 +201,7 @@ function exceptionHandler($exception)
         }
 
         $handles = Typecho_Exception::getHandles();
-        if(isset($handles[$handle]))
-        {
+        if (isset($handles[$handle])) {
             require $handles[$handle];
             exit;
         }
@@ -223,8 +209,7 @@ function exceptionHandler($exception)
 }
 
 /** 兼容PHP5.2以前的错误级别,E_RECOVERABLE_ERROR为PHP5.2的新增错误类型 */
-if(!defined('E_RECOVERABLE_ERROR'))
-{
+if (!defined('E_RECOVERABLE_ERROR')) {
     define('E_RECOVERABLE_ERROR', 4096);
 }
 
@@ -241,13 +226,11 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
 {
     static $errors;
 
-    if(empty($errors))
-    {
+    if (empty($errors)) {
         $errors = array();
     }
 
-    if(!Typecho_Exception::getHandles())
-    {
+    if (!Typecho_Exception::getHandles()) {
         $errorWord = array (
             E_ERROR              => 'Error',
             E_WARNING            => 'Warning',
@@ -264,10 +247,8 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
             E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
             );
 
-        if(empty($errno))
-        {
-            if(!empty($errors))
-            {
+        if (empty($errno)) {
+            if (!empty($errors)) {
                 $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:8pt;font-family:verdana,Helvetica,sans-serif;margin-bottom:20px;">';
                 $str .= '<tr><td style="background:#777;color:#FFF" align="center" colspan="4">System caught error</td></tr>';
                 $str .= '<tr><td align="center" style="background:#FFFFAA">Error</td>
@@ -276,8 +257,7 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
                 <td align="center" style="background:#FFFFAA">Message</td>
                 </tr>';
 
-                foreach($errors as $error)
-                {
+                foreach ($errors as $error) {
                     list($errorWord, $errno, $errfile, $errline, $errstr) = $error;
                     $str .= '<tr><td style="background:#FFF">' . $errorWord . '</td>
                     <td style="background:#FFF">' . $errfile . '</td>
@@ -290,15 +270,10 @@ function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline =
 
                 echo $str;
             }
-        }
-        else
-        {
-            if(array_key_exists($errno, $errorWord))
-            {
+        } else {
+            if (array_key_exists($errno, $errorWord)) {
                 $errorWord = $errorWord[$errno];
-            }
-            else
-            {
+            } else {
                 $errorWord = 'Unkown Error';
             }
 

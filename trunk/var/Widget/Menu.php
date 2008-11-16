@@ -135,41 +135,32 @@ class Widget_Menu extends Typecho_Widget
         $match = 0;
         $adminUrl = $this->options->siteUrl;
         
-        foreach($childMenu as $parentKey => $parentVal)
-        {
-            foreach($parentVal as $childKey => $childVal)
-            {
+        foreach ($childMenu as $parentKey => $parentVal) {
+            foreach ($parentVal as $childKey => $childVal) {
                 $link = Typecho_Common::pathToUrl($childVal[2], $adminUrl);
-                if(0 === strpos($url, $link) && strlen($link) > $match)
-                {
+                if (0 === strpos($url, $link) && strlen($link) > $match) {
                     $this->_currentParent =  $parentKey;
                     $this->_currentChild =  $childKey;
                 }
                 
-                if('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true))
-                {
+                if ('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true)) {
                     unset($this->_childMenu[$parentKey][$childKey]);
                 }
             }
             
-            if(0 == count($this->_childMenu[$parentKey]))
-            {
+            if (0 == count($this->_childMenu[$parentKey])) {
                 unset($this->_parentMenu[$parentKey]);
             }
         }
 
-        if('visitor' != $this->_childMenu[$this->_currentParent][$this->_currentChild][3])
-        {
+        if ('visitor' != $this->_childMenu[$this->_currentParent][$this->_currentChild][3]) {
             $this->user->pass($this->_childMenu[$this->_currentParent][$this->_currentChild][3]);
         }
         
-        if(is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1]))
-        {
+        if (is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1])) {
             list($widget, $method) = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
             $this->title = Typecho_Widget::widget($widget)->$method();
-        }
-        else
-        {
+        } else {
             $this->title = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
         }
         
@@ -188,25 +179,20 @@ class Widget_Menu extends Typecho_Widget
     {
         $adminUrl = $this->options->siteUrl;
         
-        foreach($this->_parentMenu as $key => $title)
-        {
+        foreach ($this->_parentMenu as $key => $title) {
             $current = reset($this->_childMenu[$key]);
             $link = Typecho_Common::pathToUrl($current[2], $adminUrl);
 
             echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\r\n";
             
             echo "<dd><ul>\r\n";
-            foreach($this->_childMenu[$key] as $inkey => $menu)
-            {
+            foreach ($this->_childMenu[$key] as $inkey => $menu) {
                 $link = Typecho_Common::pathToUrl($menu[2], $adminUrl);
                 
-                if(is_array($menu[0]))
-                {
+                if (is_array($menu[0])) {
                     list($widget, $method) = $menu[0];
                     $title = Typecho_Widget::widget($widget)->$method();
-                }
-                else
-                {
+                } else {
                     $title = $menu[0];
                 }
                 

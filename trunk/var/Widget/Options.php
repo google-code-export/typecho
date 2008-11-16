@@ -182,15 +182,11 @@ class Widget_Options extends Typecho_Widget
      */
     public function getPluginOption($pluginName, $optionName)
     {
-        if(!isset($this->_pluginConfig[$pluginName]))
-        {
-            if(!empty($this->_row['plugin:' . $pluginName])
-            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName])))
-            {
+        if (!isset($this->_pluginConfig[$pluginName])) {
+            if (!empty($this->_row['plugin:' . $pluginName])
+            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName]))) {
                 $this->_pluginConfig[$pluginName] = $options;
-            }
-            else
-            {
+            } else {
                 throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
             }
         }

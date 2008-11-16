@@ -34,20 +34,15 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
-        if(file_exists($pluginFileName))
-        {
+        if (file_exists($pluginFileName)) {
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array($pluginName . '_Plugin', 'activate')) && 
-            !in_array($pluginName, $activatedPlugins))
-            {
-                try
-                {
+            if (is_callable(array($pluginName . '_Plugin', 'activate')) && 
+            !in_array($pluginName, $activatedPlugins)) {
+                try {
                     call_user_func(array($pluginName . '_Plugin', 'activate'));
-                }
-                catch(Typecho_Plugin_Exception $e)
-                {
+                } catch (Typecho_Plugin_Exception $e) {
                     /** 截获异常 */
                     Typecho_API::factory('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                     Typecho_API::goBack();
@@ -58,10 +53,8 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                 Typecho_Db::get()->sql()->where('`name` = ?', 'plugins'));
                 
                 /** 获取插件信息 */
-                if(is_callable(array($pluginName . '_Plugin', 'config')))
-                {
-                    try
-                    {
+                if (is_callable(array($pluginName . '_Plugin', 'config'))) {
+                    try {
                         $options = Typecho_API::factory('Widget_Options');
                         
                         /** 初始化表单 */
@@ -72,9 +65,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
                         call_user_func(array($pluginName . '_Plugin', 'config'), $this->form);
                         Typecho_API::factory('Widget_Options')->insert(array('value' => serialize($this->form->getValues()),
                         'name' => 'plugin:' . $pluginName));
-                    }
-                    catch(Typecho_Plugin_Exception $e)
-                    {
+                    } catch (Typecho_Plugin_Exception $e) {
                         /** 截获异常 */
                         Typecho_API::factory('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                         Typecho_API::goBack();
@@ -104,20 +95,15 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
-        if(file_exists($pluginFileName))
-        {
+        if (file_exists($pluginFileName)) {
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array($pluginName . '_Plugin', 'deactivate')) && 
-            in_array($pluginName, $activatedPlugins))
-            {
-                try
-                {
+            if (is_callable(array($pluginName . '_Plugin', 'deactivate')) && 
+            in_array($pluginName, $activatedPlugins)) {
+                try {
                     call_user_func(array($pluginName . '_Plugin', 'deactivate'));
-                }
-                catch(Typecho_Plugin_Exception $e)
-                {
+                } catch (Typecho_Plugin_Exception $e) {
                     /** 截获异常 */
                     Typecho_API::factory('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                     Typecho_API::goBack();
@@ -149,12 +135,9 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
         $form = Typecho_API::factory('Widget_Plugins_Config')->form;
         
         /** 验证表单 */
-        try
-        {
+        try {
             $form->validate();
-        }
-        catch(Typecho_Widget_Exception $e)
-        {
+        } catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack('#edit');
         }
         
