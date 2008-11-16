@@ -127,12 +127,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $updateCondition = clone $condition;
         $updateComment = $this->db->fetchObject($condition->select('cid')->from('table.comments')->limit(1));
         
-        if($updateComment)
-        {
+        if ($updateComment) {
             $cid = $updateComment->cid;
-        }
-        else
-        {
+        } else {
             return false;
         }
     
@@ -146,10 +143,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
         );
         
         $updateStruct = array();
-        foreach($comment as $key => $val)
-        {
-            if(isset($preUpdateStruct[$key]))
-            {
+        foreach ($comment as $key => $val) {
+            if (isset($preUpdateStruct[$key])) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
@@ -180,12 +175,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $deleteCondition = clone $condition;
         $deleteComment = $this->db->fetchObject($condition->select('cid')->from('table.comments')->limit(1));
         
-        if($deleteComment)
-        {
+        if ($deleteComment) {
             $cid = $deleteComment->cid;
-        }
-        else
-        {
+        } else {
             return false;
         }
         
@@ -276,12 +268,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $autoLink = (NULL === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
         $noFollow = (NULL === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
     
-        if($this->url && $autoLink)
-        {
+        if ($this->url && $autoLink) {
             echo '<a href="' , $this->url , '"' , ($noFollow ? ' rel="external nofollow"' : NULL) , '>' , $this->author , '</a>';
-        }
-        else
-        {
+        } else {
             echo $this->author;
         }
     }

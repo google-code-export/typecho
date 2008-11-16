@@ -37,17 +37,13 @@ class Typecho_Config implements Iterator
     public function __construct($config)
     {
         /** 初始化参数 */
-        if(is_string($config))
-        {
+        if (is_string($config)) {
             parse_str($config, $params);
-        }
-        else
-        {
+        } else {
             $params = $config;
         }
     
-        foreach($params as $name => $value)
-        {
+        foreach ($params as $name => $value) {
             $this->_currentConfig[$name] = $value;
         }
     }
@@ -74,20 +70,15 @@ class Typecho_Config implements Iterator
     public function setDefault($config)
     {
         /** 初始化参数 */
-        if(is_string($config))
-        {
+        if (is_string($config)) {
             parse_str($config, $params);
-        }
-        else
-        {
+        } else {
             $params = $config;
         }
         
         /** 设置默认参数 */
-        foreach($params as $name => $value)
-        {
-            if(!array_key_exists($name, $this->_currentConfig))
-            {
+        foreach ($params as $name => $value) {
+            if (!array_key_exists($name, $this->_currentConfig)) {
                 $this->_currentConfig[$name] = $value;
             }
         }

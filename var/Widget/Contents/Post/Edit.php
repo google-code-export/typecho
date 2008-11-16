@@ -32,8 +32,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         Typecho_API::factory('Widget_Users_Current')->pass('contributor');
     
         /** 获取文章内容 */
-        if(Typecho_Request::getParameter('cid'))
-        {
+        if (Typecho_Request::getParameter('cid')) {
             $this->db->fetchRow($this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'post', 'draft')
             ->where('table.contents.`cid` = ?', Typecho_Request::getParameter('cid'))
             ->limit(1), array($this, 'push'));
@@ -49,13 +48,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function getCreated()
     {
-        if(!($date = Typecho_Request::getParameter('date')))
-        {
+        if (!($date = Typecho_Request::getParameter('date'))) {
             $date = date('Y-m-d');
         }
         
-        if(!($time = Typecho_Request::getParameter('time')))
-        {
+        if (!($time = Typecho_Request::getParameter('time'))) {
             $time = date('g:i A');
         }
         
@@ -85,10 +82,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         ->group('table.metas.`mid`')), 'mid');
         
         /** 删除已有tag */
-        if($existTags)
-        {
-            foreach($existTags as $tag)
-            {
+        if ($existTags) {
+            foreach ($existTags as $tag) {
                 $this->db->query($this->db->sql()->delete('table.relationships')
                 ->where('`cid` = ?', $cid)
                 ->where('`mid` = ?', $tag));
@@ -109,10 +104,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $insertTags = $this->getTags($tags);
         
         /** 插入tag */
-        if($insertTags)
-        {
-            foreach($insertTags as $tag)
-            {
+        if ($insertTags) {
+            foreach ($insertTags as $tag) {
                 $this->db->query($this->db->sql()->insert('table.relationships')
                 ->rows(array(
                     'mid'  =>   $tag,
@@ -142,22 +135,17 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function getTags(array $tags)
     {
         $result = array();
-        foreach($tags as $tag)
-        {
-            if(empty($tag))
-            {
+        foreach ($tags as $tag) {
+            if (empty($tag)) {
                 continue;
             }
         
             $row = $this->db->fetchRow($this->db->sql()->select('table.metas', '`mid`')
             ->where('`name` = ?', $tag)->limit(1));
             
-            if($row)
-            {
+            if ($row) {
                 $result[] = $row['mid'];
-            }
-            else
-            {
+            } else {
                 $result[] = 
                 $this->db->query($this->db->sql()->insert('table.metas')
                 ->rows(array(
@@ -195,10 +183,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         ->group('table.metas.`mid`')), 'mid');
         
         /** 删除已有category */
-        if($existCategories)
-        {
-            foreach($existCategories as $category)
-            {
+        if ($existCategories) {
+            foreach ($existCategories as $category) {
                 $this->db->query($this->db->sql()->delete('table.relationships')
                 ->where('`cid` = ?', $cid)
                 ->where('`mid` = ?', $category));
@@ -216,10 +202,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
         
         /** 插入category */
-        if($categories)
-        {
-            foreach($categories as $category)
-            {
+        if ($categories) {
+            foreach ($categories as $category) {
                 $this->db->query($this->db->sql()->insert('table.relationships')
                 ->rows(array(
                     'mid'  =>   $category,
@@ -256,8 +240,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     
         $insertId = $this->insert($contents);
         
-        if($insertId > 0)
-        {
+        if ($insertId > 0) {
             /** 插入分类 */
             $this->setCategories($insertId, !empty($contents['category']) && is_array($contents['category']) ? 
             $contents['category'] : array(), 'post');
@@ -271,26 +254,20 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         ->where('table.contents.`cid` = ?', $insertId)->limit(1), array($this, 'push'));
         
         /** 文章提示信息 */
-        if('post' == $contents['type'])
-        {
+        if ('post' == $contents['type']) {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
             _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被创建", $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        }
-        else
-        {
+        } else {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
             _t("草稿 '%s' 已经被保存", $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
 
         /** 跳转页面 */
-        if(1 == Typecho_Request::getParameter('continue'))
-        {
+        if (1 == Typecho_Request::getParameter('continue')) {
             Typecho_API::redirect(Typecho_API::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::redirect(Typecho_API::pathToUrl('post-list.php', $this->options->adminUrl));
         }
     }
@@ -314,8 +291,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         $exists = $this->db->fetchRow($select);
         
-        if(!$exists)
-        {
+        if (!$exists) {
             throw new Typecho_Widget_Exception(_t('文章不存在'), Typecho_Exception::NOTFOUND);
         }
     
@@ -329,8 +305,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $updateRows = $this->update($contents, $this->db->sql()->where('`cid` = ?', Typecho_Request::getParameter('cid')));
         $this->db->fetchRow($select, array($this, 'push'));
 
-        if($updateRows > 0)
-        {
+        if ($updateRows > 0) {
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
             $contents['category'] : array(), 'post');
@@ -340,26 +315,20 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
 
         /** 文章提示信息 */
-        if('post' == $this->type)
-        {
+        if ('post' == $this->type) {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 
             _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新", $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        }
-        else
-        {
+        } else {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 
             _t("草稿 '%s' 已经被保存", $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
 
         /** 跳转页面 */
-        if(1 == Typecho_Request::getParameter('continue'))
-        {
+        if (1 == Typecho_Request::getParameter('continue')) {
             Typecho_API::redirect(Typecho_API::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::redirect(Typecho_API::pathToUrl('post-list.php', $this->options->adminUrl));
         }
     }
@@ -375,14 +344,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $cid = Typecho_Request::getParameter('cid');
         $deleteCount = 0;
 
-        if($cid)
-        {
+        if ($cid) {
             /** 格式化文章主键 */
             $posts = is_array($cid) ? $cid : array($cid);
-            foreach($posts as $post)
-            {
-                if($this->delete($this->db->sql()->where('`cid` = ?', $post)))
-                {
+            foreach ($posts as $post) {
+                if ($this->delete($this->db->sql()->where('`cid` = ?', $post))) {
                     /** 删除分类 */
                     $this->setCategories($post, array(), 'post');
                     

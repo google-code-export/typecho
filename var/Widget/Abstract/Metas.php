@@ -136,8 +136,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function sort(array $metas, $type)
     {
-        foreach($metas as $sort => $mid)
-        {
+        foreach ($metas as $sort => $mid) {
             $this->db->query($this->update('table.metas')->row('sort', $sort + 1)
             ->where('mid = ?', $mid)->where('type = ?', $type));
         }
@@ -157,10 +156,8 @@ class Widget_Abstract_Metas extends Widget_Abstract
         $contents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')->from('table.relationships')
         ->where('mid = ?', $mid)), 'cid');
     
-        foreach($metas as $meta)
-        {
-            if($mid != $meta)
-            {
+        foreach ($metas as $meta) {
+            if ($mid != $meta) {
                 $existsContents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')->from('table.relationships')
                 ->where('mid = ?', $meta)), 'cid');
                 
@@ -168,8 +165,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
                 $this->delete($where);
                 $diffContents = array_diff($existsContents, $contents);
                 
-                foreach($diffContents as $content)
-                {
+                foreach ($diffContents as $content) {
                     $this->db->query($this->insert('table.relationships')
                     ->rows(array('mid' => $mid, 'cid' => $content)));
                 }

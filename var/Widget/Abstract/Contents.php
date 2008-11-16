@@ -106,8 +106,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function update(array $content, Typecho_Db_Query $condition)
     {
         /** 首先验证写入权限 */
-        if(!$this->postIsWriteable(clone $condition))
-        {
+        if (!$this->postIsWriteable(clone $condition)) {
             return false;
         }
     
@@ -125,17 +124,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
         );
         
         $updateStruct = array();
-        foreach($content as $key => $val)
-        {
-            if(isset($preUpdateStruct[$key]))
-            {
+        foreach ($content as $key => $val) {
+            if (isset($preUpdateStruct[$key])) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
         
         /** 更新创建时间 */
-        if(!empty($content['created']))
-        {
+        if (!empty($content['created'])) {
             $updateStruct['created'] = $content['created'];
         }
         
@@ -173,10 +169,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function haveContentPermission($userId)
     {
-        if(!$this->user->pass('editor', true))
-        {
-            if($userId != $this->user->uid)
-            {
+        if (!$this->user->pass('editor', true)) {
+            if ($userId != $this->user->uid) {
                 return false;
             }
         }
@@ -193,19 +187,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function postIsWriteable(Typecho_Db_Query $condition = NULL)
     {
-        if(empty($condition))
-        {
-            if($this->have() && $this->haveContentPermission($this->author))
-            {
+        if (empty($condition)) {
+            if ($this->have() && $this->haveContentPermission($this->author)) {
                 return true;
             }
-        }
-        else
-        {
+        } else {
             $post = $this->db->fetchRow($condition->select('author')->from('table.contents')->limit(1));
 
-            if($post && $this->haveContentPermission($post['author']))
-            {
+            if ($post && $this->haveContentPermission($post['author'])) {
                 return true;
             }
         }
@@ -288,16 +277,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['slug'] = $tmpSlug;
 
         /** 处理密码保护流程 */
-        if(!empty($value['password']) &&
+        if (!empty($value['password']) &&
         $value['password'] != $this->request->protectPassword &&
         ($value['authorId'] != $this->user->uid
-        || !$this->user->pass('editor', true)))  //如果用户的权限允许
-        {
+        || !$this->user->pass('editor', true))) {
             $value['hidden'] = true;
         
             /** 抛出错误 */
-            if($this->request->isPost() && $this->request->isSetParameter('protectPassword'))
-            {
+            if ($this->request->isPost() && $this->request->isSetParameter('protectPassword')) {
                 $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
             }
         }
@@ -305,8 +292,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value = $this->plugin(__CLASS__)->filter($value);
 
         /** 如果访问权限被禁止 */
-        if($value['hidden'])
-        {
+        if ($value['hidden']) {
             $value['text'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
             '<p><input type="password" class="text" name="protectPassword" />
@@ -414,15 +400,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $permissions = func_get_args();
         $allow = true;
 
-        foreach($permissions as $permission)
-        {
+        foreach ($permissions as $permission) {
             $permission = strtolower($permission);
 
             /** 对自动关闭反馈功能的支持 */
-            if(('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0)
-            {
-                if($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout)
-                {
+            if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0) {
+                if ($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout) {
                     return false;
                 }
             }
@@ -445,20 +428,16 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function category($split = ',', $link = true, $default = NULL)
     {
         $categories = $this->categories;
-        if($categories)
-        {
+        if ($categories) {
             $result = array();
             
-            foreach($categories as $category)
-            {
+            foreach ($categories as $category) {
                 $result[] = $link ? '<a href="' . $category['permalink'] . '">'
                 . $category['name'] . '</a>' : $category['name'];
             }
 
             echo implode($split, $result);
-        }
-        else
-        {
+        } else {
             echo $default;
         }
     }
@@ -475,19 +454,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function tags($split = ',', $link = true, $default = NULL)
     {
         /** 取出tags */
-        if($this->tags)
-        {
+        if ($this->tags) {
             $result = array();
-            foreach($this->tags as $tag)
-            {
+            foreach ($this->tags as $tag) {
                 $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
                 . $tag['name'] . '</a>' : $tag['name'];
             }
 
             echo implode($split, $result);
-        }
-        else
-        {
+        } else {
             echo $default;
         }
     }

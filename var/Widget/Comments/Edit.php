@@ -31,11 +31,9 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $comment = $this->db()->fetchRow($this->db()->sql()->select('table.comments')
         ->where('`coid` = ?', $coid)->limit(1));
         
-        if($comment)
-        {
+        if ($comment) {
             /** 不必更新的情况 */
-            if($status == $comment['status'])
-            {
+            if ($status == $comment['status']) {
                 return false;
             }
         
@@ -44,13 +42,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             ->rows(array('status' => $status))->where('`coid` = ?', $coid));
         
             /** 更新相关内容的评论数 */
-            if('approved' == $comment['status'] && 'approved' != $status)
-            {
+            if ('approved' == $comment['status'] && 'approved' != $status) {
                 $this->db()->query($this->db()->sql()->update('table.contents')
                 ->row('commentsNum', '`commentsNum` - 1')->where('`cid` = ?', $comment['cid']));
-            }
-            else if('approved' != $comment['status'] && 'approved' == $status)
-            {
+            } else if ('approved' != $comment['status'] && 'approved' == $status) {
                 $this->db()->query($this->db()->sql()->update('table.contents')
                 ->row('commentsNum', '`commentsNum` + 1')->where('`cid` = ?', $comment['cid']));
             }
@@ -84,10 +79,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $comments = $this->getCoidAsArray();
         $updateRows = 0;
         
-        foreach($comments as $comment)
-        {
-            if($this->mark($comment, 'waiting'))
-            {
+        foreach ($comments as $comment) {
+            if ($this->mark($comment, 'waiting')) {
                 $updateRows ++;
             }
         }
@@ -111,10 +104,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $comments = $this->getCoidAsArray();
         $updateRows = 0;
         
-        foreach($comments as $comment)
-        {
-            if($this->mark($comment, 'spam'))
-            {
+        foreach ($comments as $comment) {
+            if ($this->mark($comment, 'spam')) {
                 $updateRows ++;
             }
         }
@@ -138,10 +129,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $comments = $this->getCoidAsArray();
         $updateRows = 0;
         
-        foreach($comments as $comment)
-        {
-            if($this->mark($comment, 'approved'))
-            {
+        foreach ($comments as $comment) {
+            if ($this->mark($comment, 'approved')) {
                 $updateRows ++;
             }
         }
@@ -165,24 +154,19 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $comments = $this->getCoidAsArray();
         $deleteRows = 0;
         
-        foreach($comments as $coid)
-        {
+        foreach ($comments as $coid) {
             $comment = $this->db()->fetchRow($this->db()->sql()->select('table.comments')
             ->where('`coid` = ?', $coid)->limit(1));
             
-            if($comment)
-            {
+            if ($comment) {
                 /** 删除评论 */
                 $this->db()->query($this->db()->sql()->delete('table.comments')->where('`coid` = ?', $coid));
             
                 /** 更新相关内容的评论数 */
-                if('approved' == $comment['status'])
-                {
+                if ('approved' == $comment['status']) {
                     $this->db()->query($this->db()->sql()->update('table.contents')
                     ->row('commentsNum', '`commentsNum` - 1')->where('`cid` = ?', $comment['cid']));
-                }
-                else if('approved' != $comment['status'])
-                {
+                } else if ('approved' != $comment['status']) {
                     $this->db()->query($this->db()->sql()->update('table.contents')
                     ->row('commentsNum', '`commentsNum` + 1')->where('`cid` = ?', $comment['cid']));
                 }

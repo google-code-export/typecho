@@ -68,10 +68,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         parent::prepare();
 
         /** 处理feed模式 **/
-        if('feed' == Typecho_Router::$current)
-        {
-            if(!Typecho_Router::match($feedQuery))
-            {
+        if ('feed' == Typecho_Router::$current) {
+            if (!Typecho_Router::match($feedQuery)) {
                 $this->response->throwExceptionResponseByCode(_t('聚合页不存在'), 404);
             }
             
@@ -88,13 +86,10 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function select()
     {
-        if('feed' == Typecho_Router::$current)
-        {
+        if ('feed' == Typecho_Router::$current) {
             return parent::select()->where('table.contents.`allowFeed` = ?', 'enable')
             ->where('table.contents.`password` IS NULL');
-        }
-        else
-        {
+        } else {
             return parent::select();
         }
     }
@@ -108,13 +103,11 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function init()
     {
         /** 处理搜索结果跳转 */
-        if($this->request->isSetParameter('s'))
-        {
+        if ($this->request->isSetParameter('s')) {
             $filterKeywords = Typecho_Common::filterSearchQuery($this->request->s);
             
             /** 跳转到搜索页 */
-            if(NULL != $filterKeywords)
-            {
+            if (NULL != $filterKeywords) {
                 $this->response->redirect(Typecho_Router::url('search', 
                 array('keywords' => urlencode($filterKeywords)), $this->options->index));
             }
@@ -127,47 +120,38 @@ class Widget_Archive extends Widget_Abstract_Contents
     
         $select = $this->select()->where('table.contents.created < ?', $this->options->gmtTime);
 
-        switch(Typecho_Router::$current)
-        {
+        switch (Typecho_Router::$current) {
             /** 单篇内容 */
             case 'page':
             case 'post':
                 
                 /** 如果是单篇文章或独立页面 */
-                if(NULL !== $this->request->cid)
-                {
+                if (NULL !== $this->request->cid) {
                     $select->where('table.contents.cid = ?', $this->request->cid);
-                }
-                else if(NULL !== $this->request->slug)
-                {
+                } else if (NULL !== $this->request->slug) {
                     $select->where('table.contents.slug = ?', $this->request->slug);
-                }
-                else
-                {
+                } else {
                     /** 对没有索引情况下的判断 */
                     $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
 
                 /** 保存密码至cookie */
-                if($this->request->isPost() && isset($this->request->protectPassword))
-                {
+                if ($this->request->isPost() && isset($this->request->protectPassword)) {
                     $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
                 }
                 
                 $select->where('table.contents.type = ?', Typecho_Router::$current)->limit(1);
                 $post = $this->db->fetchRow($select, array($this, 'push'));
 
-                if($post && $post['category'] == $this->request->getParameter('category', $post['category'])
+                if ($post && $post['category'] == $this->request->getParameter('category', $post['category'])
                 && $post['year'] == $this->request->getParameter('year', $post['year'])
                 && $post['month'] == $this->request->getParameter('month', $post['month'])
-                && $post['day'] == $this->request->getParameter('day', $post['day']))
-                {
+                && $post['day'] == $this->request->getParameter('day', $post['day'])) {
                     /** 设置关键词 */
                     $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
                     
                     /** 设置模板 */
-                    if(!empty($post['template']))
-                    {
+                    if (!empty($post['template'])) {
                         /** 应用自定义模板 */
                         $this->_themeFile = $post['template'];
                     }
@@ -189,13 +173,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->options->archiveType = Typecho_Router::$current;
                     
                     /** 设置403头 */
-                    if($post['hidden'])
-                    {
+                    if ($post['hidden']) {
                         header('HTTP/1.1 403 Forbidden', true);
                     }
-                }
-                else
-                {
+                } else {
                     $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
                 
@@ -214,8 +195,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
-                if(!$category)
-                {
+                if (!$category) {
                     $this->response->throwExceptionResponseByCode(_t('分类不存在'), 404);
                 }
             
@@ -261,8 +241,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->where('slug = ?', $this->request->slug)->limit(1),
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
-                if(!$tag)
-                {
+                if (!$tag) {
                     $this->response->throwExceptionResponseByCode(_t('标签%s不存在', $this->request->slug), 404);
                 }
             
@@ -311,27 +290,25 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $month = $this->request->month;
                 $day = $this->request->day;
                 
-                /** 如果按日归档 */
-                if(!empty($year) && !empty($month) && !empty($day))
-                {
+                if (!empty($year) && !empty($month) && !empty($day)) {
+                
+                    /** 如果按日归档 */
                     $from = mktime(0, 0, 0, $month, $day, $year) - $this->options->timezone;
                     $to = mktime(23, 59, 59, $month, $day, $year) - $this->options->timezone;
                     
                     /** 设置标题 */
                     $this->options->archiveTitle = $year . '-' . $month . '-' . $day;
-                }
-                /** 如果按月归档 */
-                else if(!empty($year) && !empty($month))
-                {
+                } else if (!empty($year) && !empty($month)) {
+                
+                    /** 如果按月归档 */
                     $from = mktime(0, 0, 0, $month, 1, $year) - $this->options->timezone;
                     $to = mktime(23, 59, 59, $month, idate('t', $from), $year) - $this->options->timezone;
                     
                     /** 设置标题 */
                     $this->options->archiveTitle = $year . '-' . $month;
-                }
-                /** 如果按年归档 */
-                else if(!empty($year))
-                {
+                } else if (!empty($year)) {
+                
+                    /** 如果按年归档 */
                     $from = mktime(0, 0, 0, 1, 1, $year) - $this->options->timezone;
                     $to = mktime(23, 59, 59, 12, 31, $year) - $this->options->timezone;
                     
@@ -412,8 +389,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 如果已经提前压入则直接返回 */
-        if($hasPushed)
-        {
+        if ($hasPushed) {
             return;
         }
         
@@ -439,8 +415,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        if(!$this->plugin()->pageNav($prev, $next, $splitPage, $splitWord))
-        {
+        if (!$this->plugin()->pageNav($prev, $next, $splitPage, $splitWord)) {
             $query = Typecho_Router::url(Typecho_Router::$current . 
             (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
             $this->_pageRow, $this->options->index);
@@ -465,8 +440,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $mode = strtolower($mode);
         $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc, 'parentContent' => $this->_row);
         
-        switch($mode)
-        {
+        switch ($mode) {
             case 'comment':
                 return $this->widget('Widget_Comments_Archive_Comment', $parameter);
             case 'trackback':
@@ -495,14 +469,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->order('table.contents.created', Typecho_Db::SORT_ASC)
         ->limit(1));
         
-        if($content)
-        {
+        if ($content) {
             $content = $this->filter($content);
             $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
             printf($format, $link);
-        }
-        else
-        {
+        } else {
             echo $default;
         }
     }
@@ -523,14 +494,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->limit(1));
         
-        if($content)
-        {
+        if ($content) {
             $content = $this->filter($content);
             $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
             printf($format, $link);
-        }
-        else
-        {
+        } else {
             echo $default;
         }
     }

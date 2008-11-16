@@ -32,8 +32,7 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
         
         /** 过滤状态 */
         $status = $this->request->status;
-        switch($status)
-        {
+        switch ($status) {
             case 'draft':
                 $select->where('table.contents.type = ?', 'page_draft');
                 break;
@@ -46,14 +45,12 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
         }
         
         /** 过滤标题 */
-        if(NULL != ($keywords = $this->request->keywords))
-        {
+        if (NULL != ($keywords = $this->request->keywords)) {
             $args = array();
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
             
-            foreach($keywordsList as $keyword)
-            {
+            foreach ($keywordsList as $keyword) {
                 $args[] = '%' . Typecho_Common::filterSearchQuery($keyword) . '%';
             }
             

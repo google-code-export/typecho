@@ -32,8 +32,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         Typecho_API::factory('Widget_Users_Current')->pass('editor');
     
         /** 获取页面内容 */
-        if(Typecho_Request::getParameter('cid'))
-        {
+        if (Typecho_Request::getParameter('cid')) {
             $this->db->fetchRow($this->select()->where('table.contents.`type` = ? OR table.contents.`type` = ?', 'page', 'page_draft')
             ->where('table.contents.`cid` = ?', Typecho_Request::getParameter('cid'))
             ->limit(1), array($this, 'push'));
@@ -49,13 +48,11 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function getCreated()
     {
-        if(!($date = Typecho_Request::getParameter('date')))
-        {
+        if (!($date = Typecho_Request::getParameter('date'))) {
             $date = date('Y-m-d');
         }
         
-        if(!($time = Typecho_Request::getParameter('time')))
-        {
+        if (!($time = Typecho_Request::getParameter('time'))) {
             $time = date('g:i A');
         }
         
@@ -84,26 +81,20 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         ->where('table.contents.`cid` = ?', $insertId)->limit(1), array($this, 'push'));
         
         /** 页面提示信息 */
-        if('page' == $contents['type'])
-        {
+        if ('page' == $contents['type']) {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
             _t("页面 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被创建", $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        }
-        else
-        {
+        } else {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
             _t("草稿 '%s' 已经被保存", $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
 
         /** 跳转页面 */
-        if(1 == Typecho_Request::getParameter('continue'))
-        {
+        if (1 == Typecho_Request::getParameter('continue')) {
             Typecho_API::redirect(Typecho_API::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::redirect(Typecho_API::pathToUrl('page-list.php', $this->options->adminUrl));
         }
     }
@@ -127,8 +118,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         
         $exists = $this->db->fetchRow($select);
         
-        if(!$exists)
-        {
+        if (!$exists) {
             throw new Typecho_Widget_Exception(_t('页面不存在'), Typecho_Exception::NOTFOUND);
         }
     
@@ -143,26 +133,20 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         $this->db->fetchRow($select, array($this, 'push'));
 
         /** 页面提示信息 */
-        if('page' == $this->type)
-        {
+        if ('page' == $this->type) {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 
             _t("页面 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新", $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        }
-        else
-        {
+        } else {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 
             _t("草稿 '%s' 已经被保存", $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
 
         /** 跳转页面 */
-        if(1 == Typecho_Request::getParameter('continue'))
-        {
+        if (1 == Typecho_Request::getParameter('continue')) {
             Typecho_API::redirect(Typecho_API::pathToUrl('edit.php?cid=' . $this->cid, $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::redirect(Typecho_API::pathToUrl('page-list.php', $this->options->adminUrl));
         }
     }
@@ -178,14 +162,11 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         $cid = Typecho_Request::getParameter('cid');
         $deleteCount = 0;
 
-        if($cid)
-        {
+        if ($cid) {
             /** 格式化页面主键 */
             $pages = is_array($cid) ? $cid : array($cid);
-            foreach($pages as $page)
-            {
-                if($this->delete($this->db->sql()->where('`cid` = ?', $page)))
-                {
+            foreach ($pages as $page) {
+                if ($this->delete($this->db->sql()->where('`cid` = ?', $page))) {
                     /** 删除评论 */
                     $this->db->query($this->db->sql()->delete('table.comments')
                     ->where('`cid` = ?', $page));
@@ -213,22 +194,17 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
     {
         $pages = Typecho_Request::getParameter('sort');
         
-        if($pages && is_array($pages))
-        {
-            foreach($pages as $sort => $cid)
-            {
+        if ($pages && is_array($pages)) {
+            foreach ($pages as $sort => $cid) {
                 $this->db->query($this->db->sql()->update('table.contents')->row('meta', $sort + 1)
                 ->where('`cid` = ?', $cid));
             }
         }
         
-        if(!Typecho_Request::isAjax())
-        {
+        if (!Typecho_Request::isAjax()) {
             /** 转向原页 */
             Typecho_API::redirect(Typecho_API::pathToUrl('page-list.php', $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::throwAjaxResponse(_t('页面排序已经完成'), $this->options->charset);
         }
     }

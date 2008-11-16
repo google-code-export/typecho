@@ -51,16 +51,13 @@ class Widget_Plugins_Config extends Typecho_Widget
         /** 获取已激活插件 */
         $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
         
-        if(file_exists($pluginFileName))
-        {
+        if (file_exists($pluginFileName)) {
             require_once $pluginFileName;
             
             /** 获取插件信息 */
-            if(is_callable(array($pluginName . '_Plugin', 'config')) && 
-            in_array($pluginName, $activatedPlugins))
-            {
-                try
-                {
+            if (is_callable(array($pluginName . '_Plugin', 'config')) && 
+            in_array($pluginName, $activatedPlugins)) {
+                try {
                     $options = Typecho_API::factory('Widget_Options');
                     
                     /** 初始化表单 */
@@ -79,8 +76,7 @@ class Widget_Plugins_Config extends Typecho_Widget
                     
                     /** 对面板赋值 */
                     $inputs = $this->form->getInputs();
-                    foreach($inputs as $name => $input)
-                    {
+                    foreach ($inputs as $name => $input) {
                         $input->value($options->plugin($pluginName)->{$name});
                     }
                     
@@ -92,8 +88,7 @@ class Widget_Plugins_Config extends Typecho_Widget
                     $submit->button->setAttribute('class', 'submit');
                     $this->form->addItem($submit->value(_t('保存配置')));
                 }
-                catch(Typecho_Plugin_Exception $e)
-                {
+                 catch (Typecho_Plugin_Exception $e) {
                     /** 截获异常 */
                     Typecho_API::factory('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                     Typecho_API::goBack();

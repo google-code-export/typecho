@@ -149,8 +149,7 @@ class Typecho_Db
         $key = key($this->_config);
         
         /** 将连接放入池中 */
-        switch ($op)
-        {
+        switch ($op) {
             case self::READ:
             case self::WRITE:
                 $this->_pool[$op][] = $key;
@@ -183,8 +182,7 @@ class Typecho_Db
      */
     public static function get()
     {
-        if(empty(self::$_instance))
-        {
+        if (empty(self::$_instance)) {
             /** Typecho_Db_Exception */
             require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception('Missing Database Object');
@@ -250,23 +248,18 @@ class Typecho_Db
     public function query($query, $op = self::READ, $action = self::SELECT)
     {
         /** 在适配器中执行查询 */
-        if($query instanceof Typecho_Db_Query)
-        {
+        if ($query instanceof Typecho_Db_Query) {
             $action = $query->getAttribute('action');
             $op = (self::UPDATE == $action || self::DELETE == $action 
             || self::INSERT == $action) ? self::WRITE : self::READ;
-        }
-        else if(!is_string($query))
-        {
+        } else if (!is_string($query)) {
             /** 如果query不是对象也不是字符串,那么将其判断为查询资源句柄,直接返回 */
             return $query;
         }
         
         /** 选择连接池 */
-        if(!isset($this->_connectedPool[$op]))
-        {
-            if(empty($this->_pool[$op]))
-            {
+        if (!isset($this->_connectedPool[$op])) {
+            if (empty($this->_pool[$op])) {
                 /** Typecho_Db_Exception */
                 require_once 'Typecho/Db/Exception.php';
                 throw new Typecho_Db_Exception('Missing Database Connection');
@@ -277,8 +270,7 @@ class Typecho_Db
             $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
             $other = (self::READ == $op) ? self::WRITE : self::READ;
             
-            if(!empty($this->_pool[$other]) && in_array($selectConnection, $this->_pool[$other]))
-            {
+            if (!empty($this->_pool[$other]) && in_array($selectConnection, $this->_pool[$other])) {
                 $this->_connectedPool[$other] = &$selectConnectionHandle;
             }
             $this->_connectedPool[$op] = &$selectConnectionHandle;
@@ -288,11 +280,9 @@ class Typecho_Db
         /** 提交查询 */
         $resource = $this->_adapter->query($query, $handle, $op, $action);
 
-        if($action)
-        {
+        if ($action) {
             //根据查询动作返回相应资源
-            switch($action)
-            {
+            switch ($action) {
                 case self::UPDATE:
                 case self::DELETE:
                     return $this->_adapter->affectedRows($resource, $handle);
@@ -302,9 +292,7 @@ class Typecho_Db
                 default:
                     return $resource;
             }
-        }
-        else
-        {
+        } else {
             //如果直接执行查询语句则返回资源
             return $resource;
         }
@@ -324,14 +312,12 @@ class Typecho_Db
         $result = array();
         
         /** 取出过滤器 */
-        if(!empty($filter))
-        {
+        if (!empty($filter)) {
             list($object, $method) = $filter;
         }
 
         //取出每一行
-        while($rows = $this->_adapter->fetch($resource))
-        {
+        while ($rows = $this->_adapter->fetch($resource)) {
             //判断是否有过滤器
             $result[] = $filter ? call_user_func(array(&$object, $method), $rows) : $rows;
         }
@@ -351,8 +337,7 @@ class Typecho_Db
         $resource = $this->query($query, self::READ);
         
         /** 取出过滤器 */
-        if($filter)
-        {
+        if ($filter) {
             list($object, $method) = $filter;
         }
 
@@ -373,8 +358,7 @@ class Typecho_Db
         $resource = $this->query($query, self::READ);
 
         /** 取出过滤器 */
-        if($filter)
-        {
+        if ($filter) {
             list($object, $method) = $filter;
         }
         

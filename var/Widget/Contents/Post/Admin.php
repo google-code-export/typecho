@@ -74,8 +74,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $select = $this->select();
 
         /** 过滤分类 */
-        if(NULL != ($category = $this->request->category))
-        {
+        if (NULL != ($category = $this->request->category)) {
             $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
             ->where('table.relationships.mid = ?', $category);
             
@@ -83,20 +82,17 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
 
         /** 获取状态过滤条件 */
-        if(NULL != ($status = $this->request->status))
-        {
+        if (NULL != ($status = $this->request->status)) {
             $this->_filterQuery['status'] = $status;
         }
         
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
-        if(!$this->user->pass('editor', true))
-        {
+        if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.author = ?', $this->user->uid);
         }
         
         /** 过滤状态 */
-        switch($status)
-        {
+        switch ($status) {
             case 'draft':
                 $select->where('table.contents.type = ?', 'draft');
                 break;
@@ -109,14 +105,12 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
         
         /** 过滤标题 */
-        if(NULL != ($keywords = $this->request->keywords))
-        {
+        if (NULL != ($keywords = $this->request->keywords)) {
             $args = array();
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
             
-            foreach($keywordsList as $keyword)
-            {
+            foreach ($keywordsList as $keyword) {
                 $args[] = '%' . Typecho_Common::filterSearchQuery($keyword) . '%';
             }
             

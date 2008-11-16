@@ -66,8 +66,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
         $this->_currentPage = Typecho_Request::getParameter('page', 1);
     
         /** 过滤标题 */
-        if(NULL != ($keywords = Typecho_Request::getParameter('keywords')))
-        {
+        if (NULL != ($keywords = Typecho_Request::getParameter('keywords'))) {
             $select->where('table.users.`name` LIKE ? OR 
             table.users.`screenName` LIKE ?',
             '%' . Typecho_API::filterSearchQuery($keywords) . '%',

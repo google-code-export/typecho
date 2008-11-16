@@ -26,8 +26,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function action()
     {
-        if(isset($_GET['rsd']))
-        {
+        if (isset($_GET['rsd'])) {
             echo 
 <<<EOF
 <?xml version="1.0" encoding="{$this->options->charset}"?>
@@ -45,9 +44,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     </service>
 </rsd>
 EOF
-        }
-        else
-        {
+        } else {
             new Ixr_Server($methods);
         }
     }

@@ -28,8 +28,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
     public function init()
     {
         /** 如果已经登录 */
-        if($this->user->hasLogin())
-        {
+        if ($this->user->hasLogin()) {
             /** 直接返回 */
             $this->response->redirect($this->options->index);
         }
@@ -40,12 +39,10 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         $validator->addRule('password', 'required', _t('请输入密码'));
         
         /** 截获验证异常 */
-        try
-        {
+        try {
             $validator->run($this->request->from('name', 'password'));
         }
-        catch(Typecho_Validate_Exception $e)
-        {
+         catch (Typecho_Validate_Exception $e) {
             /** 设置提示信息 */
             $this->widget('Widget_Notice')->set($e->getMessages());
             $this->response->goBack();
@@ -57,13 +54,10 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         ->limit(1));
         
         /** 比对密码 */
-        if($user && $user['password'] == md5($this->request->password))
-        {
+        if ($user && $user['password'] == md5($this->request->password)) {
             $this->user->login($user['uid'], $user['password'], sha1(Typecho_Common::randString(20)),
             1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
-        }
-        else
-        {
+        } else {
             $this->widget('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
             $this->response->redirect(Typecho_Common::pathToUrl('login.php', $this->options->adminUrl)
             . ((NULL === $this->request->referer) ? 
@@ -71,12 +65,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Act
         }
         
         /** 跳转验证后地址 */
-        if(NULL != $this->request->referer)
-        {
+        if (NULL != $this->request->referer) {
             $this->response->redirect($this->request->referer);
-        }
-        else
-        {
+        } else {
             $this->response->redirect(Typecho_Common::pathToUrl('index.php', $this->options->adminUrl));
         }
     }

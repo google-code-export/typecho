@@ -68,8 +68,7 @@ class Typecho_Common
     public static function forceDisableMagicQuotesGPC()
     {
         /** 兼容php6 */
-        if(function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc())
-        {
+        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $_GET = self::stripslashesDeep($_GET);
             $_POST = self::stripslashesDeep($_POST);
             $_COOKIE = self::stripslashesDeep($_COOKIE);
@@ -90,8 +89,7 @@ class Typecho_Common
      */
     public static function setDefaultTimezone($timezone = 'UTC')
     {
-        if(!ini_get("date.timezone") && function_exists("date_default_timezone_set"))
-        {
+        if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
             @date_default_timezone_set($timezone);
         }
     }
@@ -129,16 +127,11 @@ class Typecho_Common
     {
         $result = array();
 
-        if($value)
-        {
-            foreach($value as $inval)
-            {
-                if(is_array($inval) && isset($inval[$key]))
-                {
+        if ($value) {
+            foreach ($value as $inval) {
+                if (is_array($inval) && isset($inval[$key])) {
                     $result[] = $inval[$key];
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
@@ -166,8 +159,7 @@ class Typecho_Common
         $startPos = strrpos($string, "<");
         $trimString = substr($string, $startPos);
 
-        if(false === strpos($trimString, ">"))
-        {
+        if (false === strpos($trimString, ">")) {
             $string = substr($string, 0, $startPos);
         }
 
@@ -175,21 +167,16 @@ class Typecho_Common
         preg_match_all("/<([_0-9a-zA-Z-\:]+)\s*([^>]*)>/is", $string, $startTags);
         preg_match_all("/<\/([_0-9a-zA-Z-\:]+)>/is", $string, $closeTags);
 
-        if(!empty($startTags[1]) && is_array($startTags[1]))
-        {
+        if (!empty($startTags[1]) && is_array($startTags[1])) {
             krsort($startTags[1]);
             $closeTagsIsArray = is_array($closeTags[1]);
-            foreach($startTags[1] as $key => $tag)
-            {
+            foreach ($startTags[1] as $key => $tag) {
                 $attrLength = strlen($startTags[2][$key]);
-                if($attrLength > 0 && "/" == trim($startTags[2][$key][$attrLength - 1]))
-                {
+                if ($attrLength > 0 && "/" == trim($startTags[2][$key][$attrLength - 1])) {
                     continue;
                 }
-                if(!empty($closeTags[1]) && $closeTagsIsArray)
-                {
-                    if(false !== ($index = array_search($tag, $closeTags[1])))
-                    {
+                if (!empty($closeTags[1]) && $closeTagsIsArray) {
+                    if (false !== ($index = array_search($tag, $closeTags[1]))) {
                         unset($closeTags[1][$index]);
                         continue;
                     }
@@ -218,40 +205,30 @@ class Typecho_Common
      */
     public static function stripTags($string, $allowableTags = NULL)
     {
-        if(!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags))
-        {
+        if (!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags)) {
             $normalizeTags = '<' . implode('><', $tags[1]) . '>';
             $string = strip_tags($string, $normalizeTags);
             $attributes = array_map('trim', $tags[2]);
             
             $allowableAttributes = array();
-            foreach($attributes as $key => $val)
-            {
+            foreach ($attributes as $key => $val) {
                 $allowableAttributes[$tags[1][$key]] = array();
-                if(preg_match_all("/([a-z]+)\s*\=/is", $val, $vals))
-                {
-                    foreach($vals[1] as $attribute)
-                    {
+                if (preg_match_all("/([a-z]+)\s*\=/is", $val, $vals)) {
+                    foreach ($vals[1] as $attribute) {
                         $allowableAttributes[$tags[1][$key]][] = $attribute;
                     }
                 }
             }
             
-            foreach($tags[1] as $key => $val)
-            {
+            foreach ($tags[1] as $key => $val) {
                 $match = "/\<{$val}(\s*[a-z]+\s*\=\s*[\"'][^\"']*[\"'])*\s*\>/is";
                 
-                if(preg_match_all($match, $string, $out))
-                {
-                    foreach($out[0] as $startTag)
-                    {
-                        if(preg_match_all("/([a-z]+)\s*\=\s*[\"'][^\"']*[\"']/is", $startTag, $attributesMatch))
-                        {
+                if (preg_match_all($match, $string, $out)) {
+                    foreach ($out[0] as $startTag) {
+                        if (preg_match_all("/([a-z]+)\s*\=\s*[\"'][^\"']*[\"']/is", $startTag, $attributesMatch)) {
                             $replace = $startTag;
-                            foreach($attributesMatch[1] as $attribute)
-                            {
-                                if(!in_array($attribute, $allowableAttributes[$val]))
-                                {
+                            foreach ($attributesMatch[1] as $attribute) {
+                                if (!in_array($attribute, $allowableAttributes[$val])) {
                                     $startTag = preg_replace("/\s*{$attribute}\s*=\s*[\"'][^\"']*[\"']/is", '', $startTag);
                                 }
                             }
@@ -263,9 +240,7 @@ class Typecho_Common
             }
             
             return $string;
-        }
-        else
-        {
+        } else {
             return strip_tags($string);
         }
     }
@@ -305,8 +280,7 @@ class Typecho_Common
        $search .= '1234567890!@#$%^&*()'; 
        $search .= '~`";:?+/={}[]-_|\'\\'; 
        
-       for ($i = 0; $i < strlen($search); $i++)
-       { 
+       for ($i = 0; $i < strlen($search); $i++) {
           // ;? matches the ;, which is optional 
           // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars 
         
@@ -322,30 +296,25 @@ class Typecho_Common
        $ra = array_merge($ra1, $ra2); 
         
        $found = true; // keep replacing as long as the previous round replaced something 
-       while ($found == true)
-       { 
+       while ($found == true) {
           $val_before = $val; 
-          for ($i = 0; $i < sizeof($ra); $i++)
-          { 
+          for ($i = 0; $i < sizeof($ra); $i++) {
              $pattern = '/'; 
-             for ($j = 0; $j < strlen($ra[$i]); $j++)
-             { 
-                if ($j > 0)
-                { 
+             for ($j = 0; $j < strlen($ra[$i]); $j++) {
+                if ($j > 0) {
                    $pattern .= '('; 
                    $pattern .= '(&#[xX]0{0,8}([9ab]);)'; 
                    $pattern .= '|'; 
                    $pattern .= '|(&#0{0,8}([9|10|13]);)'; 
                    $pattern .= ')*'; 
-                } 
+                }
                 $pattern .= $ra[$i][$j]; 
-             } 
+             }
              $pattern .= '/i'; 
              $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag 
              $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags 
              
-             if ($val_before == $val)
-             { 
+             if ($val_before == $val) {
                 // no replacements were made, so exit the loop 
                 $found = false; 
              } 
@@ -367,14 +336,11 @@ class Typecho_Common
      */
     public static function subStr($str, $start, $length, $trim = "...")
     {
-        if(function_exists('mb_get_info'))
-        {
+        if (function_exists('mb_get_info')) {
             $iLength = mb_strlen($str, __TYPECHO_CHARSET__);
             $str = mb_substr($str, $start, $length, __TYPECHO_CHARSET__);
             return ($length < $iLength - $start) ? $str . $trim : $str;
-        }
-        else
-        {
+        } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
             $str = join("", array_slice($info[0], $start, $length));
             return ($length < (sizeof($info[0]) - $start)) ? $str . $trim : $str;
@@ -390,12 +356,9 @@ class Typecho_Common
      */
     public static function strLen($str)
     {
-        if(function_exists('mb_get_info'))
-        {
+        if (function_exists('mb_get_info')) {
             return mb_strlen($str, __TYPECHO_CHARSET__);
-        }
-        else
-        {
+        } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
             return sizeof($info[0]);
         }
@@ -420,21 +383,16 @@ class Typecho_Common
         $i = $length;
         $cutOff = 0;
 
-        while($i > 0)
-        {
+        while ($i > 0) {
             $i--;
-            if('-' == $str[$i])
-            {
+            if ('-' == $str[$i]) {
                 $cutOff ++;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
 
-        if($cutOff)
-        {
+        if ($cutOff) {
             $str = substr($str, 0, - $cutOff);
         }
 
@@ -443,21 +401,16 @@ class Typecho_Common
         $i = 0;
         $cutOff = 0;
 
-        while($i < $length)
-        {
-            if('-' == $str[$i])
-            {
+        while ($i < $length) {
+            if ('-' == $str[$i]) {
                 $cutOff ++;
-            }
-            else
-            {
+            } else {
                 break;
             }
             $i++;
         }
 
-        if($cutOff)
-        {
+        if ($cutOff) {
             $str = substr($str, $cutOff);
         }
 
@@ -502,8 +455,7 @@ class Typecho_Common
     public static function randString($length)
     {
         $result = '';
-        for($i = 0; $i < $length; $i++)
-        {
+        for ($i = 0; $i < $length; $i++) {
             $result .= ord(rand(32, 126));
         }
         return $result;
@@ -527,14 +479,12 @@ class Typecho_Common
         $pos = 0;
         
         /** 判断扰码长度 */
-        if(strlen($salt) != 9)
-        {
+        if (strlen($salt) != 9) {
             /** 如果不是9直接返回 */
             return;
         }
         
-        while($pos < $length)
-        {
+        while ($pos < $length) {
             $asc = ord($string[$pos]);
             $last = ($last * ord($salt[($last % $asc) % 9]) + $asc) % 95 + 32;
             $hash .= chr($last);
@@ -554,13 +504,10 @@ class Typecho_Common
      */
     public static function hashValidate($from, $to)
     {
-        if('$T$' == substr($to, 0, 3))
-        {
+        if ('$T$' == substr($to, 0, 3)) {
             $salt = substr($to, 0, 12);
             return self::hash($from, $salt) == $to;
-        }
-        else
-        {
+        } else {
             return md5($from) == $to;
         }
     }

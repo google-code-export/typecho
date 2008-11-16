@@ -33,8 +33,7 @@ class Widget_Query extends Typecho_Widget
         parse_str($query, $params);
 
         //获取数量限制
-        if(empty($params['from']))
-        {
+        if (empty($params['from'])) {
             throw new Typecho_Widget_Exception(_t('没有任何数据源'));
         }
 
@@ -43,33 +42,26 @@ class Widget_Query extends Typecho_Widget
         unset($params['from']);
 
         //获取排序
-        if(!empty($params['order']))
-        {
+        if (!empty($params['order'])) {
             $sql->order($params['order'], empty($params['order']) ? NULL : $params['sort']);
             unset($params['order']);
-            if(!empty($params['sort']))
-            {
+            if (!empty($params['sort'])) {
                 unset($params['sort']);
             }
         }
         
-        if(!empty($params['limit']))
-        {
+        if (!empty($params['limit'])) {
             $sql->limit($params['limit']);
             unset($params['limit']);
         }
 
         //获取条件
-        foreach($params as $key => $val)
-        {
-            if(is_array($val))
-            {
+        foreach ($params as $key => $val) {
+            if (is_array($val)) {
                 $cond = implode(' OR ', array_fill(0, count($val), '`' . $key . '` = ?'));
                 array_unshift($val, $cond);
                 call_user_func_array(array(&$sql, 'where'), $val);
-            }
-            else
-            {
+            } else {
                 $sql->where('`' . $key . '` = ?', $val);
             }
         }
