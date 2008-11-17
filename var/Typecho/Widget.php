@@ -133,13 +133,10 @@ abstract class Typecho_Widget
     {
         $request = $this->request->{$name};
         
-        if((!empty($value) && $request == $value) || 
-        (empty($value) && !empty($name)))
-        {
+        if ((!empty($value) && $request == $value) || 
+        (empty($value) && !empty($name))) {
             return $this;
-        }
-        else
-        {
+        } else {
             /** Typecho_Widget_Helper_Null */
             require_once 'Typecho/Widget/Helper/Empty.php';
             return new Typecho_Widget_Helper_Empty();
@@ -153,12 +150,9 @@ abstract class Typecho_Widget
      */
     public function onPost()
     {
-        if($this->request->isPost())
-        {
+        if ($this->request->isPost()) {
             return $this;
-        }
-        else
-        {
+        } else {
             /** Typecho_Widget_Helper_Null */
             require_once 'Typecho/Widget/Helper/Empty.php';
             return new Typecho_Widget_Helper_Empty();
@@ -187,14 +181,12 @@ abstract class Typecho_Widget
      */
     public static function widget($className)
     {
-        if(!isset(self::$_widgetPool[$className]))
-        {
+        if (!isset(self::$_widgetPool[$className])) {
             $fileName = str_replace('_', '/', $className) . '.php';            
             require_once $fileName;
             
             /** 如果类不存在 */
-            if(!class_exists($className))
-            {
+            if (!class_exists($className)) {
                 /** Typecho_Exception */
                 require_once 'Typecho/Widget/Exception.php';
                 throw new Typecho_Widget_Exception($className);
@@ -229,27 +221,21 @@ abstract class Typecho_Widget
         $_rowsKey = array();
 
         /** 过滤数据行 */
-        foreach($this->_row as $key => $val)
-        {
-            if(is_array($val) || is_object($val))
-            {
+        foreach ($this->_row as $key => $val) {
+            if (is_array($val) || is_object($val)) {
                 unset($this->_row[$key]);
             }
         }
 
         //将数据格式化
-        foreach($this->_row as $key => $val)
-        {
+        foreach ($this->_row as $key => $val) {
             $_rowsKey[] = '{' . $key . '}';
         }
 
-        foreach($this->_stack as $val)
-        {
+        foreach ($this->_stack as $val) {
             /** 过滤数据行 */
-            foreach($val as $inkey => $inval)
-            {
-                if(is_array($inval) || is_object($inval))
-                {
+            foreach ($val as $inkey => $inval) {
+                if (is_array($inval) || is_object($inval)) {
                     unset($val[$inkey]);
                 }
             }
@@ -319,15 +305,13 @@ abstract class Typecho_Widget
      */
     public function next()
     {
-        if($this->_stack)
-        {
+        if ($this->_stack) {
             $this->_row = &$this->_stack[key($this->_stack)];
             next($this->_stack);
             $this->sequence ++;
         }
         
-        if(!$this->_row)
-        {
+        if (!$this->_row) {
             $this->_row = reset($this->_stack);
             $this->sequence = 0;
             return false;

@@ -91,8 +91,7 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     public function label($value)
     {
         /** 创建标题元素 */
-        if(empty($this->_label))
-        {
+        if (empty($this->_label)) {
             $this->_label = new Typecho_Widget_Helper_Layout('h4');
             $this->addItem($this->_label);
         }
@@ -110,8 +109,7 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
      */
     public function message($message)
     {
-        if(empty($this->_message))
-        {
+        if (empty($this->_message)) {
             $this->_message =  new Typecho_Widget_Helper_Layout('span', array('class' => 'typecho-option-item-message'));
             $this->container->addItem($this->_message);
         }
@@ -130,8 +128,7 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     public function description($description)
     {
         /** 创建描述元素 */
-        if(empty($this->_description))
-        {
+        if (empty($this->_description)) {
             $this->_description = new Typecho_Widget_Helper_Layout('p', array('class' => 'summary'));
             $this->container->addItem($this->_description);
         }

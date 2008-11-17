@@ -33,8 +33,7 @@ class Typecho_Widget_Request
      */
     public static function getInstance()
     {
-        if(empty(self::$_instance))
-        {
+        if (empty(self::$_instance)) {
             self::$_instance = new Typecho_Widget_Request();
         }
         

@@ -114,8 +114,7 @@ class IXR_Client
      */
     public function __construct($server, $path = false, $port = 80, $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
     {
-        if (!$path)
-        {
+        if (!$path) {
             // Assume we have been given a Url instead
             $bits = parse_url($server);
             $this->server = $bits['host'];
@@ -123,13 +122,10 @@ class IXR_Client
             $this->path = isset($bits['path']) ? $bits['path'] : '/';
             
             // Make absolutely sure we have a path
-            if (!$this->path)
-            {
+            if (!$this->path) {
                 $this->path = '/';
             }
-        }
-        else
-        {
+        } else {
             $this->server = $server;
             $this->path = $path;
             $this->port = $port;
@@ -172,15 +168,13 @@ class IXR_Client
         $request .= $xml;
         
         // Now send the request
-        if ($this->debug)
-        {
+        if ($this->debug) {
             echo '<pre>'.htmlspecialchars($request)."\n</pre>\n\n";
         }
         
         $fp = @fsockopen($this->server, $this->port);
         
-        if (!$fp)
-        {
+        if (!$fp) {
             $this->error = new IXR_Error(-32300, 'transport error - could not open socket');
             return false;
         }
@@ -190,15 +184,12 @@ class IXR_Client
         $gotFirstLine = false;
         $gettingHeaders = true;
         
-        while (!feof($fp))
-        {
+        while (!feof($fp)) {
             $line = fgets($fp, 4096);
             
-            if (!$gotFirstLine)
-            {
+            if (!$gotFirstLine) {
                 // Check line for '200'
-                if (strstr($line, '200') === false)
-                {
+                if (strstr($line, '200') === false) {
                     $this->error = new IXR_Error(-32300, 'transport error - HTTP status code was not 200');
                     return false;
                 }
@@ -206,34 +197,29 @@ class IXR_Client
                 $gotFirstLine = true;
             }
             
-            if (trim($line) == '')
-            {
+            if (trim($line) == '') {
                 $gettingHeaders = false;
             }
             
-            if (!$gettingHeaders)
-            {
+            if (!$gettingHeaders) {
                 $contents .= trim($line)."\n";
             }
         }
         
-        if ($this->debug)
-        {
+        if ($this->debug) {
             echo '<pre>'.htmlspecialchars($contents)."\n</pre>\n\n";
         }
         
         // Now parse what we've got back
         $this->message = new IXR_Message($contents);
-        if (!$this->message->parse())
-        {
+        if (!$this->message->parse()) {
             // XML error
             $this->error = new IXR_Error(-32700, 'parse error. not well formed');
             return false;
         }
         
         // Is the message a fault?
-        if ($this->message->messageType == 'fault')
-        {
+        if ($this->message->messageType == 'fault') {
             $this->error = new IXR_Error($this->message->faultCode, $this->message->faultString);
             return false;
         }
@@ -269,12 +255,9 @@ class IXR_Client
         array_unshift($args, $this->prefix . $method);
         $return = call_user_func(array($this, '__rpcCall'), $args);
         
-        if($return)
-        {
+        if ($return) {
             return $this->__getResponse();
-        }
-        else
-        {
+        } else {
             require_once 'IXR/Exception.php';
             throw new IXR_Exception($this->__getErrorMessage(), $this->__getErrorCode());
         }

@@ -33,8 +33,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...')
     {
-        if($this->_total < 1)
-        {
+        if ($this->_total < 1) {
             return;
         }
     
@@ -42,38 +41,33 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         $to = min($this->_totalPage, $this->_currentPage + $splitPage);
 
         //输出上一页
-        if($this->_currentPage > 1)
-        {
+        if ($this->_currentPage > 1) {
             echo '<li><a class="prev" href="' . str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) . '">'
             . $prevWord . '</a></li>';
         }
 
         //输出第一页
-        if($from > 1)
-        {
+        if ($from > 1) {
             echo '<li><a href="' . str_replace('{page}', 1, $this->_pageTemplate) . '">1</a></li>';
             //输出省略号
             echo '<li>' . $splitWord . '</li>';
         }
 
         //输出中间页
-        for($i = $from; $i <= $to; $i ++)
-        {
+        for ($i = $from; $i <= $to; $i ++) {
                 echo '<li' . ($i != $this->_currentPage ? '' : ' class="current"') . '><a href="' . str_replace('{page}', $i, $this->_pageTemplate) . '">'
                 . $i . '</a></li>';
         }
 
         //输出最后页
-        if($to < $this->_totalPage)
-        {
+        if ($to < $this->_totalPage) {
             echo '<li>' . $splitWord . '</li>';
             echo '<li><a href="' . str_replace('{page}', $this->_totalPage, $this->_pageTemplate) , '">'
             . $this->_totalPage . '</a></li>';
         }
 
         //输出下一页
-        if($this->_currentPage < $this->_totalPage)
-        {
+        if ($this->_currentPage < $this->_totalPage) {
             echo '<li><a class="next" href="' . str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) . '">'
             . $nextWord . '</a></li>';
         }

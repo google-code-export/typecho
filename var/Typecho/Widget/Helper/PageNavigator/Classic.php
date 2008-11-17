@@ -31,21 +31,18 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT')
     {
-        if($this->_total < 1)
-        {
+        if ($this->_total < 1) {
             return;
         }
     
         //输出下一页
-        if($this->_currentPage < $this->_totalPage)
-        {
+        if ($this->_currentPage < $this->_totalPage) {
             echo '<a class="next" href="' , str_replace('{page}', $this->_currentPage + 1, $this->_pageTemplate) , '">'
             , $nextWord , '</a>';
         }
 
         //输出上一页
-        if($this->_currentPage > 1)
-        {
+        if ($this->_currentPage > 1) {
             echo '<a class="prev" href="' , str_replace('{page}', $this->_currentPage - 1, $this->_pageTemplate) , '">'
             , $prevWord , '</a>';
         }

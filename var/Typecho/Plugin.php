@@ -138,14 +138,12 @@ class Typecho_Plugin
     public static function deactivate($pluginName)
     {
         /** 去掉所有相关文件 */
-        foreach(self::$_plugins['activated'][$pluginName]['files'] as $handle => $files)
-        {
+        foreach (self::$_plugins['activated'][$pluginName]['files'] as $handle => $files) {
             self::$_plugins['files'][$handle] = array_diff(self::$_plugins['files'][$handle], $files);
         }
         
         /** 去掉所有相关回调函数 */
-        foreach(self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles)
-        {
+        foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
             self::$_plugins['handles'][$handle] = array_diff(self::$_plugins['handles'][$handle], $handles);
         }
         
@@ -231,20 +229,16 @@ class Typecho_Plugin
         $last = count($args);
         $args[$last] = $last > 0 ? $args[0] : false;
         
-        if(isset($this->_required[$handle]) && isset(self::$_plugins['files'][$handle]))
-        {
+        if (isset($this->_required[$handle]) && isset(self::$_plugins['files'][$handle])) {
             $this->_required[$handle] = true;
-            foreach(self::$_plugins['files'][$handle] as $file)
-            {
+            foreach (self::$_plugins['files'][$handle] as $file) {
                 require_once $file;
             }
         }
     
-        if(isset(self::$_plugins['handles'][$handle]))
-        {
+        if (isset(self::$_plugins['handles'][$handle])) {
             $args[$last] = NULL;
-            foreach(self::$_plugins['handles'][$handle] as $callback)
-            {
+            foreach (self::$_plugins['handles'][$handle] as $callback) {
                 $args[$last] = call_user_func_array($callback, $args);
             }
         }

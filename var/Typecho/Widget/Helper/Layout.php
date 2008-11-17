@@ -79,10 +79,8 @@ class Typecho_Widget_Helper_Layout
     {
         $this->setTagName($tagName);
         
-        if(!empty($attributes))
-        {
-            foreach($attributes as $attributeName => $attributeValue)
-            {
+        if (!empty($attributes)) {
+            foreach ($attributes as $attributeName => $attributeValue) {
                 $this->setAttribute($attributeName, $attributeValue);
             }
         }
@@ -110,22 +108,15 @@ class Typecho_Widget_Helper_Layout
      */
     public function html($html = false)
     {
-        if(false === $html)
-        {
-            if(empty($this->_html))
-            {
-                foreach($this->_items as $item)
-                {
+        if (false === $html) {
+            if (empty($this->_html)) {
+                foreach ($this->_items as $item) {
                     $item->render();
                 }
-            }
-            else
-            {
+            } else {
                 echo $this->_html;
             }
-        }
-        else
-        {
+        } else {
             $this->_html = $html;
             return $this;
         }
@@ -195,14 +186,12 @@ class Typecho_Widget_Helper_Layout
         echo $this->_tagName ? "<{$this->_tagName}" : NULL;
         
         /** 输出属性 */
-        foreach($this->_attributes as $attributeName => $attributeValue)
-        {
+        foreach ($this->_attributes as $attributeName => $attributeValue) {
             echo " {$attributeName}=\"{$attributeValue}\"";
         }
         
         /** 支持自闭合 */
-        if(!$this->_close && $this->_tagName)
-        {
+        if (!$this->_close && $this->_tagName) {
             echo ">\n";
         }
     }
@@ -215,8 +204,7 @@ class Typecho_Widget_Helper_Layout
      */
     public function end()
     {
-        if($this->_tagName)
-        {
+        if ($this->_tagName) {
             echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
         }
     }
@@ -254,13 +242,11 @@ class Typecho_Widget_Helper_Layout
      */
     public function render()
     {
-        if(empty($this->_items) && empty($this->_html))
-        {
+        if (empty($this->_items) && empty($this->_html)) {
             $this->_close = true;
         }
         
-        if(NULL !== $this->_forceClose)
-        {
+        if (NULL !== $this->_forceClose) {
             $this->_close = $this->_forceClose;
         }
         

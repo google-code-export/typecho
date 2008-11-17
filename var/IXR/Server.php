@@ -111,15 +111,13 @@ class IXR_Server
             // Call the method
             $result = $this->$method($args);
         } 
-        if(is_array($method))
-        {
+        if (is_array($method)) {
             list($object, $func) = $method;
             if (!is_callable($method)) {
                 return new IXR_Error(-32601, 'server error. requested class method "'.$object . '.' . $func.'" does not exist.');
             }
             $result = call_user_func_array(array($object, $func), $args);
-        }
-        else {
+        } else {
             // It's a function - does it exist?
             if (!function_exists($method)) {
                 return new IXR_Error(-32601, 'server error. requested function "'.$method.'" does not exist.');
@@ -225,12 +223,10 @@ class IXR_Server
      */
     private function serve($data = false)
     {
-        if(!isset($GLOBALS['HTTP_RAW_POST_DATA']))
-        {
+        if (!isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             $GLOBALS['HTTP_RAW_POST_DATA'] = file_get_contents("php://input");
         }
-        if(isset($GLOBALS['HTTP_RAW_POST_DATA']))
-        {
+        if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             $GLOBALS['HTTP_RAW_POST_DATA'] = trim($GLOBALS['HTTP_RAW_POST_DATA']);
         }
     

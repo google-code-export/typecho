@@ -87,8 +87,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     private function prepare()
     {
-        if(empty($this->_formBody))
-        {
+        if (empty($this->_formBody)) {
             $this->_formBody = new Typecho_Widget_Helper_Layout('table');
             
             $tr = new Typecho_Widget_Helper_Layout('tr');
@@ -137,13 +136,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function addItem(Typecho_Widget_Helper_Layout $item)
     {
-        if($item instanceof Typecho_Widget_Helper_Form_Submit)
-        {
+        if ($item instanceof Typecho_Widget_Helper_Form_Submit) {
             $this->prepare();
             $this->_formBody->addItem($item);
-        }
-        else
-        {
+        } else {
             parent::addItem($item);
         }
         
@@ -198,8 +194,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     {
         $parameters = array();
         
-        foreach($this->_inputs as $name => $input)
-        {
+        foreach ($this->_inputs as $name => $input) {
             $parameters[$name] = Typecho_Request::getParameter($name);
         }
         return $parameters;
@@ -215,8 +210,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     {
         $values = array();
         
-        foreach($this->_inputs as $name => $input)
-        {
+        foreach ($this->_inputs as $name => $input) {
             $values[$name] = $input->value;
         }
         return $values;
@@ -244,8 +238,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $validator = new Typecho_Validate();
         $rules = array();
         
-        foreach($this->_inputs as $name => $input)
-        {
+        foreach ($this->_inputs as $name => $input) {
             $rules[$name] = $input->rules;
         }
         
@@ -255,12 +248,9 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         /** 载入异常支持 */
         require_once 'Typecho/Validate/Exception.php';
 
-        try
-        {
+        try {
             $validator->run($formData, $rules);
-        }
-        catch(Typecho_Validate_Exception $e)
-        {
+        } catch (Typecho_Validate_Exception $e) {
             /** 利用cookie记录错误 */
             Typecho_Request::setCookie('__typecho_form_message', $e->getMessages());
             
@@ -284,16 +274,13 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function render()
     {
         /** 恢复表单值 */
-        if($record = Typecho_Request::getCookie('__typecho_form_record'))
-        {
+        if ($record = Typecho_Request::getCookie('__typecho_form_record')) {
             $message = Typecho_Request::getCookie('__typecho_form_message');
-            foreach($this->_inputs as $name => $input)
-            {
+            foreach ($this->_inputs as $name => $input) {
                 $input->value(isset($record[$name]) ? $record[$name] : $input->value);
                 
                 /** 显示错误消息 */
-                if(isset($message[$name]))
-                {
+                if (isset($message[$name])) {
                     $input->message($message[$name]);
                 }
             }

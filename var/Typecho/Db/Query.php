@@ -111,17 +111,12 @@ class Typecho_Db_Query
     {
         $fields = array();
         
-        foreach($parameters as $value)
-        {
-            if(is_array($value))
-            {
-                foreach($value as $key => $val)
-                {
+        foreach ($parameters as $value) {
+            if (is_array($value)) {
+                foreach ($value as $key => $val) {
                     $fields[] = $key . ' AS ' . $val; 
                 }
-            }
-            else
-            {
+            } else {
                  $fields[] = $value;
             }
         }
@@ -138,16 +133,13 @@ class Typecho_Db_Query
      */
     public function filterColumnCallback(array $matches)
     {
-        if(empty($matches[1]) && empty($matches[4]) && !is_numeric($matches[3][0]) &&
-        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[3]))
-        {
+        if (empty($matches[1]) && empty($matches[4]) && !is_numeric($matches[3][0]) &&
+        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[3])) {
             $pos = strrpos($matches[3], '.');
             $pos = (false === $pos) ? 0 : $pos + 1;
             $column = $this->_adapter->quoteColumn(substr($matches[3], $pos));
             return $matches[2] . $this->filterPrefix(substr_replace($matches[3], $column, $pos));
-        }
-        else
-        {
+        } else {
             return $matches[1] . $matches[2] . $matches[3] . $matches[4];
         }
     }
@@ -191,12 +183,9 @@ class Typecho_Db_Query
         $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
 
-        if(func_num_args() <= 1)
-        {
+        if (func_num_args() <= 1) {
             $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
-        }
-        else
-        {
+        } else {
             $args = func_get_args();
             array_shift($args);
             $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
@@ -218,12 +207,9 @@ class Typecho_Db_Query
         $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
 
-        if(func_num_args() <= 1)
-        {
+        if (func_num_args() <= 1) {
             $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
-        }
-        else
-        {
+        } else {
             $args = func_get_args();
             array_shift($args);
             $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
@@ -279,8 +265,7 @@ class Typecho_Db_Query
      */
     public function rows(array $rows)
     {
-        foreach($rows as $key => $row)
-        {
+        foreach ($rows as $key => $row) {
             $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = empty($row) 
             && 0 !== $row && '0' !== $row && false !== $row ? 'NULL' : $this->_adapter->quoteValue($row);
         }
@@ -415,8 +400,7 @@ class Typecho_Db_Query
      */
     public function __toString()
     {
-        switch($this->_sqlPreBuild['action'])
-        {
+        switch ($this->_sqlPreBuild['action']) {
             case Typecho_Db::SELECT:
                 return $this->_adapter->parseSelect($this->_sqlPreBuild);
             case Typecho_Db::INSERT:
@@ -431,12 +415,9 @@ class Typecho_Db_Query
                 . $this->_sqlPreBuild['table']
                 . $this->_sqlPreBuild['where'];
             case Typecho_Db::UPDATE:
-            {
                 $columns = array();
-                if(isset($this->_sqlPreBuild['rows']))
-                {
-                    foreach($this->_sqlPreBuild['rows'] as $key => $val)
-                    {
+                if (isset($this->_sqlPreBuild['rows'])) {
+                    foreach ($this->_sqlPreBuild['rows'] as $key => $val) {
                         $columns[] = "$key = $val";
                     }
                 }
@@ -445,7 +426,6 @@ class Typecho_Db_Query
                 . $this->_sqlPreBuild['table']
                 . ' SET ' . implode(' , ', $columns)
                 . $this->_sqlPreBuild['where'];
-            }
             default:
                 return NULL;
         }

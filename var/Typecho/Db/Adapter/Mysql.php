@@ -34,12 +34,9 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
      */
     public function connect(Typecho_Config $config)
     {
-        if($this->_dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password))
-        {
-            if(@mysql_select_db($config->database, $this->_dbLink))
-            {
-                if($config->charset)
-                {
+        if ($this->_dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password)) {
+            if (@mysql_select_db($config->database, $this->_dbLink)) {
+                if ($config->charset) {
                     mysql_query("SET NAMES '{$config->charset}'", $this->_dbLink);
                 }
                 return $this->_dbLink;
@@ -63,8 +60,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
      */
     public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        if($resource = @mysql_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle))
-        {
+        if ($resource = @mysql_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle)) {
             return $resource;
         }
 
@@ -127,10 +123,8 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
      */
     public function parseSelect(array $sql)
     {
-        if(!empty($sql['join']))
-        {
-            foreach($sql['join'] as $val)
-            {
+        if (!empty($sql['join'])) {
+            foreach ($sql['join'] as $val) {
                 list($table, $condition, $op) = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }

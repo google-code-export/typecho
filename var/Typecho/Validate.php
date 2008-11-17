@@ -69,12 +69,9 @@ class Typecho_Validate
      */
     public function addRule($key, $rule, $message)
     {
-        if(func_num_args() <= 3)
-        {
+        if (func_num_args() <= 3) {
             $this->_rules[$key][] = array($rule, $message);
-        }
-        else
-        {
+        } else {
             $params = func_get_args();
             $params = array_splice($params, 3);
             $this->_rules[$key][] = array_merge(array($rule, $message), $params);
@@ -111,17 +108,14 @@ class Typecho_Validate
         $rules = empty($rules) ? $this->_rules : $rules;
 
         // Cycle through the rules and test for errors
-        foreach($rules as $key => $rules)
-        {
+        foreach ($rules as $key => $rules) {
             $this->_key = $key;
             $data[$key] = empty($data[$key]) ? NULL : $data[$key];
 
-            foreach($rules as $params)
-            {
+            foreach ($rules as $params) {
                 $method = $params[0];
                 
-                if('required' != $method && empty($data[$key]))
-                {
+                if ('required' != $method && empty($data[$key])) {
                     continue;
                 }
                 
@@ -129,22 +123,19 @@ class Typecho_Validate
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
 
-                if(!call_user_func_array(is_array($method) ? $method : array($this, $method), $params))
-                {
+                if (!call_user_func_array(is_array($method) ? $method : array($this, $method), $params)) {
                     $result[$key] = $message;
                     break;
                 }
             }
             
             /** 开启中断 */
-            if($this->_break && $result)
-            {
+            if ($this->_break && $result) {
                 break;
             }
         }
 
-        if($result)
-        {
+        if ($result) {
             /** 验证异常支持 */
             require_once 'Typecho/Validate/Exception.php';
             throw new Typecho_Validate_Exception($result);
