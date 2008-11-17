@@ -101,8 +101,8 @@ class Widget_Menu extends Typecho_Widget
             array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
         ),
         array(
-            array(_t('撰写文章'), _t('撰写新文章'), '/admin/edit.php', 'contributor'),
-            array(_t('创建页面'), _t('创建新页面'), '/admin/edit-page.php', 'editor'),
+            array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
+            array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
@@ -110,17 +110,17 @@ class Widget_Menu extends Typecho_Widget
             array(_t('独立页面'), _t('管理独立页面'), '/admin/manage-pages.php', 'editor'),
             array(_t('评论'), _t('管理评论'), '/admin/manage-comments.php', 'editor'),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
-            array(_t('文章分类'), _t('管理分类'), '/admin/manage-cat.php', 'editor'),
-            array(_t('标签'), _t('管理标签'), '/admin/manage-tag.php', 'editor'),
-            array(_t('用户'), _t('管理用户'), '/admin/users.php', 'administrator'),
+            array(_t('文章分类'), _t('管理分类'), '/admin/manage-cats.php', 'editor'),
+            array(_t('标签'), _t('管理标签'), '/admin/manage-tags.php', 'editor'),
+            array(_t('用户'), _t('管理用户'), '/admin/manage-users.php', 'administrator'),
             array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
-            array(_t('基本'), _t('基本设置'), '/admin/general.php', 'administrator'),
-            array(_t('评论'), _t('评论设置'), '/admin/discussion.php', 'administrator'),
-            array(_t('文章'), _t('文章设置'), '/admin/reading.php', 'administrator'),
-            array(_t('撰写'), _t('撰写习惯设置'), '/admin/writing.php', 'contributor'),
+            array(_t('基本'), _t('基本设置'), '/admin/option-general.php', 'administrator'),
+            array(_t('评论'), _t('评论设置'), '/admin/option-discussion.php', 'administrator'),
+            array(_t('文章'), _t('文章设置'), '/admin/option-reading.php', 'administrator'),
+            array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
         //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
         //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),

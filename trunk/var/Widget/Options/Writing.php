@@ -89,19 +89,15 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
     public function updateWritingSettings()
     {
         /** 验证格式 */
-        try
-        {
+        try {
             $this->form()->validate();
-        }
-        catch(Typecho_Widget_Exception $e)
-        {
+        } catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack();
         }
     
         $settings = $this->form()->getParameters();
         unset($settings['do']);
-        foreach($settings as $name => $value)
-        {
+        foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('`name` = ?', $name));
         }
 
