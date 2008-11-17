@@ -26,10 +26,10 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     /**
      * 表单标题
      * 
-     * @access private
+     * @access protected
      * @var string
      */
-    private $_label;
+    protected $label;
     
     /**
      * 表单描述
@@ -37,15 +37,15 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
      * @access private
      * @var string
      */
-    private $_description;
+    protected $description;
     
     /**
      * 表单消息
      * 
-     * @access private
+     * @access protected
      * @var string
      */
-    private $_message;
+    protected $message;
 
     /**
      * 表单元素容器
@@ -64,10 +64,11 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     public function __construct()
     {
         /** 创建html元素,并设置class */
-        parent::__construct('div', array('class' => 'typecho-option-item'));
+        parent::__construct('ul', array('class' => 'typecho-option'));
         
         /** 创建表单容器 */
-        $this->container = new Typecho_Widget_Helper_Layout('p');
+        $this->container = new Typecho_Widget_Helper_Layout('li');
+        $this->addItem($this->container);
         
         /** 运行自定义初始函数 */
         $this->init();
@@ -91,12 +92,12 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     public function label($value)
     {
         /** 创建标题元素 */
-        if (empty($this->_label)) {
-            $this->_label = new Typecho_Widget_Helper_Layout('h4');
-            $this->addItem($this->_label);
+        if (empty($this->label)) {
+            $this->label = new Typecho_Widget_Helper_Layout('label', array('class' => 'typecho-label'));
+            $this->container->addItem($this->label);
         }
 
-        $this->_label->html($value);
+        $this->label->html($value);
         return $this;
     }
     
@@ -109,12 +110,12 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
      */
     public function message($message)
     {
-        if (empty($this->_message)) {
-            $this->_message =  new Typecho_Widget_Helper_Layout('span', array('class' => 'typecho-option-item-message'));
-            $this->container->addItem($this->_message);
+        if (empty($this->message)) {
+            $this->message =  new Typecho_Widget_Helper_Layout('p', array('class' => 'message error'));
+            $this->container->addItem($this->message);
         }
         
-        $this->_message->html($message);
+        $this->message->html($message);
         return $this;
     }
     
@@ -128,12 +129,12 @@ abstract class Typecho_Widget_Helper_Decorator_Form_Default extends Typecho_Widg
     public function description($description)
     {
         /** 创建描述元素 */
-        if (empty($this->_description)) {
-            $this->_description = new Typecho_Widget_Helper_Layout('p', array('class' => 'summary'));
-            $this->container->addItem($this->_description);
+        if (empty($this->description)) {
+            $this->description = new Typecho_Widget_Helper_Layout('p', array('class' => 'desption'));
+            $this->container->addItem($this->description);
         }
         
-        $this->_description->html($description);
+        $this->description->html($description);
         return $this;
     }
 }

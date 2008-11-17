@@ -33,7 +33,8 @@ class Typecho_Widget_Helper_Form_Element_Submit extends Typecho_Widget_Helper_Fo
      */
     public function input(Typecho_Widget_Helper_Layout $container, $name = NULL, array $options = NULL)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('type' => 'button'));
+        $this->setAttribute('class', 'typecho-option typecho-option-submit');
+        $input = new Typecho_Widget_Helper_Layout('button', array('type' => 'submit'));
         $container->addItem($input);
         return $input;
     }
@@ -47,6 +48,6 @@ class Typecho_Widget_Helper_Form_Element_Submit extends Typecho_Widget_Helper_Fo
      */
     protected function _value($value)
     {
-        $this->input->setAttribute('value', $value);
+        $this->input->html($value);
     }
 }

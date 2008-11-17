@@ -52,14 +52,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     private $_inputs = array();
     
     /**
-     * 表单体
-     * 
-     * @access private
-     * @var Typecho_Widget_Helper_Layout
-     */
-    private $_formBody;
-    
-    /**
      * 构造函数,设置基本属性
      * 
      * @access public
@@ -77,26 +69,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $this->setAction($action);
         $this->setMethod($method);
         $this->setEncodeType($enctype);
-    }
-    
-    /**
-     * 准备formBody元素
-     * 
-     * @access private
-     * @return void
-     */
-    private function prepare()
-    {
-        if (empty($this->_formBody)) {
-            $this->_formBody = new Typecho_Widget_Helper_Layout('table');
-            
-            $tr = new Typecho_Widget_Helper_Layout('tr');
-            $tr->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '20%')))
-            ->addItem(new Typecho_Widget_Helper_Layout('th', array('width' => '80%')))
-            ->appendTo($this->_formBody);
-            
-            $this->_formBody->setAttribute('class', 'setting')->appendTo($this);
-        }
     }
     
     /**
@@ -119,11 +91,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      * @param Typecho_Widget_Helper_Form_Abstract $input 输入元素
      * @return Typecho_Widget_Helper_Form
      */
-    public function addInput(Typecho_Widget_Helper_Form_Abstract $input)
+    public function addInput(Typecho_Widget_Helper_Form_Element $input)
     {
         $this->_inputs[$input->name] = $input;
-        $this->prepare();
-        $this->_formBody->addItem($input);
+        $this->addItem($input);
         return $this;
     }
     
@@ -137,8 +108,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function addItem(Typecho_Widget_Helper_Layout $item)
     {
         if ($item instanceof Typecho_Widget_Helper_Form_Submit) {
-            $this->prepare();
-            $this->_formBody->addItem($item);
+            $this->addItem($item);
         } else {
             parent::addItem($item);
         }
@@ -182,22 +152,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     {
         $this->setAttribute('action', $action);
         return $this;
-    }
-    
-    /**
-     * 获取此表单的所有输入项投递值
-     * 
-     * @access public
-     * @return array
-     */
-    public function getParameters()
-    {
-        $parameters = array();
-        
-        foreach ($this->_inputs as $name => $input) {
-            $parameters[$name] = Typecho_Request::getParameter($name);
-        }
-        return $parameters;
     }
     
     /**
@@ -252,10 +206,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             $validator->run($formData, $rules);
         } catch (Typecho_Validate_Exception $e) {
             /** 利用cookie记录错误 */
-            Typecho_Request::setCookie('__typecho_form_message', $e->getMessages());
+            Typecho_Response::setCookie('__typecho_form_message', $e->getMessages());
             
             /** 利用cookie记录表单值 */
-            Typecho_Request::setCookie('__typecho_form_record', $formData);
+            Typecho_Response::setCookie('__typecho_form_record', $formData);
 
             /** 载入异常支持 */
             require_once 'Typecho/Widget/Exception.php';
@@ -285,10 +239,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
                 }
             }
             
-            Typecho_Request::deleteCookie('__typecho_form_record');
+            Typecho_Response::deleteCookie('__typecho_form_record');
         }
     
         parent::render();
-        Typecho_Request::deleteCookie('__typecho_form_message');
+        Typecho_Response::deleteCookie('__typecho_form_message');
     }
 }

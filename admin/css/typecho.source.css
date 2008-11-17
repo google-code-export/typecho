@@ -83,6 +83,11 @@ em {
     font-weight: normal;
 }
 
+form {
+	padding: 0;
+	margin: 0;
+}
+
 input, textarea {
     font-size: 13px;
 	padding: 2px;
@@ -220,7 +225,7 @@ button {
     padding-left: 110px;
 }
 
-.typecho-option label {
+.typecho-option label.typecho-label {
     float: left;
     width: 110px;
     text-align: right;
@@ -237,8 +242,8 @@ button {
  * 提示信息框
  */
 .message {
-    padding: 2px 5px;
-    font-size: 12px;
+    padding: 5px;
+    font-size: 14px;
     color: #333;
     margin-bottom: 10px;
 }
@@ -1106,7 +1111,7 @@ margin-top: 25px;
     border-top: 1px solid #fff;
 }
 
-.typecho-page-main .typecho-option label {
+.typecho-page-main .typecho-option label.typecho-label {
     width: 190px;
     margin-left: -200px;
 }
@@ -1136,8 +1141,7 @@ margin-top: 25px;
 }
 
 .typecho-page-main .typecho-option-submit {
-    margin: 15px 0px;
-    padding-left: 200px;
+    border-bottom: none;
 }
 
 /**

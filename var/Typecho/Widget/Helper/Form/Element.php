@@ -74,17 +74,17 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         parent::__construct();
         $this->name = $name;
         
+        /** 初始化表单标题 */
+        if (NULL !== $label) {
+            $this->label($label);
+        }
+        
         /** 初始化表单项 */
         $this->input = $this->input($this->container, $name, $options);
         
         /** 初始化表单值 */
         if (NULL !== $value) {
             $this->value($value);
-        }
-        
-        /** 初始化表单标题 */
-        if (NULL !== $label) {
-            $this->label($label);
         }
         
         /** 初始化表单描述 */

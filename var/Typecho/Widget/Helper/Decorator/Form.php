@@ -27,15 +27,6 @@ interface Typecho_Widget_Helper_Decorator_Form
     public function label($value);
     
     /**
-     * 创建表单容器
-     * 
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $item 表单容器
-     * @return void
-     */
-    public function container(Typecho_Widget_Helper_Layout $item);
-    
-    /**
      * 设置提示信息
      * 
      * @access public

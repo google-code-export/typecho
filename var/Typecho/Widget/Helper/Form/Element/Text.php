@@ -33,8 +33,11 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
      */
     public function input(Typecho_Widget_Helper_Layout $container, $name = NULL, array $options = NULL)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('name' => $name, 'type' => 'text'));
+        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0',
+        'name' => $name, 'type' => 'text', 'class' => 'text'));
         $container->addItem($input);
+        $this->label->setAttribute('for', $name . '-0');
+        
         return $input;
     }
     
