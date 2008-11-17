@@ -78,20 +78,17 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         $this->input = $this->input($this->container, $name, $options);
         
         /** 初始化表单值 */
-        if(NULL !== $value)
-        {
+        if (NULL !== $value) {
             $this->value($value);
         }
         
         /** 初始化表单标题 */
-        if(NULL !== $label)
-        {
+        if (NULL !== $label) {
             $this->label($label);
         }
         
         /** 初始化表单描述 */
-        if(NULL !== $description)
-        {
+        if (NULL !== $description) {
             $this->description($description);
         }
     }

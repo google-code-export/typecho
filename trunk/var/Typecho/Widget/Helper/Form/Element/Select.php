@@ -46,8 +46,7 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
         ->setAttribute('id', $name)
         ->appendTo($container);
         
-        foreach($options as $value => $label)
-        {
+        foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('option');
             $input->addItem($this->_options[$value]->setAttribute('value', $value)->html($label));
         }
@@ -64,8 +63,7 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
      */
     protected function _value($value)
     {
-        if(isset($this->_options[$value]))
-        {
+        if (isset($this->_options[$value])) {
             $this->_options[$value]->setAttribute('selected', 'true');
         }
     }

@@ -41,8 +41,7 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
      */
     public function input(Typecho_Widget_Helper_Layout $container, $name = NULL, array $options = NULL)
     {
-        foreach($options as $value => $label)
-        {
+        foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
             $this->_options[$value]->setAttribute('name', $this->name)
             ->setAttribute('type', 'checkbox')
@@ -69,10 +68,8 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
     {
         $values = is_array($values) ? $values : array($values);
         
-        foreach($values as $value)
-        {
-            if(isset($this->_options[$value]))
-            {
+        foreach ($values as $value) {
+            if (isset($this->_options[$value])) {
                 $this->_options[$value]->setAttribute('checked', 'true');
             }
         }

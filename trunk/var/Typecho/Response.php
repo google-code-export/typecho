@@ -40,20 +40,16 @@ class Typecho_Response
     private static function _parseXml($message)
     {
         /** 对于数组型则继续递归 */
-        if(is_array($message))
-        {
+        if (is_array($message)) {
             $result = '';
             
-            foreach($message as $key => $val)
-            {
+            foreach ($message as $key => $val) {
                 $tagName = is_int($key) ? 'item' : $key;
                 $result .= '<' . $tagName . '>' . self::_parseAjaxResponse($val) . '</' . $tagName . '>';
             }
             
             return $result;
-        }
-        else
-        {
+        } else {
             return '<![CDATA[' . $message . ']]>';
         }
     }
@@ -68,13 +64,10 @@ class Typecho_Response
     public static function obStart($gzipAble = false)
     {
         //开始监视输出区
-        if($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
-           && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
-        {
+        if ($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+           && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
             ob_start("ob_gzhandler");
-        }
-        else
-        {
+        } else {
             ob_start();
         }
     }
@@ -172,8 +165,7 @@ class Typecho_Response
      */
     public static function redirect($location, $isPermanently = false)
     {
-        if($isPermanently)
-        {
+        if ($isPermanently) {
             header('HTTP/1.1 301 Moved Permanently');
             header("location: {$location}\n");
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -183,9 +175,7 @@ class Typecho_Response
     <h1>Moved Permanently</h1>
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
     </body></html>');
-        }
-        else
-        {
+        } else {
             header('HTTP/1.1 302 Found');
             header("location: {$location}\n");
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -208,8 +198,7 @@ class Typecho_Response
     public static function goBack($anchor = NULL)
     {
         //判断来源
-        if(!empty($_SERVER['HTTP_REFERER']))
-        {
+        if (!empty($_SERVER['HTTP_REFERER'])) {
             self::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
         }
     }
@@ -226,8 +215,7 @@ class Typecho_Response
     public static function setCookie($key, $value, $expire = 0, $url = NULL)
     {
         $path = '/';
-        if(!empty($url))
-        {
+        if (!empty($url)) {
             $parsed = parse_url($url);
             
             /** 在路径后面强制加上斜杠 */
@@ -235,15 +223,11 @@ class Typecho_Response
         }
         
         /** 对数组型COOKIE的写入支持 */
-        if(is_array($value))
-        {
-            foreach($value as $name => $val)
-            {
+        if (is_array($value)) {
+            foreach ($value as $name => $val) {
                 setcookie("{$key}[{$name}]", $val, $expire, $path);
             }
-        }
-        else
-        {
+        } else {
             setcookie($key, $value, $expire, $path);
         }
     }
@@ -257,14 +241,12 @@ class Typecho_Response
      */
     public static function deleteCookie($key, $url = NULL)
     {
-        if(!isset($_COOKIE[$key]))
-        {
+        if (!isset($_COOKIE[$key])) {
             return;
         }
 
         $path = '/';
-        if(!empty($url))
-        {
+        if (!empty($url)) {
             $parsed = parse_url($url);
             
             /** 在路径后面强制加上斜杠 */
@@ -272,15 +254,11 @@ class Typecho_Response
         }
 
         /** 对数组型COOKIE的删除支持 */
-        if(is_array($_COOKIE[$key]))
-        {
-            foreach($_COOKIE[$key] as $name => $val)
-            {
+        if (is_array($_COOKIE[$key])) {
+            foreach ($_COOKIE[$key] as $name => $val) {
                 setcookie("{$key}[{$name}]", '', time() - 2592000, $path);
             }
-        }
-        else
-        {
+        } else {
             setcookie($key, '', time() - 2592000, $path);
         }
     }

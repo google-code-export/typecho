@@ -15,12 +15,9 @@
  */
 function _t($string)
 {
-    if(func_num_args() <= 1)
-    {
+    if (func_num_args() <= 1) {
         return Typecho_I18n::translate($string);
-    }
-    else
-    {
+    } else {
         $args = func_get_args();
         array_shift($args);
         return vsprintf(Typecho_I18n::translate($string), $args);
@@ -71,10 +68,8 @@ class Typecho_I18n
      */
     public static function translate($string)
     {
-        if(self::$_lang)
-        {
-            if(!self::$_loaded)
-            {
+        if (self::$_lang) {
+            if (!self::$_loaded) {
                 /** GetText支持 */
                 require_once 'Typecho/I18n/GetText.php';
                 Typecho_I18n_GetText::init(self::$_lang);
@@ -82,9 +77,7 @@ class Typecho_I18n
             }
 
             return isset(Typecho_I18n_GetText::$strings[$string]) ? Typecho_I18n_GetText::$strings[$string] : $string;
-        }
-        else
-        {
+        } else {
             return $string;
         }
     }
@@ -101,8 +94,7 @@ class Typecho_I18n
     {
         static $localDateDestCache, $localDateSourceCache;
         
-        if(empty($localDateDestCache) || empty($localDateSourceCache))
-        {
+        if (empty($localDateDestCache) || empty($localDateSourceCache)) {
             $map = array(
                 /** 星期 */
                 'Sun'       => _t('星期日'),
@@ -125,14 +117,11 @@ class Typecho_I18n
         $between = $now - $from;
         
         /** 如果是一天 */
-        if($between < 86400 && idate('d', $from) == idate('d', $now))
-        {
+        if ($between < 86400 && idate('d', $from) == idate('d', $now)) {
             /** 如果是一小时 */
-            if($between < 3600 && idate('H', $from) == idate('H', $now))
-            {                
+            if ($between < 3600 && idate('H', $from) == idate('H', $now)) {                
                 /** 如果是一分钟 */
-                if($between < 60 && idate('i', $from) == idate('i', $now))
-                {
+                if ($between < 60 && idate('i', $from) == idate('i', $now)) {
                     return _t('%d秒前', idate('s', $now) - idate('s', $from));
                 }
                 
@@ -143,20 +132,17 @@ class Typecho_I18n
         }
         
         /** 如果是昨天 */
-        if($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now)))
-        {
+        if ($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
             return str_replace($localDateSourceCache, $localDateDestCache, date(_t('昨天a g:i'), $from));
         }
         
         /** 如果是一个星期 */
-        if($between < 604800 && idate('W', $from) == idate('W', $now))
-        {
+        if ($between < 604800 && idate('W', $from) == idate('W', $now)) {
             return str_replace($localDateSourceCache, $localDateDestCache, date('D', $from));
         }
         
         /** 如果是 */
-        if($between < 31622400 && idate('Y', $from) == idate('Y', $now))
-        {
+        if ($between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
             return str_replace($localDateSourceCache, $localDateDestCache, date(_t('n月j日'), $from));
         }
         

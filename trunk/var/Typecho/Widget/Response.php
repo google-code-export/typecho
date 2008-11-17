@@ -33,8 +33,7 @@ class Typecho_Widget_Response
      */
     public static function getInstance()
     {
-        if(empty(self::$_instance))
-        {
+        if (empty(self::$_instance)) {
             self::$_instance = new Typecho_Widget_Response();
         }
         
@@ -71,8 +70,7 @@ class Typecho_Widget_Response
                 Typecho_Exception::RUNTIME, Typecho_Exception::UNVAILABLE);
 
         /** 判断不合法的http response code */
-        if(!empty($code) && !in_array($code, $availableCode))
-        {
+        if (!empty($code) && !in_array($code, $availableCode)) {
             throw new Typecho_Widget_Exception('Invalid HTTP response code');
         }
 

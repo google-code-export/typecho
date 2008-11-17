@@ -116,8 +116,7 @@ class Typecho_I18n_GetText
     {
         $array = array();
         foreach (explode("\n", $meta) as $info) {
-            if ($info = trim($info))
-            {
+            if ($info = trim($info)) {
                 list($key, $value) = explode(':', $info, 2);
                 $array[trim($key)] = trim($value);
             }
@@ -134,10 +133,8 @@ class Typecho_I18n_GetText
      */
     public static function load($file)
     {
-        if(!isset(self::$_files[$file]))
-        {
-        if(!file_exists($file))
-        {
+        if (!isset(self::$_files[$file])) {
+        if (!file_exists($file)) {
             return false;
         }
 
@@ -154,8 +151,7 @@ class Typecho_I18n_GetText
         }
 
         // read (part of) magic number from MO file header and define endianess
-        switch ($magic = current($array = unpack('c', self::_read(4))))
-        {
+        switch ($magic = current($array = unpack('c', self::_read(4)))) {
             case -34:
             $be = false;
             break;

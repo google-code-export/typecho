@@ -70,9 +70,8 @@ class Typecho_Feed_Writer
 	*/
 	public function setChannelElementsFromArray($elementArray)
 	{
-		if(! is_array($elementArray)) return;
-		foreach ($elementArray as $elementName => $content) 
-		{
+		if (! is_array($elementArray)) return;
+		foreach ($elementArray as $elementName => $content) {
 			$this->setChannelElement($elementName, $content);
 		}
 	}
@@ -238,22 +237,17 @@ class Typecho_Feed_Writer
 	{
 		$out  = '<?xml version="1.0" encoding="' . $this->charset . '"?>' . Typecho_Feed::EOL;
 		
-		if($this->version == Typecho_Feed::RSS2)
-		{
+		if ($this->version == Typecho_Feed::RSS2) {
 			$out .= '<rss version="2.0"
 xmlns:content="http://purl.org/rss/1.0/modules/content/"
 xmlns:dc="http://purl.org/dc/elements/1.1/"
 xmlns:wfw="http://wellformedweb.org/CommentAPI/">' . Typecho_Feed::EOL;
-		}    
-		elseif($this->version == Typecho_Feed::RSS1)
-		{
+		} elseif ($this->version == Typecho_Feed::RSS1) {
 			$out .= '<rdf:RDF 
 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 xmlns="http://purl.org/rss/1.0/"
 xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
-		}
-		else if($this->version == Typecho_Feed::ATOM1)
-		{
+		} else if ($this->version == Typecho_Feed::ATOM1) {
 			$out .= '<feed xmlns="http://www.w3.org/2005/Atom">' . Typecho_Feed::EOL;;
 		}
 		echo $out;
@@ -267,16 +261,11 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 	*/
 	private function printTale()
 	{
-		if($this->version == Typecho_Feed::RSS2)
-		{
+		if ($this->version == Typecho_Feed::RSS2) {
 			echo '</channel>' . Typecho_Feed::EOL . '</rss>'; 
-		}    
-		elseif($this->version == Typecho_Feed::RSS1)
-		{
+		} elseif ($this->version == Typecho_Feed::RSS1) {
 			echo '</rdf:RDF>';
-		}
-		else if($this->version == Typecho_Feed::ATOM1)
-		{
+		} else if ($this->version == Typecho_Feed::ATOM1) {
 			echo '</feed>';
 		}
 	  
@@ -296,49 +285,36 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 		$nodeText = '';
 		$attrText = '';
 
-		if(is_array($attributes))
-		{
-			foreach ($attributes as $key => $value) 
-			{
+		if (is_array($attributes)) {
+			foreach ($attributes as $key => $value) {
 				$attrText .= " $key=\"$value\" ";
 			}
 		}
 		
-		if(is_array($tagContent) && $this->version == Typecho_Feed::RSS1)
-		{
+		if (is_array($tagContent) && $this->version == Typecho_Feed::RSS1) {
 			$attrText = ' rdf:parseType="Resource"';
 		}
 		
 		
 		$attrText .= (in_array($tagName, $this->CDATAEncoding) && $this->version == Typecho_Feed::ATOM1)? ' type="html" ' : '';
         
-        if(empty($tagContent))
-        {
+        if (empty($tagContent)) {
             $nodeText .= "<{$tagName}{$attrText}";
-        }
-        else
-        {
+        } else {
             $nodeText .= (in_array($tagName, $this->CDATAEncoding)) ? "<{$tagName}{$attrText}><![CDATA[" : "<{$tagName}{$attrText}>";
         }
 		 
-		if(is_array($tagContent))
-		{ 
-			foreach ($tagContent as $key => $value) 
-			{
+		if (is_array($tagContent)) { 
+			foreach ($tagContent as $key => $value) {
 				$nodeText .= $this->makeNode($key, $value);
 			}
-		}
-		else
-		{
+		} else {
 			$nodeText .= (in_array($tagName, $this->CDATAEncoding))? $tagContent : htmlentities($tagContent);
 		}           
         
-        if(empty($tagContent))
-        {
+        if (empty($tagContent)) {
             $nodeText .=  "/>";
-        }
-        else
-        {
+        } else {
             $nodeText .= (in_array($tagName, $this->CDATAEncoding)) ? "]]></$tagName>" : "</$tagName>";
         }
 
@@ -353,8 +329,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 	private function printChannels()
 	{
 		//Start channel tag
-		switch ($this->version) 
-		{
+		switch ($this->version) {
 		    case Typecho_Feed::RSS2: 
 				echo '<channel>' . Typecho_Feed::EOL;        
 				break;
@@ -367,27 +342,21 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 		}
 		
 		//Print Items of channel
-		foreach ($this->channels as $key => $value) 
-		{
-			if($this->version == Typecho_Feed::ATOM1 && $key == 'link') 
-			{
+		foreach ($this->channels as $key => $value) {
+			if ($this->version == Typecho_Feed::ATOM1 && $key == 'link') {
 				// ATOM prints link element as href attribute
 				echo $this->makeNode($key,'',array('href'=>$value));
 				//Add the id for ATOM
 				echo $this->makeNode('id',$this->uuid($value,'urn:uuid:'));
-			}
-			else
-			{
+			} else {
 				echo $this->makeNode($key, $value);
 			}
 		}
 		
 		//RSS 1.0 have special tag <rdf:Seq> with channel 
-		if($this->version == Typecho_Feed::RSS1)
-		{
+		if ($this->version == Typecho_Feed::RSS1) {
 			echo "<items>" . Typecho_Feed::EOL . "<rdf:Seq>" . Typecho_Feed::EOL;
-			foreach ($this->items as $item) 
-			{
+			foreach ($this->items as $item) {
 				$thisItems = $item->getElements();
 				echo "<rdf:li resource=\"{$thisItems['link']['content']}\"/>" . Typecho_Feed::EOL;
 			}
@@ -403,31 +372,22 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 	*/
 	private function printItems()
 	{    
-		foreach ($this->items as $item) 
-		{
+		foreach ($this->items as $item) {
 			$thisItems = $item->getElements();
 			
 			//the argument is printed as rdf:about attribute of item in rss 1.0 
 			echo $this->startItem($thisItems['link']['content']);
 			
-			foreach ($thisItems as $feedItem)
-			{
-                if('category' == $feedItem['name'])
-                {
-                    foreach($feedItem['content'] as $category)
-                    {
-                        if(Typecho_Feed::ATOM1 == $this->version)
-                        {
+			foreach ($thisItems as $feedItem) {
+                if ('category' == $feedItem['name']) {
+                    foreach ($feedItem['content'] as $category) {
+                        if (Typecho_Feed::ATOM1 == $this->version) {
                             echo $this->makeNode('category', NULL, array('scheme' => $category['permalink'], 'term' => $category['name']));
-                        }
-                        else if(Typecho_Feed::RSS2 == $this->version)
-                        {
+                        } else if (Typecho_Feed::RSS2 == $this->version) {
                             echo $this->makeNode('category', $category['name']);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     echo $this->makeNode($feedItem['name'], $feedItem['content'], $feedItem['attributes']); 
                 }
 			}
@@ -444,23 +404,15 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 	*/
 	private function startItem($about = false)
 	{
-		if($this->version == Typecho_Feed::RSS2)
-		{
+		if ($this->version == Typecho_Feed::RSS2) {
 			echo '<item>' . Typecho_Feed::EOL; 
-		}    
-		elseif($this->version == Typecho_Feed::RSS1)
-		{
-			if($about)
-			{
+		} elseif ($this->version == Typecho_Feed::RSS1) {
+			if ($about) {
 				echo "<item rdf:about=\"$about\">" . Typecho_Feed::EOL;
-			}
-			else
-			{
+			} else {
 				die('link element is not set .\n It\'s required for RSS 1.0 to be used as about attribute of item');
 			}
-		}
-		else if($this->version == Typecho_Feed::ATOM1)
-		{
+		} else if ($this->version == Typecho_Feed::ATOM1) {
 			echo "<entry>" . Typecho_Feed::EOL;
 		}    
 	}
@@ -473,12 +425,9 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 	*/
 	private function endItem()
 	{
-		if($this->version == Typecho_Feed::RSS2 || $this->version == Typecho_Feed::RSS1)
-		{
+		if ($this->version == Typecho_Feed::RSS2 || $this->version == Typecho_Feed::RSS1) {
 			echo '</item>' . Typecho_Feed::EOL; 
-		}    
-		else if($this->version == Typecho_Feed::ATOM1)
-		{
+		} else if ($this->version == Typecho_Feed::ATOM1) {
 			echo "</entry>" . Typecho_Feed::EOL;
 		}
 	}

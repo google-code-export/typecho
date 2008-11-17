@@ -33,8 +33,7 @@ class Typecho_Request
      */
     public static function getParameter($key, $default = NULL)
     {
-        switch (true)
-        {
+        switch (true) {
             case isset(self::$_params[$key]):
                 return self::$_params[$key];
             case isset($_GET[$key]):
@@ -70,8 +69,7 @@ class Typecho_Request
      */
     public static function isSetParameter($key)
     {
-        switch (true)
-        {
+        switch (true) {
             case isset(self::$_params[$key]):
                 return true;
             case isset($_GET[$key]):
@@ -94,18 +92,14 @@ class Typecho_Request
      */
     public static function getParametersFrom($parameter)
     {
-        if(is_array($parameter))
-        {
+        if (is_array($parameter)) {
             $args = $parameter;
-        }
-        else
-        {
+        } else {
             $args = func_get_args();
             $parameters = array();
         }
 
-        foreach($args as $arg)
-        {
+        foreach ($args as $arg) {
             $parameters[$arg] = self::getParameter($arg);
         }
 
@@ -158,47 +152,32 @@ class Typecho_Request
      */
     public static function getPathInfo()
     {
-        if(!empty($_SERVER['PATH_INFO']) || NULL != getenv('PATH_INFO'))
-        {
+        if (!empty($_SERVER['PATH_INFO']) || NULL != getenv('PATH_INFO')) {
             $pathInfo = empty($_SERVER['PATH_INFO']) ? getenv('PATH_INFO') : $_SERVER['PATH_INFO'];
-            if(0 === strpos($pathInfo,$_SERVER['SCRIPT_NAME']))
-            {
+            if (0 === strpos($pathInfo,$_SERVER['SCRIPT_NAME'])) {
                 $path = substr($pathInfo, strlen($_SERVER['SCRIPT_NAME']));
-            }
-            else
-            {
+            } else {
                 $path = $pathInfo;
             }
-        }
-        else if(!empty($_SERVER['ORIG_PATH_INFO']) || NULL != getenv('ORIG_PATH_INFO'))
-        {
+        } else if (!empty($_SERVER['ORIG_PATH_INFO']) || NULL != getenv('ORIG_PATH_INFO')) {
             $pathInfo = empty($_SERVER['ORIG_PATH_INFO']) ? getenv('ORIG_PATH_INFO') : $_SERVER['ORIG_PATH_INFO'];
-            if(0 === strpos($pathInfo, $_SERVER['SCRIPT_NAME']) && 0 === strpos($pathInfo, $_SERVER['SCRIPT_NAME']))
-            {
+            if (0 === strpos($pathInfo, $_SERVER['SCRIPT_NAME']) && 0 === strpos($pathInfo, $_SERVER['SCRIPT_NAME'])) {
                 $path = substr($pathInfo, strlen($_SERVER['SCRIPT_NAME']));
-            }
-            else
-            {
+            } else {
                 $path = $pathInfo;
             }
-        }
-        else if(!empty($_SERVER["REDIRECT_Url"]))
-        {
+        } else if (!empty($_SERVER["REDIRECT_Url"])) {
             $path = $_SERVER["REDIRECT_Url"];
 
-            if(empty($_SERVER['QUERY_STRING']) || $_SERVER['QUERY_STRING'] == $_SERVER["REDIRECT_QUERY_STRING"])
-            {
+            if (empty($_SERVER['QUERY_STRING']) || $_SERVER['QUERY_STRING'] == $_SERVER["REDIRECT_QUERY_STRING"]) {
                 $parsedUrl = parse_url($_SERVER["REQUEST_URI"]);
-                if(!empty($parsedUrl['query']))
-                {
+                if (!empty($parsedUrl['query'])) {
                     $_SERVER['QUERY_STRING'] = $parsedUrl['query'];
                     parse_str($parsedUrl['query'], $GET);
                     $_GET = array_merge($_GET, $GET);
 
                     reset($_GET);
-                }
-                else
-                {
+                } else {
                     unset($_SERVER['QUERY_STRING']);
                 }
 
@@ -217,8 +196,7 @@ class Typecho_Request
      */
     public static function getClientIp()
     {
-        switch(true)
-        {
+        switch (true) {
             case getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'):
                 return getenv('HTTP_CLIENT_IP');
             case getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'): 

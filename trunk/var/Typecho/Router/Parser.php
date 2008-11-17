@@ -79,20 +79,13 @@ class Typecho_Router_Parser
         $paramsNum = count($params);
         $this->_params[] = $params[0];
         
-        if(1 == $paramsNum)
-        {
+        if (1 == $paramsNum) {
             return sprintf($this->_defaultRegx['char'], '+');
-        }
-        else if(2 == $paramsNum)
-        {
+        } else if (2 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '+');
-        }
-        else if(3 == $paramsNum)
-        {
+        } else if (3 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . '}');
-        }
-        else if(4 == $paramsNum)
-        {
+        } else if (4 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . ',' . $params[3] . '}');
         }
     }
@@ -107,8 +100,7 @@ class Typecho_Router_Parser
     {
         $result = array();
     
-        foreach($this->_routeMap as $key => $route)
-        {
+        foreach ($this->_routeMap as $key => $route) {
             $this->_params = array();
             $route['regx'] = preg_replace_callback("/%([^%]+)%/", array($this, '_match'),
             preg_quote(str_replace(array('[', ']', ':'), array('%', '%', ' '), $route['url'])));

@@ -34,14 +34,11 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function connect(Typecho_Config $config)
     {
-        try
-        {
+        try {
             $this->_object = $this->init($config);
             $this->_object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this->_object;
-        }
-        catch(PDOException $e)
-        {
+        } catch (PDOException $e) {
             /** 数据库异常 */
             require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::UNVAILABLE);
@@ -70,14 +67,11 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        try
-        {
+        try {
             $this->_lastInsertTable = (!empty($action) && 'INSERT' == $action) ? $query->getAttribute('table') : NULL;
             $resource = $handle->prepare($query instanceof Typecho_Db_Query ? $query->__toString() : $query);
             $resource->execute();
-        }
-        catch(PDOException $e)
-        {
+        } catch (PDOException $e) {
             /** 数据库异常 */
             require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::RUNTIME);

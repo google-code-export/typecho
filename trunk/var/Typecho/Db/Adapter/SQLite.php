@@ -35,29 +35,23 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     private function filterColumnName($result)
     {
         /** 如果结果为空,直接返回 */
-        if(!$result)
-        {
+        if (!$result) {
             return $result;
         }
     
         $tResult = array();
         
         /** 遍历数组 */
-        foreach($result as $key => $val)
-        {
+        foreach ($result as $key => $val) {
             /** 按点分隔 */
-            if(false !== ($pos = strpos($key, '.')))
-            {
+            if (false !== ($pos = strpos($key, '.'))) {
                 $key = substr($key, $pos + 1);
             }
         
             /** 按引号分割 */
-            if(false === ($pos = strpos($key, '"')))
-            {
+            if (false === ($pos = strpos($key, '"'))) {
                 $tResult[$key] = $val;
-            }
-            else
-            {
+            } else {
                 $tResult[substr($key, $pos + 1, -1)] = $val;
             }
         }
@@ -74,8 +68,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function connect(Typecho_Config $config)
     {
-        if($this->_dbHandle = sqlite_open($config->file, 0666, $error))
-        {
+        if ($this->_dbHandle = sqlite_open($config->file, 0666, $error)) {
             return $this->_dbHandle;
         }
 
@@ -95,8 +88,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        if($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle))
-        {
+        if ($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle)) {
             return $resource;
         }
         
@@ -159,10 +151,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function parseSelect(array $sql)
     {
-        if(!empty($sql['join']))
-        {
-            foreach($sql['join'] as $val)
-            {
+        if (!empty($sql['join'])) {
+            foreach ($sql['join'] as $val) {
                 list($table, $condition, $op) = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }

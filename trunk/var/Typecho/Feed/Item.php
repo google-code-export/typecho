@@ -49,9 +49,8 @@ class Typecho_Feed_Item
 	*/
 	public function addElementArray($elementArray)
 	{
-		if(! is_array($elementArray)) return;
-		foreach ($elementArray as $elementName => $content) 
-		{
+		if (! is_array($elementArray)) return;
+		foreach ($elementArray as $elementName => $content) {
 			$this->addElement($elementName, $content);
 		}
 	}
@@ -113,23 +112,17 @@ class Typecho_Feed_Item
 	*/
 	public function setDate($date)
 	{
-		if(! is_numeric($date))
-		{
+		if (! is_numeric($date)) {
 			$date = strtotime($date);
 		}
 		
-		if($this->version == Typecho_Feed::ATOM1)
-		{
+		if ($this->version == Typecho_Feed::ATOM1) {
 			$tag    = 'updated';
 			$value  = date(Typecho_Feed::DATE_ATOM, $date);
-		}
-		elseif($this->version == Typecho_Feed::RSS2)
-		{
+		} elseif ($this->version == Typecho_Feed::RSS2) {
 			$tag    = 'pubDate';
 			$value  = date(Typecho_Feed::DATE_RSS, $date);
-		}
-		else
-		{
+		} else {
 			$tag    = 'dc:date';
 			$value  = date("Y-m-d", $date);
 		}
@@ -146,12 +139,9 @@ class Typecho_Feed_Item
 	*/
 	public function setLink($link)
 	{
-		if($this->version == Typecho_Feed::RSS2 || $this->version == Typecho_Feed::RSS1)
-		{
+		if ($this->version == Typecho_Feed::RSS2 || $this->version == Typecho_Feed::RSS1) {
 			$this->addElement('link', $link);
-		}
-		else
-		{
+		} else {
 			$this->addElement('link','',array('href'=>$link));
 			$this->addElement('id', Typecho_Feed_Writer::uuid($link,'urn:uuid:'));
 		} 

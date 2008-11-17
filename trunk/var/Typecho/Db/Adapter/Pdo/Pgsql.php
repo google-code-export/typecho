@@ -52,10 +52,8 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
      */
     public function parseSelect(array $sql)
     {
-        if(!empty($sql['join']))
-        {
-            foreach($sql['join'] as $val)
-            {
+        if (!empty($sql['join'])) {
+            foreach ($sql['join'] as $val) {
                 list($table, $condition, $op) = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }

@@ -33,12 +33,12 @@ class Typecho_Json
      */
 	private static function utf162utf8($utf16)
 	{
-        if(function_exists('mb_convert_encoding')) {
+        if (function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($utf16, 'UTF-8', 'UTF-16');
         }
         $bytes = (ord($utf16{0}) << 8) | ord($utf16{1});
 
-        switch(true) {
+        switch (true) {
             case ((0x7F & $bytes) == $bytes):
                 return chr(0x7F & $bytes);
 
@@ -63,11 +63,11 @@ class Typecho_Json
      */
     private static function utf82utf16($utf8)
     {
-        if(function_exists('mb_convert_encoding')) {
+        if (function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($utf8, 'UTF-16', 'UTF-8');
         }
 
-        switch(strlen($utf8)) {
+        switch (strlen($utf8)) {
             case 1:
                 return $utf8;
 
@@ -236,8 +236,8 @@ class Typecho_Json
                                             array_keys($var),
                                             array_values($var));
 
-                    foreach($properties as $property) {
-                        if(self::_is_error($property)) {
+                    foreach ($properties as $property) {
+                        if (self::_is_error($property)) {
                             return $property;
                         }
                     }
@@ -248,8 +248,8 @@ class Typecho_Json
                 // treat it like a regular array
                 $elements = array_map(array('Typecho_Json', '_encode'), $var);
 
-                foreach($elements as $element) {
-                    if(self::_is_error($element)) {
+                foreach ($elements as $element) {
+                    if (self::_is_error($element)) {
                         return $element;
                     }
                 }
@@ -263,8 +263,8 @@ class Typecho_Json
                                         array_keys($vars),
                                         array_values($vars));
 
-                foreach($properties as $property) {
-                    if(self::_is_error($property)) {
+                foreach ($properties as $property) {
+                    if (self::_is_error($property)) {
                         return $property;
                     }
                 }
@@ -391,7 +391,7 @@ class Typecho_Json
                     return $utf8;
 
                 } elseif (preg_match('/^\[.*\]$/s', $str) || preg_match('/^\{.*\}$/s', $str)) {
-                    if ($str{0} == '[') {
+                    if ($str {0} == '[') {
                         $stk = array(self::SERVICES_JSON_IN_ARR);
                         $arr = array();
                     } else {
@@ -422,7 +422,7 @@ class Typecho_Json
                         $top = end($stk);
                         $substr_chrs_c_2 = substr($chrs, $c, 2);
 
-                        if (($c == $strlen_chrs) || (($chrs{$c} == ',') && ($top['what'] == self::SERVICES_JSON_SLICE))) {
+                        if (($c == $strlen_chrs) || (($chrs {$c} == ',') && ($top['what'] == self::SERVICES_JSON_SLICE))) {
                             $slice = substr($chrs, $top['where'], ($c - $top['where']));
                             array_push($stk, array('what' => self::SERVICES_JSON_SLICE, 'where' => ($c + 1), 'delim' => false));
 
@@ -444,23 +444,23 @@ class Typecho_Json
 
                             }
 
-                        } elseif ((($chrs{$c} == '"') || ($chrs{$c} == "'")) && ($top['what'] != self::SERVICES_JSON_IN_STR)) {
+                        } elseif ((($chrs {$c} == '"') || ($chrs{$c} == "'")) && ($top['what'] != self::SERVICES_JSON_IN_STR)) {
                             array_push($stk, array('what' => self::SERVICES_JSON_IN_STR, 'where' => $c, 'delim' => $chrs{$c}));
 
-                        } elseif (($chrs{$c} == $top['delim']) &&
+                        } elseif (($chrs {$c} == $top['delim']) &&
                                  ($top['what'] == self::SERVICES_JSON_IN_STR) &&
                                  ((strlen(substr($chrs, 0, $c)) - strlen(rtrim(substr($chrs, 0, $c), '\\'))) % 2 != 1)) {
                             array_pop($stk);
 
-                        } elseif (($chrs{$c} == '[') &&
+                        } elseif (($chrs {$c} == '[') &&
                                  in_array($top['what'], array(self::SERVICES_JSON_SLICE, self::SERVICES_JSON_IN_ARR, self::SERVICES_JSON_IN_OBJ))) {
                             array_push($stk, array('what' => self::SERVICES_JSON_IN_ARR, 'where' => $c, 'delim' => false));
-                        } elseif (($chrs{$c} == ']') && ($top['what'] == self::SERVICES_JSON_IN_ARR)) {
+                        } elseif (($chrs {$c} == ']') && ($top['what'] == self::SERVICES_JSON_IN_ARR)) {
                             array_pop($stk);
-                        } elseif (($chrs{$c} == '{') &&
+                        } elseif (($chrs {$c} == '{') &&
                                  in_array($top['what'], array(self::SERVICES_JSON_SLICE, self::SERVICES_JSON_IN_ARR, self::SERVICES_JSON_IN_OBJ))) {
                             array_push($stk, array('what' => self::SERVICES_JSON_IN_OBJ, 'where' => $c, 'delim' => false));
-                        } elseif (($chrs{$c} == '}') && ($top['what'] == self::SERVICES_JSON_IN_OBJ)) {
+                        } elseif (($chrs {$c} == '}') && ($top['what'] == self::SERVICES_JSON_IN_OBJ)) {
                             array_pop($stk);
                         } elseif (($substr_chrs_c_2 == '/*') &&
                                  in_array($top['what'], array(self::SERVICES_JSON_SLICE, self::SERVICES_JSON_IN_ARR, self::SERVICES_JSON_IN_OBJ))) {
@@ -499,7 +499,7 @@ class Typecho_Json
     {
         $encoded_value = self::_encode($value);
 
-        if(self::_is_error($encoded_value)) {
+        if (self::_is_error($encoded_value)) {
             return $encoded_value;
         }
 
@@ -515,13 +515,10 @@ class Typecho_Json
      */
 	public static function encode($var)
 	{
-        if(function_exists('json_encode'))
-        {
+        if (function_exists('json_encode')) {
             /** from php 5.1 */
             return json_encode($var);
-        }
-        else
-        {
+        } else {
             return self::_encode($var);
         }
 	}
@@ -535,13 +532,10 @@ class Typecho_Json
      */
 	public static function decode($var)
 	{
-        if(function_exists('json_decode'))
-        {
+        if (function_exists('json_decode')) {
             /** from php 5.1 */
             return json_decode($var);
-        }
-        else
-        {
+        } else {
             return self::_decode($var);
         }
 	}
