@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_Interface_Action_Widget
+class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
      * 输出表单结构
@@ -29,7 +29,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Options/Reading.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::pathToUrl('/Options/Reading.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 文章日期格式 */
@@ -55,11 +55,9 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         摘要的文字取决于你在文章中使用分隔符的位置.'));
         $form->addInput($feedFullArticlesLayout);
         
-        /** 动作 */
-        $form->addInput(new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'update'));
-        
         /** 提交按钮 */
-        $form->addItem(new Typecho_Widget_Helper_Form_Element_Submit(_t('保存设置')));
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
+        $form->addItem($submit);
         
         return $form;
     }
@@ -76,17 +74,16 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         try {
             $this->form()->validate();
         } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack();
+            $this->response->goBack();
         }
     
-        $settings = $this->form()->getParameters();
-        unset($settings['do']);
+        $settings = $this->request->from('postDateFormat', 'pageSize', 'postsListSize', 'feedFullArticlesLayout');
         foreach ($settings as $name => $value) {
-            $this->update(array('value' => $value), $this->db->sql()->where('`name` = ?', $name));
+            $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
 
-        Typecho_API::factory('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
-        Typecho_API::goBack();
+        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->response->goBack();
     }
 
     /**
@@ -95,10 +92,9 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
      * @access public
      * @return void
      */
-    public function action()
+    public function init()
     {
-        Typecho_API::factory('Widget_Users_Current')->pass('administrator');
-        Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updateReadingSettings'));
-        Typecho_API::redirect($this->options->adminUrl);
+        $this->user->pass('administrator');
+        $this->onPost()->updateReadingSettings();
     }
 }

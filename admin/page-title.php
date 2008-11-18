@@ -1,6 +1,6 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-<div class="typecho-page-title message <?php $notice->noticeType(); ?>" ondblclick="this.style.display='none'">
+<div class="typecho-page-title message <?php $notice->noticeType(); ?> popup">
 <ul>
     <?php $notice->lists(); ?>
 </ul>

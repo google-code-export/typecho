@@ -32,8 +32,8 @@ class Widget_Do extends Typecho_Widget
             
             if (class_exists($widgetName)) {
                 $reflectionWidget =  new ReflectionClass($widgetName);
-                if ($reflectionWidget->implementsInterface('Widget_Interface_Action_' . $prefix)) {
-                    Typecho_Widget::widget($widgetName);
+                if ($reflectionWidget->implementsInterface('Widget_Interface_Do')) {
+                    $this->widget($widgetName);
                     return;
                 }
             }

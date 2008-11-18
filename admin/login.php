@@ -9,7 +9,13 @@ include 'header.php';
             <form action="<?php $options->index('Login.do'); ?>" method="post" name="login">
                 <fieldset>
                     <?php if(!$user->hasLogin()): ?>
-                    <?php include 'notice.php'; ?>
+                    <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
+                    <div class="message <?php $notice->noticeType(); ?>" ondblclick="this.style.display='none'">
+                    <ul>
+                        <?php $notice->lists(); ?>
+                    </ul>
+                    </div>
+                    <?php endif; ?>
                     <legend><?php _e('后台登录'); ?></legend>
                     <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" id="name" name="name" class="text" /></p>
                     <p><label for="password"><?php _e('密码'); ?>:</label> <input type="password" id="password" name="password" class="text" /></p>

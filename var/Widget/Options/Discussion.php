@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Discussion extends Widget_Abstract_Options implements Widget_Interface_Action_Widget
+class Widget_Options_Discussion extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
      * 输出表单结构
@@ -69,7 +69,9 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsPostTimeout = new Typecho_Widget_Helper_Form_Element_Select('commentsPostTimeout', array('0' => _t('永不关闭'), '86400' => _t('一天后关闭'),
         '259200' => _t('三天后关闭'), '1296000' => _t('半个月后关闭'), '2592000' => _t('一个月后关闭'), '7776000' => _t('三个月后关闭'),
         '15552000' => _t('半年后关闭'), '31536000' => _t('一年后关闭')),
-        $this->options->commentsPostTimeout, _t('在文章发布一段时间后自动关闭评论和广播功能'));
+        $this->options->commentsPostTimeout, _t('在文章发布一段时间后自动关闭反馈功能'),
+        _t('打开此选项后,发布时间超过此设置文章的反馈功能将被关闭.<br />
+        此选项可以帮助你抵御一部分垃圾评论,但也有可能会让你失去一部分优秀的评论.'));
         $form->addInput($commentsPostTimeout);
         
         /** 对单一IP的评论时间间隔限制 */
@@ -105,10 +107,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $this->options->commentsIpBlackList,
         _t('评论者IP黑名单'), _t('站点描述将显示在网页代码的头部.'));
         $form->addInput($commentsIpBlackList);
-        
-        /** 动作 */
-        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'update');
-        $form->addInput($do);
         
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
@@ -152,6 +150,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
     public function init()
     {
         $this->user->pass('administrator');
-        $this->onRequest('do', 'update')->updateDiscussionSettings();
+        $this->onPost()->updateDiscussionSettings();
     }
 }
