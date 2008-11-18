@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Action_Widget
+class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
      * 输出表单结构
@@ -54,10 +54,6 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         打开此功能可以让你的链接看上去完全是静态地址.'));
         $form->addInput($rewrite);
         
-        /** 动作 */
-        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'update');
-        $form->addInput($do);
-        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
@@ -91,6 +87,6 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     public function init()
     {
         $this->user->pass('administrator');
-        $this->onRequest('do', 'update')->updateGeneralSettings();
+        $this->onPost()->updateGeneralSettings();
     }
 }
