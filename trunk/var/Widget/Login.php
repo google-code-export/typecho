@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Action_Widget
+class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
 {
     /**
      * 初始化函数

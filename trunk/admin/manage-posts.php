@@ -10,7 +10,14 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate">操作：<a href="#">全选</a>，<a href="#">反选</a>，<a href="#">删除选中项</a></p>
+                    <p class="operate">操作: 
+                        <a href="#">全选</a>, 
+                        <a href="#">反选</a>, 
+                        <a href="#">删除选中项</a><?php if($user->pass('editor', true)):
+                        if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no">查看我的文章</a>
+                        <?php else: ?>, <a href="?seeAll=yes">查看所有人的文章</a><?php endif;
+                        endif; ?>
+                    </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
                     <select name="category">

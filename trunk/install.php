@@ -37,74 +37,72 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
         <div class="container">
             <div class="column-14 start-06 typecho-install">
             <?php if(isset($_GET['finish'])): ?>
-                <h1 class="typecho-install-title">安装成功！</h1>
+                <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="session">
-                    <p>您的用户名是：<em>明城</em></p>
-                    <p>您的密码是：<em>12345679</em></p>
+                    <p><?php _e('您的用户名是'); ?>:<em>明城</em></p>
+                    <p><?php _e('您的密码是'); ?>:<em>12345679</em></p>
                     </div>
 
                     <div class="session">
-                    <p>您可以将下面两个链接保存到您的收藏夹：</p>
+                    <p><?php _e('您可以将下面两个链接保存到您的收藏夹'); ?>:</p>
                     <ul>
-                        <li><a href="#">点击这里访问您的控制面板</a></li>
-                        <li><a href="#">点击这里查看您的 Blog</a></li>
+                        <li><a href="/admin/index.php"><?php _e('点击这里访问您的控制面板'); ?></a></li>
+                        <li><a href="/index.php"><?php _e('点击这里查看您的 Blog'); ?></a></li>
                     </ul>
                     </div>
 
-                    <p>We hope you enjoy Typecho!</p>
+                    <p><?php _e('希望你能尽情享用 Typecho 带来的乐趣!'); ?></p>
                 </div>
             <?php elseif(isset($_GET['config'])): ?>
-                <form method="post" action="?finish">
-                    <h1 class="typecho-install-title">确认您的配置</h1>
+                <form method="post" action="?config">
+                    <h1 class="typecho-install-title"><?php _e('确认您的配置'); ?></h1>
                     <div class="typecho-install-body">
-                        <h2>数据库配置</h2>
+                        <h2><?php _e('数据库配置'); ?></h2>
                         <ul class="typecho-option">
                             <li>
-                            <label>数据库地址</label>
+                            <label class="typecho-label"><?php _e('数据库地址'); ?></label>
                             <input type="text" class="text" value="localhost"/>
-                            <p class="desption">您可能会使用 "localhost"</p>
+                            <p class="desption"><?php _e('您可能会使用 "localhost"'); ?></p>
                             </li>
                             <li>
-                            <label>数据库用户名</label>
+                            <label class="typecho-label"><?php _e('数据库用户名'); ?></label>
                             <input type="text" class="text"  />
+                            <p class="desption"><?php _e('您可能会使用 "root"'); ?></p>
                             </li>
                             <li>
-                            <label>数据库密码</label>
+                            <label class="typecho-label"><?php _e('数据库密码'); ?></label>
                             <input type="text" class="text"  />
                             </li>
 
                             <li>
-                            <label>数据库名 </label>
+                            <label class="typecho-label"><?php _e('数据库名'); ?></label>
                             <input type="text" class="text"  />
-                            <p class="desption">请您指定数据库名称</p>
+                            <p class="desption"><?php _e('请您指定数据库名称'); ?></p>
                             </li>
                             <li>
-                            <label>数据库前缀</label>
+                            <label class="typecho-label"><?php _e('数据库前缀'); ?></label>
                             <input type="text" class="text mini"  />
                             </li>
                         </ul>
 
-                        <h2>创建您的管理员帐号</h2>
+                        <h2><?php _e('创建您的管理员帐号'); ?></h2>
                         <ul class="typecho-option">
                             <li>
-                            <label>用户名</label>
+                            <label class="typecho-label"><?php _e('用户名'); ?></label>
                             <input type="text" class="text" />
-                            <div class="message error">您的用户名错误<a href="#">link</a></div>
                             </li>
                             <li>
-                            <label>密码</label>
+                            <label class="typecho-label"><?php _e('密码'); ?></label>
                             <input type="text" class="text" />
-                            <div class="message notice">您的<a href="#">用户名错</a>误</div>
                             </li>
                             <li>
-                            <label>邮件地址</label>
+                            <label class="typecho-label"><?php _e('邮件地址'); ?></label>
                             <input type="text" class="text" />
-                            <div class="message success">您的<a href="#">用户</a>名错误</div>
                             </li>
                         </ul>
                     </div>
-                     <p class="submit"><button>确认，开始安装</button></p>
+                     <p class="submit"><button type="submit"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
                 </form>
             <?php else: ?>
                 <form method="post" action="?config">
