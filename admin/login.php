@@ -10,7 +10,7 @@ include 'header.php';
                 <fieldset>
                     <?php if(!$user->hasLogin()): ?>
                     <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-                    <div class="message <?php $notice->noticeType(); ?>" ondblclick="this.style.display='none'">
+                    <div class="message <?php $notice->noticeType(); ?>">
                     <ul>
                         <?php $notice->lists(); ?>
                     </ul>

@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-22 start-02">
-                <?php Typecho_Widget::widget('Widget_Options_Reading')->form()->render(); ?>
+                <?php Typecho_Widget::widget('Widget_Options_Writing')->form()->render(); ?>
             </div>
         </div>
     </div>
