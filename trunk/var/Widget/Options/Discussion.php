@@ -111,7 +111,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $form->addInput($do);
         
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
         
         return $form;
@@ -129,7 +129,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         try {
             $this->form()->validate();
         } catch (Typecho_Widget_Exception $e) {
-            $this->response->goBack();
+            $this->response->goBack('typecho-option-item-' . key($e->getMessages()));
         }
     
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShowUrl', 'commentsUrlNofollow',

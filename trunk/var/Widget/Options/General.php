@@ -59,7 +59,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $form->addInput($do);
         
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
         
         return $form;

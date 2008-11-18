@@ -524,7 +524,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function header()
     {
-        $header = new Typecho_Widget_Helper_Decorator_Header();
+        $header = new Typecho_Widget_Helper_Header();
         $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->options->description)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options->keywords)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))

@@ -199,7 +199,7 @@ class Typecho_Response
     {
         //判断来源
         if (!empty($_SERVER['HTTP_REFERER'])) {
-            self::redirect($_SERVER['HTTP_REFERER'] . $anchor, false);
+            self::redirect($_SERVER['HTTP_REFERER'] . (empty($anchor) ? NULL : '#' . $anchor), false);
         }
     }
     
