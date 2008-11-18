@@ -10,10 +10,7 @@
  */
 
 /** Typecho_Widget_Helper_Decorator_Form_Default */
-require_once 'Typecho/Widget/Helper/Decorator/Form/Default.php';
-
-/** Typecho_Request */
-require_once 'Typecho/Request.php';
+require_once 'Typecho/Widget/Helper/Layout.php';
 
 /**
  * 表单元素抽象类

@@ -129,7 +129,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         try {
             $this->form()->validate();
         } catch (Typecho_Widget_Exception $e) {
-            $this->response->goBack('typecho-option-item-' . key($e->getMessages()));
+            $this->response->goBack();
         }
     
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShowUrl', 'commentsUrlNofollow',
