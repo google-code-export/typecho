@@ -262,7 +262,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         array('type' => 'trackback', 'permalink' => $linkPath), $this->options->index);
         
         /** 生成静态链接 */
-        $value['permalink'] = Typecho_Common::pathToUrl($linkPath, $this->options->index);
+        $value['permalink'] = Typecho_Common::url($linkPath, $this->options->index);
         
         /** 生成聚合链接 */
         /** RSS 2.0 */

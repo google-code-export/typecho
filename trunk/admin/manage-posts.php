@@ -11,9 +11,9 @@ include 'menu.php';
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">操作: 
-                        <a href="#">全选</a>, 
-                        <a href="#">反选</a>, 
-                        <a href="#">删除选中项</a><?php if($user->pass('editor', true)):
+                        <span class="operate-button select-all">全选</span>, 
+                        <span class="operate-button select-reverse">反选</span>, 
+                        <span class="operate-button select-submit">删除选中项</span><?php if($user->pass('editor', true)):
                         if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no">查看我的文章</a>
                         <?php else: ?>, <a href="?seeAll=yes">查看所有人的文章</a><?php endif;
                         endif; ?>
@@ -31,6 +31,7 @@ include 'menu.php';
                     <select name="status">
                         <option value=""><?php _e('所有文章'); ?></option>
                         <option value="published"<?php if(Typecho_Request::getParameter('status') == 'published'): ?> selected="true"<?php endif; ?>><?php _e('已发布'); ?></option>
+                        <option value="waiting"<?php if(Typecho_Request::getParameter('status') == 'waiting'): ?> selected="true"<?php endif; ?>><?php _e('待审核'); ?></option>
                         <option value="draft"<?php if(Typecho_Request::getParameter('status') == 'draft'): ?> selected="true"<?php endif; ?>><?php _e('草稿'); ?></option>
                     </select>
                     
@@ -39,7 +40,8 @@ include 'menu.php';
                 </form>
                 </div>
             
-                <table class="typecho-list-table">
+                <form method="post" class="operate-form">
+                <table class="typecho-list-table" class="operate-table">
                     <colgroup>
                         <col width="25"/>
                         <col width="400"/>
@@ -73,6 +75,8 @@ include 'menu.php';
                             <td><?php $posts->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('post' == $posts->type):
                         _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
+                        elseif('waiting' == $posts->type):
+                        _e('待审核');
                         else:
                         _e('草稿');
                         endif;?></td>
@@ -85,6 +89,7 @@ include 'menu.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+                </form>
             
             <?php if($posts->have()): ?>
             <div class="typecho-pager">

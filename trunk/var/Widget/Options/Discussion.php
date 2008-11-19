@@ -29,7 +29,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::pathToUrl('/Options/Discussion.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Discussion.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 评论日期格式 */
@@ -147,9 +147,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
      * @access public
      * @return void
      */
-    public function init()
+    public function action()
     {
         $this->user->pass('administrator');
         $this->onPost()->updateDiscussionSettings();
+        $this->response->redirect($this->options->adminUrl);
     }
 }

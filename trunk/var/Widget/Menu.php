@@ -102,6 +102,7 @@ class Widget_Menu extends Typecho_Widget
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
+            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), _t('撰写新文章'), '/admin/write-post.php?cid', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
@@ -119,7 +120,7 @@ class Widget_Menu extends Typecho_Widget
         array(
             array(_t('基本'), _t('基本设置'), '/admin/option-general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), '/admin/option-discussion.php', 'administrator'),
-            array(_t('文章'), _t('文章设置'), '/admin/option-reading.php', 'administrator'),
+            array(_t('文章'), _t('阅读设置'), '/admin/option-reading.php', 'administrator'),
             array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
         //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
@@ -137,7 +138,7 @@ class Widget_Menu extends Typecho_Widget
         
         foreach ($childMenu as $parentKey => $parentVal) {
             foreach ($parentVal as $childKey => $childVal) {
-                $link = Typecho_Common::pathToUrl($childVal[2], $adminUrl);
+                $link = Typecho_Common::url($childVal[2], $adminUrl);
                 if (0 === strpos($url, $link) && strlen($link) > $match) {
                     $this->_currentParent =  $parentKey;
                     $this->_currentChild =  $childKey;
@@ -181,25 +182,27 @@ class Widget_Menu extends Typecho_Widget
         
         foreach ($this->_parentMenu as $key => $title) {
             $current = reset($this->_childMenu[$key]);
-            $link = Typecho_Common::pathToUrl($current[2], $adminUrl);
+            $link = Typecho_Common::url($current[2], $adminUrl);
 
-            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\r\n";
+            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\n";
             
-            echo "<dd><ul>\r\n";
+            echo "<dd><ul>\n";
             foreach ($this->_childMenu[$key] as $inkey => $menu) {
-                $link = Typecho_Common::pathToUrl($menu[2], $adminUrl);
-                
-                if (is_array($menu[0])) {
-                    list($widget, $method) = $menu[0];
-                    $title = Typecho_Widget::widget($widget)->$method();
-                } else {
-                    $title = $menu[0];
+                if (!isset($menu[4]) || !$menu[4] || ($key == $this->_currentParent && $inkey == $this->_currentChild)) {
+                    $link = Typecho_Common::url($menu[2], $adminUrl);
+                    
+                    if (is_array($menu[0])) {
+                        list($widget, $method) = $menu[0];
+                        $title = Typecho_Widget::widget($widget)->$method();
+                    } else {
+                        $title = $menu[0];
+                    }
+                    
+                    echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
+                    "><a href=\"{$link}\" title=\"{$title}\">" . (isset($menu[4]) ? "<span class=\"hotkey\">{$menu[4]}</span>" : NULL) . "{$title}</a></li>\n";
                 }
-                
-                echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
-                "><a href=\"{$link}\" title=\"{$title}\">" . (isset($menu[4]) ? "<span class=\"hotkey\">{$menu[4]}</span>" : NULL) . "{$title}</a></li>\r\n";
             }
-            echo "</ul></dd>\r\n";
+            echo "</ul></dd>\n";
         }
     }
 }

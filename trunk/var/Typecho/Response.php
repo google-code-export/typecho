@@ -219,7 +219,7 @@ class Typecho_Response
             $parsed = parse_url($url);
             
             /** 在路径后面强制加上斜杠 */
-            $path = empty($parsed['path']) ? '/' : Typecho_Common::pathToUrl(NULL, $parsed['path']);
+            $path = empty($parsed['path']) ? '/' : Typecho_Common::url(NULL, $parsed['path']);
         }
         
         /** 对数组型COOKIE的写入支持 */
@@ -250,7 +250,7 @@ class Typecho_Response
             $parsed = parse_url($url);
             
             /** 在路径后面强制加上斜杠 */
-            $path = empty($parsed['path']) ? '/' : Typecho_Common::pathToUrl(NULL, $parsed['path']);
+            $path = empty($parsed['path']) ? '/' : Typecho_Common::url(NULL, $parsed['path']);
         }
 
         /** 对数组型COOKIE的删除支持 */

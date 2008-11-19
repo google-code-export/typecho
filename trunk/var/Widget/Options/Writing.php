@@ -29,7 +29,7 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::pathToUrl('/Options/Writing.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Writing.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 编辑器大小 */
@@ -102,5 +102,6 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
     {
         $this->user->pass('administrator');
         $this->onPost()->updateWritingSettings();
+        $this->response->redirect($this->options->adminUrl);
     }
 }

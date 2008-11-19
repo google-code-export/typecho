@@ -108,8 +108,11 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             case 'published':
                 $select->where('table.contents.type = ?', 'post');
                 break;
+            case 'waiting':
+                $select->where('table.contents.type = ?', 'waiting');
+                break;
             default:
-                $select->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'draft');
+                $select->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?', 'post', 'draft', 'waiting');
                 break;
         }
         
@@ -145,7 +148,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      */
     public function pageNav()
     {
-        $query = Typecho_Common::pathToUrl('manage-posts.php?' . http_build_query($this->_filterQuery) . '&page={page}',
+        $query = Typecho_Common::url('manage-posts.php?' . http_build_query($this->_filterQuery) . '&page={page}',
         $this->options->adminUrl);
         
         /** 使用盒状分页 */

@@ -9,4 +9,12 @@
  * @license GNU General Public License 2.0
  */
 interface Widget_Interface_Do
-{}
+{
+    /**
+     * 接口需要实现的入口函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function action();
+}
