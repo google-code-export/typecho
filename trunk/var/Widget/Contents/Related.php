@@ -32,7 +32,9 @@ class Widget_Contents_Related extends Widget_Abstract_Contents
     
         if ($this->parameter->tags) {
             $tagsGroup = implode(',', Typecho_API::arrayFlatten($this->parameter->tags, 'mid'));
-            $this->db->fetchAll($this->select()->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+            $this->db->fetchAll($this->select()
+            ->selectAlso(array('COUNT(table.contents.cid)' => 'contentsNum'))
+            ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
             ->where('table.relationships.mid in (' . $tagsGroup . ')')
             ->where('table.contents.cid <> ?', $this->parameter->cid)
             ->where('table.contents.password IS NULL')

@@ -102,7 +102,7 @@ class Widget_Menu extends Typecho_Widget
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
-            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), _t('撰写新文章'), '/admin/write-post.php?cid', 'contributor', true),
+            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), _t('编辑文章'), '/admin/write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
@@ -193,13 +193,13 @@ class Widget_Menu extends Typecho_Widget
                     
                     if (is_array($menu[0])) {
                         list($widget, $method) = $menu[0];
-                        $title = Typecho_Widget::widget($widget)->$method();
+                        $title = $this->widget($widget)->$method();
                     } else {
                         $title = $menu[0];
                     }
                     
                     echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
-                    "><a href=\"{$link}\" title=\"{$title}\">" . (isset($menu[4]) ? "<span class=\"hotkey\">{$menu[4]}</span>" : NULL) . "{$title}</a></li>\n";
+                    "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></li>\n";
                 }
             }
             echo "</ul></dd>\n";
