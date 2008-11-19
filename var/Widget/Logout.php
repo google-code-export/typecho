@@ -25,7 +25,7 @@ class Widget_Logout extends Widget_Abstract_Users implements Widget_Interface_Do
      * @access public
      * @return void
      */
-    public function init()
+    public function action()
     {
         $this->user->logout();
         $this->response->redirect($this->options->index);

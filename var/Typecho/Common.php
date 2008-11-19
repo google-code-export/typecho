@@ -531,7 +531,7 @@ class Typecho_Common
      * @param string $prefix 前缀
      * @return string
      */
-    public static function pathToUrl($path, $prefix)
+    public static function url($path, $prefix)
     {
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
         return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));

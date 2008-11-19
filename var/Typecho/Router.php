@@ -113,7 +113,7 @@ class Typecho_Router
             $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
         }
 
-        return Typecho_Common::pathToUrl(vsprintf($route['format'], $pattern), $prefix);
+        return Typecho_Common::url(vsprintf($route['format'], $pattern), $prefix);
     }
     
     /**

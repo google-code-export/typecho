@@ -25,7 +25,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
      * @access public
      * @return void
      */
-    public function init()
+    public function action()
     {
         /** 如果已经登录 */
         if ($this->user->hasLogin()) {
@@ -59,8 +59,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         } else {
             $this->widget('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
-            $this->response->redirect(Typecho_Common::pathToUrl('login.php', $this->options->adminUrl)
-            . ((NULL === $this->request->referer) ? 
+            $this->response->redirect($this->options->loginUrl . ((NULL === $this->request->referer) ? 
             NULL : '?referer=' . urlencode($this->request->referer)));
         }
         
@@ -68,7 +67,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         if (NULL != $this->request->referer) {
             $this->response->redirect($this->request->referer);
         } else {
-            $this->response->redirect(Typecho_Common::pathToUrl('index.php', $this->options->adminUrl));
+            $this->response->redirect($this->options->adminUrl);
         }
     }
 }

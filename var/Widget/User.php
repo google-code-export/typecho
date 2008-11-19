@@ -185,7 +185,7 @@ class Widget_User extends Typecho_Widget
             if ($return) {
                 return false;
             } else {
-                $this->response->redirect(Typecho_Common::pathToUrl('/login.php', $this->widget('Widget_Options')->adminUrl)
+                $this->response->redirect($this->widget('Widget_Options')->loginUrl
                 . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
             }
         }

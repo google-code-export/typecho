@@ -29,7 +29,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::pathToUrl('/Options/General.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/General.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 站点名称 */
@@ -84,9 +84,10 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
      * @access public
      * @return void
      */
-    public function init()
+    public function action()
     {
         $this->user->pass('administrator');
         $this->onPost()->updateGeneralSettings();
+        $this->response->redirect($this->options->adminUrl);
     }
 }
