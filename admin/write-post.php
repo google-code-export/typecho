@@ -14,12 +14,12 @@ include 'menu.php';
                 <div class="typecho-post-area">
                     <form action="" method="post">
                         <label><?php _e('标题'); ?></label>
-                        <p><input type="text" vlaue="" class="title" /></p>
+                        <p><input type="text" value="" class="title" /></p>
                         <label><?php _e('内容'); ?></label>
                         <p><textarea cols="100" rows="15"></textarea></p>
                         <p class="submit">
-                            <button><?php _e('保存'); ?></button>
-                            <button><?php _e('发布'); ?></button>
+                            <button><?php _e('保存并继续编辑'); ?></button>
+                            <button><?php _e('发布这篇文章 &raquo;'); ?></button>
                         </p>
                     </form>
                 </div>                    

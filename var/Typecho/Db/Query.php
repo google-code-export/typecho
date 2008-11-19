@@ -50,6 +50,14 @@ class Typecho_Db_Query
      * @var string
      */
     private $_prefix;
+    
+    /**
+     * 数据库关键字
+     * 
+     * @access private
+     * @var string
+     */
+    private $_keywords;
 
     /**
      * 构造函数,引用数据库适配器作为内部数据
@@ -62,6 +70,7 @@ class Typecho_Db_Query
     {
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
+        $this->_keywords = self::KEYWORDS;
         
         $this->_sqlPreBuild = array(
             'action' => NULL,
@@ -134,7 +143,7 @@ class Typecho_Db_Query
     public function filterColumnCallback(array $matches)
     {
         if (empty($matches[1]) && empty($matches[4]) && !is_numeric($matches[3][0]) &&
-        !preg_match('/^(' . self::KEYWORDS . ')$/i', $matches[3])) {
+        !preg_match('/^(' . $this->_keywords . ')$/i', $matches[3])) {
             $pos = strrpos($matches[3], '.');
             $pos = (false === $pos) ? 0 : $pos + 1;
             $column = $this->_adapter->quoteColumn(substr($matches[3], $pos));
@@ -154,6 +163,19 @@ class Typecho_Db_Query
     public function getAttribute($attributeName)
     {
         return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
+    }
+
+    /**
+     * 设置关键字
+     * 
+     * @access public
+     * @param string $keywords 关键字
+     * @return Typecho_Db_Query
+     */
+    public function setKeywords($keywords = self::KEYWORDS)
+    {
+        $this->_keywords = $keywords;
+        return $this;
     }
 
     /**
