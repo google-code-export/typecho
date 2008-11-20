@@ -237,6 +237,28 @@ button {
     color: #555;
 }
 
+/** 增加配置面板内部的错误样式 by 70 */
+.typecho-option .message {
+    padding: 2px 4px;
+    font-size: 12px;
+	width: 325px;
+	
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
 
 /**
  * 提示信息框
@@ -1155,28 +1177,6 @@ margin-top: 25px;
 
 .typecho-page-main .typecho-option-submit {
     border-bottom: none;
-}
-
-/** 增加配置面板内部的错误样式 by 70 */
-.typecho-page-main .typecho-option .message {
-    padding: 2px 4px;
-    font-size: 12px;
-	width: 325px;
-	
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
 }
 
 /**
