@@ -180,20 +180,20 @@ function exceptionHandler($exception)
         switch ($exception->getCode()) {
             case Typecho_Exception::FORBIDDEN:
                 header('HTTP/1.1 403 Forbidden');
-                $handle = '403';
+                $handle = 403;
                 break;
             case Typecho_Exception::NOTFOUND:
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
-                $handle = '404';
+                $handle = 404;
                 break;
             case Typecho_Exception::RUNTIME:
                 header('HTTP/1.1 500 Internal Server Error');
-                $handle = '500';
+                $handle = 500;
                 break;
             case Typecho_Exception::UNVAILABLE:
                 header('HTTP/1.1 503 Service Unvailable');
-                $handle = '503';
+                $handle = 503;
                 break;
             default:
                 $handle = 'error';

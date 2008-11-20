@@ -32,11 +32,17 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->user->pass('contributor');
     
         /** 获取文章内容 */
-        if ($this->request->cid) {
-            $this->db->fetchRow($this->select()->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?',
-            'post', 'draft', 'waiting')
+        if ($this->request->cid || 'update' == $this->request->do) {
+            $post = $this->db->fetchRow($this->select()
+            ->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?', 'post', 'draft', 'waiting')
             ->where('table.contents.cid = ?', $this->request->cid)
             ->limit(1), array($this, 'push'));
+            
+            if (!$post) {
+                $this->response->throwExceptionResponseByCode(_t('文章不存在'), 404);
+            } else if ($post && 'update' == $this->request->do && !$this->postIsWriteable()) {
+                $this->response->throwExceptionResponseByCode(_t('没有编辑权限'), 403);
+            }
         }
     }
     
@@ -49,17 +55,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function getMenuTitle()
     {
         return _t('编辑 "%s"', $this->title);
-    }
-    
-    /**
-     * 获取创建GMT时间戳
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getCreated()
-    {        
-        return isset($this->request->created) ? $this->request->created - $this->options->timezone : $this->options->gmtTime;
     }
     
     /**
@@ -227,9 +222,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         $contents = $this->request->from('password', 'created', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = (1 == $this->request->draft || !$this->user->pass('editor', true)) ? 'draft' : 'post';
+        $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
+        (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
         $contents['title'] = isset($this->request->title) ? _t('未命名文档') : $this->request->title;
-        $contents['created'] = $this->getCreated();
+        $contents['created'] = isset($this->request->created) ? $this->request->created - $this->options->timezone : $this->options->gmtTime;
     
         $insertId = $this->insert($contents);
         
@@ -247,20 +243,20 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 文章提示信息 */
         if ('post' == $contents['type']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被创建", $this->permalink, $this->title)
+            _t('文章 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
         } else if ('draft' == $contents['type']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t("草稿 '%s' 已经被保存", $this->title) :
+            _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         } else if ('waiting' == $contents['type']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t("文章 '%s' 已经发布, 等待审核", $this->title) :
+            _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
         }
 
         /** 跳转页面 */
-        if (1 == $this->request->continue) {
+        if ('draft' == $contents['type']) {
             $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php', $this->options->adminUrl));
@@ -275,49 +271,44 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function updatePost()
     {
-        $select = $this->select()
-        ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'draft')
-        ->where('table.contents.cid = ?', $this->request->cid)
-        ->limit(1);
-        
-        $exists = $this->db->fetchRow($select);
-        
-        if (!$exists) {
-            $this->response->throwExceptionResponseByCode(_t('文章不存在'), 404);
-        }
-    
         $contents = $this->request->from('password', 'created', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = (1 == Typecho_Request::getParameter('draft') || !$this->widget('Widget_Users_Current')->pass('editor', true)) ? 'draft' : 'post';
-        $contents['title'] = (NULL == Typecho_Request::getParameter('title')) ? 
-        _t('未命名文档') : Typecho_Request::getParameter('title');
-        $contents['created'] = $this->getCreated();
+        $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
+        (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
+        $contents['title'] = isset($this->request->title) ? _t('未命名文档') : $this->request->title;
+        $contents['created'] = isset($this->request->created) ? $this->request->created - $this->options->timezone : $this->options->gmtTime;
     
-        $updateRows = $this->update($contents, $this->db->where('cid = ?', Typecho_Request::getParameter('cid')));
-        $this->db->fetchRow($select, array($this, 'push'));
+        $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
 
         if ($updateRows > 0) {
+            /** 取出内容 */
+            $this->db->fetchRow($this->select()->where('cid = ?', $this->request->cid)->limit(1), array($this, 'push'));
+        
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'post');
+            $contents['category'] : array(), 'post' == $contents['type']);
             
             /** 插入标签 */
-            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'post');
+            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'post' == $contents['type']);
         }
 
         /** 文章提示信息 */
         if ('post' == $this->type) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t("文章 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新", $this->permalink, $this->title)
+            _t('文章 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else {
+        } else if ('draft' == $contents['type']) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t("草稿 '%s' 已经被保存", $this->title) :
+            _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+        } else if ('waiting' == $contents['type']) {
+            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+            _t('文章 "%s" 等待审核', $this->title) :
+            _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
         }
 
         /** 跳转页面 */
-        if (1 == Typecho_Request::getParameter('continue')) {
+        if ('draft' == $contents['type']) {
             $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php', $this->options->adminUrl));
@@ -332,14 +323,17 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function deletePost()
     {
-        $cid = Typecho_Request::getParameter('cid');
+        $cid = $this->request->cid;
         $deleteCount = 0;
 
         if ($cid) {
             /** 格式化文章主键 */
             $posts = is_array($cid) ? $cid : array($cid);
             foreach ($posts as $post) {
-                if ($this->delete($this->db->where('cid = ?', $post))) {
+            
+                $condition = $this->db->sql()->where('cid = ?', $post);
+                
+                if ($this->postIsWriteable($condition) && $this->delete($condition)) {
                     /** 删除分类 */
                     $this->setCategories($post, array(), 'post');
                     
@@ -352,6 +346,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     
                     $deleteCount ++;
                 }
+                
+                unset($condition);
             }
         }
         
@@ -360,7 +356,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-        Typecho_API::goBack();
+        $this->response->goBack();
     }
     
     /**
@@ -371,9 +367,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function action()
     {
-        Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertPost'));
-        Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updatePost'));
-        Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deletePost'));
+        $this->onRequest('do', 'insert')->insertPost();
+        $this->onRequest('do', 'update')->updatePost();
+        $this->onRequest('do', 'delete')->deletePost();
         $this->response->redirect($this->options->adminUrl);
     }
 }

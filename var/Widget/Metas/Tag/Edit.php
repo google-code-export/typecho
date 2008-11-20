@@ -232,7 +232,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->push($tag);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("标签 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被增加",
+        Typecho_API::factory('Widget_Notice')->set(_t("标签 '<a href=\"%s\">%s</a>' 已经被增加",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
@@ -266,7 +266,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->push($tag);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("标签 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新",
+        Typecho_API::factory('Widget_Notice')->set(_t("标签 '<a href=\"%s\">%s</a>' 已经被更新",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */

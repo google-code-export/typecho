@@ -35,7 +35,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 评论日期格式 */
         $commentDateFormat = new Typecho_Widget_Helper_Form_Element_Text('commentDateFormat', NULL, $this->options->commentDateFormat,
         _t('评论日期格式'), _t('这是一个默认的格式,当你在模板中调用显示评论日期方法时,如果没有指定日期格式,将按照此格式输出.<br />
-        具体写法请参考<a href="http://cn.php.net/manual/zh/function.date.php" target="_blank">PHP日期格式写法</a>.'));
+        具体写法请参考<a href="http://cn.php.net/manual/zh/function.date.php">PHP日期格式写法</a>.'));
         $form->addInput($commentDateFormat);
         
         /** 评论列表数目 */
@@ -55,7 +55,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $this->options->commentsUrlNofollow, _t('是否对评论者个人主页链接使用nofollow属性'),
         _t('当评论作者的个人主页地址在你的网站上呈现时,其在搜索引擎中可能被识别为外链地址.<br />
         过多的外链地址将导致你的网站在搜索引擎中被降权,打开此选项能帮助你解决此问题.<br />
-        更多关于nofollow的信息请参考<a href="http://en.wikipedia.org/wiki/Nofollow" target="_blank">wikipedia上的解释</a>.'));
+        更多关于nofollow的信息请参考<a href="http://en.wikipedia.org/wiki/Nofollow">wikipedia上的解释</a>.'));
         $form->addInput($commentsUrlNofollow);
         
         /** 评论审核 */

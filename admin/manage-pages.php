@@ -54,7 +54,7 @@ include 'menu.php';
                             <td><?php $pages->dateWord(); ?></td>
                             <td><?php $pages->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('page' == $pages->type):
-                        _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $pages->permalink);
+                        _e('<a href="%s">已发布</a>', $pages->permalink);
                         else:
                         _e('草稿');
                         endif;?></td>

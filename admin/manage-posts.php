@@ -74,7 +74,7 @@ include 'menu.php';
                             <td><?php $posts->category(' | '); ?></td>
                             <td><?php $posts->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('post' == $posts->type):
-                        _e('<a href="%s" title="在新页面打开" target="_blank">已发布</a>', $posts->permalink);
+                        _e('<a href="%s">已发布</a>', $posts->permalink);
                         elseif('waiting' == $posts->type):
                         _e('待审核');
                         else:
