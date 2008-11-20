@@ -83,7 +83,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         /** 页面提示信息 */
         if ('page' == $contents['type']) {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
-            _t("页面 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被创建", $this->permalink, $this->title)
+            _t("页面 '<a href=\"%s\">%s</a>' 已经被创建", $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
         } else {
             Typecho_API::factory('Widget_Notice')->set($insertId > 0 ? 
@@ -135,7 +135,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         /** 页面提示信息 */
         if ('page' == $this->type) {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 
-            _t("页面 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新", $this->permalink, $this->title)
+            _t("页面 '<a href=\"%s\">%s</a>' 已经被更新", $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         } else {
             Typecho_API::factory('Widget_Notice')->set($updateRows > 0 ? 

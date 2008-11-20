@@ -226,7 +226,7 @@ class Widget_Metas_Link_Edit extends Widget_Abstract_Metas implements Widget_Int
         $this->push($link);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("链接 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被增加",
+        Typecho_API::factory('Widget_Notice')->set(_t("链接 '<a href=\"%s\">%s</a>' 已经被增加",
         $this->slug, $this->name), NULL, 'success');
         
         /** 转向原页 */
@@ -261,7 +261,7 @@ class Widget_Metas_Link_Edit extends Widget_Abstract_Metas implements Widget_Int
         $this->push($link);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("链接 '<a href=\"%s\" target=\"_blank\">%s</a>' 已经被更新",
+        Typecho_API::factory('Widget_Notice')->set(_t("链接 '<a href=\"%s\">%s</a>' 已经被更新",
         $this->slug, $this->name), NULL, 'success');
         
         /** 转向原页 */
