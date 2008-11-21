@@ -2,15 +2,24 @@
 define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.3/8.11.11');
 
 /** 载入配置文件 */
-if(file_exists('config.inc.php'))
-{
+if (file_exists('config.inc.php')) {
     require_once 'config.inc.php';
     $configured = true;
-}
-else
-{
+} else {
     require_once 'config.sample.php';
     $configured = false;
+}
+
+/**
+ * 获取传递参数
+ * 
+ * @param string $name 参数名称
+ * @param string $default 默认值
+ * @return string
+ */
+function _v($name, $default = '')
+{
+    echo isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 
 $options = new stdClass();
@@ -27,16 +36,16 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
 <body>
 <div class="typecho-install-patch">
     <ol class="path">
-        <li<?php if(!isset($_GET['finish']) && !isset($_GET['config'])): ?> class="current"<?php endif; ?>><?php _e('欢迎使用'); ?></li>
-        <li<?php if(isset($_GET['config'])): ?> class="current"<?php endif; ?>><?php _e('输入您的配置'); ?></li>
-        <li<?php if(isset($_GET['finish'])): ?> class="current"<?php endif; ?>><?php _e('安装成功'); ?></li>
+        <li<?php if (!isset($_GET['finish']) && !isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('欢迎使用'); ?></li>
+        <li<?php if (isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('输入您的配置'); ?></li>
+        <li<?php if (isset($_GET['finish'])) : ?> class="current"<?php endif; ?>><?php _e('安装成功'); ?></li>
     </ol>
 </div>
 <div class="main">
     <div class="body body-950">
         <div class="container">
             <div class="column-14 start-06 typecho-install">
-            <?php if(isset($_GET['finish'])): ?>
+            <?php if (isset($_GET['finish'])) : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="session">
@@ -54,7 +63,12 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
 
                     <p><?php _e('希望你能尽情享用 Typecho 带来的乐趣!'); ?></p>
                 </div>
-            <?php elseif(isset($_GET['config'])): ?>
+            <?php  elseif (isset($_GET['config'])) : ?>
+            <?php
+                    if ('config' == Typecho_Request::getParameter('do')) {
+                        
+                    }
+            ?>
                 <form method="post" action="?config">
                     <h1 class="typecho-install-title"><?php _e('确认您的配置'); ?></h1>
                     <div class="typecho-install-body">
@@ -62,27 +76,28 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                         <ul class="typecho-option">
                             <li>
                             <label class="typecho-label"><?php _e('数据库地址'); ?></label>
-                            <input type="text" class="text" value="localhost"/>
+                            <input type="text" class="text" name="dbHost" value="<?php _v('dbHost', 'localhost'); ?>"/>
                             <p class="desption"><?php _e('您可能会使用 "localhost"'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('数据库用户名'); ?></label>
-                            <input type="text" class="text"  />
+                            <input type="text" class="text" name="dbUser" value="<?php _v('dbUser', 'root'); ?>" />
                             <p class="desption"><?php _e('您可能会使用 "root"'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('数据库密码'); ?></label>
-                            <input type="text" class="text"  />
+                            <input type="text" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
                             </li>
 
                             <li>
                             <label class="typecho-label"><?php _e('数据库名'); ?></label>
-                            <input type="text" class="text"  />
+                            <input type="text" class="text" name="dbName" value="<?php _v('dbName'); ?>" />
                             <p class="desption"><?php _e('请您指定数据库名称'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('数据库前缀'); ?></label>
-                            <input type="text" class="text mini"  />
+                            <input type="text" class="text mini" name="dbHost" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+                            <p class="desption"><?php _e('默认前缀是 "typecho_"'); ?></p>
                             </li>
                         </ul>
 
@@ -90,21 +105,18 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                         <ul class="typecho-option">
                             <li>
                             <label class="typecho-label"><?php _e('用户名'); ?></label>
-                            <input type="text" class="text" />
-                            </li>
-                            <li>
-                            <label class="typecho-label"><?php _e('密码'); ?></label>
-                            <input type="text" class="text" />
+                            <input type="text" name="userName" class="text" />
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('邮件地址'); ?></label>
-                            <input type="text" class="text" />
+                            <input type="text" name="userMail" class="text" />
                             </li>
                         </ul>
                     </div>
-                     <p class="submit"><button type="submit"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
+                    <input type="hidden" name="do" value="config" />
+                    <p class="submit"><button type="submit"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
                 </form>
-            <?php else: ?>
+            <?php  else: ?>
                 <form method="post" action="?config">
                 <h1 class="typecho-install-title"><?php _e('欢迎使用Typecho'); ?></h1>
                 <div class="typecho-install-body">

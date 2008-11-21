@@ -91,17 +91,15 @@ class Widget_User extends Typecho_Widget
      *
      * @access public
      * @param integer $uid 用户id
-     * @param string $password 用户密码
-     * @param string $authCode 认证码
      * @param integer $expire 过期时间
      * @return void
      */
-    public function login($uid, $password, $authCode, $expire = 0)
+    public function login($uid, $expire = 0)
     {
-        /** 保存登录信息,对密码采用sha1和md5双重加密 */
+        $authCode = sha1(Typecho_Common::randString(20));
         $this->response->setCookie('uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('password', sha1($password), $expire, $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('authCode', $authCode, $expire, $this->widget('Widget_Options')->siteUrl);
+        $this->response->setCookie('authCode', Typecho_Common::hash($authCode),
+        $expire, $this->widget('Widget_Options')->siteUrl);
         
         if ($this->db->fetchObject($this->db->select()
                 ->from('table.users')
@@ -131,9 +129,7 @@ class Widget_User extends Typecho_Widget
     public function logout()
     {
         $this->response->deleteCookie('uid', $this->widget('Widget_Options')->siteUrl);
-        $this->response->deleteCookie('password', $this->widget('Widget_Options')->siteUrl);
         $this->response->deleteCookie('authCode', $this->widget('Widget_Options')->siteUrl);
-        $this->response->deleteCookie('protect_password', $this->widget('Widget_Options')->siteUrl);
     }
     
     /**
@@ -147,14 +143,13 @@ class Widget_User extends Typecho_Widget
         if (NULL !== $this->_hasLogin) {
             return $this->_hasLogin;
         } else {
-            if (NULL !== $this->request->getCookie('uid') && NULL !== $this->request->getCookie('password')) {
+            if (NULL !== $this->request->getCookie('uid')) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
                 ->where('uid = ?', $this->request->getCookie('uid'))
                 ->limit(1));
 
-                if ($user && sha1($user['password']) == $this->request->getCookie('password')
-                && $user['authCode'] == $this->request->getCookie('authCode')) {
+                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->getCookie('authCode'))) {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }

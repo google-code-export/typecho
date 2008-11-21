@@ -29,7 +29,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      * @param string $nextWord 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
-     * @return unknown
+     * @return void
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...')
     {
