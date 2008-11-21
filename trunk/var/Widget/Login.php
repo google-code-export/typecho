@@ -41,8 +41,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         /** 截获验证异常 */
         try {
             $validator->run($this->request->from('name', 'password'));
-        }
-         catch (Typecho_Validate_Exception $e) {
+        } catch (Typecho_Validate_Exception $e) {
             /** 设置提示信息 */
             $this->widget('Widget_Notice')->set($e->getMessages());
             $this->response->goBack();
@@ -54,9 +53,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         ->limit(1));
         
         /** 比对密码 */
-        if ($user && $user['password'] == md5($this->request->password)) {
-            $this->user->login($user['uid'], $user['password'], sha1(Typecho_Common::randString(20)),
-            1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
+        if ($user && Typecho_Common::hashValidate($this->request->password, $user['password'])) {
+            $this->user->login($user['uid'], 1 == $this->request->remember ?
+            $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         } else {
             $this->widget('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
             $this->response->redirect($this->options->loginUrl . ((NULL === $this->request->referer) ? 

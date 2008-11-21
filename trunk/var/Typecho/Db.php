@@ -330,7 +330,7 @@ class Typecho_Db
      *
      * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return array
+     * @return stdClass
      */
     public function fetchRow($query, array $filter = NULL)
     {

@@ -66,7 +66,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * 表单验证器
      * 
      * @access public
-     * @var unknown
+     * @var array
      */
     public $rules = array();
     
@@ -138,7 +138,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * 
      * @access public
      * @param string $value 标题字符串
-     * @return Typecho_Widget_Helper_Decorator_Form_Default
+     * @return Typecho_Widget_Helper_Form_Element
      */
     public function label($value)
     {
@@ -176,7 +176,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * 
      * @access public
      * @param string $message 提示信息
-     * @return Typecho_Widget_Helper_Decorator_Form_Default
+     * @return Typecho_Widget_Helper_Form_Element
      */
     public function message($message)
     {
@@ -194,7 +194,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * 
      * @access public
      * @param string $description 描述信息
-     * @return Typecho_Widget_Helper_Decorator_Form_Default
+     * @return Typecho_Widget_Helper_Form_Element
      */
     public function description($description)
     {
@@ -229,7 +229,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @param Typecho_Widget_Helper_Layout $container 容器对象
      * @param string $name 表单元素名称
      * @param array $options 选择项
-     * @return Typecho_Widget_Helper_Layout
+     * @return Typecho_Widget_Helper_Form_Element
      */
     abstract public function input($name = NULL, array $options = NULL);
     

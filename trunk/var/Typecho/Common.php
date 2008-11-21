@@ -456,7 +456,7 @@ class Typecho_Common
     {
         $result = '';
         for ($i = 0; $i < $length; $i++) {
-            $result .= ord(rand(32, 126));
+            $result .= chr(rand(32, 126));
         }
         return $result;
     }
@@ -505,7 +505,7 @@ class Typecho_Common
     public static function hashValidate($from, $to)
     {
         if ('$T$' == substr($to, 0, 3)) {
-            $salt = substr($to, 0, 12);
+            $salt = substr($to, 3, 9);
             return self::hash($from, $salt) == $to;
         } else {
             return md5($from) == $to;

@@ -183,7 +183,7 @@ class Typecho_Db_Query
      *
      * @param string $table 需要连接的表
      * @param string $condition 连接条件
-     * @param string $po 连接方法(LEFT, RIGHT, INNER)
+     * @param string $op 连接方法(LEFT, RIGHT, INNER)
      * @return Typecho_Db_Query
      */
     public function join($table, $condition, $op = Typecho_Db::INNER_JOIN)
