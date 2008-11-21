@@ -57,7 +57,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * @access private
      * @var integer
      */
-    private $currentPage;
+    private $_currentPage;
 
     /**
      * 构造函数
@@ -68,7 +68,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     public function init()
     {
         $this->parameter->setDefault('pageSize=20');
-        $this->currentPage = $this->request->getParameter('page', 1);
+        $this->_currentPage = $this->request->getParameter('page', 1);
 
         /** 构建基础查询 */
         $select = $this->select();
@@ -135,7 +135,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->page($this->currentPage, $this->parameter->pageSize);
+        ->page($this->_currentPage, $this->parameter->pageSize);
         
         $this->db->fetchAll($select, array($this, 'push'));
     }
@@ -153,7 +153,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
-        $this->currentPage, $this->parameter->pageSize, $query);
-        $nav->render(_t('&laquo;'), _t('&raquo;'));
+        $this->_currentPage, $this->parameter->pageSize, $query);
+        $nav->render('&laquo;', '&raquo;');
     }
 }

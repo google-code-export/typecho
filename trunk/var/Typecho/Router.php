@@ -14,7 +14,7 @@ require_once 'Typecho/Common.php';
  * Typecho组件基类
  *
  * TODO 增加cache缓存
- * @package Route
+ * @package Router
  */
 class Typecho_Router
 {

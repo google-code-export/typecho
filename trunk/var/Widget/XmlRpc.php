@@ -12,11 +12,11 @@
  * 
  * @author qining
  * @category typecho
- * @package Widget_XmlRpc
+ * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface_Action_Widget
+class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
      * 入口执行方法

@@ -3,7 +3,7 @@
  * API方法,Typecho命名空间
  *
  * @category typecho
- * @package default
+ * @package Common
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
@@ -13,7 +13,7 @@
  * Typecho公用方法
  *
  * @category typecho
- * @package default
+ * @package Common
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */

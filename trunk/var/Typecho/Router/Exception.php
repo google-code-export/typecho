@@ -13,7 +13,7 @@ require_once 'Typecho/Exception.php';
 /**
  * 路由异常类
  *
- * @package Route
+ * @package Router
  */
 class Typecho_Router_Exception extends Typecho_Exception
 {}

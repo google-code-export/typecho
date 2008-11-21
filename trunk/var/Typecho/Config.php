@@ -3,7 +3,7 @@
  * 配置管理
  *
  * @category typecho
- * @package config
+ * @package Config
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$

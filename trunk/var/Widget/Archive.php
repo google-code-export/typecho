@@ -87,6 +87,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function select()
     {
         if ('feed' == Typecho_Router::$current) {
+            // 对feed输出加入限制条件
             return parent::select()->where('table.contents.`allowFeed` = ?', 'enable')
             ->where('table.contents.`password` IS NULL');
         } else {
@@ -407,8 +408,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 输出分页
      * 
      * @access public
-     * @param string $prevWord 上一页文字
-     * @param string $nextWord 下一页文字
+     * @param string $prev 上一页文字
+     * @param string $next 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
      * @return void
