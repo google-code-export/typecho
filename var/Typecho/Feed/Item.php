@@ -4,7 +4,7 @@
  * 
  * FeedItem class - Used as feed element in FeedWriter class
  *
- * @package         UnivarselFeedWriter
+ * @package         Feed
  * @author          Anis uddin Ahmad <anisniit@gmail.com>
  * @link            http://www.ajaxray.com/projects/rss
  */

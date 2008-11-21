@@ -1,6 +1,6 @@
 <?php
 /**
- * 文字输入表单项帮手
+ * 提交按钮表单项帮手
  * 
  * @category typecho
  * @package Widget
@@ -13,7 +13,7 @@
 require_once 'Typecho/Widget/Helper/Form/Element.php';
 
 /**
- * 文字输入表单项帮手类
+ * 提交按钮表单项帮手类
  * 
  * @category typecho
  * @package Widget

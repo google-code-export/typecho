@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 配置管理 */
-require_once 'Typecho/Config.php';
-
 /**
  * 路由器解析器
  * 

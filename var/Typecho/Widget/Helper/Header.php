@@ -14,7 +14,7 @@ require_once 'Typecho/Widget/Helper/Layout.php';
  * HTML文档头帮手
  * 
  * @category typecho
- * @package Typecho_Widget_Helper_Header
+ * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */

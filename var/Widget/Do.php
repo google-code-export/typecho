@@ -39,6 +39,6 @@ class Widget_Do extends Typecho_Widget
             }
         }
 
-        throw new Typecho_Widget_Exception(_t('动作%s不存在', $widgetName), Typecho_Exception::NOTFOUND);
+        $this->response->throwExceptionResponseByCode(_t('动作%s不存在', $widgetName), 404);
     }
 }

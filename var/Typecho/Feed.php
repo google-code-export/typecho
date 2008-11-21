@@ -4,18 +4,18 @@
  * 
  * @author Anis uddin Ahmad <anisniit@gmail.com>
  * @category typecho
- * @package UnivarselFeedWriter
+ * @package Feed
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id: Feed.php 219 2008-05-27 09:06:15Z magike.net $
  */
 
 /**
- * UnivarselFeedWriter
+ * Typecho_Feed
  * 
  * @author qining
  * @category typecho
- * @package UnivarselFeedWriter
+ * @package Feed
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */

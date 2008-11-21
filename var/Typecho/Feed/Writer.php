@@ -4,7 +4,7 @@
  *
  * Genarate RSS 1.0, RSS2.0 and ATOM Feed
  *                             
- * @package     UnivarselFeedWriter
+ * @package     Feed
  * @author      Anis uddin Ahmad <anisniit@gmail.com>
  * @link        http://www.ajaxray.com/projects/rss
  */
