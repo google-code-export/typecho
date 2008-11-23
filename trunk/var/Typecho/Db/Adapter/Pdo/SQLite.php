@@ -11,11 +11,11 @@
 require_once 'Typecho/Db/Adapter/Pdo.php';
 
 /**
- * 数据库Pdo_Pgsql适配器
+ * 数据库Pdo_SQLite适配器
  *
  * @package Db
  */
-class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
+class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
 {
     /**
      * 初始化数据库 
@@ -26,8 +26,7 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
      */
     public function init(Typecho_Config $config)
     {
-        $pdo = new PDO("pgsql:dbname={$config->database};host={$config->host};port={$config->port}", $config->user, $config->password);
-        $pdo->exec("SET NAMES '{$config->charset}'");
+        $pdo = new PDO("sqlite:{$config->file}");
         return $pdo;
     }
     

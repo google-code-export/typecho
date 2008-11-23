@@ -52,6 +52,11 @@ class Typecho_Exception extends Exception
      */
     public function __construct($message, $code = 0)
     {
+        if (empty($message) && function_exists('error_get_last')) {
+            /** 默认信息为上一条错误 */
+            $error = error_get_last();
+            $message = $error['message'];
+        }
         $this->_messages = is_array($message) ? $message : array($message);
         $message = is_array($message) ? implode(',', $message) : $message;
         parent::__construct($message, $code);
@@ -120,7 +125,7 @@ class Typecho_Exception extends Exception
 </head><body>
             <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:12px;background:#AA0000;padding:10px;color:#FFF">'
             . $this->code . ' : ' . $this->message . '</h1>';
-            return self::parse(parent::__toString()) . errorHandler() . '</body></html>';
+            return self::parse(parent::__toString()) . '</body></html>';
     }
     
     /**
@@ -152,12 +157,6 @@ class Typecho_Exception extends Exception
  *
  */
 set_exception_handler('exceptionHandler');
-
-/**
- * 设置错误截获函数
- *
- */
-set_error_handler('errorHandler');
 
 /**
  * 异常截获函数
@@ -204,81 +203,6 @@ function exceptionHandler($exception)
         if (isset($handles[$handle])) {
             require $handles[$handle];
             exit;
-        }
-    }
-}
-
-/** 兼容PHP5.2以前的错误级别,E_RECOVERABLE_ERROR为PHP5.2的新增错误类型 */
-if (!defined('E_RECOVERABLE_ERROR')) {
-    define('E_RECOVERABLE_ERROR', 4096);
-}
-
-/**
- * 错误截获函数
- *
- * @param integer $errno 错误代码
- * @param string $errstr 错误描述
- * @param string $errfile 错误文件
- * @param integer $errline 错误代码行
- * @return void
- */
-function errorHandler($errno = NULL, $errstr = NULL, $errfile = NULL, $errline = NULL)
-{
-    static $errors;
-
-    if (empty($errors)) {
-        $errors = array();
-    }
-
-    if (!Typecho_Exception::getHandles()) {
-        $errorWord = array (
-            E_ERROR              => 'Error',
-            E_WARNING            => 'Warning',
-            E_PARSE              => 'Parsing Error',
-            E_NOTICE             => 'Notice',
-            E_CORE_ERROR         => 'Core Error',
-            E_CORE_WARNING       => 'Core Warning',
-            E_COMPILE_ERROR      => 'Compile Error',
-            E_COMPILE_WARNING    => 'Compile Warning',
-            E_USER_ERROR         => 'User Error',
-            E_USER_WARNING       => 'User Warning',
-            E_USER_NOTICE        => 'User Notice',
-            E_STRICT             => 'Runtime Notice',
-            E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
-            );
-
-        if (empty($errno)) {
-            if (!empty($errors)) {
-                $str = '<table width="100%" cellspacing="1" cellpadding="5" border="0" style="background:#777;font-size:8pt;font-family:verdana,Helvetica,sans-serif;margin-bottom:20px;">';
-                $str .= '<tr><td style="background:#777;color:#FFF" align="center" colspan="4">System caught error</td></tr>';
-                $str .= '<tr><td align="center" style="background:#FFFFAA">Error</td>
-                <td align="center" style="background:#FFFFAA">File</td>
-                <td align="center" style="background:#FFFFAA">Line</td>
-                <td align="center" style="background:#FFFFAA">Message</td>
-                </tr>';
-
-                foreach ($errors as $error) {
-                    list($errorWord, $errno, $errfile, $errline, $errstr) = $error;
-                    $str .= '<tr><td style="background:#FFF">' . $errorWord . '</td>
-                    <td style="background:#FFF">' . $errfile . '</td>
-                    <td style="background:#FFF">' . $errline . '</td>
-                    <td style="background:#FFF">' . $errstr . '</td>
-                    </tr>';
-                }
-
-                $str .= '</table>';
-
-                echo $str;
-            }
-        } else {
-            if (array_key_exists($errno, $errorWord)) {
-                $errorWord = $errorWord[$errno];
-            } else {
-                $errorWord = 'Unkown Error';
-            }
-
-            $errors[] = array($errorWord, $errno, $errfile, $errline, $errstr);
-            echo $errorWord . "[$errno]: [file:$errfile][line:$errline] $errstr<br />\n";
         }
     }
 }

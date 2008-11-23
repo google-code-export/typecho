@@ -55,7 +55,10 @@ class Typecho_Common
         /** 设置自动载入函数 */
         function __autoLoad($className)
         {
-            require_once dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
+            $inc = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
+            if (file_exists($inc)) {
+                require_once $inc;
+            }
         }
     }
     
