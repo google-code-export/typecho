@@ -22,6 +22,32 @@ function _v($name, $default = '')
     echo isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 
+/**
+ * 判断是否兼容某个环境(perform)
+ * 
+ * @param string $adapter 适配器
+ * @return boolean
+ */
+function _p($adapter)
+{
+    switch ($adapter) {
+        case 'Mysql':
+            return function_exists('mysql_connect');
+        case 'Pdo_Mysql':
+            return extension_loaded('pdo') && in_array('mysql', PDO::getAvailableDrivers());
+        case 'SQLite':
+            return function_exists('sqlite_open');
+        case 'Pdo_SQLite':
+            return extension_loaded('pdo') && in_array('sqlite', PDO::getAvailableDrivers());
+        case 'Pgsql':
+            return function_exists('pg_connect');
+        case 'Pdo_Pgsql':
+            return extension_loaded('pdo') && in_array('pgsql', PDO::getAvailableDrivers());
+        default:
+            return false;
+    }
+}
+
 $options = new stdClass();
 $options->generator = __TYPECHO_INSTALL_VERSION__;
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -65,42 +91,65 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                 </div>
             <?php  elseif (isset($_GET['config'])) : ?>
             <?php
-                    if ('config' == Typecho_Request::getParameter('do')) {
-                        
-                    }
+                    $adapter = Typecho_Request::getParameter('dbAdapter', 'Mysql');
+                    $type = explode('_', $adapter);
+                    $type = array_pop($type);
             ?>
-                <form method="post" action="?config">
+                <form method="post" action="?config" name="config">
                     <h1 class="typecho-install-title"><?php _e('确认您的配置'); ?></h1>
                     <div class="typecho-install-body">
                         <h2><?php _e('数据库配置'); ?></h2>
+                        <?php
+                            if ('config' == Typecho_Request::getParameter('do')) {
+                                $installDb = new Typecho_Db($adapter, Typecho_Request::getParameter('dbPrefix'));
+                                $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbPort', 'dbDatabase', 'dbFile', 'dbDSN');
+                                $dbConfig = array();
+                                foreach($_dbConfig as $key => $val)
+                                {
+                                    $dbConfig[strtolower(substr($key, 2))] = $val;
+                                }
+
+                                $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
+                                
+                                try {
+                                    $installDb->query('SELECT 1 = 1');
+                                } catch (Typecho_Db_Exception $e) {
+                                    echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s"',$e->getMessage()) . '</p>';
+                                }
+                            }
+                        ?>
                         <ul class="typecho-option">
                             <li>
-                            <label class="typecho-label"><?php _e('数据库地址'); ?></label>
-                            <input type="text" class="text" name="dbHost" value="<?php _v('dbHost', 'localhost'); ?>"/>
-                            <p class="desption"><?php _e('您可能会使用 "localhost"'); ?></p>
+                            <label class="typecho-label"><?php _e('数据库适配器'); ?></label>
+                            <select name="dbAdapter">
+                                <?php if(_p('Mysql')): ?><option value="Mysql"<?php if('Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Mysql原生函数适配器') ?></option><?php endif; ?>
+                                <?php if(_p('SQLite')): ?><option value="SQLite"<?php if('SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('SQLite原生函数适配器(SQLite 2.x)') ?></option><?php endif; ?>
+                                <?php if(_p('Pgsql')): ?><option value="Pgsql"<?php if('Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pgsql原生函数适配器') ?></option><?php endif; ?>
+                                <?php if(_p('Pdo_Mysql')): ?><option value="Pdo_Mysql"<?php if('Pdo_Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动Mysql适配器') ?></option><?php endif; ?>
+                                <?php if(_p('Pdo_SQLite')): ?><option value="Pdo_SQLite"<?php if('Pdo_SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动SQLite适配器(SQLite 3.x)') ?></option><?php endif; ?>
+                                <?php if(_p('Pdo_Pgsql')): ?><option value="Pdo_Pgsql"<?php if('Pdo_Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动PostgreSql适配器') ?></option><?php endif; ?>
+                            </select>
+                            <p class="desption"><?php _e('请根据你的数据库类型选择合适的适配器'); ?></p>
                             </li>
-                            <li>
-                            <label class="typecho-label"><?php _e('数据库用户名'); ?></label>
-                            <input type="text" class="text" name="dbUser" value="<?php _v('dbUser', 'root'); ?>" />
-                            <p class="desption"><?php _e('您可能会使用 "root"'); ?></p>
-                            </li>
-                            <li>
-                            <label class="typecho-label"><?php _e('数据库密码'); ?></label>
-                            <input type="text" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
-                            </li>
-
-                            <li>
-                            <label class="typecho-label"><?php _e('数据库名'); ?></label>
-                            <input type="text" class="text" name="dbName" value="<?php _v('dbName'); ?>" />
-                            <p class="desption"><?php _e('请您指定数据库名称'); ?></p>
-                            </li>
+                            <?php require_once './install/' . $type . '.php'; ?>
                             <li>
                             <label class="typecho-label"><?php _e('数据库前缀'); ?></label>
-                            <input type="text" class="text mini" name="dbHost" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+                            <input type="text" class="text mini" name="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
                             <p class="desption"><?php _e('默认前缀是 "typecho_"'); ?></p>
                             </li>
                         </ul>
-
+                        
+                        <script>
+                        var _select = document.config.dbAdapter;
+                        _select.onchange = function()
+                        {
+                            var _form = document.config;
+                            var _do = _form.do;
+                            _do.value = 'change';
+                            _form.submit();
+                        }
+                        </script>
+                        
                         <h2><?php _e('创建您的管理员帐号'); ?></h2>
                         <ul class="typecho-option">
                             <li>

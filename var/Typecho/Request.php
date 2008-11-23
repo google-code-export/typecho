@@ -70,13 +70,13 @@ class Typecho_Request
     public static function isSetParameter($key)
     {
         switch (true) {
-            case isset(self::$_params[$key]):
+            case array_key_exists($key, self::$_params):
                 return true;
-            case isset($_GET[$key]):
+            case array_key_exists($key, $_GET):
                 return true;
-            case isset($_POST[$key]):
+            case array_key_exists($key, $_POST):
                 return true;
-            case isset($_COOKIE[$key]):
+            case array_key_exists($key, $_COOKIE):
                 return true;
             default:
                 return false;
@@ -100,7 +100,9 @@ class Typecho_Request
         }
 
         foreach ($args as $arg) {
-            $parameters[$arg] = self::getParameter($arg);
+            if (self::isSetParameter($arg)) {
+                $parameters[$arg] = self::getParameter($arg);
+            }
         }
 
         return $parameters;
