@@ -43,7 +43,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         </apis>
     </service>
 </rsd>
-EOF
+EOF;
         } else {
             new Ixr_Server($methods);
         }
