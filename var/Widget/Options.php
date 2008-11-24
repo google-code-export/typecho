@@ -46,6 +46,83 @@ class Widget_Options extends Typecho_Widget
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
     }
+    
+    /**
+     * RSS2.0
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _feedUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/'), $this->index);
+    }
+    
+    /**
+     * RSS1.0
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _feedRssUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
+    }
+    
+    /**
+     * ATOM1.O
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _feedAtomUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
+    }
+    
+    /**
+     * 评论RSS2.0聚合
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _commentsFeedUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
+    }
+    
+    /**
+     * 评论RSS1.0聚合
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _commentsFeedRssUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
+    }
+    
+    /**
+     * 评论ATOM1.0聚合
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _commentsFeedAtomUrl()
+    {
+        return Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
+    }
+    
+    /**
+     * xmlrpc api地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function _xmlRpcUrl()
+    {
+        return Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
+    }
 
     /**
      * 初始化函数
@@ -60,7 +137,7 @@ class Widget_Options extends Typecho_Widget
         $this->_stack[] = &$this->_row;
 
         /** 初始化站点信息 */
-        $this->charset = __TYPECHO_CHARSET__;
+        $this->charset = Typecho_Common::$config['charset'];
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->index = $this->rewrite ? $this->siteUrl : Typecho_Common::url('/index.php', $this->siteUrl);
         $this->themeUrl = Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
@@ -70,19 +147,9 @@ class Widget_Options extends Typecho_Widget
         
         /** 获取插件列表 */
         $this->plugins = unserialize($this->plugins);
-        
-        /** 初始化Feed地址 */
-        $this->feedUrl = Typecho_Router::url('feed', array('feed' => '/'), $this->index);
-        $this->feedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
-        $this->feedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
-        
-        /** 初始化评论Feed地址 */
-        $this->commentsFeedUrl = Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
-        $this->commentsFeedRssUrl = Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
-        $this->commentsFeedAtomUrl = Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
+        $this->routingTable = unserialize($this->routingTable); 
 
         /** 初始化常用地址 */
-        $this->xmlRpcUrl = Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
         $this->adminUrl = Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ? 
         __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
         $this->loginUrl = Typecho_Common::url('login.php', $this->adminUrl);

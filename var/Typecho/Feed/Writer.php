@@ -84,7 +84,7 @@ class Typecho_Feed_Writer
 	*/ 
 	public function generateFeed()
 	{
-		header("Content-type: text/xml; charset=" . __TYPECHO_CHARSET__, true);
+		header("Content-type: text/xml; charset=" . $this->charset, true);
 		
 		$this->printHead();
 		$this->printChannels();
