@@ -116,7 +116,7 @@ CREATE TABLE `typecho_relationships` (
 CREATE TABLE `typecho_users` (
   `uid` int(10) unsigned NOT NULL auto_increment COMMENT 'user表主键',
   `name` varchar(32) default NULL COMMENT '用户名称',
-  `password` varchar(32) default NULL COMMENT '用户密码',
+  `password` varchar(64) default NULL COMMENT '用户密码',
   `mail` varchar(200) default NULL COMMENT '用户的邮箱',
   `url` varchar(200) default NULL COMMENT '用户的主页',
   `screenName` varchar(32) default NULL COMMENT '用户显示的名称',
@@ -124,7 +124,7 @@ CREATE TABLE `typecho_users` (
   `activated` int(10) unsigned default '0' COMMENT '最后活动时间',
   `logged` int(10) unsigned default '0' COMMENT '上次登录最后活跃时间',
   `group` enum('administrator','editor','contributor','subscriber','visitor') default 'visitor' COMMENT '用户组',
-  `authCode` varchar(40) default NULL COMMENT '登录验证码',
+  `authCode` varchar(64) default NULL COMMENT '登录验证码',
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `mail` (`mail`)
