@@ -73,12 +73,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 取出已有tag */
         $existTags = Typecho_Common::arrayFlatten($this->db->fetchAll(
-        $this->db->select('table.metas.mid', array('COUNT(table.metas.mid)' => 'metasNum'))
+        $this->db->select('table.metas.mid')
         ->from('table.metas')
         ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $cid)
-        ->where('table.metas.type = ?', 'tag')
-        ->group('table.metas.mid')), 'mid');
+        ->where('table.metas.type = ?', 'tag')), 'mid');
         
         /** 删除已有tag */
         if ($existTags) {
@@ -170,12 +169,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 取出已有category */
         $existCategories = Typecho_Common::arrayFlatten($this->db->fetchAll(
-        $this->db->select('table.metas.mid', array('COUNT(table.metas.mid)' => 'metasNum'))
+        $this->db->select('table.metas.mid')
         ->from('table.metas')
         ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $cid)
-        ->where('table.metas.type = ?', 'category')
-        ->group('table.metas.mid')), 'mid');
+        ->where('table.metas.type = ?', 'category')), 'mid');
         
         /** 删除已有category */
         if ($existCategories) {

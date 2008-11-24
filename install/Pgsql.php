@@ -6,17 +6,17 @@
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库端口'); ?></label>
-<input type="text" class="text" name="dbPort" value="<?php _v('dbPort', '3306'); ?>"/>
+<input type="text" class="text" name="dbPort" value="<?php _v('dbPort', '5432'); ?>"/>
 <p class="desption"><?php _e('如果您不知道此选项的意义, 请保留默认设置'); ?></p>
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库用户名'); ?></label>
-<input type="text" class="text" name="dbUser" value="<?php _v('dbUser', 'root'); ?>" />
-<p class="desption"><?php _e('您可能会使用 "root"'); ?></p>
+<input type="text" class="text" name="dbUser" value="<?php _v('dbUser', 'postgres'); ?>" />
+<p class="desption"><?php _e('您可能会使用 "postgres"'); ?></p>
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库密码'); ?></label>
-<input type="text" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
+<input type="password" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库名'); ?></label>

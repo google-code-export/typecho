@@ -74,12 +74,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         此选项可以帮助你抵御一部分垃圾评论,但也有可能会让你失去一部分优秀的评论.'));
         $form->addInput($commentsPostTimeout);
         
-        /** 对单一IP的评论时间间隔限制 */
-        $commentsUniqueIpInterval = new Typecho_Widget_Helper_Form_Element_Select('commentsUniqueIpInterval', array('0' => _t('不限制'), '30' => _t('半分钟'),
-        '60' => _t('一分钟'), '180' => _t('三分钟'), '300' => _t('五分钟'), '900' => _t('一刻钟'), '1800' => _t('半小时'), '3600' => _t('一小时')),
-        $this->options->commentsUniqueIpInterval, _t('对单一IP的评论时间间隔限制'));
-        $form->addInput($commentsUniqueIpInterval);
-        
         /** 必须填写邮箱 */
         $commentsRequireMail = new Typecho_Widget_Helper_Form_Element_Radio('commentsRequireMail', array('0' => _t('不需要'), '1' => _t('需要')),
         $this->options->commentsRequireMail, _t('必须填写邮箱'));
@@ -95,18 +89,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         htmlspecialchars($this->options->commentsHTMLTagAllowed),
         _t('允许使用的HTML标签和属性'), _t('站点描述将显示在网页代码的头部.'));
         $form->addInput($commentsHTMLTagAllowed);
-        
-        /** 在评论中禁止出现的词汇 */
-        $commentsStopWords = new Typecho_Widget_Helper_Form_Element_Textarea('commentsStopWords', NULL, 
-        htmlentities($this->options->commentsStopWords, ENT_NOQUOTES, $this->charset),
-        _t('在评论中禁止出现的词汇'), _t('站点描述将显示在网页代码的头部.'));
-        $form->addInput($commentsStopWords);
-        
-        /** 评论者IP黑名单 */
-        $commentsIpBlackList = new Typecho_Widget_Helper_Form_Element_Textarea('commentsIpBlackList', NULL,
-        $this->options->commentsIpBlackList,
-        _t('评论者IP黑名单'), _t('站点描述将显示在网页代码的头部.'));
-        $form->addInput($commentsIpBlackList);
         
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));

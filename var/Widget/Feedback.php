@@ -20,6 +20,14 @@
 class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interface_Action
 {
     /**
+     * 内容对象
+     * 
+     * @access private
+     * @var Widget_Archive
+     */
+    private $_content;
+
+    /**
      * 评论处理函数
      * 
      * @access private
@@ -28,12 +36,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     private function comment()
     {
         $comment = array(
-            'cid'       =>  $this->widget('Widget_Archive')->cid,
+            'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  $this->request->getClientIp(),
             'type'      =>  'comment',
-            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
@@ -78,7 +86,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $comment['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->text, $this->options->commentsHTMLTagAllowed));
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
-        if (!$user->hasLogin()) {
+        if (!$this->user->hasLogin()) {
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
             $this->request->setCookie('author', $comment['author'], $expire);
             $this->request->setCookie('mail', $comment['mail'], $expire);
@@ -98,7 +106,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
-        $this->request->deleteCookie('text');
+        $this->response->deleteCookie('text');
         
         Typecho_Common::goBack('#comments-' . $commentId);
     }
@@ -112,12 +120,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     private function trackback()
     {
         $trackback = array(
-            'cid'       =>  $this->widget('Widget_Archive')->cid,
+            'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
             'ip'        =>  $this->request->getClientIp(),
             'type'      =>  'trackback',
-            'status'    =>  !$this->widget('Widget_Archive')->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
         $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
@@ -136,7 +144,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $validator->run($trackback);
         } catch (Typecho_Validate_Exception $e) {
             $message = array('success' => 1, 'message' => $e->getMessage());
-            $this->response()->throwXml($message);
+            $this->response->throwXml($message);
         }
         
         /** 生成过滤器 */
@@ -158,8 +166,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         if ($this->user->hasLogin() && $this->user->screenName != $userName) {
             /** 当前用户名与提交者不匹配 */
             return false;
-        } else if (!$this->user->hasLogin() && $this->db->fetchRow($this->db->select('table.users', '`uid`')
-        ->where('`screenName` = ? OR `name` = ?', $userName, $userName)->limit(1))) {
+        } else if (!$this->user->hasLogin() && $this->db->fetchRow($this->db->select('uid')
+        ->from('table.users')->where('screenName = ? OR name = ?', $userName, $userName)->limit(1))) {
             /** 此用户名已经被注册 */
             return false;
         }
@@ -171,49 +179,29 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      * 初始化函数
      * 
      * @access public
-     * @param Typecho_Widget_Request $request 请求对象
-     * @param Typecho_Widget_Response $response 回执对象
      * @return void
      */
-    public function init(Typecho_Widget_Request $request, Typecho_Widget_Response $response)
+    public function init()
     {
         /** 判断内容是否存在 */
         if (false !== Typecho_Router::match($request->permalink) && 
         ('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current) &&
-        $this->widget('Widget_Archive')->have() && 
+        $this->widget('Widget_Archive')->to($this->_content)->have() && 
         in_array($callback, array('comment', 'trackback'))) {
             /** 判断来源 */
-            if ('comment' == $callback && (empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->widget('Widget_Archive')->permalink)) {
-                throw new Typecho_Widget_Exception(_t('来源页不合法'));
-            }
-            
-            /** 判断评论间隔 */
-            if (!$this->widget('Widget_Archive')->postIsWriteable() && $this->widget('Widget_Archive')->commentsUniqueIpInterval > 0) {
-                $recent = $this->db->fetchObject($this->db->select('table.comments', '`created`')
-                ->where('table.comments.`ip` = ?', $request->getClientIp())
-                ->order('table.comments.`created`', Typecho_Db::SORT_DESC)->limit(1));
-
-                if ($recent) {
-                    if ($this->options->gmtTime - $recent->created < $this->options->commentsUniqueIpInterval) {
-                        throw new Typecho_Widget_Exception(_t('对不起,您的发言速度太快.'), Typecho_Exception::FORBIDDEN);
-                    }
-                }
+            if ('comment' == $callback && (empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->_content->permalink)) {
+                $this->response->throwExceptionResponseByCode(_t('来源页不合法'), 403);
             }
             
             /** 如果文章允许反馈 */
-            if (!$this->widget('Widget_Archive')->allow('comment')) {
-                throw new Typecho_Widget_Exception(_t('对不起,此内容的评论被关闭.'), Typecho_Exception::FORBIDDEN);
-            }
-            
-            if (NULL != $this->widget('Widget_Archive')->password && 
-            $this->widget('Widget_Archive')->password != $request->protect_password) {
-                throw new Typecho_Widget_Exception(_t('此文章被密码保护.'), Typecho_Exception::FORBIDDEN);
+            if (!$this->_content->allow('comment')) {
+                $this->response->throwExceptionResponseByCode(_t('对不起,此内容的反馈被禁止.'), 403);
             }
             
             /** 调用函数 */
             $this->$callback();
         } else {
-            throw new Typecho_Widget_Exception(_t('被评论的文章不存在'), Typecho_Exception::NOTFOUND);
+            $this->response->throwExceptionResponseByCode(_t('被评论的文章不存在'), 404);
         }
     }
 }

@@ -16,7 +16,7 @@
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库密码'); ?></label>
-<input type="text" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
+<input type="password" class="text" name="dbPassword" value="<?php _v('dbPassword'); ?>" />
 </li>
 <li>
 <label class="typecho-label"><?php _e('数据库名'); ?></label>

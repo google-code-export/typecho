@@ -4,26 +4,26 @@
  *
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id: Mysql.php 89 2008-03-31 00:10:57Z magike.net $
+ * @version    $Id$
  */
 
 /** 数据库适配器接口 */
 require_once 'Typecho/Db/Adapter.php';
 
 /**
- * 数据库PDOMysql适配器
+ * 数据库Pgsql适配器
  *
  * @package Db
  */
-abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
+class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 {
     /**
-     * 数据库对象
-     *
-     * @access protected
-     * @var PDO
+     * 数据库连接字符串标示
+     * 
+     * @access private
+     * @var resource
      */
-    protected $_object;
+    private $_dbLink;
     
     /**
      * 最后一次操作的数据表
@@ -32,7 +32,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * @var string
      */
     protected $_lastTable;
-
+    
     /**
      * 数据库连接函数
      *
@@ -42,26 +42,17 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function connect(Typecho_Config $config)
     {
-        try {
-            $this->_object = $this->init($config);
-            $this->_object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $this->_object;
-        } catch (PDOException $e) {
-            /** 数据库异常 */
-            require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::UNVAILABLE);
+        if ($this->_dbLink = @pg_connect("host={$config->host} port={$config->port} dbname={$config->database} user={$config->user} password={$config->password}")) {
+            if ($config->charset) {
+                pg_query($this->_dbLink, "SET NAMES '{$config->charset}'");
+            }
+            return $this->_dbLink;
         }
-    }
 
-    /**
-     * 初始化数据库 
-     * 
-     * @param Typecho_Config $config 数据库配置
-     * @abstract
-     * @access public
-     * @return PDO
-     */
-    abstract public function init(Typecho_Config $config);
+        /** 数据库异常 */
+        require_once 'Typecho/Db/Exception.php';
+        throw new Typecho_Db_Exception(@pg_last_error($this->_dbLink), Typecho_Exception::UNVAILABLE);
+    }
 
     /**
      * 执行数据库查询
@@ -75,18 +66,15 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
-        try {
-            $isQueryObject = $query instanceof Typecho_Db_Query;
-            $this->_lastTable = $isQueryObject ? $query->getAttribute('table') : NULL;
-            $resource = $handle->prepare($isQueryObject ? $query->__toString() : $query);
-            $resource->execute();
-        } catch (PDOException $e) {
-            /** 数据库异常 */
-            require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception($e->getMessage(), Typecho_Exception::RUNTIME);
+        $isQueryObject = $query instanceof Typecho_Db_Query;
+        $this->_lastTable = $isQueryObject ? $query->getAttribute('table') : NULL;
+        if ($resource = @pg_query($handle, $isQueryObject ? $query->__toString() : $query)) {
+            return $resource;
         }
 
-        return $resource;
+        /** 数据库异常 */
+        require_once 'Typecho/Db/Exception.php';
+        throw new Typecho_Db_Exception(@pg_last_error($this->_dbLink), Typecho_Exception::RUNTIME);
     }
 
     /**
@@ -97,7 +85,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function fetch($resource)
     {
-        return $resource->fetch(PDO::FETCH_ASSOC);
+        return pg_fetch_assoc($resource);
     }
     
     /**
@@ -108,7 +96,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function fetchObject($resource)
     {
-        return $resource->fetchObject();
+        return pg_fetch_object($resource);
     }
 
     /**
@@ -119,7 +107,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function quoteValue($string)
     {
-        return $this->_object->quote($string);
+        return '\'' . pg_escape_string($string) . '\'';
     }
 
     /**
@@ -129,7 +117,10 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * @param string $string
      * @return string
      */
-    public function quoteColumn($string){}
+    public function quoteColumn($string)
+    {
+        return '"' . $string . '"';
+    }
 
     /**
      * 合成查询语句
@@ -138,7 +129,21 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * @param array $sql 查询对象词法数组
      * @return string
      */
-    public function parseSelect(array $sql){}
+    public function parseSelect(array $sql)
+    {
+        if (!empty($sql['join'])) {
+            foreach ($sql['join'] as $val) {
+                list($table, $condition, $op) = $val;
+                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
+            }
+        }
+
+        $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
+
+        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
+        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+    }
 
     /**
      * 取出最后一次查询影响的行数
@@ -149,7 +154,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function affectedRows($resource, $handle)
     {
-        return $resource->rowCount();
+        return pg_affected_rows($resource);
     }
 
     /**
@@ -161,6 +166,6 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      */
     public function lastInsertId($resource, $handle)
     {
-        return $handle->lastInsertId();
+        return pg_fetch_row(pg_query($handle, 'SELECT CURRVAL(' . $this->quoteColumn($this->_lastTable . '_seq') . ')'), 0);
     }
 }

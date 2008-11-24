@@ -48,6 +48,21 @@ function _p($adapter)
     }
 }
 
+/**
+ * 获取url地址
+ * 
+ * @return string
+ */
+function _u()
+{
+    $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
+    if (isset($_SERVER["QUERY_STRING"])) {
+        $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
+    }
+    
+    return dirname($url);
+}
+
 $options = new stdClass();
 $options->generator = __TYPECHO_INSTALL_VERSION__;
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -100,21 +115,91 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                     <div class="typecho-install-body">
                         <h2><?php _e('数据库配置'); ?></h2>
                         <?php
-                            if ('config' == Typecho_Request::getParameter('do')) {
-                                $installDb = new Typecho_Db($adapter, Typecho_Request::getParameter('dbPrefix'));
+                            if ('config' == Typecho_Request::getParameter('action')) {
+                                $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
                                 $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbPort', 'dbDatabase', 'dbFile', 'dbDSN');
                                 $dbConfig = array();
-                                foreach($_dbConfig as $key => $val)
-                                {
-                                    $dbConfig[strtolower(substr($key, 2))] = $val;
+                                foreach($_dbConfig as $key => $val) {
+                                    $dbConfig[strtolower (substr($key, 2))] = $val;
                                 }
 
                                 $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
                                 
                                 try {
-                                    $installDb->query('SELECT 1 = 1');
+                                    /** 初始化数据库结构 */
+                                    $scripts = file_get_contents ('./install/' . $type . '.sql');
+                                    $scripts = explode(';', $scripts);
+                                    foreach ($scripts as $script) {
+                                        $script = trim($script);
+                                        if ($script) {
+                                            $installDb->query($script, Typecho_Db::WRITE);
+                                        }
+                                    }
+                                    
+                                    /** 全局变量 */
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => idate('Z'))));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => __TYPECHO_INSTALL_VERSION__)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentExtensions', 'user' => 0, 'value' => 'zip|rar|jpg|png|gif|txt')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => Typecho_Request::getParameter('userUrl'))));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowPing', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowFeed', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'pageSize', 'user' => 0, 'value' => 5)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'postsListSize', 'user' => 0, 'value' => 10)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsListSize', 'user' => 0, 'value' => 10)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsHTMLTagAllowed', 'user' => 0, 'value' => NULL)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'postDateFormat', 'user' => 0, 'value' => 'Y-m-d')));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'feedFullArticlesLayout', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'editorSize', 'user' => 0, 'value' => 16)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'autoSave', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPostTimeout', 'user' => 0, 'value' => 0)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsUrlNofollow', 'user' => 0, 'value' => 1)));
+                                    $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsShowUrl', 'user' => 0, 'value' => 1)));
+                                    
+                                    /** 初始分类 */
+                                    $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
+                                    'count' => 1, 'sort' => 1)));
+                                    
+                                    /** 初始关系 */
+                                    $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
+                                    
+                                    /** 初始链接 */
+                                    $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('Typecho官方网站'), 'slug' => 'http://www.typecho.org', 'type' => 'link', 'description' => _t('Typecho的老巢'),
+                                    'count' => 0, 'sort' => 1)));
+                                    
+                                    /** 初始内容 */
+                                    $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
+                                    'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 'enable',
+                                    'allowPing' => 'enable', 'allowFeed' => 'enable')));
+                                    
+                                    $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
+                                    'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 1, 'allowComment' => 'enable',
+                                    'allowPing' => 'enable', 'allowFeed' => 'enable')));
+                                    
+                                    /** 初始评论 */
+                                    $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => (time() - idate('Z')), 'author' => 'Typecho', 'url' => 'http://www.typecho.org',
+                                    'ip' => '127.0.0.1', 'agent' => __TYPECHO_INSTALL_VERSION__, 'text' => '欢迎加入Typecho大家族', 'mode' => 'comment', 'status' => 'approved', 'parent' => 0)));
+                                    
+                                    /** 初始用户 */
+                                    $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => '827ccb0eea8a706c4c34a16891f84e7b', 'mail' => Typecho_Request::getParameter('userMail'), 
+                                    'url' => 'http://www.typecho.org', 'screenName' => 'admin', 'group' => 'administrator', 'created' => (time() - idate('Z')))));
+                                    
+                                    Typecho_Response::redirect('install.php?finish');
                                 } catch (Typecho_Db_Exception $e) {
-                                    echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s"',$e->getMessage()) . '</p>';
+                                    echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                 }
                             }
                         ?>
@@ -122,12 +207,12 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                             <li>
                             <label class="typecho-label"><?php _e('数据库适配器'); ?></label>
                             <select name="dbAdapter">
-                                <?php if(_p('Mysql')): ?><option value="Mysql"<?php if('Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Mysql原生函数适配器') ?></option><?php endif; ?>
-                                <?php if(_p('SQLite')): ?><option value="SQLite"<?php if('SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('SQLite原生函数适配器(SQLite 2.x)') ?></option><?php endif; ?>
-                                <?php if(_p('Pgsql')): ?><option value="Pgsql"<?php if('Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pgsql原生函数适配器') ?></option><?php endif; ?>
-                                <?php if(_p('Pdo_Mysql')): ?><option value="Pdo_Mysql"<?php if('Pdo_Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动Mysql适配器') ?></option><?php endif; ?>
-                                <?php if(_p('Pdo_SQLite')): ?><option value="Pdo_SQLite"<?php if('Pdo_SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动SQLite适配器(SQLite 3.x)') ?></option><?php endif; ?>
-                                <?php if(_p('Pdo_Pgsql')): ?><option value="Pdo_Pgsql"<?php if('Pdo_Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动PostgreSql适配器') ?></option><?php endif; ?>
+                                <?php if (_p('Mysql')): ?><option value="Mysql"<?php if('Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Mysql原生函数适配器') ?></option><?php endif; ?>
+                                <?php if (_p('SQLite')): ?><option value="SQLite"<?php if('SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('SQLite原生函数适配器(SQLite 2.x)') ?></option><?php endif; ?>
+                                <?php if (_p('Pgsql')): ?><option value="Pgsql"<?php if('Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pgsql原生函数适配器') ?></option><?php endif; ?>
+                                <?php if (_p('Pdo_Mysql')): ?><option value="Pdo_Mysql"<?php if('Pdo_Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动Mysql适配器') ?></option><?php endif; ?>
+                                <?php if (_p('Pdo_SQLite')): ?><option value="Pdo_SQLite"<?php if('Pdo_SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动SQLite适配器(SQLite 3.x)') ?></option><?php endif; ?>
+                                <?php if (_p('Pdo_Pgsql')): ?><option value="Pdo_Pgsql"<?php if('Pdo_Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动PostgreSql适配器') ?></option><?php endif; ?>
                             </select>
                             <p class="desption"><?php _e('请根据你的数据库类型选择合适的适配器'); ?></p>
                             </li>
@@ -141,28 +226,28 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                         
                         <script>
                         var _select = document.config.dbAdapter;
-                        _select.onchange = function()
-                        {
-                            var _form = document.config;
-                            var _do = _form.do;
-                            _do.value = 'change';
-                            _form.submit();
+                        _select.onchange = function() {
+                            setTimeout("window.location.href = 'install.php?config&dbAdapter=" + this.value + "'; ",0);
                         }
                         </script>
                         
                         <h2><?php _e('创建您的管理员帐号'); ?></h2>
                         <ul class="typecho-option">
                             <li>
+                            <label class="typecho-label"><?php _e('网站地址'); ?></label>
+                            <input type="text" name="userUrl" class="text" value="<?php _v('userUrl', _u()); ?>" />
+                            </li>
+                            <li>
                             <label class="typecho-label"><?php _e('用户名'); ?></label>
-                            <input type="text" name="userName" class="text" />
+                            <input type="text" name="userName" class="text" value="<?php _v('userName', 'admin'); ?>" />
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('邮件地址'); ?></label>
-                            <input type="text" name="userMail" class="text" />
+                            <input type="text" name="userMail" class="text" value="<?php _v('userMail', 'webmaster@yourdomain'); ?>" />
                             </li>
                         </ul>
                     </div>
-                    <input type="hidden" name="do" value="config" />
+                    <input type="hidden" name="action" value="config" />
                     <p class="submit"><button type="submit"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
                 </form>
             <?php  else: ?>
