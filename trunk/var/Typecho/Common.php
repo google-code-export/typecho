@@ -29,6 +29,22 @@ class Typecho_Common
      * @var array
      */
     private static $_lockedBlocks = array();
+    
+    /**
+     * 默认的初始化配置
+     * 
+     * @access public
+     * @var array
+     */
+    public static $config = array(
+        'autoLoad'      =>  true,
+        'gpc'           =>  true,
+        'timezone'      =>  'UTC',
+        'gzip'          =>  false,
+        'charset'       =>  'UTF-8',
+        'session'       =>  false,
+        'contentType'   =>  'text/html'
+    );
 
     /**
      * 锁定标签回调函数
@@ -43,57 +59,61 @@ class Typecho_Common
         self::$_lockedBlocks[$guid] = $matches[0];
         return $guid;
     }
-
-    /**
-     * 注册自动载入函数
-     * 
-     * @access public
-     * @return void
-     */
-    public static function registerAutoLoad()
-    {
-        /** 设置自动载入函数 */
-        function __autoLoad($className)
-        {
-            $inc = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
-            if (file_exists($inc)) {
-                require_once $inc;
-            }
-        }
-    }
     
     /**
-     * 强行关闭魔术引号功能
+     * 程序初始化方法
      * 
      * @access public
+     * @param array $config 配置信息
      * @return void
      */
-    public static function forceDisableMagicQuotesGPC()
+    public static function init(array $config = NULL)
     {
-        /** 兼容php6 */
-        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-            $_GET = self::stripslashesDeep($_GET);
-            $_POST = self::stripslashesDeep($_POST);
-            $_COOKIE = self::stripslashesDeep($_COOKIE);
-
-            reset($_GET);
-            reset($_POST);
-            reset($_COOKIE);
-        }
-    }
+        self::$config = empty($config) ? self::$config : array_merge(self::$config, $config);
     
-    /**
-     * 如果时区不存在,设置一个默认时区
-     * 此方法用于修正某些未设置时区的错误
-     * 
-     * @access public
-     * @param string $timezone 时区名称
-     * @return void
-     */
-    public static function setDefaultTimezone($timezone = 'UTC')
-    {
-        if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
-            @date_default_timezone_set($timezone);
+        switch (true) {
+            case !empty(self::$config['autoLoad']):
+                /** 设置自动载入函数 */
+                function __autoLoad($className)
+                {
+                    require_once str_replace('_', '/', $className) . '.php';
+                }
+                
+            case !empty(self::$config['gpc']):
+                /** 兼容php6 */
+                if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+                    $_GET = self::stripslashesDeep($_GET);
+                    $_POST = self::stripslashesDeep($_POST);
+                    $_COOKIE = self::stripslashesDeep($_COOKIE);
+
+                    reset($_GET);
+                    reset($_POST);
+                    reset($_COOKIE);
+                }
+                
+            case isset(self::$config['timezone']):
+                if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
+                    @date_default_timezone_set($timezone);
+                }
+            
+            case !empty(self::$config['session']):
+                session_start();
+            
+            case isset(self::$config['gzip']):
+            case isset(self::$config['charset']):
+            case isset(self::$config['contentType']):
+                /** Typecho_Response */
+                require_once 'Typecho/Response.php';
+                
+            case isset(self::$config['charset']):
+                Typecho_Response::setDefaultCharset(self::$config['charset']);
+                
+            case isset(self::$config['contentType']):
+                Typecho_Response::setContentType(self::$config['contentType']);
+                
+            default:
+                Typecho_Response::obStart(self::$config['gzip']);
+                break;
         }
     }
 
@@ -340,8 +360,8 @@ class Typecho_Common
     public static function subStr($str, $start, $length, $trim = "...")
     {
         if (function_exists('mb_get_info')) {
-            $iLength = mb_strlen($str, __TYPECHO_CHARSET__);
-            $str = mb_substr($str, $start, $length, __TYPECHO_CHARSET__);
+            $iLength = mb_strlen($str, self::$config['charset']);
+            $str = mb_substr($str, $start, $length, self::$config['charset']);
             return ($length < $iLength - $start) ? $str . $trim : $str;
         } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
@@ -360,7 +380,7 @@ class Typecho_Common
     public static function strLen($str)
     {
         if (function_exists('mb_get_info')) {
-            return mb_strlen($str, __TYPECHO_CHARSET__);
+            return mb_strlen($str, self::$config['charset']);
         } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
             return sizeof($info[0]);

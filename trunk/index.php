@@ -10,6 +10,9 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
+/** 定义路由参数 */
+Typecho_Router::setRoutes(Typecho_Widget::widget('Widget_Options')->routingTable);
+
 /** 初始化插件 */
 Typecho_Plugin::init(Typecho_Widget::widget('Widget_Options')->plugins,
 array(Typecho_Widget::widget('Widget_Options'), 'getPluginOption'));

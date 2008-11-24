@@ -168,7 +168,7 @@ function exceptionHandler($exception)
 {
     @ob_clean();
 
-    if (!Typecho_Exception::getHandles()) {    
+    if (!($handles = Typecho_Exception::getHandles())) {    
         if ($exception instanceof Typecho_Exception) {
             /** 显示调用__toString,修正PHP 5.2之前的bug */
             die($exception->__toString());
@@ -199,10 +199,11 @@ function exceptionHandler($exception)
                 break;
         }
 
-        $handles = Typecho_Exception::getHandles();
         if (isset($handles[$handle])) {
             require $handles[$handle];
             exit;
         }
     }
+    
+    //TODO 需要一个通用报错页面
 }

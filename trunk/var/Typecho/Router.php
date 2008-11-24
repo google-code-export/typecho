@@ -27,12 +27,12 @@ class Typecho_Router
     public static $current;
 
     /**
-     * 已经解析完毕的路由配置
+     * 已经解析完毕的路由表配置
      * 
      * @access private
      * @var mixed
      */
-    private static $_routes = array();
+    private static $_routingTable = array();
     
     /**
      * 解析路径
@@ -43,7 +43,7 @@ class Typecho_Router
      */
     public static function match($pathInfo)
     {
-        foreach (self::$_routes as $key => $route) {
+        foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
                 
@@ -105,7 +105,7 @@ class Typecho_Router
      */
     public static function url($name, array $value = NULL, $prefix = NULL)
     {
-        $route = self::$_routes[$name];
+        $route = self::$_routingTable[$name];
        
         //交换数组键值
         $pattern = array();
@@ -130,7 +130,7 @@ class Typecho_Router
 
         /** 解析路由配置 */
         $parser = new Typecho_Router_Parser($routes);
-        self::$_routes = $parser->parse($routes);
+        self::$_routingTable = $parser->parse($routes);
     }
 
     /**
@@ -143,6 +143,6 @@ class Typecho_Router
      */
     public static function get($routeName)
     {
-        return isset(self::$_routes[$routeName]) ? self::$_routes[$routeName] : NULL;
+        return isset(self::$_routingTable[$routeName]) ? self::$_routingTable[$routeName] : NULL;
     }
 }

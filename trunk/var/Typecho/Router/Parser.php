@@ -33,7 +33,7 @@ class Typecho_Router_Parser
      * @access private
      * @var array
      */
-    private $_routeMap;
+    private $_routingTable;
     
     /**
      * 参数表
@@ -47,12 +47,12 @@ class Typecho_Router_Parser
      * 设置路由表
      * 
      * @access public
-     * @param array $routeMap 路由器映射表
+     * @param array $routingTable 路由器映射表
      * @return void
      */
-    public function __construct(array $routeMap)
+    public function __construct(array $routingTable)
     {
-        $this->_routeMap = $routeMap;
+        $this->_routingTable = $routingTable;
         
         $this->_defaultRegx = array(
             'string' => '(.%s)',
@@ -97,7 +97,7 @@ class Typecho_Router_Parser
     {
         $result = array();
     
-        foreach ($this->_routeMap as $key => $route) {
+        foreach ($this->_routingTable as $key => $route) {
             $this->_params = array();
             $route['regx'] = preg_replace_callback("/%([^%]+)%/", array($this, '_match'),
             preg_quote(str_replace(array('[', ']', ':'), array('%', '%', ' '), $route['url'])));

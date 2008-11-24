@@ -350,21 +350,6 @@ class Typecho_Db_Query
     }
     
     /**
-     * 在不破坏原字段的情况下,查询下列字段
-     * 
-     * @access public
-     * @param mixed $field 查询字段
-     * @return Typecho_Db_Query
-     */
-    public function selectAlso($field)
-    {
-        $args = func_get_args();
-        
-        $this->_sqlPreBuild['fields'] = $this->_sqlPreBuild['fields'] . ' , ' . $this->getColumnFromParameters($args);
-        return $this;
-    }
-    
-    /**
      * 查询记录操作(SELECT)
      *
      * @param string $table 查询的表
