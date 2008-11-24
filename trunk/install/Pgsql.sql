@@ -97,7 +97,7 @@ CREATE SEQUENCE "typecho_users_seq";
 
 CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_users_seq') ,
   "name" VARCHAR(32) NULL DEFAULT NULL,
-  "password" VARCHAR(32) NULL DEFAULT NULL,
+  "password" VARCHAR(64) NULL DEFAULT NULL,
   "mail" VARCHAR(200) NULL DEFAULT NULL,
   "url" VARCHAR(200) NULL DEFAULT NULL,
   "screenName" VARCHAR(32) NULL DEFAULT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_user
   "activated" INT NULL DEFAULT '0',
   "logged" INT NULL DEFAULT '0',
   "group" VARCHAR(16) NULL DEFAULT 'visitor',
-  "authCode" VARCHAR(40) NULL DEFAULT NULL,
+  "authCode" VARCHAR(64) NULL DEFAULT NULL,
   PRIMARY KEY ("uid"),
   UNIQUE ("name"),
   UNIQUE ("mail")
