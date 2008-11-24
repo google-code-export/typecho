@@ -201,10 +201,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
             
                 /** fix sql92 by 70 */
-                $select->selectAlso(array('COUNT(table.contents.cid)' => 'contentsNum'))
-                ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $category['mid'])
-                ->group('table.contents.cid');
+                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $category['mid']);
                 
                 /** 设置分页 */
                 $this->_pageRow = $category;
@@ -247,10 +245,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
             
                 /** fix sql92 by 70 */
-                $select->selectAlso(array('COUNT(table.contents.cid)' => 'contentsNum'))
-                ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $tag['mid'])
-                ->group('table.contents.cid');
+                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+                ->where('table.relationships.mid = ?', $tag['mid']);
                 
                 /** 设置分页 */
                 $this->_pageRow = $tag;

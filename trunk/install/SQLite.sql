@@ -11,10 +11,10 @@ CREATE TABLE typecho_metas ( mid INTEGER NOT NULL PRIMARY KEY, name varchar(200)
 CREATE INDEX typecho_metas_slug ON typecho_metas (slug);
 
 CREATE TABLE typecho_options ( name varchar(32) NOT NULL , user int(10) NOT NULL default '0' , value text );
-CREATE UNIQUE INDEX typecho_options_ ON typecho_options (name,user);
+CREATE UNIQUE INDEX typecho_options_name_user ON typecho_options (name,user);
 
 CREATE TABLE typecho_relationships ( cid int(10) NOT NULL , mid int(10) NOT NULL );
-CREATE UNIQUE INDEX typecho_relationships_ ON typecho_relationships (cid,mid);
+CREATE UNIQUE INDEX typecho_relationships_cid_mid ON typecho_relationships (cid,mid);
 
 CREATE TABLE typecho_users ( uid INTEGER NOT NULL PRIMARY KEY, name varchar(32) default NULL , password varchar(32) default NULL , mail varchar(200) default NULL , url varchar(200) default NULL , screenName varchar(32) default NULL , created int(10) default '0' , activated int(10) default '0' , logged int(10) default '0' , "group" varchar(13) default 'visitor' , authCode varchar(40) default NULL );
 CREATE UNIQUE INDEX typecho_users_name ON typecho_users (name);

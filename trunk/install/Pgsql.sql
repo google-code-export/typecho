@@ -1,9 +1,9 @@
 --
 -- Table structure for table `typecho_comments`
 --
-CREATE SEQUENCE "typecho_comments_coid_seq";
+CREATE SEQUENCE "typecho_comments_seq";
 
-CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_comments_coid_seq'),
+CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_comments_seq'),
   "cid" INT NULL DEFAULT '0',
   "created" INT NULL DEFAULT '0',
   "author" VARCHAR(200) NULL DEFAULT NULL,
@@ -16,20 +16,19 @@ CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_
   "status" VARCHAR(16) NULL DEFAULT 'approved',
   "parent" INT NULL DEFAULT '0',
   PRIMARY KEY ("coid")
-); 
+);
+
 CREATE INDEX "typecho_comments_cid" ON "typecho_comments" ("cid");
 CREATE INDEX "typecho_comments_created" ON "typecho_comments" ("created");
-
-SELECT setval('typecho_comments_coid_seq', (SELECT max("coid") FROM "typecho_comments"));
 
 
 --
 -- Table structure for table `typecho_contents`
 --
 
-CREATE SEQUENCE "typecho_contents_cid_seq";
+CREATE SEQUENCE "typecho_contents_seq";
 
-CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_contents_cid_seq'),
+CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_contents_seq'),
   "title" VARCHAR(200) NULL DEFAULT NULL,
   "slug" VARCHAR(128) NULL DEFAULT NULL,
   "uri" VARCHAR(200) NULL DEFAULT NULL,
@@ -47,20 +46,19 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "allowFeed" VARCHAR(16) NULL DEFAULT 'disable',
   PRIMARY KEY ("cid"),
   UNIQUE ("slug")
-); 
+);
+
 CREATE INDEX "typecho_contents_created" ON "typecho_contents" ("created");
 CREATE INDEX "typecho_contents_author" ON "typecho_contents" ("author");
-
-SELECT setval('typecho_contents_cid_seq', (SELECT max("cid") FROM "typecho_contents"));
 
 
 --
 -- Table structure for table `typecho_metas`
 --
 
-CREATE SEQUENCE "typecho_metas_mid_seq";
+CREATE SEQUENCE "typecho_metas_seq";
 
-CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_metas_mid_seq'),
+CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_metas_seq'),
   "name" VARCHAR(200) NULL DEFAULT NULL,
   "slug" VARCHAR(128) NULL DEFAULT NULL,
   "type" VARCHAR(16) NOT NULL DEFAULT '',
@@ -68,10 +66,9 @@ CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_meta
   "count" INT NULL DEFAULT '0',
   "sort" INT NULL DEFAULT '0',
   PRIMARY KEY ("mid")
-); 
-CREATE INDEX "typecho_metas_slug" ON "typecho_metas" ("slug");
+);
 
-SELECT setval('typecho_metas_mid_seq', (SELECT max("mid") FROM "typecho_metas"));
+CREATE INDEX "typecho_metas_slug" ON "typecho_metas" ("slug");
 
 
 --
@@ -96,9 +93,9 @@ CREATE TABLE "typecho_relationships" (  "cid" INT NOT NULL DEFAULT '0',
 --
 -- Table structure for table `typecho_users`
 --
-CREATE SEQUENCE "typecho_users_uid_seq";
+CREATE SEQUENCE "typecho_users_seq";
 
-CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_users_uid_seq') ,
+CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_users_seq') ,
   "name" VARCHAR(32) NULL DEFAULT NULL,
   "password" VARCHAR(32) NULL DEFAULT NULL,
   "mail" VARCHAR(200) NULL DEFAULT NULL,
@@ -113,6 +110,3 @@ CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_user
   UNIQUE ("name"),
   UNIQUE ("mail")
 );
-
-SELECT setval('typecho_users_uid_seq', (SELECT max("uid") FROM "typecho_users"));
-
