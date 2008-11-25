@@ -65,7 +65,7 @@ p {
     font-size: 12px;
 }
 
-a:link, a:visited {
+a {
     color: #BD6800;
     text-decoration: none;
 }
@@ -459,7 +459,7 @@ margin-top: 25px;
     line-height: 15px;
 }
 
-.typecho-pager a:link, .typecho-pager a:visited {
+.typecho-pager a {
     color: #333;
     display: block;
     height: 15px;
