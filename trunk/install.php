@@ -193,7 +193,8 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                 if($success)
                                 {
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
-                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbPort', 'dbDatabase', 'dbFile', 'dbDSN');
+                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbPort', 'dbPrefix', 'dbDatabase', 'dbFile', 'dbDSN');
+
                                     $dbConfig = array();
                                     foreach ($_dbConfig as $key => $val) {
                                         $dbConfig[strtolower (substr($key, 2))] = $val;
@@ -225,6 +226,7 @@ Typecho_Db::set(\$db);
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
+                                        $scripts = str_replace('typecho_', $dbConfig['prefix'], $scripts);
                                         $scripts = explode(';', $scripts);
                                         foreach ($scripts as $script) {
                                             $script = trim($script);
