@@ -465,6 +465,7 @@ margin-top: 25px;
     height: 15px;
     outline: none;
 	padding: 0 4px;
+	float: left;
 }
 
 .typecho-pager a:hover {
