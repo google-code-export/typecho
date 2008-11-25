@@ -99,7 +99,15 @@ class Typecho_Common
             case !empty(self::$config['session']):
                 session_start();
             
-            case isset(self::$config['gzip']):
+            case !empty(self::$config['gzip']):
+                //开始监视输出区
+                if ($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+                   && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+                    ob_start("ob_gzhandler");
+                } else {
+                    ob_start();
+                }
+                
             case isset(self::$config['charset']):
             case isset(self::$config['contentType']):
                 /** Typecho_Response */
@@ -112,7 +120,6 @@ class Typecho_Common
                 Typecho_Response::setContentType(self::$config['contentType']);
                 
             default:
-                Typecho_Response::obStart(self::$config['gzip']);
                 break;
         }
     }

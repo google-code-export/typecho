@@ -55,24 +55,6 @@ class Typecho_Response
     }
     
     /**
-     * 打开输出缓冲区
-     * 
-     * @access public
-     * @param boolean $gzipAble 是否打开gzip压缩
-     * @return void
-     */
-    public static function obStart($gzipAble = false)
-    {
-        //开始监视输出区
-        if ($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
-           && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-            ob_start("ob_gzhandler");
-        } else {
-            ob_start();
-        }
-    }
-    
-    /**
      * 设置默认回执编码
      * 
      * @access public

@@ -215,10 +215,23 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                 {
                                     /** 初始化配置文件 */
                                     $lines = array_slice(file(__FILE__), 0, 63);
-                                    $lines[] = "/** 定义数据库参数 */
+                                    $lines[] = "
+/** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . Typecho_Request::getParameter('dbPrefix') . "');
 \$db->addServer(" . var_export($dbConfig, true) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
+
+/** 初始化全局参数 */
+Typecho_Widget::widget('Widget_Options')->to(\$options);
+
+/** 定义路由参数 */
+Typecho_Router::setRoutes(\$options->routingTable);
+
+/** 定义404页面 */
+Typecho_Exception::set404(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . \$options->theme . '/404.php');
+
+/** 初始化插件 */
+Typecho_Plugin::init(\$options->plugins, array(\$options, 'getPluginOption'));
 ";
 
                                     file_put_contents('./config.inc.php', implode('', $lines));

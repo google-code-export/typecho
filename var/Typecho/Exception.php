@@ -36,12 +36,20 @@ class Typecho_Exception extends Exception
     private $_messages;
     
     /**
-     * 默认配置
+     * 默认异常页面
      * 
      * @access private
      * @var array
      */
     private static $_handles = array();
+    
+    /**
+     * 是否现实异常
+     * 
+     * @access private
+     * @var boolean
+     */
+    private static $_display;
 
     /**
      * 异常基类构造函数,重载以增加$code的默认参数
@@ -118,6 +126,7 @@ class Typecho_Exception extends Exception
      */
     public function __toString()
     {
+        if (self::$_display) {
             echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -126,36 +135,41 @@ class Typecho_Exception extends Exception
             <h1 style="font-family:verdana,Helvetica,sans-serif;font-size:12px;background:#AA0000;padding:10px;color:#FFF">'
             . $this->code . ' : ' . $this->message . '</h1>';
             return self::parse(parent::__toString()) . '</body></html>';
+        } else if (isset(self::$_handles[$this->code]) && is_file(self::$_handles[$this->code])) {
+            require_once self::$_handles[$this->code];
+            return;
+        } else {
+            //TODO 显示需求
+        }
     }
     
     /**
-     * 设置默认配置
+     * 设置是否显示异常
+     * 
+     * @access public
+     * @param boolean $display 是否显示异常
+     * @return void
+     */
+    public static function setDisplay($display = true)
+    {
+        self::$_display = $display;
+    }
+    
+    /**
+     * 设置默认异常处理页面
      * 
      * @access public
      * @param array $handles 配置信息
      * @return void
      */
-    public static function setHandles($handles)
+    public static function set404($handle)
     {
-        self::$_handles = $handles;
-    }
-    
-    /**
-     * 获取默认配置
-     * 
-     * @access public
-     * @return array
-     */
-    public static function getHandles()
-    {
-        return self::$_handles;
+        //目前仅开放404接口
+        self::$_handles[self::NOTFOUND] = $handle;
     }
 }
 
-/**
- * 设置异常截获函数
- *
- */
+/** 设置异常截获函数 */
 set_exception_handler('exceptionHandler');
 
 /**
@@ -167,43 +181,33 @@ set_exception_handler('exceptionHandler');
 function exceptionHandler($exception)
 {
     @ob_clean();
-
-    if (!($handles = Typecho_Exception::getHandles())) {    
-        if ($exception instanceof Typecho_Exception) {
-            /** 显示调用__toString,修正PHP 5.2之前的bug */
-            die($exception->__toString());
-        } else {
-            die(Typecho_Exception::parse($exception->__toString()));
-        }
-    } else {
-        switch ($exception->getCode()) {
-            case Typecho_Exception::FORBIDDEN:
-                header('HTTP/1.1 403 Forbidden');
-                $handle = 403;
-                break;
-            case Typecho_Exception::NOTFOUND:
-                header('HTTP/1.1 404 Not Found');
-                header('Status: 404 Not Found');
-                $handle = 404;
-                break;
-            case Typecho_Exception::RUNTIME:
-                header('HTTP/1.1 500 Internal Server Error');
-                $handle = 500;
-                break;
-            case Typecho_Exception::UNVAILABLE:
-                header('HTTP/1.1 503 Service Unvailable');
-                $handle = 503;
-                break;
-            default:
-                $handle = 'error';
-                break;
-        }
-
-        if (isset($handles[$handle])) {
-            require $handles[$handle];
-            exit;
-        }
+    
+    switch ($exception->getCode()) {
+        case Typecho_Exception::FORBIDDEN:
+            header('HTTP/1.1 403 Forbidden');
+            break;
+            
+        case Typecho_Exception::NOTFOUND:
+            header('HTTP/1.1 404 Not Found');
+            header('Status: 404 Not Found');
+            break;
+            
+        case Typecho_Exception::RUNTIME:
+            header('HTTP/1.1 500 Internal Server Error');
+            break;
+            
+        case Typecho_Exception::UNVAILABLE:
+            header('HTTP/1.1 503 Service Unvailable');
+            break;
+            
+        default:
+            break;
     }
     
-    //TODO 需要一个通用报错页面
+    if ($exception instanceof Typecho_Exception) {
+        /** 显示调用__toString,修正PHP 5.2之前的bug */
+        die($exception->__toString());
+    } else {
+        die(Typecho_Exception::parse($exception->__toString()));
+    }
 }
