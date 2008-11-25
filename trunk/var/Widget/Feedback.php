@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interface_Action
+class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interface_Do
 {
     /**
      * 内容对象
@@ -59,7 +59,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $validator->addRule('author', 'required', _t('必须填写用户名'));
         $validator->addRule('author', array($this, 'requireUserLogin'), _t('您所使用的用户名已经被注册,请登录后再次提交'));
 
-        if ($this->options->commentsRequireMail && !$user->hasLogin()) {
+        if ($this->options->commentsRequireMail && !$this->user->hasLogin()) {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
@@ -88,27 +88,27 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
-            $this->request->setCookie('author', $comment['author'], $expire);
-            $this->request->setCookie('mail', $comment['mail'], $expire);
-            $this->request->setCookie('url', $comment['url'], $expire);
+            $this->response->setCookie('author', $comment['author'], $expire);
+            $this->response->setCookie('mail', $comment['mail'], $expire);
+            $this->response->setCookie('url', $comment['url'], $expire);
         }
         
         try {
             $validator->run($comment);
         } catch (Typecho_Validate_Exception $e) {
             /** 记录文字 */
-            Typecho_Request::setCookie('text', $comment['text']);
-            throw new Typecho_Widget_Exception($e->getMessages());
+            $this->response->setCookie('text', $comment['text']);
+            $this->response->throwExceptionResponseByCode($e->getMessages());
         }
         
         /** 生成过滤器 */
-        $comment = $this->plugin('Filter')->comment($comment);
+        $comment = $this->plugin()->comment($comment);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
         $this->response->deleteCookie('text');
         
-        Typecho_Common::goBack('#comments-' . $commentId);
+        $this->response->goBack('comments-' . $commentId);
     }
     
     /**
@@ -148,7 +148,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $trackback = $this->plugin('Filter')->trackback($trackback);
+        $trackback = $this->plugin()->trackback($trackback);
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
@@ -181,10 +181,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      * @access public
      * @return void
      */
-    public function init()
+    public function action()
     {
+        /** 回调方法 */
+        $callback = $this->request->type;
+    
         /** 判断内容是否存在 */
-        if (false !== Typecho_Router::match($request->permalink) && 
+        if (false !== Typecho_Router::match($this->request->permalink) && 
         ('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current) &&
         $this->widget('Widget_Archive')->to($this->_content)->have() && 
         in_array($callback, array('comment', 'trackback'))) {

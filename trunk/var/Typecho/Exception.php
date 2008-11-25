@@ -58,7 +58,7 @@ class Typecho_Exception extends Exception
      * @param integer $code 异常代码
      * @return void
      */
-    public function __construct($message, $code = 0)
+    public function __construct($message, $code = NULL)
     {
         if (empty($message) && function_exists('error_get_last')) {
             /** 默认信息为上一条错误 */

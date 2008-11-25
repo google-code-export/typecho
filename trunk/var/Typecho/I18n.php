@@ -37,6 +37,19 @@ function _e()
 }
 
 /**
+ * 针对复数形式的翻译函数
+ * 
+ * @param string $single 单数形式的翻译
+ * @param string $plural 复数形式的翻译
+ * @param integer $number 数字
+ * @return string
+ */
+function _n($single, $plural, $number)
+{
+    return Typecho_I18n::ngettext($single, $plural, $number);
+}
+
+/**
  * 国际化字符翻译
  *
  * @package I18n
@@ -58,6 +71,20 @@ class Typecho_I18n
      * @var string
      */
     private static $_lang = NULL;
+    
+    /**
+     * 初始化语言文件
+     * 
+     * @access private
+     * @return boolean
+     */
+    private static function init()
+    {
+        /** GetText支持 */
+        require_once 'Typecho/I18n/GetText.php';
+        self::$_loaded = new Typecho_I18n_GetText(self::$_lang);
+        return true;
+    }
 
     /**
      * 翻译文字
@@ -68,18 +95,22 @@ class Typecho_I18n
      */
     public static function translate($string)
     {
-        if (self::$_lang) {
-            if (!self::$_loaded) {
-                /** GetText支持 */
-                require_once 'Typecho/I18n/GetText.php';
-                Typecho_I18n_GetText::init(self::$_lang);
-                self::$_loaded = true;
-            }
-
-            return isset(Typecho_I18n_GetText::$strings[$string]) ? Typecho_I18n_GetText::$strings[$string] : $string;
-        } else {
-            return $string;
-        }
+        self::$_lang && empty(self::$_loaded) && self::init();
+        return self::$_lang ? self::$_loaded->translate($string) : $string;
+    }
+    
+    /**
+     * 针对复数形式的翻译函数
+     * 
+     * @param string $single 单数形式的翻译
+     * @param string $plural 复数形式的翻译
+     * @param integer $number 数字
+     * @return string
+     */
+    public static function ngettext($single, $plural, $number)
+    {
+        self::$_lang && empty(self::$_loaded) && self::init();
+        return self::$_lang ? self::$_loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
     }
     
     /**
@@ -92,58 +123,39 @@ class Typecho_I18n
      */
     public static function dateWord($from, $now)
     {
-        static $localDateDestCache, $localDateSourceCache;
-        
-        if (empty($localDateDestCache) || empty($localDateSourceCache)) {
-            $map = array(
-                /** 星期 */
-                'Sun'       => _t('星期日'),
-                'Mon'       => _t('星期一'),
-                'Tue'       => _t('星期二'),
-                'Wed'       => _t('星期三'),
-                'Thu'       => _t('星期四'),
-                'Fri'       => _t('星期五'),
-                'Sat'       => _t('星期六'),
-                
-                /** 时间 */
-                'am'        => _t('上午'),
-                'pm'        => _t('下午')
-            );
-            
-            $localDateDestCache = array_values($map);
-            $localDateSourceCache = array_keys($map);
-        }
-        
         $between = $now - $from;
         
         /** 如果是一天 */
         if ($between < 86400 && idate('d', $from) == idate('d', $now)) {
             /** 如果是一小时 */
-            if ($between < 3600 && idate('H', $from) == idate('H', $now)) {                
+            if ($between < 3600 && idate('H', $from) == idate('H', $now)) {
                 /** 如果是一分钟 */
                 if ($between < 60 && idate('i', $from) == idate('i', $now)) {
-                    return _t('%d秒前', idate('s', $now) - idate('s', $from));
+                    return _n('%d秒前', '%d秒前', idate('s', $now) - idate('s', $from));
                 }
                 
-                return _t('%d分钟前', idate('i', $now) - idate('i', $from));
+                $min = idate('i', $now) - idate('i', $from);
+                return sprintf(_n('%d分钟前', '%d分钟前', $min), $min);
             }
             
-            return _t('%d小时前', idate('H', $now) - idate('H', $from));
+            $hour = idate('H', $now) - idate('H', $from);
+            return sprintf(_n('%d小时前', '%d小时前', $hour), $hour);
         }
         
         /** 如果是昨天 */
         if ($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
-            return str_replace($localDateSourceCache, $localDateDestCache, date(_t('昨天a g:i'), $from));
+            return date(_t('昨天 H:i'), $from);
         }
         
         /** 如果是一个星期 */
         if ($between < 604800 && idate('W', $from) == idate('W', $now)) {
-            return str_replace($localDateSourceCache, $localDateDestCache, date('D', $from));
+            $day = intval($between / 3600);
+            return sprintf(_n('%d天前', '%d天前', $day), $day);
         }
         
         /** 如果是 */
         if ($between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
-            return str_replace($localDateSourceCache, $localDateDestCache, date(_t('n月j日'), $from));
+            return date(_t('n月j日'), $from);
         }
         
         return date(_t('Y年m月d日'), $from);

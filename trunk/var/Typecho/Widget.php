@@ -207,7 +207,7 @@ abstract class Typecho_Widget
      */
     public function to(&$variable)
     {
-        $variable = $this;
+        return $variable = $this;
     }
 
     /**
