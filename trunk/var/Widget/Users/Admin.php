@@ -64,7 +64,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      * @access protected
      * @return void
      */
-    protected function _domainPath()
+    protected function getDomainPath()
     {
         $parts = parse_url($this->url);
         return $parts['host'] . (isset($parts['path']) ? $parts['path'] : NULL);

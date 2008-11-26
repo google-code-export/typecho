@@ -23,7 +23,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return array
      */
-    protected function _parentContent()
+    protected function getParentContent()
     {
         return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
         ->where('table.contents.cid = ?', $this->cid)
@@ -36,7 +36,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function _title()
+    protected function getTitle()
     {
         return $this->parentContent['title'];
     }
@@ -47,7 +47,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function _permalink()
+    protected function getPermalink()
     {
         return $this->parentContent['permalink'] . '#comments-' . $this->coid;
     }
@@ -58,7 +58,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function _content()
+    protected function getContent()
     {
         return $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
     }

@@ -8,7 +8,7 @@
  * @version 1.0.0
  * @link http://www.typecho.org
  */
-class HelloWorld_Plugin extends Typecho_Plugin_Abstract
+class HelloWorld_Plugin implements Typecho_Plugin_Interface
 {
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
@@ -17,10 +17,20 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public static function activate()
+    public function activate()
     {
         Typecho_Plugin::factory('admin/menu.php')->navBar = array('HelloWorld_Plugin', 'render');
     }
+    
+    /**
+     * 禁用插件方法,如果禁用失败,直接抛出异常
+     * 
+     * @static
+     * @access public
+     * @return void
+     * @throws Typecho_Plugin_Exception
+     */
+    public function deactivate(){}
     
     /**
      * 获取插件信息方法
@@ -39,7 +49,7 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
      * @access public
      * @return unknown
      */
-    public static function information()
+    public function information()
     {
         return array('title'        => 'Hello World',                                   //插件标题
                      'author'       => 'Typecho Team',                                  //插件作者
@@ -57,11 +67,10 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
-    public static function config(Typecho_Widget_Helper_Form $form)
+    public function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
-        $name = new Typecho_Widget_Helper_Form_Text('word', 'Hello World', _t('说点什么'));
-        $name->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
+        $name = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, 'Hello World', _t('说点什么'));
         $form->addInput($name);
     }
     
@@ -73,7 +82,6 @@ class HelloWorld_Plugin extends Typecho_Plugin_Abstract
      */
     public static function render()
     {
-        echo '<span style="border:1px solid #999;padding:2px;background:#E37400;color:#222">' . 
-        Typecho_Plugin::getOption('HelloWorld', 'word') . '</span>';
+        echo Typecho_Widget::widget('Widget_Options')->plugin(self)->word;
     }
 }
