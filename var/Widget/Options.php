@@ -53,7 +53,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _feedUrl()
+    protected function getFeedUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/'), $this->index);
     }
@@ -64,7 +64,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _feedRssUrl()
+    protected function getFeedRssUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
     }
@@ -75,7 +75,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _feedAtomUrl()
+    protected function getFeedAtomUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
     }
@@ -86,7 +86,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _commentsFeedUrl()
+    protected function getCommentsFeedUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
     }
@@ -97,7 +97,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _commentsFeedRssUrl()
+    protected function getCommentsFeedRssUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
     }
@@ -108,7 +108,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _commentsFeedAtomUrl()
+    protected function getCommentsFeedAtomUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
     }
@@ -119,7 +119,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function _xmlRpcUrl()
+    protected function getXmlRpcUrl()
     {
         return Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
     }
@@ -245,21 +245,21 @@ class Widget_Options extends Typecho_Widget
     /**
      * 获取插件系统参数
      * 
-     * @param string $pluginName 插件名称
-     * @param string $optionName 参数名称
+     * @param mixed $pluginName 插件名称
      * @return void
      */
-    public function getPluginOption($pluginName, $optionName)
+    public function plugin($pluginName)
     {
+        is_string($pluginName) && (list($pluginName) = explode('_', get_class($pluginName)));
         if (!isset($this->_pluginConfig[$pluginName])) {
             if (!empty($this->_row['plugin:' . $pluginName])
             && false !== ($options = unserialize($this->_row['plugin:' . $pluginName]))) {
-                $this->_pluginConfig[$pluginName] = $options;
+                $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
             } else {
                 throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
             }
         }
 
-        return $this->_pluginConfig[$pluginName][$optionName];
+        return $this->_pluginConfig[$pluginName];
     }
 }

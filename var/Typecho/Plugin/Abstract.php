@@ -9,6 +9,9 @@
  * @version $Id$
  */
 
+/** Typecho_Plugin */
+require_once 'Typecho/Plugin.php';
+
 /**
  * 插件接口
  * 
@@ -66,4 +69,31 @@ abstract class Typecho_Plugin_Abstract
      * @return void
      */
     public static function config(Typecho_Widget_Helper_Form $form){}
+    
+    /**
+     * 注册一个回调函数
+     * 
+     * @access public
+     * @param string $handle 插件句柄
+     * @param string $component 插入组件
+     * @param mixed $callback 回调函数
+     * @return void
+     */
+    public static function register($handle, $component, $callback)
+    {
+        Typecho_Plugin::factory($handle)->$component = $callback;
+    }
+    
+    /**
+     * 获取当前配置
+     * 
+     * @access public
+     * @param string $name 配置名称
+     * @return mixed
+     */
+    public static function option($name)
+    {
+        list($pluginName) = explode('_', get_class($this));
+        return Typecho_Plugin::getOption($pluginName, $name);
+    }
 }

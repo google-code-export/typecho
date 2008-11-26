@@ -20,7 +20,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access protected
      * @return array
      */
-    protected function _tags()
+    protected function getTags()
     {
         return $this->db->fetchAll($this->db
         ->select()->from('table.metas')
@@ -35,7 +35,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function _author()
+    protected function getAuthor()
     {
         return $this->db->fetchObject($this->db->select('screenName')->from('table.users')
         ->where('uid = ?', $this->authorId))->screenName;

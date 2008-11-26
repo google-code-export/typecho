@@ -25,7 +25,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @access protected
      * @return void
      */
-    protected function _parentContent()
+    protected function getParentContent()
     {
         return $this->parameter->parentContent;
     }

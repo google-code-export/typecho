@@ -50,13 +50,6 @@ class Typecho_Plugin
     private static $_tmp = array();
     
     /**
-     * 获取插件系统变量代理方法
-     * 
-     * @var mixed
-     */
-    private static $_callback;
-    
-    /**
      * 唯一句柄
      * 
      * @access private
@@ -93,7 +86,7 @@ class Typecho_Plugin
      * @param mixed $callback 获取插件系统变量的代理函数
      * @return void
      */
-    public static function init(array $plugins, $callback)
+    public static function init(array $plugins)
     {
         $plugins['activated'] = array_key_exists('activated', $plugins) ? $plugins['activated'] : array();
         $plugins['handles'] = array_key_exists('handles', $plugins) ? $plugins['handles'] : array();
@@ -101,7 +94,6 @@ class Typecho_Plugin
         
         /** 初始化变量 */
         self::$_plugins = $plugins;
-        self::$_callback = $callback;
     }
     
     /**
@@ -163,18 +155,6 @@ class Typecho_Plugin
     }
     
     /**
-     * 获取系统参数
-     * 
-     * @param string $pluginName 插件名称
-     * @param string $optionName 参数名称
-     * @return mixed
-     */
-    public static function getOption($pluginName, $optionName)
-    {
-        return call_user_func($callback, $pluginName, $optionName);
-    }
-    
-    /**
      * 需要预先包含的文件
      * 
      * @access public
@@ -192,15 +172,15 @@ class Typecho_Plugin
      * 设置回调函数
      * 
      * @access public
-     * @param string $handle 句柄
+     * @param string $component 当前组件
      * @param mixed $value 回调函数
      * @return void
      */
-    public function __set($handle, $value)
+    public function __set($component, $value)
     {
-        $handle = $this->_handle . ':' . $handle;
-        self::$_plugins['handles'][$handle][] = $value;
-        self::$_tmp['handles'][$handle][] = $value;
+        $component = $this->_handle . ':' . $component;
+        self::$_plugins['handles'][$component][] = $value;
+        self::$_tmp['handles'][$component][] = $value;
     }
     
     /**
@@ -208,37 +188,38 @@ class Typecho_Plugin
      * 
      * @access public
      * @param string $component 当前组件
-     * @return void
+     * @return Typecho_Plugin
      */
     public function __get($component)
     {
         $this->_component = $component;
+        return $this;
     }
     
     /**
      * 回调处理函数
      * 
      * @access public
-     * @param string $handle 句柄
+     * @param string $component 当前组件
      * @param string $args 参数
      * @return mixed
      */
-    public function __call($handle, $args)
+    public function __call($component, $args)
     {
-        $handle = $this->_handle . ':' . $handle;
+        $component = $this->_handle . ':' . $component;
         $last = count($args);
         $args[$last] = $last > 0 ? $args[0] : false;
         
-        if (isset($this->_required[$handle]) && isset(self::$_plugins['files'][$handle])) {
-            $this->_required[$handle] = true;
-            foreach (self::$_plugins['files'][$handle] as $file) {
+        if (isset(self::$_required[$component]) && isset(self::$_plugins['files'][$component])) {
+            self::$_required[$component] = true;
+            foreach (self::$_plugins['files'][$component] as $file) {
                 require_once $file;
             }
         }
     
-        if (isset(self::$_plugins['handles'][$handle])) {
+        if (isset(self::$_plugins['handles'][$component])) {
             $args[$last] = NULL;
-            foreach (self::$_plugins['handles'][$handle] as $callback) {
+            foreach (self::$_plugins['handles'][$component] as $callback) {
                 $args[$last] = call_user_func_array($callback, $args);
             }
         }

@@ -96,7 +96,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
         
         /** 取出插入tag */
-        $insertTags = $this->getTags($tags);
+        $insertTags = $this->scanTags($tags);
         
         /** 插入tag */
         if ($insertTags) {
@@ -124,7 +124,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @param array $tags
      * @return array
      */
-    public function getTags(array $tags)
+    public function scanTags(array $tags)
     {
         $result = array();
         foreach ($tags as $tag) {

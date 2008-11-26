@@ -56,7 +56,7 @@ class Widget_Stat extends Typecho_Widget
      * @access protected
      * @return integer
      */
-    protected function _publishedPostsNum()
+    protected function getPublishedPostsNum()
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
                     ->from('table.contents')
@@ -69,7 +69,7 @@ class Widget_Stat extends Typecho_Widget
      * @access protected
      * @return integer
      */
-    protected function _myPublishedPostsNum()
+    protected function getMyPublishedPostsNum()
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
                     ->from('table.contents')
@@ -83,7 +83,7 @@ class Widget_Stat extends Typecho_Widget
      * @access protected
      * @return integer
      */
-    protected function _publishedCommentsNum()
+    protected function getPublishedCommentsNum()
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
                     ->from('table.comments')
@@ -96,7 +96,7 @@ class Widget_Stat extends Typecho_Widget
      * @access protected
      * @return integer
      */
-    protected function _categoriesNum()
+    protected function getCategoriesNum()
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
                     ->from('table.metas')

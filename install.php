@@ -231,7 +231,7 @@ Typecho_Router::setRoutes(\$options->routingTable);
 Typecho_Exception::set404(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . \$options->theme . '/404.php');
 
 /** 初始化插件 */
-Typecho_Plugin::init(\$options->plugins, array(\$options, 'getPluginOption'));
+Typecho_Plugin::init(\$options->plugins);
 ";
 
                                     file_put_contents('./config.inc.php', implode('', $lines));
