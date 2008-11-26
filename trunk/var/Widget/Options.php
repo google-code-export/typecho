@@ -250,7 +250,6 @@ class Widget_Options extends Typecho_Widget
      */
     public function plugin($pluginName)
     {
-        is_string($pluginName) && (list($pluginName) = explode('_', get_class($pluginName)));
         if (!isset($this->_pluginConfig[$pluginName])) {
             if (!empty($this->_row['plugin:' . $pluginName])
             && false !== ($options = unserialize($this->_row['plugin:' . $pluginName]))) {
