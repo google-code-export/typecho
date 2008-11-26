@@ -162,16 +162,26 @@ class Typecho_Plugin
      * @param string $pluginFile 插件文件路径
      * @return void
      */
-    public static function headerInfo($pluginFile)
+    public static function parseInfo($pluginFile)
     {
         $tokens = token_get_all(file_get_contents($pluginFile));
+        $isFunction = false;
+        $isClass = false;
+        $isInClass = false;
+        $isInFunction = false;
+        $isDefined = false;
+        $current = NULL;
+        
         /** 初始信息 */
         $info = array(
             'description' => '',
             'title'       => '',
             'author'      => '',
             'homepage'    => '',
-            'version'     => ''
+            'version'     => '',
+            'activate'    => false,
+            'deactivate'  => false,
+            'config'      => false
         );
         
         $map = array(
@@ -180,7 +190,7 @@ class Typecho_Plugin
             'link'      =>  'homepage',
             'version'   =>  'version'
         );
-        
+
         foreach ($tokens as $token) {
             /** 获取doc comment */
             if (is_array($token) && T_DOC_COMMENT == $token[0]) {
@@ -210,12 +220,73 @@ class Typecho_Plugin
                         }
                     }
                 }
-                
-                break;
+            }
+            
+            if (is_array($token)) {
+                switch ($token[0]) {
+                    case T_FUNCTION:
+                        $isFunction = true;
+                        break;
+                    case T_IMPLEMENTS:
+                        $isClass = true;
+                        break;
+                    case T_WHITESPACE:
+                        break;
+                    case T_STRING:
+                        $string = strtolower($token[1]);
+                        switch ($string) {
+                            case 'typecho_plugin_interface':
+                                $isInClass = true;
+                                break;
+                            case 'activate':
+                            case 'deactivate':
+                            case 'config':
+                                if ($isFunction) {
+                                    $current = $string;
+                                }
+                                break;
+                            default:
+                                if (!empty($current) && $isInFunction && $isInClass) {
+                                    $info[$current] = true;
+                                }
+                                break;
+                        }
+                        break;
+                    default:
+                        if (!empty($current) && $isInFunction && $isInClass) {
+                            $info[$current] = true;
+                        }
+                        break;
+                }
+            } else {
+                $token = strtolower($token);
+                switch ($token) {
+                    case '{':
+                        if ($isDefined) {
+                            $isInFunction = true;
+                        }
+                        break;
+                    case '(':
+                        if ($isFunction && !$isDefined) {
+                            $isDefined = true;
+                        }
+                        break;
+                    case '}':
+                    case ';':
+                        $isDefined = false;
+                        $isFunction = false;
+                        $isInFunction = false;
+                        $current = NULL;
+                        break;
+                    default:
+                        if (!empty($current) && $isInFunction && $isInClass) {
+                            $info[$current] = true;
+                        }
+                        break;
+                }
             }
         }
         
-        unset($tokens);
         return $info;
     }
     
