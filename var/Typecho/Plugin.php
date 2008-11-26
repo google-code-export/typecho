@@ -104,7 +104,8 @@ class Typecho_Plugin
      */
     public static function factory($handle)
     {
-        return isset(self::$_instances[$handle]) ? self::$_instances[$handle] : (self::$_instances[$handle] = new Typecho_Plugin($handle));
+        return isset(self::$_instances[$handle]) ? self::$_instances[$handle] :
+        (self::$_instances[$handle] = new Typecho_Plugin($handle));
     }
     
     /**
@@ -152,6 +153,70 @@ class Typecho_Plugin
     public static function export()
     {
         return self::$_plugins;
+    }
+    
+    /**
+     * 获取插件文件的头信息
+     * 
+     * @access public
+     * @param string $pluginFile 插件文件路径
+     * @return void
+     */
+    public static function headerInfo($pluginFile)
+    {
+        $tokens = token_get_all(file_get_contents($pluginFile));
+        /** 初始信息 */
+        $info = array(
+            'description' => '',
+            'title'       => '',
+            'author'      => '',
+            'homepage'    => '',
+            'version'     => ''
+        );
+        
+        $map = array(
+            'package'   =>  'title',
+            'author'    =>  'author',
+            'link'      =>  'homepage',
+            'version'   =>  'version'
+        );
+        
+        foreach ($tokens as $token) {
+            /** 获取doc comment */
+            if (is_array($token) && T_DOC_COMMENT == $token[0]) {
+            
+                /** 分行读取 */
+                $described = false;
+                $lines = preg_split("(\r|\n)", $token[1]);
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    if (!empty($line) && '*' == $line[0]) {
+                        $line = trim(substr($line, 1));
+                        if (!$described && !empty($line) && '@' == $line[0]) {
+                            $described = true;
+                        }
+                        
+                        if (!$described && !empty($line)) {
+                            $info['description'] .= $line . "\n";
+                        } else if ($described && !empty($line) && '@' == $line[0]) {
+                            $info['description'] = trim($info['description']);
+                            $line = trim(substr($line, 1));
+                            $args = explode(' ', $line);
+                            $key = array_shift($args);
+                            
+                            if (isset($map[$key])) {
+                                $info[$map[$key]] = trim(implode(' ', $args));
+                            }
+                        }
+                    }
+                }
+                
+                break;
+            }
+        }
+        
+        unset($tokens);
+        return $info;
     }
     
     /**
