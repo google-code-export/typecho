@@ -18,33 +18,45 @@
  */
 class Widget_Plugins_List extends Typecho_Widget
 {
-    public function __construct()
+    /**
+     * 初始化函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function init()
     {
         /** 列出插件目录 */
         $pluginDirs = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/*');
 
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
+        $plugins = Typecho_Plugin::export();
+        $activatedPlugins = $plugins['activated'];
         
         foreach ($pluginDirs as $pluginDir) {
-            /** 获取插件名称 */
-            $pluginName = basename($pluginDir);
-        
-            /** 获取插件主文件 */
-            $pluginFileName = $pluginDir . '/Plugin.php';
+            if (is_dir($pluginDir)) {
+                /** 获取插件名称 */
+                $pluginName = basename($pluginDir);
+            
+                /** 获取插件主文件 */
+                $pluginFileName = $pluginDir . '/Plugin.php';
+            } else if (is_file($pluginDir)) {
+                $pluginFileName = $pluginDir;
+                $part = explode('.', $pluginDir);
+                if (2 == count($part) && 'php' == $part[1]) {
+                    $pluginName = $part[0];
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
             
             if (file_exists($pluginFileName)) {
-                require_once $pluginFileName;
-                
-                /** 获取插件信息 */
-                if (is_callable(array($pluginName . '_Plugin', 'information'))) {
-                    $information = call_user_func(array($pluginName . '_Plugin', 'information'));
-                    $information['name'] = $pluginName;
-                    $information['check'] = isset($information['check']) ? 
-                    str_replace('{version}', $information['version'], $information['check']) : $information['homepage'];
-                    $information['activated'] = in_array($pluginName, $activatedPlugins);
-                    $this->push($information);
-                }
+                $info = Typecho_Plugin::parseInfo($pluginFileName);
+                $info['name'] = $pluginName;
+                $info['activated'] = isset($activatedPlugins[$pluginName]);
+                $this->push($info);
             }
         }
     }

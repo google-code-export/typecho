@@ -18,15 +18,55 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Action_Widget
+class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Do
 {
+    /**
+     * 全局选项
+     * 
+     * @access protected
+     * @var Widget_Options
+     */
+    protected $options;
+
+    /**
+     * 用户对象
+     * 
+     * @access protected
+     * @var Widget_User
+     */
+    protected $user;
+    
+    /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 准备函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function prepare()
+    {
+        /** 初始化数据库 */
+        $this->db = Typecho_Db::get();
+    
+        /** 初始化常用组件 */
+        $this->options = $this->widget('Widget_Options');
+        $this->user = $this->widget('Widget_User');
+    }
+
     /**
      * 激活插件
      * 
      * @access public
      * @return void
      */
-    public function activatePlugin()
+    public function activate($pluginName)
     {
         $pluginName = Typecho_Request::getParameter('plugin');
         $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
@@ -87,7 +127,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
      * @access public
      * @return void
      */
-    public function deactivatePlugin()
+    public function deactivate($pluginName)
     {
         $pluginName = Typecho_Request::getParameter('plugin');
         $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
@@ -130,7 +170,7 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
      * @access public
      * @return void
      */
-    public function configPlugin()
+    public function config($pluginName)
     {
         $form = Typecho_API::factory('Widget_Plugins_Config')->form;
         
@@ -161,10 +201,10 @@ class Widget_Plugins_Edit extends Typecho_Widget implements Widget_Interface_Act
      */
     public function action()
     {
-        Typecho_API::factory('Widget_Users_Current')->pass('administrator');
-        Typecho_Request::bindParameter(array('do' => 'activate'), array($this, 'activatePlugin'));
-        Typecho_Request::bindParameter(array('do' => 'deactivate'), array($this, 'deactivatePlugin'));
-        Typecho_Request::bindParameter(array('do' => 'config'), array($this, 'configPlugin'));
-        Typecho_API::redirect(Typecho_API::factory('Widget_Options')->adminUrl);
+        $this->user->pass('administrator');
+        $this->onRequest('activate')->activate($this->request->activate);
+        $this->onRequest('deactivate')->deactivate($this->request->deactivate);
+        $this->onRequest('config')->config($this->request->config);
+        $this->response->redirect($this->options->adminUrl);
     }
 }
