@@ -97,8 +97,8 @@ class Widget_Menu extends Typecho_Widget
         ),
         array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
-            array(_t('插件'), _t('插件管理'), '/admin/plugin.php', 'administrator'),
-            array(_t('外观'), _t('管理网站外观'), '/admin/theme.php', 'administrator')
+            array(_t('插件'), _t('插件管理'), '/admin/plugins.php', 'administrator'),
+            array(_t('外观'), _t('管理网站外观'), '/admin/themes.php', 'administrator')
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),

@@ -165,6 +165,7 @@ class Typecho_Plugin
     public static function parseInfo($pluginFile)
     {
         $tokens = token_get_all(file_get_contents($pluginFile));
+        $isDoc = false;
         $isFunction = false;
         $isClass = false;
         $isInClass = false;
@@ -193,7 +194,7 @@ class Typecho_Plugin
 
         foreach ($tokens as $token) {
             /** 获取doc comment */
-            if (is_array($token) && T_DOC_COMMENT == $token[0]) {
+            if (!$isDoc && is_array($token) && T_DOC_COMMENT == $token[0]) {
             
                 /** 分行读取 */
                 $described = false;
@@ -220,6 +221,8 @@ class Typecho_Plugin
                         }
                     }
                 }
+                
+                $isDoc = true;
             }
             
             if (is_array($token)) {
