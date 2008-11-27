@@ -131,7 +131,8 @@ class Typecho_I18n
             if ($between < 3600 && idate('H', $from) == idate('H', $now)) {
                 /** 如果是一分钟 */
                 if ($between < 60 && idate('i', $from) == idate('i', $now)) {
-                    return _n('%d秒前', '%d秒前', idate('s', $now) - idate('s', $from));
+                    $second = idate('s', $now) - idate('s', $from);
+                    return sprintf(_n('%d秒前', '%d秒前', $second), $second);
                 }
                 
                 $min = idate('i', $now) - idate('i', $from);

@@ -91,14 +91,15 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $this->response->setCookie('author', $comment['author'], $expire);
             $this->response->setCookie('mail', $comment['mail'], $expire);
             $this->response->setCookie('url', $comment['url'], $expire);
-        }
+            
         
-        try {
-            $validator->run($comment);
-        } catch (Typecho_Validate_Exception $e) {
-            /** 记录文字 */
-            $this->response->setCookie('text', $comment['text']);
-            $this->response->throwExceptionResponseByCode($e->getMessages());
+            try {
+                $validator->run($comment);
+            } catch (Typecho_Validate_Exception $e) {
+                /** 记录文字 */
+                $this->response->setCookie('text', $comment['text']);
+                $this->response->throwExceptionResponseByCode($e->getMessages());
+            }
         }
         
         /** 生成过滤器 */

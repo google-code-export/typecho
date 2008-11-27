@@ -134,7 +134,7 @@ abstract class Typecho_Widget
         $request = $this->request->{$name};
         
         if ((!empty($value) && $request == $value) || 
-        (empty($value) && !empty($name))) {
+        (empty($value) && !empty($request))) {
             return $this;
         } else {
             /** Typecho_Widget_Helper_Null */
