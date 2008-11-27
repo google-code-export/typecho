@@ -131,13 +131,23 @@ class Typecho_Plugin
     public static function deactivate($pluginName)
     {
         /** 去掉所有相关文件 */
-        foreach (self::$_plugins['activated'][$pluginName]['files'] as $handle => $files) {
-            self::$_plugins['files'][$handle] = array_diff(self::$_plugins['files'][$handle], $files);
+        if (isset(self::$_plugins['activated'][$pluginName]['files']) && is_array(self::$_plugins['activated'][$pluginName]['files'])) {
+            foreach (self::$_plugins['activated'][$pluginName]['files'] as $handle => $files) {
+                self::$_plugins['files'][$handle] = array_diff(self::$_plugins['files'][$handle], $files);
+                if (empty(self::$_plugins['files'][$handle])) {
+                    unset(self::$_plugins['files'][$handle]);
+                }
+            }
         }
         
         /** 去掉所有相关回调函数 */
-        foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
-            self::$_plugins['handles'][$handle] = array_diff(self::$_plugins['handles'][$handle], $handles);
+        if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
+            foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
+                self::$_plugins['handles'][$handle] = array_diff(self::$_plugins['handles'][$handle], $handles);
+                if (empty(self::$_plugins['handles'][$handle])) {
+                    unset(self::$_plugins['handles'][$handle]);
+                }
+            }
         }
         
         /** 禁用当前插件 */

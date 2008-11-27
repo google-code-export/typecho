@@ -166,6 +166,11 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
      */
     public function lastInsertId($resource, $handle)
     {
-        return pg_fetch_row(pg_query($handle, 'SELECT CURRVAL(' . $this->quoteColumn($this->_lastTable . '_seq') . ')'), 0);
+        /** 查看是否存在序列,可能需要更严格的检查 */
+        if (pg_fetch_assoc(pg_query($handle, 'SELECT oid FROM pg_class WHERE relname = ' . $this->quoteValue($this->_lastTable . '_seq')))) {
+            return pg_fetch_result(pg_query($handle, 'SELECT CURRVAL(' . $this->quoteValue($this->_lastTable . '_seq') . ')'), 0, 0);
+        }
+        
+        return 0;
     }
 }
