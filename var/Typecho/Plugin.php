@@ -304,6 +304,32 @@ class Typecho_Plugin
     }
     
     /**
+     * 获取插件路径和类名
+     * 返回值为一个数组
+     * 第一项为插件路径,第二项为类名
+     * 
+     * @access public
+     * @param string $pluginName 插件名
+     * @param string $path 插件目录
+     * @return array
+     */
+    public function portal($pluginName, $path)
+    {
+        switch (true) {
+            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php'):
+                $className = $pluginName . '_Plugin';
+                break;
+            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'):
+                $className = $pluginName;
+                break;
+            default:
+                throw new Typecho_Exception('Missing Plugin ' . $pluginName, Typecho_Exception::NOTFOUND);
+        }
+        
+        return array($pluginFileName, $className);
+    }
+    
+    /**
      * 需要预先包含的文件
      * 
      * @access public

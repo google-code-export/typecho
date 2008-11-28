@@ -28,16 +28,8 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function activate($pluginName)
     {
-        switch (true) {
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php'):
-                $className = $pluginName . '_Plugin';
-                break;
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'):
-                $className = $pluginName;
-                break;
-            default:
-                $this->throwExceptionResponseByCode(_t('插件不存在'), 404);
-        }
+        /** 获取插件入口 */
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
         
         /** 获取已激活插件 */
         $plugins = Typecho_Plugin::export();
@@ -87,16 +79,8 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function deactivate($pluginName)
     {
-        switch (true) {
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php'):
-                $className = $pluginName . '_Plugin';
-                break;
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'):
-                $className = $pluginName;
-                break;
-            default:
-                $this->throwExceptionResponseByCode(_t('插件不存在'), 404);
-        }
+        /** 获取插件入口 */
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
         
         /** 获取已激活插件 */
         $plugins = Typecho_Plugin::export();
@@ -137,25 +121,24 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function config($pluginName)
     {
-        $form = Typecho_API::factory('Widget_Plugins_Config')->form;
+        $form = $this->widget('Widget_Plugins_Config')->config();
         
         /** 验证表单 */
         try {
             $form->validate();
         } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack('#edit');
+            $this->response->goBack();
         }
         
-        $pluginName = Typecho_Request::getParameter('plugin');
-        $settings = $form->getParameters();
-        Typecho_API::factory('Widget_Options')->update(array('value' => serialize($settings),
-        'name' => 'plugin:' . $pluginName), Typecho_Db::get()->sql()->where('`name` = ?', 'plugin:' . $pluginName));
+        $settings = $form->getAllRequest();
+        $this->update(array('value' => serialize($settings)),
+        $this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("插件配置已经保存"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('plugin.php', Typecho_API::factory('Widget_Options')->adminUrl));
+        $this->response->redirect(Typecho_Common::url('plugins.php', $this->options->adminUrl));
     }
 
     /**

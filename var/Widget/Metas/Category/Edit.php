@@ -63,8 +63,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         ->where('`name` = ?', $name)
         ->limit(1);
         
-        if(Typecho_Request::getParameter('mid'))
-        {
+        if (Typecho_Request::getParameter('mid')) {
             $select->where('`mid` <> ?', Typecho_Request::getParameter('mid'));
         }
     
@@ -86,8 +85,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         ->where('`slug` = ?', $slug)
         ->limit(1);
         
-        if(Typecho_Request::getParameter('mid'))
-        {
+        if (Typecho_Request::getParameter('mid')) {
             $select->where('`mid` <> ?', Typecho_Request::getParameter('mid'));
         }
     
@@ -143,15 +141,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $submit->button->setAttribute('class', 'submit');
         $form->addItem($submit);
 
-        if(NULL != Typecho_Request::getParameter('mid'))
-        {
+        if (NULL != Typecho_Request::getParameter('mid')) {
             /** 更新模式 */
             $meta = $this->db->fetchRow($this->select()
             ->where('`mid` = ?', Typecho_Request::getParameter('mid'))
             ->where('`type` = ?', 'category')->limit(1));
             
-            if(!$meta)
-            {
+            if (!$meta) {
                 throw new Typecho_Widget_Exception(_t('分类不存在'), Typecho_Exception::NOTFOUND);
             }
             
@@ -163,30 +159,25 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $submit->value(_t('编辑分类'));
             $title->html(_t('编辑分类'));
             $_action = 'update';
-        }
-        else
-        {
+        } else {
             $do->value('insert');
             $submit->value(_t('增加分类'));
             $title->html(_t('增加分类'));
             $_action = 'insert';
         }
         
-        if(empty($action))
-        {
+        if (empty($action)) {
             $action = $_action;
         }
         
         /** 给表单增加规则 */
-        if('insert' == $action || 'update' == $action)
-        {
+        if ('insert' == $action || 'update' == $action) {
             $name->addRule('required', _t('必须填写分类名称'));
             $name->addRule(array($this, 'nameExists'), _t('分类名称已经存在'));
             $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
         }
         
-        if('update' == $action)
-        {
+        if ('update' == $action) {
             $mid->addRule('required', _t('分类主键不存在'));
             $mid->addRule(array($this, 'categoryExists'), _t('分类不存在'));
         }
@@ -202,12 +193,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function insertCategory()
     {
-        try
-        {
+        try {
             $this->form('insert')->validate();
-        }
-        catch(Typecho_Widget_Exception $e)
-        {
+        } catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack('#edit');
         }
         
@@ -238,12 +226,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function ajaxInsertCategory()
     {
-        try
-        {
+        try {
             $this->form('insert')->validate();
-        }
-        catch(Typecho_Widget_Exception $e)
-        {
+        } catch (Typecho_Widget_Exception $e) {
             Typecho_API::throwAjaxResponse(implode(',', $e->getMessages()));
         }
         
@@ -267,12 +252,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function updateCategory()
     {
-        try
-        {
+        try {
             $this->form('update')->validate();
-        }
-        catch(Typecho_Widget_Exception $e)
-        {
+        } catch (Typecho_Widget_Exception $e) {
             Typecho_API::goBack('#edit');
         }
     
@@ -305,12 +287,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $categories = Typecho_Request::getParameter('mid');
         $deleteCount = 0;
         
-        if($categories && is_array($categories))
-        {
-            foreach($categories as $category)
-            {
-                if($this->delete($this->db->sql()->where('mid = ?', $category)))
-                {
+        if ($categories && is_array($categories)) {
+            foreach ($categories as $category) {
+                if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
                     $this->db->query($this->db->sql()->delete('table.relationships')->where('`mid` = ?', $category));
                     $deleteCount ++;
                 }
@@ -338,12 +317,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator->addRule('merge', 'required', _t('分类主键不存在'));
         $validator->addRule('merge', 'categoryExists', _t('请选择需要合并的分类'));
         
-        try
-        {
+        try {
             $validator->run(Typecho_Request::getParametersFrom('merge'));
-        }
-        catch(Typecho_Validate_Exception $e)
-        {
+        } catch (Typecho_Validate_Exception $e) {
             Typecho_API::factory('Widget_Notice')->set($e->getMessages(), NULL, 'error');
             Typecho_API::goBack();
         }
@@ -351,15 +327,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $merge = Typecho_Request::getParameter('merge');
         $categories = Typecho_Request::getParameter('mid');
         
-        if($categories && is_array($categories))
-        {
+        if ($categories && is_array($categories)) {
             $this->merge($merge, 'category', $categories);
             
             /** 提示信息 */
             Typecho_API::factory('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
-        }
-        else
-        {
+        } else {
             Typecho_API::factory('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
         }
         
@@ -376,18 +349,14 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function sortCategory()
     {
         $categories = Typecho_Request::getParameter('sort');
-        if($categories && is_array($categories))
-        {
+        if ($categories && is_array($categories)) {
             $this->sort($categories, 'category');
         }
         
-        if(!Typecho_Request::isAjax())
-        {
+        if (!Typecho_Request::isAjax()) {
             /** 转向原页 */
             Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
-        }
-        else
-        {
+        } else {
             Typecho_API::throwAjaxResponse(_t('分类排序已经完成'), $this->options->charset);
         }
     }

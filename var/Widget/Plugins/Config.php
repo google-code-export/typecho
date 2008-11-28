@@ -16,15 +16,31 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Plugins_Config extends Typecho_Widget
+class Widget_Plugins_Config extends Widget_Abstract_Options
 {
     /**
-     * 配置面板表单
+     * 插件文件路径
+     * 
+     * @access private
+     * @var string
+     */
+    private $_pluginFileName;
+    
+    /**
+     * 插件类
+     * 
+     * @access private
+     * @var string
+     */
+    private $_className;
+
+    /**
+     * 获取插件信息
      * 
      * @access public
-     * @var Typecho_Widget_Helper_Form
+     * @var array
      */
-    public $form;
+    public $info;
 
     /**
      * 绑定动作
@@ -32,9 +48,28 @@ class Widget_Plugins_Config extends Typecho_Widget
      * @access public
      * @return unknown
      */
-    public function __construct()
+    public function init()
     {
-        Typecho_Request::bindParameter(array('do' => 'config'), array($this, 'configPlugin'));
+        $this->user->pass('administrator');
+        if (!isset($this->request->config)) {
+            $this->throwExceptionResponseByCode(_t('插件不存在'), 404);
+        }
+        
+        /** 获取插件入口 */
+        list($this->_pluginFileName, $this->_className) = Typecho_Plugin::portal($this->request->config,
+        __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        $this->info = Typecho_Plugin::parseInfo($this->_pluginFileName);
+    }
+    
+    /**
+     * 获取菜单标题
+     * 
+     * @access public
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        return _t('设置插件 "%s"', $this->info['title']);
     }
 
     /**
@@ -43,57 +78,37 @@ class Widget_Plugins_Config extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function configPlugin()
+    public function config()
     {
-        $pluginName = Typecho_Request::getParameter('plugin');
-        $pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php';
+        /** 获取插件名称 */
+        $pluginName = $this->request->config;
         
         /** 获取已激活插件 */
-        $activatedPlugins = Typecho_API::factory('Widget_Options')->plugins;
+        $plugins = Typecho_Plugin::export();
+        $activatedPlugins = $plugins['activated'];
         
-        if (file_exists($pluginFileName)) {
-            require_once $pluginFileName;
-            
-            /** 获取插件信息 */
-            if (is_callable(array($pluginName . '_Plugin', 'config')) && 
-            in_array($pluginName, $activatedPlugins)) {
-                try {
-                    $options = Typecho_API::factory('Widget_Options');
-                    
-                    /** 初始化表单 */
-                    $this->form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Plugins/Edit.do?do=config&plugin=' .
-                    $pluginName, $options->index),
-                    Typecho_Widget_Helper_Form::POST_METHOD);
-                    
-                    /** 增加一个标题 */
-                    $information = call_user_func(array($pluginName . '_Plugin', 'information'));
-                    $title = new Typecho_Widget_Helper_Layout('h4');
-                    $this->form->addItem($title->html(_t('配置%s', $information['title']))
-                    ->setAttribute('id', 'edit'));
-                    
-                    /** 配置插件面板 */
-                    call_user_func(array($pluginName . '_Plugin', 'config'), $this->form);
-                    
-                    /** 对面板赋值 */
-                    $inputs = $this->form->getInputs();
-                    foreach ($inputs as $name => $input) {
-                        $input->value($options->plugin($pluginName)->{$name});
-                    }
-                    
-                    /** 空格 */
-                    $this->form->addItem(new Typecho_Widget_Helper_Layout('hr', array('class' => 'space')));
-                    
-                    /** 提交按钮 */
-                    $submit = new Typecho_Widget_Helper_Form_Submit();
-                    $submit->button->setAttribute('class', 'submit');
-                    $this->form->addItem($submit->value(_t('保存配置')));
-                }
-                 catch (Typecho_Plugin_Exception $e) {
-                    /** 截获异常 */
-                    Typecho_API::factory('Widget_Notice')->set($e->getMessage(), NULL, 'error');
-                    Typecho_API::goBack();
-                }
+        /** 判断实例化是否成功 */
+        
+        if (!$this->info['config'] || !isset($activatedPlugins[$pluginName])) {
+            $this->throwExceptionResponseByCode(_t('无法配置插件'), 500);
+        }
+        
+        /** 实例化插件 */
+        require_once $this->_pluginFileName;
+        $plugin = $this->widget($this->_className);
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('Plugins/Edit.do?config=' . $pluginName,
+        $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
+        $plugin->config($form);
+        
+        $options = $this->options->plugin($pluginName);
+        
+        if (!empty($options) && is_array($options)) {
+            foreach ($options as $key => $val) {
+                $form->getInput($key)->value($val);
             }
         }
+        
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置')));
+        return $form;
     }
 }
