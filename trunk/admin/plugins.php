@@ -38,16 +38,14 @@ include 'menu.php';
                             <td>
                                 <?php if ($plugins->activate): ?>
                                     <?php if ($plugins->activated): ?>
+                                        <?php if ($plugins->config): ?>
+                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $plugins->name); ?>"><?php _e('配置'); ?></a> 
+                                            | 
+                                        <?php endif; ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?deactivate=' . $plugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?activate=' . $plugins->name); ?>"><?php _e('激活'); ?></a>
                                     <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($plugins->activate && $plugins->config): ?>
-                                |
-                                <?php endif; ?>
-                                <?php if ($plugins->config): ?>
-                                    <a href="<?php $options->index('Plugins/Edit.do?config=' . $plugins->name); ?>"><?php _e('配置'); ?></a>
                                 <?php endif; ?>
                             </td>
                         </tr>

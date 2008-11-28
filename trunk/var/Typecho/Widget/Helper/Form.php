@@ -129,6 +129,22 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 获取所有输入项的提交值
+     * 
+     * @access public
+     * @return array
+     */
+    public function getAllRequest()
+    {
+        $values = array();
+        
+        foreach ($this->_inputs as $name => $input) {
+            $values[$name] = Typecho_Request::getParameter($name);
+        }
+        return $values;
+    }
+    
+    /**
      * 设置表单提交方法
      * 
      * @access public
