@@ -181,6 +181,16 @@ class Typecho_Response
     {
         //判断来源
         if (!empty($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+            
+            // ~ fix Issue 38
+            if (!empty($anchor)) {
+                $parts = parse_url($referer);
+                if (isset($parts['fragment'])) {
+                    $referer = substr($referer, 0, strlen($referer) - strlen($parts['fragment']) - 1);
+                }
+            }
+            
             self::redirect($_SERVER['HTTP_REFERER'] . (empty($anchor) ? NULL : '#' . $anchor), false);
         }
     }

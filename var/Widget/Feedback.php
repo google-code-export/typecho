@@ -193,7 +193,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $this->widget('Widget_Archive')->to($this->_content)->have() && 
         in_array($callback, array('comment', 'trackback'))) {
             /** 判断来源 */
-            if ('comment' == $callback && (empty($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $this->_content->permalink)) {
+            // ~ fix Issue 38
+            if ('comment' == $callback && 0 !== strpos($_SERVER['HTTP_REFERER'], $this->_content->permalink)) {
                 $this->response->throwExceptionResponseByCode(_t('来源页不合法'), 403);
             }
             
