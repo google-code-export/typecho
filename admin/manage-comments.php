@@ -23,37 +23,38 @@ include 'menu.php';
                     </p>
                 </form>
                 </div>
-            
-                <table class="typecho-list-table">
-                    <colgroup>
-                        <col width="25"/>
-                        <col width="125"/>
-                        <col width="125"/>
-                        <col width="350"/>
-                        <col width="250"/>
-                        <col width="125"/>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th> </th>
-                            <th><?php _e('作者'); ?></th>
-                            <th><?php _e('日期'); ?></th>
-                            <th><?php _e('内容'); ?></th>
-                            <th><?php _e('文章'); ?></th>
-                            <th><?php _e('状态'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
                     	<?php Typecho_Widget::widget('Widget_Comments_Admin')->to($comments); ?>
-                    	<?php if($comments->have()): ?>
+                        
+                        <ul class="typecho-list-notable">
                         <?php while($comments->next()): ?>
-                        <tr<?php $comments->alt('', ' class="even"'); ?>>
-                            <td><input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/></td>
-                            <td><?php $comments->author(true); ?></td>
-                            <td><?php $comments->dateWord(); ?></td>
-                            <td><?php $comments->excerpt(20); ?></td>
-                            <td><a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></td>
-                            <td>
+                        <li<?php $comments->alt('', ' class="even"'); ?>>
+
+                            <div class="header">
+                            <span class="column-21">
+                            <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
+                            <strong><?php _e('%s | %s发表在', $comments->author, $comments->dateWord); ?></strong>
+                            <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
+                            </span>
+                            <span class="column-02 right">
+                            <?php $comments->gravatar(32); ?>
+                            </span>
+                            </div>
+
+                            <?php $comments->content(); ?>
+                            
+                            <div class="footer">
+                            <span class="left">
+                            <strong>IP:</strong> <?php $comments->ip(); ?>
+                            <?php if($comments->mail): ?>
+                             | <strong>MAIL:</strong> <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>
+                            <?php endif; ?>
+                            <?php if($comments->url): ?>
+                             | <strong>URL:</strong> <a href="<?php $comments->url(); ?>"><?php $comments->url(); ?></a>
+                            <?php endif; ?>
+                            </span>
+                            
+                            <span class="right">
                             <?php if('approved' == $comments->status):
                             _e('展现');
                             elseif('waiting' == $comments->status):
@@ -61,16 +62,11 @@ include 'menu.php';
                             elseif('spam' == $comments->status):
                             _e('垃圾');
                             endif; ?>
-                            </td>
-                        </tr>
+                            </span>
+                            </div>
+                        </li>
                         <?php endwhile; ?>
-                        <?php else: ?>
-                        <tr class="even">
-                        	<td colspan="5"><?php _e('没有任何评论'); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </ul>
                 
             <?php if($comments->have()): ?>
             <div class="typecho-pager">

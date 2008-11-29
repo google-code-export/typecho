@@ -150,7 +150,7 @@ class Typecho_I18n
         
         /** 如果是一个星期 */
         if ($between < 604800 && idate('W', $from) == idate('W', $now)) {
-            $day = intval($between / 3600);
+            $day = intval($between / (3600 * 24));
             return sprintf(_n('%d天前', '%d天前', $day), $day);
         }
         

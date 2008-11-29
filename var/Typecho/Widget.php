@@ -312,7 +312,7 @@ abstract class Typecho_Widget
         }
         
         if (!$this->_row) {
-            $this->_row = reset($this->_stack);
+            reset($this->_stack);
             $this->sequence = 0;
             return false;
         }

@@ -62,6 +62,17 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         return $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
     }
+    
+    /**
+     * 输出词义化日期
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function getDateWord()
+    {
+        return Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
 
     /**
      * 获取查询对象
@@ -245,17 +256,6 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
     
     /**
-     * 输出词义化日期
-     * 
-     * @access public
-     * @return void
-     */
-    public function dateWord()
-    {
-        echo Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
-    }
-    
-    /**
      * 输出作者相关
      * 
      * @access public
@@ -286,8 +286,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function gravatar($size = 40, $rating = 'X', $default = NULL)
     {
-        echo '<img src="http://www.gravatar.com/avatar.php?gravatar_id=' . md5($this->mail) . '&size=' .
-        $rating . '&default=' . $default . '" alt="' . $this->author . '" width="' . $size . '" height="' . $size . '" />';
+        echo '<img src="http://www.gravatar.com/avatar/' . md5($this->mail) . '?s=' . $size . '&r=' .
+        $rating . '&d=' . $default . '" alt="' . $this->author . '" width="' . $size . '" height="' . $size . '" />';
     }
     
     /**

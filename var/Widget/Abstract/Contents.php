@@ -40,6 +40,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
         return $this->db->fetchObject($this->db->select('screenName')->from('table.users')
         ->where('uid = ?', $this->authorId))->screenName;
     }
+    
+    /**
+     * 输出词义化日期
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function getDateWord()
+    {
+        return Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
 
     /**
      * 获取查询对象
@@ -329,17 +340,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function date($format)
     {
         echo date(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
-    }
-    
-    /**
-     * 输出词义化日期
-     * 
-     * @access public
-     * @return void
-     */
-    public function dateWord()
-    {
-        echo Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }
 
     /**
