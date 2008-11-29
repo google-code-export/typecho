@@ -1019,6 +1019,14 @@ margin-top: 25px;
 /**
  * 列表表格
  */
+/** 增加表格标题 by 70 */
+.typecho-list-table-title {
+	font-size:14px;
+	font-weight: normal;
+	color: #777;
+	text-align: center;
+}
+
 .typecho-list-table  {
     width: 100%;
     margin: 10px 0 20px 0;

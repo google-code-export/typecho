@@ -456,6 +456,7 @@ class Typecho_Common
     public static function cutParagraph($string)
     {
         /** 锁定自闭合标签 */
+        $string = trim($string);
         $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\/\>/is", array('Typecho_Common', '__lockHTML'), $string);
         
         /** 锁定开标签 */
