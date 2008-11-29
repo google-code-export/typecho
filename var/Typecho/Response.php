@@ -191,7 +191,7 @@ class Typecho_Response
                 }
             }
             
-            self::redirect($_SERVER['HTTP_REFERER'] . (empty($anchor) ? NULL : '#' . $anchor), false);
+            self::redirect($referer . (empty($anchor) ? NULL : '#' . $anchor), false);
         }
     }
     
