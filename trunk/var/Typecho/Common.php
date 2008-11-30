@@ -101,7 +101,8 @@ class Typecho_Common
             
             case !empty(self::$config['gzip']):
                 //开始监视输出区
-                if ($gzipAble && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+                //~ fix issue 39
+                if (self::$config['gzip'] && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
                    && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
                     ob_start("ob_gzhandler");
                 } else {
