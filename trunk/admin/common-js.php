@@ -83,6 +83,17 @@
 
             return handle;
         };
+        
+        var typechoMessage = function () {
+            var message = $(document).getElement('.popup');
+            if (message) {
+                var messageEffect = new Fx.Morph(message, {duration: 'long', transition: Fx.Transitions.Sine.easeOut});
+                messageEffect.addEvent('complete', function () {
+                    this.element.style.display = 'none';
+                });
+                messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
+            }
+        }
 
         window.addEvent('domready', function() {
             var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});
@@ -92,6 +103,9 @@
             if (firstError) {
                 var errorFx = new Fx.Scroll(window).toElement(firstError.getParent('.typecho-option'));
             }
+            
+            //增加淡出效果
+            setTimeout(typechoMessage, 5000);
             handle.reSet();
         });
     })();
