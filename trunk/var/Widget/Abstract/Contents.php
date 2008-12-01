@@ -409,7 +409,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 }
             }
             
-            $allow &= ($this->_row['allow' . ucfirst($permission)] == 'enable');
+            $allow &= ($this->row['allow' . ucfirst($permission)] == 'enable');
         }
 
         return $allow and !$this->hidden;
