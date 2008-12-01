@@ -141,7 +141,6 @@ class Widget_Options extends Typecho_Widget
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->index = $this->rewrite ? $this->siteUrl : Typecho_Common::url('/index.php', $this->siteUrl);
         $this->themeUrl = Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
-        $this->attachmentUrl = Typecho_Common::url(__TYPECHO_ATTACHMENT_DIR__, $this->siteUrl);
         $this->pluginUrl = Typecho_Common::url(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
         $this->gmtTime = time() - idate('Z');
         

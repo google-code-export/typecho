@@ -112,10 +112,10 @@ class Widget_Menu extends Typecho_Widget
             array(_t('独立页面'), _t('管理独立页面'), '/admin/manage-pages.php', 'editor'),
             array(_t('评论'), _t('管理评论'), '/admin/manage-comments.php', 'editor'),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
-            array(_t('文章分类'), _t('管理分类'), '/admin/manage-cats.php', 'editor'),
-            array(_t('标签'), _t('管理标签'), '/admin/manage-tags.php', 'editor'),
+            array(_t('标签和分类'), _t('标签和分类'), '/admin/manage-metas.php', 'editor'),
+        //    array(_t('标签'), _t('管理标签'), '/admin/manage-tags.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/manage-users.php', 'administrator'),
-            array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
+        //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(

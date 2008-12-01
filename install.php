@@ -16,9 +16,6 @@ define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
 /** 定义模板目录(相对路径) */
 define('__TYPECHO_THEME_DIR__', '/usr/themes');
 
-/** 附件存储目录(相对路径) */
-define('__TYPECHO_ATTACHMENT_DIR__', '/usr/attachment');
-
 /** 后台路径(相对路径) */
 define('__TYPECHO_ADMIN_DIR__', '/admin/');
 
@@ -214,7 +211,7 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                 if($success)
                                 {
                                     /** 初始化配置文件 */
-                                    $lines = array_slice(file(__FILE__), 0, 63);
+                                    $lines = array_slice(file(__FILE__), 0, 60);
                                     $lines[] = "
 /** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . Typecho_Request::getParameter('dbPrefix') . "');
@@ -259,7 +256,6 @@ Typecho_Plugin::init(\$options->plugins);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentExtensions', 'user' => 0, 'value' => 'zip|rar|jpg|png|gif|txt')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
