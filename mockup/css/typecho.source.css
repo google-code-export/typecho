@@ -16,7 +16,7 @@ body {
     background: #f7fbe9;
     color: #333;
     */
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
     background: #333;
     color: #f7fbe9;
     /*
@@ -268,6 +268,7 @@ button {
     font-size: 14px;
     color: #333;
     margin-bottom: 10px;
+	overflow: hidden;
 }
 
 .message a:link, .message a:visited {
@@ -1078,6 +1079,80 @@ margin-top: 25px;
 
 .typecho-list-table .important {
     color: #e47e00;
+}
+
+/**
+ * 不使用表格的列表
+ */
+ul.typecho-list-notable {
+	font-weight: normal;
+	color: #777;
+	margin: 0;
+	padding: 0;
+	line-height: 24px;
+	font-size: 14px;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+}
+
+ul.typecho-list-notable img {
+	background: #FFF;
+	padding: 2px;
+}
+
+ul.typecho-list-notable .header {
+	padding: 10px 10px 0 10px;
+	height: 22px;
+}
+
+ul.typecho-list-notable .footer {
+	padding: 0 10px 10px 10px;
+	font-size: 13px;
+	height: 22px;
+}
+
+ul.typecho-list-notable .left {
+	float: left;
+}
+
+ul.typecho-list-notable .right {
+	float: right;
+	text-align: right;
+}
+
+ul.typecho-list-notable p {
+	font-size:14px;
+	font-family: Georgia,Times,"Times New Roman",serif;
+	padding: 10px;
+}
+
+ul.typecho-list-notable li {
+	margin: 0 0 5px 0;
+	padding: 5px;
+	list-style: none;
+	background: #eff5d9;
+	
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+ul.typecho-list-notable li.even {
+    
+}
+
+ul.typecho-list-notable li:hover {
+	background: #E3EEBD;
 }
 
 /**

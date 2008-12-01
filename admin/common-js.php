@@ -87,7 +87,7 @@
         var typechoMessage = function () {
             var message = $(document).getElement('.popup');
             if (message) {
-                var messageEffect = new Fx.Morph(message, {duration: 'long', transition: Fx.Transitions.Sine.easeOut});
+                var messageEffect = new Fx.Morph(message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
                 messageEffect.addEvent('complete', function () {
                     this.element.style.display = 'none';
                 });
