@@ -40,7 +40,7 @@ abstract class Typecho_Widget
      * @access protected
      * @var array
      */
-    protected $_stack = array();
+    protected $stack = array();
 
     /**
      * 数据堆栈每一行
@@ -48,7 +48,7 @@ abstract class Typecho_Widget
      * @access protected
      * @var array
      */
-    protected $_row = array();
+    protected $row = array();
     
     /**
      * 配置信息
@@ -218,33 +218,33 @@ abstract class Typecho_Widget
      */
     public function parse($format)
     {
-        $_rowsKey = array();
+        $rowsKey = array();
 
         /** 过滤数据行 */
-        foreach ($this->_row as $key => $val) {
+        foreach ($this->row as $key => $val) {
             if (is_array($val) || is_object($val)) {
-                unset($this->_row[$key]);
+                unset($this->row[$key]);
             }
         }
 
         //将数据格式化
-        foreach ($this->_row as $key => $val) {
-            $_rowsKey[] = '{' . $key . '}';
+        foreach ($this->row as $key => $val) {
+            $rowsKey[] = '{' . $key . '}';
         }
 
-        foreach ($this->_stack as $val) {
+        foreach ($this->stack as $val) {
             /** 过滤数据行 */
             foreach ($val as $inkey => $inval) {
                 if (is_array($inval) || is_object($inval)) {
                     unset($val[$inkey]);
                 }
             }
-            echo str_replace($_rowsKey, $val, $format) . "\n";
+            echo str_replace($rowsKey, $val, $format) . "\n";
         }
         
         /** 重置指针 */
-        reset($this->_row);
-        reset($this->_stack);
+        reset($this->row);
+        reset($this->stack);
     }
 
     /**
@@ -256,9 +256,9 @@ abstract class Typecho_Widget
     public function push(array $value)
     {
         //将行数据按顺序置位
-        $this->_row = $value;
+        $this->row = $value;
 
-        $this->_stack[] = $value;
+        $this->stack[] = $value;
         return $value;
     }
     
@@ -295,7 +295,7 @@ abstract class Typecho_Widget
      */
     public function have()
     {
-        return !empty($this->_stack);
+        return !empty($this->stack);
     }
 
     /**
@@ -305,19 +305,19 @@ abstract class Typecho_Widget
      */
     public function next()
     {
-        if ($this->_stack) {
-            $this->_row = &$this->_stack[key($this->_stack)];
-            next($this->_stack);
+        if ($this->stack) {
+            $this->row = &$this->stack[key($this->stack)];
+            next($this->stack);
             $this->sequence ++;
         }
         
-        if (!$this->_row) {
-            reset($this->_stack);
+        if (!$this->row) {
+            reset($this->stack);
             $this->sequence = 0;
             return false;
         }
         
-        return $this->_row;
+        return $this->row;
     }
 
     /**
@@ -342,8 +342,8 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        return isset($this->_row[$name]) ? $this->_row[$name] : (method_exists($this, $method = 'get' . ucfirst($name))
-        ? $this->_row[$name] = $this->$method() : NULL);
+        return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = 'get' . ucfirst($name))
+        ? $this->row[$name] = $this->$method() : NULL);
     }
     
     /**
@@ -355,7 +355,7 @@ abstract class Typecho_Widget
      */
     public function __set($name, $value)
     {
-        $this->_row[$name] = $value;
+        $this->row[$name] = $value;
     }
     
     /**
@@ -367,6 +367,6 @@ abstract class Typecho_Widget
      */
     public function __isset($name)
     {
-        return isset($this->_row[$name]);
+        return isset($this->row[$name]);
     }
 }

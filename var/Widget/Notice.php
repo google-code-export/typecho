@@ -58,7 +58,7 @@ class Widget_Notice extends Typecho_Widget
      */
     public function lists($tag = 'li')
     {
-        foreach ($this->_row as $row) {
+        foreach ($this->row as $row) {
             echo "<$tag>" . $row . "</$tag>";
         }
     }
@@ -73,8 +73,8 @@ class Widget_Notice extends Typecho_Widget
      */
     public function display($name, $format = '%s')
     {
-        echo empty($this->_row[$name]) ? NULL :
-        ((false === strpos($format, '%s')) ? $format : sprintf($format, $this->_row[$name]));
+        echo empty($this->row[$name]) ? NULL :
+        ((false === strpos($format, '%s')) ? $format : sprintf($format, $this->row[$name]));
     }
 
     /**

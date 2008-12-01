@@ -134,7 +134,7 @@ class Widget_Options extends Typecho_Widget
     {
         $this->db->fetchAll($this->db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
-        $this->_stack[] = &$this->_row;
+        $this->stack[] = &$this->row;
 
         /** 初始化站点信息 */
         $this->charset = Typecho_Common::$config['charset'];
@@ -166,7 +166,7 @@ class Widget_Options extends Typecho_Widget
     public function push(array $value)
     {
         //将行数据按顺序置位
-        $this->_row[$value['name']] = $value['value'];
+        $this->row[$value['name']] = $value['value'];
         return $value;
     }
     
@@ -251,8 +251,8 @@ class Widget_Options extends Typecho_Widget
     public function plugin($pluginName)
     {
         if (!isset($this->_pluginConfig[$pluginName])) {
-            if (!empty($this->_row['plugin:' . $pluginName])
-            && false !== ($options = unserialize($this->_row['plugin:' . $pluginName]))) {
+            if (!empty($this->row['plugin:' . $pluginName])
+            && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))) {
                 $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
             } else {
                 throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
