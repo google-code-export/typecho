@@ -32,13 +32,6 @@
             </ul>
         </div>
 		<div class="widget">
-			<h2>Blogroll</h2>
-			<ul>
-				<?php $this->widget('Widget_Metas_Link_List')
-                ->parse('<li><a title="{description}" href="{url}">{name}</a></li>'); ?>
-			</ul>
-		</div>
-		<div class="widget">
             <h2>Meta</h2>
             <ul>
                 <?php if($this->user->hasLogin()): ?>

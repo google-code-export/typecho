@@ -25,12 +25,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      * @access public
      * @return void
      */
-    public function __construct()
+    public function init()
     {
-        parent::__construct();
-    
-        /** 编辑以上权限 */
-        Typecho_API::factory('Widget_Users_Current')->pass('administrator');
+        /** 管理员以上权限 */
+        $this->user->pass('administrator');
     }
     
     /**
@@ -43,7 +41,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function userExists($uid)
     {
         $user = $this->db->fetchRow($this->db->sql()->select('table.users')
-        ->where('`uid` = ?', $uid)->limit(1));
+        ->where('uid = ?', $uid)->limit(1));
         
         return $user ? true : false;
     }
@@ -58,11 +56,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function nameExists($name)
     {
         $select = $this->db->sql()->select('table.users')
-        ->where('`name` = ?', $name)
+        ->where('name = ?', $name)
         ->limit(1);
         
         if (Typecho_Request::getParameter('uid')) {
-            $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
+            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
         }
 
         $user = $this->db->fetchRow($select);
@@ -79,11 +77,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function mailExists($mail)
     {
         $select = $this->db->sql()->select('table.users')
-        ->where('`mail` = ?', $mail)
+        ->where('mail = ?', $mail)
         ->limit(1);
         
         if (Typecho_Request::getParameter('uid')) {
-            $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
+            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
         }
 
         $user = $this->db->fetchRow($select);
@@ -100,11 +98,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function screenNameExists($screenName)
     {
         $select = $this->db->sql()->select('table.users')
-        ->where('`screenName` = ?', $screenName)
+        ->where('screenName = ?', $screenName)
         ->limit(1);
         
         if (Typecho_Request::getParameter('uid')) {
-            $select->where('`uid` <> ?', Typecho_Request::getParameter('uid'));
+            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
         }
     
         $user = $this->db->fetchRow($select);
@@ -178,7 +176,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         if (NULL != Typecho_Request::getParameter('uid')) {
             /** 更新模式 */
             $user = $this->db->fetchRow($this->select()
-            ->where('`uid` = ?', Typecho_Request::getParameter('uid'))->limit(1));
+            ->where('uid = ?', Typecho_Request::getParameter('uid'))->limit(1));
             
             if (!$user) {
                 throw new Typecho_Widget_Exception(_t('用户不存在'), Typecho_Exception::NOTFOUND);
