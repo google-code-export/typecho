@@ -210,9 +210,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 设置关键词 */
                 $this->options->keywords = $category['name'];
                 
-                /** 设置描述 */
-                $this->options->description = $category['description'];
-                
                 /** 设置头部feed */
                 /** RSS 2.0 */
                 $this->options->feedUrl = $category['feedUrl'];
@@ -256,9 +253,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** 设置关键词 */
                 $this->options->keywords = $tag['name'];
-                
-                /** 设置描述 */
-                $this->options->description = $tag['description'];
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
@@ -352,7 +346,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'search_page':
     
                 /** 增加自定义搜索引擎接口 */
-                $hasPushed = $this->plugin()->search($this->request->keywords, $this);
+                //~ fix issue 40
+                $this->plugin()->trigger($hasPushed)->search($this->request->keywords, $this);
     
                 $keywords = Typecho_Common::filterSearchQuery($this->request->keywords);
                 $searchQuery = '%' . $keywords . '%';

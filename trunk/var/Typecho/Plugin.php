@@ -66,6 +66,14 @@ class Typecho_Plugin
     private $_component;
     
     /**
+     * 是否触发插件的信号
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_signal;
+    
+    /**
      * 插件初始化
      * 
      * @access public
@@ -344,6 +352,20 @@ class Typecho_Plugin
     }
     
     /**
+     * 插件调用后的触发器
+     * 
+     * @access public
+     * @param boolean $signal 触发器
+     * @return Typecho_Plugin
+     */
+    public function trigger(&$signal)
+    {
+        $signal = false;
+        $this->_signal = &$signal;
+        return $this;
+    }
+    
+    /**
      * 设置回调函数
      * 
      * @access public
@@ -394,6 +416,7 @@ class Typecho_Plugin
     
         if (isset(self::$_plugins['handles'][$component])) {
             $args[$last] = NULL;
+            $this->_signal = true;
             foreach (self::$_plugins['handles'][$component] as $callback) {
                 $args[$last] = call_user_func_array($callback, $args);
             }
