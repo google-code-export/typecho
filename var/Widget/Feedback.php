@@ -93,12 +93,10 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $this->response->setCookie('url', $comment['url'], $expire);
             
         
-            try {
-                $validator->run($comment);
-            } catch (Typecho_Validate_Exception $e) {
+            if ($error = $validator->run($comment)) {
                 /** 记录文字 */
                 $this->response->setCookie('text', $comment['text']);
-                throw new Typecho_Widget_Exception($e->getMessages());
+                throw new Typecho_Widget_Exception(implode("\n", $error));
             }
         }
         
