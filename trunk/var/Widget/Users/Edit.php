@@ -179,7 +179,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             ->where('uid = ?', Typecho_Request::getParameter('uid'))->limit(1));
             
             if (!$user) {
-                throw new Typecho_Widget_Exception(_t('用户不存在'), Typecho_Exception::NOTFOUND);
+                throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
             }
             
             $title->html(_t('编辑用户'));

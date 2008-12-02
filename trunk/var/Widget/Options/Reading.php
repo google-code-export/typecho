@@ -71,9 +71,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
     public function updateReadingSettings()
     {
         /** 验证格式  */
-        try {
-            $this->form()->validate();
-        } catch (Typecho_Widget_Exception $e) {
+        if ($this->form()->validate()) {
             $this->response->goBack();
         }
     

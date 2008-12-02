@@ -295,7 +295,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
             /** 抛出错误 */
             if ($this->request->isPost() && $this->request->isSetParameter('protectPassword')) {
-                $this->response->throwExceptionResponseByCode(_t('对不起,您输入的密码错误'), 403);
+                throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), 403);
             }
         }
         

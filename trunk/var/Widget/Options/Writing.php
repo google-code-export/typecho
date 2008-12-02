@@ -77,10 +77,8 @@ class Widget_Options_Writing extends Widget_Abstract_Options implements Widget_I
     public function updateWritingSettings()
     {
         /** 验证格式 */
-        try {
-            $this->form()->validate();
-        } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack();
+        if ($this->form()->validate()) {
+            $this->response->goBack();
         }
     
         $settings = $this->request->from('editorSize', 'autoSave', 'defaultAllowComment', 'defaultAllowPing', 'defaultAllowFeed');

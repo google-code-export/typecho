@@ -92,7 +92,7 @@ class Typecho_Router
 
         /** 载入路由异常支持 */
         require_once 'Typecho/Router/Exception.php';
-        throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", Typecho_Exception::NOTFOUND);
+        throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", 404);
     }
 
     /**

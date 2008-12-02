@@ -135,11 +135,7 @@ class Typecho_Validate
             }
         }
 
-        if ($result) {
-            /** 验证异常支持 */
-            require_once 'Typecho/Validate/Exception.php';
-            throw new Typecho_Validate_Exception($result);
-        }
+        return $result;
     }
 
     /**

@@ -70,7 +70,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 处理feed模式 **/
         if ('feed' == Typecho_Router::$current) {
             if (!Typecho_Router::match($feedQuery)) {
-                $this->response->throwExceptionResponseByCode(_t('聚合页不存在'), 404);
+                throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
             }
             
             /** 默认输出10则文章 **/
@@ -133,7 +133,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $select->where('table.contents.slug = ?', $this->request->slug);
                 } else {
                     /** 对没有索引情况下的判断 */
-                    $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
+                    throw new Typecho_Widget_Exception('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
 
                 /** 保存密码至cookie */
@@ -175,10 +175,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** 设置403头 */
                     if ($post['hidden']) {
-                        header('HTTP/1.1 403 Forbidden', true);
+                        $this->response->setStatus(403);
                     }
                 } else {
-                    $this->response->throwExceptionResponseByCode('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
+                    throw new Typecho_Widget_Exception('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
                 }
                 
                 /** 设置风格文件 */
@@ -197,7 +197,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if (!$category) {
-                    $this->response->throwExceptionResponseByCode(_t('分类不存在'), 404);
+                    throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
                 }
             
                 /** fix sql92 by 70 */
@@ -241,7 +241,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if (!$tag) {
-                    $this->response->throwExceptionResponseByCode(_t('标签%s不存在', $this->request->slug), 404);
+                    throw new Typecho_Widget_Exception(_t('标签%s不存在', $this->request->slug), 404);
                 }
             
                 /** fix sql92 by 70 */

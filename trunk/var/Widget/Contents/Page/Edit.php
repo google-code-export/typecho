@@ -119,7 +119,7 @@ class Widget_Contents_Page_Edit extends Widget_Abstract_Contents implements Widg
         $exists = $this->db->fetchRow($select);
         
         if (!$exists) {
-            throw new Typecho_Widget_Exception(_t('页面不存在'), Typecho_Exception::NOTFOUND);
+            throw new Typecho_Widget_Exception(_t('页面不存在'), 404);
         }
     
         $contents = Typecho_Request::getParametersFrom('password', 'created', 'text', 'template',

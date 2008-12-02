@@ -81,7 +81,7 @@ class Widget_Feed extends Widget_Archive implements Widget_Interface_ViewRendere
             /** 解析路径 */
             parent::__construct(10);
         } else {
-            throw new Typecho_Widget_Exception(_t('聚合页不存在'), Typecho_Exception::NOTFOUND);
+            throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
         }
         
         $this->feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);

@@ -98,7 +98,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             } catch (Typecho_Validate_Exception $e) {
                 /** 记录文字 */
                 $this->response->setCookie('text', $comment['text']);
-                $this->response->throwExceptionResponseByCode($e->getMessages());
+                throw new Typecho_Widget_Exception($e->getMessages());
             }
         }
         
@@ -195,18 +195,18 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** 判断来源 */
             // ~ fix Issue 38
             if ('comment' == $callback && 0 !== strpos($_SERVER['HTTP_REFERER'], $this->_content->permalink)) {
-                $this->response->throwExceptionResponseByCode(_t('来源页不合法'), 403);
+                throw new Typecho_Widget_Exception(_t('来源页不合法'), 403);
             }
             
             /** 如果文章允许反馈 */
             if (!$this->_content->allow('comment')) {
-                $this->response->throwExceptionResponseByCode(_t('对不起,此内容的反馈被禁止.'), 403);
+                throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
             }
             
             /** 调用函数 */
             $this->$callback();
         } else {
-            $this->response->throwExceptionResponseByCode(_t('被评论的文章不存在'), 404);
+            throw new Typecho_Widget_Exception(_t('找不到内容'), 404);
         }
     }
 }

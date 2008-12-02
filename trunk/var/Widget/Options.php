@@ -254,7 +254,7 @@ class Widget_Options extends Typecho_Widget
             && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))) {
                 $this->_pluginConfig[$pluginName] = new Typecho_Config($options);
             } else {
-                throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), Typecho_Exception::RUNTIME);
+                throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), 500);
             }
         }
 
