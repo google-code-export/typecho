@@ -124,9 +124,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $form = $this->widget('Widget_Plugins_Config')->config();
         
         /** 验证表单 */
-        try {
-            $form->validate();
-        } catch (Typecho_Widget_Exception $e) {
+        if ($form->validate()) {
             $this->response->goBack();
         }
         
