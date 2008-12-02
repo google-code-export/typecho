@@ -39,9 +39,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             ->limit(1), array($this, 'push'));
             
             if (!$post) {
-                $this->response->throwExceptionResponseByCode(_t('文章不存在'), 404);
+                throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
             } else if ($post && 'update' == $this->request->do && !$this->postIsWriteable()) {
-                $this->response->throwExceptionResponseByCode(_t('没有编辑权限'), 403);
+                throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
     }

@@ -214,25 +214,17 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         
         /** 表单值 */
         $formData = Typecho_Request::getParametersFrom(array_keys($rules));
+        $error = $validator->run($formData, $rules);
         
-        /** 载入异常支持 */
-        require_once 'Typecho/Validate/Exception.php';
-
-        try {
-            $validator->run($formData, $rules);
-        } catch (Typecho_Validate_Exception $e) {
+        if ($error) {
             /** 利用cookie记录错误 */
-            Typecho_Response::setCookie('__typecho_form_message', $e->getMessages());
+            Typecho_Response::setCookie('__typecho_form_message', $error);
             
             /** 利用cookie记录表单值 */
             Typecho_Response::setCookie('__typecho_form_record', $formData);
-
-            /** 载入异常支持 */
-            require_once 'Typecho/Widget/Exception.php';
-        
-            /** 继续抛出异常 */
-            throw new Typecho_Widget_Exception($e->getMessages());
         }
+        
+        return $error;
     }
     
     /**

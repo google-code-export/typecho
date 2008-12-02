@@ -23,6 +23,55 @@ require_once 'Typecho/Common.php';
 class Typecho_Response
 {
     /**
+     * http code
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_httpCode = array(
+        100 => 'Continue',
+        101	=> 'Switching Protocols',
+        200	=> 'OK',
+        201	=> 'Created',
+        202	=> 'Accepted',
+        203	=> 'Non-Authoritative Information',
+        204	=> 'No Content',
+        205	=> 'Reset Content',
+        206	=> 'Partial Content',
+        300	=> 'Multiple Choices',
+        301	=> 'Moved Permanently',
+        302	=> 'Found',
+        303	=> 'See Other',
+        304	=> 'Not Modified',
+        305	=> 'Use Proxy',
+        307	=> 'Temporary Redirect',
+        400	=> 'Bad Request',
+        401	=> 'Unauthorized',
+        402	=> 'Payment Required',
+        403	=> 'Forbidden',
+        404	=> 'Not Found',
+        405	=> 'Method Not Allowed',
+        406	=> 'Not Acceptable',
+        407	=> 'Proxy Authentication Required',
+        408	=> 'Request Timeout',
+        409	=> 'Conflict',
+        410	=> 'Gone',
+        411	=> 'Length Required',
+        412	=> 'Precondition Failed',
+        413	=> 'Request Entity Too Large',
+        414	=> 'Request-URI Too Long',
+        415	=> 'Unsupported Media Type',
+        416	=> 'Requested Range Not Satisfiable',
+        417	=> 'Expectation Failed',
+        500	=> 'Internal Server Error',
+        501	=> 'Not Implemented',
+        502	=> 'Bad Gateway',
+        503	=> 'Service Unavailable',
+        504	=> 'Gateway Timeout',
+        505	=> 'HTTP Version Not Supported'
+    );
+
+    /**
      * 默认的字符编码
      * 
      * @access private
@@ -94,6 +143,20 @@ class Typecho_Response
     }
     
     /**
+     * 设置HTTP状态
+     * 
+     * @access public
+     * @param integer $code http代码
+     * @return void
+     */
+    public static function setStatus($code)
+    {
+        if (isset(self::$_httpCode[$code])) {
+            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true);
+        }
+    }
+    
+    /**
      * 抛出ajax的回执信息
      * 
      * @access public
@@ -148,8 +211,8 @@ class Typecho_Response
     public static function redirect($location, $isPermanently = false)
     {
         if ($isPermanently) {
-            header('HTTP/1.1 301 Moved Permanently');
-            header("location: {$location}\n");
+            self::setStatus(301);
+            self::setHeader('location', $location);
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>301 Moved Permanently</title>
@@ -158,8 +221,8 @@ class Typecho_Response
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
     </body></html>');
         } else {
-            header('HTTP/1.1 302 Found');
-            header("location: {$location}\n");
+            self::setStatus(302);
+            self::setHeader('location', $location);
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>302 Moved Temporarily</title>

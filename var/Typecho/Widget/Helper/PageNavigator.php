@@ -73,7 +73,7 @@ abstract class Typecho_Widget_Helper_PageNavigator
         $this->_pageTemplate = $pageTemplate;
 
         if (($currentPage > $this->_totalPage || $currentPage < 1) && $total > 0) {
-            throw new Typecho_Widget_Exception('Page Not Exists', Typecho_Exception::NOTFOUND);
+            throw new Typecho_Widget_Exception('Page Not Exists', 404);
         }
     }
     
@@ -87,6 +87,6 @@ abstract class Typecho_Widget_Helper_PageNavigator
     {
         /** 载入异常支持 */
         require_once 'Typecho/Widget/Exception.php';
-        throw new Typecho_Widget_Exception(get_class($this) . ':' . __METHOD__, Typecho_Exception::RUNTIME);
+        throw new Typecho_Widget_Exception(get_class($this) . ':' . __METHOD__, 500);
     }
 }

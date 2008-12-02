@@ -164,7 +164,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             
             if(!$meta)
             {
-                throw new Typecho_Widget_Exception(_t('标签不存在'), Typecho_Exception::NOTFOUND);
+                throw new Typecho_Widget_Exception(_t('标签不存在'), 404);
             }
             
             $name->value($meta['name']);

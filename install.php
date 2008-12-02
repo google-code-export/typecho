@@ -51,6 +51,7 @@ require_once 'Typecho/Router.php';
 /** 程序初始化 */
 Typecho_Common::init(array(
     'autoLoad'          =>  true,
+    'exception'         =>  true,
     'gpc'               =>  true,
     'timezone'          =>  'UTC',
     'session'           =>  false,
@@ -211,7 +212,7 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                 if($success)
                                 {
                                     /** 初始化配置文件 */
-                                    $lines = array_slice(file(__FILE__), 0, 60);
+                                    $lines = array_slice(file(__FILE__), 0, 61);
                                     $lines[] = "
 /** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . Typecho_Request::getParameter('dbPrefix') . "');
@@ -223,9 +224,6 @@ Typecho_Widget::widget('Widget_Options')->to(\$options);
 
 /** 定义路由参数 */
 Typecho_Router::setRoutes(\$options->routingTable);
-
-/** 定义404页面 */
-Typecho_Exception::set404(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . \$options->theme . '/404.php');
 
 /** 初始化插件 */
 Typecho_Plugin::init(\$options->plugins);

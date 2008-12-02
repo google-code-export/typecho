@@ -331,7 +331,7 @@ class Typecho_Plugin
                 $className = $pluginName;
                 break;
             default:
-                throw new Typecho_Exception('Missing Plugin ' . $pluginName, Typecho_Exception::NOTFOUND);
+                throw new Typecho_Exception('Missing Plugin ' . $pluginName, 404);
         }
         
         return array($pluginFileName, $className);

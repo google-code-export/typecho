@@ -38,6 +38,7 @@ class Typecho_Common
      */
     public static $config = array(
         'autoLoad'      =>  true,
+        'exception'     =>  true,
         'gpc'           =>  true,
         'timezone'      =>  'UTC',
         'gzip'          =>  false,
@@ -70,59 +71,144 @@ class Typecho_Common
     public static function init(array $config = NULL)
     {
         self::$config = empty($config) ? self::$config : array_merge(self::$config, $config);
-    
-        switch (true) {
-            case !empty(self::$config['autoLoad']):
-                /** 设置自动载入函数 */
-                function __autoLoad($className)
-                {
-                    require_once str_replace('_', '/', $className) . '.php';
-                }
-                
-            case !empty(self::$config['gpc']):
-                /** 兼容php6 */
-                if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-                    $_GET = self::stripslashesDeep($_GET);
-                    $_POST = self::stripslashesDeep($_POST);
-                    $_COOKIE = self::stripslashesDeep($_COOKIE);
-
-                    reset($_GET);
-                    reset($_POST);
-                    reset($_COOKIE);
-                }
-                
-            case isset(self::$config['timezone']):
-                if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
-                    @date_default_timezone_set($timezone);
-                }
-            
-            case !empty(self::$config['session']):
-                session_start();
-            
-            case !empty(self::$config['gzip']):
-                //开始监视输出区
-                //~ fix issue 39
-                if (self::$config['gzip'] && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
-                   && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-                    ob_start("ob_gzhandler");
-                } else {
-                    ob_start();
-                }
-                
-            case isset(self::$config['charset']):
-            case isset(self::$config['contentType']):
-                /** Typecho_Response */
-                require_once 'Typecho/Response.php';
-                
-            case isset(self::$config['charset']):
-                Typecho_Response::setDefaultCharset(self::$config['charset']);
-                
-            case isset(self::$config['contentType']):
-                Typecho_Response::setContentType(self::$config['contentType']);
-                
-            default:
-                break;
+        
+        /** 输出logo */
+        if (isset($_GET['464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021'])) {
+            header('content-Type: image/gif', true);
+            die(base64_decode('R0lGODlhXQAVANUAAP////Pz8+bm5tnZ2c3NzcDAwLOzs5mZmY2NjeR+ANp6A9l5A4CAgM51BsNwCsNwCbhrDXNzc61nEKxmEKFiE6JiE2ZmZpddFpZdFoxZGYtYGoFUHYBUHVlZWXZPIHVPIGtLI2pKI01NTV9GJlRBKVRBKkBAQEk8LT44MD03MDMzMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAABdABUAAAb/QJVwSCwaj8ikUgjxLJ9Gj+JELBSg2OwyodFCSYkKkUDwms3cs5E0GlYSVCFZTX+m60IpSnhKXIZzeEonI21HKIVxQlyIhkaEjkVOQg2TKhIKKggHAgIHCEMmByZEERFCHaAmEQcHp0ckDgmzCxlEKG+zCRAkiw4LtCBEIw26CbZFEIYXD0MeCSQBANMAAUMWABZjZSoHAAzS1AGvQyAJDRwjIRQJDnsoshSFGAsLVLPKIbKGz+jq7A6KjBCjAsweFSgSbJDD7Vq2bUK8ARjwKsIAAORQLHBHREKaCQlKEDmhIYWKdkNSLKCg4sTGg3nuDGm2yJGCPyoCOdQGiJu3/wGkQg0IEJQDtCEjIJwr0QdDEpkqIEBQgQGOkQkLilSIAwFZ1Kk5GwrBxpNhxIdFsDFg0oDPmwUchIxIEKkIVKlRAxrZQJdIBkNdh+ANmxat2W4AkAA4wOQBigyzMJgUEqIvkrtTB0uyLOQvE6+DdY41TBhxUCImFgupqmCXIhInSkC120Xw1Kow3SSYLGTr55kSDu+EiJhxEW8d+CRYEAmMUwgLehERdrI2k6mygxMBw5IIzZOOjgkpIECIieQmAlxBBcDntLVDGABYL8QoBGEoNtSjUqKeBxQneFCMSJgJocEuwpyQgQIN8KbCQEIYJFcC1EXQHiflqSDfAAcYIJ+NexdxeECIpwnxATC6QKBICbLo0kAIi1j31RAcoIiPg1Et890FCcAUgQAACACfChZVY8AA7nVz0URDFpFCCBp8oAgRJWigAYxDSDlMJCl8oAEHIkUxRCVDKABWFoF4I8iaUOgRkyVIdFCWCgKspyabeCLBxphtLVEAAKoYgNadeRZ6BF9wImHCku8NQaihkAqRXxasICACEalEqqkRQQAAOw=='));
         }
+        
+        if (isset(self::$config['autoLoad']) && self::$config['autoLoad']) {
+            /** 设置自动载入函数 */
+            function __autoLoad($className)
+            {
+                require_once str_replace('_', '/', $className) . '.php';
+            }
+        }
+        
+        if (isset(self::$config['gpc']) && self::$config['gpc']) {
+            /** 兼容php6 */
+            if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+                $_GET = self::stripslashesDeep($_GET);
+                $_POST = self::stripslashesDeep($_POST);
+                $_COOKIE = self::stripslashesDeep($_COOKIE);
+
+                reset($_GET);
+                reset($_POST);
+                reset($_COOKIE);
+            }
+        }
+        
+        if (isset(self::$config['timezone'])) {
+            if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
+                @date_default_timezone_set($timezone);
+            }
+        }
+        
+        if (isset(self::$config['session']) && self::$config['session']) {
+            session_start();
+        }
+        
+        if (isset(self::$config['gzip'])) {
+            //开始监视输出区
+            //~ fix issue 39
+            if (self::$config['gzip'] && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
+               && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+                ob_start("ob_gzhandler");
+            } else {
+                ob_start();
+            }
+        }
+        
+        if (isset(self::$config['charset']) || isset(self::$config['contentType']) || 
+        (isset(self::$config['exception']) && self::$config['exception'])) {
+            /** Typecho_Response */
+            require_once 'Typecho/Response.php';
+        }
+        
+        if (isset(self::$config['exception']) && self::$config['exception']) {
+            /** 设置异常截获函数 */
+            set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
+        }
+        
+        if (isset(self::$config['charset'])) {
+            Typecho_Response::setDefaultCharset(self::$config['charset']);
+        }
+        
+        if (isset(self::$config['contentType'])) {
+            Typecho_Response::setContentType(self::$config['contentType']);
+        }
+    }
+    
+    public static function exceptionHandle(Exception $exception)
+    {
+        /** 强行清空缓冲区 */
+        @ob_clean();
+        
+        /** 设置HTTP头状态 */
+        Typecho_Response::setStatus($code = $exception->getCode());
+        Typecho_Response::setContentType('text/html');
+        
+        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=' . self::$config['charset'] . '" />
+    <title>Error</title>
+
+    <style type="text/css">
+        body {
+            background: #f7fbe9;
+            font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+        }
+        
+        #error {
+            background: #333;
+            width: 360px;
+            margin: 0 auto;
+            margin-top: 100px;
+            color: #fff;
+            padding: 10px;
+            
+            -moz-border-radius-topleft: 4px;
+            -moz-border-radius-topright: 4px;
+            -moz-border-radius-bottomleft: 4px;
+            -moz-border-radius-bottomright: 4px;
+            -webkit-border-top-left-radius: 4px;
+            -webkit-border-top-right-radius: 4px;
+            -webkit-border-bottom-left-radius: 4px;
+            -webkit-border-bottom-right-radius: 4px;
+
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        
+        h1 {
+            padding: 10px;
+            margin: 0;
+            font-size: 36px;
+        }
+        
+        p {
+            padding: 0 20px 20px 20px;
+            margin: 0;
+        }
+        
+        img {
+            padding: 0 0 5px 260px;
+        }
+    </style>
+</head>
+<body>
+    <div id="error">
+        <h1>' . ($code > 0 ? $code : 'Error') . '</h1>
+        <p>' . $exception->getMessage() . '</p>
+        <img src="?464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021" />
+    </div>
+</body>
+</html>';
     }
 
     /**

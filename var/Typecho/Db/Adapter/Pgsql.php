@@ -51,7 +51,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         require_once 'Typecho/Db/Exception.php';
-        throw new Typecho_Db_Exception(@pg_last_error($this->_dbLink), Typecho_Exception::UNVAILABLE);
+        throw new Exception(@pg_last_error($this->_dbLink), 503);
     }
 
     /**
@@ -74,7 +74,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         require_once 'Typecho/Db/Exception.php';
-        throw new Typecho_Db_Exception(@pg_last_error($this->_dbLink), Typecho_Exception::RUNTIME);
+        throw new Typecho_Db_Exception(@pg_last_error($this->_dbLink), 500);
     }
 
     /**

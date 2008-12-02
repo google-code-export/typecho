@@ -148,7 +148,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             ->where('`type` = ?', 'category')->limit(1));
             
             if (!$meta) {
-                throw new Typecho_Widget_Exception(_t('分类不存在'), Typecho_Exception::NOTFOUND);
+                throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
             }
             
             $name->value($meta['name']);

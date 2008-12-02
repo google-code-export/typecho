@@ -52,7 +52,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
     {
         $this->user->pass('administrator');
         if (!isset($this->request->config)) {
-            $this->throwExceptionResponseByCode(_t('插件不存在'), 404);
+            throw new Typecho_Widget_Exception(_t('插件不存在'), 404);
         }
         
         /** 获取插件入口 */
@@ -90,7 +90,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         /** 判断实例化是否成功 */
         
         if (!$this->info['config'] || !isset($activatedPlugins[$pluginName])) {
-            $this->throwExceptionResponseByCode(_t('无法配置插件'), 500);
+            throw new Typecho_Widget_Exception(_t('无法配置插件'), 500);
         }
         
         /** 实例化插件 */

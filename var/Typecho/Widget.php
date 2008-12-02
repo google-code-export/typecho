@@ -89,10 +89,10 @@ abstract class Typecho_Widget
      * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($params = array())
+    public function __construct($params = NULL)
     {
         /** 初始化参数 */
-        $this->parameter = Typecho_Config::factory($params);
+        $this->parameter = Typecho_Config::factory(empty($params) ? array() : $params);
         $this->request = Typecho_Widget_Request::getInstance();
         $this->response = Typecho_Widget_Response::getInstance();
         
@@ -176,10 +176,11 @@ abstract class Typecho_Widget
      * 
      * @access public
      * @param string $className
+     * @param mixed $params 传递的参数
      * @return object
      * @throws Typecho_Exception
      */
-    public static function widget($className)
+    public static function widget($className, $params = NULL)
     {
         if (!isset(self::$_widgetPool[$className])) {
             $fileName = str_replace('_', '/', $className) . '.php';            
@@ -193,7 +194,7 @@ abstract class Typecho_Widget
             }
             
             $params = array_slice(func_get_args(), 1);
-            self::$_widgetPool[$className] = call_user_func_array(array(new ReflectionClass($className), 'newInstance'), $params);
+            self::$_widgetPool[$className] = new $className($params);
         }
         
         return self::$_widgetPool[$className];

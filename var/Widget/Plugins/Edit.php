@@ -38,7 +38,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         /** 判断实例化是否成功 */
         $info = Typecho_Plugin::parseInfo($pluginFileName);
         if (!$info['activate'] || isset($activatedPlugins[$pluginName])) {
-            $this->throwExceptionResponseByCode(_t('无法激活插件'), 500);
+            throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
         }
         
         /** 实例化插件 */
@@ -89,7 +89,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         /** 判断实例化是否成功 */
         $info = Typecho_Plugin::parseInfo($pluginFileName);
         if (!$info['deactivate'] || !isset($activatedPlugins[$pluginName])) {
-            $this->throwExceptionResponseByCode(_t('无法禁用插件'), 500);
+            throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
         }
         
         /** 实例化插件 */
