@@ -88,7 +88,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         
         /** 判断实例化是否成功 */
         $info = Typecho_Plugin::parseInfo($pluginFileName);
-        if (!$info['deactivate'] || !isset($activatedPlugins[$pluginName])) {
+        if (!isset($activatedPlugins[$pluginName])) {
             throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
         }
         
