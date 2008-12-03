@@ -51,7 +51,7 @@ require_once 'Typecho/Router.php';
 /** 程序初始化 */
 Typecho_Common::init(array(
     'autoLoad'          =>  true,
-    'exception'         =>  true,
+    'exception'         =>  'Widget_ExceptionHandle',
     'gpc'               =>  true,
     'timezone'          =>  'UTC',
     'session'           =>  false,

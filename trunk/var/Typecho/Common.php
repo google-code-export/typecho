@@ -38,7 +38,7 @@ class Typecho_Common
      */
     public static $config = array(
         'autoLoad'      =>  true,
-        'exception'     =>  true,
+        'exception'     =>  false,
         'gpc'           =>  true,
         'timezone'      =>  'UTC',
         'gzip'          =>  false,
@@ -120,20 +120,12 @@ class Typecho_Common
             }
         }
         
-        if (isset(self::$config['charset']) || isset(self::$config['contentType']) || 
-        (isset(self::$config['exception']) && self::$config['exception'])) {
+        if (isset(self::$config['charset']) || isset(self::$config['contentType'])) {
             /** Typecho_Response */
             require_once 'Typecho/Response.php';
         }
         
-        if (isset(self::$config['charset'])) {
-            Typecho_Response::setDefaultCharset(self::$config['charset']);
-        }
-        
-        if (isset(self::$config['exception']) && self::$config['exception']) {
-            /** Typecho_I18n */
-            require_once 'Typecho/I18n.php';
-        
+        if (isset(self::$config['exception'])) {
             /** 设置异常截获函数 */
             set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
         }
@@ -152,77 +144,14 @@ class Typecho_Common
      */
     public static function exceptionHandle(Exception $exception)
     {
-        /** 强行清空缓冲区 */
-        @ob_clean();
-        
-        /** 设置HTTP头状态 */
-        Typecho_Response::setStatus($code = $exception->getCode());
-        Typecho_Response::setContentType('text/html');
-        
-        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=' . self::$config['charset'] . '" />
-    <title>' . _t('出错了') . '</title>
-
-    <style type="text/css">
-        body {
-            background: #f7fbe9;
-            font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+        if (!self::$config['exception']) {
+            echo nl2br($exception->__toString());
+        } else {
+            $handleClass = self::$config['exception'];
+            new $handleClass($exception);
         }
         
-        #error {
-            background: #333;
-            width: 360px;
-            margin: 0 auto;
-            margin-top: 100px;
-            color: #fff;
-            padding: 10px;
-            
-            -moz-border-radius-topleft: 4px;
-            -moz-border-radius-topright: 4px;
-            -moz-border-radius-bottomleft: 4px;
-            -moz-border-radius-bottomright: 4px;
-            -webkit-border-top-left-radius: 4px;
-            -webkit-border-top-right-radius: 4px;
-            -webkit-border-bottom-left-radius: 4px;
-            -webkit-border-bottom-right-radius: 4px;
-
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-        
-        h1 {
-            padding: 10px;
-            margin: 0;
-            font-size: 36px;
-        }
-        
-        p {
-            padding: 0 20px 20px 20px;
-            margin: 0;
-        }
-        
-        img {
-            padding: 0 0 5px 260px;
-        }
-        
-        a img {
-            border: none;
-        }
-    </style>
-</head>
-<body>
-    <div id="error">
-        <h1>' . ($code > 0 ? $code : _t('错误')) . '</h1>
-        <p>' . nl2br($exception->getMessage()) . '</p>
-        <a href="http://typecho.org"><img src="?464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021" /></a>
-    </div>
-</body>
-</html>';
+        exit;
     }
 
     /**
