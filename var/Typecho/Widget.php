@@ -193,7 +193,6 @@ abstract class Typecho_Widget
                 throw new Typecho_Widget_Exception($className);
             }
             
-            $params = array_slice(func_get_args(), 1);
             self::$_widgetPool[$className] = new $className($params);
         }
         
