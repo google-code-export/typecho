@@ -1084,7 +1084,7 @@ margin-top: 25px;
 
 }
 
-.typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover, ul.typecho-list-notable li.hover {
+.typecho-list-table tbody tr.hover td, .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover, ul.typecho-list-notable li.hover {
     background: #E3EEBD;
 }
 
@@ -1136,67 +1136,41 @@ ul.typecho-list-notable li {
 }
 
 /**
- * 图片列表
+ * 模板列表
  */
-.typecho-thumb-list {
-    overflow: hidden;
-    clear: both;
-    width: 960px;
-    margin-bottom: 70px;
+.typecho-theme-list td {
+	line-height: 20px;
+	vertical-align: top;
+	padding: 10px;
 }
 
-.typecho-thumb-list a:hover {
+.typecho-theme-list img {
+	background: #FFF;
+	padding: 2px;
+    margin: 0 15px 0 5px;
 }
 
-.typecho-thumb-list li {
-    text-align: center;
-    width: 230px;
-    float: left;
-    position: relative;
-    padding-top: 175px;
-    height: 55px;
-    margin: 20px 10px 00px 0px;
+.typecho-theme-list p {
+	margin-left: 5px;
+	padding: 5px 0;
+	font-size: 13px;
 }
 
-.typecho-thumb-list .title {
-    font-size: 12px;
-    color: #e47e00;
-    font-size: 14px;
+.typecho-theme-list h4 {
+	font-size: 13px;
+	font-weight: bold;
 }
 
-.typecho-thumb-list .title a {
-    color: #e47e00;
-    display: block;
+.typecho-theme-list tbody tr.hover td, .typecho-theme-list tbody tr:hover td {
+	background: none;
 }
 
-.typecho-thumb-list .thumb {
-    border: 1px solid #dee4c5;
-    background: #fff;
-    padding: 1px;
-    position: absolute;
-    top:25px;
-    left:15px;
+.typecho-theme-list tbody tr td.current {
+    background: #eff5d9;
 }
 
-.typecho-thumb-list .thumb img {
-    background: #E5EAD1;
-    width: 195px;
-    height: 145px;
-}
-
-.typecho-thumb-list .desption {
-
-}
-
-.typecho-thumb-list .current {
-    background: #e47e00;
-    color: #fff;
-    height: 20px;
-    line-height: 20px;
-    width: 200px;
-    position: absolute;
-    top:0px;
-    left:15px;
+.typecho-theme-list tbody tr td.hover, .typecho-theme-list tbody tr td:hover {
+	background: #E3EEBD;
 }
 
 /**

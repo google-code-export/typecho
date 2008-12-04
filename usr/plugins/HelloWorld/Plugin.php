@@ -5,7 +5,7 @@
  * @package HelloWorld 
  * @author qining
  * @version 1.0.0
- * @link http://www.typecho.org
+ * @link http://typecho.org
  */
 class HelloWorld_Plugin implements Typecho_Plugin_Interface
 {

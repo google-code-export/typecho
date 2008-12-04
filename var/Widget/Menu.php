@@ -99,7 +99,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), '/admin/plugins.php', 'administrator'),
             array(array('Widget_Plugins_Config', 'getMenuTitle'), _t('设置插件'), '/admin/option-plugin.php?config=', 'administrator', true),
-            array(_t('外观'), _t('管理网站外观'), '/admin/themes.php', 'administrator')
+            array(_t('外观'), _t('网站外观'), '/admin/themes.php', 'administrator')
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),

@@ -45,7 +45,7 @@ include 'menu.php';
                 </div>
             
                 <form method="post" class="operate-form">
-                <table class="typecho-list-table" class="operate-table">
+                <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
                         <col width="400"/>
