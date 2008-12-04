@@ -11,7 +11,7 @@ include 'menu.php';
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
                 <h6 class="typecho-list-table-title">激活的插件</h6>
-                <table class="typecho-list-table" class="operate-table">
+                <table class="typecho-list-table">
                     <colgroup>
                         <col width="150"/>
                         <col width="400"/>

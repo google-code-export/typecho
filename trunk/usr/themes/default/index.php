@@ -1,4 +1,18 @@
-<?php include('header.php'); ?>
+<?php
+/**
+ * 这是typecho系统的一套默认皮肤
+ * 你可以自由的使用,修改和分发它
+ * 此皮肤的样式表基于 960 Grid System 制作, 它完全符合 CSS 2.0 以及 XHTML 1.0 Strict 规范
+ * 你可以在<a href="http://typecho.org">typecho的官方网站</a>获得更多关于此皮肤的信息
+ * 
+ * @package Typecho Default Theme 
+ * @author qining
+ * @version 1.0.0
+ * @link http://typecho.org
+ */
+
+include('header.php');
+?>
 
     <div class="grid_11" id="content">
 	<?php while($this->next()): ?>

@@ -4,25 +4,35 @@ include 'header.php';
 include 'menu.php';
 ?>
 
+<?php Typecho_Widget::widget('Widget_Themes_List')->to($themes); ?>
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01">
-<ul class="typecho-thumb-list">
-    <?php for ($i = 0; $i < 12; $i++) { ?>
-    <li>
-    <h4 class="title"><a href="#">模板的名称</a></h4>
-    <p class="thumb"><a href="#"><img
-        src="http://img.mall.taobaocdn.com/malli/product/seller/2135/i4/571/401/T1pJ4aXgphlZBXXXXX.jpg"
-        width="400" height="300" /></a></p>
-    <p class="desption">Typecho 默认的皮肤，鄙视 70 买了个 iPod 还带套套</p>
-    <?php if ($i == 6) { ?>
-    <p class="current">当前模板</p>
-    <?php } ?>
-    </li>
-    <?php } ?>
-</ul>
+                <ul class="typecho-option-tabs">
+                    <li class="current"><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
+                    <li<?php if('approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=approved'); ?>"><?php _e('编辑当前外观'); ?></a></li>
+                </ul>
+                
+                <table class="typecho-list-table typecho-theme-list">
+                    <colgroup>
+                        <col width="450"/>
+                        <col width="450"/>
+                    </colgroup>
+                    <?php while($themes->next()): ?>
+                    <?php $themes->alt('<tr>', ''); ?>
+                    <td <?php if($options->theme == $themes->name): ?>class="current"<?php endif; ?>>
+                        <img src="" width="120" height="90" align="left" />
+                        <h4><?php $themes->title(); ?></h4>
+                        <cite><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>
+                        &nbsp;&nbsp;&nbsp;<?php _e('版本'); ?>: <?php $themes->version() ?>
+                        </cite>
+                        <p><?php echo nl2br($themes->description); ?></p>
+                    </td>
+                    <?php $themes->alt('', '</tr>'); ?>
+                    <?php endwhile; ?>
+                </table>
             </div>
         </div>
     </div>
