@@ -8,16 +8,19 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
+                <ul class="typecho-option-tabs">
+                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('所有'); ?></a></li>
+                    <li<?php if('published' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=published'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
+                </ul>
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">操作：<a href="#">全选</a>，<a href="#">反选</a>，<a href="#">删除选中项</a></p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
-                    <select name="status">
-                        <option value=""><?php _e('所有页面'); ?></option>
-                        <option value="published"<?php if(Typecho_Request::getParameter('status') == 'published'): ?> selected="true"<?php endif; ?>><?php _e('已发布'); ?></option>
-                        <option value="draft"<?php if(Typecho_Request::getParameter('status') == 'draft'): ?> selected="true"<?php endif; ?>><?php _e('草稿'); ?></option>
-                    </select>
+                    <?php if(Typecho_Request::isSetParameter('status')): ?>
+                        <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
+                    <?php endif; ?>
                     
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
@@ -47,7 +50,7 @@ include 'menu.php';
                     	<?php Typecho_Widget::widget('Widget_Contents_Page_Admin')->to($pages); ?>
                     	<?php if($pages->have()): ?>
                         <?php while($pages->next()): ?>
-                        <tr<?php $pages->alt('', ' class="even"'); ?>>
+                        <tr<?php $pages->alt(' class="even"', ''); ?>>
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td><?php $pages->author(); ?></td>
@@ -62,7 +65,7 @@ include 'menu.php';
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="7"><?php _e('没有任何文章'); ?></td>
+                        	<td colspan="7"><?php _e('没有任何页面'); ?></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>

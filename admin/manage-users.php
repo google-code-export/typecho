@@ -40,7 +40,7 @@ include 'menu.php';
                     <tbody>
                     	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
                         <?php while($users->next()): ?>
-                        <tr<?php $users->alt('', ' class="even"'); ?>>
+                        <tr<?php $users->alt(' class="even"', ''); ?>>
                             <td><input type="checkbox" value="<?php $users->uid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('option-user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
                             <td><?php $users->screenName(); ?></td>

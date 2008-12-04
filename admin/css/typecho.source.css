@@ -146,6 +146,16 @@ button {
 }
 
 /**
+ * clearfix
+ */
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+* html>body .clearfix { display: inline-block; width: 100%; }
+* html .clearfix { height: 1%; /* End hide from IE-mac */ }
+/* ie7 hack*/
+*+html .clearfix { min-height: 1%; }
+/*]]>*/
+
+/**
  * 弹出层
  */
 .typecho-popup {
@@ -835,6 +845,7 @@ margin-top: 25px;
 .typecho-page-main .typecho-option-tabs {
     font-size: 13px;
 	font-weight: bold;
+	margin-bottom: 15px;
 }
 
 /**
@@ -961,6 +972,15 @@ margin-top: 25px;
     float: left;
     margin: 4px 0px 0px 5px;
     height: 26px;
+	
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	
+	/* hope IE support border radius, God save me! */
+	border-bottom-top-radius: 3px;
+	border-bottom-top-radius: 3px;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
@@ -1056,7 +1076,7 @@ margin-top: 25px;
     padding: 0 5px;
 }
 
-.typecho-list-table tbody tr.even {
+.typecho-list-table tbody tr.even, ul.typecho-list-notable li.even {
     background: #eff5d9;
 }
 
@@ -1064,7 +1084,7 @@ margin-top: 25px;
 
 }
 
-.typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td {
+.typecho-list-table tbody tr.hover a, .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover, ul.typecho-list-notable li.hover {
     background: #E3EEBD;
 }
 
@@ -1085,13 +1105,10 @@ margin-top: 25px;
  * 不使用表格的列表
  */
 ul.typecho-list-notable {
-	font-weight: normal;
-	color: #777;
 	margin: 0;
 	padding: 0;
-	line-height: 24px;
-	font-size: 14px;
-	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+	line-height: 20px;
+	font-size: 12px;
 }
 
 ul.typecho-list-notable img {
@@ -1099,60 +1116,23 @@ ul.typecho-list-notable img {
 	padding: 2px;
 }
 
-ul.typecho-list-notable .header {
-	padding: 10px 10px 0 10px;
-	height: 22px;
-}
-
-ul.typecho-list-notable .footer {
-	padding: 0 10px 10px 10px;
+ul.typecho-list-notable p {
+	padding: 5px 0;
 	font-size: 13px;
-	height: 22px;
-}
-
-ul.typecho-list-notable .left {
-	float: left;
 }
 
 ul.typecho-list-notable .right {
-	float: right;
 	text-align: right;
 }
 
-ul.typecho-list-notable p {
-	font-size:14px;
-	font-family: Georgia,Times,"Times New Roman",serif;
-	padding: 10px;
+ul.typecho-list-notable .center {
+	text-align: center;
 }
 
 ul.typecho-list-notable li {
 	margin: 0 0 5px 0;
-	padding: 5px;
 	list-style: none;
-	background: #eff5d9;
-	
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-}
-
-ul.typecho-list-notable li.even {
-    
-}
-
-ul.typecho-list-notable li:hover {
-	background: #E3EEBD;
+	padding: 5px 0;
 }
 
 /**

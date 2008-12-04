@@ -8,17 +8,21 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
+                <ul class="typecho-option-tabs">
+                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>">所有</a></li>
+                    <li<?php if('approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=approved'); ?>">展现</a></li>
+                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>">待审核</a></li>
+                    <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>">垃圾</a></li>
+                </ul>
+            
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">操作：<a href="#">全选</a>，<a href="#">反选</a>，<a href="#">删除选中项</a></p>
                     <p class="search">
-                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
-                    <select name="status">
-                        <option value=""><?php _e('所有页面'); ?></option>
-                        <option value="published"<?php if(Typecho_Request::getParameter('status') == 'published'): ?> selected="true"<?php endif; ?>><?php _e('已发布'); ?></option>
-                        <option value="draft"<?php if(Typecho_Request::getParameter('status') == 'draft'): ?> selected="true"<?php endif; ?>><?php _e('草稿'); ?></option>
-                    </select>
-                    
+                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                    <?php if(Typecho_Request::isSetParameter('status')): ?>
+                        <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
+                    <?php endif; ?>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>
@@ -26,43 +30,31 @@ include 'menu.php';
 
                     	<?php Typecho_Widget::widget('Widget_Comments_Admin')->to($comments); ?>
                         
-                        <ul class="typecho-list-notable">
+                        <ul class="typecho-list-notable clearfix">
                         <?php while($comments->next()): ?>
-                        <li<?php $comments->alt('', ' class="even"'); ?>>
-
-                            <div class="header">
-                            <span class="column-21">
-                            <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
-                            <strong><?php _e('%s | %s发表在', $comments->author, $comments->dateWord); ?></strong>
-                            <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
-                            </span>
-                            <span class="column-02 right">
-                            <?php $comments->gravatar(32); ?>
-                            </span>
+                        <li class="column-24<?php $comments->alt(' even', ''); ?>">
+                            <div class="column-01 center">
+                                <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                             </div>
-
-                            <?php $comments->content(); ?>
-                            
-                            <div class="footer">
-                            <span class="left">
-                            <strong>IP:</strong> <?php $comments->ip(); ?>
-                            <?php if($comments->mail): ?>
-                             | <strong>MAIL:</strong> <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>
-                            <?php endif; ?>
-                            <?php if($comments->url): ?>
-                             | <strong>URL:</strong> <a href="<?php $comments->url(); ?>"><?php $comments->url(); ?></a>
-                            <?php endif; ?>
-                            </span>
-                            
-                            <span class="right">
-                            <?php if('approved' == $comments->status):
-                            _e('展现');
-                            elseif('waiting' == $comments->status):
-                            _e('待审核');
-                            elseif('spam' == $comments->status):
-                            _e('垃圾');
-                            endif; ?>
-                            </span>
+                            <div class="column-02 center">
+                                <?php $comments->gravatar(); ?>
+                            </div>
+                            <div class="column-21">
+                                <?php $comments->author(); ?>
+                                <?php if($comments->mail): ?>
+                                 | 
+                                <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>
+                                <?php endif; ?>
+                                <?php if($comments->ip): ?>
+                                 | 
+                                <?php $comments->ip(); ?>
+                                <?php endif; ?>
+                                <?php $comments->content(); ?>
+                                <div class="right">
+                                <?php $comments->dateWord(); ?>
+                                &nbsp;&nbsp;
+                                <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
+                                </div>
                             </div>
                         </li>
                         <?php endwhile; ?>

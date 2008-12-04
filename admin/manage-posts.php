@@ -8,6 +8,13 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
+                <ul class="typecho-option-tabs">
+                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('所有'); ?></a></li>
+                    <li<?php if('published' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=published'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
+                </ul>
+            
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">操作: 
@@ -28,12 +35,9 @@ include 'menu.php';
                     	<?php endwhile; ?>
                     </select>
             
-                    <select name="status">
-                        <option value=""><?php _e('所有文章'); ?></option>
-                        <option value="published"<?php if(Typecho_Request::getParameter('status') == 'published'): ?> selected="true"<?php endif; ?>><?php _e('已发布'); ?></option>
-                        <option value="waiting"<?php if(Typecho_Request::getParameter('status') == 'waiting'): ?> selected="true"<?php endif; ?>><?php _e('待审核'); ?></option>
-                        <option value="draft"<?php if(Typecho_Request::getParameter('status') == 'draft'): ?> selected="true"<?php endif; ?>><?php _e('草稿'); ?></option>
-                    </select>
+                    <?php if(Typecho_Request::isSetParameter('status')): ?>
+                        <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
+                    <?php endif; ?>
                     
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
@@ -66,7 +70,7 @@ include 'menu.php';
                     	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
                     	<?php if($posts->have()): ?>
                         <?php while($posts->next()): ?>
-                        <tr<?php $posts->alt('', ' class="even"'); ?>>
+                        <tr<?php $posts->alt(' class="even"', ''); ?>>
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>
