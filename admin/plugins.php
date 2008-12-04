@@ -78,7 +78,7 @@ include 'menu.php';
                     <tbody>
                         <?php if ($deactivatedPlugins->have()): ?>
                         <?php while ($deactivatedPlugins->next()): ?>
-                        <tr<?php $deactivatedPlugins->alt('', ' class="even"'); ?>>
+                        <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?>>
                             <td><?php $deactivatedPlugins->title(); ?></td>
                             <td><?php $deactivatedPlugins->description(); ?></td>
                             <td><?php $deactivatedPlugins->version(); ?></td>

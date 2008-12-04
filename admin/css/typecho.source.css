@@ -1282,8 +1282,7 @@ ul.typecho-list-notable li {
 }
 
 .typecho-edit-theme .submit {
-    margin: 0 130px 130px 130px;
-    width: 810px;
+    margin: 20px 0 20px 0;
     text-align: center;
 }
 

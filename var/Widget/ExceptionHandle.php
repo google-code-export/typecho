@@ -78,6 +78,8 @@ class Widget_ExceptionHandle extends Typecho_Widget
      */
     public function init()
     {
+        @ob_clean();
+    
         if (503 != $this->parameter->code && 500 != $this->parameter->code &&
         is_file($file = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
         $this->options->theme . '/' . $this->parameter->code . '.php')) {
