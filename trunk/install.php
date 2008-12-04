@@ -293,7 +293,7 @@ Typecho_Plugin::init(\$options->plugins);
                                         'allowPing' => 'enable', 'allowFeed' => 'enable')));
                                         
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 1, 'allowComment' => 'enable',
+                                        'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 0, 'allowComment' => 'enable',
                                         'allowPing' => 'enable', 'allowFeed' => 'enable')));
                                         
                                         /** 初始评论 */

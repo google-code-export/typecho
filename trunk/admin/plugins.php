@@ -30,7 +30,7 @@ include 'menu.php';
                     </thead>
                     <tbody>
                         <?php while ($activatedPlugins->next()): ?>
-                        <tr<?php $activatedPlugins->alt('', ' class="even"'); ?>>
+                        <tr<?php $activatedPlugins->alt(' class="even"', ''); ?>>
                             <td><?php $activatedPlugins->title(); ?></td>
                             <td><?php $activatedPlugins->description(); ?></td>
                             <td><?php $activatedPlugins->version(); ?></td>
