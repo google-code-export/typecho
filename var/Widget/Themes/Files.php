@@ -53,13 +53,14 @@ class Widget_Themes_Files extends Typecho_Widget
             $files = glob($dir . '/*');
             $this->_currentFile = $this->request->getParameter('file', 'index.php');
 
-            if (is_file($dir . '/' . $this->_currentFile)) {
+            if (preg_match("/^([a-z\.])+$/i", $this->_currentFile)
+            && is_file($dir . '/' . $this->_currentFile)) {
                 foreach ($files as $file) {
                     if (is_file($file)) {
                         $file = basename($file);
                         $this->push(array(
                             'file'      =>  $file,
-                            'theme'     =>  $theme,
+                            'theme'     =>  $this->_currentTheme,
                             'current'   =>  ($file == $this->_currentFile)
                         ));
                     }
