@@ -38,9 +38,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $comment = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
-            'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
+            'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getClientIp(),
-            'type'      =>  'comment',
+            'mode'      =>  'comment',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
@@ -101,7 +101,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $comment = $this->plugin()->comment($comment);
+        $comment = $this->plugin()->comment($comment, $this->_content);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
@@ -121,9 +121,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $trackback = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
-            'agent'     =>  $_SERVER["HTTP_USER_AGENT"],
+            'agent'     =>  $this->request->getReferer(),
             'ip'        =>  $this->request->getClientIp(),
-            'type'      =>  'trackback',
+            'mode'      =>  'trackback',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
@@ -147,7 +147,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $trackback = $this->plugin()->trackback($trackback);
+        $trackback = $this->plugin()->trackback($trackback, $this->_content);
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);

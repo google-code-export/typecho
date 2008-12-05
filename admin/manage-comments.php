@@ -40,7 +40,7 @@ include 'menu.php';
                                 <?php $comments->gravatar(); ?>
                             </div>
                             <div class="column-21">
-                                <?php $comments->author(); ?>
+                                <?php $comments->author(true); ?>
                                 <?php if($comments->mail): ?>
                                  | 
                                 <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>

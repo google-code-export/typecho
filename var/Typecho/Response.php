@@ -242,10 +242,12 @@ class Typecho_Response
      */
     public static function goBack($anchor = NULL)
     {
+        /** Typecho_Request */
+        require_once 'Typecho/Request.php';
+        $referer = Typecho_Request::getReferer();
+    
         //判断来源
-        if (!empty($_SERVER['HTTP_REFERER'])) {
-            $referer = $_SERVER['HTTP_REFERER'];
-            
+        if (!empty($referer)) {
             // ~ fix Issue 38
             if (!empty($anchor)) {
                 $parts = parse_url($referer);
@@ -264,7 +266,8 @@ class Typecho_Response
      * @access public
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
-     * @param integer $ttl 过期时间,默认为0,表示随会话时间结束
+     * @param integer $expire 过期时间,默认为0,表示随会话时间结束
+     * @param string $url 路径(可以是域名,也可以是地址)
      * @return void
      */
     public static function setCookie($key, $value, $expire = 0, $url = NULL)
