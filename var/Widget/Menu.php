@@ -47,6 +47,14 @@ class Widget_Menu extends Typecho_Widget
     private $_currentChild = 0;
     
     /**
+     * 当前页面
+     * 
+     * @access private
+     * @var string
+     */
+    private $_currentUrl;
+    
+    /**
      * 全局选项
      * 
      * @access protected
@@ -133,7 +141,7 @@ class Widget_Menu extends Typecho_Widget
         $this->_childMenu = $this->plugin()->childMenu($this->_childMenu);
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-        $url = 'http://' . $host . $_SERVER['REQUEST_URI'];
+        $this->_currentUrl = 'http://' . $host . $_SERVER['REQUEST_URI'];
         $childMenu = $this->_childMenu;
         $match = 0;
         $adminUrl = $this->options->siteUrl;
@@ -141,7 +149,7 @@ class Widget_Menu extends Typecho_Widget
         foreach ($childMenu as $parentKey => $parentVal) {
             foreach ($parentVal as $childKey => $childVal) {
                 $link = Typecho_Common::url($childVal[2], $adminUrl);
-                if (0 === strpos($url, $link) && strlen($link) > $match) {
+                if (0 === strpos($this->_currentUrl, $link) && strlen($link) > $match) {
                     $this->_currentParent =  $parentKey;
                     $this->_currentChild =  $childKey;
                 }
@@ -201,7 +209,8 @@ class Widget_Menu extends Typecho_Widget
                     }
                     
                     echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
-                    "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></li>\n";
+                    "><a href=\"" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? $this->_currentUrl : $link) .
+                    "\" title=\"{$title}\">{$title}</a></li>\n";
                 }
             }
             echo "</ul></dd>\n";
