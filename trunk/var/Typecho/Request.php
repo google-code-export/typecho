@@ -213,6 +213,28 @@ class Typecho_Request
     }
     
     /**
+     * 获取网页来源
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getReferer()
+    {
+        return getenv('HTTP_REFERER');
+    }
+    
+    /**
+     * 获取客户端
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getAgent()
+    {
+        return getenv('HTTP_USER_AGENT');
+    }
+    
+    /**
      * 请求方法是否为POST
      *
      * @return boolean
