@@ -11,7 +11,7 @@ include 'menu.php';
             <div class="column-24 start-01">
                 <ul class="typecho-option-tabs">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
-                    <li><a href="<?php $options->adminUrl('theme-file.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
+                    <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
                 </ul>
                 
                 <table class="typecho-list-table typecho-theme-list">

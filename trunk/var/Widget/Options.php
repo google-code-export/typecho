@@ -123,6 +123,95 @@ class Widget_Options extends Typecho_Widget
     {
         return Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
     }
+    
+    /**
+     * 获取解析路径前缀
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getIndex()
+    {
+        return $this->rewrite ? $this->siteUrl : Typecho_Common::url('index.php', $this->siteUrl);
+    }
+    
+    /**
+     * 获取模板路径
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getThemeUrl()
+    {
+        return Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
+    }
+    
+    /**
+     * 获取插件路径
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getPluginUrl()
+    {
+        return Typecho_Common::url(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
+    }
+    
+    /**
+     * 获取后台路径
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getAdminUrl()
+    {
+        return Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ? 
+        __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
+    }
+    
+    /**
+     * 获取登录地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getLoginUrl()
+    {
+        return Typecho_Common::url('login.php', $this->adminUrl);
+    }
+    
+    /**
+     * 获取登出地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getLogoutUrl()
+    {
+        return Typecho_Common::url('Logout.do', $this->index);
+    }
+    
+    /**
+     * 获取编码
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function getCharset()
+    {
+        return Typecho_Common::$config['charset'];
+    }
+    
+    /**
+     * 获取格林尼治标准时间
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function getGmtTime()
+    {
+        return time() - idate('Z');
+    }
 
     /**
      * 初始化函数
@@ -135,24 +224,11 @@ class Widget_Options extends Typecho_Widget
         $this->db->fetchAll($this->db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
         $this->stack[] = &$this->row;
-
-        /** 初始化站点信息 */
-        $this->charset = Typecho_Common::$config['charset'];
-        $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
-        $this->index = $this->rewrite ? $this->siteUrl : Typecho_Common::url('/index.php', $this->siteUrl);
-        $this->themeUrl = Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
-        $this->pluginUrl = Typecho_Common::url(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
-        $this->gmtTime = time() - idate('Z');
         
-        /** 获取插件列表 */
+        /** 初始化站点信息 */
+        $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
         $this->routingTable = unserialize($this->routingTable); 
-
-        /** 初始化常用地址 */
-        $this->adminUrl = Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ? 
-        __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
-        $this->loginUrl = Typecho_Common::url('login.php', $this->adminUrl);
-        $this->logoutUrl = Typecho_Common::url('Logout.do', $this->index);
     }
 
     /**
