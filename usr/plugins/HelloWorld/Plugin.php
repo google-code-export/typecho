@@ -41,8 +41,7 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
     public function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
-		$nowHelloWorld = Typecho_Widget::widget('Widget_Options')->plugin('HelloWorld')->word;
-        $name = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, $nowHelloWorld, _t('说点什么'));
+        $name = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, 'Hello World', _t('说点什么'));
         $form->addInput($name);
     }
     

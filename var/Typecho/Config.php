@@ -136,7 +136,7 @@ class Typecho_Config implements Iterator
      */
     public function valid()
     {
-        return false === current($this->_currentConfig) ? false : true;
+        return false !== $this->current();
     }
 
     /**
