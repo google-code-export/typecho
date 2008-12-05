@@ -1072,7 +1072,7 @@ margin-top: 25px;
 
 .typecho-list-table td {
     height: 32px;
-    line-height: 32px;
+    line-height: 20px;
     padding: 0 5px;
 }
 
@@ -1289,6 +1289,7 @@ ul.typecho-list-notable li {
 .typecho-edit-theme textarea {
     width: 800px;
     height: 500px;
+	font-family: "Courier New",Courier,monospace;
 }
 
 /**
