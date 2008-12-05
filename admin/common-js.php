@@ -97,7 +97,7 @@
 
         window.addEvent('domready', function() {
             var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});
-            var firstError = $$('.error')[0];
+            var firstError = $(document).getElement('.typecho-option .error');
             
             //增加滚动效果
             if (firstError) {
