@@ -48,7 +48,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
         $key = new Typecho_Widget_Helper_Form_Element_Text('key', NULL, NULL, _t('服务密钥'), _t('此密钥需要向服务提供商注册<br />
         它是一个用于表明您合法用户身份的字符串'));
         $form->addInput($key->addRule('required', _t('您必须填写一个服务密钥'))
-        ->addRule(array('Akismet_Plugin', 'validateForm'), _t('您使用的服务密钥错误')));
+        ->addRule(array('Akismet_Plugin', 'validate'), _t('您使用的服务密钥错误')));
         
         $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, 'http://rest.akismet.com',
         _t('服务地址'), _t('这是反垃圾评论服务提供商的服务器地址<br />
@@ -63,22 +63,10 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      * @param string $key 服务密钥
      * @return boolean
      */
-    public function validateForm($key)
-    {
-        return self::validate($key, Typecho_Request::getParameter('url'));
-    }
-    
-    /**
-     * 验证api的key值
-     * 
-     * @access public
-     * @param string $key 服务密钥
-     * @param string $url 服务地址
-     * @return boolean
-     */
-    public function validate($key, $url)
+    public function validate($key)
     {
         $options = Typecho_Widget::widget('Widget_Options');
+        $url = Typecho_Request::getParameter('url');
         
         $data = array(
             'key'   =>  $key,
@@ -89,7 +77,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
         if (false != $client) {
             $client->setCharset($options->charset)
             ->setData($data)
-            ->setParam('User-Agent', $options->generator)
+            ->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
             ->send(Typecho_Common::url('/1.1/verify-key', $url));
             
             if ('valid' == $client->getResponseBody()) {
@@ -163,26 +151,26 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             'comment_content'       =>  $comment['text']
         );
         
-        foreach ($allowedServerVars as $key) {
-            if (array_key_exists($key, $_SERVER)) {
-                $data[$key] = $_SERVER[$key];
+        foreach ($allowedServerVars as $val) {
+            if (array_key_exists($val, $_SERVER)) {
+                $data[$val] = $_SERVER[$val];
             }
         }
 
         $client = Typecho_Http_Client::get('Curl');
         if (false != $client) {
+            $params = parse_url($url);
+            $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
+
             $client->setCharset($options->charset)
-            ->setData($data)
             ->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
+            ->setData($data)
             ->send(Typecho_Common::url('/1.1/comment-check', $url));
 
             if ('true' == $client->getResponseBody()) {
                 $comment['status'] = 'spam';
             }
         }
-        
-        print_r($comment);
-        die;
         
         return $comment;
     }

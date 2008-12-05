@@ -48,6 +48,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         curl_setopt($ch, CURLOPT_PORT, $this->port);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         /** 设置header信息 */
@@ -57,7 +58,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         
         /** 设置编码 */
         if (!empty($this->charset)) {
-            curl_setopt($ch, CURLOPT_ENCODING, $this->charset);
+            //curl_setopt($ch, CURLOPT_ENCODING, $this->charset);
         }
 
         /** POST模式 */
@@ -65,7 +66,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             curl_setopt($ch, CURLOPT_POST, true);
             
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
             }
             
             if (!empty($this->files)) {
