@@ -102,13 +102,13 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         
         $options = $this->options->plugin($pluginName);
         
-        if (!empty($options) && is_array($options)) {
+        if (!empty($options)) {
             foreach ($options as $key => $val) {
                 $form->getInput($key)->value($val);
             }
         }
         
-        $form->addInput(new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置')));
+        $form->addItem(new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置')));
         return $form;
     }
 }
