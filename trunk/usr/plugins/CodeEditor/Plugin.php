@@ -18,7 +18,7 @@ class CodeEditor_Plugin implements Typecho_Plugin_Interface
      */
     public function activate()
     {
-        Typecho_Plugin::factory('admin/theme-editor.php')->textarea = array('CodeEditor_Plugin', 'render');
+        Typecho_Plugin::factory('admin/theme-editor.php')->form = array('CodeEditor_Plugin', 'render');
     }
     
     /**
