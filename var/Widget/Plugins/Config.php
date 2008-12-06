@@ -69,7 +69,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
      */
     public function getMenuTitle()
     {
-        return _t('设置插件 "%s"', $this->info['title']);
+        return _t('设置插件 %s', $this->info['title']);
     }
 
     /**

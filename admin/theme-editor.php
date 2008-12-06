@@ -24,13 +24,17 @@ include 'menu.php';
                             <?php endwhile; ?>
                         </ul>
                         <div class="content">
-                        <form method="post" name="theme" id="theme">
+                        <form method="post" name="theme" id="theme" action="<?php $options->index('Themes/Edit.do'); ?>">
                             <textarea name="content" id="content"><?php echo $files->currentContent(); ?></textarea>
-                            <?php Typecho_Plugin::factory('admin/theme-editor.php')->textarea(); ?>
-                            <?php if($files->currentIsReadable()): ?>
-                            <div class="submit"><button type="submit">保存文件</button></div>
+                            <?php if($files->currentIsWriteable()): ?>
+                            <div class="submit">
+                                <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
+                                <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />
+                                <button type="submit">保存文件</button>
+                            </div>
                             <?php endif; ?>
                         </form>
+                        <?php Typecho_Plugin::factory('admin/theme-editor.php')->form(); ?>
                         </div>
                     </div>
                 </div>

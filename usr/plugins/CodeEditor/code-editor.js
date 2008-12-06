@@ -14,11 +14,11 @@ var ce_textarea = document.getElementById( 'content' );
 if( ce_form && ce_textarea ) {
 	/// hooke ce_form.onsubmit
 	ce_form.onsubmit = function() {
-		newcontent.toggleEditor();
+		ce_textarea.removeAttribute('disabled');
 		ce_form.submit();
 	}
 	/// dateitype erkennen
-	var ce_file = document.getElementsByName( 'file' );
+	var ce_file = document.getElementsByName( 'edit' );
 	var ce_file_type = 'php';
 	if( ce_file && ce_file.length > 0 ) {
 		if( ce_file[ 0 ].value.match( '\.css' ) ) {

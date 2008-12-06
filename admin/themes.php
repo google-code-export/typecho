@@ -23,12 +23,17 @@ include 'menu.php';
                     <?php while($themes->next()): ?>
                     <?php $themes->alt('<tr>', ''); ?>
                     <td <?php if($options->theme == $themes->name): ?>class="current"<?php endif; ?>>
-                        <img src="" width="120" height="90" align="left" />
-                        <h4><?php $themes->title(); ?></h4>
+                        <div class="column-04">
+                        <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
+                        </div>
+                        <div class="column-08">
+                        <h4><?php $themes->title(); ?>
+                        <?php if($options->theme != $themes->name): ?><a class="button" href="<?php $options->index('Themes/Edit.do?change=' . $themes->name); ?>"><?php _e('激活'); ?></a><?php endif; ?></h4>
                         <cite><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>
                         &nbsp;&nbsp;&nbsp;<?php _e('版本'); ?>: <?php $themes->version() ?>
                         </cite>
                         <p><?php echo nl2br($themes->description); ?></p>
+                        </div>
                     </td>
                     <?php $themes->alt('', '</tr>'); ?>
                     <?php endwhile; ?>

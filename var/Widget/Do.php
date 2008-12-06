@@ -23,11 +23,12 @@ class Widget_Do extends Typecho_Widget
     public function init()
     {
         /** 验证路由地址 **/
-        $prefix = 'plugin' == Typecho_Router::$current ? 'Plugin' : 'Widget';
-        $widgetName = $prefix . '_' . str_replace('/', '_', $this->request->widget);
-        $fileName = __TYPECHO_ROOT_DIR__ . '/var/' . $prefix . '/' . $this->request->widget . '.php';
+        $widget = trim($this->request->widget, '/');
+        $objectName = str_replace('/', '_', $widget);
+        $widgetName = 'plugin' == Typecho_Router::$current ? $objectName : 'Widget_' . $objectName;
+        $fileName = ('plugin' == Typecho_Router::$current ? $widget : 'Widget/' . $widget) . '.php';
 
-        if (file_exists($fileName)) {
+        if (Typecho_Common::isAvailableClass($widgetName)) {
             require_once $fileName;
             
             if (class_exists($widgetName)) {
@@ -39,6 +40,6 @@ class Widget_Do extends Typecho_Widget
             }
         }
 
-        throw new Typecho_Widget_Exception(_t('动作%s不存在', $widgetName), 404);
+        throw new Typecho_Widget_Exception(_t('请求的路径不存在'), 404);
     }
 }

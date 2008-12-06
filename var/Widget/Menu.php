@@ -106,13 +106,13 @@ class Widget_Menu extends Typecho_Widget
         array(
             array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), '/admin/plugins.php', 'administrator'),
-            array(array('Widget_Plugins_Config', 'getMenuTitle'), _t('设置插件'), '/admin/option-plugin.php?config=', 'administrator', true),
+            array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), '/admin/option-plugin.php?config=', 'administrator', true),
             array(_t('外观'), _t('网站外观'), '/admin/themes.php', 'administrator'),
-            array(array('Widget_Themes_Files', 'getMenuTitle'), _t('编辑风格文件'), '/admin/theme-editor.php', 'administrator', true)
+            array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), '/admin/theme-editor.php', 'administrator', true)
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
-            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), _t('编辑文章'), '/admin/write-post.php?cid=', 'contributor', true),
+            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), '/admin/write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),

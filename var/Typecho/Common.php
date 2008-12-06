@@ -21,6 +21,14 @@ class Typecho_Common
 {
     /** 默认不解析的标签列表 */
     const LOCKED_HTML_TAG = 'code|script';
+    
+    /**
+     * 缓存的包含路径
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_cachedIncludePath = false;
 
     /**
      * 锁定的代码块
@@ -82,6 +90,11 @@ class Typecho_Common
             /** 设置自动载入函数 */
             function __autoLoad($className)
             {
+                /**
+                 * 自动载入函数并不判断此类的文件是否存在, 我们认为当你显式的调用它时, 你已经确认它存在了
+                 * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
+                 * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
+                 */
                 require_once str_replace('_', '/', $className) . '.php';
             }
         }
@@ -152,6 +165,36 @@ class Typecho_Common
         }
         
         exit;
+    }
+    
+    /**
+     * 判断类是否能被加载
+     * 此函数会遍历所有的include目录, 所以会有一定的性能消耗, 但是不会很大
+     * 可是我们依然建议你在必须检测一个类能否被加载时使用它, 它通常表现为以下两种情况
+     * 1. 当需要被加载的类不存在时, 系统不会停止运行 (如果你不判断, 系统会因抛出严重错误而停止)
+     * 2. 你需要知道哪些类无法被加载, 以提示使用者
+     * 除了以上情况, 你无需关注那些类无法被加载, 因为当它们不存在时系统会自动停止并报错
+     * 
+     * @access public
+     * @param string $className 类名
+     * @return boolean
+     */
+    public static function isAvailableClass($className)
+    {
+        /** 获取所有include目录 */
+        $dirs = false === self::$_cachedIncludePath ? explode(PATH_SEPARATOR, get_include_path())
+        : self::$_cachedIncludePath;
+        $file = str_replace('_', '/', $className) . '.php';
+
+        foreach ($dirs as $dir) {
+            if (!empty($dir)) {
+                if (is_file($dir . '/' . $file)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -571,17 +614,6 @@ class Typecho_Common
         } else {
             return md5($from) == $to;
         }
-    }
-
-    /**
-     * 动态获取网站根目录
-     *
-     * @access public
-     * @return string
-     */
-    public static function getSiteRoot()
-    {
-        return substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')) . '/';
     }
     
     /**

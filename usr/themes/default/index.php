@@ -6,9 +6,9 @@
  * 你可以在<a href="http://typecho.org">typecho的官方网站</a>获得更多关于此皮肤的信息
  * 
  * @package Typecho Default Theme 
- * @author qining
+ * @author fen
  * @version 1.0.0
- * @link http://typecho.org
+ * @link http://www.hellowiki.com
  */
 
 include('header.php');

@@ -48,12 +48,12 @@ class Widget_Themes_Files extends Typecho_Widget
         $this->widget('Widget_User')->pass('administrator');
         $this->_currentTheme = $this->request->getParameter('theme', $this->widget('Widget_Options')->theme);
         
-        if (preg_match("/^([a-z])+$/i", $this->_currentTheme)
+        if (preg_match("/^([_a-z-\ ])+$/i", $this->_currentTheme)
         && is_dir($dir = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->_currentTheme)) {
             $files = glob($dir . '/*');
             $this->_currentFile = $this->request->getParameter('file', 'index.php');
 
-            if (preg_match("/^([a-z\.])+$/i", $this->_currentFile)
+            if (preg_match("/^([_a-z-\.\ ])+$/i", $this->_currentFile)
             && is_file($dir . '/' . $this->_currentFile)) {
                 foreach ($files as $file) {
                     if (is_file($file)) {
@@ -81,7 +81,7 @@ class Widget_Themes_Files extends Typecho_Widget
      */
     public function getMenuTitle()
     {
-        return _t('编辑风格文件 %s', $this->_currentFile);
+        return _t('编辑文件 %s', $this->_currentFile);
     }
     
     /**
@@ -102,9 +102,9 @@ class Widget_Themes_Files extends Typecho_Widget
      * @access public
      * @return string
      */
-    public function currentIsReadable()
+    public function currentIsWriteable()
     {
-        return is_readable(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
+        return is_writeable(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
         $this->_currentTheme . '/' . $this->_currentFile);
     }
     
