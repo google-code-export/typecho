@@ -18,8 +18,8 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      */
     public function activate()
     {
-        if (false == Typecho_Http_Client::get('Curl')) {
-            throw new Typecho_Plugin_Exception(_t('对不起, 您的主机不支持php-curl扩展, 无法正常使用此功能'));
+        if (false == Typecho_Http_Client::get('Curl', 'Socket')) {
+            throw new Typecho_Plugin_Exception(_t('对不起, 您的主机不支持 php-curl 扩展而且没有打开 allow_url_fopen 功能, 无法正常使用此功能'));
         }
     
         Typecho_Plugin::factory('Widget_Feedback')->comment = array('Akismet_Plugin', 'filter');
@@ -73,10 +73,9 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             'blog'  =>  $options->siteUrl
         );
         
-        $client = Typecho_Http_Client::get('Curl');
+        $client = Typecho_Http_Client::get('Curl', 'Socket');
         if (false != $client) {
-            $client->setCharset($options->charset)
-            ->setData($data)
+            $client->setData($data)
             ->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
             ->send(Typecho_Common::url('/1.1/verify-key', $url));
             
@@ -157,13 +156,12 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             }
         }
 
-        $client = Typecho_Http_Client::get('Curl');
+        $client = Typecho_Http_Client::get('Curl', 'Socket');
         if (false != $client) {
             $params = parse_url($url);
             $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
 
-            $client->setCharset($options->charset)
-            ->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
+            $client->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
             ->setData($data)
             ->send(Typecho_Common::url('/1.1/comment-check', $url));
 
