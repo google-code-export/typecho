@@ -283,10 +283,6 @@ Typecho_Plugin::init(\$options->plugins);
                                         /** 初始关系 */
                                         $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
                                         
-                                        /** 初始链接 */
-                                        $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('Typecho官方网站'), 'slug' => 'http://www.typecho.org', 'type' => 'link', 'description' => _t('Typecho的老巢'),
-                                        'count' => 0, 'sort' => 1)));
-                                        
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
                                         'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 'enable',
