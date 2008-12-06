@@ -3,18 +3,18 @@
  *
  * @author	fen1211@gmail.com
  * @link	http://typecho.net/
- * @update	2008-11-09 20:30
+ * @update	2008-12-06 20:30
  */
 
 
 /* import 960.gs css framework */
-@import url(960.gs.css);
+@import url(css/960.gs.css);
 
 /*
  * gobal settings
  */
 body {
-background: #fff url(../images/body_bg.png) repeat-x;
+background: #fff url(images/body_bg.png) repeat-x;
 font-family: "trebuchet ms", geneva, sans-serif;
 line-height: 1.6;
 }
@@ -79,7 +79,7 @@ ul#nav_menu li a {
 color: #fff;
 display: block;
 float: left;
-width: 120px;
+padding: 0 30px;
 text-align: center;
 }
 ul#nav_menu li a.current {
@@ -210,7 +210,7 @@ list-style-type: none;
 .widget_style ul li {
 margin: 0;
 padding-left: 12px;
-background: url(../images/widget_style_li.png) 0 5px no-repeat;
+background: url(images/widget_style_li.png) 0 5px no-repeat;
 }
 
 /* 
