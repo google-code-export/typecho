@@ -27,9 +27,6 @@ class Typecho_Http_Client
     
     /** GET方法 */
     const METHOD_GET = 'GET';
-
-    /** PUT方法 */
-    const METHOD_PUT = 'PUT';
     
     /** 定义行结束符 */
     const EOL = "\r\n";

@@ -50,15 +50,23 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        
+        /** 设置HTTP版本 */
+        switch ($this->rfc) {
+            case 'HTTP/1.0':
+                curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+                break;
+            case 'HTTP/1.1':
+                curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+                break;
+            default:
+                curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_NONE);
+                break;
+        }
 
         /** 设置header信息 */
         if (!empty($this->params)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $this->params);
-        }
-        
-        /** 设置编码 */
-        if (!empty($this->charset)) {
-            //curl_setopt($ch, CURLOPT_ENCODING, $this->charset);
         }
 
         /** POST模式 */
@@ -70,9 +78,17 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             }
             
             if (!empty($this->files)) {
-                foreach ($this->files as $file) {
-                    curl_setopt($ch, CURLOPT_FILE, '@' . $file);
+                foreach ($this->files as $key => &$file) {
+                    $file = '@' . $file;
                 }
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->files);
+            }
+        }
+        
+        /** 设置cookie */
+        if (!empty($this->cookies)) {
+            foreach ($this->cookies as $cookie) {
+                curl_setopt($ch, CURLOPT_COOKIE, $cookie);
             }
         }
         

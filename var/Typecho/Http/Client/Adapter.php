@@ -79,14 +79,6 @@ abstract class Typecho_Http_Client_Adapter
     protected $cookies = array();
     
     /**
-     * 请求编码
-     * 
-     * @access protected
-     * @var string
-     */
-    protected $charset = 'UTF-8';
-    
-    /**
      * 协议名称及版本
      * 
      * @access protected
@@ -183,6 +175,12 @@ abstract class Typecho_Http_Client_Adapter
      */
     public function setCookie($key, $value, $expire = 0, $url = NULL)
     {
+        $params = parse_url($url);
+        $this->cookies[] = rawurlencode($key) . '=' . rawurlencode($value)
+                         . (empty($expire) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $expire) . ' GMT')
+                         . (empty($params['path']) ? '' : '; path=' . $params['path'])
+                         . (empty($params['host']) ? '' : '; domain=' . $params['host'])
+                         . ('https' == $params['scheme'] ? '' : '; secure');
         return $this;
     }
     
@@ -266,19 +264,6 @@ abstract class Typecho_Http_Client_Adapter
     {
         $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
         $this->params[$key] = $value;
-        return $this;
-    }
-    
-    /**
-     * 设置编码
-     * 
-     * @access public
-     * @param string $charset 编码
-     * @return Typecho_Http_Client_Adapter
-     */
-    public function setCharset($charset)
-    {
-        $this->charset = $charset;
         return $this;
     }
     
