@@ -88,7 +88,7 @@ include 'menu.php';
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="7"><?php _e('没有任何文章'); ?></td>
+                        	<td colspan="7"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
