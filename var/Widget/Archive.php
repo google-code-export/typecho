@@ -509,7 +509,9 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        if (!$this->plugin()->pageNav($prev, $next, $splitPage, $splitWord)) {
+        $this->plugin()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
+        
+        if (!$hasNav) {
             $query = Typecho_Router::url(Typecho_Router::$current . 
             (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
             $this->_pageRow, $this->options->index);
