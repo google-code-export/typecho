@@ -65,8 +65,8 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         }
 
         /** 设置header信息 */
-        if (!empty($this->params)) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->params);
+        if (!empty($this->headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         }
 
         /** POST模式 */

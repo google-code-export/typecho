@@ -76,7 +76,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
         $client = Typecho_Http_Client::get('Curl', 'Socket');
         if (false != $client) {
             $client->setData($data)
-            ->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
+            ->setHeader('User-Agent', $options->generator . ' | Akismet/1.1')
             ->send(Typecho_Common::url('/1.1/verify-key', $url));
             
             if ('valid' == $client->getResponseBody()) {
@@ -161,7 +161,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             $params = parse_url($url);
             $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
 
-            $client->setParam('User-Agent', $options->generator . ' | Akismet/1.1')
+            $client->setHeader('User-Agent', $options->generator . ' | Akismet/1.1')
             ->setData($data)
             ->send(Typecho_Common::url('/1.1/comment-check', $url));
 

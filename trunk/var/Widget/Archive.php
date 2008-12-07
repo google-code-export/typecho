@@ -58,6 +58,62 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_pageRow;
     
     /**
+     * 聚合器对象
+     * 
+     * @access private
+     * @var Typecho_Feed_Writer
+     */
+    private $_feed;
+    
+    /**
+     * RSS 2.0聚合地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $_feedUrl;
+    
+    /**
+     * RSS 1.0聚合地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $_feedRssUrl;
+    
+    /**
+     * ATOM 聚合地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $_feedAtomUrl;
+    
+    /**
+     * 本页关键字
+     * 
+     * @access private
+     * @var string
+     */
+    private $_keywords;
+    
+    /**
+     * 本页描述
+     * 
+     * @access private
+     * @var string
+     */
+    private $_description;
+    
+    /**
+     * 聚合类型
+     * 
+     * @access private
+     * @var string
+     */
+    private $_feedType;
+    
+    /**
      * prepare 
      * 
      * @access public
@@ -69,9 +125,35 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 处理feed模式 **/
         if ('feed' == Typecho_Router::$current) {
-            if (!Typecho_Router::match($feedQuery)) {
-                throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
+        
+            /** 判断聚合类型 */
+            switch (true) {
+                case 0 === strpos($this->request->feed, '/rss/') || '/rss' == $this->request->feed:
+                    /** 如果是RSS1标准 */
+                    $this->request->feed = substr($this->request->feed, 4);
+                    $this->_feedType = Typecho_Feed::RSS1;
+                    break;
+                case 0 === strpos($this->request->feed, '/atom/') || '/atom' == $this->request->feed:
+                    /** 如果是ATOM标准 */
+                    $this->request->feed = substr($this->request->feed, 5);
+                    $this->_feedType = Typecho_Feed::ATOM1;
+                    break;
+                default:
+                    $this->_feedType = Typecho_Feed::RSS2;
+                    break;
             }
+        
+            if (!Typecho_Router::match($this->request->feed) || 'feed' == Typecho_Router::$current) {
+                if (0 === strpos($this->request->feed, '/comments/') || '/comments' == $this->request->feed) {
+                    /** 专为feed使用的hack */
+                    Typecho_Router::$current = 'comments';
+                } else {
+                    throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
+                }
+            }
+            
+            /** 初始化聚合器 */
+            $this->_feed = Typecho_Feed::generator($this->_feedType);
             
             /** 默认输出10则文章 **/
             $this->parameter->pageSize = 10;
@@ -88,8 +170,8 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ('feed' == Typecho_Router::$current) {
             // 对feed输出加入限制条件
-            return parent::select()->where('table.contents.`allowFeed` = ?', 'enable')
-            ->where('table.contents.`password` IS NULL');
+            return parent::select()->where('table.contents.allowFeed = ?', 'enable')
+            ->where('table.contents.password IS NULL');
         } else {
             return parent::select();
         }
@@ -118,8 +200,16 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->parameter->setDefault(array('pageSize' => $this->options->pageSize));
         $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
         $hasPushed = false;
-    
+
+        /** 定时发布功能 */
         $select = $this->select()->where('table.contents.created < ?', $this->options->gmtTime);
+        
+        /** 初始化其它变量 */
+        $this->_feedUrl = $this->options->feedUrl;
+        $this->_feedRssUrl = $this->options->feedRssUrl;
+        $this->_feedAtomUrl = $this->options->feedAtomUrl;
+        $this->_keywords = $this->options->keywords;
+        $this->_description = $this->options->description;
 
         switch (Typecho_Router::$current) {
             /** 单篇内容 */
@@ -149,7 +239,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 && $post['month'] == $this->request->getParameter('month', $post['month'])
                 && $post['day'] == $this->request->getParameter('day', $post['day'])) {
                     /** 设置关键词 */
-                    $this->options->keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+                    $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
                     
                     /** 设置模板 */
                     if (!empty($post['template'])) {
@@ -159,13 +249,13 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** 设置头部feed */
                     /** RSS 2.0 */
-                    $this->options->feedUrl = $post['feedUrl'];
+                    $this->_feedUrl = $post['feedUrl'];
                     
                     /** RSS 1.0 */
-                    $this->options->feedRssUrl = $post['feedRssUrl'];
+                    $this->_feedRssUrl = $post['feedRssUrl'];
                     
                     /** ATOM 1.0 */
-                    $this->options->feedAtomUrl = $post['feedAtomUrl'];
+                    $this->_feedAtomUrl = $post['feedAtomUrl'];
                     
                     /** 设置标题 */
                     $this->options->archiveTitle = $post['title'];
@@ -208,17 +298,20 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_pageRow = $category;
                 
                 /** 设置关键词 */
-                $this->options->keywords = $category['name'];
+                $this->_keywords = $category['name'];
+                
+                /** 设置描述 */
+                $this->_description = $category['description'];
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options->feedUrl = $category['feedUrl'];
+                $this->_feedUrl = $category['feedUrl'];
                 
                 /** RSS 1.0 */
-                $this->options->feedRssUrl = $category['feedRssUrl'];
+                $this->_feedRssUrl = $category['feedRssUrl'];
                 
                 /** ATOM 1.0 */
-                $this->options->feedAtomUrl = $category['feedAtomUrl'];
+                $this->_feedAtomUrl = $category['feedAtomUrl'];
                 
                 /** 设置标题 */
                 $this->options->archiveTitle = $category['name'];
@@ -252,17 +345,20 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_pageRow = $tag;
                 
                 /** 设置关键词 */
-                $this->options->keywords = $tag['name'];
+                $this->_keywords = $tag['name'];
+                
+                /** 设置描述 */
+                $this->_description = $tag['description'];
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options->feedUrl = $tag['feedUrl'];
+                $this->_feedUrl = $tag['feedUrl'];
                 
                 /** RSS 1.0 */
-                $this->options->feedRssUrl = $tag['feedRssUrl'];
+                $this->_feedRssUrl = $tag['feedRssUrl'];
                 
                 /** ATOM 1.0 */
-                $this->options->feedAtomUrl = $tag['feedAtomUrl'];
+                $this->_feedAtomUrl = $tag['feedAtomUrl'];
                 
                 /** 设置标题 */
                 $this->options->archiveTitle = $tag['name'];
@@ -329,13 +425,13 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $currentRoute = str_replace('_page', '', Typecho_Router::$current);
                 
                 /** RSS 2.0 */
-                $this->options->feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
+                $this->_feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
                 
                 /** RSS 1.0 */
-                $this->options->feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedRssUrl);
+                $this->_feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedRssUrl);
                 
                 /** ATOM 1.0 */
-                $this->options->feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
+                $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -357,20 +453,20 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery);
                 
                 /** 设置关键词 */
-                $this->options->keywords = $keywords;
+                $this->_keywords = $keywords;
                 
                 /** 设置分页 */
                 $this->_pageRow = array('keywords' => $keywords);
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->options->feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedUrl);
+                $this->_feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedUrl);
                 
                 /** RSS 1.0 */
-                $this->options->feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
+                $this->_feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
                 
                 /** ATOM 1.0 */
-                $this->options->feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
+                $this->_feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
                 
                 /** 设置标题 */
                 $this->options->archiveTitle = $keywords;
@@ -522,18 +618,18 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function header()
     {
-        $header = new Typecho_Widget_Helper_Header();
-        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->options->description)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->options->keywords)))
+        $header = new Typecho_Widget_Helper_Layout_Header();
+        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->_description)))
+        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->_keywords)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
         'href' => Typecho_Common::url('wlwmanifest.xml', $this->options->adminUrl))))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->options->feedUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->options->feedRssUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->options->feedAtomUrl)));
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->_feedUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->_feedRssUrl)))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->_feedAtomUrl)));
         
         /** 插件支持 */
         $this->plugin()->header($header);
@@ -585,13 +681,124 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * 输出feed 
+     * 输出feed
      * 
      * @access public
      * @return void
      */
     public function feed()
     {
+        $this->_feed->setCharset($this->options->charset);
+        $this->_feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
+        $this->_feed->setSubTitle($this->_description);
+
+        if (Typecho_Feed::RSS2 == $this->_feedType) {
+            $this->_feed->setChannelElement('language', _t('zh-cn'));
+            $this->_feed->setLink($this->_feedUrl);
+        }
         
+        if (Typecho_Feed::RSS1 == $this->_feedType) {
+            /** 如果是RSS1标准 */
+            $this->_feed->setChannelAbout($this->_feedRssUrl);
+            $this->_feed->setLink($this->_feedRssUrl);
+        }
+        
+        if (Typecho_Feed::ATOM1 == $this->_feedType) {
+            /** 如果是ATOM标准 */
+            $this->_feed->setLink($this->_feedAtomUrl);
+        }
+
+        if (Typecho_Feed::RSS1 == $this->_feedType || Typecho_Feed::RSS2 == $this->_feedType) {
+            $this->_feed->setDescription($this->_description);
+        }
+
+        if (Typecho_Feed::RSS2 == $this->_feedType || Typecho_Feed::ATOM1 == $this->_feedType) {
+            $this->_feed->setChannelElement(Typecho_Feed::RSS2 == $this->_feedType ? 'pubDate' : 'updated',
+            date(Typecho_Feed::dateFormat($this->_feedType), 
+            $this->options->gmtTime + $this->options->timezone));
+        }
+        
+        /** 插件接口 */
+        $this->plugin()->feed($this->_feed, $this);
+        
+        /** 添加聚合频道 */
+        switch (Typecho_Router::$current) {
+            case 'post':
+            case 'page':
+            case 'comments':
+                if ('comments' == Typecho_Router::$current) {
+                    $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
+                } else {
+                    $comments = $this->comments(NULL, true);
+                }
+                
+                while ($comments->next()) {
+                    $item = $this->_feed->createNewItem();
+                    $item->setTitle($comments->author);
+                    $item->setLink($comments->permalink);
+                    $item->setDate($comments->date + $this->options->timezone);
+                    $item->setDescription(Typecho_Common::cutParagraph($comments->content));
+
+                    if (Typecho_Feed::RSS2 == $this->_feedType) {
+                        $item->addElement('guid', $comments->permalink);
+                        $item->addElement('content:encoded', Typecho_Common::subStr(Typecho_Common::stripTags($comments->content), 0, 100, '...'));
+                        $item->addElement('author', $comments->author);
+                        $item->addElement('dc:creator', $comments->author);
+                    }
+                    
+                    $this->plugin()->item($item, $this);
+                    $this->_feed->addItem($item);
+                }
+                break;
+                
+            case 'category':
+            case 'category_page':
+            case 'tag':
+            case 'tag_page':
+            case 'archive_year':
+            case 'archive_month':
+            case 'archive_day':
+            case 'archive_year_page':
+            case 'archive_month_page':
+            case 'archive_day_page':
+            case 'search':
+            case 'search_page':
+            default:
+                while ($this->next()) {
+                    $item = $this->_feed->createNewItem();
+                    $item->setTitle($this->title);
+                    $item->setLink($this->permalink);
+                    $item->setDate($this->created + $this->options->timezone);
+                    
+                    /** RSS全文输出开关支持 */
+                    if ($this->options->feedFullText) {
+                        $item->setDescription($this->text);
+                    } else {
+                        $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
+                        $contents = explode('<!--more-->', $content);
+                        
+                        list($abstract) = $contents;
+                        $item->setDescription(Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p><a href="'
+                        . $this->permalink . '">' . _t('阅读更多...') . '</a></p>' : NULL));
+                    }
+                    
+                    $item->setCategory($this->categories);
+                    
+                    if (Typecho_Feed::RSS2 == $this->_feedType) {
+                        $item->addElement('guid', $this->permalink);
+                        $item->addElement('comments', $this->permalink . '#comments');
+                        $item->addElement('content:encoded', Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...'));
+                        $item->addElement('author', $this->author);
+                        $item->addElement('dc:creator', $this->author);
+                        $item->addElement('wfw:commentRss', $this->feedUrl);
+                    }
+                    
+                    $this->plugin()->item($item, $this);
+                    $this->_feed->addItem($item);
+                }
+                break;
+        }
+        
+        $this->_feed->generateFeed();
     }
 }
