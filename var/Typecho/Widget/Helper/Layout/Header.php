@@ -18,7 +18,7 @@ require_once 'Typecho/Widget/Helper/Layout.php';
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Header extends Typecho_Widget_Helper_Layout
+class Typecho_Widget_Helper_Layout_Header extends Typecho_Widget_Helper_Layout
 {
     /**
      * 重载构造函数

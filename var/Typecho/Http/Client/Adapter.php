@@ -63,12 +63,12 @@ abstract class Typecho_Http_Client_Adapter
     protected $files = array();
     
     /**
-     * 参数
+     * 头信息参数
      * 
      * @access protected
      * @var array
      */
-    protected $params = array();
+    protected $headers = array();
     
     /**
      * cookies
@@ -194,7 +194,7 @@ abstract class Typecho_Http_Client_Adapter
     public function setQuery($query)
     {
         $query = is_array($query) ? http_build_query($query) : $query;
-        $this->query = empty($this->query) ? $query : $this->params['query'] . '&' . $query;
+        $this->query = empty($this->query) ? $query : $this->query . '&' . $query;
         return $this;
     }
     
@@ -253,17 +253,17 @@ abstract class Typecho_Http_Client_Adapter
     }
     
     /**
-     * 设置参数
+     * 设置头信息参数
      * 
      * @access public
      * @param string $key 参数名称
      * @param string $value 参数值
      * @return Typecho_Http_Client_Adapter
      */
-    public function setParam($key, $value)
+    public function setHeader($key, $value)
     {
         $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
-        $this->params[$key] = $value;
+        $this->headers[$key] = $value;
         return $this;
     }
     

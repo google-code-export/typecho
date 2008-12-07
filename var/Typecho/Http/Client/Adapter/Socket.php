@@ -50,8 +50,8 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         $request .= 'Connection: Close' . $eol;
         
         /** 设置header信息 */
-        if (!empty($this->params)) {
-            foreach ($this->params as $key => $val) {
+        if (!empty($this->headers)) {
+            foreach ($this->headers as $key => $val) {
                 $request .= $key . ': ' . $val . $eol;
             }
         }

@@ -50,10 +50,10 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** FEED全文输出 */
-        $feedFullArticlesLayout = new Typecho_Widget_Helper_Form_Element_Radio('feedFullArticlesLayout', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
-        $this->options->feedFullArticlesLayout, _t('聚合全文输出'), _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.<br />
+        $feedFullText = new Typecho_Widget_Helper_Form_Element_Radio('feedFullText', array('0' => _t('仅输出摘要'), '1' => _t('全文输出')),
+        $this->options->feedFullText, _t('聚合全文输出'), _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.<br />
         摘要的文字取决于你在文章中使用分隔符的位置.'));
-        $form->addInput($feedFullArticlesLayout);
+        $form->addInput($feedFullText);
         
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
@@ -75,7 +75,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
     
-        $settings = $this->request->from('postDateFormat', 'pageSize', 'postsListSize', 'feedFullArticlesLayout');
+        $settings = $this->request->from('postDateFormat', 'pageSize', 'postsListSize', 'feedFullText');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
