@@ -18,6 +18,9 @@ class CodeEditor_Plugin implements Typecho_Plugin_Interface
      */
     public function activate()
     {
+        if(false !== strpos(Typecho_Request::getAgent(), 'KHTML')) {
+            throw new Typecho_Plugin_Exception(_t('对不起, 您使用的Webkit核心浏览器无法正常使用此插件'));
+        }
         Typecho_Plugin::factory('admin/theme-editor.php')->form = array('CodeEditor_Plugin', 'render');
     }
     
