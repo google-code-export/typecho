@@ -10,7 +10,6 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
                     <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>">所有</a></li>
-                    <li<?php if('approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=approved'); ?>">展现</a></li>
                     <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>">待审核</a></li>
                     <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>">垃圾</a></li>
                 </ul>

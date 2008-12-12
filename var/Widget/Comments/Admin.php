@@ -70,6 +70,8 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         
         if (in_array($this->request->status, array('approved', 'waiting', 'spam'))) {
             $select->where('table.comments.status = ?', $this->request->status);
+        } else {
+            $select->where('table.comments.status = ? OR table.comments.status = ?', 'approved', 'waiting');
         }
     
         $this->_countSql = clone $select;

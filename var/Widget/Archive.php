@@ -748,7 +748,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $item->addElement('dc:creator', $comments->author);
                     }
                     
-                    $this->plugin()->item($item, $this);
+                    $this->plugin()->commentFeedItem($item, $this->_feedType, $this);
                     $this->_feed->addItem($item);
                 }
                 break;
@@ -788,6 +788,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $this->permalink);
+                        $item->addElement('slash:comments', $this->commentsNum);
                         $item->addElement('comments', $this->permalink . '#comments');
                         $item->addElement('content:encoded', Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...'));
                         $item->addElement('author', $this->author);
@@ -795,7 +796,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $item->addElement('wfw:commentRss', $this->feedUrl);
                     }
                     
-                    $this->plugin()->item($item, $this);
+                    $this->plugin()->feedItem($item, $this->_feedType, $this);
                     $this->_feed->addItem($item);
                 }
                 break;
