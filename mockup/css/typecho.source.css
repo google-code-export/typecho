@@ -557,7 +557,7 @@ margin-top: 25px;
     color: #fff;
     position: relative;
     z-index: 250; /* IE 是个 250 */
-	border-bottom: 3px solid #DCE2C0;
+	border-bottom: 1px solid #DCE2C0;
 }
 
 .typecho-head-guid dl {
