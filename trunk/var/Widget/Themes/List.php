@@ -39,23 +39,12 @@ class Widget_Themes_List extends Typecho_Widget
                 $info = Typecho_Plugin::parseInfo($themeFile);
                 $info['name'] = basename($theme);
                 
-                /** 支持png,jpg,gif三种截图格式,推荐比率为4:3 */
-                switch (true) {
-                    case is_file($themes . '/screen.png'):
-                        $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') 
-                        . '/' . $theme . '/screen.png', $siteUrl);
-                        break;
-                    case is_file($themes . '/screen.jpg'):
-                        $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') 
-                        . '/' . $theme . '/screen.jpg', $siteUrl);
-                        break;
-                    case is_file($themes . '/screen.gif'):
-                        $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') 
-                        . '/' . $theme . '/screen.gif', $siteUrl);
-                        break;
-                    default:
-                        $info['screen'] = Typecho_Common::url('/images/noscreen.gif', $adminUrl);
-                        break;
+                $screen = glob($theme . '/screen*.{jpg,png,gif,bmp,jpeg,JPG,PNG,GIF,BMG,JPEG}', GLOB_BRACE);
+                if ($screen) {
+                    $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') . 
+                    '/' . $info['name'] . '/' . basename(current($screen)), $siteUrl);
+                } else {
+                    $info['screen'] = Typecho_Common::url('/images/noscreen.gif', $adminUrl);
                 }
                 
                 $this->push($info);
