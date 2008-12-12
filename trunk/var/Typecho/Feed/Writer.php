@@ -241,6 +241,7 @@ class Typecho_Feed_Writer
 			$out .= '<rss version="2.0"
 xmlns:content="http://purl.org/rss/1.0/modules/content/"
 xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
 xmlns:wfw="http://wellformedweb.org/CommentAPI/">' . Typecho_Feed::EOL;
 		} elseif ($this->version == Typecho_Feed::RSS1) {
 			$out .= '<rdf:RDF 

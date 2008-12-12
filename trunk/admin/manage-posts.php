@@ -18,8 +18,8 @@ include 'menu.php';
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">操作: 
-                        <span class="operate-button select-all">全选</span>, 
-                        <span class="operate-button select-reverse">反选</span>, 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all">全选</span>, 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse">不选</span>, 
                         <span class="operate-button select-submit">删除选中项</span><?php if($user->pass('editor', true)):
                         if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no">查看我的文章</a>
                         <?php else: ?>, <a href="?seeAll=yes">查看所有人的文章</a><?php endif;

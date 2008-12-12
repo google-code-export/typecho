@@ -1115,6 +1115,10 @@ margin-top: 25px;
     background: #E3EEBD;
 }
 
+.typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
+	background: #DBE9AB;
+}
+
 .typecho-list-table h4 {
     font-weight: normal;
 }
