@@ -17,12 +17,12 @@ include 'menu.php';
             
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate">操作: 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all">全选</span>, 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse">不选</span>, 
-                        <span class="operate-button select-submit">删除选中项</span><?php if($user->pass('editor', true)):
-                        if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no">查看我的文章</a>
-                        <?php else: ?>, <a href="?seeAll=yes">查看所有人的文章</a><?php endif;
+                    <p class="operate"><?php _e('操作'); ?>: 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>, 
+                        <span onclick="document.manage_posts.submit();" class="operate-button select-submit"><?php _e('删除选中项'); ?></span><?php if($user->pass('editor', true)):
+                        if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no"><?php _e('查看我的文章'); ?></a>
+                        <?php else: ?>, <a href="?seeAll=yes"><?php _e('查看所有人的文章'); ?></a><?php endif;
                         endif; ?>
                     </p>
                     <p class="search">
@@ -44,7 +44,7 @@ include 'menu.php';
                 </form>
                 </div>
             
-                <form method="post" class="operate-form">
+                <form method="post" name="manage_posts" class="operate-form" action="<?php $options->index('Contents/Post/Edit.do'); ?>">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
@@ -93,6 +93,7 @@ include 'menu.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <input type="hidden" name="do" value="delete" />
                 </form>
             
             <?php if($posts->have()): ?>

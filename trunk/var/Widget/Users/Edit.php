@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interface_Action_Widget
+class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interface_Do
 {
     /**
      * 入口函数
@@ -40,7 +40,8 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function userExists($uid)
     {
-        $user = $this->db->fetchRow($this->db->sql()->select('table.users')
+        $user = $this->db->fetchRow($this->db->select()
+        ->from('table.users')
         ->where('uid = ?', $uid)->limit(1));
         
         return $user ? true : false;
@@ -55,12 +56,13 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function nameExists($name)
     {
-        $select = $this->db->sql()->select('table.users')
+        $select = $this->db->select()
+        ->from('table.users')
         ->where('name = ?', $name)
         ->limit(1);
         
-        if (Typecho_Request::getParameter('uid')) {
-            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
         }
 
         $user = $this->db->fetchRow($select);
@@ -76,12 +78,13 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function mailExists($mail)
     {
-        $select = $this->db->sql()->select('table.users')
+        $select = $this->db->select()
+        ->from('table.users')
         ->where('mail = ?', $mail)
         ->limit(1);
         
-        if (Typecho_Request::getParameter('uid')) {
-            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
         }
 
         $user = $this->db->fetchRow($select);
@@ -97,12 +100,13 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function screenNameExists($screenName)
     {
-        $select = $this->db->sql()->select('table.users')
+        $select = $this->db->select()
+        ->from('table.users')
         ->where('screenName = ?', $screenName)
         ->limit(1);
         
-        if (Typecho_Request::getParameter('uid')) {
-            $select->where('uid <> ?', Typecho_Request::getParameter('uid'));
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
         }
     
         $user = $this->db->fetchRow($select);
@@ -119,7 +123,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Users/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Edit.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 创建标题 */
@@ -173,10 +177,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
         $form->addItem($submit);
 
-        if (NULL != Typecho_Request::getParameter('uid')) {
+        if (NULL != $this->request->uid) {
             /** 更新模式 */
             $user = $this->db->fetchRow($this->select()
-            ->where('uid = ?', Typecho_Request::getParameter('uid'))->limit(1));
+            ->where('uid = ?', $this->request->uid)->limit(1));
             
             if (!$user) {
                 throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
@@ -243,23 +247,23 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $this->form('insert')->validate();
         }
          catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack('#edit');
+            $this->response->goBack();
         }
         
         /** 取出数据 */
-        $user = Typecho_Request::getParametersFrom('name', 'mail', 'screenName', 'password', 'url', 'group');
+        $user = $this->request->from('name', 'mail', 'screenName', 'password', 'url', 'group');
         $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
-        $user['password'] = md5($user['password']);
+        $user['password'] = Typecho_Common::hash($user['password']);
         $user['created'] = $this->options->gmtTime;
     
         /** 插入数据 */
         $user['uid'] = $this->insert($user);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("用户 '%s' 已经被增加", $user['screenName']), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("用户 '%s' 已经被增加", $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('users.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
     }
     
     /**
@@ -274,26 +278,26 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $this->form('update')->validate();
         }
          catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack('#edit');
+            $this->response->goBack();
         }
     
         /** 取出数据 */
-        $user = Typecho_Request::getParametersFrom('mail', 'screenName', 'password', 'url', 'group');
+        $user = $this->request->from('mail', 'screenName', 'password', 'url', 'group');
         $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
         if (empty($user['password'])) {
             unset($user['password']);
         } else {
-            $user['password'] = md5($user['password']);
+            $user['password'] = Typecho_Common::hash($user['password']);
         }
     
         /** 更新数据 */
-        $this->update($user, $this->db->sql()->where('uid = ?', Typecho_Request::getParameter('uid')));
+        $this->update($user, $this->db->sql()->where('uid = ?', $this->request->uid));
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("用户 '%s' 已经被更新", $user['screenName']), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("用户 '%s' 已经被更新", $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('users.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
     }
     
     /**
@@ -304,7 +308,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function deleteUser()
     {
-        $users = Typecho_Request::getParameter('uid');
+        $users = $this->request->uid;
         $deleteCount = 0;
         
         if ($users && is_array($users)) {
@@ -320,11 +324,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         }
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($deleteCount > 0 ? _t('用户已经删除') : _t('没有用户被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('用户已经删除') : _t('没有用户被删除'), NULL,
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('users.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
     }
     
     /**
@@ -335,10 +339,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function action()
     {
-        Typecho_API::factory('Widget_Users_Current')->pass('editor');
-        Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertUser'));
-        Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updateUser'));
-        Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deleteUser'));
-        Typecho_API::redirect($this->options->adminUrl);
+        $this->user->pass('editor');
+        $this->onRequest('do', 'insert')->insertUser();
+        $this->onRequest('do', 'update')->updateUser();
+        $this->onRequest('do', 'delete')->deleteUser();
+        $this->response->redirect($this->options->adminUrl);
     }
 }
