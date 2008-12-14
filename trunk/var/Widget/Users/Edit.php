@@ -126,10 +126,6 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Edit.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
-        /** 创建标题 */
-        $title = new Typecho_Widget_Helper_Layout('h4');
-        $form->addItem($title->setAttribute('id', 'edit'));
-        
         /** 用户名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('用户名*'), _t('此用户名将作为用户登录时所用的名称.<br />
         请不要与系统中现有的用户名重复.'));
@@ -162,7 +158,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $group =  new Typecho_Widget_Helper_Form_Element_Select('group', array('visitor' => _t('访问者'),
         'subscriber' => _t('关注者'), 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
         NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.<br />
-        具体的权限分配表请<a href="#">参考这里</a>.'));
+        具体的权限分配表请<a href="http://typecho.org/develop/acl">参考这里</a>.'));
         $form->addInput($group);
         
         /** 用户动作 */
@@ -186,7 +182,6 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
                 throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
             }
             
-            $title->html(_t('编辑用户'));
             $submit->value(_t('编辑用户'));
             $name->value($user['name']);
             $screenName->value($user['screenName']);
@@ -197,7 +192,6 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $uid->value($user['uid']);
             $_action = 'update';
         } else {
-            $title->html(_t('增加用户'));
             $submit->value(_t('增加用户'));
             $url->value('http://');
             $do->value('insert');
@@ -215,6 +209,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $mail->addRule('required', _t('必须填写电子邮箱'));
             $mail->addRule(array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
             $mail->addRule('email', _t('电子邮箱格式错误'));
+            $password->addRule('minLength', _t('为了保证账户安全, 请输入至少六位的密码'), 6);
             $confirm->addRule('confirm', _t('两次输入的密码不一致'), 'password');
         }
         
@@ -243,10 +238,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function insertUser()
     {
-        try {
-            $this->form('insert')->validate();
-        }
-         catch (Typecho_Widget_Exception $e) {
+        if ($this->form('insert')->validate()) {
             $this->response->goBack();
         }
         
@@ -274,10 +266,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function updateUser()
     {
-        try {
-            $this->form('update')->validate();
-        }
-         catch (Typecho_Widget_Exception $e) {
+        if ($this->form('update')->validate()) {
             $this->response->goBack();
         }
     
@@ -339,7 +328,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function action()
     {
-        $this->user->pass('editor');
+        $this->user->pass('administrator');
         $this->onRequest('do', 'insert')->insertUser();
         $this->onRequest('do', 'update')->updateUser();
         $this->onRequest('do', 'delete')->deleteUser();

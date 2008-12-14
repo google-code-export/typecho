@@ -115,7 +115,7 @@ class Typecho_Validate
             foreach ($rules as $params) {
                 $method = $params[0];
                 
-                if ('required' != $method && empty($data[$key])) {
+                if ('required' != $method && 'confirm' != $method && empty($data[$key])) {
                     continue;
                 }
                 
@@ -148,7 +148,7 @@ class Typecho_Validate
      */
     public function minLength($str, $length)
     {
-        return (Typecho_Common::strLen($str) > $length);
+        return (Typecho_Common::strLen($str) >= $length);
     }
 
     /**
@@ -161,7 +161,7 @@ class Typecho_Validate
      */
     public function confirm($str, $key)
     {
-        return !empty($this->_data[$key]) && ($str == $this->_data[$key]);
+        return !empty($this->_data[$key]) ? ($str == $this->_data[$key]) : empty($str);
     }
 
     /**

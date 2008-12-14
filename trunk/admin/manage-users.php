@@ -14,6 +14,8 @@ include 'menu.php';
                     <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
                     <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>, 
                     <span onclick="document.manage_users.submit();" class="operate-button select-submit"><?php _e('删除选中项'); ?></span>
+                     | 
+                    <a href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />                                
