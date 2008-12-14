@@ -97,8 +97,8 @@ class Widget_User extends Typecho_Widget
     public function login($uid, $expire = 0)
     {
         $authCode = sha1(Typecho_Common::randString(20));
-        $this->response->setCookie('uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('authCode', Typecho_Common::hash($authCode),
+        $this->response->setCookie('__typecho_uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
+        $this->response->setCookie('__typecho_authCode', Typecho_Common::hash($authCode),
         $expire, $this->widget('Widget_Options')->siteUrl);
         
         if ($this->db->fetchObject($this->db->select()
@@ -128,8 +128,8 @@ class Widget_User extends Typecho_Widget
      */
     public function logout()
     {
-        $this->response->deleteCookie('uid', $this->widget('Widget_Options')->siteUrl);
-        $this->response->deleteCookie('authCode', $this->widget('Widget_Options')->siteUrl);
+        $this->response->deleteCookie('__typecho_uid', $this->widget('Widget_Options')->siteUrl);
+        $this->response->deleteCookie('__typecho_authCode', $this->widget('Widget_Options')->siteUrl);
     }
     
     /**
@@ -143,13 +143,13 @@ class Widget_User extends Typecho_Widget
         if (NULL !== $this->_hasLogin) {
             return $this->_hasLogin;
         } else {
-            if (NULL !== $this->request->getCookie('uid')) {
+            if (NULL !== $this->request->getCookie('__typecho_uid')) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
-                ->where('uid = ?', $this->request->getCookie('uid'))
+                ->where('uid = ?', $this->request->getCookie('__typecho_uid'))
                 ->limit(1));
 
-                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->getCookie('authCode'))) {
+                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->getCookie('__typecho_authCode'))) {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }
