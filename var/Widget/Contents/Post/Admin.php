@@ -150,7 +150,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->options->adminUrl);
         
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
+        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
         $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render('&laquo;', '&raquo;');
     }

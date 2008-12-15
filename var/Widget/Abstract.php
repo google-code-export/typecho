@@ -77,7 +77,7 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    abstract public function count(Typecho_Db_Query $condition);
+    abstract public function size(Typecho_Db_Query $condition);
     
     /**
      * 增加记录方法
