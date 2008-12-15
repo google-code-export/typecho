@@ -48,7 +48,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
      * @access public
      * @return unknown
      */
-    public function init()
+    public function execute()
     {
         $this->user->pass('administrator');
         if (!isset($this->request->config)) {
@@ -93,12 +93,11 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
             throw new Typecho_Widget_Exception(_t('无法配置插件'), 500);
         }
         
-        /** 实例化插件 */
+        /** 载入插件 */
         require_once $this->_pluginFileName;
-        $plugin = $this->widget($this->_className);
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('Plugins/Edit.do?config=' . $pluginName,
         $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
-        $plugin->config($form);
+        call_user_func(array($this->_className, 'config'), $form);
         
         $options = $this->options->plugin($pluginName);
         

@@ -16,7 +16,7 @@ class CodeEditor_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function activate()
+    public static function activate()
     {
         if(false !== strpos(Typecho_Request::getAgent(), 'KHTML')) {
             throw new Typecho_Plugin_Exception(_t('对不起, 您使用的Webkit核心浏览器无法正常使用此插件'));
@@ -32,7 +32,7 @@ class CodeEditor_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function deactivate(){}
+    public static function deactivate(){}
     
     /**
      * 获取插件配置面板
@@ -41,7 +41,7 @@ class CodeEditor_Plugin implements Typecho_Plugin_Interface
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
-    public function config(Typecho_Widget_Helper_Form $form){}
+    public static function config(Typecho_Widget_Helper_Form $form){}
     
     /**
      * 插件实现方法

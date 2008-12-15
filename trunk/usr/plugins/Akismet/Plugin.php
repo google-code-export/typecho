@@ -16,7 +16,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function activate()
+    public static function activate()
     {
         if (false == Typecho_Http_Client::get('Curl', 'Socket')) {
             throw new Typecho_Plugin_Exception(_t('对不起, 您的主机不支持 php-curl 扩展而且没有打开 allow_url_fopen 功能, 无法正常使用此功能'));
@@ -34,7 +34,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function deactivate(){}
+    public static function deactivate(){}
     
     /**
      * 获取插件配置面板
@@ -43,7 +43,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
-    public function config(Typecho_Widget_Helper_Form $form)
+    public static function config(Typecho_Widget_Helper_Form $form)
     {
         $key = new Typecho_Widget_Helper_Form_Element_Text('key', NULL, NULL, _t('服务密钥'), _t('此密钥需要向服务提供商注册<br />
         它是一个用于表明您合法用户身份的字符串'));
@@ -63,7 +63,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      * @param string $key 服务密钥
      * @return boolean
      */
-    public function validate($key)
+    public static function validate($key)
     {
         $options = Typecho_Widget::widget('Widget_Options');
         $url = Typecho_Request::getParameter('url');

@@ -20,12 +20,12 @@
 class Widget_Comments_Archive_Comment extends Widget_Comments_Archive
 {
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
         ->where('table.comments.mode = ?', 'comment')

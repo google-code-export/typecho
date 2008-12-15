@@ -49,24 +49,25 @@ class Widget_User extends Typecho_Widget
             );
     
     /**
-     * 准备函数
+     * 构造函数
      * 
      * @access public
      * @return void
      */
-    public function prepare()
+    public function __construct()
     {
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
+        parent::__construct();
     }
 
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()

@@ -64,19 +64,19 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      * @access protected
      * @return void
      */
-    protected function getDomainPath()
+    protected function ___domainPath()
     {
         $parts = parse_url($this->url);
         return $parts['host'] . (isset($parts['path']) ? $parts['path'] : NULL);
     }
     
     /**
-     * 构造函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();

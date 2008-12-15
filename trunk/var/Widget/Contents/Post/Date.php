@@ -36,13 +36,16 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     protected $db;
     
     /**
-     * 准备函数
+     * 构造函数
      * 
      * @access public
+     * @param mixed $params 传递的参数
      * @return void
      */
-    public function prepare()
+    public function __construct($params = NULL)
     {
+        parent::__construct($params);
+        
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
         
@@ -56,7 +59,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 设置参数默认值 */
         $this->parameter->setDefault('format=Y-m&type=month');

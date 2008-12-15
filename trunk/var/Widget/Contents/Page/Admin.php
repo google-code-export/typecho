@@ -20,12 +20,12 @@
 class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
 {
     /**
-     * 构造函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 构建基础查询 */
         $select = $this->select();
@@ -37,10 +37,8 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
                 $select->where('table.contents.type = ?', 'page_draft');
                 break;
             case 'published':
-                $select->where('table.contents.type = ?', 'page');
-                break;
             default:
-                $select->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft');
+                $select->where('table.contents.type = ?', 'page');
                 break;
         }
         

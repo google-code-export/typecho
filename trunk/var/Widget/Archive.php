@@ -114,14 +114,15 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_feedType;
     
     /**
-     * prepare 
+     * 构造函数
      * 
      * @access public
+     * @param mixed $params 传递的参数
      * @return void
      */
-    public function prepare()
+    public function __construct($params = NULL)
     {
-        parent::prepare();
+        parent::__construct($params);
 
         /** 处理feed模式 **/
         if ('feed' == Typecho_Router::$current) {
@@ -178,12 +179,12 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 处理搜索结果跳转 */
         if ($this->request->isSetParameter('s')) {

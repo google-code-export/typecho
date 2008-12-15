@@ -16,7 +16,7 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function activate()
+    public static function activate()
     {
         Typecho_Plugin::factory('admin/menu.php')->navBar = array('HelloWorld_Plugin', 'render');
     }
@@ -29,7 +29,7 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function deactivate(){}
+    public static function deactivate(){}
     
     /**
      * 获取插件配置面板
@@ -38,7 +38,7 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
-    public function config(Typecho_Widget_Helper_Form $form)
+    public static function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, 'Hello World', _t('说点什么'));

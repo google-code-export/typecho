@@ -20,12 +20,12 @@
 class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
 {
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
     

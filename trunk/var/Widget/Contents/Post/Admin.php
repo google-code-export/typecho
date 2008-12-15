@@ -60,12 +60,12 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     private $_currentPage;
 
     /**
-     * 构造函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->parameter->setDefault('pageSize=20');
         $this->_currentPage = $this->request->getParameter('page', 1);
@@ -105,14 +105,12 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             case 'draft':
                 $select->where('table.contents.type = ?', 'draft');
                 break;
-            case 'published':
-                $select->where('table.contents.type = ?', 'post');
-                break;
             case 'waiting':
                 $select->where('table.contents.type = ?', 'waiting');
                 break;
+            case 'published':
             default:
-                $select->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?', 'post', 'draft', 'waiting');
+                $select->where('table.contents.type = ?', 'post');
                 break;
         }
         

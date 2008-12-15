@@ -9,21 +9,21 @@ include 'menu.php';
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('所有'); ?></a></li>
-                    <li<?php if('published' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=published'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('已发布'); ?></a></li>
                     <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
+                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                    <?php if($user->pass('editor', true)): ?>
+                        <li class="right<?php if('no' != Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=yes"><?php _e('所有人的文章'); ?></a></li>
+                        <li class="right<?php if('no' == Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=no"><?php _e('我的文章'); ?></a></li>
+                    <?php endif; ?>
                 </ul>
-            
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
                         <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>, 
-                        <span onclick="document.manage_posts.submit();" class="operate-button select-submit"><?php _e('删除选中项'); ?></span><?php if($user->pass('editor', true)):
-                        if('yes' == Typecho_Request::getParameter('seeAll')): ?>, <a href="?seeAll=no"><?php _e('查看我的文章'); ?></a>
-                        <?php else: ?>, <a href="?seeAll=yes"><?php _e('查看所有人的文章'); ?></a><?php endif;
-                        endif; ?>
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                        <?php _e('选中项'); ?>: 
+                        <span onclick="document.manage_posts.submit();" class="operate-button select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
@@ -34,12 +34,10 @@ include 'menu.php';
                     	<option value="<?php $category->mid(); ?>"<?php if(Typecho_Request::getParameter('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
                     	<?php endwhile; ?>
                     </select>
-            
+                    <button type="submit"><?php _e('筛选'); ?></button>
                     <?php if(Typecho_Request::isSetParameter('status')): ?>
                         <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
                     <?php endif; ?>
-                    
-                    <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>
                 </div>

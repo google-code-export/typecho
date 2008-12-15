@@ -21,12 +21,12 @@
 class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 必须为贡献者以上权限 */
         $this->user->pass('contributor');
@@ -54,7 +54,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function getMenuTitle()
     {
-        return _t('编辑 "%s"', $this->title);
+        return _t('编辑 %s', $this->title);
     }
     
     /**

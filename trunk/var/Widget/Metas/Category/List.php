@@ -20,12 +20,12 @@
 class Widget_Metas_Category_List extends Widget_Abstract_Metas
 {    
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->db->fetchAll($this->select()->where('type = ?', 'category')
         ->order('table.metas.sort', Typecho_Db::SORT_ASC), array($this, 'push'));

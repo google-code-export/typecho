@@ -23,7 +23,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return array
      */
-    protected function getParentContent()
+    protected function ___parentContent()
     {
         return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
         ->where('table.contents.cid = ?', $this->cid)
@@ -36,7 +36,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function getTitle()
+    protected function ___title()
     {
         return $this->parentContent['title'];
     }
@@ -47,7 +47,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function getPermalink()
+    protected function ___permalink()
     {
         return $this->parentContent['permalink'] . '#comments-' . $this->coid;
     }
@@ -58,9 +58,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function getContent()
+    protected function ___content()
     {
-        return $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
+        return Typecho_Common::cutParagraph($this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text);
     }
     
     /**
@@ -69,9 +69,20 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @return void
      */
-    protected function getDateWord()
+    protected function ___dateWord()
     {
         return Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
+    
+    /**
+     * 锚点id
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___theId()
+    {
+        return 'comments-' . $this->coid;
     }
 
     /**
@@ -291,17 +302,6 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
     
     /**
-     * 输出格式化后的内容
-     * 
-     * @access public
-     * @return void
-     */
-    public function content()
-    {
-        echo Typecho_Common::cutParagraph($this->content);
-    }
-    
-    /**
      * 输出评论摘要
      *
      * @access public
@@ -312,16 +312,5 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function excerpt($length = 100, $trim = '...')
     {
         echo Typecho_Common::subStr(Typecho_Common::stripTags($this->content), 0, $length, $trim);
-    }
-    
-    /**
-     * 输出锚点id
-     * 
-     * @access public
-     * @return void
-     */
-    public function theId()
-    {
-        echo 'comments-' , $this->coid;
     }
 }

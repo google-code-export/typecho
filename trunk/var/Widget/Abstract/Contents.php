@@ -20,7 +20,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access protected
      * @return array
      */
-    protected function getTags()
+    protected function ___tags()
     {
         return $this->db->fetchAll($this->db
         ->select()->from('table.metas')
@@ -35,7 +35,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function getAuthor()
+    protected function ___author()
     {
         return $this->db->fetchObject($this->db->select('screenName')->from('table.users')
         ->where('uid = ?', $this->authorId))->screenName;
@@ -47,7 +47,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access protected
      * @return void
      */
-    protected function getDateWord()
+    protected function ___dateWord()
     {
         return Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
     }

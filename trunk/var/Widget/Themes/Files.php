@@ -37,12 +37,12 @@ class Widget_Themes_Files extends Typecho_Widget
     private $_currentFile;
 
     /**
-     * 入口函数
+     * 执行函数
      *
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 管理员权限 */
         $this->widget('Widget_User')->pass('administrator');
@@ -50,7 +50,7 @@ class Widget_Themes_Files extends Typecho_Widget
         
         if (preg_match("/^([_a-z-\ ])+$/i", $this->_currentTheme)
         && is_dir($dir = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->_currentTheme)) {
-            $files = glob($dir . '/*');
+            $files = glob($dir . '/*.{php,PHP,js,JS,css,CSS,vbs,VBS}', GLOB_BRACE);
             $this->_currentFile = $this->request->getParameter('file', 'index.php');
 
             if (preg_match("/^([_a-z-\.\ ])+$/i", $this->_currentFile)

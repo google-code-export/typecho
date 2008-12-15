@@ -19,13 +19,15 @@
 class Widget_Plugins_List_Activated extends Widget_Plugins_List
 {
     /**
-     * 准备函数
+     * 构造函数
      * 
      * @access public
+     * @param mixed $params 传递的参数
      * @return void
      */
-    public function prepare()
+    public function __construct($params = NULL)
     {
+        parent::__construct($params);
         $this->parameter->activated = true;
     }
 }

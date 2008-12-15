@@ -23,12 +23,12 @@ class Widget_Notice extends Typecho_Widget
     public $noticeType = 'notice';
     
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         if (NULL !== $this->request->getCookie('notice')) {
             $this->noticeType = $this->request->getCookie('noticeType');
