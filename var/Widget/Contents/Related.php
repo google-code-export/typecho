@@ -21,12 +21,12 @@
 class Widget_Contents_Related extends Widget_Abstract_Contents
 {
     /**
-     * 构造函数,初始化数据
+     * 执行函数,初始化数据
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->parameter->setDefault('limit=5');
     

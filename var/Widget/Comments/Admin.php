@@ -51,12 +51,12 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     private $_total = false;
     
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $select = $this->select();
         $this->parameter->setDefault('pageSize=20');

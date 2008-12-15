@@ -12,9 +12,9 @@ include 'menu.php';
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
                     <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                    <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>, 
-                    <span onclick="document.manage_users.submit();" class="operate-button select-submit"><?php _e('删除选中项'); ?></span>
-                     | 
+                    <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                    <?php _e('选中项'); ?>: 
+                    <span onclick="document.manage_users.submit();" class="operate-button select-submit"><?php _e('删除'); ?></span>, 
                     <a href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
                     </p>
                     <p class="search">

@@ -18,24 +18,25 @@
 class Widget_Comments_Recent extends Widget_Abstract_Comments
 {    
     /**
-     * 重载准备函数
+     * 构造函数
      * 
      * @access public
+     * @param mixed $params 传递的参数
      * @return void
      */
-    public function prepare()
+    public function __construct($params = NULL)
     {
-        parent::prepare();
+        parent::__construct($params);
         $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
     }
 
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->db->fetchAll($this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.status = ?', 'approved')

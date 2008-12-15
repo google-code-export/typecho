@@ -18,12 +18,12 @@
 class Widget_Comments_Recent_Comment extends Widget_Comments_Recent
 {
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->db()->fetchAll($this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.type = ?', 'comment')

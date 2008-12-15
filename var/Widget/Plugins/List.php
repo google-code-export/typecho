@@ -19,12 +19,12 @@
 class Widget_Plugins_List extends Typecho_Widget
 {
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 列出插件目录 */
         $pluginDirs = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/*');

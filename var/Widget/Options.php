@@ -26,26 +26,6 @@ class Widget_Options extends Typecho_Widget
      * @var array
      */
     private $_pluginConfig = array();
-
-    /**
-     * 数据库对象
-     * 
-     * @access protected
-     * @var Typecho_Db
-     */
-    protected $db;
-    
-    /**
-     * 准备函数
-     * 
-     * @access public
-     * @return void
-     */
-    public function prepare()
-    {
-        /** 初始化数据库 */
-        $this->db = Typecho_Db::get();
-    }
     
     /**
      * RSS2.0
@@ -53,7 +33,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getFeedUrl()
+    protected function ___feedUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/'), $this->index);
     }
@@ -64,7 +44,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getFeedRssUrl()
+    protected function ___feedRssUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/rss/'), $this->index);
     }
@@ -75,7 +55,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getFeedAtomUrl()
+    protected function ___feedAtomUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/atom/'), $this->index);
     }
@@ -86,7 +66,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getCommentsFeedUrl()
+    protected function ___commentsFeedUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/comments/'), $this->index);
     }
@@ -97,7 +77,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getCommentsFeedRssUrl()
+    protected function ___commentsFeedRssUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/rss/comments/'), $this->index);
     }
@@ -108,7 +88,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getCommentsFeedAtomUrl()
+    protected function ___commentsFeedAtomUrl()
     {
         return Typecho_Router::url('feed', array('feed' => '/atom/comments/'), $this->index);
     }
@@ -119,7 +99,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getXmlRpcUrl()
+    protected function ___xmlRpcUrl()
     {
         return Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
     }
@@ -130,7 +110,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getIndex()
+    protected function ___index()
     {
         return $this->rewrite ? $this->siteUrl : Typecho_Common::url('index.php', $this->siteUrl);
     }
@@ -141,7 +121,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getThemeUrl()
+    protected function ___themeUrl()
     {
         return Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
     }
@@ -152,7 +132,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getPluginUrl()
+    protected function ___pluginUrl()
     {
         return Typecho_Common::url(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
     }
@@ -163,7 +143,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getAdminUrl()
+    protected function ___adminUrl()
     {
         return Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ? 
         __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
@@ -175,7 +155,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getLoginUrl()
+    protected function ___loginUrl()
     {
         return Typecho_Common::url('login.php', $this->adminUrl);
     }
@@ -186,7 +166,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getLogoutUrl()
+    protected function ___logoutUrl()
     {
         return Typecho_Common::url('Logout.do', $this->index);
     }
@@ -197,7 +177,7 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return string
      */
-    protected function getCharset()
+    protected function ___charset()
     {
         return Typecho_Common::$config['charset'];
     }
@@ -208,20 +188,21 @@ class Widget_Options extends Typecho_Widget
      * @access protected
      * @return integer
      */
-    protected function getGmtTime()
+    protected function ___gmtTime()
     {
         return time() - idate('Z');
     }
 
     /**
-     * 初始化函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
-        $this->db->fetchAll($this->db->select()->from('table.options')
+        $db = Typecho_Db::get();
+        $db->fetchAll($db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
         $this->stack[] = &$this->row;
         

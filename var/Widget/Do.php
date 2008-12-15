@@ -20,7 +20,7 @@ class Widget_Do extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 验证路由地址 **/
         $widget = trim($this->request->widget, '/');

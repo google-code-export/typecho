@@ -83,7 +83,10 @@ class Typecho_Router
 
         /** 遍历路由 */
         if (false !== ($route = self::match($pathInfo))) {
-            $widget = new $route['widget'];
+            /** Typecho_Widget */
+            require_once 'Typecho/Widget.php';
+            
+            $widget = Typecho_Widget::widget($route['widget']);
             if (isset($route['action'])) {
                 $widget->{$route['action']}();
             }

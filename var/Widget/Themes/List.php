@@ -21,12 +21,12 @@
 class Widget_Themes_List extends Typecho_Widget
 {
     /**
-     * 入口函数
+     * 执行函数
      *
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $themes = glob(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/*');
         $options = $this->widget('Widget_Options');

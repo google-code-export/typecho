@@ -95,30 +95,15 @@ abstract class Typecho_Widget
         $this->parameter = Typecho_Config::factory(empty($params) ? array() : $params);
         $this->request = Typecho_Widget_Request::getInstance();
         $this->response = Typecho_Widget_Response::getInstance();
-        
-        /** 准备 */
-        $this->prepare();
-        
-        /** 初始化 */
-        $this->init();
     }
     
     /**
-     * 准备函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function prepare()
-    {}
-    
-    /**
-     * 初始化函数
-     * 
-     * @access public
-     * @return void
-     */
-    public function init()
+    public function execute()
     {}
     
     /**
@@ -137,7 +122,7 @@ abstract class Typecho_Widget
         (empty($value) && !empty($request))) {
             return $this;
         } else {
-            /** Typecho_Widget_Helper_Null */
+            /** Typecho_Widget_Helper_Empty */
             require_once 'Typecho/Widget/Helper/Empty.php';
             return new Typecho_Widget_Helper_Empty();
         }
@@ -175,7 +160,7 @@ abstract class Typecho_Widget
      * 工厂方法,将类静态化放置到列表中
      * 
      * @access public
-     * @param string $className
+     * @param string $className 组件名
      * @param mixed $params 传递的参数
      * @return object
      * @throws Typecho_Exception
@@ -194,6 +179,7 @@ abstract class Typecho_Widget
             }
             
             self::$_widgetPool[$className] = new $className($params);
+            self::$_widgetPool[$className]->execute();
         }
         
         return self::$_widgetPool[$className];
@@ -342,7 +328,7 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = 'get' . ucfirst($name))
+        return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
         ? $this->row[$name] = $this->$method() : NULL);
     }
     
@@ -365,7 +351,7 @@ abstract class Typecho_Widget
      * @param string $name
      * @return boolean
      */
-    public function __isset($name)
+    public function __isSet($name)
     {
         return isset($this->row[$name]);
     }

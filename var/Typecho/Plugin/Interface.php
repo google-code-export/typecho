@@ -25,7 +25,7 @@ interface Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function activate();
+    public static function activate();
     
     /**
      * 禁用插件方法,如果禁用失败,直接抛出异常
@@ -35,7 +35,7 @@ interface Typecho_Plugin_Interface
      * @return void
      * @throws Typecho_Plugin_Exception
      */
-    public function deactivate();
+    public static function deactivate();
     
     /**
      * 获取插件配置面板
@@ -45,5 +45,5 @@ interface Typecho_Plugin_Interface
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
      */
-    public function config(Typecho_Widget_Helper_Form $form);
+    public static function config(Typecho_Widget_Helper_Form $form);
 }

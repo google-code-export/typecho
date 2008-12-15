@@ -20,15 +20,36 @@
 class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interface_Do
 {
     /**
-     * 入口函数
+     * 执行函数
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         /** 管理员以上权限 */
         $this->user->pass('administrator');
+        
+        if (NULL != $this->request->uid) {
+            /** 更新模式 */
+            $user = $this->db->fetchRow($this->select()
+            ->where('uid = ?', $this->request->uid)->limit(1), array($this, 'push'));
+            
+            if (!$user) {
+                throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
+            }
+        }
+    }
+    
+    /**
+     * 获取菜单标题
+     * 
+     * @access public
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        return _t('编辑用户 %s', $this->name);
     }
     
     /**
@@ -174,26 +195,18 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addItem($submit);
 
         if (NULL != $this->request->uid) {
-            /** 更新模式 */
-            $user = $this->db->fetchRow($this->select()
-            ->where('uid = ?', $this->request->uid)->limit(1));
-            
-            if (!$user) {
-                throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
-            }
-            
+            /** 更新模式 */            
             $submit->value(_t('编辑用户'));
-            $name->value($user['name']);
-            $screenName->value($user['screenName']);
-            $url->value($user['url']);
-            $mail->value($user['mail']);
-            $group->value($user['group']);
+            $name->value($this->name);
+            $screenName->value($this->screenName);
+            $url->value($this->url);
+            $mail->value($this->mail);
+            $group->value($this->group);
             $do->value('update');
-            $uid->value($user['uid']);
+            $uid->value($this->uid);
             $_action = 'update';
         } else {
             $submit->value(_t('增加用户'));
-            $url->value('http://');
             $do->value('insert');
             $_action = 'insert';
         }
@@ -252,7 +265,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $user['uid'] = $this->insert($user);
         
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("用户 '%s' 已经被增加", $user['screenName']), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t('用户 %s 已经被增加', $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
@@ -283,7 +296,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $this->update($user, $this->db->sql()->where('uid = ?', $this->request->uid));
         
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("用户 '%s' 已经被更新", $user['screenName']), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t('用户 %s 已经被更新', $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));

@@ -41,12 +41,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
         }
         
-        /** 实例化插件 */
+        /** 载入插件 */
         require_once $pluginFileName;
-        $plugin = $this->widget($className);
         
         try {
-            $plugin->activate();
+            call_user_func(array($className, 'activate'));
             Typecho_Plugin::activate($pluginName);
             $this->update(array('value' => serialize(Typecho_Plugin::export())),
             $this->db->sql()->where('name = ?', 'plugins'));
@@ -57,7 +56,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         }
         
         $form = new Typecho_Widget_Helper_Form();
-        $plugin->config($form);
+        call_user_func(array($className, 'config'), $form);
         $options = $form->getValues();
         if ($options) {
             $this->insert(array(
@@ -92,12 +91,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
         }
         
-        /** 实例化插件 */
+        /** 载入插件 */
         require_once $pluginFileName;
-        $plugin = $this->widget($className);
         
         try {
-            $plugin->deactivate();
+            call_user_func(array($className, 'deactivate'));
             Typecho_Plugin::deactivate($pluginName);
             $this->update(array('value' => serialize(Typecho_Plugin::export())),
             $this->db->sql()->where('name = ?', 'plugins'));

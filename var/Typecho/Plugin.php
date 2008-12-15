@@ -252,6 +252,8 @@ class Typecho_Plugin
                         $isClass = true;
                         break;
                     case T_WHITESPACE:
+                    case T_COMMENT:
+                    case T_DOC_COMMENT:
                         break;
                     case T_STRING:
                         $string = strtolower($token[1]);

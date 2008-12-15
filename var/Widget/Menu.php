@@ -77,25 +77,26 @@ class Widget_Menu extends Typecho_Widget
     public $title;
     
     /**
-     * 准备函数
+     * 构造函数
      * 
      * @access public
      * @return void
      */
-    public function prepare()
+    public function __construct()
     {
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
+        parent::__construct();
     }
     
     /**
-     * 构造函数,初始化菜单
+     * 执行函数,初始化菜单
      * 
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         $this->_parentMenu = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
         
@@ -125,7 +126,7 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('标签'), _t('管理标签'), '/admin/manage-tags.php', 'editor'),
             array(_t('用户'), _t('管理用户'), '/admin/manage-users.php', 'administrator'),
             array(_t('新增用户'), _t('新增用户'), '/admin/user.php', 'administrator', true),
-            array(_t('编辑用户'), _t('编辑用户'), '/admin/user.php?uid=', 'administrator', true),
+            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), '/admin/user.php?uid=', 'administrator', true),
         //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
