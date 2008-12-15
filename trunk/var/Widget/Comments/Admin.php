@@ -93,7 +93,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $query = Typecho_Common::url('manage-comments.php?' . http_build_query($this->_filterQuery) . '&page={page}', $this->options->adminUrl);
 
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->count($this->_countSql) : $this->_total,
+        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
         $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render(_t('&laquo;'), _t('&raquo;'));
     }

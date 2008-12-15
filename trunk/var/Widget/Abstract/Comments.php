@@ -223,7 +223,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    public function count(Typecho_Db_Query $condition)
+    public function size(Typecho_Db_Query $condition)
     {
         return $this->db->fetchObject($condition->select(array('COUNT(coid)' => 'num'))->from('table.comments'))->num;
     }

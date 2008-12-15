@@ -74,7 +74,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * @param Typecho_Db_Query $condition 计算条件
      * @return integer
      */
-    public function count(Typecho_Db_Query $condition)
+    public function size(Typecho_Db_Query $condition)
     {
         return $this->db->fetchObject($condition->select(array('COUNT(mid)' => 'num'))->from('table.metas'))->num;
     }

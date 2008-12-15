@@ -47,6 +47,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
+	font-family: Georgia, serif;
 }
 
 h1 {
@@ -1356,7 +1357,7 @@ ul.typecho-list-notable li {
     margin-bottom: 15px;
 }
 
-.typecho-post-area label {
+.typecho-post-area label.typecho-label {
     font-size: 13px;
     font-weight: bold;
     margin: 5px 0px;
@@ -1368,52 +1369,53 @@ ul.typecho-list-notable li {
     margin: 15px 0px 20px;
 }
 
-.column-24 .typecho-post-area input {
+.column-24 .typecho-post-area input.text {
     font-size: 13px;
-    width: 944px;
+    width: 700px;
 }
 
 .column-24 .typecho-post-area input.title {
 	font-size: 20px; /* 撰写页面标题input */
-	border: 1px solid #bbb;
 }
 
 .column-24 .typecho-post-area textarea {
     font-size: 13px;
-    width: 944px;
+    width: 700px;
 	height: 300px;
-	border: 1px solid #bbb;
 }
 
-.typecho-post-option .typecho-option {
+ul.typecho-post-option {
     border: 0px;
-    margin: 0px;
+    margin: 0px 0px 0px 20px;
+	border-top: 1px solid #EBEFDA;
+	border-bottom: 1px solid #fff;
 }
 
-.typecho-post-option .typecho-option select {
-    width: 120px;
+ul.typecho-post-option li {
+	list-style: none;
+    border-bottom: 1px solid #EBEFDA;
+    border-top: 1px solid #fff;
+	padding: 5px 0 10px 0;
 }
 
-.typecho-post-option .typecho-option .message {
-    margin: 5px 0px;
-    width: 60%;
+ul.typecho-post-option li ul {
+	border: none;
+	margin: 0;
 }
 
-/*
-.typecho-post-option .typecho-option {
-
+ul.typecho-post-option li ul li {
+	height: 20px;
+	line-height: 20px;
+	border: none;
+	font-size: 12px;
+	padding: 5px;
+	margin-bottom:5px;
+	background: #EFF5D9;
 }
- */
 
-.typecho-post-option .post-option-content {
-    clear: both;
-    zoom: 1;
-}
-
-.typecho-post-option .post-option-content textarea {
-    width: 505px;
-    height: 75px;
-    clear: both;
+ul.typecho-post-option .description {
+	color: #999;
+	margin-top: 5px;
 }
 
 /**

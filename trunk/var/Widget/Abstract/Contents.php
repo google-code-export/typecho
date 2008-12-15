@@ -219,7 +219,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
      */
-    public function count(Typecho_Db_Query $condition)
+    public function size(Typecho_Db_Query $condition)
     {
         return $this->db->fetchObject($condition->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents'))->num;
     }
