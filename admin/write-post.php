@@ -3,7 +3,6 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 ?>
-
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
@@ -29,7 +28,7 @@ include 'menu.php';
                                 <ul class="typecho-post-option">
                                     <li>
                                         <label class="typecho-label"><?php _e('日期'); ?></label>
-                                        <p><input type="text" value="" class="mini" /></p>
+                                        <p><input type="text" readonly="readonly" name="date" id="date" value="" class="mini" />
                                         <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                                     </li>
                                     <li>
@@ -58,6 +57,19 @@ include 'menu.php';
         </div>
     </div>
 </div>
-
+<style type="text/css">@import url(<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-win2k-1.css'); ?>);</style>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar_stripped.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
+<script type="text/javascript">
+    Calendar.setup(
+        {
+            inputField : "date",
+            ifFormat : "%Y-%m-%d %H:%M",
+            showsTime: true,
+            button : "date"
+        }
+    );
+</script>
 <?php include 'common-js.php'; ?>
 <?php include 'copyright.php'; ?>

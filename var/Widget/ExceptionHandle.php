@@ -49,16 +49,7 @@ class Widget_ExceptionHandle extends Typecho_Widget
             'trace'     =>  $excepiton->getTrace(),
             'error'     =>  $excepiton->__toString()
         ));
-    }
-    
-    /**
-     * 准备一些常用组件
-     * 
-     * @access public
-     * @return void
-     */
-    public function prepare()
-    {
+        
         /** 如果数据库可用 */
         //~ 503和500都是内部程序错误
         if (503 != $this->parameter->code && 500 != $this->parameter->code) {
