@@ -37,8 +37,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___author()
     {
-        return $this->db->fetchObject($this->db->select('screenName')->from('table.users')
-        ->where('uid = ?', $this->authorId))->screenName;
+        return $this->db->fetchObject($this->db->select()->from('table.users')
+        ->where('uid = ?', $this->authorId));
     }
     
     /**
@@ -88,9 +88,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'commentsNum'   =>  0,
-            'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 'enable' : 'disable',
-            'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
-            'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
+            'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
+            'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
+            'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
         );
         
         /** 首先插入部分数据 */
@@ -128,9 +128,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
-            'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 'enable' : 'disable',
-            'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 'enable' : 'disable',
-            'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 'enable' : 'disable',
+            'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
+            'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
+            'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
         );
         
         $updateStruct = array();
@@ -337,7 +337,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param string $format 日期格式
      * @return void
      */
-    public function date($format)
+    public function date($format = NULL)
     {
         echo date(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
     }
@@ -409,7 +409,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 }
             }
             
-            $allow &= ($this->row['allow' . ucfirst($permission)] == 'enable');
+            $allow &= ($this->row['allow' . ucfirst($permission)] == 1);
         }
 
         return $allow and !$this->hidden;
@@ -464,5 +464,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
         } else {
             echo $default;
         }
+    }
+    
+    /**
+     * 输出当前作者
+     * 
+     * @access public
+     * @param string $item 需要输出的项目
+     * @return void
+     */
+    public function author($item = 'screenName')
+    {
+        echo $this->author->{$item};
     }
 }

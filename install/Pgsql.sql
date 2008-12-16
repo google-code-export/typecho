@@ -41,9 +41,9 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "type" VARCHAR(32) NULL DEFAULT NULL,
   "password" VARCHAR(32) NULL DEFAULT NULL,
   "commentsNum" INT NULL DEFAULT '0',
-  "allowComment" VARCHAR(16) NULL DEFAULT 'disable',
-  "allowPing" VARCHAR(16) NULL DEFAULT 'disable',
-  "allowFeed" VARCHAR(16) NULL DEFAULT 'disable',
+  "allowComment" CHAR(1) NULL DEFAULT '0',
+  "allowPing" CHAR(1) NULL DEFAULT '0',
+  "allowFeed" CHAR(1) NULL DEFAULT '0',
   PRIMARY KEY ("cid"),
   UNIQUE ("slug")
 );

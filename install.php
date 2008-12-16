@@ -285,12 +285,12 @@ Typecho_Plugin::init(\$options->plugins);
                                         
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 'enable',
-                                        'allowPing' => 'enable', 'allowFeed' => 'enable')));
+                                        'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'author' => 1, 'type' => 'post', 'commentsNum' => 1, 'allowComment' => 1,
+                                        'allowPing' => 1, 'allowFeed' => 1)));
                                         
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 0, 'allowComment' => 'enable',
-                                        'allowPing' => 'enable', 'allowFeed' => 'enable')));
+                                        'text' => _t('<p>这只是个测试页面.</p>'), 'author' => 1, 'meta' => 1, 'type' => 'page', 'commentsNum' => 0, 'allowComment' => 1,
+                                        'allowPing' => 1, 'allowFeed' => 1)));
                                         
                                         /** 初始评论 */
                                         $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => (time() - idate('Z')), 'author' => 'Typecho', 'url' => 'http://typecho.org',

@@ -1360,8 +1360,17 @@ ul.typecho-list-notable li {
 }
 
 .typecho-post-area .submit {
-    text-align: right;
+	height: 24px;
+	line-height: 24px;
     margin: 15px 0px 20px;
+}
+
+.typecho-post-area .right {
+	float: right;
+}
+
+.typecho-post-area .left {
+	float: left;
 }
 
 .column-24 .typecho-post-area input.text {
@@ -1387,7 +1396,23 @@ ul.typecho-list-notable li {
 .column-24 .typecho-post-area textarea#text {
     font-size: 13px;
     width: 700px;
-	height: 300px;
+	height: 350px;
+}
+
+.column-24 .typecho-post-area textarea#trackback {
+    font-size: 13px;
+    width: 430px;
+	height: 70px;
+}
+
+.typecho-post-area br {
+	height: 10px;
+	line-height: 10px;
+}
+
+.typecho-post-area #advance-panel {
+	margin: 0;
+	display: none;
 }
 
 ul.typecho-post-option {
@@ -1409,23 +1434,45 @@ ul.typecho-post-option li ul {
 	margin: 0;
 }
 
+ul.typecho-post-option li ul.related {
+	margin-left: 20px;
+}
+
 ul.typecho-post-option li ul li {
 	height: 20px;
 	line-height: 20px;
 	border: none;
 	font-size: 12px;
-	padding: 5px;
-	margin-bottom:5px;
+	padding: 4px;
+	margin-bottom: 5px;
 	background: #EFF5D9;
+}
+
+ul.typecho-post-option li ul.related li {
+	background: none;
+	list-style-type: disc;
+	padding: 4px 0;
+	margin: 0;
 }
 
 ul.typecho-post-option li ul li:hover {
 	background: #E3EEBD
 }
 
+ul.typecho-post-option li ul.related li:hover {
+	background: none;
+}
+
 ul.typecho-post-option .description {
 	color: #999;
 	margin-top: 5px;
+}
+
+.typecho-post-area .advance {
+	font-weight: bold;
+	color: #333;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 /**

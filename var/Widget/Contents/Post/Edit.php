@@ -38,12 +38,60 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             ->where('table.contents.cid = ?', $this->request->cid)
             ->limit(1), array($this, 'push'));
             
-            if (!$post) {
+            if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
             } else if ($post && 'update' == $this->request->do && !$this->postIsWriteable()) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
+    }
+    
+    /**
+     * 重载获取内容的方法
+     * 
+     * @access public
+     * @return void
+     */
+    public function content()
+    {
+        echo htmlspecialchars(trim(preg_replace(array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is"), array('', "\n\n", "\n"), $this->text)));
+    }
+    
+    /**
+     * 输出文章发布日期
+     *
+     * @access public
+     * @param string $format 日期格式
+     * @return void
+     */
+    public function date($format = NULL)
+    {
+        if (isset($this->created)) {
+            parent::date($format);
+        } else {
+            echo date($format, $this->options->gmtTime + $this->options->timezone);
+        }
+    }
+    
+    /**
+     * 获取文章权限
+     *
+     * @access public
+     * @param string $permission 权限
+     * @return unknown
+     */
+    public function allow()
+    {
+        $permissions = func_get_args();
+        $allow = true;
+
+        foreach ($permissions as $permission) {
+            $permission = 'allow' . ucfirst(strtolower($permission));
+            $optionPermission = 'default' . ucfirst($permission);
+            $allow &= (isset($this->{$permission}) ? $this->{$permission} : $this->options->{$optionPermission});
+        }
+
+        return $allow and !$this->hidden;
     }
     
     /**
