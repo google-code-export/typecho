@@ -19,15 +19,14 @@
 class Widget_Plugins_List_Deactivated extends Widget_Plugins_List
 {
     /**
-     * 构造函数
+     * 执行函数
      * 
      * @access public
-     * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($params = NULL)
+    public function execute()
     {
-        parent::__construct($params);
         $this->parameter->activated = false;
+        parent::execute();
     }
 }

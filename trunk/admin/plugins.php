@@ -37,7 +37,7 @@ include 'menu.php';
                             <td><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage
                             . '">' . $activatedPlugins->author . '</a>'; ?></td>
                             <td>
-                                <?php if ($activatedPlugins->activate): ?>
+                                <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
                                     <?php if ($activatedPlugins->activated): ?>
                                         <?php if ($activatedPlugins->config): ?>
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('配置'); ?></a> 
@@ -47,6 +47,8 @@ include 'menu.php';
                                     <?php else: ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?activate=' . $activatedPlugins->name); ?>"><?php _e('激活'); ?></a>
                                     <?php endif; ?>
+                                <?php else: ?>
+                                    <span class="important"><?php _e('即插即用'); ?></span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -85,7 +87,7 @@ include 'menu.php';
                             <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
                             . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
                             <td>
-                                <?php if ($deactivatedPlugins->activate): ?>
+                                <?php if ($deactivatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
                                     <?php if ($deactivatedPlugins->activated): ?>
                                         <?php if ($deactivatedPlugins->config): ?>
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('配置'); ?></a> 

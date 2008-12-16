@@ -1129,11 +1129,6 @@ margin-top: 25px;
     font-weight: normal;
 }
 
-.typecho-list-table sup {
-    font-size: 12px;
-    margin-left: 5px;
-}
-
 .typecho-list-table .important {
     color: #e47e00;
 }

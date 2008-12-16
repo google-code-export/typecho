@@ -56,9 +56,15 @@ class Widget_Plugins_List extends Typecho_Widget
             if (file_exists($pluginFileName)) {
                 $info = Typecho_Plugin::parseInfo($pluginFileName);
                 $info['name'] = $pluginName;
-                $info['activated'] = isset($activatedPlugins[$pluginName]);
                 
-                if  (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
+                /** 默认即插即用 */
+                $info['activated'] = true;
+                
+                if ($info['activate'] || $info['deactivate'] || $info['config']) {
+                    $info['activated'] = isset($activatedPlugins[$pluginName]);
+                }
+                
+                if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
                     $this->push($info);
                 }
             }
