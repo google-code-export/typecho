@@ -626,8 +626,8 @@ margin-top: 25px;
 .typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
-    background: #404040 /*url(../images/sprite.png) 0 -360px repeat-x*/;
-    /*text-decoration: none;*/
+    background: #444 /*url(../images/sprite.png) 0 -360px repeat-x*/;
+	text-decoration: underline;
 }
 
 .typecho-head-guid dd {
