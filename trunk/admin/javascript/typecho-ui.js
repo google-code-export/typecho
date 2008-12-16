@@ -118,6 +118,21 @@ var typechoScroll = function (sel, parentSel) {
     }
 }
 
+var typechoLocation = function (url) {
+    setTimeout('window.location.href="' + url + '"', 0);
+}
+
+var typechoToggle = function (sel, btn, showWord, hideWord) {
+    var el = $(document).getElement(sel);
+    if ('none' == el.getStyle('display')) {
+        $(btn).set('html', showWord);
+        el.setStyle('display', 'block');
+    } else {
+        $(btn).set('html', hideWord);
+        el.setStyle('display', 'none');
+    }
+}
+
 /** 提交表单 */
 var typechoSubmit = function (formSel, inputSel, op) {
     var form = $(document).getElement(formSel);

@@ -171,7 +171,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ('feed' == Typecho_Router::$current) {
             // 对feed输出加入限制条件
-            return parent::select()->where('table.contents.allowFeed = ?', 'enable')
+            return parent::select()->where('table.contents.allowFeed = ?', 1)
             ->where('table.contents.password IS NULL');
         } else {
             return parent::select();

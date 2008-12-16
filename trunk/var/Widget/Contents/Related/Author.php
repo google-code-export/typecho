@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_Related extends Widget_Abstract_Contents
+class Widget_Contents_Related_Author extends Widget_Abstract_Contents
 {
     /**
      * 执行函数,初始化数据
@@ -30,11 +30,9 @@ class Widget_Contents_Related extends Widget_Abstract_Contents
     {
         $this->parameter->setDefault('limit=5');
     
-        if ($this->parameter->tags) {
-            $tagsGroup = implode(',', Typecho_API::arrayFlatten($this->parameter->tags, 'mid'));
+        if ($this->parameter->author) {
             $this->db->fetchAll($this->select()
-            ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-            ->where('table.relationships.mid IN (' . $tagsGroup . ')')
+            ->where('table.contents.author = ?', $this->parameter->author)
             ->where('table.contents.cid <> ?', $this->parameter->cid)
             ->where('table.contents.password IS NULL')
             ->where('table.contents.created < ?', $this->options->gmtTime)
