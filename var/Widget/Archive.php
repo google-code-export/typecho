@@ -605,12 +605,23 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 
      * @access public
      * @param integer $limit 输出数量
+     * @param string $type 关联类型
      * @return Typecho_Widget
      */
-    public function related($limit = 5)
+    public function related($limit = 5, $type = NULL)
     {
-        /** 如果访问权限被设置为禁止,则tag会被置为空 */
-        return $this->widget('Widget_Contents_Related', array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
+        $type = strtolower($type);
+        
+        switch ($type) {
+            case 'author':
+                /** 如果访问权限被设置为禁止,则tag会被置为空 */
+                return $this->widget('Widget_Contents_Related_Author', 
+                array('cid' => $this->cid, 'type' => $this->type, 'author' => $this->author->uid, 'limit' => $limit));
+            default:
+                /** 如果访问权限被设置为禁止,则tag会被置为空 */
+                return $this->widget('Widget_Contents_Related', 
+                array('cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit));
+        }
     }
     
     /**
