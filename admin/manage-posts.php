@@ -23,7 +23,7 @@ include 'menu.php';
                         <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
                         <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                         <?php _e('选中项'); ?>: 
-                        <span onclick="document.manage_posts.submit();" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                        <span onclick="typechoSubmit('form[name=manage_posts]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />

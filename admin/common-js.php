@@ -6,15 +6,12 @@
     (function () {
         window.addEvent('domready', function() {
             var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});
-            var firstError = $(document).getElement('.typecho-option .error');
-            
-            //增加滚动效果
-            if (firstError) {
-                var errorFx = new Fx.Scroll(window).toElement(firstError.getParent('.typecho-option'));
-            }
             
             //增加淡出效果
             setTimeout(typechoMessage, 5000);
+            typechoScroll('.typecho-option .error', '.typecho-option');
+            typechoOpenLink(/^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/,
+            /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>[_a-zA-Z0-9\/]+\.(do|plugin).*$/);
             typechoTableListener('.typecho-list-table');
             typechoTableListener('.typecho-list-notable');
             handle.reSet();
