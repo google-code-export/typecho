@@ -79,6 +79,7 @@ var typechoGuid = function (el, config) {
     return handle;
 };
 
+/** 消息窗口淡出 */
 var typechoMessage = function () {
     var message = $(document).getElement('.popup');
     if (message) {
@@ -90,6 +91,45 @@ var typechoMessage = function () {
     }
 };
 
+/** 在新窗口打开链接 */
+var typechoOpenLink = function (adminPattern, doPattern) {
+    $(document).getElements('a').each(function (item) {
+        href = item.href;
+        if (href && '#' != href) {
+            /** 如果匹配则继续 */
+            if (adminPattern.exec(href) || doPattern.exec(href)) {
+                return;
+            }
+            
+            $(item).addEvent('click', function () {
+                window.open(this.href);
+                return false;
+            });
+        }
+    });
+}
+
+var typechoScroll = function (sel, parentSel) {
+    var firstError = $(document).getElement(sel);
+    
+    //增加滚动效果
+    if (firstError) {
+        var errorFx = new Fx.Scroll(window).toElement(firstError.getParent(parentSel));
+    }
+}
+
+/** 提交表单 */
+var typechoSubmit = function (formSel, inputSel, op) {
+    var form = $(document).getElement(formSel);
+    var input = $(document).getElement(inputSel);
+    
+    if (form && input) {
+        input.set('value', op);
+        form.submit();
+    }
+}
+
+/** 操作按钮 */
 var typechoOperate = function (selector, op) {
     /** 获取元素 */
     var el = $(document).getElement(selector);

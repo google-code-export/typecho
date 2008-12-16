@@ -1374,11 +1374,22 @@ ul.typecho-list-notable li {
     width: 700px;
 }
 
+.column-24 .typecho-post-area input.date {
+	width: 150px;
+	background: #DDD url(../images/calendar.gif) right center no-repeat;
+	border: 1px solid #AAA;
+	padding: 4px;
+}
+
+.column-24 .typecho-post-area input.mini {
+	width: 200px;
+}
+
 .column-24 .typecho-post-area input.title {
 	font-size: 20px; /* 撰写页面标题input */
 }
 
-.column-24 .typecho-post-area textarea {
+.column-24 .typecho-post-area textarea#text {
     font-size: 13px;
     width: 700px;
 	height: 300px;
@@ -1411,6 +1422,10 @@ ul.typecho-post-option li ul li {
 	padding: 5px;
 	margin-bottom:5px;
 	background: #EFF5D9;
+}
+
+ul.typecho-post-option li ul li:hover {
+	background: #E3EEBD
 }
 
 ul.typecho-post-option .description {

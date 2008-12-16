@@ -20,10 +20,10 @@ include 'menu.php';
                     <span onclick="typechoOperate('.typecho-list-notable', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
                     <span onclick="typechoOperate('.typecho-list-notable', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                     <?php _e('选中项') ?>:
-                    <span onclick="document.getElementsByName('do')[0].value = 'approved'; document.manage_comments.submit();" class="operate-button select-submit"><?php _e('通过'); ?></span>, 
-                    <span onclick="document.getElementsByName('do')[0].value = 'waiting'; document.manage_comments.submit();" class="operate-button select-submit"><?php _e('待审核'); ?></span>, 
-                    <span onclick="document.getElementsByName('do')[0].value = 'spam'; document.manage_comments.submit();" class="operate-button select-submit"><?php _e('标记垃圾'); ?></span>, 
-                    <span onclick="document.getElementsByName('do')[0].value = 'delete'; document.manage_comments.submit();" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'approved');" class="operate-button select-submit"><?php _e('通过'); ?></span>, 
+                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'waiting');" class="operate-button select-submit"><?php _e('待审核'); ?></span>, 
+                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'spam');" class="operate-button select-submit"><?php _e('标记垃圾'); ?></span>, 
+                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
