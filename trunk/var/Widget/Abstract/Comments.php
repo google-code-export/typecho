@@ -219,6 +219,30 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
     
     /**
+     * 评论是否可以被修改
+     * 
+     * @access public
+     * @param Typecho_Db_Query $condition 条件
+     * @return mixed
+     */
+    public function commentIsWriteable(Typecho_Db_Query $condition = NULL)
+    {
+        if (empty($condition)) {
+            if ($this->have() && ($this->user->pass('editor', true) || $this->ownerId == $this->user->uid)) {
+                return true;
+            }
+        } else {
+            $post = $this->db->fetchRow($condition->select('ownerId')->from('table.comments')->limit(1));
+
+            if ($post && ($this->user->pass('editor', true) || $post['ownerId'] == $this->user->uid)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * 按照条件计算评论数量
      * 
      * @access public

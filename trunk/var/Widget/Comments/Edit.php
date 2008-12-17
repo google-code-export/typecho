@@ -28,10 +28,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     private function mark($coid, $status)
     {
-        $comment = $this->db->fetchRow($this->db->select()
-        ->from('table.comments')->where('coid = ?', $coid)->limit(1));
+        $comment = $this->db->fetchRow($this->select()
+        ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
         
-        if ($comment) {
+        if ($comment && $this->commentIsWriteable()) {
             /** 不必更新的情况 */
             if ($status == $comment['status']) {
                 return false;
@@ -155,10 +155,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $deleteRows = 0;
         
         foreach ($comments as $coid) {
-            $comment = $this->db->fetchRow($this->db->select()
-            ->from('table.comments')->where('coid = ?', $coid)->limit(1));
+            $comment = $this->db->fetchRow($this->select()
+            ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
             
-            if ($comment) {
+            if ($comment && $this->commentIsWriteable()) {
                 /** 删除评论 */
                 $this->db->query($this->db->delete('table.comments')->where('coid = ?', $coid));
             
