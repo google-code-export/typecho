@@ -168,42 +168,24 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->query($condition->delete('table.contents'));
     }
-    
-    /**
-     * 检测当前用户是否具备修改权限
-     * 
-     * @access public
-     * @param integer $userId 文章的作者id
-     * @return boolean
-     */
-    public function haveContentPermission($userId)
-    {
-        if (!$this->user->pass('editor', true)) {
-            if ($userId != $this->user->uid) {
-                return false;
-            }
-        }
 
-        return true;
-    }
-    
     /**
      * 内容是否可以被修改
      * 
      * @access public
-     * @param Typecho_Db_Query $condition 更新条件
+     * @param Typecho_Db_Query $condition 条件
      * @return mixed
      */
     public function postIsWriteable(Typecho_Db_Query $condition = NULL)
     {
         if (empty($condition)) {
-            if ($this->have() && $this->haveContentPermission($this->authorId)) {
+            if ($this->have() && ($this->user->pass('editor', true) || $this->authorId == $this->user->uid)) {
                 return true;
             }
         } else {
             $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
 
-            if ($post && $this->haveContentPermission($post['authorId'])) {
+            if ($post && ($this->user->pass('editor', true) || $post['authorId'] == $this->user->uid)) {
                 return true;
             }
         }
