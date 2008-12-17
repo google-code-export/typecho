@@ -60,10 +60,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function select()
     {
-        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created',
+        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.authorId',
         'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
-        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
-        array('table.contents.author' => 'authorId'))
+        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed')
         ->from('table.contents');
     }
     
@@ -83,7 +82,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
-            'author'        =>  $this->user->uid,
+            'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
@@ -95,7 +94,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
-        
+        echo $this->db->insert('table.contents')->rows($insertStruct);
         /** 更新缩略名 */
         $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
         $this->db->query($this->db->update('table.contents')
@@ -198,13 +197,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function postIsWriteable(Typecho_Db_Query $condition = NULL)
     {
         if (empty($condition)) {
-            if ($this->have() && $this->haveContentPermission($this->author)) {
+            if ($this->have() && $this->haveContentPermission($this->authorId)) {
                 return true;
             }
         } else {
-            $post = $this->db->fetchRow($condition->select('author')->from('table.contents')->limit(1));
+            $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
 
-            if ($post && $this->haveContentPermission($post['author'])) {
+            if ($post && $this->haveContentPermission($post['authorId'])) {
                 return true;
             }
         }
@@ -355,7 +354,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $contents = explode('<!--more-->', $content);
         
         list($abstract) = $contents;
-        echo empty($more) ? $content : (Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+        echo NULL === $more ? $content : (Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
         . $this->permalink . '">' . $more . '</a></p>' : NULL));
     }
 

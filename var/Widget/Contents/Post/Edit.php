@@ -21,6 +21,25 @@
 class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
+     * 将tags取出
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function ___tags()
+    {
+        if ($this->have()) {
+            return $this->db->fetchAll($this->db
+            ->select()->from('table.metas')
+            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+            ->where('table.relationships.cid = ?', $this->cid)
+            ->where('table.metas.type = ?', 'tag'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        }
+        
+        return array();
+    }
+
+    /**
      * 执行函数
      * 
      * @access public
@@ -32,7 +51,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->user->pass('contributor');
     
         /** 获取文章内容 */
-        if ($this->request->cid || 'update' == $this->request->do) {
+        if (($this->request->cid && 'delete' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
             ->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?', 'post', 'draft', 'waiting')
             ->where('table.contents.cid = ?', $this->request->cid)
@@ -54,7 +73,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function content()
     {
-        echo htmlspecialchars(trim(preg_replace(array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is"), array('', "\n\n", "\n"), $this->text)));
+        echo htmlspecialchars(trim(preg_replace(
+        array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+        array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+        $this->text)));
     }
     
     /**
@@ -270,9 +293,19 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
         $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
         (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
-        $contents['title'] = isset($this->request->title) ? _t('未命名文档') : $this->request->title;
-        $contents['created'] = isset($this->request->created) ? $this->request->created - $this->options->timezone : $this->options->gmtTime;
-    
+        $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['created'] = isset($this->request->date) ? 
+        strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
+
+        /** 对内容的解析插件,此插件可能与本身的分段解析冲突,因此二者无法共存 */
+        $contents['text'] = $this->plugin()->trigger($hasParsed)->parse($contents['text']);
+        if (!$hasParsed) {
+            $contents['text'] = Typecho_Common::cutParagraph($contents['text']);
+        }
+        
+        /** 提交数据的过滤 */
+        $contents = $this->plugin()->filter($contents, 'insert');
+
         $insertId = $this->insert($contents);
         
         if ($insertId > 0) {
@@ -303,9 +336,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['type']) {
-            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-posts.php' . 
+            ('post' != $contents['type'] ? '?status=' . $contents['type'] : ''), $this->options->adminUrl));
         }
     }
     
@@ -321,8 +355,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
         $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
         (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
-        $contents['title'] = isset($this->request->title) ? _t('未命名文档') : $this->request->title;
-        $contents['created'] = isset($this->request->created) ? $this->request->created - $this->options->timezone : $this->options->gmtTime;
+        $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['created'] = isset($this->request->date) ? 
+        strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
+    
+        /** 对内容的解析插件,此插件可能与本身的分段解析冲突,因此二者无法共存 */
+        $contents['text'] = $this->plugin()->trigger($hasParsed)->parse($contents['text']);
+        if (!$hasParsed) {
+            $contents['text'] = Typecho_Common::cutParagraph($contents['text']);
+        }
+        
+        /** 提交数据的过滤 */
+        $contents = $this->plugin()->filter($contents, 'update');
     
         $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
 
@@ -355,7 +399,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['type']) {
-            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php', $this->options->adminUrl));
         }

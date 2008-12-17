@@ -34,13 +34,13 @@ class Typecho_Request
     public static function getParameter($key, $default = NULL)
     {
         switch (true) {
-            case isset(self::$_params[$key]):
+            case !empty(self::$_params[$key]):
                 return self::$_params[$key];
-            case isset($_GET[$key]):
+            case !empty($_GET[$key]):
                 return $_GET[$key];
-            case isset($_POST[$key]):
+            case !empty($_POST[$key]):
                 return $_POST[$key];
-            case isset($_COOKIE[$key]):
+            case !empty($_COOKIE[$key]):
                 return $_COOKIE[$key];
             default:
                 return $default;

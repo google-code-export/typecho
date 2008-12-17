@@ -187,7 +187,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function execute()
     {
         /** 处理搜索结果跳转 */
-        if ($this->request->isSetParameter('s')) {
+        if (isset($this->request->s)) {
             $filterKeywords = Typecho_Common::filterSearchQuery($this->request->s);
             
             /** 跳转到搜索页 */
@@ -661,7 +661,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function remember($cookieName)
     {
-        echo $this->request->getCookie($cookieName);
+        echo $this->request->getCookie('__typecho_remember_' . $cookieName);
     }
     
     /**

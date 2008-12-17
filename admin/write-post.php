@@ -12,7 +12,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                 <div class="typecho-post-option column-24">
                     <div class="typecho-post-area column-24">
-                        <form action="" method="post">
+                        <form action="<?php $options->index('Contents/Post/Edit.do'); ?>" method="post" name="write_post">
                             <div class="column-18">
                                 <div class="column-18">
                                     <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
@@ -26,8 +26,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                             <span onclick="typechoToggle('#advance-panel', this, '<?php _e('&laquo; 收起高级选项'); ?>', '<?php _e('&laquo; 展开高级选项'); ?>');" class="advance"><?php _e('&laquo; 展开高级选项'); ?></span>
                                         </span>
                                         <span class="right">
-                                            <button><?php _e('保存并继续编辑'); ?></button>
-                                            <button><?php _e('发布这篇文章 &raquo;'); ?></button>
+                                            <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
+                                            <input type="hidden" name="type" value="<?php $post->have() ? $post->type() : print('post'); ?>" />
+                                            <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
+                                            <button onclick="typechoSubmit('form[name=write_post]', 'input[name=type]', 'draft');"><?php _e('保存并继续编辑'); ?></button>
+                                            <button onclick="typechoSubmit('form[name=write_post]', 'input[name=type]', 'post');"><?php _e('发布这篇文章 &raquo;'); ?></button>
                                         </span>
                                     </p>
                                 </div>
@@ -46,11 +49,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                             <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                             <ul>
                                                 <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($post->allow('comment')): ?>checked="true"<?php endif; ?> />
-                                                <label for="allowComment"><?php _e('允许评论'); ?><label></li>
+                                                <label for="allowComment"><?php _e('允许评论'); ?></label></li>
                                                 <li><input id="allowPing" name="allowPing" type="checkbox" value="1" <?php if($post->allow('ping')): ?>checked="true"<?php endif; ?> />
-                                                <label for="allowPing"><?php _e('允许被引用'); ?><label></li>
+                                                <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
                                                 <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
-                                                <label for="allowFeed"><?php _e('允许在聚合中出现'); ?><label></li>
+                                                <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                                             </ul>
                                         </div>
                                     </li>
@@ -77,7 +80,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                                 ?>
                                                 <?php while($category->next()): ?>
                                                 <li><input type="checkbox" id="category-<?php $category->mid(); ?>" value="<?php $category->mid(); ?>" name="category[]" <?php if(in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
-                                                <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?><label></li>
+                                                <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
                                                 <?php endwhile; ?>
                                             </ul>
                                         </p>

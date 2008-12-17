@@ -112,6 +112,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
             'cid'       =>  $comment['cid'],
             'created'   =>  $this->options->gmtTime,
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
+            'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
+            'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
             'ip'        =>  empty($comment['ip']) ? $this->request->getClientIp() : $comment['ip'],
@@ -119,7 +121,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
             'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
-            'parent'    =>  empty($comment['parent']) ? '0' : $comment['parent'],
+            'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
         );
         
         /** 首先插入部分数据 */

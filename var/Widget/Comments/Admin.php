@@ -68,6 +68,20 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             $this->_filterQuery['keywords'] = $keywords;
         }
         
+        /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */
+        if (!$this->user->pass('contributor', true)) {
+            $select->where('table.comments.ownerId = ?', $this->user->uid);
+        } else {
+            if ('yes' == $this->request->seeAll) {
+                $this->response->setCookie('seeAll', 'yes');
+            } else {
+                if ('no' == $this->request->seeAll) {
+                    $this->response->setCookie('seeAll', 'no');
+                }
+                $select->where('table.comments.ownerId = ?', $this->user->uid);
+            }
+        }
+        
         if (in_array($this->request->status, array('approved', 'waiting', 'spam'))) {
             $select->where('table.comments.status = ?', $this->request->status);
         } else {

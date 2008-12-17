@@ -7,6 +7,8 @@ CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_
   "cid" INT NULL DEFAULT '0',
   "created" INT NULL DEFAULT '0',
   "author" VARCHAR(200) NULL DEFAULT NULL,
+  "authorId" INT NULL DEFAULT '0',
+  "ownerId" INT NULL DEFAULT '0',
   "mail" VARCHAR(200) NULL DEFAULT NULL,
   "url" VARCHAR(200) NULL DEFAULT NULL,
   "ip" VARCHAR(64) NULL DEFAULT NULL,
@@ -36,9 +38,9 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "modified" INT NULL DEFAULT '0',
   "text" TEXT NULL DEFAULT NULL,
   "meta" INT NULL DEFAULT '0',
-  "author" INT NULL DEFAULT '0',
+  "authorId" INT NULL DEFAULT '0',
   "template" VARCHAR(32) NULL DEFAULT NULL,
-  "type" VARCHAR(32) NULL DEFAULT NULL,
+  "type" VARCHAR(16) NULL DEFAULT 'post',
   "password" VARCHAR(32) NULL DEFAULT NULL,
   "commentsNum" INT NULL DEFAULT '0',
   "allowComment" CHAR(1) NULL DEFAULT '0',
@@ -49,7 +51,6 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
 );
 
 CREATE INDEX "typecho_contents_created" ON "typecho_contents" ("created");
-CREATE INDEX "typecho_contents_author" ON "typecho_contents" ("author");
 
 
 --

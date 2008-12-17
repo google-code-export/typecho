@@ -65,4 +65,21 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
         $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
+    
+    /**
+     * 取出最后一次插入返回的主键值
+     *
+     * @param resource $resource 查询的资源数据
+     * @param mixed $handle 连接对象
+     * @return integer
+     */
+    public function lastInsertId($resource, $handle)
+    {
+        /** 查看是否存在序列,可能需要更严格的检查 */
+        if ($handle->query('SELECT oid FROM pg_class WHERE relname = ' . $this->quoteValue($this->_lastTable . '_seq'))->fetchAll()) {
+            return $handle->lastInsertId($this->_lastTable . '_seq');
+        }
+        
+        return 0;
+    }
 }

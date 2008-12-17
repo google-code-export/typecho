@@ -88,7 +88,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
         if (!$this->user->pass('editor', true)) {
-            $select->where('table.contents.author = ?', $this->user->uid);
+            $select->where('table.contents.authorId = ?', $this->user->uid);
         } else {
             if ('yes' == $this->request->seeAll) {
                 $this->response->setCookie('seeAll', 'yes');
@@ -96,7 +96,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
                 if ('no' == $this->request->seeAll) {
                     $this->response->setCookie('seeAll', 'no');
                 }
-                $select->where('table.contents.author = ?', $this->user->uid);
+                $select->where('table.contents.authorId = ?', $this->user->uid);
             }
         }
         

@@ -32,7 +32,7 @@ class Widget_Contents_Related_Author extends Widget_Abstract_Contents
     
         if ($this->parameter->author) {
             $this->db->fetchAll($this->select()
-            ->where('table.contents.author = ?', $this->parameter->author)
+            ->where('table.contents.authorId = ?', $this->parameter->author)
             ->where('table.contents.cid <> ?', $this->parameter->cid)
             ->where('table.contents.password IS NULL')
             ->where('table.contents.created < ?', $this->options->gmtTime)
