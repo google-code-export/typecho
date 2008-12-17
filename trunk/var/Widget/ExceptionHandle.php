@@ -59,6 +59,9 @@ class Widget_ExceptionHandle extends Typecho_Widget
             /** 初始化常用组件 */
             $this->options = $this->widget('Widget_Options');
         }
+        
+        //~ 执行
+        $this->execute();
     }
     
     /**
@@ -67,7 +70,7 @@ class Widget_ExceptionHandle extends Typecho_Widget
      * @access public
      * @return void
      */
-    public function init()
+    public function execute()
     {
         @ob_clean();
     

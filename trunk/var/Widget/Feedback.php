@@ -40,14 +40,15 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getClientIp(),
+            'ownerId'   =>  $this->_content->author->uid,
             'mode'      =>  'comment',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
         if ($parentId = $this->request->parent) {
-            if (($parent = $this->db->fetchRow($this->db->select('table.comments', '`coid`')
-            ->where('`coid` = ?', $parentId))) && $this->content->cid == $parent['cid']) {
+            if (($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
+            ->where('coid = ?', $parentId))) && $this->content->cid == $parent['cid']) {
                 $comment['parent'] = $parentId;
             } else {
                 throw new Typecho_Widget_Exception(_t('父级评论不存在'));
@@ -70,10 +71,6 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
-
-        $comment['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('author', $this->user->screenName))));
-        $comment['mail'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('mail', $this->user->mail))));
-        $comment['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->getParameter('url', $this->user->url))));
         
         /** 修正用户提交的url */
         if (!empty($comment['url'])) {
@@ -87,17 +84,29 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
+            /** Anti-XSS */
+            $comment['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->author)));
+            $comment['mail'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->mail)));
+            $comment['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->url)));
+        
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
-            $this->response->setCookie('author', $comment['author'], $expire);
-            $this->response->setCookie('mail', $comment['mail'], $expire);
-            $this->response->setCookie('url', $comment['url'], $expire);
+            $this->response->setCookie('__typecho_remember_author', $comment['author'], $expire);
+            $this->response->setCookie('__typecho_remember_mail', $comment['mail'], $expire);
+            $this->response->setCookie('__typecho_remember_url', $comment['url'], $expire);
             
         
             if ($error = $validator->run($comment)) {
                 /** 记录文字 */
-                $this->response->setCookie('text', $comment['text']);
+                $this->response->setCookie('__typecho_remember_text', $comment['text']);
                 throw new Typecho_Widget_Exception(implode("\n", $error));
             }
+        } else {
+            $comment['author'] = $this->user->screenName;
+            $comment['mail'] = $this->user->mail;
+            $comment['url'] = $this->user->url;
+        
+            /** 记录登录用户的id */
+            $comment['authorId'] = $this->user->uid;
         }
         
         /** 生成过滤器 */
@@ -123,6 +132,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $this->request->getReferer(),
             'ip'        =>  $this->request->getClientIp(),
+            'ownerId'   =>  $this->_content->author->uid,
             'mode'      =>  'trackback',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );

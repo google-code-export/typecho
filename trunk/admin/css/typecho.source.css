@@ -312,6 +312,7 @@ button {
 .message a:link, .message a:visited {
     color: #333;
     text-decoration: underline;
+	line-height: 20px;
 }
 
 .error {
@@ -334,6 +335,7 @@ button {
 
 /** 增加顶部消息样式 by 70 */
 .popup {
+	margin-top: 30px;
 	margin-bottom: -10px;
 }
 
@@ -1435,7 +1437,7 @@ ul.typecho-post-option li ul {
 }
 
 ul.typecho-post-option li ul.related {
-	margin-left: 20px;
+	margin: 10px 0 0 20px;
 }
 
 ul.typecho-post-option li ul li {
@@ -1451,7 +1453,7 @@ ul.typecho-post-option li ul li {
 ul.typecho-post-option li ul.related li {
 	background: none;
 	list-style-type: disc;
-	padding: 4px 0;
+	padding: 0;
 	margin: 0;
 }
 

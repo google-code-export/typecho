@@ -199,7 +199,8 @@ var typechoTableListener = function (selector) {
         
         /** 监听click事件 */
         el.getElements('tbody tr td input[type=checkbox]').each(function(item) {
-            $(item).addEvent('click', function() {
+            $(item).addEvent('click', function(event) {
+                event.stopPropagation();
                 if ($(this).getProperty('checked')) {
                     $(this).getParent('tr').addClass('checked');
                 } else {

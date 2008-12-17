@@ -22,13 +22,15 @@ CREATE TABLE `typecho_comments` (
   `cid` int(10) unsigned default '0' COMMENT 'post表主键,关联字段',
   `created` int(10) unsigned default '0' COMMENT '评论生成时的GMT unix时间戳',
   `author` varchar(200) default NULL COMMENT '评论作者',
+  `authorId` int(10) unsigned default '0' COMMENT '评论所属用户id',
+  `ownerId` int(10) unsigned default '0' COMMENT '评论所属内容作者id',
   `mail` varchar(200) default NULL COMMENT '评论者邮件',
   `url` varchar(200) default NULL COMMENT '评论者网址',
   `ip` varchar(64) default NULL COMMENT '评论者ip地址',
   `agent` varchar(200) default NULL COMMENT '评论者客户端',
   `text` text COMMENT '评论文字',
-  `mode` enum('pingback','trackback','comment') default 'comment' COMMENT '评论类型',
-  `status` enum('approved','spam','waiting') default 'approved' COMMENT '评论状态',
+  `mode` varchar(16) default 'comment' COMMENT '评论类型',
+  `status` varchar(16) default 'approved' COMMENT '评论状态',
   `parent` int(10) unsigned default '0' COMMENT '父级评论',
   PRIMARY KEY  (`coid`),
   KEY `cid` (`cid`),
@@ -50,9 +52,9 @@ CREATE TABLE `typecho_contents` (
   `modified` int(10) unsigned default '0' COMMENT '内容更改时的GMT unix时间戳',
   `text` text COMMENT '内容文字',
   `meta` int(10) unsigned default '0',
-  `author` int(10) unsigned default '0' COMMENT '内容所属用户id',
+  `authorId` int(10) unsigned default '0' COMMENT '内容所属用户id',
   `template` varchar(32) default NULL COMMENT '内容使用的模板',
-  `type` varchar(32) default NULL COMMENT '内容类别',
+  `type` varchar(16) default 'post' COMMENT '内容类别',
   `password` varchar(32) default NULL COMMENT '受保护内容,此字段对应内容保护密码',
   `commentsNum` int(10) unsigned default '0' COMMENT '内容所属评论数,冗余字段',
   `allowComment` char(1) default '0' COMMENT '是否允许评论',
@@ -60,8 +62,7 @@ CREATE TABLE `typecho_contents` (
   `allowFeed` char(1) default '0' COMMENT '允许出现在聚合中',
   PRIMARY KEY  (`cid`),
   UNIQUE KEY `slug` (`slug`),
-  KEY `created` (`created`),
-  KEY `author` (`author`)
+  KEY `created` (`created`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -123,7 +124,7 @@ CREATE TABLE `typecho_users` (
   `created` int(10) unsigned default '0' COMMENT '用户注册时的GMT unix时间戳',
   `activated` int(10) unsigned default '0' COMMENT '最后活动时间',
   `logged` int(10) unsigned default '0' COMMENT '上次登录最后活跃时间',
-  `group` enum('administrator','editor','contributor','subscriber','visitor') default 'visitor' COMMENT '用户组',
+  `group` varchar(16) default 'visitor' COMMENT '用户组',
   `authCode` varchar(64) default NULL COMMENT '登录验证码',
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),

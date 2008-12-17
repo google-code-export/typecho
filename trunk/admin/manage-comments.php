@@ -12,6 +12,10 @@ include 'menu.php';
                     <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('所有'); ?></a></li>
                     <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
                     <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?></a></li>
+                    <?php if($user->pass('contributor', true)): ?>
+                        <li class="right<?php if('yes' == Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=yes"><?php _e('所有'); ?></a></li>
+                        <li class="right<?php if('yes' != Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=no"><?php _e('我的'); ?></a></li>
+                    <?php endif; ?>
                 </ul>
             
                 <div class="typecho-list-operate">

@@ -543,8 +543,8 @@ class Typecho_Common
         /** 去掉不需要的 */
         $string = preg_replace("/\<p\>\s*\<h([1-6])\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1>\\2</h\\1>\n", $string);
         $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>(.*)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1>\\2</\\1>\n", $string);
-        $string = preg_replace("/\<\/(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>\s*\<br\s?\/?\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>/is",
-        "</\\1>\n<\\2>", $string);
+        $string = preg_replace("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>\s*\<br\s?\/?\>\s*\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>/is",
+        "<\\1\\2>\n<\\3\\4>", $string);
 
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }

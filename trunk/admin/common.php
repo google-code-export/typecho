@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/../config.inc.php';
 
 /** 注册一个初始化插件 */
-Typecho_Plugin::factory('admin/header.php')->begin();
+Typecho_Plugin::factory('admin/common.php')->begin();
 
 Typecho_Widget::widget('Widget_User')->to($user);
 Typecho_Widget::widget('Widget_Notice')->to($notice);
