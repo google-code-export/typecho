@@ -69,4 +69,12 @@ class Helper_Plugin implements Typecho_Plugin_Interface
     {
         
     }
+    
+    public static function addAction()
+    {
+    }
+    
+    public static function removeAction()
+    {
+    }
 }

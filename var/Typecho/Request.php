@@ -34,17 +34,24 @@ class Typecho_Request
     public static function getParameter($key, $default = NULL)
     {
         switch (true) {
-            case !empty(self::$_params[$key]):
-                return self::$_params[$key];
-            case !empty($_GET[$key]):
-                return $_GET[$key];
-            case !empty($_POST[$key]):
-                return $_POST[$key];
-            case !empty($_COOKIE[$key]):
-                return $_COOKIE[$key];
+            case isset(self::$_params[$key]):
+                $value = self::$_params[$key];
+                break;
+            case isset($_GET[$key]):
+                $value = $_GET[$key];
+                break;
+            case isset($_POST[$key]):
+                $value = $_POST[$key];
+                break;
+            case isset($_COOKIE[$key]):
+                $value = $_COOKIE[$key];
+                break;
             default:
-                return $default;
+                $value = NULL;
+                break;
         }
+        
+        return strlen($value) > 0 ? $value : $default;
     }
     
     /**
@@ -106,6 +113,42 @@ class Typecho_Request
         }
 
         return $parameters;
+    }
+    
+    /**
+     * 根据当前uri构造指定参数的uri
+     * 
+     * @access public
+     * @param mixed $parameter 指定的参数
+     * @return string
+     */
+    public static function uri($parameter = NULL)
+    {
+        /** 初始化地址 */
+        list($scheme) = explode('/', $_SERVER["SERVER_PROTOCOL"]);
+        $requestUri = strtolower($scheme) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $parts = parse_url($requestUri);
+    
+        /** 初始化参数 */
+        if (is_string($parameter)) {
+            parse_str($parameter, $args);
+        } else if (is_array($parameter)) {
+            $args = $parameter;
+        } else {
+            return $requestUri;
+        }
+        
+        /** 构造query */
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $currentArgs);
+            $args = array_merge($currentArgs, $args);
+        }
+        $parts['query'] = http_build_query($args);
+        
+        /** 返回地址 */
+        return $parts['scheme'] . '://' 
+        . (isset($parts['user']) ? $parts['user'] . (isset($parts['pass']) ? ':' . $parts['pass'] : NULL) : NULL)
+        . $parts['host'] . $parts['path'] . (isset($parts['query']) ? '?' . $parts['query'] : NULL);
     }
 
     /**

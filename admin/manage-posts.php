@@ -13,8 +13,8 @@ include 'menu.php';
                     <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
                     <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
                     <?php if($user->pass('editor', true)): ?>
-                        <li class="right<?php if('yes' == Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=yes"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if('yes' != Typecho_Request::getParameter('seeAll')): ?> current<?php endif; ?>"><a href="?seeAll=no"><?php _e('我的'); ?></a></li>
+                        <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="right<?php if('on' != Typecho_Request::getParameter('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
                 </ul>
                 <div class="typecho-list-operate">

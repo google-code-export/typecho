@@ -144,7 +144,7 @@ class Widget_Menu extends Typecho_Widget
         $this->_childMenu = $this->plugin()->childMenu($this->_childMenu);
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-        $this->_currentUrl = 'http://' . $host . $_SERVER['REQUEST_URI'];
+        $this->_currentUrl = $this->request->uri();
         $childMenu = $this->_childMenu;
         $match = 0;
         $adminUrl = $this->options->siteUrl;

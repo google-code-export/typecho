@@ -19,14 +19,6 @@
 class Widget_Users_Admin extends Widget_Abstract_Users
 {
     /**
-     * 用于过滤的条件
-     * 
-     * @access private
-     * @var array
-     */
-    private $_filterQuery = array();
-    
-    /**
      * 分页计算对象
      * 
      * @access private
@@ -87,7 +79,6 @@ class Widget_Users_Admin extends Widget_Abstract_Users
             $select->where('name LIKE ? OR screenName LIKE ?',
             '%' . Typecho_Common::filterSearchQuery($keywords) . '%',
             '%' . Typecho_Common::filterSearchQuery($keywords) . '%');
-            $this->_filterQuery['keywords'] = $keywords;
         }
     
         $this->_countSql = clone $select;
@@ -106,8 +97,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      */
     public function pageNav()
     {
-        $query = Typecho_Common::url('manage-users.php?' . http_build_query($this->_filterQuery) . '&page={page}',
-        $this->options->adminUrl);
+        $query = $this->request->uri('page={page}');;
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
