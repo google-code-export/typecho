@@ -53,6 +53,14 @@ abstract class Typecho_Widget_Helper_PageNavigator
      * @var string
      */
     protected $_pageTemplate;
+    
+    /**
+     * 页面占位符
+     * 
+     * @access protected
+     * @var mixed
+     */
+    protected $_pageHolder = array('{page}', '%7Bpage%7D');
 
     /**
      * 构造函数,初始化页面基本信息

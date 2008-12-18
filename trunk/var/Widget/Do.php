@@ -25,10 +25,15 @@ class Widget_Do extends Typecho_Widget
         /** 验证路由地址 **/
         $widget = trim($this->request->widget, '/');
         $objectName = str_replace('/', '_', $widget);
-        $widgetName = 'plugin' == Typecho_Router::$current ? $objectName : 'Widget_' . $objectName;
-        $fileName = ('plugin' == Typecho_Router::$current ? $widget : 'Widget/' . $widget) . '.php';
-
-        if (Typecho_Common::isAvailableClass($widgetName)) {
+        
+        /** 判断是否为plugin */
+        $isPlugin = Typecho_Common::isAvailableClass($objectName) && 
+        in_array($widgetName, $this->widget('Widget_Options')->actionTable);
+        
+        $widgetName = $isPlugin ? $objectName : 'Widget_' . $objectName;
+        $fileName = ($isPlugin ? $widget : 'Widget/' . $widget) . '.php';
+        
+        if ($isPlugin || Typecho_Common::isAvailableClass($widgetName)) {
             require_once $fileName;
             
             if (class_exists($widgetName)) {

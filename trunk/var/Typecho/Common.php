@@ -177,14 +177,24 @@ class Typecho_Common
      * 
      * @access public
      * @param string $className 类名
+     * @param string $path 指定的路径名称
      * @return boolean
      */
-    public static function isAvailableClass($className)
+    public static function isAvailableClass($className, $path = NULL)
     {
         /** 获取所有include目录 */
-        $dirs = false === self::$_cachedIncludePath ? explode(PATH_SEPARATOR, get_include_path())
+        $dirs = false === self::$_cachedIncludePath ? array_map('realpath', explode(PATH_SEPARATOR, get_include_path()))
         : self::$_cachedIncludePath;
         $file = str_replace('_', '/', $className) . '.php';
+        
+        if (!empty($path)) {
+            $path = realpath($path);
+            if (in_array($path, $dirs)) {
+                $dirs = array($path);
+            } else {
+                return false;
+            }
+        }
 
         foreach ($dirs as $dir) {
             if (!empty($dir)) {
@@ -357,7 +367,7 @@ class Typecho_Common
      */
     public static function filterSearchQuery($query)
     {
-        return str_replace(array('%', '?', '*', '/'), '', $query);
+        return str_replace(array('%', '?', '*', '/', '{', '}'), '', $query);
     }
     
     /**
@@ -370,7 +380,7 @@ class Typecho_Common
      * @return string
      */
     public static function removeXSS($val)
-    { 
+    {
        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed 
        // this prevents some character re-spacing such as <java\0script> 
        // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs 

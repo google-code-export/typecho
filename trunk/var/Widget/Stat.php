@@ -91,6 +91,20 @@ class Widget_Stat extends Typecho_Widget
     }
     
     /**
+     * 获取当前用户显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___myPublishedCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'approved')
+                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+    }
+    
+    /**
      * 获取分类数目
      * 
      * @access protected

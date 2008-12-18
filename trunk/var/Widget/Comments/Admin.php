@@ -19,14 +19,6 @@
 class Widget_Comments_Admin extends Widget_Abstract_Comments
 {
     /**
-     * 用于过滤的条件
-     * 
-     * @access private
-     * @var array
-     */
-    private $_filterQuery = array();
-    
-    /**
      * 分页计算对象
      * 
      * @access private
@@ -65,18 +57,17 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {
             $select->where('table.comments.text LIKE ?', '%' . Typecho_Common::filterSearchQuery($keywords) . '%');
-            $this->_filterQuery['keywords'] = $keywords;
         }
         
         /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */
         if (!$this->user->pass('contributor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
         } else {
-            if ('yes' == $this->request->seeAll) {
-                $this->response->setCookie('seeAll', 'yes');
+            if ('on' == $this->request->__typecho_all_comments) {
+                $this->response->setCookie('__typecho_all_comments', 'on');
             } else {
-                if ('no' == $this->request->seeAll) {
-                    $this->response->setCookie('seeAll', 'no');
+                if ('off' == $this->request->__typecho_all_comments) {
+                    $this->response->setCookie('__typecho_all_comments', 'off');
                 }
                 $select->where('table.comments.ownerId = ?', $this->user->uid);
             }
@@ -104,7 +95,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
      */
     public function pageNav()
     {
-        $query = Typecho_Common::url('manage-comments.php?' . http_build_query($this->_filterQuery) . '&page={page}', $this->options->adminUrl);
+        $query = $this->request->uri('page={page}');
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,

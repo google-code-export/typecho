@@ -182,7 +182,7 @@ class Widget_User extends Typecho_Widget
                 return false;
             } else {
                 $this->response->redirect($this->widget('Widget_Options')->loginUrl
-                . '?referer=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), false);
+                . '?referer=' . urlencode($this->request->uri()), false);
             }
         }
 
