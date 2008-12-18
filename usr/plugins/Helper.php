@@ -8,7 +8,7 @@
  * @version 1.0.0
  * @link http://typecho.org
  */
-class Helper_Plugin implements Typecho_Plugin_Interface
+class Helper implements Typecho_Plugin_Interface
 {
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
@@ -75,6 +75,18 @@ class Helper_Plugin implements Typecho_Plugin_Interface
     }
     
     public static function removeAction()
+    {
+    }
+    
+    public static function addPanel()
+    {
+    }
+    
+    public static function removePanel()
+    {
+    }
+    
+    public static function panelUrl()
     {
     }
 }
