@@ -1,25 +1,33 @@
 
 
-    <div class="grid_5" id="sidebar">
-		<div class="widget_style">
+    <div class="grid_4" id="sidebar">
+    
+	    <div class="widget">
             <h2>Latest Post</h2>
             <ul>
                 <?php $this->widget('Widget_Contents_Post_Recent')
                 ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
             </ul>
-		</div>
+	    </div>
+    
+    
+	    <div id="search" class="widget">
+	        <form method="post" action="">
+            	<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="Search" /></div>
+	        </form>
+	    </div>
 
-		<div class="widget_style">
+	    <div class="widget">
             <h2>Recent Comments</h2>
             <ul>
             <?php $this->widget('Widget_Comments_Recent')->to($comments); ?>
             <?php while($comments->next()): ?>
-                <li><?php $comments->author(false); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(10, '[...]'); ?></a></li>
+                <li><?php $comments->author(false); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(70, '...'); ?></a></li>
             <?php endwhile; ?>
             </ul>
-		</div>
+	    </div>
 
-        <div class="widget_style">
+        <div class="widget">
             <h2>Categories</h2>
             <ul>
                 <?php $this->widget('Widget_Metas_Category_List')
@@ -27,7 +35,7 @@
             </ul>
 		</div>
 
-        <div class="widget_style">
+        <div class="widget">
             <h2>Archives</h2>
             <ul>
                 <?php $this->widget('Widget_Contents_Post_Date', 'type=month&format=F Y')
@@ -35,7 +43,7 @@
             </ul>
 		</div>
 
-		<div class="widget_style">
+		<div class="widget">
             <h2>Meta</h2>
             <ul>
                 <?php if($this->user->hasLogin()): ?>

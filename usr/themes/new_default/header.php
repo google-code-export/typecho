@@ -42,21 +42,16 @@
 
 <body>
 <div class="container_16 clearfix">
-    <div id="header" class="grid_16">
-		<ul class="clearfix" id="nav_menu">
-			<li><a href="<?php $this->options->siteUrl(); ?>">Home</a></li>
-				<?php $this->widget('Widget_Contents_Page_List')
-                ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-		</ul>
-
-		<div id="logo">
-	        <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
-			<span><?php $this->options->description() ?></span>
-		</div>
-
-		<div id="search">
-            <form method="post" action="">
-            	<div><input type="text" name="s" class="text" size="32" /> <input type="submit" class="submit" value="Search" /></div>
-            </form>
-		</div>
+    <div id="header" class="grid_14">
+	<div id="logo">
+	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
+	    	<p class="description"><?php $this->options->description() ?></p>
+    	</div>
+	<ul class="clearfix" id="nav_menu">
+	    <li><a href="<?php $this->options->siteUrl(); ?>">Home</a></li>
+	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
+	    <li><a href="#">Documents</a></li>
+	    <li><a href="#">Forum</a></li>
+	    <li><a href="#">Download</a></li>
+	</ul>
     </div><!-- end #header -->
