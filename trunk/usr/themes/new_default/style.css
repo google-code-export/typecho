@@ -1,9 +1,9 @@
 /*
- * Typecho 默认模板
+ * Typecho Default Theme
  *
  * @author	fen1211@gmail.com
  * @link	http://typecho.net/
- * @update	2008-12-06 20:30
+ * @update	2008-12-18 21:00
  */
 
 
@@ -14,12 +14,12 @@
  * gobal settings
  */
 body {
-background: #fff url(images/body_bg.png) repeat-x;
-font-family: "trebuchet ms", geneva, sans-serif;
-line-height: 1.6;
+background: #fff;
+font-family: "Lucida Sans Unicode", Lucida Grande, sans-serif;
+line-height: 1.62;
 }
 
-input, textarea { font-family: "trebuchet ms", geneva, sans-serif; font-size: 100%; }
+input, textarea { font-family: "Lucida Sans Unicode", Lucida Grande, sans-serif; font-size: 100%; }
 
 a {
 color: #bd6800;
@@ -27,7 +27,7 @@ text-decoration: none;
 }
 a:hover {
 color: #333;
-text-decoration: none;
+text-decoration: underline;
 }
 
 p img {
@@ -36,79 +36,85 @@ padding: 2px;
 }
 
 /*
+ * !!! reset container_16 width=840px, and there are 14 columns !!!
+ */
+.container_16 { width: 840px; }
+
+/*
  * header
  */
 
 #header {
 color: #666;
-margin-bottom: 15px;
-height: 125px;
+margin: 0 10px 15px;
+height: 115px;
 position: relative;
+border-bottom: 1px dotted #EAF2CE;
 }
 
 #logo {
 position: absolute;
-top: 55px;
+top: 22px;
 left: 0;
+background: url(images/logo_bg.png) no-repeat right top;
+padding-right: 20px;
 }
 
 #logo h1 {
+font-size: 36px;
 margin-bottom: 0;
 }
 #logo h1 a {
 color: #222;
 }
 #logo h1 a:hover {
+text-decoration: none;
 }
+
+p.description { margin: -5px 0 0; text-align: right; }
 
 /* header nav menu */
 ul#nav_menu {
 list-style: none;
 position: absolute;
-left: 0;
-top: 0;
-margin: 0;
+right: 0;
+top: 50px;
+overflow: hidden;
 }
 ul#nav_menu li {
-float: left;
-height: 30px;
-line-height: 30px;
-margin: 0;
+display: inline;
+margin: 0 5px 0 0;
+padding-left: 8px;
+border-left: 1px dotted #EAF2CE;
+margin-left: -1px;
 }
 ul#nav_menu li a {
-color: #fff;
-display: block;
-float: left;
-padding: 0 30px;
-text-align: center;
+color: #333;
+font-weight: bold;
 }
 ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
-background: #404040;
 text-decoration: underline;
-}
-
-#search {
-position: absolute;
-right: 0;
-top: 70px;
+color: #BD6800;
 }
 
 /*
  * content
  */
 #content {
-border-top: 1px solid #eaf2ce;
+/*border-top: 1px solid #eaf2ce;*/
 }
 
 .post {
-border-bottom: 1px solid #eaf2ce;
-padding-top: 15px;
+/*border-bottom: 1px solid #eaf2ce;*/
+margin-bottom: 30px;
 }
+.post a { font-weight: bold; }
+
 h2.entry_title {
 margin-bottom: 0;
-font-size: 18px;
+/*font-size: 18px;*/
 color: #BD6800;
 }
 
@@ -118,21 +124,22 @@ margin-bottom: 15px;
 }
 
 #post_extra {
-background: #F3FADE;
+background: #EAF2CE;
 padding: 5px 10px;
 }
 
 /* pages nav */
-.pages {
-margin-top: 20px;
+ol.pages {
+margin: 20px 0 0 0;
 color: #666;
+list-style: none;
 }
 
-.pages a,.pages span {
-display: block;
-float: left;
-border-right: 1px solid #e5ead1;
-padding: 0 8px;
+ol.pages li {
+margin: 0 5px 0 0;
+padding: 0 8px 0 0;
+border-right: 1px solid #EAF2CE;
+display: inline;
 }
 
 /*
@@ -146,10 +153,12 @@ margin: 0;
 list-style: none;
 }
 ol#comment_list li {
-margin: 0 0 15px;
+margin: 0 0 25px;
 }
 .comment_data {
 margin-bottom: 5px;
+padding-bottom: 5px;
+border-bottom: 1px dotted #EAF2CE;
 color: #777;
 }
 .comment_data .author {
@@ -157,23 +166,19 @@ font-weight: bold;
 color: #333;
 }
 .comment_body {
-background: #F3F9DF;
-border-bottom: 1px solid #E9F4BF;
-padding: 15px 15px 0;
 }
 
 img.avatar {
 background: #fff;
 border: 1px solid #E9F4BF;
 padding: 2px;
-float: right;
+float: left;
 width: 32px;
 height: 32px;
-margin: 0 0 5px 5px;
+margin: 0 10px 0 0;
 }
 
 #comment_form {
-margin-left: 15px;
 }
 #comment_form label {
 margin-left: 15px;
@@ -192,26 +197,28 @@ width: 90%;
  * sidebar
  */
 #sidebar {
-background: #f3fade;
+/*background: #f3fade;*/
 }
-.widget_style {
-padding: 20px 25px;
+.widget {
+/*padding: 20px 25px;
 border-bottom: 1px solid #e5ead1;
-border-top: 1px solid #fff;
+border-top: 1px solid #fff;*/
+margin-bottom: 25px;
 }
-.widget_style h2 {
-color: #333;
+.widget h2 {
 font-size: 16px;
-margin-bottom: 10px;
+margin-bottom: 0;
 }
-.widget_style ul {
+.widget ul {
 margin: 0;
 list-style-type: none;
 }
-.widget_style ul li {
+.widget ul li {
 margin: 0;
-padding-left: 12px;
-background: url(images/widget_style_li.png) 0 5px no-repeat;
+border-bottom: 1px dotted #eaf2ce;
+padding: 3px 0;
+/*padding-left: 12px;
+background: url(images/widget_style_li.png) 0 5px no-repeat;*/
 }
 
 /* 
