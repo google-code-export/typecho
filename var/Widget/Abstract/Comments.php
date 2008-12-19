@@ -94,7 +94,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function select()
     {
         return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
-        'table.comments.agent', 'table.comments.text', 'table.comments.mode', 'table.comments.status', 'table.comments.parent', array('table.comments.created' => 'date'))
+        'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', array('table.comments.created' => 'date'))
         ->from('table.comments');
     }
     
@@ -119,7 +119,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             'ip'        =>  empty($comment['ip']) ? $this->request->getClientIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
-            'mode'      =>  empty($comment['mode']) ? 'comment' : $comment['mode'],
+            'type'      =>  empty($comment['type']) ? 'comment' : $comment['type'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
             'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
         );

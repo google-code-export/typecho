@@ -53,7 +53,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 获取文章内容 */
         if (($this->request->cid && 'delete' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
-            ->where('table.contents.type = ? OR table.contents.type = ? OR table.contents.type = ?', 'post', 'draft', 'waiting')
+            ->where('table.contents.type = ?', 'post')
             ->where('table.contents.cid = ?', $this->request->cid)
             ->limit(1), array($this, 'push'));
             
@@ -290,9 +290,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function insertPost()
     {
         $contents = $this->request->from('password', 'created', 'text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
-        (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
+        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
+        $contents['type'] = 'post';
+        $contents['status'] = $this->request->draft ? 'draft' :
+        (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
+        
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
@@ -305,7 +307,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         /** 提交数据的过滤 */
         $contents = $this->plugin()->filter($contents, 'insert');
-
         $insertId = $this->insert($contents);
         
         if ($insertId > 0) {
@@ -320,26 +321,25 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
         
         /** 文章提示信息 */
-        if ('post' == $contents['type']) {
+        if ('publish' == $contents['status']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
             _t('文章 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        } else if ('draft' == $contents['type']) {
+        } else if ('draft' == $contents['status']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
             _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        } else if ('waiting' == $contents['type']) {
+        } else if ('waiting' == $contents['status']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
             _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
         }
 
         /** 跳转页面 */
-        if ('draft' == $contents['type']) {
+        if ('draft' == $contents['status']) {
             $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php' . 
-            ('post' != $contents['type'] ? '?status=' . $contents['type'] : ''), $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
     }
     
@@ -353,8 +353,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         $contents = $this->request->from('password', 'created', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
-        $contents['type'] = ('draft' == $this->request->type) ? 'draft' :
-        (($this->user->pass('editor', true) && 'post' == $this->request->type) ? 'post' : 'waiting');
+        $contents['type'] = 'post';
+        $contents['status'] = $this->request->draft ? 'draft' :
+        (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
+        
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
@@ -367,7 +369,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         /** 提交数据的过滤 */
         $contents = $this->plugin()->filter($contents, 'update');
-    
         $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
 
         if ($updateRows > 0) {
@@ -383,25 +384,25 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
 
         /** 文章提示信息 */
-        if ('post' == $this->type) {
+        if ('publish' == $contents['status']) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
             _t('文章 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
             : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else if ('draft' == $contents['type']) {
+        } else if ('draft' == $contents['status']) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
             _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else if ('waiting' == $contents['type']) {
+        } else if ('waiting' == $contents['status']) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
             _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
         }
 
         /** 跳转页面 */
-        if ('draft' == $contents['type']) {
+        if ('draft' == $contents['status']) {
             $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
     }
     

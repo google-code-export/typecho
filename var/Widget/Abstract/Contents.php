@@ -42,7 +42,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
     
     /**
-     * 输出词义化日期
+     * 获取词义化日期
      * 
      * @access protected
      * @return void
@@ -50,6 +50,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
     protected function ___dateWord()
     {
         return Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+    }
+    
+    /**
+     * 获取文章摘要
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___excerpt()
+    {
+        return Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...');
     }
 
     /**
@@ -61,8 +72,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function select()
     {
         return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.authorId',
-        'table.contents.modified', 'table.contents.type', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta', 'table.contents.template',
-        'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed')
+        'table.contents.modified', 'table.contents.type', 'table.contents.status', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta',
+        'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed')
         ->from('table.contents');
     }
     
@@ -81,10 +92,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
-            'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
+            'meta'          =>  is_numeric($content['meta']) ? $content['meta'] : '0',
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
+            'status'        =>  empty($content['status']) ? 'publish' : $content['status'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'commentsNum'   =>  0,
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
@@ -122,10 +134,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 构建更新结构 */
         $preUpdateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'meta'          =>  is_numeric($content['meta']) ? '0' : $content['meta'],
+            'meta'          =>  is_numeric($content['meta']) ? $content['meta'] : '0',
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
+            'status'        =>  empty($content['status']) ? 'publish' : $content['status'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,

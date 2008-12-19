@@ -109,6 +109,7 @@ var typechoOpenLink = function (adminPattern, doPattern) {
     });
 }
 
+/** 页面滚动 */
 var typechoScroll = function (sel, parentSel) {
     var firstError = $(document).getElement(sel);
     
@@ -142,6 +143,18 @@ var typechoSubmit = function (formSel, inputSel, op) {
         input.set('value', op);
         form.submit();
     }
+}
+
+/** 提交按钮自动失效,防止重复提交 */
+var typechoAutoDisableSubmit = function () {
+
+    $(document).getElements('input[type=submit]').addEvent('click', function () {
+            $(this).setProperty('disabled', true);
+    });
+    
+    $(document).getElements('button[type=submit]').addEvent('click', function () {
+            $(this).setProperty('disabled', true);
+    });
 }
 
 /** 操作按钮 */

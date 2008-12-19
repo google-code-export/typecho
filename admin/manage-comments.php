@@ -9,7 +9,7 @@ include 'menu.php';
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('所有'); ?></a></li>
+                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('所有'); ?></a></li>
                     <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
                     <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?></a></li>
                     <?php if($user->pass('contributor', true)): ?>

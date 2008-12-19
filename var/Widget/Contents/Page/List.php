@@ -29,6 +29,7 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
     public function execute()
     {
         $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'page')
+        ->where('table.contents.status = ?', 'publish')
         ->order('table.contents.meta', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

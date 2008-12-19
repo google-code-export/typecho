@@ -41,7 +41,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getClientIp(),
             'ownerId'   =>  $this->_content->author->uid,
-            'mode'      =>  'comment',
+            'type'      =>  'comment',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
@@ -93,13 +93,6 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $this->response->setCookie('__typecho_remember_author', $comment['author'], $expire);
             $this->response->setCookie('__typecho_remember_mail', $comment['mail'], $expire);
             $this->response->setCookie('__typecho_remember_url', $comment['url'], $expire);
-            
-        
-            if ($error = $validator->run($comment)) {
-                /** 记录文字 */
-                $this->response->setCookie('__typecho_remember_text', $comment['text']);
-                throw new Typecho_Widget_Exception(implode("\n", $error));
-            }
         } else {
             $comment['author'] = $this->user->screenName;
             $comment['mail'] = $this->user->mail;
@@ -107,6 +100,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
             /** 记录登录用户的id */
             $comment['authorId'] = $this->user->uid;
+        }
+        
+        if ($error = $validator->run($comment)) {
+            /** 记录文字 */
+            $this->response->setCookie('__typecho_remember_text', $comment['text']);
+            throw new Typecho_Widget_Exception(implode("\n", $error));
         }
         
         /** 生成过滤器 */
@@ -133,7 +132,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'agent'     =>  $this->request->getReferer(),
             'ip'        =>  $this->request->getClientIp(),
             'ownerId'   =>  $this->_content->author->uid,
-            'mode'      =>  'trackback',
+            'type'      =>  'trackback',
             'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         

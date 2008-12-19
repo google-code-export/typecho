@@ -28,17 +28,17 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
     public function execute()
     {
         /** 构建基础查询 */
-        $select = $this->select();
+        $select = $this->select()->where('table.contents.type = ?', 'page');
         
         /** 过滤状态 */
         $status = $this->request->status;
         switch ($status) {
             case 'draft':
-                $select->where('table.contents.type = ?', 'page_draft');
+                $select->where('table.contents.status = ?', 'draft');
                 break;
-            case 'published':
+            case 'publish':
             default:
-                $select->where('table.contents.type = ?', 'page');
+                $select->where('table.contents.status = ?', 'publish');
                 break;
         }
         

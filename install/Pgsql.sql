@@ -14,7 +14,7 @@ CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_
   "ip" VARCHAR(64) NULL DEFAULT NULL,
   "agent" VARCHAR(200) NULL DEFAULT NULL,
   "text" TEXT NULL DEFAULT NULL,
-  "mode" VARCHAR(16) NULL DEFAULT 'comment',
+  "type" VARCHAR(16) NULL DEFAULT 'comment',
   "status" VARCHAR(16) NULL DEFAULT 'approved',
   "parent" INT NULL DEFAULT '0',
   PRIMARY KEY ("coid")
@@ -41,6 +41,7 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "authorId" INT NULL DEFAULT '0',
   "template" VARCHAR(32) NULL DEFAULT NULL,
   "type" VARCHAR(16) NULL DEFAULT 'post',
+  "status" VARCHAR(16) NULL DEFAULT 'publish',
   "password" VARCHAR(32) NULL DEFAULT NULL,
   "commentsNum" INT NULL DEFAULT '0',
   "allowComment" CHAR(1) NULL DEFAULT '0',

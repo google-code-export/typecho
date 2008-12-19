@@ -11,6 +11,7 @@
             //增加淡出效果
             setTimeout(typechoMessage, 5000);
             typechoScroll('.typecho-option .error', '.typecho-option');
+            typechoAutoDisableSubmit();
             typechoOpenLink(/^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/,
             /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>[_a-zA-Z0-9\/]+\.(do|plugin).*$/);
             typechoTableListener('.typecho-list-table');

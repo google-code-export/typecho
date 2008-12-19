@@ -114,6 +114,22 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_feedType;
     
     /**
+     * 归档标题
+     * 
+     * @access private
+     * @var array
+     */
+    private $_archiveTitle = array();
+    
+    /**
+     * 归档类型
+     * 
+     * @access private
+     * @var string
+     */
+    private $_archiveType;
+    
+    /**
      * 构造函数
      * 
      * @access public
@@ -203,7 +219,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $hasPushed = false;
 
         /** 定时发布功能 */
-        $select = $this->select()->where('table.contents.created < ?', $this->options->gmtTime);
+        $select = $this->select()->where('table.contents.status = ?', 'publish')
+        ->where('table.contents.created < ?', $this->options->gmtTime);
         
         /** 初始化其它变量 */
         $this->_feedUrl = $this->options->feedUrl;
@@ -233,36 +250,36 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
                 
                 $select->where('table.contents.type = ?', Typecho_Router::$current)->limit(1);
-                $post = $this->db->fetchRow($select, array($this, 'push'));
+                $this->db->fetchRow($select, array($this, 'push'));
 
-                if ($post && $post['category'] == $this->request->getParameter('category', $post['category'])
-                && $post['year'] == $this->request->getParameter('year', $post['year'])
-                && $post['month'] == $this->request->getParameter('month', $post['month'])
-                && $post['day'] == $this->request->getParameter('day', $post['day'])) {
+                if ($this->have()) {
                     /** 设置关键词 */
                     $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+                    
+                    /** 设置描述 */
+                    $this->_description = $this->excerpt;
                     
                     /** 设置模板 */
                     if (!empty($post['template'])) {
                         /** 应用自定义模板 */
-                        $this->_themeFile = $post['template'];
+                        $this->_themeFile = $this->template;
                     }
                     
                     /** 设置头部feed */
                     /** RSS 2.0 */
-                    $this->_feedUrl = $post['feedUrl'];
+                    $this->_feedUrl = $this->feedUrl;
                     
                     /** RSS 1.0 */
-                    $this->_feedRssUrl = $post['feedRssUrl'];
+                    $this->_feedRssUrl = $this->feedRssUrl;
                     
                     /** ATOM 1.0 */
-                    $this->_feedAtomUrl = $post['feedAtomUrl'];
+                    $this->_feedAtomUrl = $this->feedAtomUrl;
                     
                     /** 设置标题 */
-                    $this->options->archiveTitle = $post['title'];
+                    $this->_archiveTitle[] = $this->title;
                     
                     /** 设置归档类型 */
-                    $this->options->archiveType = Typecho_Router::$current;
+                    $this->_archiveType = 'single';
                     
                     /** 设置403头 */
                     if ($post['hidden']) {
@@ -315,10 +332,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_feedAtomUrl = $category['feedAtomUrl'];
                 
                 /** 设置标题 */
-                $this->options->archiveTitle = $category['name'];
+                $this->_archiveTitle[] = $category['name'];
                 
                 /** 设置归档类型 */
-                $this->options->archiveType = 'category';
+                $this->_archiveType = 'category';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -362,10 +379,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_feedAtomUrl = $tag['feedAtomUrl'];
                 
                 /** 设置标题 */
-                $this->options->archiveTitle = $tag['name'];
+                $this->_archiveTitle[] = $tag['name'];
                 
                 /** 设置归档类型 */
-                $this->options->archiveType = 'tag';
+                $this->_archiveType = 'tag';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -391,7 +408,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $to = mktime(23, 59, 59, $month, $day, $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options->archiveTitle = $year . '-' . $month . '-' . $day;
+                    $this->_archiveTitle[] = $year;
+                    $this->_archiveTitle[] = $month;
+                    $this->_archiveTitle[] = $day;
                 } else if (!empty($year) && !empty($month)) {
                 
                     /** 如果按月归档 */
@@ -399,7 +418,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $to = mktime(23, 59, 59, $month, idate('t', $from), $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options->archiveTitle = $year . '-' . $month;
+                    $this->_archiveTitle[] = $year;
+                    $this->_archiveTitle[] = $month;
                 } else if (!empty($year)) {
                 
                     /** 如果按年归档 */
@@ -407,14 +427,14 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $to = mktime(23, 59, 59, 12, 31, $year) - $this->options->timezone;
                     
                     /** 设置标题 */
-                    $this->options->archiveTitle = $year;
+                    $this->_archiveTitle[] = $year;
                 }
                 
                 $select->where('table.contents.created >= ?', $from)
                 ->where('table.contents.created <= ?', $to);
                 
                 /** 设置归档类型 */
-                $this->options->archiveType = 'date';
+                $this->_archiveType = 'date';
                 
                 /** 设置头部feed */
                 $value = array('year' => $year, 'month' => $month, 'day' => $day);
@@ -470,10 +490,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
                 
                 /** 设置标题 */
-                $this->options->archiveTitle = $keywords;
+                $this->_archiveTitle[] = $keywords;
                 
                 /** 设置归档类型 */
-                $this->options->archiveType = 'search';
+                $this->_archiveType = 'search';
                 
                 /** 设置风格文件 */
                 $this->_themeFile = 'archive.php';
@@ -528,16 +548,16 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 获取评论归档对象
      * 
      * @access public
-     * @param string $mode 评论模式
+     * @param string $type 评论类型
      * @param boolean $desc 是否倒序输出
      * @return Widget_Abstract_Comments
      */
-    public function comments($mode = NULL, $desc = false)
+    public function comments($type = NULL, $desc = false)
     {
-        $mode = strtolower($mode);
+        $type = strtolower($type);
         $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc, 'parentContent' => $this->row);
         
-        switch ($mode) {
+        switch ($type) {
             case 'comment':
                 return $this->widget('Widget_Comments_Archive_Comment', $parameter);
             case 'trackback':
@@ -665,6 +685,39 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 输出归档标题
+     * 
+     * @access public
+     * @param string $split
+     * @return void
+     */
+    public function archiveTitle($split = ' &raquo; ')
+    {
+        if ($this->_archiveTitle) {
+            echo $split . implode($split, $this->_archiveTitle);
+        }
+    }
+    
+    /**
+     * 判断归档类型
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function is()
+    {
+        $types = func_get_args();
+        
+        foreach ($types as $type) {
+            if ($type == $this->_archiveType) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * 设置主题文件
      * 
      * @access public
@@ -703,7 +756,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function feed()
     {
         $this->_feed->setCharset($this->options->charset);
-        $this->_feed->setTitle(($this->options->archiveTitle ? $this->options->archiveTitle . ' - ' : NULL) . $this->options->title);
+        $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
         $this->_feed->setSubTitle($this->_description);
 
         if (Typecho_Feed::RSS2 == $this->_feedType) {
@@ -802,9 +855,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $item->addElement('guid', $this->permalink);
                         $item->addElement('slash:comments', $this->commentsNum);
                         $item->addElement('comments', $this->permalink . '#comments');
-                        $item->addElement('content:encoded', Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...'));
-                        $item->addElement('author', $this->author);
-                        $item->addElement('dc:creator', $this->author);
+                        $item->addElement('content:encoded', $this->excerpt);
+                        $item->addElement('author', $this->author->screenName);
+                        $item->addElement('dc:creator', $this->author->screenName);
                         $item->addElement('wfw:commentRss', $this->feedUrl);
                     }
                     

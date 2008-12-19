@@ -28,7 +28,7 @@ class Widget_Comments_Archive_Pingback extends Widget_Comments_Archive
     public function execute()
     {
         $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
-        ->where('table.comments.mode = ?', 'pingback')
+        ->where('table.comments.type = ?', 'pingback')
         ->where('table.comments.cid = ?', $this->parameter->cid)
         ->order('table.comments.created', $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }

@@ -66,6 +66,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     
         $resource = $this->db->query($this->db->select('created')->from('table.contents')
         ->where('type = ?', 'post')
+        ->where('table.contents.status = ?', 'publish')
         ->where('table.contents.created < ?', $this->options->gmtTime));
         
         $result = array();

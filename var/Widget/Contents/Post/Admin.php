@@ -63,7 +63,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->_currentPage = $this->request->getParameter('page', 1);
 
         /** 构建基础查询 */
-        $select = $this->select();
+        $select = $this->select()->where('table.contents.type = ?', 'post');
 
         /** 过滤分类 */
         if (NULL != ($category = $this->request->category)) {
@@ -88,14 +88,14 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         /** 过滤状态 */
         switch ($this->request->status) {
             case 'draft':
-                $select->where('table.contents.type = ?', 'draft');
+                $select->where('table.contents.status = ?', 'draft');
                 break;
             case 'waiting':
-                $select->where('table.contents.type = ?', 'waiting');
+                $select->where('table.contents.status = ?', 'waiting');
                 break;
-            case 'published':
+            case 'publish':
             default:
-                $select->where('table.contents.type = ?', 'post');
+                $select->where('table.contents.status = ?', 'publish');
                 break;
         }
         
