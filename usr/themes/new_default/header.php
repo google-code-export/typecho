@@ -50,8 +50,5 @@
 	<ul class="clearfix" id="nav_menu">
 	    <li><a href="<?php $this->options->siteUrl(); ?>">Home</a></li>
 	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-	    <li><a href="#">Documents</a></li>
-	    <li><a href="#">Forum</a></li>
-	    <li><a href="#">Download</a></li>
 	</ul>
     </div><!-- end #header -->
