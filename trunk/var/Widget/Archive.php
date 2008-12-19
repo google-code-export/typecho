@@ -282,7 +282,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->_archiveType = 'single';
                     
                     /** 设置403头 */
-                    if ($post['hidden']) {
+                    if ($this->hidden) {
                         $this->response->setStatus(403);
                     }
                 } else {
