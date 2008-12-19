@@ -209,7 +209,7 @@ class Widget_Options extends Typecho_Widget
         /** 初始化站点信息 */
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
-        $this->routingTable = unserialize($this->routingTable); 
+        $this->routingTable = unserialize($this->routingTable);
     }
 
     /**
@@ -284,18 +284,6 @@ class Widget_Options extends Typecho_Widget
     public function adminUrl($path = NULL)
     {
         echo Typecho_Common::url($path, $this->adminUrl);
-    }
-    
-    /**
-     * 归档标题
-     * 
-     * @access public
-     * @param string $format 标题格式
-     * @return void
-     */
-    public function archiveTitle($format = '%s')
-    {
-        echo sprintf($format, $this->archiveTitle);
     }
     
     /**

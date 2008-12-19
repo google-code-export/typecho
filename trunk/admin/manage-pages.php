@@ -9,7 +9,7 @@ include 'menu.php';
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
                     <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
                 </ul>
                 <div class="typecho-list-operate">

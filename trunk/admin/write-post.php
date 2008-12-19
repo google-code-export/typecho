@@ -27,10 +27,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                         </span>
                                         <span class="right">
                                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
-                                            <input type="hidden" name="type" value="<?php $post->have() ? $post->type() : print('post'); ?>" />
+                                            <input type="hidden" name="draft" value="0" />
                                             <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
-                                            <button onclick="typechoSubmit('form[name=write_post]', 'input[name=type]', 'draft');"><?php _e('保存并继续编辑'); ?></button>
-                                            <button onclick="typechoSubmit('form[name=write_post]', 'input[name=type]', 'post');"><?php _e('发布这篇文章 &raquo;'); ?></button>
+                                            <button type="submit" onclick="typechoSubmit('form[name=write_post]', 'input[name=draft]', '1');"><?php _e('保存并继续编辑'); ?></button>
+                                            <button type="submit" onclick="typechoSubmit('form[name=write_post]', 'input[name=draft]', '0');"><?php _e('发布这篇文章 &raquo;'); ?></button>
                                         </span>
                                     </p>
                                 </div>

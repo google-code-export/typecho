@@ -28,7 +28,7 @@ class Widget_Comments_Archive_Trackback extends Widget_Comments_Archive
     public function execute()
     {
         $this->db->fetchAll($this->select()->where('table.comments.status = ?', 'approved')
-        ->where('table.comments.mode = ?', 'trackback')
+        ->where('table.comments.type = ?', 'trackback')
         ->where('table.comments.cid = ?', $this->parameter->cid)
         ->order('table.comments.created', $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC), array($this, 'push'));
     }

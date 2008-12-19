@@ -2,36 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="content-type" content="text/html; charset=<?php $this->options->charset(); ?>" />
-<title><?php
-    /** 自定义标题 */
-    switch ($this->options->archiveType)
-    {
-        /** 如果是分类 */
-        case 'category':
-            $this->options->archiveTitle('分类"%s" &raquo; ');
-            break;
-        /** 如果是标签 */
-        case 'tag':
-            $this->options->archiveTitle('标签"%s" &raquo; ');
-            break;
-        /** 如果是日期归档 */
-        case 'date':
-            $this->options->archiveTitle('按日期归档 %s &raquo; ');
-            break;
-        /** 如果是搜索 */
-        case 'search':
-            $this->options->archiveTitle('搜索关键字"%s" &raquo; ');
-            break;
-        /** 如果是文章或独立页面 */
-        case 'post':
-        case 'page':
-            $this->options->archiveTitle('%s &raquo; ');
-            break;
-        default:
-            $this->options->archiveTitle();
-            break;
-    }
-?><?php $this->options->title(); ?></title>
+<title><?php $this->options->title(); ?><?php $this->archiveTitle(); ?></title>
 
 <!-- 使用url函数转换相关路径 -->
 <link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('style.css'); ?>" />
