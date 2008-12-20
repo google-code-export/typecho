@@ -13,9 +13,7 @@ if (!in_array($panel, $panelTable)) {
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
-            <?php require_once $panel; ?>
-        </div>
+        <?php require_once $panel; ?>
     </div>
 </div>
 

@@ -66,7 +66,7 @@ include 'menu.php';
                     <p class="current">您当前使用的版本是 <em>0.2</em></p>
                     <p class="latest"><a href="#">官方最新版本是 <em>0.2</em></a></p>
                 </div>
-                <h3>Typecho官方通告</h3>
+                <h3>官方消息</h3>
                 <div class="intro-link">
                     <ul>
                         <li><a href="#">Typecho杭州研究院成立</a> - <span class="date">8月7日</span></li>

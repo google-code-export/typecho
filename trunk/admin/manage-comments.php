@@ -49,10 +49,11 @@ include 'menu.php';
                         <div class="column-01 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>
-                        <div class="column-02 center">
+                        <div class="column-02 center avatar">
                             <?php $comments->gravatar(); ?>
                         </div>
                         <div class="column-21">
+                            <img src="<?php $options->adminUrl('images/' . $comments->type . '.gif'); ?>" class="inline" alt="<?php $comments->type(); ?>" />
                             <?php $comments->author(true); ?>
                             <?php if($comments->mail): ?>
                              | 

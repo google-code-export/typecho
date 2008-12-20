@@ -95,6 +95,14 @@ class Typecho_Db
      * @var string
      */
     private $_prefix;
+    
+    /**
+     * 适配器名称
+     * 
+     * @access private
+     * @var string
+     */
+    private $_adapterName;
 
     /**
      * 实例化的数据库对象
@@ -110,7 +118,10 @@ class Typecho_Db
      * @return void
      */
     public function __construct($adapterName, $prefix = 'typecho_')
-    {    
+    {
+        /** 获取适配器名称 */
+        $this->_adapterName = $adapterName;
+        
         /** 数据库适配器 */
         require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $adapterName) . '.php';
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
@@ -123,6 +134,17 @@ class Typecho_Db
 
         //实例化适配器对象
         $this->_adapter = new $adapterName();
+    }
+    
+    /**
+     * 获取适配器名称
+     * 
+     * @access public
+     * @return string
+     */
+    public function getAdapterName()
+    {
+        return $this->_adapterName;
     }
 
     /**

@@ -54,7 +54,25 @@ include 'menu.php';
                             <td><?php $users->screenName(); ?></td>
                             <td><?php if($users->url): ?><a href="<?php $users->url(); ?>"><?php $users->domainPath(); ?></a><?php else: _e('暂无'); endif; ?></td>
                             <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
-                            <td><?php $users->group(); ?></td>
+                            <td><?php switch ($users->group) {
+                                case 'administrator':
+                                    _e('管理员');
+                                    break;
+                                case 'editor':
+                                    _e('编辑');
+                                    break;
+                                case 'contributor':
+                                    _e('贡献者');
+                                    break;
+                                case 'subscriber':
+                                    _e('关注者');
+                                    break;
+                                case 'visitor':
+                                    _e('访问者');
+                                    break;
+                                default:
+                                    break;
+                            } ?></td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

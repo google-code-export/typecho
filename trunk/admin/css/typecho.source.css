@@ -1145,9 +1145,13 @@ ul.typecho-list-notable {
 	font-size: 12px;
 }
 
-ul.typecho-list-notable img {
+ul.typecho-list-notable .avatar img {
 	background: #FFF;
 	padding: 2px;
+}
+
+ul.typecho-list-notable img.inline {
+	margin-bottom: -5px;
 }
 
 ul.typecho-list-notable p {
@@ -1375,33 +1379,33 @@ ul.typecho-list-notable li {
 	float: left;
 }
 
-.column-24 .typecho-post-area input.text {
+.typecho-post-area input.text {
     font-size: 13px;
     width: 700px;
 }
 
-.column-24 .typecho-post-area input.date {
+.typecho-post-area input.date {
 	width: 150px;
 	background: #DDD url(../images/calendar.gif) right center no-repeat;
 	border: 1px solid #AAA;
 	padding: 4px;
 }
 
-.column-24 .typecho-post-area input.mini {
+.typecho-post-area input.mini {
 	width: 200px;
 }
 
-.column-24 .typecho-post-area input.title {
+.typecho-post-area input.title {
 	font-size: 20px; /* 撰写页面标题input */
 }
 
-.column-24 .typecho-post-area textarea#text {
+.typecho-post-area textarea#text {
     font-size: 13px;
     width: 700px;
 	height: 350px;
 }
 
-.column-24 .typecho-post-area textarea#trackback {
+.typecho-post-area textarea#trackback {
     font-size: 13px;
     width: 430px;
 	height: 70px;
@@ -1419,7 +1423,7 @@ ul.typecho-list-notable li {
 
 ul.typecho-post-option {
     border: 0px;
-    margin: 0px 0px 0px 20px;
+    margin: 0px 0px 0px 10px;
 	border-top: 1px solid #EBEFDA;
 	border-bottom: 1px solid #fff;
 }
@@ -1480,72 +1484,130 @@ ul.typecho-post-option .description {
 /**
  * 标签列表
  */
-.tag-list {
-    font-size: 12px;
-    overflow: hidden;
+
+.typecho-page-main .tag-list, ul.category-list {
+	background: #DEE4C5;
+	border: 1px solid #D1DAAD;
+	
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
-.tag-list li {
-    float: left;
+.typecho-page-main .tag-list h2, ul.category-list h2 {
+	font-size: 13px;
+	padding: 5px 10px 0 10px;
 }
 
-.typecho-page-main .tag-list li {
-    padding: 0px;
-    margin: 0px;
+.typecho-page-main .tag-list .items {
+	padding: 5px 10px;
+	background: #F7FBE9;
+	margin-top: 5px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
-.tag-list a:link, .tag-list a:visited {
+.typecho-page-main .tag-list span {
+    padding: 4px;
+    margin: 0 0 10px 0;
     outline: none;
-    padding: 0px 2px;
+	line-height: 28px;
+	cursor: move;
 }
 
-.tag-list a:hover {
-    color: #fff;
-    background: #E47E00;
-    text-decoration: none;
+.typecho-page-main .tag-list span.move {
+	border: 2px solid #aaa;
+	padding: 2px 5px;
+	z-index: 100;
+	background: #FFF;
+	
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
-/**
- * 查看留言回复
- */
-.typecho-view-comment {
-
+.typecho-page-main .tag-list span.size-1 {
+	font-size: 12px;
 }
 
-.typecho-view-comment ul {
-    overflow: hidden;
-    zoom: 1;
-    width: 100%
+.typecho-page-main .tag-list span.size-2 {
+	font-size: 16px;
 }
 
-.typecho-view-comment li {
-    float: left;
-    width: 33.3%;
+.typecho-page-main .tag-list span.size-3 {
+	font-size: 18px;
 }
 
-.typecho-view-comment li input {
-    width: 250px;
+.typecho-page-main .tag-list span.size-4 {
+	font-size: 22px;
 }
 
-.typecho-view-comment li label {
-    display: block;
-    font-size: 13px;
-    font-weight: bold;
+.typecho-page-main .tag-list span.size-5 {
+	font-size: 28px;
 }
 
-.typecho-view-comment h4 {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 10px 0px 5px 0px;
+/** 分类列表 */
+ul.category-list {
+	margin: 0;
+	padding: 0;
 }
 
-.typecho-view-comment .status {
-    text-align: right;
-    margin: 5px 15px;
+ul.category-list li {
+	height: 20px;
+	line-height: 20px;
+	border: none;
+	font-size: 13px;
+	padding: 4px 10px;
+	margin-top: 5px;
+	background: #EFF5D9;
+	border-top: 1px solid #D1DAAD;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	
+	/* hope IE support border radius, God save me! */
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
+ul.category-list li:hover {
+	background: #E3EEBD;
+}
 
-.typecho-view-comment textarea {
-    width: 780px;
-    height: 200px;
+ul.category-list li a {
+	color: #555;
+}
+
+.manage-metas {
+	margin: 10px 0;
+	*padding-bottom: 10px;
 }
