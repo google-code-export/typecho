@@ -289,7 +289,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function insertPost()
     {
-        $contents = $this->request->from('password', 'created', 'text', 'template',
+        $contents = $this->request->from('password', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
@@ -312,10 +312,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($insertId > 0) {
             /** 插入分类 */
             $this->setCategories($insertId, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'post' == $contents['type']);
+            $contents['category'] : array(), 'publish' == $contents['status']);
             
             /** 插入标签 */
-            $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'], 'post' == $contents['type']);
+            $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'], 'publish' == $contents['status']);
         }
         
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
@@ -337,7 +337,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
+            $this->response->goBack();
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
@@ -351,7 +351,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function updatePost()
     {
-        $contents = $this->request->from('password', 'created', 'text', 'template',
+        $contents = $this->request->from('password', 'text', 'template',
         'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
@@ -377,10 +377,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'post' == $contents['type']);
+            $contents['category'] : array(), 'publish' == $contents['status']);
             
             /** 插入标签 */
-            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'post' == $contents['type']);
+            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'publish' == $contents['status']);
         }
 
         /** 文章提示信息 */
@@ -400,7 +400,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
+            $this->response->goBack();
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }

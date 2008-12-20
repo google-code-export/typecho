@@ -14,7 +14,12 @@ include 'menu.php';
                 </ul>
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate">操作：<a href="#">全选</a>，<a href="#">反选</a>，<a href="#">删除选中项</a></p>
+                    <p class="operate"><?php _e('操作'); ?>: 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
+                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                        <?php _e('选中项'); ?>: 
+                        <span onclick="typechoSubmit('form[name=manage_pages]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                    </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
                     <?php if(Typecho_Request::isSetParameter('status')): ?>
@@ -26,6 +31,7 @@ include 'menu.php';
                 </form>
                 </div>
             
+                <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('Contents/Page/Edit.do'); ?>">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
@@ -69,6 +75,8 @@ include 'menu.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <input type="hidden" name="do" value="delete" />
+                </form>
             
             </div>
         </div>
