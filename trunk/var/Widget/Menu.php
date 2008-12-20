@@ -115,6 +115,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
             array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), '/admin/write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
+            array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), '/admin/write-page.php?cid=', 'editor', true),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
