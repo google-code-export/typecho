@@ -21,11 +21,11 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th><?php _e('名称'); ?></th>
+                            <th class="typecho-radius-topleft"><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th><?php _e('操作'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('操作'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,11 +70,11 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th><?php _e('名称'); ?></th>
+                            <th class="typecho-radius-topleft"><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th><?php _e('操作'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('操作'); ?></th>
                         </tr>
                     </thead>
                     <tbody>

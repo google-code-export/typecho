@@ -55,13 +55,13 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th> </th>
+                            <th class="typecho-radius-topleft"> </th>
                             <th><?php _e('标题'); ?></th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('发布日期'); ?></th>
                             <th><?php _e('分类'); ?></th>
                             <th><?php _e('评论'); ?></th>
-                            <th><?php _e('状态'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('状态'); ?></th>
                         </tr>
                     </thead>
                     <tbody>

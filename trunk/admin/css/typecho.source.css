@@ -213,6 +213,32 @@ button {
     margin-right: 5px;
 }
 
+/**
+ * 圆角
+ */
+.typecho-radius-topleft {
+	-moz-border-radius-topleft: 4px;
+	-webkit-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+.typecho-radius-topright {
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.typecho-radius-bottomleft {
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.typecho-radius-bottomright {
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
 
 /**
  * 选择日历
@@ -1019,7 +1045,7 @@ margin-top: 25px;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
-    background: #f7fbe9;
+    background: #f7fbe9 url(../images/btn.png) top repeat-x;
 }
 
 .typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
@@ -1095,14 +1121,16 @@ margin-top: 25px;
 }
 
 .typecho-list-table thead {
-    background: #dee4c5;
 }
 
 .typecho-list-table th {
     text-align: left;
-    padding: 3px 5px;
+    padding: 0 5px;
+    height: 32px;
+    line-height: 20px;
     font-weight: bold;
-    border-bottom: 1px solid #d1daad;
+    border-bottom: 1px solid #F7FBE9;
+	background: #dee4c5 url(../images/thead.png) top repeat-x;
 }
 
 .typecho-list-table td {
@@ -1125,6 +1153,10 @@ margin-top: 25px;
 
 .typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
 	background: #DBE9AB;
+}
+
+.typecho-list-table tbody tr.checked-even td, ul.typecho-list-notable li.checked-even {
+	background: #CCE087;
 }
 
 .typecho-list-table h4 {

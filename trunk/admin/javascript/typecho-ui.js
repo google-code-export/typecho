@@ -148,13 +148,33 @@ var typechoSubmit = function (formSel, inputSel, op) {
 /** 提交按钮自动失效,防止重复提交 */
 var typechoAutoDisableSubmit = function () {
 
-    $(document).getElements('input[type=submit]').addEvent('click', function () {
+    $(document).getElements('input[type=submit]').addEvent('click', function (event) {
+            event.stopPropagation();
             $(this).setProperty('disabled', true);
+            $(this).getParent('form').submit();
     });
     
-    $(document).getElements('button[type=submit]').addEvent('click', function () {
+    $(document).getElements('button[type=submit]').addEvent('click', function (event) {
+            event.stopPropagation();
             $(this).setProperty('disabled', true);
+            $(this).getParent('form').submit();
     });
+}
+
+var _typechoCheckItem = function (item) {
+    if (item.hasClass('even')) {
+        item.addClass('checked-even');
+    } else {
+        item.addClass('checked');
+    }
+}
+
+var _typechoUncheckItem = function (item) {
+    if (item.hasClass('even')) {
+        item.removeClass('checked-even');
+    } else {
+        item.removeClass('checked');
+    }
 }
 
 /** 操作按钮 */
@@ -168,13 +188,13 @@ var typechoOperate = function (selector, op) {
         switch (op) {
             case 'selectAll':
                 elements.each(function(item) {
-                    $(item).getParent('tr').addClass('checked');
+                    _typechoCheckItem($(item).getParent('tr'));
                     $(item).setProperty('checked', 'true');
                 });
                 break;
             case 'selectNone':
                 elements.each(function(item) {
-                    $(item).getParent('tr').removeClass('checked');
+                    _typechoUncheckItem($(item).getParent('tr'));
                     $(item).removeProperty('checked');
                 });
                 break;
@@ -187,13 +207,13 @@ var typechoOperate = function (selector, op) {
         switch (op) {
             case 'selectAll':
                 elements.each(function(item) {
-                    $(item).getParent('li').addClass('checked');
+                    _typechoCheckItem($(item).getParent('li'));
                     $(item).setProperty('checked', 'true');
                 });
                 break;
             case 'selectNone':
                 elements.each(function(item) {
-                    $(item).getParent('li').removeClass('checked');
+                    _typechoUncheckItem($(item).getParent('li'));
                     $(item).removeProperty('checked');
                 });
                 break;
@@ -215,9 +235,9 @@ var typechoTableListener = function (selector) {
             $(item).addEvent('click', function(event) {
                 event.stopPropagation();
                 if ($(this).getProperty('checked')) {
-                    $(this).getParent('tr').addClass('checked');
+                    _typechoCheckItem($(this).getParent('tr'));
                 } else {
-                    $(this).getParent('tr').removeClass('checked');
+                    _typechoUncheckItem($(this).getParent('tr'));
                 }
             });
         });
@@ -241,11 +261,12 @@ var typechoTableListener = function (selector) {
     } else if (el && 'ul' == el.get('tag')) {
         /** 如果是列表形式 */
         el.getElements('li input[type=checkbox]').each(function(item) {
-            $(item).addEvent('click', function() {
+            $(item).addEvent('click', function(event) {
+                event.stopPropagation();
                 if ($(this).getProperty('checked')) {
-                    $(this).getParent('li').addClass('checked');
+                    _typechoCheckItem($(this).getParent('li'));
                 } else {
-                    $(this).getParent('li').removeClass('checked');
+                    _typechoUncheckItem($(this).getParent('li'));
                 }
             });
         });

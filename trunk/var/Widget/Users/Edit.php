@@ -29,6 +29,16 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     {
         /** 管理员以上权限 */
         $this->user->pass('administrator');
+        
+        /** 更新模式 */
+        if (($this->request->uid && 'delete' != $this->request->do) || 'update' == $this->request->do) {
+            $this->db->fetchRow($this->select()
+            ->where('uid = ?', $this->request->uid)->limit(1), array($this, 'push'));
+            
+            if (!$this->have()) {
+                throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
+            }
+        }
     }
     
     /**
@@ -184,15 +194,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
         $form->addItem($submit);
 
-        if (NULL != $this->request->uid) {
-            /** 更新模式 */
-            $this->db->fetchRow($this->select()
-            ->where('uid = ?', $this->request->uid)->limit(1), array($this, 'push'));
-            
-            if (!$this->have()) {
-                throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
-            }
-                    
+        if (NULL != $this->request->uid) {                    
             $submit->value(_t('编辑用户'));
             $name->value($this->name);
             $screenName->value($this->screenName);
