@@ -47,6 +47,12 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                             </ul>
                         </li>
+                        <?php if($page->have()): ?>
+                        <li>
+                            <label class="typecho-label"><?php _e('相关'); ?></label>
+                            <p><?php _e('此页面的创建者是 <strong>%s</strong>', $page->author->screenName); ?></p>
+                        </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </form>
