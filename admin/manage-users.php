@@ -37,12 +37,12 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th> </th>
+                            <th class="typecho-radius-topleft"> </th>
                             <th><?php _e('用户名'); ?></th>
                             <th><?php _e('昵称'); ?></th>
                             <th><?php _e('个人主页'); ?></th>
                             <th><?php _e('电子邮件'); ?></th>
-                            <th><?php _e('用户组'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('用户组'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
