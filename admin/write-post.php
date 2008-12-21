@@ -89,7 +89,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <?php if($post->have()): ?>
                         <li>
                             <label class="typecho-label"><?php _e('相关'); ?></label>
-                            <p><?php _e('此文的作者是 %s', $post->author->screenName); ?></p>
+                            <p><?php _e('此文的作者是 <strong>%s</strong>', $post->author->screenName); ?></p>
                             <?php Typecho_Widget::widget('Widget_Contents_Related_Author', 
                             "limit=3&cid={$post->cid}&author={$post->author->uid}&type={$post->type}")->to($related); ?>
                             <?php if($related->have()): ?>
