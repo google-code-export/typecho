@@ -23,4 +23,4 @@
 <input type="text" class="text" name="dbDatabase" value="<?php _v('dbDatabase', 'typecho'); ?>" />
 <p class="desption"><?php _e('请您指定数据库名称'); ?></p>
 </li>
-<input type="hidden" name="dbCharset" value="utf8" />
+<input type="hidden" name="dbCharset" value="<?php _e('utf8'); ?>" />

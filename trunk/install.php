@@ -191,7 +191,7 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                 if($success)
                                 {
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
-                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbPort', 'dbPrefix', 'dbDatabase', 'dbFile', 'dbDSN');
+                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbPrefix', 'dbDatabase', 'dbFile', 'dbDsn');
 
                                     $dbConfig = array();
                                     foreach ($_dbConfig as $key => $val) {
