@@ -40,7 +40,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function categoryExists($mid)
     {
-        $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
+        $category = $this->db->fetchRow($this->db->select()
+        ->from('table.metas')
         ->where('type = ?', 'category')
         ->where('mid = ?', $mid)->limit(1));
         
@@ -56,13 +57,14 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function nameExists($name)
     {
-        $select = $this->db->sql()->select('table.metas')
+        $select = $this->db->select()
+        ->from('table.metas')
         ->where('type = ?', 'category')
         ->where('name = ?', $name)
         ->limit(1);
         
-        if (Typecho_Request::getParameter('mid')) {
-            $select->where('mid <> ?', Typecho_Request::getParameter('mid'));
+        if ($this->request->mid) {
+            $select->where('mid <> ?', $this->request->mid);
         }
     
         $category = $this->db->fetchRow($select);
@@ -78,13 +80,14 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function slugExists($slug)
     {
-        $select = $this->db->sql()->select('table.metas')
+        $select = $this->db->select()
+        ->from('table.metas')
         ->where('type = ?', 'category')
         ->where('slug = ?', $slug)
         ->limit(1);
         
-        if (Typecho_Request::getParameter('mid')) {
-            $select->where('mid <> ?', Typecho_Request::getParameter('mid'));
+        if ($this->request->mid) {
+            $select->where('mid <> ?', $this->request->mid);
         }
     
         $category = $this->db->fetchRow($select);
@@ -186,17 +189,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function insertCategory()
     {
-        try {
-            $this->form('insert')->validate();
-        } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack('#edit');
+        if ($this->form('insert')->validate()) {
+            $this->response->goBack();
         }
         
         /** 取出数据 */
-        $category = Typecho_Request::getParametersFrom('name', 'slug', 'description');
-        $category['slug'] = Typecho_API::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $category = $this->request->from('name', 'slug', 'description');
+        $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
-        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(sort) AS maxSort')
+        $category['sort'] = $this->db->fetchObject($this->db->select(array('MAX(sort)' => 'maxSort'))
+        ->from('table.metas')
         ->where('type = ?', 'category'))->maxSort + 1;
     
         /** 插入数据 */
@@ -204,11 +206,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->push($category);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被增加",
+        $this->widget('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被增加",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
     
     /**
@@ -222,19 +224,19 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         try {
             $this->form('insert')->validate();
         } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::throwAjaxResponse(implode(',', $e->getMessages()));
+            Typecho_Common::throwAjax(implode(',', $e->getMessages()));
         }
         
         /** 取出数据 */
-        $category = Typecho_Request::getParametersFrom('name');
-        $category['slug'] = Typecho_API::slugName($category['name']);
+        $category = $this->request->from('name');
+        $category['slug'] = Typecho_Common::slugName($category['name']);
         $category['type'] = 'category';
         $category['description'] = $category['name'];
         $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(sort) AS maxSort')
         ->where('type = ?', 'category'))->maxSort + 1;
     
         /** 插入数据 */
-        Typecho_API::throwAjaxResponse($this->insert($category), $this->options->charset);
+        Typecho_Common::throwAjax($this->insert($category), $this->options->charset);
     }
     
     /**
@@ -245,28 +247,26 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function updateCategory()
     {
-        try {
-            $this->form('update')->validate();
-        } catch (Typecho_Widget_Exception $e) {
-            Typecho_API::goBack('#edit');
+        if ($this->form('update')->validate()) {
+            $this->response->goBack();
         }
     
         /** 取出数据 */
-        $category = Typecho_Request::getParametersFrom('name', 'slug', 'description');
-        $category['slug'] = Typecho_API::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $category = $this->request->from('name', 'slug', 'description');
+        $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
     
         /** 更新数据 */
-        $this->update($category, $this->db->sql()->where('mid = ?', Typecho_Request::getParameter('mid')));
-        $category['mid'] = Typecho_Request::getParameter('mid');
+        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->mid));
+        $category['mid'] = $this->request->mid;
         $this->push($category);
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被更新",
+        $this->widget('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被更新",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
     
     /**
@@ -277,7 +277,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function deleteCategory()
     {
-        $categories = Typecho_Request::getParameter('mid');
+        $categories = $this->request->mid;
         $deleteCount = 0;
         
         if ($categories && is_array($categories)) {
@@ -290,11 +290,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), NULL,
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
     
     /**
@@ -310,27 +310,25 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator->addRule('merge', 'required', _t('分类主键不存在'));
         $validator->addRule('merge', 'categoryExists', _t('请选择需要合并的分类'));
         
-        try {
-            $validator->run(Typecho_Request::getParametersFrom('merge'));
-        } catch (Typecho_Validate_Exception $e) {
-            Typecho_API::factory('Widget_Notice')->set($e->getMessages(), NULL, 'error');
-            Typecho_API::goBack();
+        if ($validator->run($this->request->from('merge'))) {
+            $this->widget('Widget_Notice')->set($e->getMessages(), NULL, 'error');
+            $this->response->goBack();
         }
         
         $merge = Typecho_Request::getParameter('merge');
-        $categories = Typecho_Request::getParameter('mid');
+        $categories = $this->request->mid;
         
         if ($categories && is_array($categories)) {
             $this->merge($merge, 'category', $categories);
             
             /** 提示信息 */
-            Typecho_API::factory('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
         } else {
-            Typecho_API::factory('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
         }
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
     
     /**
@@ -341,16 +339,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        $categories = Typecho_Request::getParameter('sort');
+        $categories = $this->request->sort;
         if ($categories && is_array($categories)) {
             $this->sort($categories, 'category');
         }
         
         if (!Typecho_Request::isAjax()) {
             /** 转向原页 */
-            Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-cat.php', $this->options->adminUrl));
         } else {
-            Typecho_API::throwAjaxResponse(_t('分类排序已经完成'), $this->options->charset);
+            Typecho_Common::throwAjax(_t('分类排序已经完成'), $this->options->charset);
         }
     }
     
@@ -366,20 +364,20 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator = new Typecho_Validate($this);
         $validator->addRule('mid', 'required', _t('分类主键不存在'));
         $validator->addRule('mid', array($this, 'categoryExists'), _t('分类不存在'));
-        $validator->run(Typecho_Request::getParametersFrom('mid'));
+        $validator->run($this->request->from('mid'));
         
-        $this->options->update(array('value' => Typecho_Request::getParameter('mid')),
+        $this->options->update(array('value' => $this->request->mid),
         $this->db->sql()->where('name = ?', 'defaultCategory'));
         
-        $this->db->fetchRow($this->select()->where('mid = ?', Typecho_Request::getParameter('mid'))
+        $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
         ->where('type = ?', 'category')->limit(1), array($this, 'push'));
         
         /** 提示信息 */
-        Typecho_API::factory('Widget_Notice')->set(_t("'<a href=\"%s\">%s</a>' 已经被设为默认分类",
+        $this->widget('Widget_Notice')->set(_t("'<a href=\"%s\">%s</a>' 已经被设为默认分类",
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        Typecho_API::redirect(Typecho_API::pathToUrl('manage-cat.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
     
     /**
@@ -390,14 +388,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function action()
     {
-        Typecho_API::factory('Widget_Users_Current')->pass('editor');
-        Typecho_Request::bindParameter(array('do' => 'insert'), array($this, 'insertCategory'));
-        Typecho_Request::bindParameter(array('do' => 'ajaxInsert'), array($this, 'ajaxInsertCategory'));
-        Typecho_Request::bindParameter(array('do' => 'update'), array($this, 'updateCategory'));
-        Typecho_Request::bindParameter(array('do' => 'delete'), array($this, 'deleteCategory'));
-        Typecho_Request::bindParameter(array('do' => 'merge'), array($this, 'mergeCategory'));
-        Typecho_Request::bindParameter(array('do' => 'sort'), array($this, 'sortCategory'));
-        Typecho_Request::bindParameter(array('do' => 'default'), array($this, 'defaultCategory'));
-        Typecho_API::redirect($this->options->adminUrl);
+        $this->onRequest('do', 'insert')->insertCategory();
+        $this->onRequest('do', 'update')->updateCategory();
+        $this->onRequest('do', 'delete')->deleteCategory();
+        $this->onRequest('do', 'merge')->mergeCategory();
+        $this->onRequest('do', 'sort')->sortCategory();
+        $this->onRequest('do', 'default')->defaultCategory();
+        $this->response->redirect($this->options->adminUrl);
     }
 }
