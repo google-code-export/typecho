@@ -1018,7 +1018,7 @@ margin-top: 25px;
  * 标签页
  */
 .typecho-option-tabs {
-    background: #dee4c5;
+    background: #dee4c5 url(../images/tabs.png) top repeat-x;
     height: 30px;
     overflow: hidden;
     zoom: 1;
@@ -1130,7 +1130,7 @@ margin-top: 25px;
     line-height: 20px;
     font-weight: bold;
     border-bottom: 1px solid #F7FBE9;
-	background: #dee4c5 url(../images/thead.png) top repeat-x;
+	background: #D3DBB3 url(../images/thead.png) top repeat-x;
 }
 
 .typecho-list-table td {
@@ -1557,7 +1557,7 @@ ul.typecho-post-option .description {
 }
 
 .typecho-page-main .tag-list span {
-    padding: 4px;
+    padding: 2px 4px;
     margin: 0 0 10px 0;
     outline: none;
 	line-height: 28px;
@@ -1565,25 +1565,10 @@ ul.typecho-post-option .description {
 }
 
 .typecho-page-main .tag-list span.move {
-	border: 2px solid #aaa;
-	padding: 2px 5px;
+	border: 1px solid #aaa;
+	padding: 0 3px;
 	z-index: 100;
 	background: #FFF;
-	
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
 }
 
 .typecho-page-main .tag-list span.size-1 {

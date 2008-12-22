@@ -551,10 +551,10 @@ class Typecho_Common
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */
-        $string = preg_replace("/\<p\>\s*\<h([1-6])\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1>\\2</h\\1>\n", $string);
-        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>(.*)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1>\\2</\\1>\n", $string);
-        $string = preg_replace("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>\s*\<br\s?\/?\>\s*\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)\>/is",
-        "<\\1\\2>\n<\\3\\4>", $string);
+        $string = preg_replace("/\<p\>\s*\<h([1-6])([^\>]*)\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1\\2>\\3</h\\1>\n", $string);
+        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.*)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1\\2>\\3</\\1>\n", $string);
+        $string = preg_replace("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>\s*\<br\s?\/?\>\s*\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>/is",
+        "<\\1\\2\\3>\n<\\4\\5\\6>", $string);
 
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }

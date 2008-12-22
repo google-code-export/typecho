@@ -3,6 +3,14 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 ?>
+
+<style>
+.tag-list, .column-06 {
+    overflow: visible;
+    z-index: 0;
+}
+</style>
+
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
@@ -34,6 +42,7 @@ include 'menu.php';
         
         var typechoDrag = new Drag.Move(item, {
             onSnap: function(el){
+                el.setStyle('position', 'absolute');
                 el.addClass('move');
             },
             onComplete: function(el){
