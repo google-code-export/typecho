@@ -92,7 +92,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
-            'meta'          =>  is_numeric($content['meta']) ? $content['meta'] : '0',
+            'meta'          =>  empty($content['meta']) ? intval($content['meta']) : 0,
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
@@ -134,7 +134,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 构建更新结构 */
         $preUpdateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'meta'          =>  is_numeric($content['meta']) ? $content['meta'] : '0',
+            'meta'          =>  empty($content['meta']) ? intval($content['meta']) : 0,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],

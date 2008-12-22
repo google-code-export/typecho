@@ -46,11 +46,11 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
-                        <col width="400"/>
-                        <col width="100"/>
+                        <col width="350"/>
+                        <col width="125"/>
                         <col width="125"/>
                         <col width="150"/>
-                        <col width="100"/>
+                        <col width="125"/>
                         <col width="100"/>
                     </colgroup>
                     <thead>
@@ -74,7 +74,7 @@ include 'menu.php';
                             <td><?php $posts->author(); ?></td>
                             <td><?php $posts->dateWord(); ?></td>
                             <td><?php $posts->category(' | '); ?></td>
-                            <td><?php $posts->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
+                            <td><?php $posts->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('post' == $posts->type):
                         _e('<a href="%s">已发布</a>', $posts->permalink);
                         elseif('waiting' == $posts->type):

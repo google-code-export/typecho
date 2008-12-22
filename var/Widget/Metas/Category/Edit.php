@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget_Interface_Action_Widget
+class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget_Interface_Do
 {
     /**
      * 入口函数
@@ -25,12 +25,10 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      * @access public
      * @return void
      */
-    public function __construct()
+    public function execute()
     {
-        parent::__construct();
-    
         /** 编辑以上权限 */
-        Typecho_API::factory('Widget_Users_Current')->pass('editor');
+        $this->user->pass('editor');
     }
     
     /**
@@ -43,8 +41,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function categoryExists($mid)
     {
         $category = $this->db->fetchRow($this->db->sql()->select('table.metas')
-        ->where('`type` = ?', 'category')
-        ->where('`mid` = ?', $mid)->limit(1));
+        ->where('type = ?', 'category')
+        ->where('mid = ?', $mid)->limit(1));
         
         return $category ? true : false;
     }
@@ -59,12 +57,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function nameExists($name)
     {
         $select = $this->db->sql()->select('table.metas')
-        ->where('`type` = ?', 'category')
-        ->where('`name` = ?', $name)
+        ->where('type = ?', 'category')
+        ->where('name = ?', $name)
         ->limit(1);
         
         if (Typecho_Request::getParameter('mid')) {
-            $select->where('`mid` <> ?', Typecho_Request::getParameter('mid'));
+            $select->where('mid <> ?', Typecho_Request::getParameter('mid'));
         }
     
         $category = $this->db->fetchRow($select);
@@ -81,12 +79,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function slugExists($slug)
     {
         $select = $this->db->sql()->select('table.metas')
-        ->where('`type` = ?', 'category')
-        ->where('`slug` = ?', $slug)
+        ->where('type = ?', 'category')
+        ->where('slug = ?', $slug)
         ->limit(1);
         
         if (Typecho_Request::getParameter('mid')) {
-            $select->where('`mid` <> ?', Typecho_Request::getParameter('mid'));
+            $select->where('mid <> ?', Typecho_Request::getParameter('mid'));
         }
     
         $category = $this->db->fetchRow($select);
@@ -98,54 +96,50 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      * 
      * @access public
      * @param string $action 表单动作
-     * @return Typecho_Widget_Helper_Form
+     * @return Typecho_Widget_Helper_Form_Element
      */
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_API::pathToUrl('/Metas/Category/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Metas/Category/Edit.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
-        /** 创建标题 */
-        $title = new Typecho_Widget_Helper_Layout('h4');
-        $form->addItem($title->setAttribute('id', 'edit'));
-        
         /** 分类名称 */
-        $name = new Typecho_Widget_Helper_Form_Text('name', NULL, _t('分类名称*'));
-        $name->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
+        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('分类名称*'));
         $form->addInput($name);
         
         /** 分类缩略名 */
-        $slug = new Typecho_Widget_Helper_Form_Text('slug', NULL, _t('分类缩略名'), _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
-        $slug->input->setAttribute('class', 'text')->setAttribute('style', 'width:60%');
+        $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, NULL, _t('分类缩略名'),
+        _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
         $form->addInput($slug);
         
+        /** 分类顺序 */
+        $sort = new Typecho_Widget_Helper_Form_Element_Text('sort', NULL, NULL, _t('分类顺序'),
+        _t('请填入一个数字以表示分类在列表中显示的顺序,如果没有特殊要求请留空'));
+        $form->addInput($sort);
+        
         /** 分类描述 */
-        $description =  new Typecho_Widget_Helper_Form_Textarea('description', NULL, _t('分类描述'), _t('此文字用于描述分类,在有的主题中它会被显示.'));
-        $description->input->setAttribute('rows', 5)->setAttribute('style', 'width:80%');
+        $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
+        _t('分类描述'), _t('此文字用于描述分类,在有的主题中它会被显示.'));
         $form->addInput($description);
         
         /** 分类动作 */
-        $do = new Typecho_Widget_Helper_Form_Hidden('do');
+        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do');
         $form->addInput($do);
         
         /** 分类主键 */
-        $mid = new Typecho_Widget_Helper_Form_Hidden('mid');
+        $mid = new Typecho_Widget_Helper_Form_Element_Hidden('mid');
         $form->addInput($mid);
         
-        /** 空格 */
-        $form->addItem(new Typecho_Widget_Helper_Layout('hr', array('class' => 'space')));
-        
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Submit();
-        $submit->button->setAttribute('class', 'submit');
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit();
         $form->addItem($submit);
 
-        if (NULL != Typecho_Request::getParameter('mid')) {
+        if ($this->request->mid) {
             /** 更新模式 */
             $meta = $this->db->fetchRow($this->select()
-            ->where('`mid` = ?', Typecho_Request::getParameter('mid'))
-            ->where('`type` = ?', 'category')->limit(1));
+            ->where('mid = ?', $this->request->mid)
+            ->where('type = ?', 'category')->limit(1));
             
             if (!$meta) {
                 throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
@@ -153,16 +147,15 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             
             $name->value($meta['name']);
             $slug->value($meta['slug']);
+            $sort->value($meta['sort']);
             $description->value($meta['description']);
             $do->value('update');
             $mid->value($meta['mid']);
             $submit->value(_t('编辑分类'));
-            $title->html(_t('编辑分类'));
             $_action = 'update';
         } else {
             $do->value('insert');
             $submit->value(_t('增加分类'));
-            $title->html(_t('增加分类'));
             $_action = 'insert';
         }
         
@@ -203,8 +196,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $category = Typecho_Request::getParametersFrom('name', 'slug', 'description');
         $category['slug'] = Typecho_API::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
-        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(`sort`) AS `maxSort`')
-        ->where('`type` = ?', 'category'))->maxSort + 1;
+        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(sort) AS maxSort')
+        ->where('type = ?', 'category'))->maxSort + 1;
     
         /** 插入数据 */
         $category['mid'] = $this->insert($category);
@@ -237,8 +230,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $category['slug'] = Typecho_API::slugName($category['name']);
         $category['type'] = 'category';
         $category['description'] = $category['name'];
-        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(`sort`) AS `maxSort`')
-        ->where('`type` = ?', 'category'))->maxSort + 1;
+        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(sort) AS maxSort')
+        ->where('type = ?', 'category'))->maxSort + 1;
     
         /** 插入数据 */
         Typecho_API::throwAjaxResponse($this->insert($category), $this->options->charset);
@@ -290,7 +283,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         if ($categories && is_array($categories)) {
             foreach ($categories as $category) {
                 if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
-                    $this->db->query($this->db->sql()->delete('table.relationships')->where('`mid` = ?', $category));
+                    $this->db->query($this->db->sql()->delete('table.relationships')->where('mid = ?', $category));
                     $deleteCount ++;
                 }
             }
@@ -378,8 +371,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->options->update(array('value' => Typecho_Request::getParameter('mid')),
         $this->db->sql()->where('name = ?', 'defaultCategory'));
         
-        $this->db->fetchRow($this->select()->where('`mid` = ?', Typecho_Request::getParameter('mid'))
-        ->where('`type` = ?', 'category')->limit(1), array($this, 'push'));
+        $this->db->fetchRow($this->select()->where('mid = ?', Typecho_Request::getParameter('mid'))
+        ->where('type = ?', 'category')->limit(1), array($this, 'push'));
         
         /** 提示信息 */
         Typecho_API::factory('Widget_Notice')->set(_t("'<a href=\"%s\">%s</a>' 已经被设为默认分类",

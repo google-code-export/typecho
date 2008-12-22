@@ -35,7 +35,7 @@ CREATE TABLE `typecho_comments` (
   PRIMARY KEY  (`coid`),
   KEY `cid` (`cid`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -64,7 +64,7 @@ CREATE TABLE `typecho_contents` (
   PRIMARY KEY  (`cid`),
   UNIQUE KEY `slug` (`slug`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE `typecho_metas` (
   `sort` int(10) unsigned default '0' COMMENT '项目排序',
   PRIMARY KEY  (`mid`),
   KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,7 @@ CREATE TABLE `typecho_options` (
   `user` int(10) unsigned NOT NULL default '0' COMMENT '配置所属用户,默认为0(全局配置)',
   `value` text COMMENT '配置值',
   PRIMARY KEY  (`name`,`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -107,7 +107,7 @@ CREATE TABLE `typecho_relationships` (
   `cid` int(10) unsigned NOT NULL COMMENT '内容主键',
   `mid` int(10) unsigned NOT NULL COMMENT '项目主键',
   PRIMARY KEY  (`cid`,`mid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -130,4 +130,4 @@ CREATE TABLE `typecho_users` (
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `mail` (`mail`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
