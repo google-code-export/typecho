@@ -22,7 +22,7 @@
             <ul>
             <?php $this->widget('Widget_Comments_Recent')->to($comments); ?>
             <?php while($comments->next()): ?>
-                <li><?php $comments->author(false); ?>: <a href="<?php $comments->permalink(); ?>"><?php $comments->excerpt(70, '...'); ?></a></li>
+                <li><a href="<?php $comments->permalink(); ?>"><?php $comments->author(false); ?></a>: <?php $comments->excerpt(28, '...'); ?></li>
             <?php endwhile; ?>
             </ul>
 	    </div>

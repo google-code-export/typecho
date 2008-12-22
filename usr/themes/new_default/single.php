@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="clearfix" id="post_extra">
-			Tags: <?php $this->tags(',', true, 'none'); ?>
+			Tags: <?php $this->tags(', ', true, 'none'); ?>
 		</div>
 
 		<?php include('comments.php'); ?>
