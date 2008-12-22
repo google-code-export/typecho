@@ -35,8 +35,8 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
-                        <col width="450"/>
-                        <col width="100"/>
+                        <col width="400"/>
+                        <col width="150"/>
                         <col width="125"/>
                         <col width="150"/>
                         <col width="150"/>
@@ -60,7 +60,7 @@ include 'menu.php';
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td><?php $pages->author(); ?></td>
                             <td><?php $pages->dateWord(); ?></td>
-                            <td><?php $pages->commentsNum(_t('没有评论'), _t('仅有一条评论'), _t('%d条评论')); ?></td>
+                            <td><?php $pages->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('page' == $pages->type):
                         _e('<a href="%s">已发布</a>', $pages->permalink);
                         else:

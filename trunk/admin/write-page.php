@@ -37,6 +37,10 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <p class="description"><?php _e('为这篇日志自定义链接地址, 有利于搜索引擎收录'); ?></p>
                         </li>
                         <li>
+                            <label for="slug" class="typecho-label"><?php _e('页面顺序'); ?></label>
+                            <p><input type="text" id="meta" name="meta" value="<?php $page->meta(); ?>" class="mini" /></p>
+                        </li>
+                        <li>
                             <label class="typecho-label"><?php _e('权限控制'); ?></label>
                             <ul>
                                 <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($page->allow('comment')): ?>checked="true"<?php endif; ?> />

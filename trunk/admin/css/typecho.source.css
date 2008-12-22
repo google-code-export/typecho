@@ -1018,7 +1018,7 @@ margin-top: 25px;
  * 标签页
  */
 .typecho-option-tabs {
-    background: #dee4c5 url(../images/tabs.png) top repeat-x;
+    background: #dee4c5;
     height: 30px;
     overflow: hidden;
     zoom: 1;
@@ -1130,7 +1130,7 @@ margin-top: 25px;
     line-height: 20px;
     font-weight: bold;
     border-bottom: 1px solid #F7FBE9;
-	background: #D3DBB3 url(../images/thead.png) top repeat-x;
+	background: #D3DBB3;
 }
 
 .typecho-list-table td {
@@ -1266,9 +1266,21 @@ ul.typecho-list-notable li {
     border-top: 1px solid #fff;
 }
 
+.typecho-page-main .typecho-mini-panel {
+	background: #DEE4C5;
+}
+
 .typecho-page-main .typecho-option label.typecho-label {
     width: 190px;
     margin-left: -200px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option label.typecho-label {
+	float: none;
+	margin: 0;
+	width: auto;
+	display: block;
+	text-align:left;
 }
 
 .typecho-page-main .typecho-option li {
@@ -1276,8 +1288,21 @@ ul.typecho-list-notable li {
     padding-left: 200px;
 }
 
+.typecho-page-main .typecho-mini-panel .typecho-option {
+	border: none;
+	padding: 0 10px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option li {
+    padding-left: 0;
+}
+
 .typecho-page-main .typecho-option input.text {
     width: 475px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option input.text {
+	width: 280px;
 }
 
 .typecho-page-main .typecho-option input.mini {
@@ -1287,6 +1312,11 @@ ul.typecho-list-notable li {
 .typecho-page-main .typecho-option textarea {
     width: 475px;
     height: 150px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option textarea {
+	width: 280px;
+	height: 70px;
 }
 
 .typecho-page-main .typecho-option .desption {
@@ -1518,76 +1548,52 @@ ul.typecho-post-option .description {
  */
 
 .typecho-page-main .tag-list, ul.category-list {
-	background: #DEE4C5;
-	border: 1px solid #D1DAAD;
-	
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
+	background: #D3DBB3;
+	position: relative;
 }
 
 .typecho-page-main .tag-list h2, ul.category-list h2 {
 	font-size: 13px;
-	padding: 5px 10px 0 10px;
-}
-
-.typecho-page-main .tag-list .items {
 	padding: 5px 10px;
-	background: #F7FBE9;
-	margin-top: 5px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
 }
 
-.typecho-page-main .tag-list span {
+.typecho-page-main .tag-list h2 {
+	border-bottom: 1px solid #F7FBE9;
+}
+
+.typecho-page-main .tag-list ul.items {
+	padding: 5px 10px;
+	background: #EFF5D9;
+	position: relative;
+}
+
+.typecho-page-main .tag-list li {
     padding: 2px 4px;
-    margin: 0 0 10px 0;
+	list-style: none;
+    margin: 0;
     outline: none;
 	line-height: 28px;
 	cursor: move;
+	float: left;
 }
 
-.typecho-page-main .tag-list span.move {
-	border: 1px solid #aaa;
-	padding: 0 3px;
-	z-index: 100;
-	background: #FFF;
-}
-
-.typecho-page-main .tag-list span.size-1 {
+.typecho-page-main .tag-list li.size-1 {
 	font-size: 12px;
 }
 
-.typecho-page-main .tag-list span.size-2 {
+.typecho-page-main .tag-list li.size-2 {
 	font-size: 16px;
 }
 
-.typecho-page-main .tag-list span.size-3 {
+.typecho-page-main .tag-list li.size-3 {
 	font-size: 18px;
 }
 
-.typecho-page-main .tag-list span.size-4 {
+.typecho-page-main .tag-list li.size-4 {
 	font-size: 22px;
 }
 
-.typecho-page-main .tag-list span.size-5 {
+.typecho-page-main .tag-list li.size-5 {
 	font-size: 28px;
 }
 
@@ -1597,23 +1603,15 @@ ul.category-list {
 	padding: 0;
 }
 
-ul.category-list li {
+ul.category-list li, ul.category-list h6 {
 	height: 20px;
 	line-height: 20px;
 	border: none;
 	font-size: 13px;
 	padding: 4px 10px;
-	margin-top: 5px;
 	background: #EFF5D9;
-	border-top: 1px solid #D1DAAD;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	
-	/* hope IE support border radius, God save me! */
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
+	border-top: 1px solid #F7FBE9;
+	border-bottom: 1px solid #DEE4C5;
 }
 
 ul.category-list li:hover {
@@ -1622,6 +1620,17 @@ ul.category-list li:hover {
 
 ul.category-list li a {
 	color: #555;
+}
+
+.tag-list li.move, .category-list li.move {
+	z-index: 100;
+	font-weight: bold;
+	color: #cc0000;
+	background: none;
+}
+
+.tag-list li.clone, .category-list li.clone {
+	color: #EFF5D9;
 }
 
 .manage-metas {
