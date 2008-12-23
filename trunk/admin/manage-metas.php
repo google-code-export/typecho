@@ -14,6 +14,7 @@ include 'menu.php';
                         <li<?php if('tag' == Typecho_Request::getParameter('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php?type=tag'); ?>"><?php _e('标签'); ?></a></li>
                     </ul>
                     
+                    <?php if(!Typecho_Request::isSetParameter('type') || 'category' == Typecho_Request::getParameter('type')): ?>
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
                             <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
@@ -43,6 +44,7 @@ include 'menu.php';
                             </tr>
                         </thead>
                         <tbody>
+                            <?php if($categories->have()): ?>
                             <?php while ($categories->next()): ?>
                             <tr<?php $categories->alt(' class="even"', ''); ?>>
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
@@ -52,15 +54,31 @@ include 'menu.php';
                                 <td><?php $categories->count(); ?></td>
                             </tr>
                             <?php endwhile; ?>
+                            <?php else: ?>
+                            <tr class="even">
+                                <td colspan="5"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
+                            </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                     <input type="hidden" name="do" value="delete" />
                     </form>
-                    
+                    <?php else: ?>
+                    <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud')->to($tags); ?>
+                    <ul class="tag-list clearfix typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                        <?php while ($tags->next()): ?>
+                        <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>"><a href="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></a></li>
+                        <?php endwhile; ?>
+                    </ul>
+                    <?php endif; ?>
                     
                 </div>
                 <div class="column-08 start-17 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
-                    <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
+                    <?php if(!Typecho_Request::isSetParameter('type') || 'category' == Typecho_Request::getParameter('type')): ?>
+                        <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
+                    <?php else: ?>
+                        <?php Typecho_Widget::widget('Widget_Metas_Tag_Edit')->form()->render(); ?>
+                    <?php endif; ?>
                 </div>
         </div>
     </div>

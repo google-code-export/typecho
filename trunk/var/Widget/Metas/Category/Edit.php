@@ -206,37 +206,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->push($category);
         
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被增加",
+        $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被增加',
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        $this->response->goBack();
-    }
-    
-    /**
-     * ajax增加分类
-     * 
-     * @access public
-     * @return void
-     */
-    public function ajaxInsertCategory()
-    {
-        try {
-            $this->form('insert')->validate();
-        } catch (Typecho_Widget_Exception $e) {
-            Typecho_Common::throwAjax(implode(',', $e->getMessages()));
-        }
-        
-        /** 取出数据 */
-        $category = $this->request->from('name');
-        $category['slug'] = Typecho_Common::slugName($category['name']);
-        $category['type'] = 'category';
-        $category['description'] = $category['name'];
-        $category['sort'] = $this->db->fetchObject($this->db->sql()->select('table.metas', 'MAX(sort) AS maxSort')
-        ->where('type = ?', 'category'))->maxSort + 1;
-    
-        /** 插入数据 */
-        Typecho_Common::throwAjax($this->insert($category), $this->options->charset);
+        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
     }
     
     /**
@@ -262,11 +236,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->push($category);
         
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("分类 '<a href=\"%s\">%s</a>' 已经被更新",
+        $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被更新',
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        $this->response->goBack();
+        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
     }
     
     /**
@@ -294,41 +268,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 转向原页 */
-        $this->response->goBack();
-    }
-    
-    /**
-     * 合并分类
-     * 
-     * @access public
-     * @return void
-     */
-    public function mergeCategory()
-    {
-        /** 验证数据 */
-        $validator = new Typecho_Validate($this);
-        $validator->addRule('merge', 'required', _t('分类主键不存在'));
-        $validator->addRule('merge', 'categoryExists', _t('请选择需要合并的分类'));
-        
-        if ($validator->run($this->request->from('merge'))) {
-            $this->widget('Widget_Notice')->set($e->getMessages(), NULL, 'error');
-            $this->response->goBack();
-        }
-        
-        $merge = Typecho_Request::getParameter('merge');
-        $categories = $this->request->mid;
-        
-        if ($categories && is_array($categories)) {
-            $this->merge($merge, 'category', $categories);
-            
-            /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
-        } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
-        }
-        
-        /** 转向原页 */
-        $this->response->goBack();
+        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
     }
     
     /**
@@ -361,7 +301,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function defaultCategory()
     {
         /** 验证数据 */
-        $validator = new Typecho_Validate($this);
+        $validator = new Typecho_Validate();
         $validator->addRule('mid', 'required', _t('分类主键不存在'));
         $validator->addRule('mid', array($this, 'categoryExists'), _t('分类不存在'));
         $validator->run($this->request->from('mid'));
@@ -373,11 +313,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         ->where('type = ?', 'category')->limit(1), array($this, 'push'));
         
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("'<a href=\"%s\">%s</a>' 已经被设为默认分类",
+        $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
         $this->permalink, $this->name), NULL, 'success');
         
         /** 转向原页 */
-        $this->response->goBack();
+        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
     }
     
     /**
@@ -391,7 +331,6 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->onRequest('do', 'insert')->insertCategory();
         $this->onRequest('do', 'update')->updateCategory();
         $this->onRequest('do', 'delete')->deleteCategory();
-        $this->onRequest('do', 'merge')->mergeCategory();
         $this->onRequest('do', 'sort')->sortCategory();
         $this->onRequest('do', 'default')->defaultCategory();
         $this->response->redirect($this->options->adminUrl);
