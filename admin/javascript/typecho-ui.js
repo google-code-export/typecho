@@ -182,7 +182,7 @@ var _typechoHiddenByMouse = function (parent, show) {
     
     if (_el) {
         if (show) {
-            _el.setStyle('display', 'block');
+            _el.setStyle('display', 'inline');
         } else {
             _el.setStyle('display', 'none');
         }
