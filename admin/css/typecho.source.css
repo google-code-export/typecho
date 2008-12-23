@@ -574,7 +574,7 @@ margin-top: 25px;
     font-size: 12px;
 }
 
-.typecho-login legend {
+.typecho-login legend, .hidden-by-mouse {
     display: none;
 }
 

@@ -65,7 +65,7 @@ include 'menu.php';
                             <?php endif; ?>
                             <?php $comments->content(); ?>
                             <div class="line">
-                                <div class="left">
+                                <div class="left hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
                                     <?php else: ?>
