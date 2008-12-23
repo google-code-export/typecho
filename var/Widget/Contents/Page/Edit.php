@@ -89,7 +89,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->goBack();
+            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $insertId, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
         }
@@ -131,7 +131,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->goBack();
+            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->request->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
         }

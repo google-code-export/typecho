@@ -337,7 +337,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->goBack();
+            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $insertId, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
@@ -400,7 +400,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->goBack();
+            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->request->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
