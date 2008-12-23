@@ -20,7 +20,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $page->have() ? 'update' : 'insert'; ?>" />
                                 <button type="submit" onclick="typechoSubmit('form[name=write_page]', 'input[name=draft]', '1');"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" onclick="typechoSubmit('form[name=write_page]', 'input[name=draft]', '0');"><?php if($page->have()): ?><?php _e('更新页面 &raquo;'); ?><?php else: ?><?php _e('发布页面 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" onclick="typechoSubmit('form[name=write_page]', 'input[name=draft]', '0');"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                 </div>
