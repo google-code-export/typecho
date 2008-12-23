@@ -304,17 +304,22 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator = new Typecho_Validate();
         $validator->addRule('mid', 'required', _t('分类主键不存在'));
         $validator->addRule('mid', array($this, 'categoryExists'), _t('分类不存在'));
-        $validator->run($this->request->from('mid'));
         
-        $this->options->update(array('value' => $this->request->mid),
-        $this->db->sql()->where('name = ?', 'defaultCategory'));
+        if ($error = $validator->run($this->request->from('mid'))) {
+            $this->widget('Widget_Notice')->set($error, NULL, 'error');
+        } else {
         
-        $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
-        ->where('type = ?', 'category')->limit(1), array($this, 'push'));
-        
-        /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
-        $this->permalink, $this->name), NULL, 'success');
+            $this->db->query($this->db->update('table.options')
+            ->rows(array('value' => $this->request->mid))
+            ->where('name = ?', 'defaultCategory'));
+            
+            $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
+            ->where('type = ?', 'category')->limit(1), array($this, 'push'));
+            
+            /** 提示信息 */
+            $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
+            $this->permalink, $this->name), NULL, 'success');
+        }
         
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));

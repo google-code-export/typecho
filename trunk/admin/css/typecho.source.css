@@ -333,7 +333,7 @@ button {
  * 提示信息框
  */
 .message {
-    padding: 5px;
+    padding: 5px 10px;
     font-size: 14px;
     color: #333;
     margin-bottom: 10px;
@@ -1172,6 +1172,14 @@ margin-top: 25px;
     color: #e47e00;
 }
 
+.typecho-list-table .description, ul.typecho-list-notable .description {
+    color: #aaa;
+}
+
+.typecho-list-table img.inline {
+	margin-bottom: -3px;
+}
+
 /**
  * 不使用表格的列表
  */
@@ -1205,11 +1213,11 @@ ul.typecho-list-notable .weak {
 	color: #777;
 }
 
-ul.typecho-list-notable .left {
+ul.typecho-list-notable .left, .typecho-list-table .left {
 	float: left;
 }
 
-ul.typecho-list-notable .right {
+ul.typecho-list-notable .right, .typecho-list-table .right {
 	float: right;
 }
 
@@ -1562,6 +1570,20 @@ ul.typecho-post-option .description {
     margin: 0;
 	line-height: 28px;
 	float: left;
+	cursor: pointer;
+}
+
+.typecho-page-main ul.tag-list li input {
+	display: none;
+}
+
+.typecho-page-main ul.tag-list li:hover, .typecho-page-main ul.tag-list li.hover {
+	background: none;
+}
+
+.typecho-page-main ul.tag-list li.checked {
+	background: none;
+	font-weight: bold;
 }
 
 .typecho-page-main ul.tag-list li.size-1 {
