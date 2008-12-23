@@ -177,6 +177,18 @@ var _typechoUncheckItem = function (item) {
     }
 }
 
+var _typechoHiddenByMouse = function (parent, show) {
+    var _el = $(parent).getElement('.hidden-by-mouse');
+    
+    if (_el) {
+        if (show) {
+            _el.setStyle('display', 'block');
+        } else {
+            _el.setStyle('display', 'none');
+        }
+    }
+}
+
 /** 操作按钮 */
 var typechoOperate = function (selector, op) {
     /** 获取元素 */
@@ -246,9 +258,11 @@ var typechoTableListener = function (selector) {
         el.getElements('tbody tr').each(function(item) {
             $(item).addEvents({'mouseover': function() {
                 $(this).addClass('hover');
+                _typechoHiddenByMouse(this, true);
             },
             'mouseleave': function() {
                 $(this).removeClass('hover');
+                _typechoHiddenByMouse(this, false);
             },
             'click': function() {
                 var checkBox = $(this).getElement('input[type=checkbox]');
@@ -275,9 +289,11 @@ var typechoTableListener = function (selector) {
         el.getElements('li').each(function(item) {
             $(item).addEvents({'mouseover': function() {
                 $(this).addClass('hover');
+                _typechoHiddenByMouse(this, true);
             },
             'mouseleave': function() {
                 $(this).removeClass('hover');
+                _typechoHiddenByMouse(this, false);
             },
             'click': function() {
                 var checkBox = $(this).getElement('input[type=checkbox]');
