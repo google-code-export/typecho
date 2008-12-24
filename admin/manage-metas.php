@@ -89,8 +89,7 @@ include 'menu.php';
                         <?php while ($tags->next()): ?>
                         <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
-                        <span><?php $tags->name(); ?></span>
-                        <sub class="hidden-by-mouse"><a href="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php _e('编辑'); ?></a></sub>
+                        <a href="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></a>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>

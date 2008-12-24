@@ -146,6 +146,17 @@ class Typecho_Db
     {
         return $this->_adapterName;
     }
+    
+    /**
+     * 获取表前缀
+     * 
+     * @access public
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->_prefix;
+    }
 
     /**
      * 获取SQL词法构建器实例化对象
