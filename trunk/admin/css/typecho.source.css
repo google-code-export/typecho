@@ -574,7 +574,7 @@ margin-top: 25px;
     font-size: 12px;
 }
 
-.typecho-login legend, .hidden-by-mouse {
+.typecho-login legend {
     display: none;
 }
 
@@ -1180,6 +1180,15 @@ margin-top: 25px;
 	margin-bottom: -3px;
 }
 
+.typecho-list-table tr td .hidden-by-mouse, ul.typecho-list-notable li .hidden-by-mouse {
+	display: none;
+}
+
+.typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse,
+.typecho-list-table tr.hover td .hidden-by-mouse, ul.typecho-list-notable li.hover .hidden-by-mouse {
+	display: inline;
+}
+
 /**
  * 不使用表格的列表
  */
@@ -1579,6 +1588,8 @@ ul.typecho-post-option .description {
 
 .typecho-page-main ul.tag-list li:hover, .typecho-page-main ul.tag-list li.hover {
 	background: none;
+	padding: 2px 4px 1px 4px;
+	border-bottom: 1px solid #555;
 }
 
 .typecho-page-main ul.tag-list li.checked {
