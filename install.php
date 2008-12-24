@@ -237,7 +237,7 @@ Typecho_Plugin::init(\$options->plugins);
                                         $scripts = str_replace('typecho_', $dbConfig['prefix'], $scripts);
                                         
                                         if (isset($dbConfig['charset'])) {
-                                            str_replace('%charset%', $dbConfig['charset'], $scripts);
+                                            $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
                                         }
                                         
                                         $scripts = explode(';', $scripts);
