@@ -18,7 +18,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        if (false == Typecho_Http_Client::get('Curl', 'Socket')) {
+        if (false == Typecho_Http_Client::get()) {
             throw new Typecho_Plugin_Exception(_t('对不起, 您的主机不支持 php-curl 扩展而且没有打开 allow_url_fopen 功能, 无法正常使用此功能'));
         }
     
@@ -156,7 +156,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             }
         }
 
-        $client = Typecho_Http_Client::get('Curl', 'Socket');
+        $client = Typecho_Http_Client::get();
         if (false != $client) {
             $params = parse_url($url);
             $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);

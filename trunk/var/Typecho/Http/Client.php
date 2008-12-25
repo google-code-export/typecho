@@ -41,6 +41,14 @@ class Typecho_Http_Client
     {
         $adapters = func_get_args();
         
+        if (empty($adapters)) {
+            $adapters = array();
+            $adapterFiles = glob(dirname(__FILE__) . '/Client/Adapter/*.php');
+            foreach ($adapterFiles as $file) {
+                $adapters[] = substr(basename($file), 0, -4);
+            }
+        }
+        
         foreach ($adapters as $adapter) {
             require_once 'Typecho/Http/Client/Adapter/' . $adapter . '.php';
             $adapterName = 'Typecho_Http_Client_Adapter_' . $adapter;
