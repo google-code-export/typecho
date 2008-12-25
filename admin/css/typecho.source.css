@@ -695,12 +695,13 @@ margin-top: 25px;
     position: relative;
     top: 0;
 	padding: 0;
+	overflow: hidden;
 }
 
 .typecho-head-guid li {
 	/*margin-bottom: 1px;*/
-	background: url(../images/sprite.png) 0px -370px repeat-x;
-	padding-top: 2px;
+	border-top: 1px solid #EFEFDE;
+	border-bottom: 1px solid #CED6A5;
 }
 
 .typecho-head-guid dd li.first {
