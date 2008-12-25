@@ -2,6 +2,8 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
+
+$stat = Typecho_Widget::widget('Widget_Stat');
 ?>
 <div class="main">
     <div class="body body-950">
@@ -10,7 +12,11 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
                     <li<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?></a></li>
+                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?>
+                    <?php if($stat->draftPagesNum > 0): ?> 
+                        <span class="balloon"><?php $stat->draftPagesNum(); ?></span>
+                    <?php endif; ?>
+                    </a></li>
                 </ul>
                 <div class="typecho-list-operate">
                 <form method="get">

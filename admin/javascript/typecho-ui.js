@@ -127,7 +127,7 @@ var typechoLocation = function (url) {
 
 var typechoToggle = function (sel, btn, showWord, hideWord) {
     var el = $(document).getElement(sel);
-    btn.toggleClass('close');
+    $(btn).toggleClass('close');
     if ('none' == el.getStyle('display')) {
         $(btn).set('html', showWord);
         el.setStyle('display', 'block');

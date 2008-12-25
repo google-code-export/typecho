@@ -23,7 +23,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access private
      * @var string
      */
-    private $_themeFile = 'index.php';
+    private $_themeFile;
     
     /**
      * 分页计算对象
@@ -127,7 +127,15 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access private
      * @var string
      */
-    private $_archiveType;
+    private $_archiveType = 'index';
+    
+    /**
+     * 归档缩略名
+     * 
+     * @access private
+     * @var string
+     */
+    private $_archiveSlug;
     
     /**
      * 构造函数
@@ -291,9 +299,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_description = $this->excerpt;
                 
                 /** 设置模板 */
-                if (!empty($post['template'])) {
+                if ($this->template) {
                     /** 应用自定义模板 */
-                    $this->_themeFile = $this->template;
+                    $this->_themeFile = 'custom/' . $this->template;
                 }
                 
                 /** 设置头部feed */
@@ -310,15 +318,16 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_archiveTitle[] = $this->title;
                 
                 /** 设置归档类型 */
-                $this->_archiveType = 'single';
+                $this->_archiveType = Typecho_Router::$current;
+                
+                /** 设置归档缩略名 */
+                $this->_archiveSlug = 'post' == Typecho_Router::$current ? $this->cid : $this->slug;
                 
                 /** 设置403头 */
                 if ($this->hidden) {
                     $this->response->setStatus(403);
                 }
-                
-                /** 设置风格文件 */
-                $this->_themeFile = 'post' == Typecho_Router::$current ? 'single.php' : 'page.php';
+
                 $hasPushed = true;
                 break;
                 
@@ -365,8 +374,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 设置归档类型 */
                 $this->_archiveType = 'category';
                 
-                /** 设置风格文件 */
-                $this->_themeFile = 'archive.php';
+                /** 设置归档缩略名 */
+                $this->_archiveSlug = $category['slug'];
                 break;
 
             /** 标签归档 */
@@ -412,8 +421,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 设置归档类型 */
                 $this->_archiveType = 'tag';
                 
-                /** 设置风格文件 */
-                $this->_themeFile = 'archive.php';
+                /** 设置归档缩略名 */
+                $this->_archiveSlug = $tag['slug'];
                 break;
 
             /** 日期归档 */
@@ -481,9 +490,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** ATOM 1.0 */
                 $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
-                
-                /** 设置风格文件 */
-                $this->_themeFile = 'archive.php';
                 break;
 
             /** 搜索归档 */
@@ -522,9 +528,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** 设置归档类型 */
                 $this->_archiveType = 'search';
-                
-                /** 设置风格文件 */
-                $this->_themeFile = 'archive.php';
                 break;
 
             default:
@@ -727,22 +730,16 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
-     * 判断归档类型
+     * 判断归档类型和名称
      * 
      * @access public
+     * @param string $archiveType 归档类型
+     * @param string $archiveSlug 归档名称
      * @return boolean
      */
-    public function is()
-    {
-        $types = func_get_args();
-        
-        foreach ($types as $type) {
-            if ($type == $this->_archiveType) {
-                return true;
-            }
-        }
-        
-        return false;
+    public function is($archiveType, $archiveSlug = NULL)
+    {        
+        return ($archiveType == $this->_archiveType) && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
     }
     
     /**
@@ -758,6 +755,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 获取主题文件
+     * 
+     * @access public
+     * @param string $fileName 主题文件
+     * @return void
+     */
+    public function get($fileName)
+    {
+        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
+    }
+    
+    /**
      * 输出视图
      * 
      * @access public
@@ -767,9 +776,47 @@ class Widget_Archive extends Widget_Abstract_Contents
     {    
         /** 添加Pingback */
         $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
+        $themeDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
+        $validated = false;
+
+        /** 个性化模板系统 */
+        if (empty($this->_themeFile) && !empty($this->_archiveType)) {
+        
+            //~ 首先找具体路径, 比如 category/default.php
+            if (!empty($this->_archiveSlug)) {
+                $themeFile = $this->_archiveType . '/' . $this->_archiveSlug . '.php';
+                if (is_file($themeDir . $themeFile)) {
+                    $this->_themeFile = $themeFile;
+                    $validated = true;
+                }
+            }
+
+            //~ 然后找归档类型路径, 比如 category.php
+            if (!$validated) {
+                $themeFile = $this->_archiveType . '.php';
+                if (is_file($themeDir . $themeFile)) {
+                    $this->_themeFile = $themeFile;
+                    $validated = true;
+                }
+            }
+            
+            //~ 最后找归档路径, 比如 archive.php
+            if (!$validated && 'index' != $this->_archiveType) {
+                $themeFile = 'archive.php';
+                if (is_file($themeDir . $themeFile)) {
+                    $this->_themeFile = $themeFile;
+                    $validated = true;
+                }
+            }
+        }
+        
+        /** 文件不存在 */
+        if (!$validated && !is_file($themeDir . $this->_themeFile)) {
+            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+        }
     
         /** 输出模板 */
-        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $this->_themeFile;
+        require_once $themeDir . $this->_themeFile;
         
         /** 挂接插件 */
         $this->plugin()->render($this);
