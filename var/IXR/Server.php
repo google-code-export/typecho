@@ -110,20 +110,20 @@ class IXR_Server
             }
             // Call the method
             $result = $this->$method($args);
-        } 
-        if (is_array($method)) {
-            list($object, $func) = $method;
-            if (!is_callable($method)) {
-                return new IXR_Error(-32601, 'server error. requested class method "'.$object . '.' . $func.'" does not exist.');
-            }
-            $result = call_user_func_array(array($object, $func), $args);
-        } else {
-            // It's a function - does it exist?
-            if (!function_exists($method)) {
+        } else { 
+            if (is_array($method)) {
+                list($object, $func) = $method;
+                if (!is_callable($method)) {
+                    return new IXR_Error(-32601, 'server error. requested class method "'.$object . '.' . $func.'" does not exist.');
+                }
+                $result = call_user_func_array(array($object, $func), $args);
+            } elseif (!function_exists($method)) {
+                // It's a function - does it exist?
                 return new IXR_Error(-32601, 'server error. requested function "'.$method.'" does not exist.');
+            } else {
+                // Call the function
+                $result = $method($args);
             }
-            // Call the function
-            $result = $method($args);
         }
         return $result;
     }
