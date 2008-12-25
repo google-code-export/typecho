@@ -2,6 +2,8 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
+
+$stat = Typecho_Widget::widget('Widget_Stat');
 ?>
 <div class="main">
     <div class="body body-950">
@@ -12,19 +14,40 @@ include 'menu.php';
             
                 <div class="intro-link">
                     <ul>
-                        <li><a href="#">撰写一篇新文章</a></li>
-                        <li><a href="#">创建一个新页面</a></li>
-                        <li><a href="#">等待审核的评论 (10)</a></li>
-                        <li><a href="#">添加一个连接地址</a></li>
-                        <li><a href="#">更换我的主题</a></li>
-                        <li><a href="#">更新我的资料</a></li>
-                        <li><a href="#">修改系统设置</a></li>
+                        <li><a href="#"><?php _e('更新我的资料'); ?></a></li>
+                        <?php if($user->pass('contributor', true)): ?>
+                        <li><a href="<?php $options->adminUrl('write-post.php'); ?>"><?php _e('撰写一篇新文章'); ?></a></li>
+                        <?php if($user->pass('editor', true) && 'on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?> 
+                            <li><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('等待审核的评论'); ?></a>
+                            <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
+                            </li>
+                        <?php elseif($stat->myWaitingCommentsNum > 0): ?>
+                            <li><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('等待审核的评论'); ?></a>
+                            <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
+                            </li>
+                        <?php endif; ?>
+                        <?php if($user->pass('editor', true) && 'on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?> 
+                            <li><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾评论'); ?></a>
+                            <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
+                            </li>
+                        <?php elseif($stat->mySpamCommentsNum > 0): ?>
+                            <li><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾评论'); ?></a>
+                            <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
+                            </li>
+                        <?php endif; ?>
+                        <?php if($user->pass('editor', true)): ?>
+                        <li><a href="<?php $options->adminUrl('write-page.php'); ?>"><?php _e('创建一个新页面'); ?></a></li>
+                        <?php if($user->pass('administrator', true)): ?>
+                        <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('更换我的主题'); ?></a></li>
+                        <li><a href="<?php $options->adminUrl('option-general.php'); ?>"><?php _e('修改系统设置'); ?></a></li>
+                        <?php endif; ?>
+                        <?php endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
             
                 <h3><?php _e('统计信息'); ?></h3>
                 <div class="status">
-                	<?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?>
                     <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
                     $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
                     <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>

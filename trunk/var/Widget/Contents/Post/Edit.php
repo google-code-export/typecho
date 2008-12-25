@@ -38,6 +38,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         return array();
     }
+    
+    /**
+     * 获取当前所有自定义模板
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function ___templates()
+    {
+        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/custom/*.php');
+        return array_map('basename', $files);
+    }
 
     /**
      * 执行函数

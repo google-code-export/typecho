@@ -65,6 +65,34 @@ class Widget_Stat extends Typecho_Widget
     }
     
     /**
+     * 获取待审核的文章数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___waitingPostsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'waiting')
+                    ->where('table.contents.status = ?', 'publish'))->num;
+    }
+    
+    /**
+     * 获取草稿文章数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___draftPostsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'draft')
+                    ->where('table.contents.status = ?', 'publish'))->num;
+    }
+    
+    /**
      * 获取当前用户已发布的文章数目
      * 
      * @access protected
@@ -77,6 +105,64 @@ class Widget_Stat extends Typecho_Widget
                     ->where('table.contents.type = ?', 'post')
                     ->where('table.contents.status = ?', 'publish')
                     ->where('table.contents.authorId = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取当前用户待审核文章数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___myWaitingPostsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.status = ?', 'waiting')
+                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取当前用户草稿文章数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___myDraftPostsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.status = ?', 'draft')
+                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取已发布页面数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___publishedPagesNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'page')
+                    ->where('table.contents.status = ?', 'publish'))->num;
+    }
+    
+    /**
+     * 获取草稿页面数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___draftPagesNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'page')
+                    ->where('table.contents.status = ?', 'draft'))->num;
     }
     
     /**
@@ -93,6 +179,32 @@ class Widget_Stat extends Typecho_Widget
     }
     
     /**
+     * 获取当前待审核的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___waitingCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'waiting'))->num;
+    }
+    
+    /**
+     * 获取当前垃圾评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___spamCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'spam'))->num;
+    }
+    
+    /**
      * 获取当前用户显示的评论数目
      * 
      * @access protected
@@ -103,6 +215,34 @@ class Widget_Stat extends Typecho_Widget
         return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
                     ->from('table.comments')
                     ->where('table.comments.status = ?', 'approved')
+                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取当前用户显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___myWaitingCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'waiting')
+                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+    }
+    
+    /**
+     * 获取当前用户显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___mySpamCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'spam')
                     ->where('table.comments.ownerId = ?', $this->user->uid))->num;
     }
     

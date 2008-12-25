@@ -147,7 +147,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         $updateStruct = array();
         foreach ($content as $key => $val) {
-            if (isset($preUpdateStruct[$key])) {
+            if (array_key_exists($key, $preUpdateStruct)) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
