@@ -79,11 +79,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         /** 页面提示信息 */
         if ('publish' == $contents['status']) {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t("页面 '<a href=\"%s\">%s</a>' 已经被创建", $this->permalink, $this->title)
+            _t('页面 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
         } else {
             $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t("草稿 '%s' 已经被保存", $this->title) :
+            _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
 
@@ -121,11 +121,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         /** 页面提示信息 */
         if ('publish' == $contents['status']) {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t("页面 '<a href=\"%s\">%s</a>' 已经被更新", $this->permalink, $this->title)
+            _t('页面 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
             : _t('页面提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         } else {
             $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t("草稿 '%s' 已经被保存", $this->title) :
+            _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
 

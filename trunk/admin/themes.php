@@ -22,7 +22,7 @@ include 'menu.php';
                     <?php Typecho_Widget::widget('Widget_Themes_List')->to($themes); ?>
                     <?php while($themes->next()): ?>
                     <?php $themes->alt('<tr>', ''); ?>
-                    <td <?php if($options->theme == $themes->name): ?>class="current"<?php endif; ?>>
+                    <td class="<?php if($themes->activated): ?>current <?php endif; ?>typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                         <div class="column-04">
                         <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
                         </div>
