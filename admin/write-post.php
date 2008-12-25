@@ -19,7 +19,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
                         <p class="submit">
                             <span class="left">
-                                <span onclick="typechoToggle('#advance-panel', this, '<?php _e('&laquo; 收起高级选项'); ?>', '<?php _e('&laquo; 展开高级选项'); ?>');" class="advance"><?php _e('&laquo; 展开高级选项'); ?></span>
+                                <span onclick="typechoToggle('#advance-panel', this, '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');" class="advance close">
+                                <?php _e('展开高级选项'); ?>
+                                </span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />

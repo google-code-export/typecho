@@ -66,6 +66,11 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
 
         /** 设置header信息 */
         if (!empty($this->headers)) {
+            if (isset($this->headers['User-Agent'])) {
+                curl_setopt($ch, CURLOPT_USERAGENT, $this->headers['User-Agent']);
+                unset($this->headers['User-Agent']);
+            }
+        
             curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         }
 

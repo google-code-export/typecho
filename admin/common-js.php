@@ -2,7 +2,7 @@
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/mootools-1.2.1-core-yc.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/mootools-1.2.1-more.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho-ui.js'); ?>"></script>
-<script type="text/javascript"> 
+<script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
             var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});

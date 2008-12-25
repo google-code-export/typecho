@@ -1564,6 +1564,12 @@ ul.typecho-post-option .description {
 	color: #333;
 	text-decoration: underline;
 	cursor: pointer;
+	padding-left: 16px;
+	background: url(../images/arrow_up.gif) left center no-repeat;
+}
+
+.typecho-post-area .close {
+	background: url(../images/arrow_down.gif) left center no-repeat;
 }
 
 /**
