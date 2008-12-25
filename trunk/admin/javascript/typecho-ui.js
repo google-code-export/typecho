@@ -29,6 +29,8 @@ var typechoGuid = function (el, config) {
                     _d.setStyle('display', 'none');
                 } else {
                     _d.setStyle('display', 'block');
+                    _d.getElement('ul li:first-child').setStyle('border-top', 'none');
+                    _d.getElement('ul li:last-child').setStyle('border-bottom', 'none');
                 }
             }
         }

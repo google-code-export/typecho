@@ -235,13 +235,39 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'post':
                 
                 /** 如果是单篇文章或独立页面 */
-                if (NULL !== $this->request->cid) {
+                if (isset($this->request->cid)) {
                     $select->where('table.contents.cid = ?', $this->request->cid);
-                } else if (NULL !== $this->request->slug) {
+                }
+                
+                /** 匹配缩略名 */
+                if (isset($this->request->slug)) {
                     $select->where('table.contents.slug = ?', $this->request->slug);
-                } else {
-                    /** 对没有索引情况下的判断 */
-                    throw new Typecho_Widget_Exception('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
+                }
+                
+                /** 匹配时间 */
+                if (isset($this->request->year)) {
+                    $year = $this->request->year;
+                    
+                    $fromMonth = 1;
+                    $toMonth = 12;
+                    
+                    if (isset($this->request->month)) {
+                        $fromMonth = $this->request->month;
+                        $toMonth = $fromMonth;
+                        
+                        $fromDay = 1;
+                        $toDay = idate('t', mktime(0, 0, 0, $toMonth, 1, $year));
+                        
+                        if (isset($this->request->day)) {
+                            $fromDay = $this->request->day;
+                            $toDay = $fromDay;
+                        }
+                    }
+                    
+                    /** 获取起始GMT时间的unix时间戳 */
+                    $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - idate('z');
+                    $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - idate('z');
+                    $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
                 }
 
                 /** 保存密码至cookie */
@@ -249,44 +275,46 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
                 }
                 
+                /** 匹配类型 */
                 $select->where('table.contents.type = ?', Typecho_Router::$current)->limit(1);
                 $this->db->fetchRow($select, array($this, 'push'));
+                
+                if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
+                    /** 对没有索引情况下的判断 */
+                    throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+                }
 
-                if ($this->have()) {
-                    /** 设置关键词 */
-                    $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
-                    
-                    /** 设置描述 */
-                    $this->_description = $this->excerpt;
-                    
-                    /** 设置模板 */
-                    if (!empty($post['template'])) {
-                        /** 应用自定义模板 */
-                        $this->_themeFile = $this->template;
-                    }
-                    
-                    /** 设置头部feed */
-                    /** RSS 2.0 */
-                    $this->_feedUrl = $this->feedUrl;
-                    
-                    /** RSS 1.0 */
-                    $this->_feedRssUrl = $this->feedRssUrl;
-                    
-                    /** ATOM 1.0 */
-                    $this->_feedAtomUrl = $this->feedAtomUrl;
-                    
-                    /** 设置标题 */
-                    $this->_archiveTitle[] = $this->title;
-                    
-                    /** 设置归档类型 */
-                    $this->_archiveType = 'single';
-                    
-                    /** 设置403头 */
-                    if ($this->hidden) {
-                        $this->response->setStatus(403);
-                    }
-                } else {
-                    throw new Typecho_Widget_Exception('post' == Typecho_Router::$current ? _t('文章不存在') : _t('页面不存在'), 404);
+                /** 设置关键词 */
+                $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+                
+                /** 设置描述 */
+                $this->_description = $this->excerpt;
+                
+                /** 设置模板 */
+                if (!empty($post['template'])) {
+                    /** 应用自定义模板 */
+                    $this->_themeFile = $this->template;
+                }
+                
+                /** 设置头部feed */
+                /** RSS 2.0 */
+                $this->_feedUrl = $this->feedUrl;
+                
+                /** RSS 1.0 */
+                $this->_feedRssUrl = $this->feedRssUrl;
+                
+                /** ATOM 1.0 */
+                $this->_feedAtomUrl = $this->feedAtomUrl;
+                
+                /** 设置标题 */
+                $this->_archiveTitle[] = $this->title;
+                
+                /** 设置归档类型 */
+                $this->_archiveType = 'single';
+                
+                /** 设置403头 */
+                if ($this->hidden) {
+                    $this->response->setStatus(403);
                 }
                 
                 /** 设置风格文件 */
