@@ -10,7 +10,7 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
                     <li<?php if(!Typecho_Request::isSetParameter('status') || 'approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('已通过'); ?></a></li>
-                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?><span class="balloon">1</span></a></li>
                     <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?></a></li>
                     <?php if($user->pass('contributor', true)): ?>
                         <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>

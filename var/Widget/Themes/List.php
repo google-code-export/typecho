@@ -29,26 +29,40 @@ class Widget_Themes_List extends Typecho_Widget
     public function execute()
     {
         $themes = glob(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/*');
-        $options = $this->widget('Widget_Options');
-        $siteUrl = $options->siteUrl;
-        $adminUrl = $options->adminUrl;
         
-        foreach ($themes as $theme) {
-            $themeFile = $theme . '/index.php';
-            if (is_file($themeFile)) {
-                $info = Typecho_Plugin::parseInfo($themeFile);
-                $info['name'] = basename($theme);
-                
-                $screen = glob($theme . '/screen*.{jpg,png,gif,bmp,jpeg,JPG,PNG,GIF,BMG,JPEG}', GLOB_BRACE);
-                if ($screen) {
-                    $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') . 
-                    '/' . $info['name'] . '/' . basename(current($screen)), $siteUrl);
-                } else {
-                    $info['screen'] = Typecho_Common::url('/images/noscreen.gif', $adminUrl);
+        if ($themes) {
+            $options = $this->widget('Widget_Options');
+            $siteUrl = $options->siteUrl;
+            $adminUrl = $options->adminUrl;
+            $activated  = 0;
+            $result = array();
+            
+            foreach ($themes as $key => $theme) {
+                $themeFile = $theme . '/index.php';
+                if (is_file($themeFile)) {
+                    $info = Typecho_Plugin::parseInfo($themeFile);
+                    $info['name'] = basename($theme);
+                    
+                    if ($info['activated'] = ($options->theme == $info['name'])) {
+                        $activated = $key;
+                    }
+                    
+                    $screen = glob($theme . '/screen*.{jpg,png,gif,bmp,jpeg,JPG,PNG,GIF,BMG,JPEG}', GLOB_BRACE);
+                    if ($screen) {
+                        $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') . 
+                        '/' . $info['name'] . '/' . basename(current($screen)), $siteUrl);
+                    } else {
+                        $info['screen'] = Typecho_Common::url('/images/noscreen.gif', $adminUrl);
+                    }
+                    
+                    $result[] = $info;
                 }
-                
-                $this->push($info);
             }
+            
+            $clone = $result[$activated];
+            unset($result[$activated]);
+            array_unshift($result, $clone);
+            array_filter($result, array($this, 'push'));
         }
     }
 }

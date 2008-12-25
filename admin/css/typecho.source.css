@@ -75,7 +75,7 @@ a:hover {
     text-decoration: underline;
 }
 
-a.button {
+a.button, span.balloon {
     background: #BD6800;
 	color: #FFF;
 	padding: 2px 4px;
@@ -95,6 +95,11 @@ a.button {
 	border-top-right-radius: 2px;
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
+}
+
+span.balloon {
+	padding: 0 4px;
+	margin: 0 5px;
 }
 
 a.button:hover {
