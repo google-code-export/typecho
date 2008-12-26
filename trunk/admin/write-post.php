@@ -27,8 +27,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
-                                <button type="submit" onclick="typechoSubmit('form[name=write_post]', 'input[name=draft]', '1');"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" onclick="typechoSubmit('form[name=write_post]', 'input[name=draft]', '0');"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" onclick="$(document).getElement('input[name=draft]').set('value', 1);"><?php _e('保存并继续编辑'); ?></button>
+                                <button type="submit" onclick="$(document).getElement('input[name=draft]').set('value', 0);"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>

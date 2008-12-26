@@ -141,4 +141,45 @@ class Widget_Abstract_Metas extends Widget_Abstract
             ->where('mid = ?', $mid)->where('type = ?', $type));
         }
     }
+    
+    /**
+     * 合并数据
+     * 
+     * @access public
+     * @param integer $mid 数据主键
+     * @param string $type 数据类型
+     * @param array $metas 需要合并的数据集
+     * @return void
+     */
+    public function merge($mid, $type, array $metas)
+    {
+        $contents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')
+        ->from('table.relationships')
+        ->where('mid = ?', $mid)), 'cid');
+    
+        foreach ($metas as $meta) {
+            if ($mid != $meta) {
+                $existsContents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->db
+                ->select('cid')->from('table.relationships')
+                ->where('mid = ?', $meta)), 'cid');
+                
+                $where = $this->db->sql()->where('mid = ? AND type = ?', $meta, $type);
+                $this->delete($where);
+                $diffContents = array_diff($existsContents, $contents);
+                
+                foreach ($diffContents as $content) {
+                    $this->db->query($this->db->insert('table.relationships')
+                    ->rows(array('mid' => $mid, 'cid' => $content)));
+                }
+                
+                unset($existsContents);
+            }
+        }
+        
+        $num = $this->db->fetchObject($this->db
+        ->select(array('COUNT(mid)' => 'num'))->from('table.relationships')
+        ->where('table.relationships.mid = ?', $mid))->num;
+        
+        $this->update(array('count' => $num), $this->db->sql()->where('mid = ?', $mid));
+    }
 }

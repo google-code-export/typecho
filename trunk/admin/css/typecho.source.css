@@ -102,8 +102,7 @@ span.balloon {
 }
 
 a.button:hover {
-    filter: Alpha(opacity=65);
-    opacity:.65;
+    background: #D29B51;
 }
 
 a.important {
@@ -1276,10 +1275,6 @@ ul.typecho-list-notable li {
 
 .typecho-theme-list tbody tr td.current {
     background: #eff5d9;
-}
-
-.typecho-theme-list tbody tr td.hover, .typecho-theme-list tbody tr td:hover {
-	background: #E3EEBD;
 }
 
 /**

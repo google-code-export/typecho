@@ -15,17 +15,21 @@ include 'menu.php';
                     </ul>
                     
                     <?php if(!Typecho_Request::isSetParameter('type') || 'category' == Typecho_Request::getParameter('type')): ?>
+                    <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
+                    <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('Metas/Category/Edit.do'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
                             <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
                             <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span onclick="typechoSubmit('form[name=manage_categories]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                            <span onclick="typechoSubmit('form[name=manage_categories]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>, 
+                            <span onclick="typechoSubmit('form[name=manage_categories]', 'input[name=do]', 'merge');" class="operate-button select-submit"><?php _e('合并到'); ?></span>
+                            <select name="merge">
+                                <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
+                            </select>
                         </p>
                     </div>
                     
-                    <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('Metas/Category/Edit.do'); ?>">
-                    <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
                     <table class="typecho-list-table">
                         <colgroup>
                             <col width="25"/>
