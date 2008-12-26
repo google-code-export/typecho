@@ -55,7 +55,7 @@ class Widget_Themes_List extends Typecho_Widget
                         $info['screen'] = Typecho_Common::url('/images/noscreen.gif', $adminUrl);
                     }
                     
-                    $result[] = $info;
+                    $result[$key] = $info;
                 }
             }
             
