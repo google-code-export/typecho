@@ -87,7 +87,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>
                             <td><?php $posts->dateWord(); ?></td>
-                            <td><?php $posts->category(' | '); ?></td>
+                            <td><?php $posts->category(', '); ?></td>
                             <td><?php $posts->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
                             <td><?php if('post' == $posts->type):
                         _e('<a href="%s">已发布</a>', $posts->permalink);

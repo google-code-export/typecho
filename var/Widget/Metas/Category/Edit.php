@@ -272,6 +272,40 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     }
     
     /**
+     * 合并分类
+     * 
+     * @access public
+     * @return void
+     */
+    public function mergeCategory()
+    {
+        /** 验证数据 */
+        $validator = new Typecho_Validate();
+        $validator->addRule('merge', 'required', _t('分类主键不存在'));
+        $validator->addRule('merge', array($this, 'categoryExists'), _t('请选择需要合并的分类'));
+        
+        if ($validator->run($this->request->from('merge'))) {
+            $this->widget('Widget_Notice')->set($e->getMessages(), NULL, 'error');
+            $this->response->goBack();
+        }
+        
+        $merge = $this->request->merge;
+        $categories = $this->request->mid;
+        
+        if ($categories && is_array($categories)) {
+            $this->merge($merge, 'category', $categories);
+            
+            /** 提示信息 */
+            $this->widget('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+        }
+        
+        /** 转向原页 */
+        $this->response->goBack();
+    }
+    
+    /**
      * 分类排序
      * 
      * @access public
@@ -336,6 +370,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->onRequest('do', 'insert')->insertCategory();
         $this->onRequest('do', 'update')->updateCategory();
         $this->onRequest('do', 'delete')->deleteCategory();
+        $this->onRequest('do', 'merge')->mergeCategory();
         $this->onRequest('do', 'sort')->sortCategory();
         $this->onRequest('do', 'default')->defaultCategory();
         $this->response->redirect($this->options->adminUrl);
