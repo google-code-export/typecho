@@ -29,8 +29,8 @@ class IXR_Date {
     }
     function parseTimestamp($timestamp) {
         $this->year = date('Y', $timestamp);
-        $this->month = date('Y', $timestamp);
-        $this->day = date('Y', $timestamp);
+        $this->month = date('m', $timestamp);
+        $this->day = date('d', $timestamp);
         $this->hour = date('H', $timestamp);
         $this->minute = date('i', $timestamp);
         $this->second = date('s', $timestamp);
