@@ -631,7 +631,7 @@ margin-top: 25px;
     color: #fff;
     position: relative;
     z-index: 250; /* IE 是个 250 */
-	border-bottom: 1px solid #DCE2C0;
+	/*border-bottom: 1px solid #DCE2C0;*/
 }
 
 .typecho-head-guid dl {
@@ -663,7 +663,7 @@ margin-top: 25px;
 .typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
 .typecho-head-guid dt a:hover {
     background: #444 /*url(../images/sprite.png) 0 -360px repeat-x*/;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 
 .typecho-head-guid dd {
@@ -682,8 +682,8 @@ margin-top: 25px;
 	padding: 10px;
     z-index: 250;
     top: 30px;
-	min-width: 180px;
-	*width: 180px; /* IE需要这个宽度 */
+	min-width: 140px;
+	*width: 140px; /* IE需要这个宽度 */
 	-moz-border-radius-bottomleft: 3px;
 	-moz-border-radius-bottomright: 3px;
 	-webkit-border-bottom-left-radius: 3px;
@@ -1295,6 +1295,7 @@ ul.typecho-list-notable li {
 .typecho-page-main .typecho-option label.typecho-label {
     width: 190px;
     margin-left: -200px;
+	font-weight: bold;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option label.typecho-label {
