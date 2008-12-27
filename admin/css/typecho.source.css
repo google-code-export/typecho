@@ -683,7 +683,7 @@ margin-top: 25px;
     z-index: 250;
     top: 30px;
 	min-width: 140px;
-	*width: 140px; /* IE需要这个宽度 */
+	_width: 140px; /* IE6需要这个宽度 */
 	-moz-border-radius-bottomleft: 3px;
 	-moz-border-radius-bottomright: 3px;
 	-webkit-border-bottom-left-radius: 3px;
