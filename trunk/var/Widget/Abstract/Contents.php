@@ -106,7 +106,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
-        echo $this->db->insert('table.contents')->rows($insertStruct);
         /** 更新缩略名 */
         $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
         $this->db->query($this->db->update('table.contents')
