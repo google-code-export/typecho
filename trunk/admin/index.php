@@ -85,19 +85,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             </div>
 
             <div class="column-06 start-19 typecho-dashboard-nav">
-                <div class="update-check">
-                    <p class="current">您当前使用的版本是 <em>0.2</em></p>
-                    <p class="latest"><a href="#">官方最新版本是 <em>0.2</em></a></p>
+                <?php if ($version = Typecho_Request::getCookie('__typecho_check_version')): ?>
+                <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <p class="current"><?php _e('您当前使用的版本是'); ?> <em><?php echo $version['current']; ?></em></p>
+                    <p class="latest">
+                    <a href="<?php echo $version['link']; ?>"><?php _e('官方最新版本是'); ?> <em><?php echo $version['latest']; ?></em></a>
+                    </p>
                 </div>
-                <h3>官方消息</h3>
-                <div class="intro-link">
+                <?php endif; ?>
+                <h3><?php _e('官方消息'); ?></h3>
+                <div id="typecho-message" class="intro-link">
                     <ul>
-                        <li><a href="#">Typecho杭州研究院成立</a> - <span class="date">8月7日</span></li>
-                        <li><a href="#">欢迎Fen回归</a> - <span class="date">8月7日</span></li>
-                        <li><a href="#">Typecho开始支持PostgreSQL</a> - <span class="date">8月7日</span></li>
-                        <li><a href="#">功能需求与UI关心</a> - <span class="date">8月7日</span></li>
-                        <li><a href="#">下阶段工作计划</a> - <span class="date">8月7日</span></li>
-                        <li><a href="#">Some Big Sites Are Using Google Trends To Direct Editorial</a> - <span class="date">8月7日</span></li>
+                        <li><?php _e('读取中...'); ?></li>
                     </ul>
                 </div>
             </div>
@@ -106,4 +105,41 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     </div>
 </div>
 <?php include 'common-js.php'; ?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+            var _feedRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=feed");
+            _feedRequest.addEvent('onSuccess', function (responseJSON) {
+                $(document).getElement('#typecho-message ul li').destroy();
+                responseJSON.each(function (item) {
+                    var _li = document.createElement('li');
+                    $(_li).set('html', '<a target="_blank" href="' + item.link + '">' + item.title + '</a> - <span class="date">' + item.date + '</span>');
+                    var _ul = $(document).getElement('#typecho-message ul');
+                    _ul.appendChild(_li);
+                });
+            });
+            
+            <?php if ($user->pass('editor') && !Typecho_Request::getCookie('__typecho_check_version')): ?>
+            var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=checkVersion");
+            _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
+                if (responseJSON.available) {
+                    var _div = document.createElement('div');
+                    $(_div).addClass('update-check');
+                    $(_div).addClass('typecho-radius-topleft');
+                    $(_div).addClass('typecho-radius-topright');
+                    $(_div).addClass('typecho-radius-bottomleft');
+                    $(_div).addClass('typecho-radius-bottomright');
+                    var _html = '<p class="current"><?php _e('您当前使用的版本是'); ?> <em>' + responseJSON.current + '</em></p>';
+                    _html += '<p class="latest"><a href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>';
+                    $(_div).set('html', _html);
+                    
+                    $(_div).fade('hide');
+                    $(document).getElement('.start-19').insertBefore(_div, $(document).getElement('.start-19 h3'));
+                    $(_div).fade('in');
+                }
+            });
+            <?php endif; ?>
+        });
+    })();
+</script>
 <?php include 'copyright.php'; ?>

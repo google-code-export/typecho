@@ -355,6 +355,7 @@ abstract class Typecho_Http_Client_Adapter
      */
     public function getResponseHeader($key)
     {
+        $key = strtolower($key);
         return isset($this->responseHeader[$key]) ? $this->responseHeader[$key] : NULL;
     }
     

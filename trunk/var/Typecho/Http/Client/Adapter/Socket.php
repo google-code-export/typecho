@@ -96,12 +96,14 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 $request .= $eol;
                 $request .= $content;
             }
+        } else {
+            $request .= $eol;
         }
         
         /** 打开连接 */
         $socket = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
         if (false === $socket) {
-            throw new Typecho_Http_Client($errno . ':' . $errstr);
+            throw new Typecho_Http_Client_Exception($errno . ':' . $errstr);
         }
         
         /** 发送数据 */
@@ -117,5 +119,23 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         
         fclose($socket);
         return $response;
+    }
+    
+    /**
+     * 获取回执身体
+     * 
+     * @access public
+     * @return string
+     */
+    public function getResponseBody()
+    {
+        /** 支持chunked编码 */
+        if ('chunked' == $this->getResponseHeader('Transfer-Encoding')) {
+            $parts = explode("\r\n", $this->reponseBody, 2);
+            $counter = hexdec($parts[0]);
+            $this->reponseBody = substr($parts[1], 0, $counter);
+        }
+        
+        return $this->reponseBody;
     }
 }
