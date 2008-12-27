@@ -43,7 +43,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-            ->send('http://code.google.com/feeds/p/magike/downloads/basic');
+            ->send('http://code.google.com/feeds/p/typecho/downloads/basic');
             
             /** 匹配内容体 */
             $response = $client->getResponseBody();
@@ -57,7 +57,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
                     $title = trim($matches[2][$key]);
-                    $title = '0.4(8.12.28)-release';
                     if (preg_match("/([0-9\.]+)\(([0-9\.]+)\)\-release/is", $title, $out)) {
                         if (version_compare($out[1] . '.' . $out[2], $version, '>')) {
                             $result = array('available' => true, 'latest' => $out[1],
