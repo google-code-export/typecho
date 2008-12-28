@@ -301,7 +301,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 设置模板 */
                 if ($this->template) {
                     /** 应用自定义模板 */
-                    $this->_themeFile = 'custom/' . $this->template;
+                    $this->_themeFile = $this->template;
                 }
                 
                 /** 设置头部feed */
@@ -739,7 +739,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function is($archiveType, $archiveSlug = NULL)
     {        
-        return ($archiveType == $this->_archiveType) && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
+        return ($archiveType == $this->_archiveType || ('archive' == $archiveType && 'index' != $this->_archiveType))
+        && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
     }
     
     /**
@@ -761,7 +762,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $fileName 主题文件
      * @return void
      */
-    public function get($fileName)
+    public function need($fileName)
     {
         require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
     }

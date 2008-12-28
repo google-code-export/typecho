@@ -157,7 +157,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
         }
 
         $client = Typecho_Http_Client::get();
-        if (false != $client) {
+        if (false != $client && $key) {
             $params = parse_url($url);
             $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
 

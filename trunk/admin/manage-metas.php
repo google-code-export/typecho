@@ -96,9 +96,7 @@ include 'menu.php';
                         <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
-                        <?php if ($tags->count > 0): ?>
                         <sup><a class="balloon-button" href="<?php $tags->permalink(); ?>"><?php $tags->count(); ?></a></sup>
-                        <?php endif; ?>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>

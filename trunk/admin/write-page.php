@@ -39,12 +39,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                     <select name="template">
                                         <option value=""><?php _e('不选择'); ?></option>
                                         <?php foreach ($page->templates as $template): ?>
-                                        <option value="<?php echo $template; ?>"<?php if($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $template; ?></option>
+                                        <option value="<?php echo $template['value']; ?>"<?php if($template['value'] == $page->template): ?> selected="true"<?php endif; ?>><?php echo $template['name']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </p>
                                 <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?><br/>
-                                <?php _e('自定义模板文件所在的目录是你当前模板目录下面的custom目录'); ?></p>
                             </div>
                             <div class="column-06">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
