@@ -150,17 +150,21 @@ var typechoSubmit = function (formSel, inputSel, op) {
 
 /** 提交按钮自动失效,防止重复提交 */
 var typechoAutoDisableSubmit = function () {
+    $(document).getElements('input[type=submit]').removeProperty('disabled');
+    $(document).getElements('button[type=submit]').removeProperty('disabled');
 
     $(document).getElements('input[type=submit]').addEvent('click', function (event) {
             event.stopPropagation();
             $(this).setProperty('disabled', true);
             $(this).getParent('form').submit();
+            return false;
     });
     
     $(document).getElements('button[type=submit]').addEvent('click', function (event) {
             event.stopPropagation();
             $(this).setProperty('disabled', true);
             $(this).getParent('form').submit();
+            return false;
     });
 }
 
@@ -170,6 +174,8 @@ var _typechoCheckItem = function (item) {
     } else {
         item.addClass('checked');
     }
+    
+    item.fireEvent('checked', item);
 }
 
 var _typechoUncheckItem = function (item) {
@@ -178,6 +184,8 @@ var _typechoUncheckItem = function (item) {
     } else {
         item.removeClass('checked');
     }
+    
+    item.fireEvent('unchecked', item);
 }
 
 /** 操作按钮 */
@@ -228,67 +236,69 @@ var typechoOperate = function (selector, op) {
 
 var typechoTableListener = function (selector) {
     /** 获取元素 */
-    var el = $(document).getElement(selector);
+    var _table = $(document).getElements(selector);
     
-    if (el && 'table' == el.get('tag')) {
-        /** 如果是标准表格 */
-        
-        /** 监听click事件 */
-        el.getElements('tbody tr td input[type=checkbox]').each(function(item) {
-            $(item).addEvent('click', function(event) {
-                event.stopPropagation();
-                if ($(this).getProperty('checked')) {
-                    _typechoCheckItem($(this).getParent('tr'));
-                } else {
-                    _typechoUncheckItem($(this).getParent('tr'));
-                }
+    _table.each(function (el) {
+        if (el && 'table' == el.get('tag')) {
+            /** 如果是标准表格 */
+            
+            /** 监听click事件 */
+            el.getElements('tbody tr td input[type=checkbox]').each(function(item) {
+                $(item).addEvent('click', function(event) {
+                    event.stopPropagation();
+                    if ($(this).getProperty('checked')) {
+                        _typechoCheckItem($(this).getParent('tr'));
+                    } else {
+                        _typechoUncheckItem($(this).getParent('tr'));
+                    }
+                });
             });
-        });
-        
-        /** 监听鼠标事件 */
-        el.getElements('tbody tr').each(function(item) {
-            $(item).addEvents({'mouseover': function() {
-                $(this).addClass('hover');
-            },
-            'mouseleave': function() {
-                $(this).removeClass('hover');
-            },
-            'click': function() {
-                var checkBox = $(this).getElement('input[type=checkbox]');
-                if (checkBox) {
-                    checkBox.click();
+            
+            /** 监听鼠标事件 */
+            el.getElements('tbody tr').each(function(item) {
+                $(item).addEvents({'mouseover': function() {
+                    $(this).addClass('hover');
+                },
+                'mouseleave': function() {
+                    $(this).removeClass('hover');
+                },
+                'click': function() {
+                    var checkBox = $(this).getElement('input[type=checkbox]');
+                    if (checkBox) {
+                        checkBox.click();
+                    }
                 }
-            }
+                });
             });
-        });
-    } else if (el && 'ul' == el.get('tag')) {
-        /** 如果是列表形式 */
-        el.getElements('li input[type=checkbox]').each(function(item) {
-            $(item).addEvent('click', function(event) {
-                event.stopPropagation();
-                if ($(this).getProperty('checked')) {
-                    _typechoCheckItem($(this).getParent('li'));
-                } else {
-                    _typechoUncheckItem($(this).getParent('li'));
+        } else if (el && 'ul' == el.get('tag')) {
+            /** 如果是列表形式 */
+            el.getElements('li input[type=checkbox]').each(function(item) {
+                $(item).addEvent('click', function(event) {
+                    event.stopPropagation();
+                    if ($(this).getProperty('checked')) {
+                        _typechoCheckItem($(this).getParent('li'));
+                    } else {
+                        _typechoUncheckItem($(this).getParent('li'));
+                    }
+                });
+            });
+            
+            /** 监听鼠标事件 */
+            el.getElements('li').each(function(item) {
+                $(item).addEvents({'mouseover': function() {
+                    $(this).addClass('hover');
+                },
+                'mouseleave': function() {
+                    $(this).removeClass('hover');
+                },
+                'click': function() {
+                    var checkBox = $(this).getElement('input[type=checkbox]');
+                    if (checkBox) {
+                        checkBox.click();
+                    }
                 }
+                });
             });
-        });
-        
-        /** 监听鼠标事件 */
-        el.getElements('li').each(function(item) {
-            $(item).addEvents({'mouseover': function() {
-                $(this).addClass('hover');
-            },
-            'mouseleave': function() {
-                $(this).removeClass('hover');
-            },
-            'click': function() {
-                var checkBox = $(this).getElement('input[type=checkbox]');
-                if (checkBox) {
-                    checkBox.click();
-                }
-            }
-            });
-        });
-    }
+        }
+    });
 };
