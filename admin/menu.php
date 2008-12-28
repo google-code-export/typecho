@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<div class="typecho-head-guid">
+<div class="typecho-head-guid body-950">
     <dl id="typecho:guid">
         <?php $menu->output(); ?>
     </dl>
