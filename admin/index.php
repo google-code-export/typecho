@@ -85,7 +85,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             </div>
 
             <div class="column-06 start-19 typecho-dashboard-nav">
-                <?php if ($version = Typecho_Request::getCookie('__typecho_check_version')): ?>
+                <?php if ($version = Typecho_Request::getCookie('__typecho_check_version') && $version['available']): ?>
                 <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <p class="current"><?php _e('您当前使用的版本是'); ?> <em><?php echo $version['current']; ?></em></p>
                     <p class="latest">
