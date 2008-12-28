@@ -166,10 +166,12 @@ class Widget_Abstract_Metas extends Widget_Abstract
                 $where = $this->db->sql()->where('mid = ? AND type = ?', $meta, $type);
                 $this->delete($where);
                 $diffContents = array_diff($existsContents, $contents);
+                $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $meta));
                 
                 foreach ($diffContents as $content) {
                     $this->db->query($this->db->insert('table.relationships')
                     ->rows(array('mid' => $mid, 'cid' => $content)));
+                    $contents[] = $content;
                 }
                 
                 unset($existsContents);
@@ -181,5 +183,45 @@ class Widget_Abstract_Metas extends Widget_Abstract
         ->where('table.relationships.mid = ?', $mid))->num;
         
         $this->update(array('count' => $num), $this->db->sql()->where('mid = ?', $mid));
+    }
+    
+    /**
+     * 根据tag获取ID
+     * 
+     * @access public
+     * @param mixed $inputTags 标签名
+     * @return array
+     */
+    public function scanTags($inputTags)
+    {
+        $tags = is_array($inputTags) ? $inputTags : array($inputTags);
+        $result = array();
+        
+        foreach ($tags as $tag) {
+            if (empty($tag)) {
+                continue;
+            }
+        
+            $row = $this->db->fetchRow($this->select()
+            ->where('name = ?', $tag)->limit(1));
+            
+            if ($row) {
+                $result[] = $row['mid'];
+            } else {
+                $slug = Typecho_Common::slugName($tag);
+                
+                if ($slug) {
+                    $result[] = $this->insert(array(
+                        'name'  =>  $tag,
+                        'slug'  =>  $slug,
+                        'type'  =>  'tag',
+                        'count' =>  0,
+                        'sort'  =>  0,
+                    ));
+                }
+            }
+        }
+        
+        return is_array($inputTags) ? $result : current($result);
     }
 }

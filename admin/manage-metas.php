@@ -64,7 +64,7 @@ include 'menu.php';
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
                                 <td><?php $categories->description(); ?></td>
-                                <td><?php $categories->count(); ?></td>
+                                <td><a class="balloon-button" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
                             </tr>
                             <?php endwhile; ?>
                             <?php else: ?>
@@ -78,22 +78,27 @@ include 'menu.php';
                     </form>
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud')->to($tags); ?>
+                    <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('Metas/Tag/Edit.do'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
                             <span onclick="typechoOperate('.typecho-list-notable', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
                             <span onclick="typechoOperate('.typecho-list-notable', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span onclick="typechoSubmit('form[name=manage_tags]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                            <span onclick="typechoSubmit('form[name=manage_tags]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>, 
+                            <span onclick="typechoSubmit('form[name=manage_tags]', 'input[name=do]', 'merge');" class="operate-button select-submit"><?php _e('合并到'); ?></span> 
+                            <input type="text" name="merge" />
                         </p>
                     </div>
                     
-                    <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('Metas/Tag/Edit.do'); ?>">
                     <ul class="typecho-list-notable tag-list clearfix typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                         <?php if($tags->have()): ?>
                         <?php while ($tags->next()): ?>
                         <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
-                        <a href="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></a>
+                        <span rel="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
+                        <?php if ($tags->count > 0): ?>
+                        <sup><a class="balloon-button" href="<?php $tags->permalink(); ?>"><?php $tags->count(); ?></a></sup>
+                        <?php endif; ?>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>
@@ -117,4 +122,40 @@ include 'menu.php';
 </div>
 
 <?php include 'common-js.php'; ?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+            var _selection;
+            
+            $(document).getElements('ul.tag-list li').addEvent('checked', function (item) {
+                if (!_selection) {
+                    _selection = document.createElement('div');
+                    $(_selection).addClass('tag-selection');
+                    $(document).getElement('.typecho-mini-panel form')
+                    .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name'));
+                }
+                
+                var _href = item.getElement('span').getProperty('rel');
+                var _text = item.getElement('span').get('text');
+                var _a = document.createElement('a');
+                $(_a).addClass('button');
+                $(_a).setProperty('href', _href);
+                $(_a).set('text', _text);
+                _selection.appendChild(_a);
+                item.checkedElement = _a;
+            });
+            
+            $(document).getElements('ul.tag-list li').addEvent('unchecked', function (item) {
+                if (item.checkedElement) {
+                    $(item.checkedElement).destroy();
+                }
+                
+                if (!$(_selection).getElement('a')) {
+                    _selection.destroy();
+                    _selection = null;
+                }
+            });
+        });
+    })();
+</script>
 <?php include 'copyright.php'; ?>

@@ -72,6 +72,25 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     }
     
     /**
+     * 判断分类名转换到缩略名后是否合法
+     * 
+     * @access public
+     * @param string $name 标签名
+     * @return boolean
+     */
+    public function nameToSlug($name)
+    {
+        if (empty($this->request->slug)) {
+            $slug = Typecho_Common::slugName($name);
+            if (empty($slug) || !$this->slugExists($name)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
      * 判断分类缩略名是否存在
      * 
      * @access public
@@ -83,7 +102,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $select = $this->db->select()
         ->from('table.metas')
         ->where('type = ?', 'category')
-        ->where('slug = ?', $slug)
+        ->where('slug = ?', Typecho_Common::slugName($slug))
         ->limit(1);
         
         if ($this->request->mid) {
@@ -170,6 +189,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         if ('insert' == $action || 'update' == $action) {
             $name->addRule('required', _t('必须填写分类名称'));
             $name->addRule(array($this, 'nameExists'), _t('分类名称已经存在'));
+            $name->addRule(array($this, 'nameToSlug'), _t('分类名称无法被转换为缩略名'));
             $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
         }
         

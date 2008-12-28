@@ -13,15 +13,17 @@ include 'menu.php';
                 <h6 class="typecho-list-table-title">激活的插件</h6>
                 <table class="typecho-list-table">
                     <colgroup>
+                        <col width="10"/>
                         <col width="150"/>
-                        <col width="400"/>
+                        <col width="390"/>
                         <col width="100"/>
                         <col width="150"/>
                         <col width="200"/>
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"><?php _e('名称'); ?></th>
+                            <th class="typecho-radius-topleft"> </th>
+                            <th><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
                             <th><?php _e('作者'); ?></th>
@@ -31,6 +33,7 @@ include 'menu.php';
                     <tbody>
                         <?php while ($activatedPlugins->next()): ?>
                         <tr<?php $activatedPlugins->alt(' class="even"', ''); ?>>
+                            <td></td>
                             <td><?php $activatedPlugins->title(); ?></td>
                             <td><?php $activatedPlugins->description(); ?></td>
                             <td><?php $activatedPlugins->version(); ?></td>
@@ -62,15 +65,17 @@ include 'menu.php';
                 <h6 class="typecho-list-table-title">禁用的插件</h6>
                 <table class="typecho-list-table" class="operate-table">
                     <colgroup>
+                        <col width="10"/>
                         <col width="150"/>
-                        <col width="400"/>
+                        <col width="390"/>
                         <col width="100"/>
                         <col width="150"/>
                         <col width="200"/>
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"><?php _e('名称'); ?></th>
+                            <th class="typecho-radius-topleft"> </th>
+                            <th><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
                             <th><?php _e('作者'); ?></th>
@@ -81,6 +86,7 @@ include 'menu.php';
                         <?php if ($deactivatedPlugins->have()): ?>
                         <?php while ($deactivatedPlugins->next()): ?>
                         <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?>>
+                            <td></td>
                             <td><?php $deactivatedPlugins->title(); ?></td>
                             <td><?php $deactivatedPlugins->description(); ?></td>
                             <td><?php $deactivatedPlugins->version(); ?></td>

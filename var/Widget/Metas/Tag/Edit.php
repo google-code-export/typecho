@@ -56,23 +56,6 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      * @param string $name 标签名称
      * @return boolean
      */
-    public function tagNameExists($name)
-    {
-        $tag = $this->db->fetchRow($this->db->select()
-        ->from('table.metas')
-        ->where('type = ?', 'tag')
-        ->where('name = ?', $name)->limit(1));
-        
-        return $tag ? true : false;
-    }
-    
-    /**
-     * 判断标签名称是否存在
-     * 
-     * @access public
-     * @param string $name 标签名称
-     * @return boolean
-     */
     public function nameExists($name)
     {
         $select = $this->db->select()
@@ -90,6 +73,25 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     }
     
     /**
+     * 判断标签名转换到缩略名后是否合法
+     * 
+     * @access public
+     * @param string $name 标签名
+     * @return boolean
+     */
+    public function nameToSlug($name)
+    {
+        if (empty($this->request->slug)) {
+            $slug = Typecho_Common::slugName($name);
+            if (empty($slug) || !$this->slugExists($name)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
      * 判断标签缩略名是否存在
      * 
      * @access public
@@ -101,7 +103,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $select = $this->db->select()
         ->from('table.metas')
         ->where('type = ?', 'tag')
-        ->where('slug = ?', $slug)
+        ->where('slug = ?', Typecho_Common::slugName($slug))
         ->limit(1);
         
         if ($this->request->mid) {
@@ -177,6 +179,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         if ('insert' == $action || 'update' == $action) {
             $name->addRule('required', _t('必须填写标签名称'));
             $name->addRule(array($this, 'nameExists'), _t('标签名称已经存在'));
+            $name->addRule(array($this, 'nameToSlug'), _t('标签名称无法被转换为缩略名'));
             $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
         }
         
@@ -197,13 +200,13 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function insertTag()
     {
         if ($this->form('insert')->validate()) {
-            $this->response->goBack('#edit');
+            $this->response->goBack();
         }
     
         /** 取出数据 */
         $tag = $this->request->from('name', 'slug');
         $tag['type'] = 'tag';
-        $tag['slug'] = empty($tag['slug']) ? $tag['name'] : $tag['slug'];
+        $tag['slug'] = Typecho_Common::slugName(empty($tag['slug']) ? $tag['name'] : $tag['slug']);
     
         /** 插入数据 */
         $tag['mid'] = $this->insert($tag);
@@ -226,13 +229,13 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function updateTag()
     {
         if ($this->form('update')->validate()) {
-            $this->response->goBack('#edit');
+            $this->response->goBack();
         }
     
         /** 取出数据 */
         $tag = $this->request->from('name', 'slug', 'mid');
         $tag['type'] = 'tag';
-        $tag['slug'] = empty($tag['slug']) ? $tag['name'] : $tag['slug'];
+        $tag['slug'] = Typecho_Common::slugName(empty($tag['slug']) ? $tag['name'] : $tag['slug']);
     
         /** 更新数据 */
         $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->mid));
@@ -273,6 +276,40 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
     }
+    
+    /**
+     * 合并标签
+     * 
+     * @access public
+     * @return void
+     */
+    public function mergeTag()
+    {
+        if (empty($this->request->merge)) {
+            $this->widget('Widget_Notice')->set(_t('请填写需要合并到的标签'), NULL, 'notice');
+            $this->response->goBack();
+        }
+        
+        $merge = $this->scanTags($this->request->merge);
+        if (empty($merge)) {
+            $this->widget('Widget_Notice')->set(_t('合并到的标签名不合法'), NULL, 'error');
+            $this->response->goBack();
+        }
+        
+        $tags = $this->request->mid;
+        
+        if ($tags && is_array($tags)) {
+            $this->merge($merge, 'tag', $tags);
+            
+            /** 提示信息 */
+            $this->widget('Widget_Notice')->set(_t('标签已经合并'), NULL, 'success');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), NULL, 'notice');
+        }
+        
+        /** 转向原页 */
+        $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+    }
 
     /**
      * 入口函数,绑定事件
@@ -285,6 +322,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->onRequest('do', 'insert')->insertTag();
         $this->onRequest('do', 'update')->updateTag();
         $this->onRequest('do', 'delete')->deleteTag();
+        $this->onRequest('do', 'merge')->mergeTag();
         $this->response->redirect($this->options->adminUrl);
     }
 }
