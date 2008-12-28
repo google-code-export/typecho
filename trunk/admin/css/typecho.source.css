@@ -638,7 +638,7 @@ margin-top: 25px;
 
 .typecho-head-guid dl {
     overflow: hidden;
-    margin-left:10px;
+    /*margin-left:10px;*/
     zoom: 1;
 }
 
@@ -750,7 +750,7 @@ margin-top: 25px;
     position:absolute;
     font-size: 12px;
     top: 0px;
-    right: 5px;
+    right: -5px;
     /* review IE */
            *right: 25px;
            height: 30px;
