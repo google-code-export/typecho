@@ -24,7 +24,6 @@ var typechoGuid = function (el, config) {
             el.addClass('current');
             var _d = el.getNext('dd');
             if (_d) {
-                _d.setStyle('left', el.getPosition().x - config.offset);
                 if (_d.getStyle('display') != 'none') {
                     _d.setStyle('display', 'none');
                 } else {
@@ -32,6 +31,7 @@ var typechoGuid = function (el, config) {
                     _d.getElement('ul li:first-child').setStyle('border-top', 'none');
                     _d.getElement('ul li:last-child').setStyle('border-bottom', 'none');
                 }
+                _d.setStyle('left', el.getPosition().x - el.getParent('dl').getPosition().x - config.offset);
             }
         }
     }
