@@ -125,7 +125,7 @@ class Typecho_Response
      */
     public static function setContentType($contentType = 'text/html', $charset = NULL)
     {
-        header('content-Type: ' . $contentType . ';charset= ' . (empty($charset) ? self::$_defaultCharset : $charset), true);
+        header('content-Type: ' . $contentType . '; charset=' . (empty($charset) ? self::$_defaultCharset : $charset), true);
     }
     
     /**

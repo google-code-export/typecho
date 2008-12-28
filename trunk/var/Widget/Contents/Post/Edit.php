@@ -179,7 +179,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
         
         /** 取出插入tag */
-        $insertTags = $this->scanTags($tags);
+        $insertTags = $this->widget('Widget_Abstract_Metas')->scanTags($tags);
         
         /** 插入tag */
         if ($insertTags) {
@@ -198,43 +198,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 }
             }
         }
-    }
-    
-    /**
-     * 根据tag获取ID
-     * 
-     * @access public
-     * @param array $tags
-     * @return array
-     */
-    public function scanTags(array $tags)
-    {
-        $result = array();
-        foreach ($tags as $tag) {
-            if (empty($tag)) {
-                continue;
-            }
-        
-            $row = $this->db->fetchRow($this->db->select('mid')
-            ->from('table.metas')
-            ->where('name = ?', $tag)->limit(1));
-            
-            if ($row) {
-                $result[] = $row['mid'];
-            } else {
-                $result[] = 
-                $this->db->query($this->db->insert('table.metas')
-                ->rows(array(
-                    'name'  =>  $tag,
-                    'slug'  =>  $tag,
-                    'type'  =>  'tag',
-                    'count' =>  0,
-                    'sort'  =>  0,
-                )));
-            }
-        }
-        
-        return $result;
     }
     
     /**

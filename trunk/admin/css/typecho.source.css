@@ -75,11 +75,12 @@ a:hover {
     text-decoration: underline;
 }
 
-a.button, span.balloon {
+a.button, span.balloon, a.balloon-button {
     background: #BD6800;
 	color: #FFF;
 	padding: 2px 4px;
     text-decoration: none;
+	font-weight: bold;
 	
 	-moz-border-radius-topleft: 2px;
 	-moz-border-radius-topright: 2px;
@@ -97,12 +98,13 @@ a.button, span.balloon {
 	border-bottom-right-radius: 2px;
 }
 
-span.balloon {
+span.balloon, a.balloon-button {
 	padding: 0 4px;
 }
 
-a.button:hover {
+a.button:hover, a.balloon-button:hover {
     background: #D29B51;
+	text-decoration: none;
 }
 
 a.important {
@@ -699,6 +701,7 @@ margin-top: 25px;
     top: 0;
 	padding: 0;
 	overflow: hidden;
+	min-width: 140px;
 }
 
 .typecho-head-guid li {
@@ -1234,6 +1237,10 @@ ul.typecho-list-notable .right, .typecho-list-table .right {
 	float: right;
 }
 
+ul.typecho-list-notable .center, .typecho-list-table .center {
+	text-align: center;
+}
+
 ul.typecho-list-notable .center {
 	text-align: center;
 }
@@ -1595,8 +1602,6 @@ ul.typecho-post-option .description {
 
 .typecho-page-main ul.tag-list li:hover, .typecho-page-main ul.tag-list li.hover {
 	background: none;
-	padding: 2px 4px 1px 4px;
-	border-bottom: 1px solid #555;
 }
 
 .typecho-page-main ul.tag-list li.checked {
@@ -1622,4 +1627,17 @@ ul.typecho-post-option .description {
 
 .typecho-page-main ul.tag-list li.size-5 {
 	font-size: 28px;
+}
+
+.typecho-page-main ul.tag-list li sup {
+	font-size: 10px;
+}
+
+.typecho-page-main .typecho-mini-panel .tag-selection {
+	margin: 10px;
+	font-size: 13px;
+}
+
+.typecho-page-main .typecho-mini-panel .tag-selection a {
+	margin-right: 5px;
 }

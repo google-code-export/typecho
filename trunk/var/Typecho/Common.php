@@ -489,45 +489,8 @@ class Typecho_Common
     {
         $str = str_replace(array("'", ":", "\\", "/"), "", $str);
         $str = str_replace(array("+", ",", " ", ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
-
-        //cut string
-        //from end
-        $length = strlen($str);
-        $i = $length;
-        $cutOff = 0;
-
-        while ($i > 0) {
-            $i--;
-            if ('-' == $str[$i]) {
-                $cutOff ++;
-            } else {
-                break;
-            }
-        }
-
-        if ($cutOff) {
-            $str = substr($str, 0, - $cutOff);
-        }
-
-        //from start
-        $length = strlen($str);
-        $i = 0;
-        $cutOff = 0;
-
-        while ($i < $length) {
-            if ('-' == $str[$i]) {
-                $cutOff ++;
-            } else {
-                break;
-            }
-            $i++;
-        }
-
-        if ($cutOff) {
-            $str = substr($str, $cutOff);
-        }
-
-        return empty($str) ? (empty($default) ? time() : $default) : $str;
+        $str = trim($str, '-');
+        return empty($str) ? $default : $str;
     }
     
     /**

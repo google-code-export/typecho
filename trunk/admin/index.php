@@ -111,18 +111,21 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             var _feedRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=feed");
             _feedRequest.addEvent('onSuccess', function (responseJSON) {
                 $(document).getElement('#typecho-message ul li').destroy();
-                responseJSON.each(function (item) {
-                    var _li = document.createElement('li');
-                    $(_li).set('html', '<a target="_blank" href="' + item.link + '">' + item.title + '</a> - <span class="date">' + item.date + '</span>');
-                    var _ul = $(document).getElement('#typecho-message ul');
-                    _ul.appendChild(_li);
-                });
+                
+                if (responseJSON) {
+                    responseJSON.each(function (item) {
+                        var _li = document.createElement('li');
+                        $(_li).set('html', '<a target="_blank" href="' + item.link + '">' + item.title + '</a> - <span class="date">' + item.date + '</span>');
+                        var _ul = $(document).getElement('#typecho-message ul');
+                        _ul.appendChild(_li);
+                    });
+                }
             });
             
             <?php if ($user->pass('editor') && !Typecho_Request::getCookie('__typecho_check_version')): ?>
             var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=checkVersion");
             _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
-                if (responseJSON.available) {
+                if (responseJSON && responseJSON.available) {
                     var _div = document.createElement('div');
                     $(_div).addClass('update-check');
                     $(_div).addClass('typecho-radius-topleft');
