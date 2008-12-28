@@ -19,7 +19,7 @@
 	    	<p class="description"><?php $this->options->description() ?></p>
     	</div>
 	<ul class="clearfix" id="nav_menu">
-	    <li><a href="<?php $this->options->siteUrl(); ?>">Home</a></li>
+	    <li><a href="<?php $this->options->siteUrl(); ?>">首页</a></li>
 	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
 	</ul>
     </div><!-- end #header -->
