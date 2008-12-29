@@ -100,6 +100,8 @@ class Widget_User extends Typecho_Widget
         $this->response->setCookie('__typecho_uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
         $this->response->setCookie('__typecho_authCode', Typecho_Common::hash($authCode),
         $expire, $this->widget('Widget_Options')->siteUrl);
+
+        $this->_hasLogin = true;
         
         if ($this->db->fetchObject($this->db->select()
                 ->from('table.users')
