@@ -42,7 +42,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'ip'        =>  $this->request->getClientIp(),
             'ownerId'   =>  $this->_content->author->uid,
             'type'      =>  'comment',
-            'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  !$this->_content->allow('edit') && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
     
         /** 判断父节点 */
@@ -133,7 +133,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'ip'        =>  $this->request->getClientIp(),
             'ownerId'   =>  $this->_content->author->uid,
             'type'      =>  'trackback',
-            'status'    =>  !$this->_content->postIsWriteable() && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+            'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
         $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
@@ -196,8 +196,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     
         /** 判断内容是否存在 */
         if (false !== Typecho_Router::match($this->request->permalink) && 
-        ('post' == Typecho_Router::$current || 'page' == Typecho_Router::$current) &&
         $this->widget('Widget_Archive')->to($this->_content)->have() && 
+        $this->_content->is('single') && 
         in_array($callback, array('comment', 'trackback'))) {
             /** 判断来源 */
             // ~ fix Issue 38

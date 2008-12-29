@@ -126,7 +126,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function update(array $content, Typecho_Db_Query $condition)
     {
         /** 首先验证写入权限 */
-        if (!$this->postIsWriteable(clone $condition)) {
+        if (!$this->isWriteable(clone $condition)) {
             return false;
         }
     
@@ -188,21 +188,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param Typecho_Db_Query $condition 条件
      * @return mixed
      */
-    public function postIsWriteable(Typecho_Db_Query $condition = NULL)
+    public function isWriteable(Typecho_Db_Query $condition)
     {
-        if (empty($condition)) {
-            if ($this->have() && ($this->user->pass('editor', true) || $this->authorId == $this->user->uid)) {
-                return true;
-            }
-        } else {
-            $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
-
-            if ($post && ($this->user->pass('editor', true) || $post['authorId'] == $this->user->uid)) {
-                return true;
-            }
-        }
-        
-        return false;
+        $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
+        return $post && ($this->user->pass('editor', true) || $post['authorId'] == $this->user->uid);
     }
     
     /**
@@ -395,17 +384,21 @@ class Widget_Abstract_Contents extends Widget_Abstract
         foreach ($permissions as $permission) {
             $permission = strtolower($permission);
 
-            /** 对自动关闭反馈功能的支持 */
-            if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0) {
-                if ($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout) {
-                    return false;
+            if ('edit' == $permission) {
+                $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
+            } else {
+                /** 对自动关闭反馈功能的支持 */
+                if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0) {
+                    if ($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout) {
+                        return false;
+                    }
                 }
+                
+                $allow &= ($this->row['allow' . ucfirst($permission)] == 1) and !$this->hidden;
             }
-            
-            $allow &= ($this->row['allow' . ucfirst($permission)] == 1);
         }
 
-        return $allow and !$this->hidden;
+        return $allow;
     }
 
     /**

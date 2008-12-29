@@ -40,7 +40,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             
             if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('页面不存在'), 404);
-            } else if ($post && 'update' == $this->request->do && !$this->postIsWriteable()) {
+            } else if ($post && 'update' == $this->request->do && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }

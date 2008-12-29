@@ -89,9 +89,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><?php $posts->dateWord(); ?></td>
                             <td><?php $posts->category(', '); ?></td>
                             <td><?php $posts->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
-                            <td><?php if('post' == $posts->type):
+                            <td><?php if('publish' == $posts->status):
                         _e('<a href="%s">已发布</a>', $posts->permalink);
-                        elseif('waiting' == $posts->type):
+                        elseif('waiting' == $posts->status):
                         _e('待审核');
                         else:
                         _e('草稿');
