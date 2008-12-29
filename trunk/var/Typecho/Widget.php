@@ -33,6 +33,14 @@ abstract class Typecho_Widget
      * @var array
      */
     private static $_widgetPool = array();
+    
+    /**
+     * 帮手列表
+     * 
+     * @access private
+     * @var array
+     */
+    private $_helpers = array();
 
     /**
      * 内部数据堆栈
@@ -51,51 +59,12 @@ abstract class Typecho_Widget
     protected $row = array();
     
     /**
-     * 配置信息
-     * 
-     * @access protected
-     * @var Typecho_Config
-     */
-    protected $parameter;
-    
-    /**
-     * 请求信息
-     * 
-     * @access protected
-     * @var Typecho_Widget_Request
-     */
-    protected $request;
-    
-    /**
-     * 回执信息
-     * 
-     * @access protected
-     * @var Typecho_Widget_Response
-     */
-    protected $response;
-    
-    /**
      * 当前堆栈指针顺序值,从1开始
      * 
      * @access public
      * @var integer
      */
     public $sequence = 0;
-    
-    /**
-     * 构造函数
-     * 
-     * @access public
-     * @param mixed $params 传递的参数
-     * @return void
-     */
-    public function __construct($params = NULL)
-    {
-        /** 初始化参数 */
-        $this->parameter = Typecho_Config::factory(empty($params) ? array() : $params);
-        $this->request = Typecho_Widget_Request::getInstance();
-        $this->response = Typecho_Widget_Response::getInstance();
-    }
     
     /**
      * 执行函数
@@ -162,10 +131,11 @@ abstract class Typecho_Widget
      * @access public
      * @param string $alias 组件别名
      * @param mixed $params 传递的参数
+     * @param mixed $request 前端参数
      * @return object
      * @throws Typecho_Exception
      */
-    public static function widget($alias, $params = NULL)
+    public static function widget($alias, $params = NULL, $request = NULL)
     {
         list($className) = explode('@', $alias);
         if (!isset(self::$_widgetPool[$alias])) {
@@ -179,7 +149,16 @@ abstract class Typecho_Widget
                 throw new Typecho_Widget_Exception($className);
             }
             
-            self::$_widgetPool[$alias] = new $className($params);
+            self::$_widgetPool[$alias] = new $className();
+            
+            if (!empty($params)) {
+                self::$_widgetPool[$alias]->parameter->setDefault($params);
+            }
+            
+            if (!empty($request)) {
+                self::$_widgetPool[$alias]->request->flush($request);
+            }
+            
             self::$_widgetPool[$alias]->execute();
         }
         
@@ -330,7 +309,8 @@ abstract class Typecho_Widget
     public function __get($name)
     {
         return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
-        ? $this->row[$name] = $this->$method() : NULL);
+        ? $this->row[$name] = $this->$method() : 
+        (isset($this->_helpers[$name]) ? $this->_helpers[$name] : $this->_helpers[$name] = $this->__helper($name)));
     }
     
     /**
@@ -355,5 +335,26 @@ abstract class Typecho_Widget
     public function __isSet($name)
     {
         return isset($this->row[$name]);
+    }
+    
+    /**
+     * 载入组件帮手
+     * 
+     * @access public
+     * @param string $name 帮手名称
+     * @return string
+     */
+    public function __helper($name)
+    {
+        switch ($name) {
+            case 'request':
+                return new Typecho_Widget_Request();
+            case 'response':
+                return new Typecho_Widget_Response();
+            case 'parameter':
+                return Typecho_Config::factory();
+            default:
+                return NULL;
+        }
     }
 }

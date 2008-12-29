@@ -98,14 +98,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 获取页面 */
         try {
             /** 由于Widget_Contents_Page_Edit是从request中获取参数, 因此我们需要强行设置flush一下request */
-            /** flush函数同样支持array传递, 下面可以写成 $this->request->flush(array('cid' => $pageId)); */
-            $this->request->flush("cid={$pageId}");
-
+            /** widget方法的第三个参数可以指定强行转换传入此widget的request参数 */
             /** 此组件会进行复杂的权限检测 */
-            $page = $this->widget('Widget_Contents_Page_Edit');
+            $page = $this->widget('Widget_Contents_Page_Edit', NULL, "cid={$pageId}");
         } catch (Typecho_Widget_Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
-            retrun new IXR_Error($e->getCode(), $e->getMessage());
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
 
         /** 取得文章作者的名字*/
@@ -159,8 +157,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 过滤type为page的contents */
         /** 同样需要flush一下, 需要取出所有status的页面 */
-        $this->request->flush("status=all");
-        $pages = $this->widget('Widget_Contents_Page_Admin');
+        $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
 
         /** 初始化要返回的数据结构 */
         $pageStructs = array();

@@ -58,7 +58,6 @@ class Widget_User extends Typecho_Widget
     {
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
-        parent::__construct();
     }
 
     /**

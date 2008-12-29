@@ -149,12 +149,11 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 构造函数
      * 
      * @access public
-     * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($params = NULL)
+    public function __construct()
     {
-        parent::__construct($params);
+        parent::__construct();
 
         /** 处理feed模式 **/
         if ('feed' == Typecho_Router::$current) {

@@ -47,13 +47,10 @@ abstract class Widget_Abstract extends Typecho_Widget
      * 构造函数
      * 
      * @access public
-     * @param mixed $params 传递的参数
      * @return void
      */
-    public function __construct($params = NULL)
+    public function __construct()
     {
-        parent::__construct($params);
-        
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
     

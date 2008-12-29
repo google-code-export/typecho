@@ -18,29 +18,6 @@ require_once 'Typecho/Response.php';
 class Typecho_Widget_Response
 {
     /**
-     * 实例化的对象
-     * 
-     * @access private
-     * @var Typecho_Controller_Request
-     */
-    private static $_instance;
-    
-    /**
-     * 获取实例化对象
-     * 
-     * @access public
-     * @return Typecho_Controller_Request
-     */
-    public static function getInstance()
-    {
-        if (empty(self::$_instance)) {
-            self::$_instance = new Typecho_Widget_Response();
-        }
-        
-        return self::$_instance;
-    }
-    
-    /**
      * Response包的直接代理
      * 
      * @access public
