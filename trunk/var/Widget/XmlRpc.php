@@ -459,9 +459,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwNewPost($blogId, $userName, $password, $content, $publish)
     {
-        $content['publish'] = $publish;
-        $data = serialize($content);
-        file_put_contents('content.txt', $data);
         /** 检查权限*/
         if(!$this->checkAccess($userName, $password))
         {
@@ -644,6 +641,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwEditPost($postId, $userName, $password, $content, $publish)
     {
+        
         if(!$this->checkAccess($userName, $password))
         {
             return $this->error;
@@ -652,7 +650,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
 
         /** 提交查询 */
-        $post = $this->$db->fetchRow($select, array($this, 'filter'));
+        $post = $this->db->fetchRow($select, array($this, 'filter'));
 
         /** 验证权限*/
         if($post['authorId'] != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator'))
@@ -662,9 +660,21 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $content['do'] = 'edit';
         $content['post_id'] = $postId;
-        $this->mwNewPost($userName, $password, $content, $publish);
+        $content['publish'] = $publish;
+        $data = serialize($content);
+        file_put_contents('content.txt', $data);
+        $this->mwNewPost(1, $userName, $password, $content, $publish);
     }
 
+    /**
+     * 获取指定id的post 
+     * 
+     * @param int $postId 
+     * @param string $userName 
+     * @param string $password 
+     * @access public
+     * @return void
+     */
     public function mwGetPost($postId, $userName, $password)
     {
         if(!$this->checkAccess($userName, $password))
@@ -984,7 +994,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 先删除原来的relationships*/
-        $this->db->query($this->db->sql()->where('cid', $postId)->delete('table.relationships'));
+        $this->db->query($this->db->sql()->where('cid = ?', $postId)->delete('table.relationships'));
         /** 插入新的relationships*/
         foreach($categoies as $category)
         {
