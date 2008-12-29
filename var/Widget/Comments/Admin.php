@@ -75,7 +75,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         
         if (in_array($this->request->status, array('approved', 'waiting', 'spam'))) {
             $select->where('table.comments.status = ?', $this->request->status);
-        } else {
+        } else if ('all' != $this->request->status) {
             $select->where('table.comments.status = ?', 'approved');
         }
     

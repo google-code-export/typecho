@@ -120,13 +120,19 @@ class Typecho_Request
      * 刷新所有request
      * 
      * @access public
-     * @param array $parameters 参数
+     * @param mixed $parameters 参数
      * @return void
      */
     public static function flush($parameters)
     {
         self::$_flushed = true;
-        self::$_params = $parameters;
+        
+        $args = $parameters;
+        if (is_string($parameters)) {
+            parse_str($parameters, $args);
+        }
+        
+        self::$_params = $args;
     }
     
     /**
