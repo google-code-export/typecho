@@ -284,9 +284,11 @@ class Typecho_Response
         if (is_array($value)) {
             foreach ($value as $name => $val) {
                 setcookie("{$key}[{$name}]", $val, $expire, $path);
+                $_COOKIE[$key][$name] = $val;
             }
         } else {
             setcookie($key, $value, $expire, $path);
+            $_COOKIE[$key] = $value;
         }
     }
     
@@ -315,9 +317,11 @@ class Typecho_Response
         if (is_array($_COOKIE[$key])) {
             foreach ($_COOKIE[$key] as $name => $val) {
                 setcookie("{$key}[{$name}]", '', time() - 2592000, $path);
+                unset($_COOKIE[$key][$name]);
             }
         } else {
             setcookie($key, '', time() - 2592000, $path);
+            unset($_COOKIE[$key]);
         }
     }
     
