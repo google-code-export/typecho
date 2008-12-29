@@ -32,6 +32,14 @@ class Typecho_Widget_Request
      * @var boolean
      */
     private $_flushed = false;
+    
+    /**
+     * 设置过滤器
+     * 
+     * @access private
+     * @var array
+     */
+    private $_filters = array();
 
     /**
      * 获取参数列表
@@ -43,6 +51,25 @@ class Typecho_Widget_Request
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'getParametersFrom'), $args);
+    }
+    
+    /**
+     * 设置过滤器
+     * <code>
+     * $this->setFilters(array(
+     *     'cid'    => 'intval',
+     *     'mid'    => 'intval',
+     *     'slug'   => array($this, 'custom')
+     * ));
+     * </code>
+     * 
+     * @access public
+     * @param array $filters 过滤项
+     * @return void
+     */
+    public function setFilters(array $filters = array())
+    {
+        $this->_filters = $filters;
     }
     
     /**
@@ -75,10 +102,13 @@ class Typecho_Widget_Request
     public function getParameter($name, $default = NULL)
     {
         if ($this->_flushed) {
-            return isset($this->_params[$name]) ? $this->_params[$name] : $default;
+            $value = isset($this->_params[$name]) ? $this->_params[$name] : $default;
         } else {
-            return Typecho_Request::getParameter($name, $default);
+            $value = Typecho_Request::getParameter($name, $default);
         }
+        
+        return !isset($this->_filters[$name]) ? $value : 
+        (is_array($value) ? array_map($this->_filters[$name], $value) : call_user_func($this->_filters[$name], $value));
     }
     
     /**
