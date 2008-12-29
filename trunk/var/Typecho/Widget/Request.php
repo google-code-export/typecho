@@ -107,8 +107,9 @@ class Typecho_Widget_Request
             $value = Typecho_Request::getParameter($name, $default);
         }
         
-        return !isset($this->_filters[$name]) ? $value : 
-        (is_array($value) ? array_map($this->_filters[$name], $value) : call_user_func($this->_filters[$name], $value));
+        return isset($this->_filters[$name]) && $this->isSetParameter($name) ? 
+        (is_array($value) ? array_map($this->_filters[$name], $value) : call_user_func($this->_filters[$name], $value))
+        : $value;
     }
     
     /**
