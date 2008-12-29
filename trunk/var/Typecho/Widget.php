@@ -160,14 +160,15 @@ abstract class Typecho_Widget
      * 工厂方法,将类静态化放置到列表中
      * 
      * @access public
-     * @param string $className 组件名
+     * @param string $alias 组件别名
      * @param mixed $params 传递的参数
      * @return object
      * @throws Typecho_Exception
      */
-    public static function widget($className, $params = NULL)
+    public static function widget($alias, $params = NULL)
     {
-        if (!isset(self::$_widgetPool[$className])) {
+        list($className) = explode('@', $alias);
+        if (!isset(self::$_widgetPool[$alias])) {
             $fileName = str_replace('_', '/', $className) . '.php';            
             require_once $fileName;
             
@@ -178,11 +179,11 @@ abstract class Typecho_Widget
                 throw new Typecho_Widget_Exception($className);
             }
             
-            self::$_widgetPool[$className] = new $className($params);
-            self::$_widgetPool[$className]->execute();
+            self::$_widgetPool[$alias] = new $className($params);
+            self::$_widgetPool[$alias]->execute();
         }
         
-        return self::$_widgetPool[$className];
+        return self::$_widgetPool[$alias];
     }
 
     /**

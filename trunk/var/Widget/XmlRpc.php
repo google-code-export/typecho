@@ -19,62 +19,25 @@
 class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
-     * 重载构造函数，初始化api与调用方法的对应
-     *
+     * 当前错误
+     * 
+     * @access private
+     * @var IXR_Error
+     */
+    private $error;
+
+    /**
+     * 如果这里没有重载, 每次都会被默认执行
+     * 
      * @access public
+     * @param boolen $run 是否执行
      * @return void
      */
-    public function __construct()
+    public function execute($run = false)
     {
-        parent::__construct();
-        $this->methods = array(
-            /** WordPress API */
-            'wp.getPage'            => array($this,'wpGetPage'),
-            'wp.getPages'            => array($this,'wpGetPages'),
-            'wp.newPage'            => array($this,'wpNewPage'),
-            'wp.deletePage'            => array($this,'wpDeletePage'),
-            'wp.editPage'            => array($this,'wpEditPage'),
-            'wp.getPageList'            => array($this,'wpGetPageList'),
-            'wp.getAuthors'            => array($this,'wpGetAuthors'),
-            'wp.getCategories'        => array($this,'mwGetCategories'),
-            'wp.newCategory'            => array($this,'wpNewCategory'),
-            'wp.suggestCategories'        => array($this,'wpSuggestCategories'),
-            'wp.uploadFile'            => array($this,'mwNewMediaObject'),
-
-            /** Blogger API */
-            'blogger.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
-            'blogger.getUserInfo'    => array($this,'bloggerGetUserInfo'),
-            'blogger.getPost'            => array($this,'bloggerGetPost'),
-            'blogger.getRecentPosts' => array($this,'bloggerGetRecentPosts'),
-            'blogger.getTemplate' => array($this,'bloggerGetTemplate'),
-            'blogger.setTemplate' => array($this,'bloggerSetTemplate'),
-            'blogger.deletePost' => array($this,'bloggerDeletePost'),
-
-            /** MetaWeblog API (with MT extensions to structs) */
-            'metaWeblog.newPost' => array($this,'mwNewPost'),
-            'metaWeblog.editPost' => array($this,'mwEditPost'),
-            'metaWeblog.getPost' => array($this,'mwGetPost'),
-            'metaWeblog.getRecentPosts' => array($this,'mwGetRecentPosts'),
-            'metaWeblog.getCategories' => array($this,'mwGetCategories'),
-            'metaWeblog.newMediaObject' => array($this,'mwNewMediaObject'),
-
-            /** MetaWeblog API aliases for Blogger API */
-            'metaWeblog.deletePost' => array($this,'bloggerDeletePost'),
-            'metaWeblog.getTemplate' => array($this,'bloggerGetTemplate'),
-            'metaWeblog.setTemplate' => array($this,'bloggerSetTemplate'),
-            'metaWeblog.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
-
-            /** MovableType API */
-            'mt.getCategoryList' => array($this,'mtGetCategoryList'),
-            'mt.getRecentPostTitles' => array($this,'mtGetRecentPostTitles'),
-            'mt.getPostCategories' => array($this,'mtGetPostCategories'),
-            'mt.setPostCategories' => array($this,'mtSetPostCategories'),
-            'mt.publishPost' => array($this,'mtPublishPost'),
-
-            /** PingBack */
-            'pingback.ping' => array($this,'pingbackPing'),
-            'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
-        );
+        if ($run) {
+            parent::execute();
+        }
     }
 
     /**
@@ -83,27 +46,25 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @access public
      * @return void
      */
-    public function checkAccess($userName, $password, $level='contributor')
+    public function checkAccess($userName, $password, $level = 'contributor')
     {
         /** 验证用户名和密码 */
         $select = $this->db->select()->from('table.users')->where('name = ?', $userName)->limit(1);
-        $user = $this->db->fetchRow($select, array($this->user, 'push'));
-        if($user && Typecho_Common::hashValidate($password, $user['password']))
-        {
+        $user = $this->db->fetchRow($select);
+        if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
+            /** 登录操作 */
+            /** 登录后用$this->user即可调用当前用户 */
+            $this->user->login($user['uid']);
+            
             /** 验证权限 */
-           if (array_key_exists($level, $this->user->groups) && $this->user->groups[$this->user->group] <= $this->user->groups[$level]) 
-            {
-                return $user;
-            }
-            else
-            {
-                $this->error = new IXR_Error(403, 'no power');
+            if ($this->user->pass($level, true)) {
+                return true;
+            } else {
+                $this->error = new IXR_Error(403, _t('权限不足'));
                 return false;
             }
-        }
-        else
-        {
-            $this->error = new IXR_Error(403, '无法登陆，密码错误');
+        } else {
+            $this->error = new IXR_Error(403, _t('无法登陆, 密码错误'));
             return false;
         }
     }
@@ -130,55 +91,55 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function wpGetPage($blogId, $pageId, $userName, $password)
     {
         /** 检查权限 */
-        if(!$this->checkAccess($userName, $password))
-        {
+        if(!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
-        /** 过滤id为$pageId的page */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $pageId, 'page')->limit(1);
+        /** 获取页面 */
+        try {
+            /** 由于Widget_Contents_Page_Edit是从request中获取参数, 因此我们需要强行设置flush一下request */
+            /** flush函数同样支持array传递, 下面可以写成 $this->request->flush(array('cid' => $pageId)); */
+            $this->request->flush("cid={$pageId}");
 
-        /** 提交查询 */
-        $page = $this->db->fetchRow($select, array($this, 'push'));
+            /** 此组件会进行复杂的权限检测 */
+            $page = $this->widget('Widget_Contents_Page_Edit');
+        } catch (Typecho_Widget_Exception $e) {
+            /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
+            retrun new IXR_Error($e->getCode(), $e->getMessage());
+        }
 
         /** 取得文章作者的名字*/
         $page['author_name'] = $this->author->name;
         $page['author_screen_name'] = $this->author->screenName;
         /** 对文章内容做截取处理，以获得description和text_more*/
-        $page['content'] = $this->getPostExtended($page['text']);
+        list($excerpt, $more) = $this->getPostExtended($page->text);
 
-        /** 如果这个page存在则输出，否则输出错误 */
-        if($page) {
-            $pageStruct = array(
-                    'dateCreated'   => new IXR_Date($this->options->timezone + $page['created']),
-                    'userid'        => $page['authorId'],
-                    'page_id'       => $page['cid'],
-                    /** todo:此处有疑问 */
-                    'page_status'   => $page['type'],
-                    'description'   => $page['content']['0'],
-                    'title'         => $page['title'],
-                    'link'          => $page['permalink'],
-                    'permalink'      => $page['permalink'],
-                    'categories'    => $page['categories'],
-                    'excerpt'       => $page['content']['0'],
-                    'text_more'     => $page['content']['1'],
-                    'mt_allow_comments' => $page['allowComment'],
-                    'mt_allow_pings' => $page['allowPing'],                          
-                    'wp_slug'        => $page['slug'],
-                    'wp_password'   => $page['password'],
-                    'wp_author'     => $page['author_name'],
-                    'wp_page_parent_id' => 0,
-                    'wp_page_parent_title' => NULL,
-                    'wp_page_order' => $page['cid'],
-                    'wp_author_id'  => $page['authorId'],
-                    'wp_author_display_name' => $page['author_screen_name'],
-                    );
-            return $pageStruct;
-        }
-        else
-        {
-            return IXR_error(404, _t('对不起，不存在此页'));
-        }
+        $pageStruct = array(
+                'dateCreated'   => new IXR_Date($this->options->timezone + $page->created),
+                'userid'        => $page->authorId,
+                'page_id'       => $page->cid,
+                /** todo:此处有疑问 */
+                'page_status'   => $page->status,
+                'description'   => $excerpt,
+                'title'         => $page->title,
+                'link'          => $page->permalink,
+                'permalink'     => $page->permalink,
+                'categories'    => $page->categories,
+                'excerpt'       => $excerpt,
+                'text_more'     => $more,
+                'mt_allow_comments' => $page->allowComment,
+                'mt_allow_pings' => $page->allowPing,                          
+                'wp_slug'        => $page->slug,
+                'wp_password'   => $page->password,
+                'wp_author'     => $page->author->name,
+                'wp_page_parent_id' => 0,
+                'wp_page_parent_title' => NULL,
+                'wp_page_order' => $page->meta,     //meta是描述字段, 在page时表示顺序
+                'wp_author_id'  => $page->authorId,
+                'wp_author_display_name' => $page->author->screenName,
+            );
+        
+        return $pageStruct;
     }
 
     /**
@@ -192,54 +153,48 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpGetPages($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
         /** 过滤type为page的contents */
-        $select = $this->select()->where('table.contents.type = ?', page);
-        /** 查询并把数据压入栈中*/
-        $this->db->fetchAll($select, array($this, 'push'));
+        /** 同样需要flush一下, 需要取出所有status的页面 */
+        $this->request->flush("status=all");
+        $pages = $this->widget('Widget_Contents_Page_Admin');
 
         /** 初始化要返回的数据结构 */
         $pageStructs = array();
 
-        if($this->have())
-        {
-            while($this->next())
-            {
-                /** 对文章内容做截取处理，以获得description和text_more*/
-                $content = $this->getPostExtended($this->text);
-                $pageStructs[] = array(
-                        'dateCreated'       => new IXR_Date($this->options->timezone + $this->created),
-                        'userid'            => $this->authorId,
-                        'page_id'           => $this->cid,
-                        'page_status'       => $this->type,
-                        'description'       => $content[0],
-                        'title'             => $this->title,
-                        'link'              => $this->permalink,
-                        'permalink'         => $this->permalink,
-                        'categories'        => $this->categories,
-                        'excerpt'           => $content[0],
-                        'text_more'         => $content[1],
-                        'mt_allow_comments' => $this->allowComment,
-                        'mt_allow_pings' => $this->allowPing,
-                        'wp_slug'           => $this->slug,
-                        'wp_password'       => $this->password,
-                        'wp_page_parent_id' => 0,
-                        'wp_page_parent_title'=> NULL,
-                        'wp_page_order'     => $this->cid,
-                        'wp_author_id'      => $this->authorId,
-                        'wp_author_display_name'    => $this->author->screenName,
-                        );
-            }
-            return $pageStructs;
+        while ($pages->next()) {
+            /** 对文章内容做截取处理，以获得description和text_more*/
+            list($excerpt, $more) = $this->getPostExtended($pages->text);
+            $pageStructs[] = array(
+                'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
+                'userid'        => $pages->authorId,
+                'page_id'       => $pages->cid,
+                /** todo:此处有疑问 */
+                'page_status'   => $pages->status,
+                'description'   => $excerpt,
+                'title'         => $pages->title,
+                'link'          => $pages->permalink,
+                'permalink'     => $pages->permalink,
+                'categories'    => $pages->categories,
+                'excerpt'       => $excerpt,
+                'text_more'     => $more,
+                'mt_allow_comments' => $pages->allowComment,
+                'mt_allow_pings' => $pages->allowPing,                          
+                'wp_slug'        => $pages->slug,
+                'wp_password'   => $pages->password,
+                'wp_author'     => $pages->author->name,
+                'wp_page_parent_id' => 0,
+                'wp_page_parent_title' => NULL,
+                'wp_page_order' => $pages->meta,     //meta是描述字段, 在page时表示顺序
+                'wp_author_id'  => $pages->authorId,
+                'wp_author_display_name' => $pages->author->screenName,
+            );
         }
-        else
-        {
-            return IXR_error(404, _t('对不起，不存在此页'));
-        }
+        
+        return $pageStructs;
     }
 
     /**
@@ -1369,7 +1324,55 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 </rsd>
 EOF;
         } else {
-            new Ixr_Server($this->methods);
+            /** 直接把初始化放到这里 */
+            new Ixr_Server(array(
+                /** WordPress API */
+                'wp.getPage'            => array($this,'wpGetPage'),
+                'wp.getPages'            => array($this,'wpGetPages'),
+                'wp.newPage'            => array($this,'wpNewPage'),
+                'wp.deletePage'            => array($this,'wpDeletePage'),
+                'wp.editPage'            => array($this,'wpEditPage'),
+                'wp.getPageList'            => array($this,'wpGetPageList'),
+                'wp.getAuthors'            => array($this,'wpGetAuthors'),
+                'wp.getCategories'        => array($this,'mwGetCategories'),
+                'wp.newCategory'            => array($this,'wpNewCategory'),
+                'wp.suggestCategories'        => array($this,'wpSuggestCategories'),
+                'wp.uploadFile'            => array($this,'mwNewMediaObject'),
+
+                /** Blogger API */
+                'blogger.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
+                'blogger.getUserInfo'    => array($this,'bloggerGetUserInfo'),
+                'blogger.getPost'            => array($this,'bloggerGetPost'),
+                'blogger.getRecentPosts' => array($this,'bloggerGetRecentPosts'),
+                'blogger.getTemplate' => array($this,'bloggerGetTemplate'),
+                'blogger.setTemplate' => array($this,'bloggerSetTemplate'),
+                'blogger.deletePost' => array($this,'bloggerDeletePost'),
+
+                /** MetaWeblog API (with MT extensions to structs) */
+                'metaWeblog.newPost' => array($this,'mwNewPost'),
+                'metaWeblog.editPost' => array($this,'mwEditPost'),
+                'metaWeblog.getPost' => array($this,'mwGetPost'),
+                'metaWeblog.getRecentPosts' => array($this,'mwGetRecentPosts'),
+                'metaWeblog.getCategories' => array($this,'mwGetCategories'),
+                'metaWeblog.newMediaObject' => array($this,'mwNewMediaObject'),
+
+                /** MetaWeblog API aliases for Blogger API */
+                'metaWeblog.deletePost' => array($this,'bloggerDeletePost'),
+                'metaWeblog.getTemplate' => array($this,'bloggerGetTemplate'),
+                'metaWeblog.setTemplate' => array($this,'bloggerSetTemplate'),
+                'metaWeblog.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
+
+                /** MovableType API */
+                'mt.getCategoryList' => array($this,'mtGetCategoryList'),
+                'mt.getRecentPostTitles' => array($this,'mtGetRecentPostTitles'),
+                'mt.getPostCategories' => array($this,'mtGetPostCategories'),
+                'mt.setPostCategories' => array($this,'mtSetPostCategories'),
+                'mt.publishPost' => array($this,'mtPublishPost'),
+
+                /** PingBack */
+                'pingback.ping' => array($this,'pingbackPing'),
+                'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
+            ));
         }
     }
 }

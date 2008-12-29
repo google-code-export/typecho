@@ -36,6 +36,8 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
             case 'draft':
                 $select->where('table.contents.status = ?', 'draft');
                 break;
+            case 'all':
+                break;
             case 'publish':
             default:
                 $select->where('table.contents.status = ?', 'publish');

@@ -93,6 +93,8 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             case 'waiting':
                 $select->where('table.contents.status = ?', 'waiting');
                 break;
+            case 'all':
+                break;
             case 'publish':
             default:
                 $select->where('table.contents.status = ?', 'publish');
