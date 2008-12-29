@@ -67,7 +67,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><?php $pages->author(); ?></td>
                             <td><?php $pages->dateWord(); ?></td>
                             <td><?php $pages->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
-                            <td><?php if('page' == $pages->type):
+                            <td><?php if('publish' == $pages->status):
                         _e('<a href="%s">已发布</a>', $pages->permalink);
                         else:
                         _e('草稿');

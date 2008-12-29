@@ -130,6 +130,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_archiveType = 'index';
     
     /**
+     * 是否为单一归档
+     * 
+     * @access private
+     * @var string
+     */
+    private $_archiveSingle = false;
+    
+    /**
      * 归档缩略名
      * 
      * @access private
@@ -193,7 +201,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function select()
     {
-        if ('feed' == Typecho_Router::$current) {
+        if ($this->_feed) {
             // 对feed输出加入限制条件
             return parent::select()->where('table.contents.allowFeed = ?', 1)
             ->where('table.contents.password IS NULL');
@@ -236,6 +244,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedAtomUrl = $this->options->feedAtomUrl;
         $this->_keywords = $this->options->keywords;
         $this->_description = $this->options->description;
+        
+        /** 强行设置归档类型 */
+        if (isset($this->options->type)) {
+            Typecho_Router::$current = $this->options->type;
+        }
 
         switch (Typecho_Router::$current) {
             /** 单篇内容 */
@@ -322,6 +335,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** 设置归档缩略名 */
                 $this->_archiveSlug = 'post' == Typecho_Router::$current ? $this->cid : $this->slug;
+                
+                /** 设置单一归档类型 */
+                $this->_archiveSingle = true;
                 
                 /** 设置403头 */
                 if ($this->hidden) {
@@ -739,7 +755,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function is($archiveType, $archiveSlug = NULL)
     {        
-        return ($archiveType == $this->_archiveType || ('archive' == $archiveType && 'index' != $this->_archiveType))
+        return ($archiveType == $this->_archiveType || 
+        (($this->_archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->_archiveType))
         && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
     }
     
@@ -801,9 +818,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
             }
             
-            //~ 最后找归档路径, 比如 archive.php
+            //~ 最后找归档路径, 比如 archive.php 或者 single.php
             if (!$validated && 'index' != $this->_archiveType) {
-                $themeFile = 'archive.php';
+                $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
                 if (is_file($themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;

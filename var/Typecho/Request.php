@@ -22,6 +22,14 @@ class Typecho_Request
      * @var array
      */
     private static $_params = array();
+    
+    /**
+     * 是否刷新标志位
+     * 
+     * @access private
+     * @var boolean
+     */
+    private static $_flushed = false;
 
     /**
      * 获取指定的http传递参数
@@ -34,6 +42,9 @@ class Typecho_Request
     public static function getParameter($key, $default = NULL)
     {
         switch (true) {
+            case self::$_flushed:
+                $value = isset(self::$_params[$key]) ? self::$_params[$key] : $default;
+                break;
             case isset(self::$_params[$key]):
                 $value = self::$_params[$key];
                 break;
@@ -76,18 +87,10 @@ class Typecho_Request
      */
     public static function isSetParameter($key)
     {
-        switch (true) {
-            case isset(self::$_params[$key]):
-                return true;
-            case isset($_GET[$key]):
-                return true;
-            case isset($_POST[$key]):
-                return true;
-            case isset($_COOKIE[$key]):
-                return true;
-            default:
-                return false;
-        }
+        return isset(self::$_params[$key])
+        || isset($_GET[$key])
+        || isset($_POST[$key])
+        || isset($_COOKIE[$key]);
     }
 
     /**
@@ -107,12 +110,23 @@ class Typecho_Request
         }
 
         foreach ($args as $arg) {
-            if (self::isSetParameter($arg)) {
-                $parameters[$arg] = self::getParameter($arg);
-            }
+            $parameters[$arg] = self::getParameter($arg);
         }
 
         return $parameters;
+    }
+    
+    /**
+     * 刷新所有request
+     * 
+     * @access public
+     * @param array $parameters 参数
+     * @return void
+     */
+    public static function flush($parameters)
+    {
+        self::$_flushed = true;
+        self::$_params = $parameters;
     }
     
     /**

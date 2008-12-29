@@ -85,7 +85,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
             if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
-            } else if ($post && 'update' == $this->request->do && !$this->postIsWriteable()) {
+            } else if ($post && 'update' == $this->request->do && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
@@ -135,12 +135,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $allow = true;
 
         foreach ($permissions as $permission) {
-            $permission = 'allow' . ucfirst(strtolower($permission));
-            $optionPermission = 'default' . ucfirst($permission);
-            $allow &= (isset($this->{$permission}) ? $this->{$permission} : $this->options->{$optionPermission});
+            $permission = strtolower($permission);
+
+            if ('edit' == $permission) {
+                $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
+            } else {
+                $permission = 'allow' . ucfirst(strtolower($permission));
+                $optionPermission = 'default' . ucfirst($permission);
+                $allow &= (isset($this->{$permission}) ? $this->{$permission} : $this->options->{$optionPermission});
+            }
         }
 
-        return $allow and !$this->hidden;
+        return $allow;
     }
     
     /**
@@ -413,7 +419,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 
-                if ($this->postIsWriteable($condition) && $this->delete($condition)) {
+                if ($this->isWriteable($condition) && $this->delete($condition)) {
                     /** 删除分类 */
                     $this->setCategories($post, array(), 'post');
                     
