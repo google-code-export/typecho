@@ -43,7 +43,7 @@ class Widget_ExceptionHandle extends Typecho_Widget
      */
     public function __construct(Exception $excepiton)
     {
-        parent::__construct(array(
+        $this->parameter->setDefault(array(
             'code'      =>  $excepiton->getCode(),
             'message'   =>  $excepiton->getMessage(),
             'trace'     =>  $excepiton->getTrace(),

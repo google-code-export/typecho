@@ -18,28 +18,21 @@ require_once 'Typecho/Request.php';
 class Typecho_Widget_Request
 {
     /**
-     * 实例化的对象
+     * 刷新后的参数
      * 
      * @access private
-     * @var Typecho_Controller_Request
+     * @var array
      */
-    private static $_instance;
+    private $_params = array();
     
     /**
-     * 获取实例化对象
+     * 是否刷新
      * 
-     * @access public
-     * @return Typecho_Controller_Request
+     * @access private
+     * @var boolean
      */
-    public static function getInstance()
-    {
-        if (empty(self::$_instance)) {
-            self::$_instance = new Typecho_Widget_Request();
-        }
-        
-        return self::$_instance;
-    }
-    
+    private $_flushed = false;
+
     /**
      * 获取参数列表
      * 
@@ -49,7 +42,99 @@ class Typecho_Widget_Request
     public function from()
     {
         $args = func_get_args();
-        return call_user_func_array(array('Typecho_Request', 'getParametersFrom'), $args);
+        return call_user_func_array(array($this, 'getParametersFrom'), $args);
+    }
+    
+    /**
+     * 刷新所有request
+     * 
+     * @access public
+     * @param array $parameters 参数
+     * @return void
+     */
+    public function flush($parameters)
+    {
+        $this->_flushed = true;
+        
+        $args = $parameters;
+        if (is_string($parameters)) {
+            parse_str($parameters, $args);
+        }
+        
+        $this->_params = $args;
+    }
+    
+    /**
+     * 获取指定的http传递参数
+     *
+     * @access public
+     * @param string $key 指定的参数
+     * @param mixed $default 默认的参数
+     * @return mixed
+     */
+    public function getParameter($name, $default = NULL)
+    {
+        if ($this->_flushed) {
+            return isset($this->_params[$name]) ? $this->_params[$name] : $default;
+        } else {
+            return Typecho_Request::getParameter($name, $default);
+        }
+    }
+    
+    /**
+     * 从参数列表指定的值中获取http传递参数
+     *
+     * @access public
+     * @param mixed $parameter 指定的参数
+     * @return unknown
+     */
+    public function getParametersFrom($parameter)
+    {
+        if (is_array($parameter)) {
+            $args = $parameter;
+        } else {
+            $args = func_get_args();
+            $parameters = array();
+        }
+
+        foreach ($args as $arg) {
+            $parameters[$arg] = $this->getParameter($arg);
+        }
+
+        return $parameters;
+    }
+    
+    /**
+     * 设置http传递参数
+     * 
+     * @access public
+     * @param string $name 指定的参数
+     * @param mixed $value 参数值
+     * @return void
+     */
+    public function setParameter($name, $value)
+    {
+        if ($this->_flushed) {
+            $this->_params[$name] = $value;
+        } else {
+            Typecho_Request::setParameter($name, $value);
+        }
+    }
+    
+    /**
+     * 参数是否存在
+     * 
+     * @access public
+     * @param string $key 指定的参数
+     * @return boolean
+     */
+    public function isSetParameter($key)
+    {
+        if ($this->_flushed) {
+            return isset($this->_params[$key]);
+        } else {
+            return Typecho_Request::isSetParameter($key);
+        }
     }
 
     /**
@@ -74,7 +159,7 @@ class Typecho_Widget_Request
      */
     public function __get($name)
     {
-        return Typecho_Request::getParameter($name);
+        return $this->getParameter($name);
     }
     
     /**
@@ -87,7 +172,7 @@ class Typecho_Widget_Request
      */
     public function __set($name, $value)
     {
-        Typecho_Request::setParameter($name, $value);
+        $this->setParameter($name, $value);
     }
     
     /**
@@ -99,6 +184,6 @@ class Typecho_Widget_Request
      */
     public function __isset($name)
     {
-        return Typecho_Request::isSetParameter($name);
+        return $this->isSetParameter($name);
     }
 }

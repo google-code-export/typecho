@@ -55,13 +55,10 @@ class Widget_Metas_Tag_Admin extends Widget_Abstract_Metas
      * 入口函数
      * 
      * @access public
-     * @param string $pageSize 分页数量
      * @return void
      */
-    public function __construct($pageSize = NULL)
+    public function __construct()
     {
-        parent::__construct();
-        
         $this->_pageSize = empty($pageSize) ? 20 : $pageSize;
         $this->_currentPage = Typecho_Request::getParameter('page', 1);
         $select = $this->select()->where('`type` = ?', 'tag');

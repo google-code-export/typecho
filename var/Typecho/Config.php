@@ -34,18 +34,10 @@ class Typecho_Config implements Iterator
      * @param mixed $config 配置列表
      * @return void
      */
-    public function __construct($config)
+    public function __construct($config = array())
     {
         /** 初始化参数 */
-        if (is_string($config)) {
-            parse_str($config, $params);
-        } else {
-            $params = $config;
-        }
-    
-        foreach ($params as $name => $value) {
-            $this->_currentConfig[$name] = $value;
-        }
+        $this->setDefault($config);
     }
     
     /**
@@ -55,7 +47,7 @@ class Typecho_Config implements Iterator
      * @param array $config 配置列表
      * @return void
      */
-    public static function factory($config)
+    public static function factory($config = array())
     {
         return new Typecho_Config($config);
     }
