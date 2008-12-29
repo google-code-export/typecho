@@ -77,7 +77,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->user->pass('contributor');
     
         /** 获取文章内容 */
-        if (($this->request->cid && 'delete' != $this->request->do) || 'update' == $this->request->do) {
+        if ((isset($this->request->cid) && 'delete' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'post')
             ->where('table.contents.cid = ?', $this->request->cid)

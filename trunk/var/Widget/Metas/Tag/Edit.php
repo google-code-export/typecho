@@ -149,7 +149,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
         $form->addItem($submit);
 
-        if (NULL != $this->request->mid) {
+        if (isset($this->request->mid)) {
             /** 更新模式 */
             $meta = $this->db->fetchRow($this->select()
             ->where('mid = ?', $this->request->mid)
