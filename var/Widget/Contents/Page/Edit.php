@@ -32,7 +32,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->user->pass('editor');
     
         /** 获取文章内容 */
-        if ((isset($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do) || 'update' == $this->request->do) {
+        if ((isset($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do
+         && 'insert' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'page')
             ->where('table.contents.cid = ?', $this->request->cid)
