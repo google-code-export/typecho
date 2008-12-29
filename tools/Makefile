@@ -11,7 +11,7 @@ package:
 	@echo 'package'
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
-    rm -Rf build/todo.txt
+	rm -Rf build/todo.txt
 	tar -cvvzf build.tar.gz build/
 
 
