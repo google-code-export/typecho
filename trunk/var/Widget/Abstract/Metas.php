@@ -137,7 +137,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
     public function sort(array $metas, $type)
     {
         foreach ($metas as $sort => $mid) {
-            $this->db->query($this->update('table.metas')->row('sort', $sort + 1)
+            $this->db->query($this->update('table.metas')->rows(array('order' => $sort + 1))
             ->where('mid = ?', $mid)->where('type = ?', $type));
         }
     }

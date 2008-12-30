@@ -34,8 +34,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     <ul id="advance-panel" class="typecho-post-option column-18">
                         <li class="column-18">
                             <div class="column-12">
-                                <label for="slug" class="typecho-label"><?php _e('页面顺序'); ?></label>
-                                <p><input type="text" id="meta" name="meta" value="<?php $page->meta(); ?>" class="mini" /></p>
+                                <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
+                                <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>" class="mini" /></p>
                                 <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                                 <br />
                                 <label class="typecho-label"><?php _e('自定义模板'); ?></label>

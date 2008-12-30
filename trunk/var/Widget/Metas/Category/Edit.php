@@ -136,9 +136,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $form->addInput($slug);
         
         /** 分类顺序 */
-        $sort = new Typecho_Widget_Helper_Form_Element_Text('sort', NULL, NULL, _t('分类顺序'),
+        $order = new Typecho_Widget_Helper_Form_Element_Text('order', NULL, NULL, _t('分类顺序'),
         _t('请填入一个数字以表示分类在列表中显示的顺序,如果没有特殊要求请留空'));
-        $form->addInput($sort);
+        $form->addInput($order);
         
         /** 分类描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
@@ -169,7 +169,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             
             $name->value($meta['name']);
             $slug->value($meta['slug']);
-            $sort->value($meta['sort']);
+            $order->value($meta['order']);
             $description->value($meta['description']);
             $do->value('update');
             $mid->value($meta['mid']);
@@ -217,9 +217,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $category = $this->request->from('name', 'slug', 'description');
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
-        $category['sort'] = $this->db->fetchObject($this->db->select(array('MAX(sort)' => 'maxSort'))
+        $category['order'] = $this->db->fetchObject($this->db->select(array('MAX(order)' => 'maxOrder'))
         ->from('table.metas')
-        ->where('type = ?', 'category'))->maxSort + 1;
+        ->where('type = ?', 'category'))->maxOrder + 1;
     
         /** 插入数据 */
         $category['mid'] = $this->insert($category);
@@ -333,7 +333,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        $categories = $this->request->sort;
+        $categories = $this->request->order;
         if ($categories && is_array($categories)) {
             $this->sort($categories, 'category');
         }

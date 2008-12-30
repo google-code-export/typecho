@@ -47,11 +47,10 @@ CREATE TABLE `typecho_contents` (
   `cid` int(10) unsigned NOT NULL auto_increment COMMENT 'post表主键',
   `title` varchar(200) default NULL COMMENT '内容标题',
   `slug` varchar(128) default NULL COMMENT '内容缩略名',
-  `uri` varchar(200) default NULL COMMENT '资源描述符',
   `created` int(10) unsigned default '0' COMMENT '内容生成时的GMT unix时间戳',
   `modified` int(10) unsigned default '0' COMMENT '内容更改时的GMT unix时间戳',
   `text` text COMMENT '内容文字',
-  `meta` int(10) unsigned default '0',
+  `order` int(10) unsigned default '0',
   `authorId` int(10) unsigned default '0' COMMENT '内容所属用户id',
   `template` varchar(32) default NULL COMMENT '内容使用的模板',
   `type` varchar(16) default 'post' COMMENT '内容类别',
@@ -79,7 +78,7 @@ CREATE TABLE `typecho_metas` (
   `type` varchar(32) NOT NULL COMMENT '项目类型',
   `description` varchar(200) default NULL COMMENT '选项描述',
   `count` int(10) unsigned default '0' COMMENT '项目所属内容个数',
-  `sort` int(10) unsigned default '0' COMMENT '项目排序',
+  `order` int(10) unsigned default '0' COMMENT '项目排序',
   PRIMARY KEY  (`mid`),
   KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;

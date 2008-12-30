@@ -73,6 +73,31 @@ class Typecho_Widget_Request
     }
     
     /**
+     * 增加过滤器
+     * 
+     * @access public
+     * @param string $name 需要过滤的字段
+     * @param mixed $callback 过滤的函数
+     * @return void
+     */
+    public function addFilter($name, $callback)
+    {
+        $this->_filters[$name] = $callback;
+    }
+    
+    /**
+     * 移除过滤器
+     * 
+     * @access public
+     * @param string $name 需要过滤的字段
+     * @return void
+     */
+    public function removeFilter($name)
+    {
+        unset($this->_filters[$name]);
+    }
+    
+    /**
      * 刷新所有request
      * 
      * @access public
