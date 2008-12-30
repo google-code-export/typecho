@@ -35,6 +35,13 @@
  */
 
 //reload by 70 (typecho group)
+/**
+ * This file is part of PHP-gettext
+ * 
+ * @author Danilo Segan <danilo@kvota.net>, Nico Kaiser <nico@siriux.net>
+ * @category typecho
+ * @package I18n
+ */
 class Typecho_I18n_GetText
 {
     //public:
