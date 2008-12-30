@@ -391,7 +391,7 @@ Typecho_Plugin::init(\$options->plugins);
                 </div>
                 <?php
                 if ($success) {
-                    echo '<p class="submit"><button type="submit">' . _e('我准备好了, 开始下一步 &raquo;') . '</button></p>';
+                    echo '<p class="submit"><button type="submit">' . _t('我准备好了, 开始下一步 &raquo;') . '</button></p>';
                 }
                 ?>
                 </form>
