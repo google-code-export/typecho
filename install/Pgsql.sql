@@ -33,11 +33,10 @@ CREATE SEQUENCE "typecho_contents_seq";
 CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_contents_seq'),
   "title" VARCHAR(200) NULL DEFAULT NULL,
   "slug" VARCHAR(128) NULL DEFAULT NULL,
-  "uri" VARCHAR(200) NULL DEFAULT NULL,
   "created" INT NULL DEFAULT '0',
   "modified" INT NULL DEFAULT '0',
   "text" TEXT NULL DEFAULT NULL,
-  "meta" INT NULL DEFAULT '0',
+  "order" INT NULL DEFAULT '0',
   "authorId" INT NULL DEFAULT '0',
   "template" VARCHAR(32) NULL DEFAULT NULL,
   "type" VARCHAR(16) NULL DEFAULT 'post',
@@ -66,7 +65,7 @@ CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_meta
   "type" VARCHAR(16) NOT NULL DEFAULT '',
   "description" VARCHAR(200) NULL DEFAULT NULL,
   "count" INT NULL DEFAULT '0',
-  "sort" INT NULL DEFAULT '0',
+  "order" INT NULL DEFAULT '0',
   PRIMARY KEY ("mid")
 );
 

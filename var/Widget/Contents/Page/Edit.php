@@ -56,7 +56,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     public function insertPage()
     {
         $contents = $this->request->from('text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'meta');
+        'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
@@ -105,7 +105,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     public function updatePage()
     {
         $contents = $this->request->from('text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'meta');
+        'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
@@ -183,7 +183,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         if ($pages && is_array($pages)) {
             foreach ($pages as $sort => $cid) {
-                $this->db->query($this->db->update('table.contents')->rows(array('meta' => $sort + 1))
+                $this->db->query($this->db->update('table.contents')->rows(array('order' => $sort + 1))
                 ->where('cid = ?', $cid));
             }
         }

@@ -28,6 +28,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     public function execute()
     {
         $this->db->fetchAll($this->select()->where('type = ?', 'category')
-        ->order('table.metas.sort', Typecho_Db::SORT_ASC), array($this, 'push'));
+        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

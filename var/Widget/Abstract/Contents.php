@@ -72,7 +72,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function select()
     {
         return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.authorId',
-        'table.contents.modified', 'table.contents.type', 'table.contents.status', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.meta',
+        'table.contents.modified', 'table.contents.type', 'table.contents.status', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.order',
         'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed')
         ->from('table.contents');
     }
@@ -92,7 +92,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
-            'meta'          =>  empty($content['meta']) ? intval($content['meta']) : 0,
+            'order'         =>  empty($content['order']) ? NULL : $content['text'],
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
@@ -129,11 +129,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if (!$this->isWriteable(clone $condition)) {
             return false;
         }
-    
+
         /** 构建更新结构 */
         $preUpdateStruct = array(
             'title'         =>  empty($content['title']) ? NULL : $content['title'],
-            'meta'          =>  empty($content['meta']) ? intval($content['meta']) : 0,
+            'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
@@ -221,7 +221,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $value['cid'])
         ->where('table.metas.type = ?', 'category')
-        ->order('table.metas.sort', Typecho_Db::SORT_ASC), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Abstract_Metas'), 'filter'));
         
         /** 取出第一个分类作为slug条件 */
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));

@@ -285,18 +285,18 @@ Typecho_Plugin::init(\$options->plugins);
                                         
                                         /** 初始分类 */
                                         $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
-                                        'count' => 1, 'sort' => 1)));
+                                        'count' => 1, 'order' => 1)));
                                         
                                         /** 初始关系 */
                                         $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
                                         
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => _t('<p>如果您看到这篇文章,表示您的blog已经安装成功.</p>'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
+                                        'text' => '<p>' . _t('如果您看到这篇文章,表示您的blog已经安装成功.') . '</p>', 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
                                         
-                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => _t('<p>这只是个测试页面.</p>'), 'authorId' => 1, 'meta' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
+                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
+                                        'text' => '<p>' . _t('本页面由Typecho创建, 这只是个测试页面.') . '</p>', 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
                                         
                                         /** 初始评论 */

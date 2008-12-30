@@ -278,7 +278,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return ($this->error);
         }
         $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'page')
-        ->order('table.contents.meta', Typecho_Db::SORT_ASC), array($this, 'push'));
+        ->order('table.contents.order', Typecho_Db::SORT_ASC), array($this, 'push'));
 
         /**初始化*/
         $pageStructs = array();
@@ -775,7 +775,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $meta = $this->widget('Widget_Abstract_Metas');
 
         $this->db->fetchAll($meta->select()->where('type = ?', 'category')
-        ->order('table.metas.sort', Typecho_Db::SORT_ASC), array($this, 'push'));
+        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this, 'push'));
         /** 初始化category数组*/
         $categoryStructs = array();
         while($this->next())
@@ -835,7 +835,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 读取数据*/
         $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'post')
-        ->order('table.contents.meta', Typecho_Db::SORT_ASC), array($this, 'push'));
+        ->order('table.contents.order', Typecho_Db::SORT_ASC), array($this, 'push'));
 
         /**初始化*/
         $postTitleStructs = array();
@@ -1106,7 +1106,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         $select = $this->select()->where('table.contents.type = ? AND table.contents.authorId = ?', 'post', $this->user->uid)
-        ->order('table.contents.meta', Typecho_Db::SORT_ASC)->limit($postsNum);
+        ->order('table.contents.order', Typecho_Db::SORT_ASC)->limit($postsNum);
         echo $select;
         $this->db->fetchAll($select, array($this, 'push'));
         if($this->have())
