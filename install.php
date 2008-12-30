@@ -60,7 +60,7 @@ Typecho_Common::init(array(
     'contentType'       =>  'text/html'
 ));
 
-define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.3/8.12.29');
+define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.3/8.12.30');
 
 /**
  * 获取传递参数
