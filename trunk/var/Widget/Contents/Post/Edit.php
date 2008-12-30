@@ -285,8 +285,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function insertPost()
     {
-        $contents = $this->request->from('password', 'text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
+        $contents = $this->request->from('password', 'text','allowComment',
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
@@ -347,8 +347,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function updatePost()
     {
-        $contents = $this->request->from('password', 'text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'category', 'tags');
+        $contents = $this->request->from('password', 'text', 'allowComment',
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
