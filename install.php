@@ -368,6 +368,13 @@ Typecho_Plugin::init(\$options->plugins);
                 <form method="post" action="?config">
                 <h1 class="typecho-install-title"><?php _e('欢迎使用Typecho'); ?></h1>
                 <div class="typecho-install-body">
+                <?php
+                $success = true;
+                if (!is_writeable('.')) {
+                    echo '<p class="message error">' . _t('安装目录不可写, 无法进入下一步创建配置文件, 请设置你的目录权限为可写') . '</p>';
+                    $success = false;
+                }
+                ?>
                 <h2><?php _e('安装说明'); ?></h2>
                 <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求.如果不符合,将在上方出现提示信息,
 请按照提示信息检查你的主机配置.如果服务器环境符合要求,将在下方出现"同意并安装"的按钮,点击此按钮即可一步完成安装.'); ?></strong></p>
@@ -382,7 +389,11 @@ Typecho_Plugin::init(\$options->plugins);
                 </ol>
                 <p><a href="http://typecho.org"><?php _e('查看所有贡献者'); ?></a></p>
                 </div>
-                <p class="submit"><button type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
+                <?php
+                if ($success) {
+                    echo '<p class="submit"><button type="submit">' . _e('我准备好了, 开始下一步 &raquo;') . '</button></p>';
+                }
+                ?>
                 </form>
             <?php endif; ?>
             
