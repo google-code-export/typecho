@@ -85,7 +85,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             </div>
 
             <div class="column-06 start-19 typecho-dashboard-nav">
-                <?php if ($version = Typecho_Request::getCookie('__typecho_check_version') && $version['available']): ?>
+                <?php $version = Typecho_Request::getCookie('__typecho_check_version'); ?>
+                <?php if ($version && $version['available']): ?>
                 <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <p class="current"><?php _e('您当前使用的版本是'); ?> <em><?php echo $version['current']; ?></em></p>
                     <p class="latest">
@@ -133,7 +134,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     $(_div).addClass('typecho-radius-bottomleft');
                     $(_div).addClass('typecho-radius-bottomright');
                     var _html = '<p class="current"><?php _e('您当前使用的版本是'); ?> <em>' + responseJSON.current + '</em></p>';
-                    _html += '<p class="latest"><a href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>';
+                    _html += '<p class="latest"><a target="_blank" href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>';
                     $(_div).set('html', _html);
                     
                     $(_div).fade('hide');
