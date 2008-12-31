@@ -31,20 +31,39 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
      */
     public function render($prevWord = 'PREV', $nextWord = 'NEXT')
     {
-        if ($this->_total < 1) {
-            return;
-        }
+        $this->prev($prevWord);
+        $this->next($nextWord);
+    }
     
-        //输出下一页
-        if ($this->_currentPage < $this->_totalPage) {
-            echo '<a class="next" href="' , str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) , '">'
-            , $nextWord , '</a>';
-        }
-
+    /**
+     * 输出上一页
+     * 
+     * @access public
+     * @param string $prevWord 上一页文字
+     * @return void
+     */
+    public function prev($prevWord = 'PREV')
+    {
         //输出上一页
-        if ($this->_currentPage > 1) {
-            echo '<a class="prev" href="' , str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) , '">'
-            , $prevWord , '</a>';
+        if ($this->_total > 0 && $this->_currentPage > 1) {
+            echo '<a class="prev" href="' . str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . '">'
+            . $prevWord . '</a>';
+        }
+    }
+    
+    /**
+     * 输出下一页
+     * 
+     * @access public
+     * @param string $prevWord 下一页文字
+     * @return void
+     */
+    public function next($nextWord = 'NEXT')
+    {
+        //输出下一页
+        if ($this->_total > 0 && $this->_currentPage < $this->_totalPage) {
+            echo '<a class="next" title="" href="' . str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . '">'
+            . $nextWord . '</a>';
         }
     }
 }

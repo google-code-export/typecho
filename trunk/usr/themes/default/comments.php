@@ -16,7 +16,7 @@
 			<h4 id="response"><?php _e('添加新评论'); ?></h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
-				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('Logout'); ?> &raquo;</a></p>
+				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('登出'); ?> &raquo;</a></p>
                 <?php else: ?>
 				<p><input type="text" name="author" class="text" size="35" value="<?php $this->remember('author'); ?>" /><label><?php _e('名字'); ?> *</label></p>
 				<p><input type="text" name="mail" class="text" size="35" value="<?php $this->remember('mail'); ?>" /><label><?php _e('E-mail'); ?> *</label></p>
