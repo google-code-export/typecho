@@ -91,19 +91,15 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar_stripped.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
-<?php include 'common-js.php'; ?>
 <script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-            Calendar.setup(
-                {
-                    inputField : "date",
-                    ifFormat : "%Y-%m-%d %H:%M",
-                    showsTime: true,
-                    button : "date"
-                }
-            );
-        });
-    })();
+    Calendar.setup(
+        {
+            inputField : "date",
+            ifFormat : "%Y-%m-%d %H:%M",
+            showsTime: true,
+            button : "date"
+        }
+    );
 </script>
+<?php include 'common-js.php'; ?>
 <?php include 'copyright.php'; ?>

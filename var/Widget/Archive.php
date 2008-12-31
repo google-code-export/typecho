@@ -797,14 +797,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $validated = false;
 
         /** 个性化模板系统 */
-        if (!empty($this->_archiveType)) {
-            //~ 自定义模板
-            if (!empty($this->_themeFile)) {
-                if (is_file($this->_themeFile . $themeFile)) {
-                    $this->_themeFile = $themeFile;
-                    $validated = true;
-                }
-            }
+        if (empty($this->_themeFile) && !empty($this->_archiveType)) {
         
             //~ 首先找具体路径, 比如 category/default.php
             if (!empty($this->_archiveSlug)) {
@@ -831,10 +824,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
-            }
-            
-            if (!$validated) {
-                $this->_themeFile = 'index.php';
             }
         }
         

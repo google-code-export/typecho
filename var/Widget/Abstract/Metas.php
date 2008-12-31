@@ -216,7 +216,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
                         'slug'  =>  $slug,
                         'type'  =>  'tag',
                         'count' =>  0,
-                        'order'  =>  0,
+                        'sort'  =>  0,
                     ));
                 }
             }
