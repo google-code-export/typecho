@@ -168,7 +168,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___logoutUrl()
     {
-        return Typecho_Common::url('Logout.do', $this->index);
+        return Typecho_Router::url('do', array('widget' => 'Logout'), $this->options->index);
     }
     
     /**

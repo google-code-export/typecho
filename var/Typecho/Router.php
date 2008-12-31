@@ -113,7 +113,7 @@ class Typecho_Router
         //交换数组键值
         $pattern = array();
         foreach ($route['params'] as $row) {
-            $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
+            $pattern[$row] = isset($value[$row]) ? urlencode($value[$row]) : '{' . $row . '}';
         }
 
         return Typecho_Common::url(vsprintf($route['format'], $pattern), $prefix);
