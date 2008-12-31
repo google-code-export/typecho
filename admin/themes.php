@@ -35,9 +35,10 @@ include 'menu.php';
                         <p><?php echo nl2br($themes->description); ?></p>
                         </div>
                     </td>
+                    <?php $last = $themes->sequence; ?>
                     <?php $themes->alt('', '</tr>'); ?>
                     <?php endwhile; ?>
-                    <?php if($themes->sequence % 2): ?>
+                    <?php if($last % 2): ?>
                     <td>&nbsp;</td></tr>
                     <?php endif; ?>
                 </table>

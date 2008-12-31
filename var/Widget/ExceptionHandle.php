@@ -91,7 +91,7 @@ class Widget_ExceptionHandle extends Typecho_Widget
 产生此问题的原因可能是由于程序的内部出现了严重错误造成, 请检查你的程序. 如果您无法解决这个问题可以到typecho社区寻求帮助.');
                 error_log($this->parameter->error);
             } else {
-                $message = $this->parameter->message;
+                $message = nl2br($this->parameter->message);
             }
             
             echo 

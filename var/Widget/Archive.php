@@ -584,6 +584,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 输出文章内容
+     *
+     * @access public
+     * @param string $more 文章截取后缀
+     * @return void
+     */
+    public function content($more = NULL)
+    {
+        parent::content($this->is('single') ? NULL : $more);
+    }
+    
+    /**
      * 输出分页
      * 
      * @access public
@@ -607,6 +619,31 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->_currentPage, $this->parameter->pageSize, $query);
             $nav->render($prev, $next, $splitPage, $splitWord);
         }
+    }
+    
+    /**
+     * 前一页
+     * 
+     * @access public
+     * @param string $word 链接标题
+     * @param string $page 页面链接
+     * @return void
+     */
+    public function pageLink($word = '&laquo; Previous Entries', $page = 'render')
+    {
+        static $nav;
+    
+        if (empty($nav)) {
+            $query = Typecho_Router::url(Typecho_Router::$current . 
+            (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
+            $this->_pageRow, $this->options->index);
+
+            /** 使用盒状分页 */
+            $nav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
+            $this->_currentPage, $this->parameter->pageSize, $query);
+        }
+        
+        $nav->{$page}($word);
     }
     
     /**
@@ -735,6 +772,17 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 输出header */
         $header->render();
+    }
+    
+    /**
+     * 支持页脚自定义
+     * 
+     * @access public
+     * @return void
+     */
+    public function footer()
+    {
+        $this->plugin()->footer($this);
     }
     
     /**
