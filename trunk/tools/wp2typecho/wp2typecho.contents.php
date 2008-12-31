@@ -26,13 +26,24 @@ while($articleInfo = mysql_fetch_array($articleQuery)) {
     $template = NULL;
 
     $type = $articleInfo['post_type'];
-    if($articleInfo['post_status'] == 'draft' || $articleInfo['post_status'] == 'pending') {
-        $type = 'draft';
+    if($articleInfo['post_type'] == 'revision') {
+        $type = 'post';
     }
+	$status = $articleInfo['post_status'];
     $password = $articleInfo['post_password'];
     $commentsNum = $articleInfo['comment_count'];
-    $allowComment = $articleInfo['comment_status'] == 'open' ? 'enable' : 'disable';
+    $allowComment = $articleInfo['comment_status'];
+	if($articleInfo['comment_status'] == 'open' || $articleInfo['comment_status'] == 'enable') {
+        $allowComment = '1';
+	}else{
+		$allowComment = '0';
+	}
     $allowPing = $articleInfo['ping_status'] == 'open' ? 'enable' : 'disable';
-    $allowFeed = 'enable';
-    mysql_query("INSERT INTO {$typechoPre}contents VALUES('$cid', '$title', '$slug', '$uri', '$created', '$modified', '$text', '$meta', '$author', '$template', '$type', '$password', '$commentsNum', '$allowComment', '$allowPing', '$allowFeed')");
+	if($articleInfo['ping_status'] == 'open' || $articleInfo['ping_status'] == 'enable') {
+        $allowPing = '1';
+	}else{
+		$allowPing = '0';
+	}
+    $allowFeed = '1';
+    mysql_query("INSERT INTO {$typechoPre}contents VALUES('$cid', '$title', '$slug', '$created', '$modified', '$text', '$meta', '$author', '$template', '$type', '$status', '$password', '$commentsNum', '$allowComment', '$allowPing', '$allowFeed')");
 }
