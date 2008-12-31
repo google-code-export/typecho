@@ -92,9 +92,6 @@ class Widget_Abstract_Metas extends Widget_Abstract
         $type = $value['type'];
         $routeExists = (NULL != Typecho_Router::get($type));
         
-        $tmpSlug = $value['slug'];
-        $value['slug'] = urlencode($value['slug']);
-        
         $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
         
         /** 生成聚合链接 */
@@ -106,8 +103,6 @@ class Widget_Abstract_Metas extends Widget_Abstract
         
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
-        
-        $value['slug'] = $tmpSlug;
         
         $value = $this->plugin(__CLASS__)->filter($value);
         return $value;

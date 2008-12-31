@@ -296,7 +296,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
                 
                 /** 匹配类型 */
-                $select->where('table.contents.type = ?', Typecho_Router::$current)->limit(1);
+                $select->limit(1);
                 $this->db->fetchRow($select, array($this, 'push'));
                 
                 if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
@@ -330,10 +330,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_archiveTitle[] = $this->title;
                 
                 /** 设置归档类型 */
-                $this->_archiveType = Typecho_Router::$current;
+                $this->_archiveType = $this->type;
                 
                 /** 设置归档缩略名 */
-                $this->_archiveSlug = 'post' == Typecho_Router::$current ? $this->cid : $this->slug;
+                $this->_archiveSlug = 'post' == $this->type ? $this->cid : $this->slug;
                 
                 /** 设置单一归档类型 */
                 $this->_archiveSingle = true;
@@ -350,10 +350,20 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'category':
             case 'category_page':
                 /** 如果是分类 */
-                $category = $this->db->fetchRow($this->db->select()
+                $categorySelect = $this->db->select()
                 ->from('table.metas')
                 ->where('type = ?', 'category')
-                ->where('slug = ?', $this->request->slug)->limit(1),
+                ->limit(1);
+                
+                if (isset($this->request->mid)) {
+                    $categorySelect->where('mid = ?', $this->request->mid);
+                }
+                
+                if (isset($this->request->slug)) {
+                    $categorySelect->where('slug = ?', $this->request->slug);
+                }
+                
+                $category = $this->db->fetchRow($categorySelect,
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if (!$category) {
@@ -397,14 +407,23 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'tag':
             case 'tag_page':
 
+                $tagSelect = $this->db->select()->from('table.metas')
+                ->where('type = ?', 'tag')->limit(1);
+                
+                if (isset($this->request->mid)) {
+                    $tagSelect->where('mid = ?', $this->request->mid);
+                }
+                
+                if (isset($this->request->slug)) {
+                    $tagSelect->where('slug = ?', $this->request->slug);
+                }
+
                 /** 如果是标签 */
-                $tag = $this->db->fetchRow($this->db->select()->from('table.metas')
-                ->where('type = ?', 'tag')
-                ->where('slug = ?', $this->request->slug)->limit(1),
+                $tag = $this->db->fetchRow($tagSelect,
                 array($this->widget('Widget_Abstract_Metas'), 'filter'));
                 
                 if (!$tag) {
-                    throw new Typecho_Widget_Exception(_t('标签%s不存在', $this->request->slug), 404);
+                    throw new Typecho_Widget_Exception(_t('标签不存在'), 404);
                 }
             
                 /** fix sql92 by 70 */
@@ -452,12 +471,13 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $year = $this->request->year;
                 $month = $this->request->month;
                 $day = $this->request->day;
+                $timezone = idate('Z');
                 
                 if (!empty($year) && !empty($month) && !empty($day)) {
                 
                     /** 如果按日归档 */
-                    $from = mktime(0, 0, 0, $month, $day, $year) - $this->options->timezone;
-                    $to = mktime(23, 59, 59, $month, $day, $year) - $this->options->timezone;
+                    $from = mktime(0, 0, 0, $month, $day, $year);
+                    $to = mktime(23, 59, 59, $month, $day, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -466,8 +486,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year) && !empty($month)) {
                 
                     /** 如果按月归档 */
-                    $from = mktime(0, 0, 0, $month, 1, $year) - $this->options->timezone;
-                    $to = mktime(23, 59, 59, $month, idate('t', $from), $year) - $this->options->timezone;
+                    $from = mktime(0, 0, 0, $month, 1, $year);
+                    $to = mktime(23, 59, 59, $month, idate('t', $from), $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -475,15 +495,15 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year)) {
                 
                     /** 如果按年归档 */
-                    $from = mktime(0, 0, 0, 1, 1, $year) - $this->options->timezone;
-                    $to = mktime(23, 59, 59, 12, 31, $year) - $this->options->timezone;
+                    $from = mktime(0, 0, 0, 1, 1, $year);
+                    $to = mktime(23, 59, 59, 12, 31, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
                 }
                 
-                $select->where('table.contents.created >= ?', $from)
-                ->where('table.contents.created <= ?', $to);
+                $select->where('table.contents.created >= ?', $from - $timezone)
+                ->where('table.contents.created <= ?', $to - $timezone);
                 
                 /** 设置归档类型 */
                 $this->_archiveType = 'date';
@@ -560,7 +580,6 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
-        
         $this->db->fetchAll($select, array($this, 'push'));
     }
     

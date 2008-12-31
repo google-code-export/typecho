@@ -83,23 +83,23 @@ var typechoGuid = function (el, config) {
 
 /** 消息窗口淡出 */
 var typechoMessage = function () {
-    var message = $(document).getElement('.popup');
-    if (message) {
-        var messageEffect = new Fx.Morph(message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-        messageEffect.addEvent('complete', function () {
+    var _message = $(document).getElement('.popup');
+    if (_message) {
+        var _messageEffect = new Fx.Morph(_message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+        _messageEffect.addEvent('complete', function () {
             this.element.style.display = 'none';
         });
-        messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
+        _messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
     }
 };
 
 /** 在新窗口打开链接 */
 var typechoOpenLink = function (adminPattern, doPattern) {
     $(document).getElements('a').each(function (item) {
-        href = item.href;
-        if (href && '#' != href) {
+        var _href = item.href;
+        if (_href && '#' != _href) {
             /** 如果匹配则继续 */
-            if (adminPattern.exec(href) || doPattern.exec(href)) {
+            if (adminPattern.exec(_href) || doPattern.exec(_href)) {
                 return;
             }
             
@@ -113,11 +113,11 @@ var typechoOpenLink = function (adminPattern, doPattern) {
 
 /** 页面滚动 */
 var typechoScroll = function (sel, parentSel) {
-    var firstError = $(document).getElement(sel);
+    var _firstError = $(document).getElement(sel);
     
     //增加滚动效果
-    if (firstError) {
-        var errorFx = new Fx.Scroll(window).toElement(firstError.getParent(parentSel));
+    if (_firstError) {
+        var _errorFx = new Fx.Scroll(window).toElement(_firstError.getParent(parentSel));
     }
 }
 
