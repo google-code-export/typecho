@@ -50,7 +50,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         /** 验证用户名和密码 */
         $select = $this->db->select()->from('table.users')->where('name = ?', $userName)->limit(1);
-        $user = $this->db->fetchRow($select);
+        $user = $this->db->fetchRow($select, array($this->user, push));
         if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
             /** 登录操作 */
             /** 登录后用$this->user即可调用当前用户 */
@@ -239,7 +239,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         else
         {
-            return(new IXR_Error(500,"无法删除页面."));
+            return(new IXR_Error(500,_t("无法删除页面")));
         }
         return true;
     }
@@ -277,23 +277,20 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             return ($this->error);
         }
-        $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'page')
-        ->order('table.contents.order', Typecho_Db::SORT_ASC), array($this, 'push'));
-
+        $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
         /**初始化*/
         $pageStructs = array();
-        if($this->have())
+        
+        while($pages->next())
         {
-            while($this->next())
-            {
-                $pageStructs[] = array(
-                        'dateCreated'   => new IXR_Date($this->options->timezone + $this->created),
-                        'page_id'       => $this->cid,
-                        'page_title'    => $this->title,
-                        'page_parent_id'=> 0,
-                        );
-            }
+            $pageStructs[] = array(
+                    'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
+                    'page_id'       => $pages->cid,
+                    'page_title'    => $pages->title,
+                    'page_parent_id'=> 0,
+                    );
         }
+        
         return $pageStructs;
     }
 
@@ -355,7 +352,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 初始化meta widget，然后插入*/
         $meta = $this->widget('Widget_Abstract_Metas');
         if(!$meta->insert($option)) {
-            return new IXR_Error(500, '对不起,提交文章时发生错误.');
+            return new IXR_Error(500, _t('对不起,提交文章时发生错误.'));
         }
         return true;
     }
@@ -523,7 +520,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             /** 执行插入*/
             if(!$insertId = $this->insert($input))
             {
-                return new IXR_Error(500, '对不起,该文章不能更新.');
+                return new IXR_Error(500, _t('对不起,该文章不能更新.'));
             }
         }
         if($insertId && 'page' != $input['type'] && 'page_draft' != $input['type'])
@@ -607,14 +604,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 验证权限*/
         if($post['authorId'] != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator'))
         {
-            return new IXR_Error('503', '对不起，你没有权限编辑此文章');
+            return new IXR_Error('503', _t('对不起，你没有权限编辑此文章'));
         }
 
         $content['do'] = 'edit';
         $content['post_id'] = $postId;
         $content['publish'] = $publish;
         $data = serialize($content);
-        file_put_contents('content.txt', $data);
         $this->mwNewPost(1, $userName, $password, $content, $publish);
     }
 
@@ -634,54 +630,41 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        /** 过滤id为$postId的post */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
-
-        /** 提交查询 */
-        $post = $this->db->fetchRow($select, array($this, 'push'));
-
-
-        /** 如果这个post存在则输出，否则输出错误 */
-        if($post) {
-            /** 取得文章作者的名字*/
-            $post['author_name'] = $this->author->name;
-            $post['author_screen_name'] = $this->author->screenName;
-            /** 对文章内容做截取处理，以获得description和text_more*/
-            $post['content'] = $this->getPostExtended($post['text']);
-            /** 只需要分类的name*/
-            $post['category'] = array();
-            var_dump($post);
-            foreach($post['categories'] as $category)
-            {
-                $post['category'][] = $category['name'];
-            }
-
-            $postStruct = array(
-                    'dateCreated'   => new IXR_Date($this->options->timezone + $post['created']),
-                    'userid'        => $post['authorId'],
-                    'postid'       => $post['cid'],
-                    'description'   => $post['content']['0'],
-                    'title'         => $post['title'],
-                    'link'          => $post['permalink'],
-                    'permalink'     => $post['permalink'],
-                    'categories'    => $post['category'],
-                    'mt_excerpt'    => $post['content']['0'],
-                    'mt_text_more'  => $post['content']['1'],
-                    'mt_allow_comments' => $post['allowComment'],
-                    'mt_allow_pings' => $post['allowPing'],
-                    'wp_slug'       => $post['slug'],
-                    'wp_password'   => $post['password'],
-                    'wp_author'     => $post['author_name'],
-                    'wp_author_id'  => $post['authorId'],
-                    'wp_author_display_name' => $post['author_screen_name'],
-                    );
-            return $postStruct;
+        try {
+            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        else
+
+        /** 对文章内容做截取处理，以获得description和text_more*/
+        list($excerpt, $more) = $this->getPostExtended($post->text);
+        /** 只需要分类的name*/
+        $theCategory = array();
+        foreach($post->categories as $category)
         {
-            return IXR_error(404, _t('对不起，不存在此文章'));
+            $theCategory = $category['name'];
         }
 
+        $postStruct = array(
+                'dateCreated'   => new IXR_Date($this->options->timezone + $post->created),
+                'userid'        => $post->authorId,
+                'postid'       => $post->cid,
+                'description'   => $excerpt,
+                'title'         => $post->title,
+                'link'          => $post->permalink,
+                'permalink'     => $post->permalink,
+                'categories'    => $theCategory,
+                'mt_excerpt'    => $excerpt,
+                'mt_text_more'  => $more,
+                'mt_allow_comments' => $post->allowComment,
+                'mt_allow_pings' => $post->allowPing,
+                'wp_slug'       => $post->slug,
+                'wp_password'   => $post->password,
+                'wp_author'     => $post->author->name,
+                'wp_author_id'  => $post->authorId,
+                'wp_author_display_name' => $post->author->screenName,
+                );
+        return $postStruct;
     }
 
     /**
@@ -701,47 +684,40 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        /** 构建查询 */
-        $select = $this->select()->where('table.contents.type = ?', 'post')->limit($postsNum);
-
-        /** 提交查询 */
-        $posts = $this->db->fetchAll($select, array($this, 'push'));
-
+        //todo:限制数量
+        $posts = $this->widget('Widget_Contents_Post_Admin', NULL, 'status=all');
 
         $postStructs = array();
         /** 如果这个post存在则输出，否则输出错误 */
-        foreach($posts as $post)
+        while($posts->next())
         {
-            /** 取得文章作者的名字*/
-            $post['author_name'] = $this->author->name;
-            $post['author_screen_name'] = $this->author->screenName;
             /** 对文章内容做截取处理，以获得description和text_more*/
-            $post['content'] = $this->getPostExtended($post['text']);
+            list($excerpt, $more) = $this->getPostExtended($post->text);
             /** 只需要分类的name*/
-            $post['category'] = array();
-            foreach($post['categories'] as $category)
+            $theCategory = array();
+            foreach($posts->categories as $category)
             {
-                $post['category'][] = $category['name'];
+                $theCategory = $category['name'];
             }
-
+             
             $postStruct = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $post['created']),
-                    'userid'        => $post['authorId'],
-                    'postid'       => $post['cid'],
-                    'description'   => $post['content']['0'],
-                    'title'         => $post['title'],
-                    'link'          => $post['permalink'],
-                    'permalink'     => $post['permalink'],
-                    'categories'    => $post['category'],
-                    'mt_excerpt'    => $post['content']['0'],
-                    'mt_text_more'  => $post['content']['1'],
-                    'mt_allow_comments' => $post['allowComment'],
-                    'mt_allow_pings' => $post['allowPing'],
-                    'wp_slug'       => $post['slug'],
-                    'wp_password'   => $post['password'],
-                    'wp_author'     => $post['author_name'],
-                    'wp_author_id'  => $post['authorId'],
-                    'wp_author_display_name' => $post['author_screen_name'],
+                    'userid'        => $posts->authorId,
+                    'postid'       => $posts->cid,
+                    'description'   => $excerpt,
+                    'title'         => $posts->title,
+                    'link'          => $posts->permalink,
+                    'permalink'     => $posts->permalink,
+                    'categories'    => $theCategory,
+                    'mt_excerpt'    => $excerpt,
+                    'mt_text_more'  => $more,
+                    'mt_allow_comments' => $posts->allowComment,
+                    'mt_allow_pings' => $posts->allowPing,
+                    'wp_slug'       => $posts->slug,
+                    'wp_password'   => $posts->password,
+                    'wp_author'     => $posts->author->name,
+                    'wp_author_id'  => $posts->authorId,
+                    'wp_author_display_name' => $posts->author->screenName,
                     );
             $postStructs[] = $postStruct;
         }
@@ -752,7 +728,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         else
         {
-           return IXR_error(404, _t('对不起，没有任何文章'));
+           return new IXR_Error(404, _t('对不起，没有任何文章'));
         }
     }
 
@@ -834,27 +810,17 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 读取数据*/
-        $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'post')
-        ->order('table.contents.order', Typecho_Db::SORT_ASC), array($this, 'push'));
-
+        $posts = $this->widget('Widget_Contents_Post_Admin', NULL, 'status=all');
         /**初始化*/
         $postTitleStructs = array();
-        if($this->have())
+        while($posts->next())
         {
-            while($this->next())
-            {
-                $postTitleStructs[] = array(
-                        'dateCreated'   => new IXR_Date($this->options->timezone + $this->created),
-                        'userid'        => $this->authorId,
-                        'postid'        => $this->cid,
-                        'title'         => $this->title,
-                        );
-            }
-        }
-        else
-        {
-            $this->error = new IXR_Error(500, '没有任何文章.');
-            return $this->error;
+            $postTitleStructs[] = array(
+                    'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
+                    'userid'        => $posts->authorId,
+                    'postid'        => $posts->cid,
+                    'title'         => $posts->title,
+                    );
         }
         return $postTitleStructs;
 
@@ -910,14 +876,15 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        /** 过滤id为$postId的post */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
-
-        /** 提交查询 */
-        $post = $this->db->fetchRow($select, array($this, 'push'));
+        try {
+            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
+        }
+        
         /** 格式化categories*/
         $categories = array();
-        foreach($this->categories as $category)
+        foreach($post->categories as $category)
         {
             $categories[] = array(
                     'categoryName'      => $category['name'],
@@ -1063,28 +1030,21 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        /** 过滤id为$postId的post */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ? AND table.contents.authorId', $postId, 'post', $this->user->uid)->limit(1);
-
-        /** 提交查询 */
-        $post = $this->db->fetchRow($select, array($this, 'filter'));
-        if(!$post)
-        {
-            return new IXR_Error('404', '没有找到该文章');
+        try {
+            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
-
-        /** 取得文章作者的名字*/
-        $post['author_name'] = $this->author;
-
-        $content = '<title>' . $post['title'] . '</title>';
-        $content .= '<category>' . $post['categaries']['0']['name'];
-        $content .= stripslashes($post['text']);
+        
+        $content = '<title>' . $post->title . '</title>';
+        $content .= '<category>' . $post->categaries['0']['name'];
+        $content .= stripslashes($post->text);
 
         $struct = array(
-                'userid'        => $post['authorId'],
-                'dateCreated'   => new IXR_Date($this->options->timezone + $post['created']),
+                'userid'        => $post->authorId,
+                'dateCreated'   => new IXR_Date($this->options->timezone + $post->created),
                 'content'       => $content,
-                'postid'        => $post['cid'],
+                'postid'        => $post->cid,
                 );
         return $struct;
     }
@@ -1105,33 +1065,29 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             return $this->error;
         }
-        $select = $this->select()->where('table.contents.type = ? AND table.contents.authorId = ?', 'post', $this->user->uid)
-        ->order('table.contents.order', Typecho_Db::SORT_ASC)->limit($postsNum);
-        echo $select;
-        $this->db->fetchAll($select, array($this, 'push'));
-        if($this->have())
+        //todo:限制数量
+        $posts = $this->widget('Widget_Contents_Post_Admin', NULL, 'status=all');
+        
+        $postStructs = array();
+        while($posts->next())
         {
-            $postStructs = array();
-            while($this->next())
-            {
-                $content = '<title>' . $this->title . '</title>';
-                $content .= '<category>' . $this->categaries['0']['name'];
-                $content .= stripslashes($this->text);
+            $content = '<title>' . $posts->title . '</title>';
+            $content .= '<category>' . $posts->categaries['0']['name'];
+            $content .= stripslashes($posts->text);
 
-                $struct = array(
-                    'userid'        => $this->authorId,
-                    'dateCreated'   => new IXR_Date($this->options->timezone + $this->created),
-                    'content'       => $content,
-                    'postid'        => $this->cid,
-                );
-                $postStructs[] = $struct;
-            }
-            return $postStructs;
+            $struct = array(
+                'userid'        => $posts->authorId,
+                'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
+                'content'       => $content,
+                'postid'        => $posts->cid,
+            );
+            $postStructs[] = $struct;
         }
-        else
+        if(NULL == $postStructs)
         {
             return new IXR_Error('404', '没有任何文章');
         }
+        return $postStructs;
     }
 
     /**
