@@ -38,9 +38,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>" class="mini" /></p>
                                 <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                                 <br />
-                                <label class="typecho-label"><?php _e('自定义模板'); ?></label>
+                                <label for="template" class="typecho-label"><?php _e('自定义模板'); ?></label>
                                 <p>
-                                    <select name="template">
+                                    <select name="template" id="template">
                                         <option value=""><?php _e('不选择'); ?></option>
                                         <?php foreach ($page->templates as $template): ?>
                                         <option value="<?php echo $template['value']; ?>"<?php if($template['value'] == $page->template): ?> selected="true"<?php endif; ?>><?php echo $template['name']; ?></option>

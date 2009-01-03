@@ -43,7 +43,7 @@ include 'menu.php';
                                 <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
                                     <?php if ($activatedPlugins->activated): ?>
                                         <?php if ($activatedPlugins->config): ?>
-                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('配置'); ?></a> 
+                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
@@ -96,7 +96,7 @@ include 'menu.php';
                                 <?php if ($deactivatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
                                     <?php if ($deactivatedPlugins->activated): ?>
                                         <?php if ($deactivatedPlugins->config): ?>
-                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('配置'); ?></a> 
+                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>

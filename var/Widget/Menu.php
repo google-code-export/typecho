@@ -139,8 +139,21 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
         ));
         
-        $this->_parentMenu = $this->plugin()->parentMenu($this->_parentMenu);
-        $this->_childMenu = $this->plugin()->childMenu($this->_childMenu);
+        /** 获取扩展菜单 */
+        $panelTable = unserialize($this->options->panelTable);
+        $extendingParentMenu = empty($panelTable['parent']) ? array() : $panelTable['parent'];
+        $extendingChildMenu = empty($panelTable['child']) ? array() : $panelTable['child'];
+
+        foreach ($extendingParentMenu as $key => $val) {
+            $this->_parentMenu[10 + $key] = $val;
+        }
+        
+        foreach ($extendingChildMenu as $key => $val) {
+            $this->_childMenu[$key] = isset($this->_childMenu[$key]) ? $this->_childMenu[$key] : array();
+            if (isset($this->_parentMenu[$key])) {
+                $this->_childMenu[$key] = array_merge($this->_childMenu[$key], $val);
+            }
+        }
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $this->_currentUrl = $this->request->uri();
