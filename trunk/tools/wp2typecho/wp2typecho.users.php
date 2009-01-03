@@ -3,11 +3,8 @@
  *wordpress转typecho用户数据转换(users)程序
  */
 
-$res = mysql_connect("localhost", "root", "123456");
-mysql_select_db("program_wordpress");
-$tablepre = 'wp_';
-$typechoPre = 'typecho_';
-mysql_query('SET NAMES utf8');
+/** 载入配置支持 */
+require_once 'config.php';
 $userQuery = mysql_query("SELECT * FROM {$tablepre}users");
 while($userInfo = mysql_fetch_array($userQuery)) {
     $uid = $userInfo['ID'];

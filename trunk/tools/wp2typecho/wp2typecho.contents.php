@@ -2,13 +2,9 @@
 /**
  *wordpress转typecho文章数据转换(contents)程序
  */
-
-$res = mysql_connect("localhost", "root", "123456");
-mysql_select_db("program_wordpress");
-$tablepre = 'wp_';
-$typechoPre = 'typecho_';
-mysql_query('SET NAMES utf8');
-$articleQuery = mysql_query("SELECT * FROM {$tablepre}posts WHERE post_status != 'inherit'");
+/** 载入配置支持 */
+require_once 'config.php';
+$articleQuery = mysql_query("SELECT * FROM {$tablepre}posts");
 while($articleInfo = mysql_fetch_array($articleQuery)) {
     $cid = $articleInfo['ID'];
     $title = addslashes($articleInfo['post_title']);
@@ -30,6 +26,9 @@ while($articleInfo = mysql_fetch_array($articleQuery)) {
         $type = 'post';
     }
 	$status = $articleInfo['post_status'];
+	if($articleInfo['post_type'] == 'inherit') {
+        $type = 'publish';
+    }
     $password = $articleInfo['post_password'];
     $commentsNum = $articleInfo['comment_count'];
     $allowComment = $articleInfo['comment_status'];

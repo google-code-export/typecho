@@ -4,11 +4,8 @@
  *这个要在meta转换完之后再转
  */
 
-$res = mysql_connect("localhost", "root", "123456");
-mysql_select_db("program_wordpress");
-$tablepre = 'wp_';
-$typechoPre = 'typecho_';
-mysql_query('SET NAMES utf8');
+/** 载入配置支持 */
+require_once 'config.php';
 $linkQuery = mysql_query("SELECT * FROM {$tablepre}links");
 while($linkInfo = mysql_fetch_array($linkQuery)) {
     $name = addslashes($linkInfo['link_name']);
