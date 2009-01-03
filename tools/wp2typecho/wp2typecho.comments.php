@@ -2,11 +2,8 @@
 /**
  *wordpress转typecho评论数据转换(comments)程序  
  */
-$res = mysql_connect("localhost", "root", "123456");
-mysql_select_db("program_wordpress");
-$tablepre = 'wp_';
-$typechoPre = 'typecho_';
-mysql_query('SET NAMES utf8');
+/** 载入配置支持 */
+require_once 'config.php';
 $commentQuery = mysql_query("SELECT * FROM {$tablepre}comments");
 while($commentArray = mysql_fetch_array($commentQuery)) {
     $coid = $commentArray['comment_ID'];

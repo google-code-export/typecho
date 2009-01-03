@@ -1,1 +1,3 @@
-链接数据转换(wp2typecho.link.php)程序要在meta(wp2typecho.term.php)转换之后再运行
+tools/wp2typecho
+
+修改config.php中的数据库设置，然后访问该工具即可
