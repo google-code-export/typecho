@@ -1139,46 +1139,48 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         else
         {
-            return new IXR_Error(16, '源地址服务器错误.');
+            return new IXR_Error(16, _t('源地址服务器错误.'));
         }
 
         /** 检查目标地址是否正确*/
-        if(($pos = strpos($target, $this->option->siteUrl . '/index.php/')) === 0)
+        if(($pos = strpos($target, $this->options->siteUrl . 'index.php/')) === 0)
         {
-            $pathInfo = $substr($target, $pos + 1);
+            $pathInfo = substr($target, $pos + 1);
             /** 这样可以得到cid或者slug*/
             if($route = Typecho_Router::match($pathInfo))
             {
-                if(NULL != $this->request->cid) {
-                    $select = $this->select()->where('table.contents.cid = ?',$this->request->cid)->limit(1);
+                //todo:为什么是type啊？
+                if(NULL != $this->request->type) {
+                    $select = $this->select()->where('table.contents.cid = ?',$this->request->type)->limit(1);
                 } else if(NULL != $this->request->slug) {
-                    $select = $this->select()->where('table.contents.slug = ?', $this->request->cid)->limit(1);
+                    //todo:此处有疑问
+                    $select = $this->select()->where('table.contents.slug = ?', $this->request->slug)->limit(1);
                 } else {
                     /** 文章不存在*/
-                    return new IXR_Error(33, '这个目标地址不存在.');
+                    return new IXR_Error(33, _t('这个目标地址不存在.'));
                 }
             }
             else
             {
-                return new IXR_Error(33, '这个目标地址不存在.');
+                return new IXR_Error(33, _t('这个目标地址不存在.'));
             }
 
             /** 提交查询 */
-            $post = $this->$db->fetchRow($select, array($this, 'filter'));
+            $post = $this->db->fetchRow($select, array($this, 'filter'));
             if($post)
             {
                 /** 检查是否可以ping*/
                 if($post['allowPing'] && ($post['type'] == 'post' || $post['type'] == 'page'))
                 {
                     /** 现在可以ping了，但是还得检查下这个pingback是否已经存在了*/
-                    $pingNum = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments'))->where('table.comments.cid = ? AND table.comments.url = ? AND table.comments.type <> ?', $post['cid'], $source, 'comment')->num;
+                    $pingNum = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')->where('table.comments.cid = ? AND table.comments.url = ? AND table.comments.type <> ?', $post['cid'], $source, 'comment'))->num;
                     if($pingNum <= 0)
                     {
                         /** 现在开始插入以及邮件提示了 $response就是第一行请求时返回的数组*/
-                        preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response['body'], $matchTitle);
+                        preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response, $matchTitle);
                         $finalTitle = $matchTitle[1];
                         /** 干掉html tag，只留下<a>*/
-                        $text = Typecho_Common::stripTags($response['body'], '<a>');
+                        $text = Typecho_Common::stripTags($response, '<a href="">');
                         /** 此处将$target quote,留着后面用*/
                         $pregLink = preg_quote($target);
                         /** 找出含有target链接的最长的一行作为$finalText*/
@@ -1200,7 +1202,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
  						    }
                         }
                         /** 截取一段字*/
-                        $finalText = '[...]' . Typecho_Common::subStr($finalText) . '[...]';
+                        $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200) . '[...]';
 
                         /** 组织$input，准备插入*/
                         $input = array();
@@ -1211,7 +1213,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         $input['ip'] = $_SERVER["REMOTE_ADDR"];
                         $input['agent'] = $_SERVER["HTTP_USER_AGENT"];
                         $input['text'] = $finalText;
-                        $input['mod'] = 'pingback';
+                        $input['type'] = 'pingback';
+                        var_dump($input);
                         if(0 != $this->options->commentsRequireModeration)
                         {
                             $input['status'] = 'waiting';
@@ -1228,23 +1231,23 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     }
                     else
                     {
-                        return new IXR_Error(48, 'PingBack已经存在.');
+                        return new IXR_Error(48, _t('PingBack已经存在.'));
                     }
                 }
                 else
                 {
-                    return IXR_Error(49, '目标地址禁止Ping.');
+                    return IXR_Error(49, _t('目标地址禁止Ping.'));
                 }
             }
             else
             {
-                return IXR_Error(33, '这个目标地址不存在');
+                return new IXR_Error(33, _t('这个目标地址不存在'));
             }
 
         }
         else
         {
-            return new IXR_Error(33, '这个目标地址错误.');
+            return new IXR_Error(33, _t('这个目标地址错误.'));
         }
     }
 
