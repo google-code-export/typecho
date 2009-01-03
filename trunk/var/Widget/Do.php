@@ -29,7 +29,7 @@ class Widget_Do extends Typecho_Widget
         /** 判断是否为plugin */
         $actionTable = unserialize($this->widget('Widget_Options')->actionTable);
         $isPlugin = Typecho_Common::isAvailableClass($objectName) && 
-        in_array($widgetName, $actionTable);
+        in_array($objectName, $actionTable);
         
         $widgetName = $isPlugin ? $objectName : 'Widget_' . $objectName;
         $fileName = ($isPlugin ? $widget : 'Widget/' . $widget) . '.php';

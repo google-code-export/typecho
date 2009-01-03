@@ -45,7 +45,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         require_once $pluginFileName;
         
         try {
-            call_user_func(array($className, 'activate'));
+            $result = call_user_func(array($className, 'activate'));
             Typecho_Plugin::activate($pluginName);
             $this->update(array('value' => serialize(Typecho_Plugin::export())),
             $this->db->sql()->where('name = ?', 'plugins'));
@@ -66,7 +66,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             ));
         }
         
-        $this->widget('Widget_Notice')->set(_t('插件已经被激活'), NULL, 'success');
+        if ($result && is_string($result)) {
+            $this->widget('Widget_Notice')->set($result, NULL, 'notice');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('插件已经被激活'), NULL, 'success');
+        }
         $this->response->goBack();
     }
     
@@ -95,7 +99,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         require_once $pluginFileName;
         
         try {
-            call_user_func(array($className, 'deactivate'));
+            $result = call_user_func(array($className, 'deactivate'));
             Typecho_Plugin::deactivate($pluginName);
             $this->update(array('value' => serialize(Typecho_Plugin::export())),
             $this->db->sql()->where('name = ?', 'plugins'));
@@ -107,7 +111,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         
-        $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), NULL, 'success');
+        if ($result && is_string($result)) {
+            $this->widget('Widget_Notice')->set($result, NULL, 'notice');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), NULL, 'success');
+        }
         $this->response->goBack();
     }
     

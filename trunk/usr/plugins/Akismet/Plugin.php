@@ -24,6 +24,8 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
     
         Typecho_Plugin::factory('Widget_Feedback')->comment = array('Akismet_Plugin', 'filter');
         Typecho_Plugin::factory('Widget_Feedback')->trackback = array('Akismet_Plugin', 'filter');
+        
+        return _t('请配置此插件的API KEY, 以使您的反垃圾策略生效');
     }
     
     /**
