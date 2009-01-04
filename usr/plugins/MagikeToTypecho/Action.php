@@ -32,6 +32,8 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
         $masterDb->query($masterDb->delete('table.relationships')->where('1 = 1'));
         $userId = $this->widget('Widget_User')->uid;
         
+        /** 转换程序 */
+        
         /** 转换评论 */
         $i = 0;
         
