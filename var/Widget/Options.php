@@ -304,6 +304,17 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 编码输出允许出现在评论中的html标签
+     * 
+     * @access public
+     * @return void
+     */
+    public function commentsHTMLTagAllowed()
+    {
+        echo htmlspecialchars($this->commentsHTMLTagAllowed);
+    }
+    
+    /**
      * 获取插件系统参数
      * 
      * @param mixed $pluginName 插件名称

@@ -23,6 +23,14 @@ class Widget_Notice extends Typecho_Widget
     public $noticeType = 'notice';
     
     /**
+     * 提示高亮
+     * 
+     * @access public
+     * @var string
+     */
+    public $highlight;
+    
+    /**
      * 执行函数
      * 
      * @access public
@@ -30,11 +38,16 @@ class Widget_Notice extends Typecho_Widget
      */
     public function execute()
     {
-        if (NULL !== $this->request->getCookie('notice')) {
-            $this->noticeType = $this->request->getCookie('noticeType');
-            $this->push($this->request->getCookie('notice'));
-            $this->response->deleteCookie('notice', $this->widget('Widget_Options')->siteUrl);
-            $this->response->deleteCookie('noticeType', $this->widget('Widget_Options')->siteUrl);
+        if (NULL !== $this->request->getCookie('__typecho_notice')) {
+            $this->noticeType = $this->request->getCookie('__typecho_notice_type');
+            $this->push($this->request->getCookie('__typecho_notice'));
+            $this->response->deleteCookie('__typecho_notice', $this->widget('Widget_Options')->siteUrl);
+            $this->response->deleteCookie('__typecho_notice_type', $this->widget('Widget_Options')->siteUrl);
+        }
+        
+        if (NULL !== $this->request->getCookie('__typecho_notice_highlight')) {
+            $this->highlight = $this->request->getCookie('__typecho_notice_highlight');
+            $this->response->deleteCookie('__typecho_notice_highlight', $this->widget('Widget_Options')->siteUrl);
         }
     }
     
@@ -76,6 +89,20 @@ class Widget_Notice extends Typecho_Widget
         echo empty($this->row[$name]) ? NULL :
         ((false === strpos($format, '%s')) ? $format : sprintf($format, $this->row[$name]));
     }
+    
+    /**
+     * 高亮相关元素
+     * 
+     * @access public
+     * @param string $theId 需要高亮元素的id
+     * @return void
+     */
+    public function highlight($theId)
+    {
+        $this->response->setCookie('__typecho_notice_highlight', $theId, 
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->widget('Widget_Options')->siteUrl);
+    }
 
     /**
      * 设定堆栈每一行的值
@@ -101,9 +128,9 @@ class Widget_Notice extends Typecho_Widget
             }
         }
         
-        $this->response->setCookie('notice', $notice, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->response->setCookie('__typecho_notice', $notice, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('noticeType', $type, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->response->setCookie('__typecho_notice_type', $type, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
     }
 }

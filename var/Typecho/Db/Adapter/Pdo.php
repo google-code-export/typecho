@@ -34,6 +34,17 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     protected $_lastTable;
 
     /**
+     * 判断适配器是否可用
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAvailable()
+    {
+        return extension_loaded('pdo');
+    }
+
+    /**
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置

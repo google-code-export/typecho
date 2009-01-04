@@ -20,6 +20,17 @@
 class Widget_Abstract_Metas extends Widget_Abstract
 {
     /**
+     * 锚点id
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___theId()
+    {
+        return $this->type . '-' . $this->mid;
+    }
+
+    /**
      * 获取原始查询对象
      * 
      * @access public

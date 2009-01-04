@@ -26,6 +26,17 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     private $_dbHandle;
     
     /**
+     * 判断适配器是否可用
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAvailable()
+    {
+        return function_exists('sqlite_open');
+    }
+    
+    /**
      * 过滤字段名
      * 
      * @access private

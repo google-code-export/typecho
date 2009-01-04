@@ -18,6 +18,17 @@ require_once 'Typecho/Db/Adapter/Pdo.php';
 class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
 {
     /**
+     * 判断适配器是否可用
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAvailable()
+    {
+        return parent::isAvailable() && in_array('sqlite', PDO::getAvailableDrivers());
+    }
+    
+    /**
      * 初始化数据库 
      * 
      * @param Typecho_Config $config 数据库配置

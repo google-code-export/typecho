@@ -263,6 +263,9 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         /** 插入数据 */
         $user['uid'] = $this->insert($user);
         
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('user-' . $user['uid']);
+        
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('用户 %s 已经被增加', $user['screenName']), NULL, 'success');
         
@@ -293,6 +296,9 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     
         /** 更新数据 */
         $this->update($user, $this->db->sql()->where('uid = ?', $this->request->uid));
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('user-' . $this->request->uid);
         
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('用户 %s 已经被更新', $user['screenName']), NULL, 'success');

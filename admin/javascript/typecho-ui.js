@@ -138,6 +138,23 @@ var typechoToggle = function (sel, btn, showWord, hideWord) {
     }
 }
 
+/** 高亮元素 */
+var typechoHighlight = function (theId) {
+    if (theId) {
+        var el = $(document).getElement('#' + theId);
+        if (el) {
+            el.set('tween', {duration: 1500});
+            
+            var _bg = el.getStyle('background-color');
+            if (!_bg || 'transparent' == _bg) {
+                _bg = '#F7FBE9';
+            }
+
+            el.tween('background-color', '#AACB36', _bg);
+        }
+    }
+}
+
 /** 提交表单 */
 var typechoSubmit = function (formSel, inputSel, op) {
     var form = $(document).getElement(formSel);

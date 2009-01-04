@@ -87,6 +87,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
         }
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
@@ -129,6 +132,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             _t('草稿 "%s" 已经被保存', $this->title) :
             _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
         }
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {

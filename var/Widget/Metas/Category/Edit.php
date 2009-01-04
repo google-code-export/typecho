@@ -225,6 +225,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $category['mid'] = $this->insert($category);
         $this->push($category);
         
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
+        
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被增加',
         $this->permalink, $this->name), NULL, 'success');
@@ -254,6 +257,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->update($category, $this->db->sql()->where('mid = ?', $this->request->mid));
         $category['mid'] = $this->request->mid;
         $this->push($category);
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
         
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被更新',

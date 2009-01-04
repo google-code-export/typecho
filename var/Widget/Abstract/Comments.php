@@ -49,7 +49,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___permalink()
     {
-        return $this->parentContent['permalink'] . '#comments-' . $this->coid;
+        return $this->parentContent['permalink'] . '#' . $this->theId;
     }
     
     /**
@@ -82,7 +82,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___theId()
     {
-        return 'comments-' . $this->coid;
+        return 'comment-' . $this->coid;
     }
 
     /**

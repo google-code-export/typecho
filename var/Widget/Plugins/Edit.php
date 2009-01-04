@@ -66,6 +66,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             ));
         }
         
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
+        
         if ($result && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
         } else {
@@ -111,6 +114,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
+        
         if ($result && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
         } else {
@@ -137,6 +143,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $settings = $form->getAllRequest();
         $this->update(array('value' => serialize($settings)),
         $this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
         
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), NULL, 'success');

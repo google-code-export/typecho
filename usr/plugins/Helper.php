@@ -53,22 +53,51 @@ class Helper implements Typecho_Plugin_Interface
      * 增加路由
      * 
      * @access public
-     * @return boolean
+     * @param string $name 路由名称
+     * @param string $url 路由路径
+     * @param string $widget 组件名称
+     * @param string $action 组件动作
+     * @return void
      */
-    public static function addRoute()
+    public static function addRoute($name, $url, $widget, $action = NULL)
     {
+        $routingTable = self::options()->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
         
+        $routingTable[$name] = array(
+            'url'       =>  $url,
+            'widget'    =>  $widget,
+            'action'    =>  $action
+        );
+        self::options()->routingTable = $routingTable;
+        
+        $db = Typecho_Db::get();
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($routingTable))
+        , $db->sql()->where('name = ?', 'routingTable'));
     }
     
     /**
      * 移除路由
      * 
      * @access public
-     * @return boolean
+     * @param string $name 路由名称
+     * @return integer
      */
-    public static function removeRoute()
+    public static function removeRoute($name)
     {
+        $routingTable = self::options()->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
         
+        unset($routingTable[$name]);
+        self::options()->routingTable = $routingTable;
+        
+        $db = Typecho_Db::get();
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($routingTable))
+        , $db->sql()->where('name = ?', 'routingTable'));
     }
     
     /**

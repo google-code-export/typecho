@@ -61,7 +61,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<?php Typecho_Widget::widget('Widget_Contents_Page_Admin')->to($pages); ?>
                     	<?php if($pages->have()): ?>
                         <?php while($pages->next()): ?>
-                        <tr<?php $pages->alt(' class="even"', ''); ?>>
+                        <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td><?php $pages->author(); ?></td>

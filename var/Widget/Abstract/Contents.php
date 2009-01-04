@@ -62,6 +62,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...');
     }
+    
+    /**
+     * 锚点id
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___theId()
+    {
+        return $this->type . '-' . $this->cid;
+    }
 
     /**
      * 获取查询对象
