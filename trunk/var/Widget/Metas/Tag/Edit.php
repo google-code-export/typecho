@@ -212,6 +212,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $tag['mid'] = $this->insert($tag);
         $this->push($tag);
         
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
+        
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被增加',
         $this->permalink, $this->name), NULL, 'success');
@@ -240,6 +243,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         /** 更新数据 */
         $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->mid));
         $this->push($tag);
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
         
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被更新',

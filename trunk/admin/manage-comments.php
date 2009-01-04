@@ -59,7 +59,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <ul class="typecho-list-notable clearfix">
                     <?php if($comments->have()): ?>
                     <?php while($comments->next()): ?>
-                    <li class="column-24<?php $comments->alt(' even', ''); ?>">
+                    <li class="column-24<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
                         <div class="column-01 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>

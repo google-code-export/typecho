@@ -32,7 +32,7 @@ include 'menu.php';
                     </thead>
                     <tbody>
                         <?php while ($activatedPlugins->next()): ?>
-                        <tr<?php $activatedPlugins->alt(' class="even"', ''); ?>>
+                        <tr<?php $activatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $activatedPlugins->name(); ?>">
                             <td></td>
                             <td><?php $activatedPlugins->title(); ?></td>
                             <td><?php $activatedPlugins->description(); ?></td>
@@ -85,7 +85,7 @@ include 'menu.php';
                     <tbody>
                         <?php if ($deactivatedPlugins->have()): ?>
                         <?php while ($deactivatedPlugins->next()): ?>
-                        <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?>>
+                        <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $deactivatedPlugins->name(); ?>">
                             <td></td>
                             <td><?php $deactivatedPlugins->title(); ?></td>
                             <td><?php $deactivatedPlugins->description(); ?></td>

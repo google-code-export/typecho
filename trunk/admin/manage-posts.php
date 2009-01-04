@@ -82,7 +82,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
                     	<?php if($posts->have()): ?>
                         <?php while($posts->next()): ?>
-                        <tr<?php $posts->alt(' class="even"', ''); ?>>
+                        <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>

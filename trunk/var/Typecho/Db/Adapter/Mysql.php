@@ -26,6 +26,17 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     private $_dbLink;
     
     /**
+     * 判断适配器是否可用
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAvailable()
+    {
+        return function_exists('mysql_connect');
+    }
+    
+    /**
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置

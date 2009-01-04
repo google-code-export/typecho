@@ -52,7 +52,7 @@ include 'menu.php';
                         <tbody>
                             <?php if($categories->have()): ?>
                             <?php while ($categories->next()): ?>
-                            <tr<?php $categories->alt(' class="even"', ''); ?>>
+                            <tr<?php $categories->alt(' class="even"', ''); ?> id="<?php $categories->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                 <td><a href="<?php echo Typecho_Request::uri('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
@@ -93,7 +93,7 @@ include 'menu.php';
                     <ul class="typecho-list-notable tag-list clearfix typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                         <?php if($tags->have()): ?>
                         <?php while ($tags->next()): ?>
-                        <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>">
+                        <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
                         <sup><a class="balloon-button" href="<?php $tags->permalink(); ?>"><?php $tags->count(); ?></a></sup>

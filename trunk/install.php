@@ -84,17 +84,17 @@ function _p($adapter)
 {
     switch ($adapter) {
         case 'Mysql':
-            return function_exists('mysql_connect');
+            return Typecho_Db_Adapter_Mysql::isAvailable();
         case 'Pdo_Mysql':
-            return extension_loaded('pdo') && in_array('mysql', PDO::getAvailableDrivers());
+            return Typecho_Db_Adapter_Pdo_Mysql::isAvailable();
         case 'SQLite':
-            return function_exists('sqlite_open');
+            return Typecho_Db_Adapter_SQLite::isAvailable();
         case 'Pdo_SQLite':
-            return extension_loaded('pdo') && in_array('sqlite', PDO::getAvailableDrivers());
+            return Typecho_Db_Adapter_Pdo_SQLite::isAvailable();
         case 'Pgsql':
-            return function_exists('pg_connect');
+            return Typecho_Db_Adapter_Pgsql::isAvailable();
         case 'Pdo_Pgsql':
-            return extension_loaded('pdo') && in_array('pgsql', PDO::getAvailableDrivers());
+            return Typecho_Db_Adapter_Pdo_Pgsql::isAvailable();
         default:
             return false;
     }
@@ -193,11 +193,10 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
                                     $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbPrefix', 'dbDatabase', 'dbFile', 'dbDsn');
 
+                                    $_dbConfig = array_filter($_dbConfig);
                                     $dbConfig = array();
                                     foreach ($_dbConfig as $key => $val) {
-                                        if (Typecho_Request::isSetParameter($key)) {
-                                            $dbConfig[strtolower (substr($key, 2))] = $val;
-                                        }
+                                        $dbConfig[strtolower (substr($key, 2))] = $val;
                                     }
 
                                     $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);

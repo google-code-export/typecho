@@ -16,6 +16,14 @@
 interface Typecho_Db_Adapter
 {
     /**
+     * 判断适配器是否可用
+     * 
+     * @access public
+     * @return boolean
+     */
+    public static function isAvailable();
+
+    /**
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置

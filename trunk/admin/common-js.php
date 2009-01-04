@@ -7,6 +7,9 @@
         window.addEvent('domready', function() {
             var handle = new typechoGuid('typecho:guid', {offset: 1, type: 'mouse'});
             
+            //增加高亮效果
+            typechoHighlight('<?php echo $notice->highlight; ?>');
+            
             //增加淡出效果
             setTimeout(typechoMessage, 5000);
             typechoScroll('.typecho-option .error', '.typecho-option');

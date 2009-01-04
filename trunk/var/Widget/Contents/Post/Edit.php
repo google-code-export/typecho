@@ -330,6 +330,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
         }
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
@@ -393,6 +396,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
         }
+
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight($this->theId);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {

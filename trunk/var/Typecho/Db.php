@@ -125,6 +125,11 @@ class Typecho_Db
         /** 数据库适配器 */
         require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $adapterName) . '.php';
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
+        
+        if (!call_user_func(array($adapterName, 'isAvailable'))) {
+            throw new Typecho_Db_Exception("Adapter {$adapterName} is not available", 500);
+        }
+        
         $this->_prefix = $prefix;
         
         /** 初始化内部变量 */
