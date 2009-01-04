@@ -130,7 +130,7 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
 <div class="typecho-install-patch">
     <ol class="path">
         <li<?php if (!isset($_GET['finish']) && !isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('欢迎使用'); ?></li>
-        <li<?php if (isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('输入您的配置'); ?></li>
+        <li<?php if (isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('初始化您的配置'); ?></li>
         <li<?php if (isset($_GET['finish'])) : ?> class="current"<?php endif; ?>><?php _e('安装成功'); ?></li>
     </ol>
 </div>

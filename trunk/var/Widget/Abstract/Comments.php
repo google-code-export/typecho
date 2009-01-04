@@ -263,7 +263,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function filter(array $value)
     {
-        $value = $this->plugin(__CLASS__)->filter($value);
+        $value = $this->plugin(__CLASS__)->filter($value, $this);
         return $value;
     }
 

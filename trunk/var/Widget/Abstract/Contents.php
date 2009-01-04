@@ -281,7 +281,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             }
         }
         
-        $value = $this->plugin(__CLASS__)->filter($value);
+        $value = $this->plugin(__CLASS__)->filter($value, $this);
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
