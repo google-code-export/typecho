@@ -257,8 +257,8 @@ class Helper implements Typecho_Plugin_Interface
      * @access public
      * @return unknown
      */
-    public static function panelUrl($fileName)
+    public static function url($fileName)
     {
-        
+        return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
 }
