@@ -195,7 +195,9 @@ $options->generator = __TYPECHO_INSTALL_VERSION__;
 
                                     $dbConfig = array();
                                     foreach ($_dbConfig as $key => $val) {
-                                        $dbConfig[strtolower (substr($key, 2))] = $val;
+                                        if (Typecho_Request::isSetParameter($key)) {
+                                            $dbConfig[strtolower (substr($key, 2))] = $val;
+                                        }
                                     }
 
                                     $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);

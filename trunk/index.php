@@ -10,6 +10,9 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
+/** 缓存路由表 */
+$options->cacheRoutingTable(Typecho_Router::$parsedRoutingTable);
+
 /** 注册一个初始化插件 */
 Typecho_Plugin::factory('index.php')->begin();
 

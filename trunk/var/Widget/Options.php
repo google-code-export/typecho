@@ -227,6 +227,23 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 缓存路由表
+     * 
+     * @access public
+     * @param array $parsedTable 已经解析的路由表
+     * @return void
+     */
+    public function cacheRoutingTable($parsedRoutingTable)
+    {
+        if ($parsedRoutingTable) {
+            $this->routingTable = array_merge(array($parsedRoutingTable), $this->routingTable);
+            $db = Typecho_Db::get();
+            $this->widget('Widget_Abstract_Options')->update(array('value' => serialize($this->routingTable)),
+            $db->sql()->where('name = ?', 'routingTable'));
+        }
+    }
+    
+    /**
      * 输出网站路径
      * 
      * @access public
