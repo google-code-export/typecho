@@ -43,7 +43,7 @@ class Widget_Plugins_List extends Typecho_Widget
                 $pluginFileName = $pluginDir . '/Plugin.php';
             } else if (is_file($pluginDir)) {
                 $pluginFileName = $pluginDir;
-                $part = explode('.', $pluginDir);
+                $part = explode('.', basename($pluginDir));
                 if (2 == count($part) && 'php' == $part[1]) {
                     $pluginName = $part[0];
                 } else {
