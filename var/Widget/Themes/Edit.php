@@ -32,6 +32,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $theme = trim($theme, './');
         if (is_dir(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme)) {
             $this->update(array('value' => $theme), $this->db->sql()->where('name = ?', 'theme'));
+            $this->widget('Widget_Notice')->highlight('theme-' . $theme);
             $this->widget('Widget_Notice')->set(_t("外观已经改变"), NULL, 'success');
             $this->response->goBack();
         } else {

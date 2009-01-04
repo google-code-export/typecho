@@ -115,6 +115,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
         );
         
+        if (!empty($content['cid'])) {
+            $insertStruct['cid'] = $content['cid'];
+        }
+        
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
         /** 更新缩略名 */

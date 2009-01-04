@@ -351,6 +351,13 @@ button {
 	line-height: 20px;
 }
 
+.message blockquote {
+	margin: 5px 10px;
+	padding: 0 5px;
+	font-size: 13px;
+	border-left: 3px solid #999;
+}
+
 .error {
     border: 1px solid #fbc2c4;
     background: #fbe3e4;
@@ -1611,26 +1618,27 @@ ul.typecho-post-option .description {
 
 .typecho-page-main ul.tag-list li.size-1 {
 	font-size: 12px;
+	color: #777;
 }
 
 .typecho-page-main ul.tag-list li.size-2 {
 	font-size: 16px;
+	color: #666;
 }
 
 .typecho-page-main ul.tag-list li.size-3 {
 	font-size: 18px;
+	color: #555;
 }
 
 .typecho-page-main ul.tag-list li.size-4 {
 	font-size: 22px;
+	color: #444;
 }
 
 .typecho-page-main ul.tag-list li.size-5 {
 	font-size: 28px;
-}
-
-.typecho-page-main ul.tag-list li sup {
-	font-size: 10px;
+	color: #333;
 }
 
 .typecho-page-main .typecho-mini-panel .tag-selection {
@@ -1639,5 +1647,7 @@ ul.typecho-post-option .description {
 }
 
 .typecho-page-main .typecho-mini-panel .tag-selection a {
-	margin-right: 5px;
+	margin: 0 5px 5px 0;
+	display: block;
+	float: left;
 }

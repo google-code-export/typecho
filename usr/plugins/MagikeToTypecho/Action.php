@@ -35,11 +35,11 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
         /** 转换程序 */
         
         /** 转换评论 */
-        $i = 0;
+        $i = 1;
         
         while (true) {
             $result = $db->query($db->select()->from('table.comments')
-            ->order('comment_id', Typecho_Db::SORT_ASC)->page($i * 100, 100));
+            ->order('comment_id', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
             
             while ($row = $db->fetchRow($result)) {
@@ -67,6 +67,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                 break;
             }
             
+            $i ++;
             unset($result);
         }
         
@@ -79,16 +80,17 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                 'slug'          =>  $cat['category_postname'],
                 'description'   =>  $cat['category_describe'],
                 'count'         =>  $cat['category_count'],
+                'type'          =>  'category',
                 'order'         =>  $cat['category_sort']
             ));
         }
         
         /** 转换内容 */
-        $i = 0;
+        $i = 1;
         
         while (true) {
             $result = $db->query($db->select()->from('table.posts')
-            ->order('post_id', Typecho_Db::SORT_ASC)->page($i * 100, 100));
+            ->order('post_id', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
             
             while ($row = $db->fetchRow($result)) {
@@ -125,6 +127,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                 break;
             }
             
+            $i ++;
             unset($result);
         }
     }

@@ -26,6 +26,11 @@ try {
     $success = false;
 }
 
+$static = array();
+foreach ($rows as $row) {
+    $static[$row['static_name']] = $row['static_value'];
+}
+
 include 'header.php';
 include 'menu.php';
 ?>
@@ -36,7 +41,18 @@ include 'menu.php';
             <div class="column-22 start-02">
                 <?php if ($success): ?>
                 <div class="message notice">
-                    <?php _e('我们检测到了你已经安装的 Magike 系统信息, 点击下方的开始按钮开始数据转换, 数据转换可能会耗时较长.'); ?>
+                <form action="<?php $options->index('MagikeToTypecho/Action.do'); ?>" method="post">
+                    <?php _e('我们检测到了 Magike 系统信息, 点击下方的按钮开始数据转换, 数据转换可能会耗时较长.'); ?>
+                    <blockquote>
+                    <ul>
+                        <li><strong><?php echo $static['blog_name']; ?></strong></li>
+                        <li><strong><?php echo $static['description']; ?></strong></li>
+                        <li><strong><?php echo $static['siteurl']; ?></strong></li>
+                    </ul>
+                    </blockquote>
+                    <br />
+                    <p><button type="submit"><?php _e('开始数据转换 &raquo;'); ?></button></p>
+                </form>
                 </div>
                 <?php else: ?>
                 <div class="message error">
