@@ -53,6 +53,17 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
     {
         return '`' . $string . '`';
     }
+    
+    /**
+     * 引号转义函数
+     *
+     * @param string $string 需要转义的字符串
+     * @return string
+     */
+    public function quoteValue($string)
+    {
+        return '\'' . str_replace(array('\'', '\\'), array('\'\'', '\\\\'), $string) . '\'';
+    }
 
     /**
      * 合成查询语句

@@ -173,4 +173,15 @@ class Typecho_I18n
     {
         self::$_lang = $lang;
     }
+    
+    /**
+     * 获取语言项
+     * 
+     * @access public
+     * @return void
+     */
+    public static function getLang()
+    {
+        return self::$_lang;
+    }
 }

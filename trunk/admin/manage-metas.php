@@ -96,7 +96,6 @@ include 'menu.php';
                         <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
-                        <sup><a class="balloon-button" href="<?php $tags->permalink(); ?>"><?php $tags->count(); ?></a></sup>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>
@@ -129,6 +128,7 @@ include 'menu.php';
                 if (!_selection) {
                     _selection = document.createElement('div');
                     $(_selection).addClass('tag-selection');
+                    $(_selection).addClass('clearfix');
                     $(document).getElement('.typecho-mini-panel form')
                     .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name'));
                 }

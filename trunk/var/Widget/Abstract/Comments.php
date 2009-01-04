@@ -110,7 +110,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
-            'created'   =>  $this->options->gmtTime,
+            'created'   =>  empty($comment['created']) ? $this->options->gmtTime : $comment['created'],
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
             'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
@@ -123,6 +123,10 @@ class Widget_Abstract_Comments extends Widget_Abstract
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
             'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
         );
+        
+        if (!empty($comment['coid'])) {
+            $insertStruct['coid'] = $comment['coid'];
+        }
         
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.comments')->rows($insertStruct));

@@ -217,14 +217,18 @@ var typechoOperate = function (selector, op) {
         switch (op) {
             case 'selectAll':
                 elements.each(function(item) {
-                    _typechoCheckItem($(item).getParent('tr'));
-                    $(item).setProperty('checked', 'true');
+                    if (!$(item).getProperty('checked')) {
+                        _typechoCheckItem($(item).getParent('tr'));
+                        $(item).setProperty('checked', 'true');
+                    }
                 });
                 break;
             case 'selectNone':
                 elements.each(function(item) {
-                    _typechoUncheckItem($(item).getParent('tr'));
-                    $(item).removeProperty('checked');
+                    if ($(item).getProperty('checked')) {
+                        _typechoUncheckItem($(item).getParent('tr'));
+                        $(item).removeProperty('checked');
+                    }
                 });
                 break;
             default:
@@ -236,14 +240,18 @@ var typechoOperate = function (selector, op) {
         switch (op) {
             case 'selectAll':
                 elements.each(function(item) {
-                    _typechoCheckItem($(item).getParent('li'));
-                    $(item).setProperty('checked', 'true');
+                    if (!$(item).getProperty('checked')) {
+                        _typechoCheckItem($(item).getParent('li'));
+                        $(item).setProperty('checked', 'true');
+                    }
                 });
                 break;
             case 'selectNone':
                 elements.each(function(item) {
-                    _typechoUncheckItem($(item).getParent('li'));
-                    $(item).removeProperty('checked');
+                    if ($(item).getProperty('checked')) {
+                        _typechoUncheckItem($(item).getParent('li'));
+                        $(item).removeProperty('checked');
+                    }
                 });
                 break;
             default:
