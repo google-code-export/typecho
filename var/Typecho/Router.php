@@ -25,6 +25,14 @@ class Typecho_Router
      * @var string
      */
     public static $current;
+    
+    /**
+     * 已经解析的路由表
+     * 
+     * @access public
+     * @var array
+     */
+    public static $parsedRoutingTable;
 
     /**
      * 已经解析完毕的路由表配置
@@ -120,7 +128,7 @@ class Typecho_Router
     }
     
     /**
-     * 设置数据库默认配置
+     * 设置路由器默认配置
      * 
      * @access public
      * @param mixed $routes 配置信息
@@ -131,9 +139,13 @@ class Typecho_Router
         /** 载入路由解析支持 */
         require_once 'Typecho/Router/Parser.php';
 
-        /** 解析路由配置 */
-        $parser = new Typecho_Router_Parser($routes);
-        self::$_routingTable = $parser->parse($routes);
+        if (isset($routes[0])) {
+            self::$_routingTable = $routes[0];
+        } else {
+            /** 解析路由配置 */
+            $parser = new Typecho_Router_Parser($routes);
+            self::$_routingTable = self::$parsedRoutingTable = $parser->parse($routes);
+        }
     }
 
     /**
