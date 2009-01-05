@@ -57,7 +57,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="column-12 start-07 typecho-dashboard-main">
                 <div class="section">
                     <h4><?php _e('最近发表的文章'); ?></h4>
-                    <?php Typecho_Widget::widget('Widget_Contents_Post_Recent')->to($posts); ?>
+                    <?php Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=5')->to($posts); ?>
                     <ul>
                     <?php if($posts->have()): ?>
                     <?php while($posts->next()): ?>
@@ -72,7 +72,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             	<div class="section">
                     <h4><?php _e('最新得到的回复'); ?></h4>
                     <ul>
-                        <?php Typecho_Widget::widget('Widget_Comments_Recent')->to($comments); ?>
+                        <?php Typecho_Widget::widget('Widget_Comments_Recent', 'pageSize=5')->to($comments); ?>
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
                         <li><?php $comments->author(true); ?> <?php _e('发布于'); ?> <a href="<?php $comments->permalink(); ?>" class="title"><?php $comments->title(); ?></a> - <span class="date"><?php $comments->dateWord(); ?></span></li>

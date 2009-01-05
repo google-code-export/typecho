@@ -109,7 +109,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'status'        =>  empty($content['status']) ? 'publish' : $content['status'],
             'password'      =>  empty($content['password']) ? NULL : $content['password'],
-            'commentsNum'   =>  0,
+            'commentsNum'   =>  empty($content['commentsNum']) ? 0 : $content['commentsNum'],
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,

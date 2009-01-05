@@ -1537,10 +1537,12 @@ ul.typecho-post-option li {
 ul.typecho-post-option li ul {
 	border: none;
 	margin: 0;
+	height: 130px;
+	overflow: auto;
 }
 
 ul.typecho-post-option li ul.related {
-	margin: 10px 0 0 20px;
+	margin: 10px 0 0 0;
 }
 
 ul.typecho-post-option li ul li {
@@ -1555,7 +1557,7 @@ ul.typecho-post-option li ul li {
 
 ul.typecho-post-option li ul.related li {
 	background: none;
-	list-style-type: disc;
+	list-style: none;
 	padding: 0;
 	margin: 0;
 }

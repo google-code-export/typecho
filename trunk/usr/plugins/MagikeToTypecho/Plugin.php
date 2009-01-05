@@ -18,9 +18,19 @@ class MagikeToTypecho_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        Helper::addPanel(1, 'MagikeToTypecho/panel.php', _t('从Magike导入'), _t('从Magike导入'), 'administrator');
+        if (!Typecho_Db_Adapter_Mysql::isAvailable() && !Typecho_Db_Adapter_Pdo_Mysql::isAvailable()) {
+            throw new Typecho_Plugin_Exception(_t('没有找到任何可用的 Mysql 适配器'));
+        }
+        
+        $error = NULL;
+        if ((!is_dir(__TYPECHO_ROOT_DIR__ . '/usr/uploads/') || !is_writeable(__TYPECHO_ROOT_DIR__ . '/usr/uploads/'))
+        && !is_writeable(__TYPECHO_ROOT_DIR__ . '/usr/')) {
+            $error = '<br /><strong>' . _t('%s 目录不可写, 可能会导致附件转换不成功', __TYPECHO_ROOT_DIR__ . '/usr/uploads/') . '</strong>';
+        }
+    
+        Helper::addPanel(1, 'MagikeToTypecho/panel.php', _t('从Magike导入数据'), _t('从Magike导入数据'), 'administrator');
         Helper::addAction('MagikeToTypecho_Action');
-        return _t('请在插件设置里设置 Magike 所在的数据库参数');
+        return _t('请在插件设置里设置 Magike 所在的数据库参数') . $error;
     }
     
     /**

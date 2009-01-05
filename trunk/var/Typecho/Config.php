@@ -56,10 +56,11 @@ class Typecho_Config implements Iterator
      * 设置默认的配置
      * 
      * @access public
-     * @param string $config
+     * @param mixed $config 配置信息
+     * @param boolean $replace 是否替换已经存在的信息
      * @return void
      */
-    public function setDefault($config)
+    public function setDefault($config, $replace = false)
     {
         /** 初始化参数 */
         if (is_string($config)) {
@@ -70,7 +71,7 @@ class Typecho_Config implements Iterator
         
         /** 设置默认参数 */
         foreach ($params as $name => $value) {
-            if (!array_key_exists($name, $this->_currentConfig)) {
+            if ($replace || !array_key_exists($name, $this->_currentConfig)) {
                 $this->_currentConfig[$name] = $value;
             }
         }
