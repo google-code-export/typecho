@@ -45,7 +45,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
      */
     public function connect(Typecho_Config $config)
     {
-        if ($this->_dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password)) {
+        if ($this->_dbLink = @mysql_connect($config->host . ':' . $config->port, $config->user, $config->password, true)) {
             if (@mysql_select_db($config->database, $this->_dbLink)) {
                 if ($config->charset) {
                     mysql_query("SET NAMES '{$config->charset}'", $this->_dbLink);

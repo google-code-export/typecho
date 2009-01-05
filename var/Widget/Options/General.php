@@ -20,59 +20,6 @@
  */
 class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Do
 {
-    public function checkApache($value)
-    {
-        
-    }
-
-    /**
-     * 检测是否可以rewrite
-     * 
-     * @access public
-     * @param string $value 是否打开rewrite
-     * @return void
-     */
-    public function checkRewrite($value)
-    {
-        if ($value) {
-            $this->user->pass('administrator');
-        
-            /** 首先直接请求远程地址验证 */
-            $client = Typecho_Http_Client::get();
-            
-            if (!file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')) {
-                if (is_writeable(__TYPECHO_ROOT_DIR__)) {
-                    $parsed = parse_url($this->options->siteUrl);
-                    $basePath = empty($parsed['path']) ? '/' : $parsed['path'];
-                    $basePath = rtrim($basePath, '/') . '/';
-                    
-                    file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase {$basePath}
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
-</IfModule>");
-                }
-            }
-            
-            if ($client) {
-                /** 发送一个rewrite地址请求 */
-                $client->setData(array('do' => 'remoteCallback'))
-                ->setHeader('User-Agent', $this->options->generator)
-                ->send(Typecho_Common::url('Ajax.do', $this->options->siteUrl));
-                
-                if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-        
-        return true;
-    }
-
     /**
      * 输出表单结构
      * 
@@ -101,23 +48,6 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         $timezone = new Typecho_Widget_Helper_Form_Element_Select('timezone', array('28800' => _t('中华人民共和国')), $this->options->timezone, _t('时区'));
         $form->addInput($timezone);
         
-        /** 是否使用地址重写功能 */
-        $rewrite = new Typecho_Widget_Helper_Form_Element_Radio('rewrite', array('0' => _t('不启用'), '1' => _t('启用')),
-        $this->options->rewrite, _t('是否使用地址重写功能'), _t('地址重写即rewrite功能是某些服务器软件提供的优化内部连接的功能.<br />
-        打开此功能可以让你的链接看上去完全是静态地址.'));
-        
-        $errorStr = _t('无法启用重写功能, 请检查你的服务器设置');
-        
-        /** 如果是apache服务器, 可能存在无法写入.htaccess文件的现象 */
-        if (((isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache'))
-        || function_exists('apache_get_version')) && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
-        && !is_writeable(__TYPECHO_ROOT_DIR__)) {
-            $errorStr .= _t('<br /><strong>我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.
-            请调整你的目录权限, 或者手动创建一个.htaccess文件.</strong>');
-        }
-        
-        $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
-        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
@@ -138,7 +68,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
             $this->response->goBack();
         }
         
-        $settings = $this->request->from('title', 'description', 'keywords', 'timezone', 'rewrite');
+        $settings = $this->request->from('title', 'description', 'keywords', 'timezone');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
