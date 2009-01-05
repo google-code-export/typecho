@@ -152,7 +152,7 @@ abstract class Typecho_Widget
             self::$_widgetPool[$alias] = new $className();
             
             if (!empty($params)) {
-                self::$_widgetPool[$alias]->parameter->setDefault($params);
+                self::$_widgetPool[$alias]->parameter->setDefault($params, true);
             }
             
             if (!empty($request)) {
