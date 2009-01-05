@@ -133,10 +133,10 @@ class Widget_Menu extends Typecho_Widget
             array(_t('基本'), _t('基本设置'), '/admin/option-general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), '/admin/option-discussion.php', 'administrator'),
             array(_t('文章'), _t('阅读设置'), '/admin/option-reading.php', 'administrator'),
-            array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
+        //    array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
         //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
-        //    array(_t('永久链接'), _t('永久链接设置'), '/admin/permalink.php', 'administrator'),
+            array(_t('永久链接'), _t('永久链接设置'), '/admin/option-permalink.php', 'administrator'),
         ));
         
         /** 获取扩展菜单 */
