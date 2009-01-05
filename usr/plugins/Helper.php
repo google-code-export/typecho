@@ -50,6 +50,25 @@ class Helper implements Typecho_Plugin_Interface
     }
     
     /**
+     * 导入语言项
+     * 
+     * @access public
+     * @param string $domain
+     * @return void
+     */
+    public static function lang($domain)
+    {
+        $currentLang = Typecho_I18n::getLang();
+        if ($currentLang) {
+            $currentLang = basename($currentLang);
+            $fileName = dirname(__FILE__) . '/' . $domain . '/lang/' . $currentLang;
+            if (is_file($fileName)) {
+                Typecho_I18n::addLang($fileName);
+            }
+        }
+    }
+    
+    /**
      * 增加路由
      * 
      * @access public
