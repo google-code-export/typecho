@@ -114,8 +114,10 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 添加评论 */
         $commentId = $this->insert($comment);
         $this->response->deleteCookie('text');
+        $this->db->fetchRow($this->select()->where('coid = ?', $commentId)
+        ->limit(1), array($this, 'push'));
         
-        $this->response->goBack('comments-' . $commentId);
+        $this->response->goBack($this->theId);
     }
     
     /**
