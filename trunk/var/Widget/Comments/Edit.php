@@ -166,9 +166,6 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
                 if ('approved' == $comment['status']) {
                     $this->db->query($this->db->update('table.contents')
                     ->expression('commentsNum', 'commentsNum - 1')->where('cid = ?', $comment['cid']));
-                } else if ('approved' != $comment['status']) {
-                    $this->db->query($this->db->update('table.contents')
-                    ->expression('commentsNum', 'commentsNum + 1')->where('cid = ?', $comment['cid']));
                 }
                 
                 $deleteRows ++;
