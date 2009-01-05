@@ -89,4 +89,30 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     </div>
 </div>
 <?php include 'common-js.php'; ?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+            var _pagesList = $(document).getElement('.typecho-list-table');
+            
+            if (_pagesList) {
+                typechoTableSorter(_pagesList);
+                
+                _pagesList.getElements('tr').addEvents({
+                    'dragStart': function () {
+                        $(this).setStyle('cursor', 'move');
+                    },
+                    
+                    'dragStop': function (result) {
+                        $(this).setStyle('cursor', '');
+                        var _obj = this;
+                        
+                        var _r = new Request.JSON({
+                            url: '<?php $options->index('Contents/Page/Edit.do'); ?>'
+                        }).send(result + '&do=sort');
+                    }
+                });
+            }
+        });
+    })();
+</script>
 <?php include 'copyright.php'; ?>

@@ -135,11 +135,6 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
         $form->addInput($slug);
         
-        /** 分类顺序 */
-        $order = new Typecho_Widget_Helper_Form_Element_Text('order', NULL, NULL, _t('分类顺序'),
-        _t('请填入一个数字以表示分类在列表中显示的顺序,如果没有特殊要求请留空'));
-        $form->addInput($order);
-        
         /** 分类描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
         _t('分类描述'), _t('此文字用于描述分类,在有的主题中它会被显示.'));
@@ -169,7 +164,6 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             
             $name->value($meta['name']);
             $slug->value($meta['slug']);
-            $order->value($meta['order']);
             $description->value($meta['description']);
             $do->value('update');
             $mid->value($meta['mid']);
@@ -339,16 +333,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        $categories = $this->request->order;
+        $categories = $this->request->mid;
         if ($categories && is_array($categories)) {
             $this->sort($categories, 'category');
         }
         
-        if (!Typecho_Request::isAjax()) {
+        if (!$this->request->isAjax()) {
             /** 转向原页 */
             $this->response->redirect(Typecho_Common::url('manage-cat.php', $this->options->adminUrl));
         } else {
-            Typecho_Common::throwAjax(_t('分类排序已经完成'), $this->options->charset);
+            $this->response->throwJson(array('success' => 1, 'message' => _t('分类排序已经完成')));
         }
     }
     
