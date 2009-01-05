@@ -198,7 +198,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 转向原页 */
             $this->response->goBack();
         } else {
-            $this->response->throwAjax(_t('页面排序已经完成'));
+            $this->response->throwJson(array('success' => 1, 'message' => _t('页面排序已经完成')));
         }
     }
     

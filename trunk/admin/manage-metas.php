@@ -122,6 +122,27 @@ include 'menu.php';
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
+            var _categoriesList = $(document).getElement('.typecho-list-table');
+            
+            if (_categoriesList) {
+                typechoTableSorter(_categoriesList);
+                
+                _categoriesList.getElements('tr').addEvents({
+                    'dragStart': function () {
+                        $(this).setStyle('cursor', 'move');
+                    },
+                    
+                    'dragStop': function (result) {
+                        $(this).setStyle('cursor', '');
+                        var _obj = this;
+                        
+                        var _r = new Request.JSON({
+                            url: '<?php $options->index('Metas/Category/Edit.do'); ?>'
+                        }).send(result + '&do=sort');
+                    }
+                });
+            }
+        
             var _selection;
             
             $(document).getElements('ul.tag-list li').addEvent('checked', function (item) {

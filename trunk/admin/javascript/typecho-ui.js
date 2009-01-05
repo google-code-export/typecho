@@ -82,6 +82,103 @@ var typechoGuid = function (el, config) {
     return handle;
 };
 
+/** 表格拖动排序 */
+var typechoTableSorter = function (el) {
+    if (!el) {
+        return;
+    }
+
+    /** 需要监听的元素 */
+    var _tr = $(el).getElements('tr');
+    
+    /** 正在排序的元素 */
+    var _dragTr = null;
+    var _draged = false;
+    var _dragFired = false;
+    
+    $(el).addEvent('mouseleave', function (event) {
+        _dragTr = null;
+    });
+    
+    var _reset = function () {
+        $(el).getElements('tr').each(function (item, index) {
+            if (index % 2) {
+                item.addClass('even');
+                if (item.hasClass('checked') || item.hasClass('checked-even')) {
+                    item.removeClass('checked');
+                    item.addClass('checked-even');
+                }
+            } else {
+                item.removeClass('even');
+                if (item.hasClass('checked') || item.hasClass('checked-even')) {
+                    item.removeClass('checked-even');
+                    item.addClass('checked');
+                }
+            }
+        });
+    }
+    
+    _tr.addEvents({
+        'mousedown': function (event) {
+            if (!_dragTr && event.target.tagName == "TD") {
+                _dragTr = this;
+                _dragFired = false;
+                return false;
+            }
+        },
+        
+        'mousemove': function (event) {
+            if (_dragTr && event.target.tagName == "TD") {                
+                if (!_dragFired) {
+                    $(_dragTr).fireEvent('dragStart');
+                    _dragFired = true;
+                }
+                
+                _reset();
+                
+                if (_dragTr != this) {
+                    /** 从下面进来的 */
+                    if ($(this).getCoordinates(_dragTr).top < 0) {
+                        $(this).inject(_dragTr, 'after');
+                    } else {
+                        $(this).inject(_dragTr, 'before');
+                    }
+                
+                    _draged = true;
+                    $(this).removeClass('hover');
+                    return false;
+                }
+            }
+        },
+        
+        'mouseup': function (event) {
+            if (_dragTr && event.target.tagName == "TD") {
+                var _inputs = _dragTr.getParent('table').getElements('tr td input[type=checkbox]');
+                var result = "";
+                
+                for (var i = 0; i< _inputs.length; i ++) {
+                    if (result.length > 0) result += '&';
+                    result += _inputs[i].name + '=' + _inputs[i].value;
+                }
+                
+                if (_draged) {
+                    $(this).fireEvent('click');
+                    _draged = false;
+                }
+                
+                if (_dragFired) {
+                    $(_dragTr).fireEvent('dragStop', result);
+                    _dragFired = false;
+                }
+                
+                _reset();
+                _dragTr = null;
+                return false;
+            }
+        }
+    });
+}
+
 /** 消息窗口淡出 */
 var typechoMessage = function () {
     var _message = $(document).getElement('.popup');
@@ -141,7 +238,7 @@ var typechoToggle = function (sel, btn, showWord, hideWord) {
 /** 高亮元素 */
 var typechoHighlight = function (theId) {
     if (theId) {
-        var el = $(document).getElement('#' + theId);
+        var el = $(theId);
         if (el) {
             el.set('tween', {duration: 1500});
             
@@ -283,10 +380,14 @@ var typechoTableListener = function (selector) {
             /** 监听鼠标事件 */
             el.getElements('tbody tr').each(function(item) {
                 $(item).addEvents({'mouseover': function() {
-                    $(this).addClass('hover');
+                    if (!$(this).hasClass('hover')) {
+                        $(this).addClass('hover');
+                    }
                 },
                 'mouseleave': function() {
-                    $(this).removeClass('hover');
+                    if ($(this).hasClass('hover')) {
+                        $(this).removeClass('hover');
+                    }
                 },
                 'click': function() {
                     var checkBox = $(this).getElement('input[type=checkbox]');
@@ -312,10 +413,14 @@ var typechoTableListener = function (selector) {
             /** 监听鼠标事件 */
             el.getElements('li').each(function(item) {
                 $(item).addEvents({'mouseover': function() {
-                    $(this).addClass('hover');
+                    if (!$(this).hasClass('hover')) {
+                        $(this).addClass('hover');
+                    }
                 },
                 'mouseleave': function() {
-                    $(this).removeClass('hover');
+                    if ($(this).hasClass('hover')) {
+                        $(this).removeClass('hover');
+                    }
                 },
                 'click': function() {
                     var checkBox = $(this).getElement('input[type=checkbox]');
