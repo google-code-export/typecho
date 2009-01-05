@@ -111,7 +111,8 @@ class Typecho_I18n_GetText
      */
     private function readint()
     {
-        return array_shift(unpack($this->BYTEORDER == 0 ? 'V' : 'N', fread($this->STREAM, 4)));
+        $end = unpack($this->BYTEORDER == 0 ? 'V' : 'N', fread($this->STREAM, 4));
+        return array_shift($end);
     }
 
     /**
@@ -122,7 +123,7 @@ class Typecho_I18n_GetText
      */
     private function readintarray($count)
     {
-        return array_shift(unpack($this->BYTEORDER == 0 ? 'V' : 'N', fread($this->STREAM, 4 * $count)));
+        return unpack(($this->BYTEORDER == 0 ? 'V' : 'N') . $count, fread($this->STREAM, 4 * $count));
     }
 
     /**
@@ -149,11 +150,13 @@ class Typecho_I18n_GetText
             $this->cache_translations = array ();
             /* read all strings in the cache */
             for ($i = 0; $i < $this->total; $i++) {
-                fseek($this->STREAM, $this->table_originals[$i * 2 + 2]);
-                $original = fread($this->STREAM, $this->table_originals[$i * 2 + 1]);
-                fseek($this->STREAM, $this->table_translations[$i * 2 + 2]);
-                $translation = fread($this->STREAM, $this->table_translations[$i * 2 + 1]);
-                $this->cache_translations[$original] = $translation;
+                if ($this->table_originals[$i * 2 + 1] > 0) {
+                    fseek($this->STREAM, $this->table_originals[$i * 2 + 2]);
+                    $original = fread($this->STREAM, $this->table_originals[$i * 2 + 1]);
+                    fseek($this->STREAM, $this->table_translations[$i * 2 + 2]);
+                    $translation = fread($this->STREAM, $this->table_translations[$i * 2 + 1]);
+                    $this->cache_translations[$original] = $translation;
+                }
             }
         }
     }
@@ -241,9 +244,10 @@ class Typecho_I18n_GetText
      * 
      * @access public
      * @param string string to be translated
+     * @param integer $num found string number
      * @return string translated string (or original, if not found)
      */
-    public function translate($string)
+    public function translate($string, &$num)
     {
         if ($this->short_circuit)
             return $string;
@@ -322,9 +326,10 @@ class Typecho_I18n_GetText
      * @param string single
      * @param string plural
      * @param string number
+     * @param integer $num found string number
      * @return translated plural form
      */
-    public function ngettext($single, $plural, $number)
+    public function ngettext($single, $plural, $number, &$num)
     {
         if ($this->short_circuit) {
             if ($number != 1)
@@ -360,4 +365,14 @@ class Typecho_I18n_GetText
         }
     }
 
+    /**
+     * 关闭文件句柄
+     * 
+     * @access public
+     * @return void
+     */
+    public function __destruct()
+    {
+        fclose($this->STREAM);
+    }
 }

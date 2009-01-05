@@ -1601,7 +1601,9 @@ ul.typecho-post-option .description {
 	list-style: none;
     margin: 0;
 	line-height: 28px;
+	white-space:nowrap;
 	float: left;
+	display: block;
 	cursor: pointer;
 }
 
@@ -1616,6 +1618,7 @@ ul.typecho-post-option .description {
 .typecho-page-main ul.tag-list li.checked {
 	background: none;
 	font-weight: bold;
+	text-decoration: underline;
 }
 
 .typecho-page-main ul.tag-list li.size-1 {
@@ -1652,4 +1655,5 @@ ul.typecho-post-option .description {
 	margin: 0 5px 5px 0;
 	display: block;
 	float: left;
+	white-space:nowrap;
 }

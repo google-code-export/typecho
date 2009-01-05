@@ -81,8 +81,8 @@ class Typecho_I18n
     private static function init()
     {
         /** GetText支持 */
-        require_once 'Typecho/I18n/GetText.php';
-        self::$_loaded = new Typecho_I18n_GetText(self::$_lang);
+        require_once 'Typecho/I18n/GetTextMulti.php';
+        self::$_loaded = new Typecho_I18n_GetTextMulti(self::$_lang);
         return true;
     }
 
@@ -172,6 +172,18 @@ class Typecho_I18n
     public static function setLang($lang)
     {
         self::$_lang = $lang;
+    }
+    
+    /**
+     * 增加语言项
+     * 
+     * @access public
+     * @param string $lang 语言名称
+     * @return void
+     */
+    public static function addLang($lang)
+    {
+        self::$_loaded->addFile($lang);
     }
     
     /**

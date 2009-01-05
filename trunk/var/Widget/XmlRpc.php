@@ -1153,7 +1153,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         else
         {
-            return new IXR_Error(16, _t('源地址服务器错误.'));
+            return new IXR_Error(16, _t('源地址服务器错误'));
         }
 
         /** 检查目标地址是否正确*/
@@ -1168,12 +1168,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     $select = $this->select()->where('table.contents.cid = ?',$this->request->type)->limit(1);
                 }else {
                     /** 文章不存在*/
-                    return new IXR_Error(33, _t('这个目标地址不存在.'));
+                    return new IXR_Error(33, _t('这个目标地址不存在'));
                 }
             }
             else
             {
-                return new IXR_Error(33, _t('这个目标地址不存在.'));
+                return new IXR_Error(33, _t('这个目标地址不存在'));
             }
 
             /** 提交查询 */
@@ -1245,12 +1245,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     }
                     else
                     {
-                        return new IXR_Error(48, _t('PingBack已经存在.'));
+                        return new IXR_Error(48, _t('PingBack已经存在'));
                     }
                 }
                 else
                 {
-                    return IXR_Error(49, _t('目标地址禁止Ping.'));
+                    return IXR_Error(49, _t('目标地址禁止Ping'));
                 }
             }
             else
