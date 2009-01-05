@@ -22,13 +22,12 @@ try {
     ), Typecho_Db::READ);
     
     $rows = $magikeDb->fetchAll($magikeDb->select()->from('table.statics'));
+    $static = array();
+    foreach ($rows as $row) {
+        $static[$row['static_name']] = $row['static_value'];
+    }
 } catch (Typecho_Db_Exception $e) {
     $success = false;
-}
-
-$static = array();
-foreach ($rows as $row) {
-    $static[$row['static_name']] = $row['static_value'];
 }
 
 include 'header.php';
