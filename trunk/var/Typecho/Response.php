@@ -102,7 +102,7 @@ class Typecho_Response
             return preg_match("/^[^<>]+$/is", $message) ? $message : '<![CDATA[' . $message . ']]>';
         }
     }
-    
+        
     /**
      * 设置默认回执编码
      * 
@@ -210,6 +210,10 @@ class Typecho_Response
      */
     public static function redirect($location, $isPermanently = false)
     {
+        /** Typecho_Common */
+        require_once 'Typecho/Common.php';
+        $location = Typecho_Common::safeUrl($location);
+    
         if ($isPermanently) {
             self::setStatus(301);
             self::setHeader('location', $location);
