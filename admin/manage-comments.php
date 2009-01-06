@@ -41,7 +41,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <span rel="approved" class="operate-button typecho-table-select-submit"><?php _e('通过'); ?></span>, 
                     <span rel="waiting" class="operate-button typecho-table-select-submit"><?php _e('待审核'); ?></span>, 
                     <span rel="spam" class="operate-button typecho-table-select-submit"><?php _e('标记垃圾'); ?></span>, 
-                    <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>
+                    <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span><?php if('spam' == Typecho_Request::getParameter('status')): ?>, 
+                    <span rel="delete-spam" class="operate-button typecho-table-select-submit"><strong><?php _e('删除所有垃圾评论'); ?></strong></span>
+                    <?php endif; ?>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />

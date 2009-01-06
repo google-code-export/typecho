@@ -179,6 +179,25 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         /** 返回原网页 */
         $this->response->goBack();
     }
+    
+    /**
+     * 删除所有垃圾评论
+     * 
+     * @access public
+     * @return string
+     */
+    public function deleteSpamComment()
+    {
+        $deleteRows = $this->db->query($this->db->delete('table.comments')->where('status = ?', 'spam'));
+        
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($deleteRows > 0 ?
+        _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'), NULL,
+        $deleteRows > 0 ? 'success' : 'notice');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
 
     /**
      * 初始化函数
@@ -193,7 +212,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $this->onRequest('do', 'spam')->spamComment();
         $this->onRequest('do', 'approved')->approvedComment();
         $this->onRequest('do', 'delete')->deleteComment();
+        $this->onRequest('do', 'delete-spam')->deleteSpamComment();
         
-        $response->redirect($this->options()->adminUrl);
+        $this->response->redirect($this->options->adminUrl);
     }
 }
