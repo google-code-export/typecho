@@ -94,12 +94,12 @@ class Typecho_Response
             
             foreach ($message as $key => $val) {
                 $tagName = is_int($key) ? 'item' : $key;
-                $result .= '<' . $tagName . '>' . self::_parseAjaxResponse($val) . '</' . $tagName . '>';
+                $result .= '<' . $tagName . '>' . self::_parseXml($val) . '</' . $tagName . '>';
             }
             
             return $result;
         } else {
-            return '<![CDATA[' . $message . ']]>';
+            return preg_match("/^[^<>]+$/is", $message) ? $message : '<![CDATA[' . $message . ']]>';
         }
     }
     
@@ -170,7 +170,7 @@ class Typecho_Response
         self::setContentType('text/xml', $charset);
         
         /** 构建消息体 */
-        echo '<?xml version="1.0" encoding="' . $charset . '"?>',
+        echo '<?xml version="1.0" encoding="' . self::$_defaultCharset . '"?>',
         '<response>',
         self::_parseXml($message),
         '</response>';

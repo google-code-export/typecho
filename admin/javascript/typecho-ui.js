@@ -82,102 +82,244 @@ var typechoGuid = function (el, config) {
     return handle;
 };
 
-/** 表格拖动排序 */
-var typechoTableSorter = function (el) {
-    if (!el) {
-        return;
-    }
+var typechoTable = {
+    
+    table: null,        //当前表格
+    
+    draggable: false,    //是否可拖拽
+    
+    draggedEl: null,    //当前拖拽的元素
+    
+    draggedFired: false,    //是否触发
 
-    /** 需要监听的元素 */
-    var _tr = $(el).getElements('tr');
+    init: function (match) {
+        /** 初始化表格风格 */
+        var _el = $(document).getElement(match);
+        if (_el) {
+            typechoTable.table = _el;
+            typechoTable.draggable = _el.hasClass('draggable');
+            typechoTable.bindButtons();
+            typechoTable.reset();
+        }
+    },
     
-    /** 正在排序的元素 */
-    var _dragTr = null;
-    var _draged = false;
-    var _dragFired = false;
+    reset: function () {
+        var _el = typechoTable.table;
+        typechoTable.draggedEl = null;
+        
+        if ('undefined' == typeof(_el._childTag)) {
+            switch (_el.get('tag')) {
+                case 'ul':
+                    _el._childTag = 'li';
+                    break;
+                case 'table':
+                    _el._childTag = 'tr';
+                    break;
+                default:
+                    break;
+            }
+            
+            var _cb = _el.getElements(_el._childTag + ' input[type=checkbox]').each(function (item) {
+                item._parent = item.getParent(typechoTable.table._childTag);
+               
+                /** 监听click事件 */
+                item.addEvent('click', typechoTable.checkBoxClick);
+            });
+        }
     
-    $(el).addEvent('mouseleave', function (event) {
-        _dragTr = null;
-    });
-    
-    var _reset = function () {
-        $(el).getElements('tr').each(function (item, index) {
-            if (index % 2) {
-                item.addClass('even');
-                if (item.hasClass('checked') || item.hasClass('checked-even')) {
-                    item.removeClass('checked');
-                    item.addClass('checked-even');
+        /** 如果有even */
+        var _hasEven = _el.getElements(_el._childTag + '.even').length > 0;
+        
+        _el.getElements(_el._childTag).filter(function (item, index) {
+            /** 把th干掉 */
+            return 'tr' != item.get('tag') || 0 == item.getChildren('th').length;
+        }).each(function (item, index) {
+            if (_hasEven) {
+                /** 处理已经选择的选项 */
+                if (index % 2) {
+                    item.removeClass('even');
+                } else {
+                    item.addClass('even');
                 }
-            } else {
-                item.removeClass('even');
+                
                 if (item.hasClass('checked') || item.hasClass('checked-even')) {
-                    item.removeClass('checked-even');
-                    item.addClass('checked');
+                    item.removeClass(index % 2 ? 'checked-even' : 'checked')
+                    .addClass(index % 2 ? 'checked' : 'checked-even');
                 }
             }
+            
+            typechoTable.bindEvents(item);
         });
-    }
+    },
     
-    _tr.addEvents({
-        'mousedown': function (event) {
-            if (!_dragTr && event.target.tagName == "TD") {
-                _dragTr = this;
-                _dragFired = false;
-                return false;
+    checkBoxClick: function (event) {
+        var _el = $(this);
+        if (_el.getProperty('checked')) {
+            _el.setProperty('checked', false);
+            _el._parent.removeClass(_el._parent.hasClass('even') ? 'checked-even' : 'checked');
+            typechoTable.unchecked(this, _el._parent);
+        } else {
+            _el.setProperty('checked', true);
+            _el._parent.addClass(_el._parent.hasClass('even') ? 'checked-even' : 'checked');
+            typechoTable.checked(this, _el._parent);
+        }
+    },
+    
+    itemMouseOver: function (event) {
+        if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
+            $(this).addClass('hover');
+        }
+    },
+    
+    itemMouseLeave: function (event) {
+        if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
+            $(this).removeClass('hover');
+        }
+    },
+    
+    itemClick: function (event) {
+        /** 触发多选框点击事件 */
+        var _el;
+        if (_el = $(this).getElement('input[type=checkbox]')) {
+            _el.fireEvent('click');
+        }
+    },
+    
+    itemMouseDown: function (event) {
+        if (!typechoTable.draggedEl) {
+            typechoTable.draggedEl = this;
+            typechoTable.draggedFired = false;
+            return false;
+        }
+    },
+    
+    itemMouseMove: function (event) {
+        if (typechoTable.draggedEl) {
+            if (!typechoTable.draggedFired) {
+                typechoTable.dragStart(this);
+                $(this).setStyle('cursor', 'move');
+                typechoTable.draggedFired = true;
             }
-        },
-        
-        'mousemove': function (event) {
-            if (_dragTr && event.target.tagName == "TD") {                
-                if (!_dragFired) {
-                    $(_dragTr).fireEvent('dragStart');
-                    _dragFired = true;
+            
+            if (typechoTable.draggedEl != this) {
+                /** 从下面进来的 */
+                if ($(this).getCoordinates(typechoTable.draggedEl).top < 0) {
+                    $(this).inject(typechoTable.draggedEl, 'after');
+                } else {
+                    $(this).inject(typechoTable.draggedEl, 'before');
                 }
                 
-                _reset();
-                
-                if (_dragTr != this) {
-                    /** 从下面进来的 */
-                    if ($(this).getCoordinates(_dragTr).top < 0) {
-                        $(this).inject(_dragTr, 'after');
-                    } else {
-                        $(this).inject(_dragTr, 'before');
+                if ($(this).hasClass('even')) {
+                    if (!$(typechoTable.draggedEl).hasClass('even')) {
+                        $(this).removeClass('even');
+                        $(typechoTable.draggedEl).addClass('even');
                     }
-                
-                    _draged = true;
-                    $(this).removeClass('hover');
-                    return false;
-                }
-            }
-        },
-        
-        'mouseup': function (event) {
-            if (_dragTr && event.target.tagName == "TD") {
-                var _inputs = _dragTr.getParent('table').getElements('tr td input[type=checkbox]');
-                var result = "";
-                
-                for (var i = 0; i< _inputs.length; i ++) {
-                    if (result.length > 0) result += '&';
-                    result += _inputs[i].name + '=' + _inputs[i].value;
-                }
-                
-                if (_draged) {
-                    $(this).fireEvent('click');
-                    _draged = false;
+                    
+                    if ($(this).hasClass('checked-even') && 
+                    !$(typechoTable.draggedEl).hasClass('checked-even')) {
+                        $(this).removeClass('checked-even');
+                        $(typechoTable.draggedEl).addClass('checked-even');
+                    }
+                } else {
+                    if ($(typechoTable.draggedEl).hasClass('even')) {
+                        $(this).addClass('even');
+                        $(typechoTable.draggedEl).removeClass('even');
+                    }
+                    
+                    if ($(this).hasClass('checked') && 
+                    $(typechoTable.draggedEl).hasClass('checked')) {
+                        $(this).removeClass('checked');
+                        $(typechoTable.draggedEl).addClass('checked');
+                    }
                 }
                 
-                if (_dragFired) {
-                    $(_dragTr).fireEvent('dragStop', result);
-                    _dragFired = false;
-                }
-                
-                _reset();
-                _dragTr = null;
                 return false;
             }
         }
-    });
-}
+    },
+    
+    itemMouseUp: function (event) {
+        if (typechoTable.draggedEl) {
+            var _inputs = typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]');
+            var result = '';
+            
+            for (var i = 0; i< _inputs.length; i ++) {
+                if (result.length > 0) result += '&';
+                result += _inputs[i].name + '=' + _inputs[i].value;
+            }
+            
+            if (typechoTable.draggedFired) {    
+                $(this).fireEvent('click');
+                $(this).setStyle('cursor', '');
+                typechoTable.dragStop(this, result);
+                typechoTable.draggedFired = false;
+                typechoTable.reset();
+            }
+            
+            typechoTable.draggedEl = null;
+            return false;
+        }
+    },
+    
+    checked:   function (input, item) {return false;},
+    
+    unchecked: function (input, item) {return false;},
+    
+    dragStart: function (item) {return false;},
+    
+    dragStop: function (item, result) {return false;},
+    
+    bindButtons: function () {
+        /** 全选按钮 */
+        $(document).getElements('.typecho-table-select-all')
+        .addEvent('click', function () {
+            typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]')
+            .each(function (item) {
+                if (!item.getProperty('checked')) {
+                    item.fireEvent('click');
+                }
+            });
+        });
+        
+        /** 不选按钮 */
+        $(document).getElements('.typecho-table-select-none')
+        .addEvent('click', function () {
+            typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]')
+            .each(function (item) {
+                if (item.getProperty('checked')) {
+                    item.fireEvent('click');
+                }
+            });
+        });
+        
+        /** 提交按钮 */
+        $(document).getElements('.typecho-table-select-submit')
+        .addEvent('click', function () {
+            var _f = typechoTable.table.getParent('form');
+            _f.getElement('input[name=do]').set('value', $(this).getProperty('rel'));
+            _f.submit();
+        });
+    },
+    
+    bindEvents: function (item) {
+        item.removeEvents();
+
+        item.addEvents({
+            'mouseover': typechoTable.itemMouseOver,
+            'mouseleave': typechoTable.itemMouseLeave,
+            'click': typechoTable.itemClick
+        });
+
+        if (typechoTable.draggable && 
+        typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]').length > 0) {
+            item.addEvents({
+                'mousedown': typechoTable.itemMouseDown,
+                'mousemove': typechoTable.itemMouseMove,
+                'mouseup': typechoTable.itemMouseUp
+            });
+        }
+    }
+};
 
 /** 消息窗口淡出 */
 var typechoMessage = function () {
@@ -252,17 +394,6 @@ var typechoHighlight = function (theId) {
     }
 }
 
-/** 提交表单 */
-var typechoSubmit = function (formSel, inputSel, op) {
-    var form = $(document).getElement(formSel);
-    var input = $(document).getElement(inputSel);
-    
-    if (form && input) {
-        input.set('value', op);
-        form.submit();
-    }
-}
-
 /** 提交按钮自动失效,防止重复提交 */
 var typechoAutoDisableSubmit = function () {
     $(document).getElements('input[type=submit]').removeProperty('disabled');
@@ -282,154 +413,3 @@ var typechoAutoDisableSubmit = function () {
             return false;
     });
 }
-
-var _typechoCheckItem = function (item) {
-    if (item.hasClass('even')) {
-        item.addClass('checked-even');
-    } else {
-        item.addClass('checked');
-    }
-    
-    item.fireEvent('checked', item);
-}
-
-var _typechoUncheckItem = function (item) {
-    if (item.hasClass('even')) {
-        item.removeClass('checked-even');
-    } else {
-        item.removeClass('checked');
-    }
-    
-    item.fireEvent('unchecked', item);
-}
-
-/** 操作按钮 */
-var typechoOperate = function (selector, op) {
-    /** 获取元素 */
-    var el = $(document).getElement(selector);
-    
-    if (el && 'table' == el.get('tag')) {
-        /** 如果是标准表格 */
-        var elements = el.getElements('tbody tr td input[type=checkbox]');
-        switch (op) {
-            case 'selectAll':
-                elements.each(function(item) {
-                    if (!$(item).getProperty('checked')) {
-                        _typechoCheckItem($(item).getParent('tr'));
-                        $(item).setProperty('checked', 'true');
-                    }
-                });
-                break;
-            case 'selectNone':
-                elements.each(function(item) {
-                    if ($(item).getProperty('checked')) {
-                        _typechoUncheckItem($(item).getParent('tr'));
-                        $(item).removeProperty('checked');
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-    } else if (el && 'ul' == el.get('tag')) {
-        /** 如果是列表形式 */
-        var elements = el.getElements('li input[type=checkbox]');
-        switch (op) {
-            case 'selectAll':
-                elements.each(function(item) {
-                    if (!$(item).getProperty('checked')) {
-                        _typechoCheckItem($(item).getParent('li'));
-                        $(item).setProperty('checked', 'true');
-                    }
-                });
-                break;
-            case 'selectNone':
-                elements.each(function(item) {
-                    if ($(item).getProperty('checked')) {
-                        _typechoUncheckItem($(item).getParent('li'));
-                        $(item).removeProperty('checked');
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-    }
-};
-
-var typechoTableListener = function (selector) {
-    /** 获取元素 */
-    var _table = $(document).getElements(selector);
-    
-    _table.each(function (el) {
-        if (el && 'table' == el.get('tag')) {
-            /** 如果是标准表格 */
-            
-            /** 监听click事件 */
-            el.getElements('tbody tr td input[type=checkbox]').each(function(item) {
-                $(item).addEvent('click', function(event) {
-                    event.stopPropagation();
-                    if ($(this).getProperty('checked')) {
-                        _typechoCheckItem($(this).getParent('tr'));
-                    } else {
-                        _typechoUncheckItem($(this).getParent('tr'));
-                    }
-                });
-            });
-            
-            /** 监听鼠标事件 */
-            el.getElements('tbody tr').each(function(item) {
-                $(item).addEvents({'mouseover': function() {
-                    if (!$(this).hasClass('hover')) {
-                        $(this).addClass('hover');
-                    }
-                },
-                'mouseleave': function() {
-                    if ($(this).hasClass('hover')) {
-                        $(this).removeClass('hover');
-                    }
-                },
-                'click': function() {
-                    var checkBox = $(this).getElement('input[type=checkbox]');
-                    if (checkBox) {
-                        checkBox.click();
-                    }
-                }
-                });
-            });
-        } else if (el && 'ul' == el.get('tag')) {
-            /** 如果是列表形式 */
-            el.getElements('li input[type=checkbox]').each(function(item) {
-                $(item).addEvent('click', function(event) {
-                    event.stopPropagation();
-                    if ($(this).getProperty('checked')) {
-                        _typechoCheckItem($(this).getParent('li'));
-                    } else {
-                        _typechoUncheckItem($(this).getParent('li'));
-                    }
-                });
-            });
-            
-            /** 监听鼠标事件 */
-            el.getElements('li').each(function(item) {
-                $(item).addEvents({'mouseover': function() {
-                    if (!$(this).hasClass('hover')) {
-                        $(this).addClass('hover');
-                    }
-                },
-                'mouseleave': function() {
-                    if ($(this).hasClass('hover')) {
-                        $(this).removeClass('hover');
-                    }
-                },
-                'click': function() {
-                    var checkBox = $(this).getElement('input[type=checkbox]');
-                    if (checkBox) {
-                        checkBox.click();
-                    }
-                }
-                });
-            });
-        }
-    });
-};

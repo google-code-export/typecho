@@ -98,6 +98,30 @@ a.button, span.balloon, a.balloon-button {
 	border-bottom-right-radius: 2px;
 }
 
+a.size-0 {
+	background: #FFC57D;
+}
+
+a.size-1 {
+	background: #FFA537;
+}
+
+a.size-2 {
+	background: #EC8200;
+}
+
+a.size-3 {
+	background: #BD6800;
+}
+
+a.size-4 {
+	background: #915000;
+}
+
+a.size-5 {
+	background: #6C3C00;
+}
+
 span.balloon, a.balloon-button {
 	padding: 0 4px;
 }
@@ -1615,7 +1639,7 @@ ul.typecho-post-option .description {
 	background: none;
 }
 
-.typecho-page-main ul.tag-list li.checked {
+.typecho-page-main ul.tag-list li.checked, .typecho-page-main ul.tag-list li.checked-even {
 	background: none;
 	font-weight: bold;
 	text-decoration: underline;

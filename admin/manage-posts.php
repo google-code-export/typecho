@@ -34,10 +34,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                        <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                        <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                         <?php _e('选中项'); ?>: 
-                        <span onclick="typechoSubmit('form[name=manage_posts]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                        <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
@@ -60,22 +60,20 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
+                        <col width="50"/>
                         <col width="350"/>
                         <col width="125"/>
-                        <col width="125"/>
-                        <col width="150"/>
-                        <col width="125"/>
-                        <col width="100"/>
+                        <col width="200"/>
+                        <col width="250"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th><?php _e('标题'); ?></th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('发布日期'); ?></th>
-                            <th><?php _e('分类'); ?></th>
-                            <th><?php _e('评论'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('状态'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('分类'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,18 +82,32 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($posts->next()): ?>
                         <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
+                            <td><a href="<?php $posts->permalink(); ?>" class="balloon-button right <?php
+                            switch (true) {
+                                case 0 == $posts->commentsNum:
+                                    echo 'size-0';
+                                    break;
+                                case 0 < $posts->commentsNum && $posts->commentsNum < 10:
+                                    echo 'size-1';
+                                    break;
+                                case 10 <= $posts->commentsNum && $posts->commentsNum < 20:
+                                    echo 'size-2';
+                                    break;
+                                case 20 <= $posts->commentsNum && $posts->commentsNum < 50:
+                                    echo 'size-3';
+                                    break;
+                                case 50 <= $posts->commentsNum && $posts->commentsNum < 100:
+                                    echo 'size-4';
+                                    break;
+                                case 100 <= $posts->commentsNum:
+                                    echo 'size-5';
+                                    break;
+                            }
+                            ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>
                             <td><?php $posts->dateWord(); ?></td>
                             <td><?php $posts->category(', '); ?></td>
-                            <td><?php $posts->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
-                            <td><?php if('publish' == $posts->status):
-                        _e('<a href="%s">已发布</a>', $posts->permalink);
-                        elseif('waiting' == $posts->status):
-                        _e('待审核');
-                        else:
-                        _e('草稿');
-                        endif;?></td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>

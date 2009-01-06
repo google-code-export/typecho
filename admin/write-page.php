@@ -17,16 +17,14 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <p><textarea id="text" name="text"><?php $page->content(); ?></textarea></p>
                         <p class="submit">
                             <span class="left">
-                                <span onclick="typechoToggle('#advance-panel', this, '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');" class="advance close">
-                                <?php _e('展开高级选项'); ?>
-                                </span>
+                                <span class="advance close"><?php _e('展开高级选项'); ?></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $page->have() ? 'update' : 'insert'; ?>" />
-                                <button type="submit" onclick="$(document).getElement('input[name=draft]').set('value', 1);"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" onclick="$(document).getElement('input[name=draft]').set('value', 0);"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
+                                <button type="submit" id="btn-submit"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>
@@ -94,6 +92,21 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <?php include 'common-js.php'; ?>
 <script type="text/javascript">
     (function () {
+        /** 绑定按钮 */
+        $(document).getElement('span.advance').addEvent('click', function () {
+            typechoToggle('#advance-panel', this,
+            '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
+        });
+        
+        $('btn-save').addEvent('click', function () {
+            $(document).getElement('input[name=draft]').set('value', 1);
+        });
+        
+        $('btn-submit').addEvent('click', function () {
+            $(document).getElement('input[name=draft]').set('value', 0);
+        });
+
+        /** 初始化日历 */
         window.addEvent('domready', function() {
             Calendar.setup(
                 {
