@@ -70,6 +70,23 @@ class Typecho_Common
     }
     
     /**
+     * 将url中的非法xss去掉时的数组回调过滤函数
+     * 
+     * @access private
+     * @param string $string 需要过滤的字符串
+     * @return string
+     */
+    public static function __removeUrlXss($string)
+    {
+        $string = str_replace(array('%0d', '%0a'), '', $string);
+        return preg_replace(array(
+            "/<\/?[a-z]+.*?>?/i",       //禁止任何标签
+            "/\(\s*(\"|')/i",           //函数开头
+            "/(\"|')\s*\)/i",           //函数结尾
+        ), '', $string);
+    }
+    
+    /**
      * 程序初始化方法
      * 
      * @access public
@@ -252,6 +269,22 @@ class Typecho_Common
 
         return $result;
     }
+    
+    /**
+     * 根据parse_url的结果重新组合url
+     * 
+     * @access public
+     * @param array $params 解析后的参数
+     * @return string
+     */
+    public static function buildUrl($params)
+    {
+        return (isset($params['scheme']) ? $params['scheme'] . '://' : NULL)
+        . (isset($params['user']) ? $params['user'] . (isset($params['pass']) ? ':' . $params['pass'] : NULL) . '@' : NULL)
+        . (isset($params['host']) ? $params['host'] : NULL)
+        . (isset($params['path']) ? $params['path'] : NULL)
+        . (isset($params['query']) ? '?' . $params['query'] : NULL);
+    }
 
     /**
      * 自闭合html修复函数
@@ -368,6 +401,31 @@ class Typecho_Common
     public static function filterSearchQuery($query)
     {
         return str_replace(array('%', '?', '*', '/', '{', '}'), '', $query);
+    }
+    
+    /**
+     * 将url中的非法字符串
+     * 
+     * @access private
+     * @param string $string 需要过滤的url
+     * @return string
+     */
+    public static function safeUrl($url)
+    {
+        //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
+        //~ fix issue 66
+        $params = parse_url($url);
+        
+        /** 禁止非法的协议跳转 */
+        if (isset($params['scheme'])) {
+            if (!in_array($params['scheme'], array('http', 'https'))) {
+                return;
+            }
+        }
+        
+        /** 过滤解析串 */
+        $params = array_map(array('Typecho_Common', '__removeUrlXss'), $params);
+        return self::buildUrl($params);
     }
     
     /**

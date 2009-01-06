@@ -22,7 +22,7 @@ include 'header.php';
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('登录'); ?></button>
-                    <input type="hidden" name="referer" value="<?php echo Typecho_Request::getParameter('referer'); ?>" />
+                    <input type="hidden" name="referer" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('referer')); ?>" />
                     </p>
                     <script type="text/javascript">
                     var _form = document.login.name; _form.focus();

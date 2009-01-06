@@ -50,7 +50,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </select>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     <?php if(Typecho_Request::isSetParameter('status')): ?>
-                        <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
+                        <input type="hidden" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('status')); ?>" name="status" />
                     <?php endif; ?>
                     </p>
                 </form>

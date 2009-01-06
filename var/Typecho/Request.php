@@ -135,10 +135,11 @@ class Typecho_Request
         }
         $parts['query'] = http_build_query($args);
         
+        /** Typecho_Common */
+        require_once 'Typecho/Common.php';
+        
         /** 返回地址 */
-        return $parts['scheme'] . '://' 
-        . (isset($parts['user']) ? $parts['user'] . (isset($parts['pass']) ? ':' . $parts['pass'] : NULL) : NULL)
-        . $parts['host'] . $parts['path'] . (isset($parts['query']) ? '?' . $parts['query'] : NULL);
+        return Typecho_Common::buildUrl($parts);
     }
 
     /**

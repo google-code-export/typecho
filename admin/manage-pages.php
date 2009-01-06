@@ -29,7 +29,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
                     <?php if(Typecho_Request::isSetParameter('status')): ?>
-                        <input type="hidden" value="<?php echo Typecho_Request::getParameter('status'); ?>" name="status" />
+                        <input type="hidden" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('status')); ?>" name="status" />
                     <?php endif; ?>
                     
                     <button type="submit"><?php _e('筛选'); ?></button>
