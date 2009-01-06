@@ -30,8 +30,26 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
         $this->widget('Widget_Abstract_Comments')->to($comments)->delete($masterDb->sql()->where('1 = 1'));
         $this->widget('Widget_Abstract_Metas')->to($metas)->delete($masterDb->sql()->where('1 = 1'));
         $this->widget('Widget_Contents_Post_Edit')->to($edit);
+        $this->widget('Widget_Abstract_Users')->to($users)->delete($masterDb->sql()->where('uid <> 1'));
         $masterDb->query($masterDb->delete('table.relationships')->where('1 = 1'));
         $userId = $this->widget('Widget_User')->uid;
+        
+        /** 转换用户 */
+        $rows = $db->fetchAll($db->select()->from('table.users'));
+        foreach ($rows as $row) {
+            if (1 != $row['user_id']) {
+                $users->insert(array(
+                    'uid'       =>  $row['user_id'],
+                    'name'      =>  $row['user_name'],
+                    'password'  =>  $row['user_password'],
+                    'mail'      =>  $row['user_mail'],
+                    'url'       =>  $row['user_url'],
+                    'screenName'=>  $row['user_nick'],
+                    'created'   => strtotime($row['user_register']),
+                    'group'     => array_search($row['user_group'], $this->widget('Widget_User')->groups)
+                ));
+            }
+        }
         
         /** 转换全局变量 */
         $rows = $db->fetchAll($db->select()->from('table.statics'));

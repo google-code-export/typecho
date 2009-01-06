@@ -370,6 +370,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
             ->where('type = ?', 'category')->limit(1), array($this, 'push'));
             
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->theId);
+            
             /** 提示信息 */
             $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
             $this->permalink, $this->name), NULL, 'success');
