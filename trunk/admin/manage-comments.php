@@ -35,13 +35,13 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
-                    <span onclick="typechoOperate('.typecho-list-notable', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                    <span onclick="typechoOperate('.typecho-list-notable', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                    <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                     <?php _e('选中项') ?>:
-                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'approved');" class="operate-button select-submit"><?php _e('通过'); ?></span>, 
-                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'waiting');" class="operate-button select-submit"><?php _e('待审核'); ?></span>, 
-                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'spam');" class="operate-button select-submit"><?php _e('标记垃圾'); ?></span>, 
-                    <span onclick="typechoSubmit('form[name=manage_comments]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                    <span rel="approved" class="operate-button typecho-table-select-submit"><?php _e('通过'); ?></span>, 
+                    <span rel="waiting" class="operate-button typecho-table-select-submit"><?php _e('待审核'); ?></span>, 
+                    <span rel="spam" class="operate-button typecho-table-select-submit"><?php _e('标记垃圾'); ?></span>, 
+                    <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />

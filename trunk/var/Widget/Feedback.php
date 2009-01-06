@@ -128,6 +128,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      */
     private function trackback()
     {
+        /** 如果库中已经存在当前ip为spam的trackback则直接拒绝 */
+        if ($this->size($this->select()
+        ->where('status = ? AND ip = ?', 'spam', $this->request->getClientIp())) > 0) {
+            /** 使用404告诉机器人 */
+            throw new Typecho_Widget_Exception(_t('找不到内容'), 404);
+        }
+    
         $trackback = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
@@ -149,11 +156,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
         ->addRule('blog_name', 'required', 'We require all Trackbacks to provide an blog name.');
         
-        try {
-            $validator->setBreak();
-            $validator->run($trackback);
-        } catch (Typecho_Validate_Exception $e) {
-            $message = array('success' => 1, 'message' => $e->getMessage());
+        $validator->setBreak();
+        if ($error = $validator->run($trackback)) {
+            $message = array('success' => 1, 'message' => current($error));
             $this->response->throwXml($message);
         }
         

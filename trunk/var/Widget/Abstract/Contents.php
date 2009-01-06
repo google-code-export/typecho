@@ -376,9 +376,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param string $string 评论数格式化数据
      * @return void
      */
-    public function commentsNum($string = 'Comments %d')
+    public function commentsNum()
     {
         $args = func_get_args();
+        if (!$args) {
+            $args[] = '%d';
+        }
+        
         $num = intval($this->commentsNum);
         
         echo sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num);

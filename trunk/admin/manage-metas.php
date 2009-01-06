@@ -19,18 +19,18 @@ include 'menu.php';
                     <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('Metas/Category/Edit.do'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
-                            <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                            <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                            <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                            <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span onclick="typechoSubmit('form[name=manage_categories]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>, 
-                            <span onclick="typechoSubmit('form[name=manage_categories]', 'input[name=do]', 'merge');" class="operate-button select-submit"><?php _e('合并到'); ?></span>
+                            <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span>
                             <select name="merge">
                                 <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
                             </select>
                         </p>
                     </div>
                     
-                    <table class="typecho-list-table">
+                    <table class="typecho-list-table draggable">
                         <colgroup>
                             <col width="25"/>
                             <col width="150"/>
@@ -81,11 +81,11 @@ include 'menu.php';
                     <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('Metas/Tag/Edit.do'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
-                            <span onclick="typechoOperate('.typecho-list-notable', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                            <span onclick="typechoOperate('.typecho-list-notable', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                            <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                            <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span onclick="typechoSubmit('form[name=manage_tags]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>, 
-                            <span onclick="typechoSubmit('form[name=manage_tags]', 'input[name=do]', 'merge');" class="operate-button select-submit"><?php _e('合并到'); ?></span> 
+                            <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span> 
                             <input type="text" name="merge" />
                         </p>
                     </div>
@@ -122,58 +122,45 @@ include 'menu.php';
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-            var _categoriesList = $(document).getElement('.typecho-list-table');
-            
-            if (_categoriesList) {
-                typechoTableSorter(_categoriesList);
-                
-                _categoriesList.getElements('tr').addEvents({
-                    'dragStart': function () {
-                        $(this).setStyle('cursor', 'move');
-                    },
-                    
-                    'dragStop': function (result) {
-                        $(this).setStyle('cursor', '');
-                        var _obj = this;
-                        
-                        var _r = new Request.JSON({
-                            url: '<?php $options->index('Metas/Category/Edit.do'); ?>'
-                        }).send(result + '&do=sort');
-                    }
-                });
-            }
-        
             var _selection;
             
-            $(document).getElements('ul.tag-list li').addEvent('checked', function (item) {
-                if (!_selection) {
-                    _selection = document.createElement('div');
-                    $(_selection).addClass('tag-selection');
-                    $(_selection).addClass('clearfix');
-                    $(document).getElement('.typecho-mini-panel form')
-                    .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name'));
-                }
+            if ('tr' == typechoTable.table._childTag) {
+                typechoTable.dragStop = function (obj, result) {
+                    var _r = new Request.JSON({
+                        url: '<?php $options->index('Metas/Category/Edit.do'); ?>'
+                    }).send(result + '&do=sort');
+                };
+            } else {
+                typechoTable.checked = function (input, item) {
+                    if (!_selection) {
+                        _selection = document.createElement('div');
+                        $(_selection).addClass('tag-selection');
+                        $(_selection).addClass('clearfix');
+                        $(document).getElement('.typecho-mini-panel form')
+                        .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name'));
+                    }
+                    
+                    var _href = item.getElement('span').getProperty('rel');
+                    var _text = item.getElement('span').get('text');
+                    var _a = document.createElement('a');
+                    $(_a).addClass('button');
+                    $(_a).setProperty('href', _href);
+                    $(_a).set('text', _text);
+                    _selection.appendChild(_a);
+                    item.checkedElement = _a;
+                };
                 
-                var _href = item.getElement('span').getProperty('rel');
-                var _text = item.getElement('span').get('text');
-                var _a = document.createElement('a');
-                $(_a).addClass('button');
-                $(_a).setProperty('href', _href);
-                $(_a).set('text', _text);
-                _selection.appendChild(_a);
-                item.checkedElement = _a;
-            });
-            
-            $(document).getElements('ul.tag-list li').addEvent('unchecked', function (item) {
-                if (item.checkedElement) {
-                    $(item.checkedElement).destroy();
-                }
-                
-                if (!$(_selection).getElement('a')) {
-                    _selection.destroy();
-                    _selection = null;
-                }
-            });
+                typechoTable.unchecked = function (input, item) {
+                    if (item.checkedElement) {
+                        $(item.checkedElement).destroy();
+                    }
+                    
+                    if (!$(_selection).getElement('a')) {
+                        _selection.destroy();
+                        _selection = null;
+                    }
+                };
+            }
         });
     })();
 </script>

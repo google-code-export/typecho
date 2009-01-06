@@ -21,10 +21,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                        <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                        <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                        <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                         <?php _e('选中项'); ?>: 
-                        <span onclick="typechoSubmit('form[name=manage_pages]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span>
+                        <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
@@ -38,23 +38,23 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             
                 <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('Contents/Page/Edit.do'); ?>">
-                <table class="typecho-list-table">
+                <table class="typecho-list-table draggable">
                     <colgroup>
                         <col width="25"/>
-                        <col width="400"/>
+                        <col width="50"/>
+                        <col width="425"/>
                         <col width="150"/>
-                        <col width="125"/>
                         <col width="150"/>
-                        <col width="150"/>
+                        <col width="200"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th><?php _e('标题'); ?></th>
+                            <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th><?php _e('发布日期'); ?></th>
-                            <th><?php _e('评论'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('状态'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,15 +63,32 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($pages->next()): ?>
                         <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
+                            <td><a href="<?php $pages->permalink(); ?>" class="balloon-button right <?php
+                            switch (true) {
+                                case 0 == $pages->commentsNum:
+                                    echo 'size-0';
+                                    break;
+                                case 0 < $pages->commentsNum && $pages->commentsNum < 10:
+                                    echo 'size-1';
+                                    break;
+                                case 10 <= $pages->commentsNum && $pages->commentsNum < 20:
+                                    echo 'size-2';
+                                    break;
+                                case 20 <= $pages->commentsNum && $pages->commentsNum < 50:
+                                    echo 'size-3';
+                                    break;
+                                case 50 <= $pages->commentsNum && $pages->commentsNum < 100:
+                                    echo 'size-4';
+                                    break;
+                                case 100 <= $pages->commentsNum:
+                                    echo 'size-5';
+                                    break;
+                            }
+                            ?>"><?php $pages->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
+                            <td><?php $pages->slug(); ?></td>
                             <td><?php $pages->author(); ?></td>
                             <td><?php $pages->dateWord(); ?></td>
-                            <td><?php $pages->commentsNum(_t('没有评论'), _t('一条评论'), _t('%d条评论')); ?></td>
-                            <td><?php if('publish' == $pages->status):
-                        _e('<a href="%s">已发布</a>', $pages->permalink);
-                        else:
-                        _e('草稿');
-                        endif;?></td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>
@@ -92,26 +109,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-            var _pagesList = $(document).getElement('.typecho-list-table');
-            
-            if (_pagesList) {
-                typechoTableSorter(_pagesList);
-                
-                _pagesList.getElements('tr').addEvents({
-                    'dragStart': function () {
-                        $(this).setStyle('cursor', 'move');
-                    },
-                    
-                    'dragStop': function (result) {
-                        $(this).setStyle('cursor', '');
-                        var _obj = this;
-                        
-                        var _r = new Request.JSON({
-                            url: '<?php $options->index('Contents/Page/Edit.do'); ?>'
-                        }).send(result + '&do=sort');
-                    }
-                });
-            }
+            typechoTable.dragStop = function (item, result) {
+                var _r = new Request.JSON({
+                    url: '<?php $options->index('Contents/Page/Edit.do'); ?>'
+                }).send(result + '&do=sort');
+            };
         });
     })();
 </script>

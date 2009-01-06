@@ -11,10 +11,10 @@ include 'menu.php';
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
-                    <span onclick="typechoOperate('.typecho-list-table', 'selectAll');" class="operate-button select-all"><?php _e('全选'); ?></span>, 
-                    <span onclick="typechoOperate('.typecho-list-table', 'selectNone');" class="operate-button select-reverse"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                    <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
+                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                     <?php _e('选中项'); ?>: 
-                    <span onclick="typechoSubmit('form[name=manage_users]', 'input[name=do]', 'delete');" class="operate-button select-submit"><?php _e('删除'); ?></span> 
+                    <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span> 
                     <!-- <a href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a> -->
                     </p>
                     <p class="search">
