@@ -75,7 +75,7 @@ a:hover {
     text-decoration: underline;
 }
 
-a.button, span.balloon, a.balloon-button {
+a.button, span.balloon, a.balloon-button, .typecho-pager a {
     background: #BD6800;
 	color: #FFF;
 	padding: 2px 4px;
@@ -99,27 +99,27 @@ a.button, span.balloon, a.balloon-button {
 }
 
 a.size-0 {
-	background: #FFC57D;
+	background: #C4CD9C;
 }
 
 a.size-1 {
-	background: #FFA537;
+	background: #AFBA7C;
 }
 
 a.size-2 {
-	background: #EC8200;
+	background: #9AA859;
 }
 
 a.size-3 {
-	background: #BD6800;
+	background: #717B40;
 }
 
 a.size-4 {
-	background: #915000;
+	background: #545C30;
 }
 
 a.size-5 {
-	background: #6C3C00;
+	background: #373D1F;
 }
 
 span.balloon, a.balloon-button {
@@ -129,6 +129,30 @@ span.balloon, a.balloon-button {
 a.button:hover, a.balloon-button:hover {
     background: #D29B51;
 	text-decoration: none;
+}
+
+a.size-0:hover {
+	background: #AFBA7C;
+}
+
+a.size-1:hover {
+	background: #9AA859;
+}
+
+a.size-2:hover {
+	background: #717B40;
+}
+
+a.size-3:hover {
+	background: #545C30;
+}
+
+a.size-4:hover {
+	background: #373D1F;
+}
+
+a.size-5:hover {
+	background: #2C3018;
 }
 
 a.important {
@@ -551,8 +575,8 @@ margin-top: 25px;
 }
 
 .typecho-pager ul {
-    line-height: 15px;
-    height: 15px;
+    line-height: 16px;
+    height: 16px;
     overflow: hidden;
     float: left;
     zoom: 1;
@@ -563,17 +587,18 @@ margin-top: 25px;
     margin-right: 3px;
     font-size: 12px;
     float: left;
-    height: 15px;
-    line-height: 15px;
+    height: 16px;
+    line-height: 16px;
 }
 
 .typecho-pager a {
     color: #333;
     display: block;
-    height: 15px;
+    height: 16px;
     outline: none;
 	padding: 0 4px;
 	float: left;
+	background: none;
 }
 
 .typecho-pager a:hover {
@@ -582,7 +607,7 @@ margin-top: 25px;
     background: #dee4c5;
 }
 
-.typecho-pager li.current, .typecho-pager li.current a {
+.typecho-pager li.current a {
     background: #e47e00;
 }
 
