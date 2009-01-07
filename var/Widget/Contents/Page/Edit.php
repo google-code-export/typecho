@@ -60,17 +60,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['text'] = trim($contents['text']);
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
-    
-        /** 对内容的解析插件,此插件可能与本身的分段解析冲突,因此二者无法共存 */
-        $contents['text'] = $this->plugin()->trigger($hasParsed)->parse($contents['text']);
-        if (!$hasParsed) {
-            $contents['text'] = Typecho_Common::cutParagraph($contents['text']);
-        }
         
         /** 提交数据的过滤 */
-        $contents = $this->plugin()->filter($contents, 'insert');
+        $contents = $this->plugin()->insert($contents);
         $insertId = $this->insert($contents);
         
         if ($insertId > 0) {
@@ -112,9 +107,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['text'] = trim($contents['text']);
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
     
+        /** 提交数据的过滤 */
+        $contents = $this->plugin()->update($contents);
         $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
         
         if ($updateRows > 0) {

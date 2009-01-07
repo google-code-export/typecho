@@ -108,7 +108,8 @@ class Widget_Menu extends Typecho_Widget
             array(_t('插件'), _t('插件管理'), '/admin/plugins.php', 'administrator'),
             array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), '/admin/option-plugin.php?config=', 'administrator', true),
             array(_t('外观'), _t('网站外观'), '/admin/themes.php', 'administrator'),
-            array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), '/admin/theme-editor.php', 'administrator', true)
+            array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), '/admin/theme-editor.php', 'administrator', true),
+            array(_t('升级'), _t('升级程序'), '/admin/upgrade.php', 'administrator', true)
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
@@ -193,6 +194,17 @@ class Widget_Menu extends Typecho_Widget
         array_shift($this->_parentMenu);
         array_shift($this->_childMenu);
         $this->_currentParent --;
+    }
+    
+    /**
+     * 获取当前菜单
+     * 
+     * @access public
+     * @return array
+     */
+    public function getCurrentMenu()
+    {
+        return $this->_childMenu[$this->_currentParent][$this->_currentChild];
     }
 
     /**

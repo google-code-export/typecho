@@ -111,7 +111,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                     'url'       =>  $row['comment_author_url'],
                     'ip'        =>  $row['comment_author_IP'],
                     'agent'     =>  $row['comment_agent'],
-                    'text'      =>  str_replace('<br />', "\n", $row['comment_content']),
+                    'text'      =>  $row['comment_content'],
                     'type'      =>  empty($row['comment_type']) ? 'comment' : $row['comment_type'],
                     'status'    =>  $status,
                     'parent'    =>  $row['comment_parent']

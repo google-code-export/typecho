@@ -80,7 +80,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             }
         }
         
-        $comment['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->text, $this->options->commentsHTMLTagAllowed));
+        $comment['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
+        $this->request->text, $this->options->commentsHTMLTagAllowed)));
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
@@ -152,7 +153,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
         $trackback['url'] = Typecho_Common::safeUrl($this->request->url);
-        $trackback['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->excerpt, $this->options->commentsHTMLTagAllowed));
+        $trackback['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
+        $this->request->excerpt, $this->options->commentsHTMLTagAllowed)));
         
         //检验格式
         $validator = new Typecho_Validate();

@@ -45,6 +45,7 @@ class Typecho_Common
      * @var array
      */
     public static $config = array(
+        'version'       =>  '0.3/9.1.7',
         'autoLoad'      =>  true,
         'exception'     =>  false,
         'gpc'           =>  true,
@@ -325,6 +326,11 @@ class Typecho_Common
     {
         //关闭自闭合标签
         $startPos = strrpos($string, "<");
+        
+        if (false == $startPos) {
+            return $string;
+        }
+        
         $trimString = substr($string, $startPos);
 
         if (false === strpos($trimString, ">")) {
