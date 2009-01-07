@@ -91,20 +91,29 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
             $j = 0;
             
             while ($row = $db->fetchRow($result)) {
+                $status = $row['comment_approved'];
+                if ('spam' == $row['comment_approved']) {
+                    $status = 'spam';
+                } else if ('0' == $row['comment_approved']) {
+                    $status = 'waiting';
+                } else {
+                    $status = 'approved';
+                }
+            
                 $comments->insert(array(
                     'coid'      =>  $row['comment_ID'],
                     'cid'       =>  $row['comment_post_ID'],
-                    'created'   =>  $row['comment_date_gmt'],
-                    'author'    =>  $row['comment_user'],
-                    'authorId'  =>  $row['comment_author'],
-                    'ownerId'   =>  $row['comment_useid'],
+                    'created'   =>  strtotime($row['comment_date_gmt']),
+                    'author'    =>  $row['comment_author'],
+                    'authorId'  =>  $row['user_id'],
+                    'ownerId'   =>  1,
                     'mail'      =>  $row['comment_author_mail'],
                     'url'       =>  $row['comment_author_url'],
                     'ip'        =>  $row['comment_author_IP'],
                     'agent'     =>  $row['comment_agent'],
-                    'text'      =>  $row['comment_content'],
-                    'type'      =>  $row['comment_type'],
-                    'status'    =>  $row['comment_approved'],
+                    'text'      =>  str_replace('<br />', "\n", $row['comment_content']),
+                    'type'      =>  empty($row['comment_type']) ? 'comment' : $row['comment_type'],
+                    'status'    =>  $status,
                     'parent'    =>  $row['comment_parent']
                 ));
                 $j ++;
@@ -118,35 +127,30 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
             $i ++;
             unset($result);
         }
-                
-		/** 转换Wordpress的terms表 */
-		$cats = $db->fetchAll($db->select()->from('table.terms'));
-        foreach ($cats as $cat) {
-            $metas->insert(array(
-                'mid'       	=>  $row['terms_id'],
-                'name'     		=>  $row['name'],
-                'slug'      	=>  $row['slug'],
-				'order'     	=>  '0',
-            ));
-        }
 		
 		/** 转换Wordpress的term_taxonomy表 */
-		$cats = $db->fetchAll($db->select()->from('table.term_taxonomy'));
-        foreach ($cats as $cat) {
+		$terms = $db->fetchAll($db->select()->from('table.term_taxonomy')
+        ->join('table.terms', 'table.term_taxonomy.term_id = table.terms.term_id')
+        ->where('taxonomy = ? OR taxonomy = ?', 'category', 'post_tag'));
+        foreach ($terms as $term) {
             $metas->insert(array(
-                'type'      	=>  $row['taxonomy'],
-                'description'   =>  $row['description'],
-                'count'      	=>  $row['count'],
+                'mid'           =>  $term['term_taxonomy_id'],
+                'name'          =>  $term['name'],
+                'slug'          =>  $term['slug'],
+                'type'      	=>  'post_tag' == $term['taxonomy'] ? 'tag' : 'category',
+                'description'   =>  $term['description'],
+                'count'      	=>  $term['count'],
             ));
-        }
-		
-		/** 转换关系表 */
-		$cats = $db->fetchAll($db->select()->from('table.term_relationships'));
-        foreach ($cats as $cat) {
-            $relationships->insert(array(
-                'cid'      	=>  $row['object_id'],
-                'mid'   	=>  $row['term_taxonomy_id'],
-            ));
+            
+            /** 转换关系表 */
+            $relationships = $db->fetchAll($db->select()->from('table.term_relationships')
+            ->where('term_taxonomy_id = ?', $term['term_taxonomy_id']));
+            foreach ($relationships as $relationship) {
+                $masterDb->query($masterDb->insert('table.relationships')->rows(array(
+                    'cid'      	=>  $relationship['object_id'],
+                    'mid'   	=>  $relationship['term_taxonomy_id'],
+                )));
+            }
         }
 		
         /** 转换内容 */
@@ -154,6 +158,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
         
         while (true) {
             $result = $db->query($db->select()->from('table.posts')
+            ->where('post_type = ? OR post_type = ?', 'post', 'page')
             ->order('ID', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
             
@@ -162,26 +167,20 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                     'cid'           =>  $row['ID'],
                     'title'         =>  $row['post_title'],
                     'slug'          =>  $row['post_name'],
-                    'created'       =>  $row['post_date_gmt'],
-                    'modified'      =>  $row['post_modified_gmt'],
-                    'text'          =>  preg_replace($pattern, $replace, $row['post_content']),
-                    'order'         =>  0,
+                    'created'       =>  strtotime($row['post_date_gmt']),
+                    'modified'      =>  strtotime($row['post_modified_gmt']),
+                    'text'          =>  $row['post_content'],
+                    'order'         =>  $row['menu_order'],
                     'authorId'      =>  $row['post_author'],
                     'template'      =>  NULL,
-                    'type'          =>  $row['post_type'] ? 'page' : 'post',
-                    'status'        =>  $row['post_status'] ? 'draft' : 'publish',
+                    'type'          =>  'page' == $row['post_type'] ? 'page' : 'post',
+                    'status'        =>  'publish' == $row['post_status'] ? 'publish' : 'draft',
                     'password'      =>  $row['post_password'],
                     'commentsNum'   =>  $row['comment_count'],
-                    'allowComment'  =>  $row['comment_status']? '0' : '1',
-                    'allowFeed'     =>  $row['post_allow_feed']? '0' : '1',
-                    'allowPing'     =>  $row['ping_status']? '0' : '1',
+                    'allowComment'  =>  'open' == $row['comment_status']? '1' : '0',
+                    'allowFeed'     =>  '1',
+                    'allowPing'     =>  'open' == $row['ping_status']? '1' : '0',
                 ));
-                
-                /** 插入分类关系 */
-                $edit->setCategories($row['ID'], array($row['terms_id']), !$row['post_status']);
-                
-                /** 设置标签 */
-                $edit->setTags($row['ID'], $row['name'], !$row['post_status']);
                 
                 $j ++;
                 unset($row);

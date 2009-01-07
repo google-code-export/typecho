@@ -1,11 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php if(is_file(__TYPECHO_ROOT_DIR__ . '/install.php')): ?>
-<div class="message error popup">
-<ul>
-    <li><?php _e('安装程序还存在于您的主机上. 为了保证使用安全, 请删除它们.'); ?></li>
-</ul>
-</div>
-<?php elseif($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
+<?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
 <div class="message <?php $notice->noticeType(); ?> popup">
 <ul>
     <?php $notice->lists(); ?>

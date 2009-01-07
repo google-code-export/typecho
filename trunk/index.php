@@ -10,6 +10,9 @@
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
+/** 当前程序内部版本号 */
+define('__TYPECHO_VERSION__', '0.3/9.1.7');
+
 /** 缓存路由表 */
 $options->cacheRoutingTable(Typecho_Router::$parsedRoutingTable);
 

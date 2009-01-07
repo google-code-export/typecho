@@ -21,11 +21,11 @@ try {
       'database' => $dbConfig->database
     ), Typecho_Db::READ);
     
-    /**$rows = $wordpressDb->fetchAll($wordpressDb->select()->from('table.statics'));
+    $rows = $wordpressDb->fetchAll($wordpressDb->select()->from('table.options'));
     $static = array();
     foreach ($rows as $row) {
-        $static[$row['static_name']] = $row['static_value'];
-    }*/
+        $static[$row['option_name']] = $row['option_value'];
+    }
 } catch (Typecho_Db_Exception $e) {
     $success = false;
 }
@@ -44,8 +44,8 @@ include 'menu.php';
                     <?php _e('我们检测到了 Wordpress 系统信息, 点击下方的按钮开始数据转换, 数据转换可能会耗时较长.'); ?>
                     <blockquote>
                     <ul>
-                        <li><strong><?php echo $static['blog_name']; ?></strong></li>
-                        <li><strong><?php echo $static['description']; ?></strong></li>
+                        <li><strong><?php echo $static['blogname']; ?></strong></li>
+                        <li><strong><?php echo $static['blogdescription']; ?></strong></li>
                         <li><strong><?php echo $static['siteurl']; ?></strong></li>
                     </ul>
                     </blockquote>

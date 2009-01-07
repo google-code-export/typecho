@@ -589,7 +589,7 @@ class Typecho_Common
         $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         /** 区分段落 */
-        $string = preg_replace("/(\r\n|\n|\r)/", "\n", $string);
+        $string = preg_replace("/\r*\n\r*/", "\n", $string);
         $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
         $string = str_replace("\n", '<br />', $string);
         
