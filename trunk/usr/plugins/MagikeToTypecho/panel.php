@@ -1,5 +1,8 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
+
 $success = true;
 try {
     $dbConfig = $options->plugin('MagikeToTypecho');
