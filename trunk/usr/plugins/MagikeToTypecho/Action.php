@@ -144,7 +144,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                 'name'          =>  $cat['category_name'],
                 'slug'          =>  $cat['category_postname'],
                 'description'   =>  $cat['category_describe'],
-                'count'         =>  $cat['category_count'],
+                'count'         =>  0,
                 'type'          =>  'category',
                 'order'         =>  $cat['category_sort']
             ));
