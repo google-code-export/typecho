@@ -7,6 +7,7 @@ DIR=../
 #update subversion
 svnup:
 	@echo 'subverion update'
+	rm -Rf build/
 	svn up ../
 	svn export ../ build
 
