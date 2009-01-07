@@ -26,26 +26,26 @@ clear:
 
 upgrade:
 	make svnup
-	rm -Rf $DIR/admin/
-	cp -Rf build/admin/ $DIR
-	rm -Rf $DIR/var/
-	cp -Rf build/var/ $DIR
-	rm -Rf $DIR/index.php
-	cp build/index.php $DIR
-	rm -Rf $DIR/usr/plugins/CodeEditor/
-	rm -Rf $DIR/usr/plugins/HelloWorld/
-	rm -Rf $DIR/usr/plugins/Akismet/
-	rm -Rf $DIR/usr/plugins/MagikeToTypecho/
-	rm -Rf $DIR/usr/plugins/WordpressToTypecho/
-	rm -Rf $DIR/usr/plugins/Helper.php
-	rm -Rf $DIR/usr/plugins/SimpleCode.php
-	cp -Rf build/usr/plugins/CodeEditor/ $DIR/usr/plugins/
-	cp -Rf build/usr/plugins/HelloWorld/ $DIR/usr/plugins/
-	cp -Rf build/usr/plugins/Akismet/ $DIR/usr/plugins/
-	cp -Rf build/usr/plugins/MagikeToTypecho/ $DIR/usr/plugins/
-	cp -Rf build/usr/plugins/WordpressToTypecho/ $DIR/usr/plugins/
-	cp build/usr/plugins/Helper.php $DIR/usr/plugins/
-	cp build/usr/plugins/SimpleCode.php $DIR/usr/plugins/
+	rm -Rf ${DIR}/admin/
+	cp -Rf build/admin/ ${DIR}
+	rm -Rf ${DIR}/var/
+	cp -Rf build/var/ ${DIR}
+	rm -Rf ${DIR}/index.php
+	cp build/index.php ${DIR}
+	rm -Rf ${DIR}/usr/plugins/CodeEditor/
+	rm -Rf ${DIR}/usr/plugins/HelloWorld/
+	rm -Rf ${DIR}/usr/plugins/Akismet/
+	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
+	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
+	rm -Rf ${DIR}/usr/plugins/Helper.php
+	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
+	cp -Rf build/usr/plugins/CodeEditor/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/WordpressToTypecho/ ${DIR}/usr/plugins/
+	cp build/usr/plugins/Helper.php ${DIR}/usr/plugins/
+	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
 	make clear
 
 
