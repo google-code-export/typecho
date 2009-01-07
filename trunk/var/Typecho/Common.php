@@ -78,9 +78,8 @@ class Typecho_Common
      */
     public static function __removeUrlXss($string)
     {
-        $string = str_replace(array('%0d', '%0a'), '', $string);
+        $string = str_replace(array('%0d', '%0a'), '', strip_tags($string));
         return preg_replace(array(
-            "/<\/?[a-z]+.*?>?/i",       //禁止任何标签
             "/\(\s*(\"|')/i",           //函数开头
             "/(\"|')\s*\)/i",           //函数结尾
         ), '', $string);
@@ -285,6 +284,29 @@ class Typecho_Common
         . (isset($params['path']) ? $params['path'] : NULL)
         . (isset($params['query']) ? '?' . $params['query'] : NULL);
     }
+    
+    /**
+     * 根据count数目来输出字符
+     * <code>
+     * echo splitByCount(20, 10, 20, 30, 40, 50);
+     * </code>
+     * 
+     * @access public
+     * @return string
+     */
+    public static function splitByCount($count)
+    {
+        $sizes = func_get_args();
+        array_shift($sizes);
+        
+        foreach ($sizes as $size) {
+            if ($count < $size) {
+                return $size;
+            }
+        }
+        
+        return 0;
+    }
 
     /**
      * 自闭合html修复函数
@@ -414,7 +436,7 @@ class Typecho_Common
     {
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
-        $params = parse_url($url);
+        $params = parse_url(str_replace(array("\r", "\n"), '', $url));
         
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {

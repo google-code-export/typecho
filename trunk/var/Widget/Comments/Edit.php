@@ -32,6 +32,9 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
         
         if ($comment && $this->commentIsWriteable()) {
+            /** 增加评论编辑插件接口 */
+            $this->plugin()->mark($comment, $this, $status);
+        
             /** 不必更新的情况 */
             if ($status == $comment['status']) {
                 return false;

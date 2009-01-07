@@ -27,7 +27,7 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
      */
     public function execute()
     {
-        $this->parameter->setDefault(array('sort' => 'count', 'split' => 5, 'ignoreZeroCount' => false, 'desc' => true));
+        $this->parameter->setDefault(array('sort' => 'count', 'ignoreZeroCount' => false, 'desc' => true));
         $select = $this->select()->where('type = ?', 'tag')->order($this->parameter->sort,
         $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
         
@@ -50,9 +50,7 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
     public function split()
     {
         $args = func_get_args();
-        $num = func_num_args();
-        $size = min(intval($this->count / $this->parameter->split), $num - 1);
-        
-        echo $args[$size];
+        array_unshift($args, $this->count);
+        echo call_user_func_array(array('Typecho_Common', 'splitByCount'), $args);
     }
 }

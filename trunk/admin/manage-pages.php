@@ -63,28 +63,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($pages->next()): ?>
                         <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $pages->permalink(); ?>" class="balloon-button right <?php
-                            switch (true) {
-                                case 0 == $pages->commentsNum:
-                                    echo 'size-0';
-                                    break;
-                                case 0 < $pages->commentsNum && $pages->commentsNum < 10:
-                                    echo 'size-1';
-                                    break;
-                                case 10 <= $pages->commentsNum && $pages->commentsNum < 20:
-                                    echo 'size-2';
-                                    break;
-                                case 20 <= $pages->commentsNum && $pages->commentsNum < 50:
-                                    echo 'size-3';
-                                    break;
-                                case 50 <= $pages->commentsNum && $pages->commentsNum < 100:
-                                    echo 'size-4';
-                                    break;
-                                case 100 <= $pages->commentsNum:
-                                    echo 'size-5';
-                                    break;
-                            }
-                            ?>"><?php $pages->commentsNum(); ?></a></td>
+                            <td><a href="<?php $pages->permalink(); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td><?php $pages->slug(); ?></td>
                             <td><?php $pages->author(); ?></td>

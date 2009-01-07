@@ -64,7 +64,7 @@ include 'menu.php';
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
                                 <td><?php $categories->description(); ?></td>
-                                <td><a class="balloon-button" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
+                                <td><a class="balloon-button size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
                             </tr>
                             <?php endwhile; ?>
                             <?php else: ?>
@@ -77,7 +77,7 @@ include 'menu.php';
                     <input type="hidden" name="do" value="delete" />
                     </form>
                     <?php else: ?>
-                    <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud')->to($tags); ?>
+                    <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>
                     <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('Metas/Tag/Edit.do'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
@@ -93,7 +93,7 @@ include 'menu.php';
                     <ul class="typecho-list-notable tag-list clearfix typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                         <?php if($tags->have()): ?>
                         <?php while ($tags->next()): ?>
-                        <li class="<?php $tags->split('size-1', 'size-2', 'size-3', 'size-4', 'size-5'); ?>" id="<?php $tags->theId(); ?>">
+                        <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo Typecho_Request::uri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
                         </li>
