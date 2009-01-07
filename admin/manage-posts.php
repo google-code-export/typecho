@@ -63,8 +63,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="50"/>
                         <col width="350"/>
                         <col width="125"/>
-                        <col width="200"/>
                         <col width="250"/>
+                        <col width="200"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -72,8 +72,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th><?php _e('发布日期'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('分类'); ?></th>
+                            <th><?php _e('分类'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,8 +85,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $posts->permalink(); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>
-                            <td><?php $posts->dateWord(); ?></td>
                             <td><?php $posts->category(', '); ?></td>
+                            <td><?php $posts->dateWord(); ?></td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>
