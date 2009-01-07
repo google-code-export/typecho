@@ -98,27 +98,27 @@ a.button, span.balloon, a.balloon-button, .typecho-pager a {
 	border-bottom-right-radius: 2px;
 }
 
-a.size-0 {
+a.size-1 {
 	background: #C4CD9C;
 }
 
-a.size-1 {
+a.size-10 {
 	background: #AFBA7C;
 }
 
-a.size-2 {
+a.size-20 {
 	background: #9AA859;
 }
 
-a.size-3 {
+a.size-50 {
 	background: #717B40;
 }
 
-a.size-4 {
+a.size-100 {
 	background: #545C30;
 }
 
-a.size-5 {
+a.size-0 {
 	background: #373D1F;
 }
 
@@ -131,27 +131,27 @@ a.button:hover, a.balloon-button:hover {
 	text-decoration: none;
 }
 
-a.size-0:hover {
+a.size-1:hover {
 	background: #AFBA7C;
 }
 
-a.size-1:hover {
+a.size-10:hover {
 	background: #9AA859;
 }
 
-a.size-2:hover {
+a.size-20:hover {
 	background: #717B40;
 }
 
-a.size-3:hover {
+a.size-50:hover {
 	background: #545C30;
 }
 
-a.size-4:hover {
+a.size-100:hover {
 	background: #373D1F;
 }
 
-a.size-5:hover {
+a.size-0:hover {
 	background: #2C3018;
 }
 
@@ -1670,27 +1670,27 @@ ul.typecho-post-option .description {
 	text-decoration: underline;
 }
 
-.typecho-page-main ul.tag-list li.size-1 {
+.typecho-page-main ul.tag-list li.size-5 {
 	font-size: 12px;
 	color: #777;
 }
 
-.typecho-page-main ul.tag-list li.size-2 {
+.typecho-page-main ul.tag-list li.size-10 {
 	font-size: 16px;
 	color: #666;
 }
 
-.typecho-page-main ul.tag-list li.size-3 {
+.typecho-page-main ul.tag-list li.size-20 {
 	font-size: 18px;
 	color: #555;
 }
 
-.typecho-page-main ul.tag-list li.size-4 {
+.typecho-page-main ul.tag-list li.size-30 {
 	font-size: 22px;
 	color: #444;
 }
 
-.typecho-page-main ul.tag-list li.size-5 {
+.typecho-page-main ul.tag-list li.size-0 {
 	font-size: 28px;
 	color: #333;
 }

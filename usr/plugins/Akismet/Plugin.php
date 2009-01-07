@@ -4,7 +4,7 @@
  * 
  * @package Akismet
  * @author qining
- * @version 1.0
+ * @version 1.1
  * @link http://typecho.org
  */
 class Akismet_Plugin implements Typecho_Plugin_Interface
@@ -24,6 +24,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
     
         Typecho_Plugin::factory('Widget_Feedback')->comment = array('Akismet_Plugin', 'filter');
         Typecho_Plugin::factory('Widget_Feedback')->trackback = array('Akismet_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Comments_Edit')->mark = array('Akismet_Plugin', 'mark');
         
         return _t('请配置此插件的API KEY, 以使您的反垃圾策略生效');
     }
@@ -90,15 +91,34 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
     }
     
     /**
+     * 标记评论状态时的插件接口
+     * 
+     * @access public
+     * @param array $comment 评论数据的结构体
+     * @param Typecho_Widget $commentWidget 评论组件
+     * @param string $status 评论状态
+     * @return void
+     */
+    public static function mark($comment, $commentWidget, $status)
+    {
+        if ('spam' == $comment['status'] && $status != 'spam') {
+            self::filter($comment, $commentWidget, NULL, 'submit-ham');
+        } else if ('spam' != $comment['status'] && $status == 'spam') {
+            self::filter($comment, $commentWidget, NULL, 'submit-spam');
+        }
+    }
+    
+    /**
      * 评论过滤器
      * 
      * @access public
      * @param array $comment 评论结构
      * @param Typecho_Widget $post 被评论的文章
      * @param array $result 返回的结果上下文
+     * @param string $api api地址
      * @return void
      */
-    public static function filter($comment, $post, $result)
+    public static function filter($comment, $post, $result, $api = 'comment-check')
     {
         $comment = empty($result) ? $comment : $result;
     
@@ -164,8 +184,9 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
 
             $client->setHeader('User-Agent', $options->generator . ' | Akismet/1.1')
+            ->setTimeout(5)
             ->setData($data)
-            ->send(Typecho_Common::url('/1.1/comment-check', $url));
+            ->send(Typecho_Common::url('/1.1/' . $api, $url));
 
             if ('true' == $client->getResponseBody()) {
                 $comment['status'] = 'spam';

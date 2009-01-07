@@ -87,7 +87,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** Anti-XSS */
             $comment['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->author)));
             $comment['mail'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->mail)));
-            $comment['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->url)));
+            $comment['url'] = Typecho_Common::safeUrl($this->request->url);
         
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
             $this->response->setCookie('__typecho_remember_author', $comment['author'], $expire);
@@ -128,6 +128,11 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      */
     private function trackback()
     {
+        /** 如果不是POST方法 */
+        if (!$this->request->isPost()) {
+            $this->response->redirect($this->_content->permalink);
+        }
+    
         /** 如果库中已经存在当前ip为spam的trackback则直接拒绝 */
         if ($this->size($this->select()
         ->where('status = ? AND ip = ?', 'spam', $this->request->getClientIp())) > 0) {
@@ -146,7 +151,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         );
         
         $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
-        $trackback['url'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->url)));
+        $trackback['url'] = Typecho_Common::safeUrl($this->request->url);
         $trackback['text'] = Typecho_Common::removeXSS(Typecho_Common::stripTags($this->request->excerpt, $this->options->commentsHTMLTagAllowed));
         
         //检验格式
@@ -154,7 +159,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $validator->addRule('url', 'required', 'We require all Trackbacks to provide an url.')
         ->addRule('url', 'url', 'Your url is not valid.')
         ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
-        ->addRule('blog_name', 'required', 'We require all Trackbacks to provide an blog name.');
+        ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.');
         
         $validator->setBreak();
         if ($error = $validator->run($trackback)) {
@@ -167,6 +172,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
+        
+        /** 返回正确 */
+        $this->response->throwXml(array('success' => 0, 'message' => 'Trackback has registered.'));
     }
     
     /**

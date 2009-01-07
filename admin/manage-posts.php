@@ -82,28 +82,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($posts->next()): ?>
                         <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $posts->permalink(); ?>" class="balloon-button right <?php
-                            switch (true) {
-                                case 0 == $posts->commentsNum:
-                                    echo 'size-0';
-                                    break;
-                                case 0 < $posts->commentsNum && $posts->commentsNum < 10:
-                                    echo 'size-1';
-                                    break;
-                                case 10 <= $posts->commentsNum && $posts->commentsNum < 20:
-                                    echo 'size-2';
-                                    break;
-                                case 20 <= $posts->commentsNum && $posts->commentsNum < 50:
-                                    echo 'size-3';
-                                    break;
-                                case 50 <= $posts->commentsNum && $posts->commentsNum < 100:
-                                    echo 'size-4';
-                                    break;
-                                case 100 <= $posts->commentsNum:
-                                    echo 'size-5';
-                                    break;
-                            }
-                            ?>"><?php $posts->commentsNum(); ?></a></td>
+                            <td><a href="<?php $posts->permalink(); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td><?php $posts->author(); ?></td>
                             <td><?php $posts->dateWord(); ?></td>
