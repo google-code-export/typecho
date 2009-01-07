@@ -98,7 +98,6 @@ class Typecho_Plugin
     {
         $plugins['activated'] = array_key_exists('activated', $plugins) ? $plugins['activated'] : array();
         $plugins['handles'] = array_key_exists('handles', $plugins) ? $plugins['handles'] : array();
-        $plugins['files'] = array_key_exists('files', $plugins) ? $plugins['files'] : array();
         
         /** 初始化变量 */
         self::$_plugins = $plugins;
@@ -138,16 +137,6 @@ class Typecho_Plugin
      */
     public static function deactivate($pluginName)
     {
-        /** 去掉所有相关文件 */
-        if (isset(self::$_plugins['activated'][$pluginName]['files']) && is_array(self::$_plugins['activated'][$pluginName]['files'])) {
-            foreach (self::$_plugins['activated'][$pluginName]['files'] as $handle => $files) {
-                self::$_plugins['files'][$handle] = array_diff(self::$_plugins['files'][$handle], $files);
-                if (empty(self::$_plugins['files'][$handle])) {
-                    unset(self::$_plugins['files'][$handle]);
-                }
-            }
-        }
-        
         /** 去掉所有相关回调函数 */
         if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
             foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
@@ -323,7 +312,7 @@ class Typecho_Plugin
      * @param string $path 插件目录
      * @return array
      */
-    public function portal($pluginName, $path)
+    public static function portal($pluginName, $path)
     {
         switch (true) {
             case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php'):
@@ -337,20 +326,6 @@ class Typecho_Plugin
         }
         
         return array($pluginFileName, $className);
-    }
-    
-    /**
-     * 需要预先包含的文件
-     * 
-     * @access public
-     * @param string $file 文件名称(相对路径)
-     * @return void
-     */
-    public function need($file)
-    {
-        $handle = $this->_handle . ':' . $this->_component;
-        self::$_plugins['files'][$handle][] = $file;
-        self::$_tmp['files'][$handle][] = $file;
     }
     
     /**
@@ -408,13 +383,6 @@ class Typecho_Plugin
         $component = $this->_handle . ':' . $component;
         $last = count($args);
         $args[$last] = $last > 0 ? $args[0] : false;
-        
-        if (isset(self::$_required[$component]) && isset(self::$_plugins['files'][$component])) {
-            self::$_required[$component] = true;
-            foreach (self::$_plugins['files'][$component] as $file) {
-                require_once $file;
-            }
-        }
     
         if (isset(self::$_plugins['handles'][$component])) {
             $args[$last] = NULL;

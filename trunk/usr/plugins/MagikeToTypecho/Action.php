@@ -119,7 +119,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                     'url'       =>  $row['comment_homepage'],
                     'ip'        =>  $row['comment_ip'],
                     'agent'     =>  $row['comment_agent'],
-                    'text'      =>  $row['comment_text'],
+                    'text'      =>  nl2br($row['comment_text']),
                     'type'      =>  $row['comment_type'],
                     'status'    =>  $row['comment_publish'],
                     'parent'    =>  $row['comment_parent']
@@ -157,6 +157,12 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
             $result = $db->query($db->select()->from('table.posts')
             ->order('post_id', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
+            
+            $row['post_content'] = preg_replace(
+            array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+            "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+            array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+            $row['post_content']);
             
             while ($row = $db->fetchRow($result)) {
                 $contents->insert(array(

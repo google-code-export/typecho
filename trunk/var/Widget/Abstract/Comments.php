@@ -60,7 +60,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___content()
     {
-        return Typecho_Common::cutParagraph($this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text);
+        return $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
     }
     
     /**

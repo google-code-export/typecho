@@ -352,7 +352,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $contents = explode('<!--more-->', $content);
         
         list($abstract) = $contents;
-        echo NULL === $more ? $content : (Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p class="more"><a href="'
+        echo NULL === $more ? Typecho_Common::cutParagraph($content) : 
+        (Typecho_Common::cutParagraph(Typecho_Common::fixHtml($abstract)) 
+        . (count($contents) > 1 ? '<p class="more"><a href="'
         . $this->permalink . '">' . $more . '</a></p>' : NULL));
     }
 

@@ -74,8 +74,8 @@ class Widget_Stat extends Typecho_Widget
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
                     ->from('table.contents')
-                    ->where('table.contents.type = ?', 'waiting')
-                    ->where('table.contents.status = ?', 'publish'))->num;
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.status = ?', 'waiting'))->num;
     }
     
     /**
@@ -88,8 +88,8 @@ class Widget_Stat extends Typecho_Widget
     {
         return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
                     ->from('table.contents')
-                    ->where('table.contents.type = ?', 'draft')
-                    ->where('table.contents.status = ?', 'publish'))->num;
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.status = ?', 'draft'))->num;
     }
     
     /**
