@@ -252,6 +252,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         switch (Typecho_Router::$current) {
             /** 索引页 */
             case 'index':
+            case 'index_page':
             
                 $select->where('table.contents.type = ?', 'post');
                 break;
