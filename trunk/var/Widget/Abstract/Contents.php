@@ -60,7 +60,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___description()
     {
-        return Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...');
+        return Typecho_Common::subStr(strip_tags($this->text), 0, 100, '...');
     }
     
     /**
@@ -398,7 +398,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->excerpt), 0, $length, $trim);
+        echo Typecho_Common::subStr(strip_tags($this->excerpt), 0, $length, $trim);
     }
 
     /**
