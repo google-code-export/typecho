@@ -60,8 +60,6 @@ Typecho_Common::init(array(
     'contentType'       =>  'text/html'
 ));
 
-define('__TYPECHO_INSTALL_VERSION__', 'Typecho 0.3/8.12.30');
-
 /**
  * 获取传递参数
  * 
@@ -116,7 +114,7 @@ function _u()
 }
 
 $options = new stdClass();
-$options->generator = __TYPECHO_INSTALL_VERSION__;
+$options->generator = 'Typecho ' . Typecho_Common::$config['version'];
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -253,7 +251,7 @@ Typecho_Plugin::init(\$options->plugins);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => _t('28800'))));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => __TYPECHO_INSTALL_VERSION__)));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => $options->generator)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
@@ -302,7 +300,7 @@ Typecho_Plugin::init(\$options->plugins);
                                         
                                         /** 初始评论 */
                                         $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => (time() - idate('Z')), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
-                                        'ip' => '127.0.0.1', 'agent' => __TYPECHO_INSTALL_VERSION__, 'text' => '欢迎加入Typecho大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
+                                        'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入Typecho大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
                                         
                                         /** 初始用户 */
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'), 
