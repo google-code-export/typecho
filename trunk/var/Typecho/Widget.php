@@ -308,9 +308,9 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
+        return is_array($this->row) && array_key_exists($name, $this->row) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
         ? $this->row[$name] = $this->$method() : 
-        (isset($this->_helpers[$name]) ? $this->_helpers[$name] : $this->_helpers[$name] = $this->__helper($name)));
+        (isset($this->_helpers[$name]) ? $this->_helpers[$name] : $this->__helper($name)));
     }
     
     /**
@@ -348,13 +348,20 @@ abstract class Typecho_Widget
     {
         switch ($name) {
             case 'request':
-                return new Typecho_Widget_Request();
+                $this->_helpers[$name] = new Typecho_Widget_Request();
+                break;
             case 'response':
-                return new Typecho_Widget_Response();
+                $this->_helpers[$name] = new Typecho_Widget_Response();
+                break;
             case 'parameter':
-                return Typecho_Config::factory();
+                $this->_helpers[$name] = Typecho_Config::factory();
+                break;
             default:
-                return NULL;
+                $method = '___' . $name;
+                $result = $this->plugin()->trigger($plugged)->{$method}($name, $this);
+                return $plugged ? $result : NULL;
         }
+        
+        return $this->_helpers[$name];
     }
 }
