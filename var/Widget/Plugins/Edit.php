@@ -35,14 +35,14 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $plugins = Typecho_Plugin::export();
         $activatedPlugins = $plugins['activated'];
         
-        /** 判断实例化是否成功 */
-        $info = Typecho_Plugin::parseInfo($pluginFileName);
-        if (!$info['activate'] || isset($activatedPlugins[$pluginName])) {
-            throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
-        }
-        
         /** 载入插件 */
         require_once $pluginFileName;
+        
+        /** 判断实例化是否成功 */
+        if (isset($activatedPlugins[$pluginName]) || !class_exists($className)
+        || !method_exists($className, 'activate')) {
+            throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
+        }
         
         try {
             $result = call_user_func(array($className, 'activate'));
@@ -93,13 +93,18 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $activatedPlugins = $plugins['activated'];
         
         /** 判断实例化是否成功 */
-        $info = Typecho_Plugin::parseInfo($pluginFileName);
         if (!isset($activatedPlugins[$pluginName])) {
             throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
         }
         
         /** 载入插件 */
         require_once $pluginFileName;
+        
+        /** 判断实例化是否成功 */
+        if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
+        || !method_exists($className, 'deactivate')) {
+            throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
+        }
         
         try {
             $result = call_user_func(array($className, 'deactivate'));

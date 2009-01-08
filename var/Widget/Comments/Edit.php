@@ -67,7 +67,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     private function getCoidAsArray()
     {
-        $coid = $this->request->coid;
+        $coid = $this->request->filter('int')->coid;
         return $coid ? (is_array($coid) ? $coid : array($coid)) : array();
     }
 

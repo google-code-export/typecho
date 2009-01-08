@@ -149,6 +149,22 @@ class Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 移除某个属性
+     * 
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function removeAttribute($attributeName)
+    {
+        if (isset($this->_attributes[$attributeName])) {
+            unset($this->_attributes[$attributeName]);
+        }
+        
+        return $this;
+    }
+    
+    /**
      * 设置是否自闭合
      * 
      * @access public

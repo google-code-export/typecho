@@ -42,14 +42,16 @@ class Typecho_Widget_Helper_Form_Element_Radio extends Typecho_Widget_Helper_For
     {
         foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
-            $this->container($this->_options[$value]->setAttribute('name', $this->name)
+            $item = $this->multiline();
+            
+            $item->addItem($this->_options[$value]->setAttribute('name', $this->name)
             ->setAttribute('type', 'radio')
             ->setAttribute('value', $value)
             ->setAttribute('id', $this->name . '-' . $value));
             
             $labelItem = new Typecho_Widget_Helper_Layout('label');
-            $this->container($labelItem->setAttribute('for', $this->name . '-' . $value)
-            ->html($label . '&nbsp;'));
+            $item->addItem($labelItem->setAttribute('for', $this->name . '-' . $value)->html($label));
+            $this->container($item);
         }
         
         return current($this->_options);
@@ -64,6 +66,10 @@ class Typecho_Widget_Helper_Form_Element_Radio extends Typecho_Widget_Helper_For
      */
     protected function _value($value)
     {
+        foreach ($this->_options as $option) {
+            $option->removeAttribute('checked');
+        }
+    
         if (isset($this->_options[$value])) {
             $this->value = $value;
             $this->_options[$value]->setAttribute('checked', 'true');

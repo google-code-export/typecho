@@ -53,14 +53,50 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
     
     /**
-     * 获取文章摘要
+     * 对文章的简短纯文本描述
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___description()
+    {
+        return Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...');
+    }
+    
+    /**
+     * 获取文章内容摘要
      * 
      * @access protected
      * @return string
      */
     protected function ___excerpt()
     {
-        return Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, 100, '...');
+        $contents = explode('<!--more-->', $this->text);
+        list($abstract) = $contents;
+        
+        $abstract = $this->plugin(__CLASS__)->trigger($plugged)->excerpt($abstract);
+        if ($plugged) {
+            return $abstract;
+        } else {
+            return Typecho_Common::cutParagraph($abstract);
+        }
+    }
+    
+    /**
+     * 获取文章内容
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___content()
+    {
+        $content = $this->plugin(__CLASS__)->trigger($plugged)->content($this->text);
+        
+        if ($plugged) {
+            return $content;
+        } else {
+            return Typecho_Common::cutParagraph($content);
+        }
     }
     
     /**
@@ -348,14 +384,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function content($more = NULL)
     {
-        $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
-        $contents = explode('<!--more-->', $content);
-        
-        list($abstract) = $contents;
-        echo NULL === $more ? Typecho_Common::cutParagraph($content) : 
-        (Typecho_Common::cutParagraph(Typecho_Common::fixHtml($abstract)) 
-        . (count($contents) > 1 ? '<p class="more"><a href="'
-        . $this->permalink . '">' . $more . '</a></p>' : NULL));
+        echo NULL !== $more && false !== strpos($this->text, '<!--more-->') ? 
+        $this->excerpt : $this->content;
     }
 
     /**
@@ -368,7 +398,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->text), 0, $length, $trim);
+        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->excerpt), 0, $length, $trim);
     }
 
     /**

@@ -81,7 +81,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
          && 'insert' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'post')
-            ->where('table.contents.cid = ?', $this->request->cid)
+            ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
             
             if (!$this->have()) {
@@ -354,11 +354,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 提交数据的过滤 */
         $contents = $this->plugin()->update($contents);
-        $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
+        $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->cid));
 
         if ($updateRows > 0) {
             /** 取出内容 */
-            $this->db->fetchRow($this->select()->where('cid = ?', $this->request->cid)->limit(1), array($this, 'push'));
+            $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
         
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
@@ -388,7 +388,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->request->cid, $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
         }
@@ -402,7 +402,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function deletePost()
     {
-        $cid = $this->request->cid;
+        $cid = $this->request->filter('int')->cid;
         $deleteCount = 0;
 
         if ($cid) {

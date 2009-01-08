@@ -34,12 +34,46 @@ class Typecho_Widget_Request
     private $_flushed = false;
     
     /**
-     * 设置过滤器
+     * 当前过滤器
      * 
      * @access private
      * @var array
      */
-    private $_filters = array();
+    private $_filter = array();
+    
+    /**
+     * 支持的过滤器列表
+     * 
+     * @access private
+     * @var string
+     */
+    private static $_supportFilters = array(
+        'int'       =>  'intval',
+        'integer'   =>  'intval',
+        'search'    =>  array('Typecho_Common', 'filterSearchQuery'),
+        'xss'       =>  array('Typecho_Common', 'search'),
+        'url'       =>  array('Typecho_Common', 'safeUrl')
+    );
+    
+    /**
+     * 应用过滤器
+     * 
+     * @access private
+     * @param mixed $value
+     * @return void
+     */
+    private function _applyFilter($value)
+    {
+        if ($this->_filter) {
+            foreach ($this->_filter as $filter) {
+                $value = is_array($value) ? array_map($filter, $value) :
+                call_user_func($filter, $value);
+            }
+        }
+        
+        $this->_filter = array();
+        return $value;
+    }
 
     /**
      * 获取参数列表
@@ -51,50 +85,6 @@ class Typecho_Widget_Request
     {
         $args = func_get_args();
         return call_user_func_array(array($this, 'getParametersFrom'), $args);
-    }
-    
-    /**
-     * 设置过滤器
-     * <code>
-     * $this->setFilters(array(
-     *     'cid'    => 'intval',
-     *     'mid'    => 'intval',
-     *     'slug'   => array($this, 'custom')
-     * ));
-     * </code>
-     * 
-     * @access public
-     * @param array $filters 过滤项
-     * @return void
-     */
-    public function setFilters(array $filters = array())
-    {
-        $this->_filters = $filters;
-    }
-    
-    /**
-     * 增加过滤器
-     * 
-     * @access public
-     * @param string $name 需要过滤的字段
-     * @param mixed $callback 过滤的函数
-     * @return void
-     */
-    public function addFilter($name, $callback)
-    {
-        $this->_filters[$name] = $callback;
-    }
-    
-    /**
-     * 移除过滤器
-     * 
-     * @access public
-     * @param string $name 需要过滤的字段
-     * @return void
-     */
-    public function removeFilter($name)
-    {
-        unset($this->_filters[$name]);
     }
     
     /**
@@ -117,6 +107,23 @@ class Typecho_Widget_Request
     }
     
     /**
+     * 设置过滤器
+     * 
+     * @access public
+     * @param mixed $filter 过滤器名称
+     * @return Typecho_Widget_Request
+     */
+    public function filter()
+    {
+        $filters = func_get_args();
+        
+        foreach ($filters as $filter) {
+            $this->_filter[] = isset(self::$_supportFilters[$filter]) ? self::$_supportFilters[$filter] : $filter;
+        }
+        return $this;
+    }
+    
+    /**
      * 获取指定的http传递参数
      *
      * @access public
@@ -132,9 +139,8 @@ class Typecho_Widget_Request
             $value = Typecho_Request::getParameter($name, $default);
         }
         
-        return isset($this->_filters[$name]) && $this->isSetParameter($name) ? 
-        (is_array($value) ? array_map($this->_filters[$name], $value) : call_user_func($this->_filters[$name], $value))
-        : $value;
+        return $this->_filter && $this->isSetParameter($name) ? 
+        $this->_applyFilter($value) : $value;
     }
     
     /**

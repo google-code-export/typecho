@@ -55,8 +55,8 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $this->_currentPage = $this->request->getParameter('page', 1);
     
         /** 过滤标题 */
-        if (NULL != ($keywords = $this->request->keywords)) {
-            $select->where('table.comments.text LIKE ?', '%' . Typecho_Common::filterSearchQuery($keywords) . '%');
+        if (NULL != ($keywords = $this->request->filter('search')->keywords)) {
+            $select->where('table.comments.text LIKE ?', '%' . $keywords . '%');
         }
         
         /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */

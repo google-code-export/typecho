@@ -248,7 +248,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $category['type'] = 'category';
     
         /** 更新数据 */
-        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->mid));
+        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
         $category['mid'] = $this->request->mid;
         $this->push($category);
         
@@ -271,7 +271,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function deleteCategory()
     {
-        $categories = $this->request->mid;
+        $categories = $this->request->filter('int')->mid;
         $deleteCount = 0;
         
         if ($categories && is_array($categories)) {
@@ -310,7 +310,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
         
         $merge = $this->request->merge;
-        $categories = $this->request->mid;
+        $categories = $this->request->filter('int')->mid;
         
         if ($categories && is_array($categories)) {
             $this->merge($merge, 'category', $categories);
@@ -333,7 +333,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        $categories = $this->request->mid;
+        $categories = $this->request->filter('int')->mid;
         if ($categories && is_array($categories)) {
             $this->sort($categories, 'category');
         }

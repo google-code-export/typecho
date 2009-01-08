@@ -65,7 +65,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         ->limit(1);
         
         if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+            $select->where('mid <> ?', $this->request->filter('int')->mid);
         }
     
         $tag = $this->db->fetchRow($select);
@@ -241,7 +241,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $tag['slug'] = Typecho_Common::slugName(empty($tag['slug']) ? $tag['name'] : $tag['slug']);
     
         /** 更新数据 */
-        $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->mid));
+        $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
         $this->push($tag);
         
         /** 设置高亮 */
@@ -263,7 +263,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      */
     public function deleteTag()
     {
-        $tags = $this->request->mid;
+        $tags = $this->request->filter('int')->mid;
         $deleteCount = 0;
         
         if ($tags && is_array($tags)) {
@@ -302,7 +302,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             $this->response->goBack();
         }
         
-        $tags = $this->request->mid;
+        $tags = $this->request->filter('int')->mid;
         
         if ($tags && is_array($tags)) {
             $this->merge($merge, 'tag', $tags);

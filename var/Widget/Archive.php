@@ -219,7 +219,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
-            $filterKeywords = Typecho_Common::filterSearchQuery($this->request->s);
+            $filterKeywords = $this->request->filter('search')->s;
             
             /** 跳转到搜索页 */
             if (NULL != $filterKeywords) {
@@ -250,13 +250,19 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         switch (Typecho_Router::$current) {
+            /** 索引页 */
+            case 'index':
+            
+                $select->where('table.contents.type = ?', 'post');
+                break;
+                
             /** 单篇内容 */
             case 'page':
             case 'post':
                 
                 /** 如果是单篇文章或独立页面 */
                 if (isset($this->request->cid)) {
-                    $select->where('table.contents.cid = ?', $this->request->cid);
+                    $select->where('table.contents.cid = ?', $this->request->filter('int')->cid);
                 }
                 
                 /** 匹配缩略名 */
@@ -266,20 +272,20 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** 匹配时间 */
                 if (isset($this->request->year)) {
-                    $year = $this->request->year;
+                    $year = $this->request->filter('int')->year;
                     
                     $fromMonth = 1;
                     $toMonth = 12;
                     
                     if (isset($this->request->month)) {
-                        $fromMonth = $this->request->month;
+                        $fromMonth = $this->request->filter('int')->month;
                         $toMonth = $fromMonth;
                         
                         $fromDay = 1;
                         $toDay = idate('t', mktime(0, 0, 0, $toMonth, 1, $year));
                         
                         if (isset($this->request->day)) {
-                            $fromDay = $this->request->day;
+                            $fromDay = $this->request->filter('int')->day;
                             $toDay = $fromDay;
                         }
                     }
@@ -308,7 +314,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
                 
                 /** 设置描述 */
-                $this->_description = $this->excerpt;
+                $this->_description = $this->description;
                 
                 /** 设置模板 */
                 if ($this->template) {
@@ -356,7 +362,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->limit(1);
                 
                 if (isset($this->request->mid)) {
-                    $categorySelect->where('mid = ?', $this->request->mid);
+                    $categorySelect->where('mid = ?', $this->request->filter('int')->mid);
                 }
                 
                 if (isset($this->request->slug)) {
@@ -372,7 +378,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             
                 /** fix sql92 by 70 */
                 $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $category['mid']);
+                ->where('table.relationships.mid = ?', $category['mid'])
+                ->where('table.contents.type = ?', 'post');
                 
                 /** 设置分页 */
                 $this->_pageRow = $category;
@@ -411,7 +418,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->where('type = ?', 'tag')->limit(1);
                 
                 if (isset($this->request->mid)) {
-                    $tagSelect->where('mid = ?', $this->request->mid);
+                    $tagSelect->where('mid = ?', $this->request->filter('int')->mid);
                 }
                 
                 if (isset($this->request->slug)) {
@@ -428,7 +435,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             
                 /** fix sql92 by 70 */
                 $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $tag['mid']);
+                ->where('table.relationships.mid = ?', $tag['mid'])
+                ->where('table.contents.type = ?', 'post');
                 
                 /** 设置分页 */
                 $this->_pageRow = $tag;
@@ -468,9 +476,9 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'archive_day_page':
 
                 /** 如果是按日期归档 */
-                $year = $this->request->year;
-                $month = $this->request->month;
-                $day = $this->request->day;
+                $year = $this->request->filter('int')->year;
+                $month = $this->request->filter('int')->month;
+                $day = $this->request->filter('int')->day;
                 $timezone = idate('Z');
                 
                 if (!empty($year) && !empty($month) && !empty($day)) {
@@ -503,7 +511,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
                 
                 $select->where('table.contents.created >= ?', $from - $timezone)
-                ->where('table.contents.created <= ?', $to - $timezone);
+                ->where('table.contents.created <= ?', $to - $timezone)
+                ->where('table.contents.type = ?', 'post');
                 
                 /** 设置归档类型 */
                 $this->_archiveType = 'date';
@@ -533,14 +542,17 @@ class Widget_Archive extends Widget_Abstract_Contents
     
                 /** 增加自定义搜索引擎接口 */
                 //~ fix issue 40
-                $this->plugin()->trigger($hasPushed)->search($this->request->keywords, $this);
+                $keywords = $this->request->filter('search')->keywords;
+                $this->plugin()->trigger($hasPushed)->search($keywords, $this);
     
-                $keywords = Typecho_Common::filterSearchQuery($this->request->keywords);
-                $searchQuery = '%' . $keywords . '%';
-                
-                /** 搜索无法进入隐私项保护归档 */
-                $select->where('table.contents.password IS NULL')
-                ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery);
+                if (!$hasPushed) {
+                    $searchQuery = '%' . $keywords . '%';
+                    
+                    /** 搜索无法进入隐私项保护归档 */
+                    $select->where('table.contents.password IS NULL')
+                    ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
+                    ->where('table.contents.type = ?', 'post');
+                }
                 
                 /** 设置关键词 */
                 $this->_keywords = $keywords;
@@ -566,6 +578,44 @@ class Widget_Archive extends Widget_Abstract_Contents
                 break;
 
             default:
+                $result = $this->archive(Typecho_Router::$current, $select);
+                
+                if (isset($result['hasPushed'])) {
+                    $hasPushed = $result['hasPushed'];
+                }
+                
+                if (isset($result['archiveTitle'])) {
+                    $this->_archiveTitle = $result['archiveTitle'];
+                }
+                
+                if (isset($result['archiveType'])) {
+                    $this->_archiveType = $result['archiveType'];
+                }
+                
+                if (isset($result['keywords'])) {
+                    $this->_keywords = $result['keywords'];
+                }
+
+                if (isset($result['description'])) {
+                    $this->_description = $result['description'];
+                }
+                
+                if (isset($result['pageRow'])) {
+                    $this->_pageRow = $result['pageRow'];
+                }
+                
+                if (isset($result['feedUrl'])) {
+                    $this->_feedUrl = $result['feedUrl'];
+                }
+                
+                if (isset($result['feedRssUrl'])) {
+                    $this->_feedRssUrl = $result['feedRssUrl'];
+                }
+                
+                if (isset($result['feedAtomUrl'])) {
+                    $this->_feedAtomUrl = $result['feedAtomUrl'];
+                }
+
                 break;
         }
         
@@ -575,13 +625,23 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 仅输出文章 */
-        $select->where('table.contents.type = ?', 'post');
         $this->_countSql = clone $select;
 
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
         $this->db->fetchAll($select, array($this, 'push'));
     }
+    
+    /**
+     * 自定义归档
+     * 
+     * @access public
+     * @param string $current 当前路由
+     * @param Typecho_Db_Query $select 数据库选择器
+     * @return void
+     */
+    public function archive($current, Typecho_Db_Query $select)
+    {}
     
     /**
      * 输出文章内容
@@ -1025,7 +1085,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $item->addElement('guid', $this->permalink);
                         $item->addElement('slash:comments', $this->commentsNum);
                         $item->addElement('comments', $this->permalink . '#comments');
-                        $item->addElement('content:encoded', $this->excerpt);
+                        $item->addElement('content:encoded', $this->description);
                         $item->addElement('author', $this->author->screenName);
                         $item->addElement('dc:creator', $this->author->screenName);
                         $item->addElement('wfw:commentRss', $this->feedUrl);

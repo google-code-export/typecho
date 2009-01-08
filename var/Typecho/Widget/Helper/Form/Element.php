@@ -55,6 +55,14 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     protected $container;
     
     /**
+     * 多行输入
+     * 
+     * @access public
+     * @var array()
+     */
+    protected $multiline = array();
+    
+    /**
      * 输入栏
      * 
      * @access public
@@ -219,6 +227,33 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     {
         $this->value = $value;
         $this->_value($value);
+        return $this;
+    }
+    
+    /**
+     * 多行输出模式
+     * 
+     * @access public
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function multiline()
+    {
+        $item = new Typecho_Widget_Helper_Layout('span');
+        $this->multiline[] = $item;
+        return $item;
+    }
+    
+    /**
+     * 多行输出模式
+     * 
+     * @access public
+     * @return Typecho_Widget_Helper_Form_Element
+     */
+    public function multiMode()
+    {
+        foreach ($this->multiline as $item) {
+            $item->setAttribute('class', 'multiline');
+        }
         return $this;
     }
     

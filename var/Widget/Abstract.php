@@ -57,15 +57,6 @@ abstract class Widget_Abstract extends Typecho_Widget
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
-        
-        /** 设置过滤器 */
-        $this->request->setFilters(array(
-            'cid'   =>  'intval',
-            'mid'   =>  'intval',
-            'uid'   =>  'intval',
-            'coid'  =>  'intval',
-            'page'  =>  'intval'
-        ));
     }
     
     /**
