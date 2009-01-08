@@ -36,7 +36,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
          && 'insert' != $this->request->do) || 'update' == $this->request->do) {
             $post = $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'page')
-            ->where('table.contents.cid = ?', $this->request->cid)
+            ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
             
             if (!$this->have()) {
@@ -113,11 +113,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     
         /** 提交数据的过滤 */
         $contents = $this->plugin()->update($contents);
-        $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->request->cid));
+        $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->cid));
         
         if ($updateRows > 0) {
             /** 取出页面 */
-            $this->db->fetchRow($this->select()->where('cid = ?', $this->request->cid)->limit(1), array($this, 'push'));
+            $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
         }
 
         /** 页面提示信息 */
@@ -136,7 +136,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->request->cid, $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
             $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
         }
@@ -150,7 +150,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function deletePage()
     {
-        $cid = $this->request->cid;
+        $cid = $this->request->filter('int')->cid;
         $deleteCount = 0;
 
         if ($cid) {
@@ -183,7 +183,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function sortPage()
     {
-        $pages = $this->request->cid;
+        $pages = $this->request->filter('int')->cid;
         
         if ($pages && is_array($pages)) {
             foreach ($pages as $sort => $cid) {

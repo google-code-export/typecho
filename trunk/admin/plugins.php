@@ -14,11 +14,11 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="10"/>
-                        <col width="150"/>
+                        <col width="200"/>
                         <col width="390"/>
                         <col width="100"/>
-                        <col width="150"/>
-                        <col width="200"/>
+                        <col width="125"/>
+                        <col width="175"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -66,11 +66,11 @@ include 'menu.php';
                 <table class="typecho-list-table" class="operate-table">
                     <colgroup>
                         <col width="10"/>
-                        <col width="150"/>
+                        <col width="200"/>
                         <col width="390"/>
                         <col width="100"/>
-                        <col width="150"/>
-                        <col width="200"/>
+                        <col width="125"/>
+                        <col width="175"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -93,7 +93,7 @@ include 'menu.php';
                             <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
                             . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
                             <td>
-                                <?php if ($deactivatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
+                                <?php if ($deactivatedPlugins->activate || $deactivatedPlugins->deactivate || $deactivatedPlugins->config): ?>
                                     <?php if ($deactivatedPlugins->activated): ?>
                                         <?php if ($deactivatedPlugins->config): ?>
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 

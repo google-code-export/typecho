@@ -18,9 +18,7 @@ include 'menu.php';
                     <!-- <a href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a> -->
                     </p>
                     <p class="search">
-					<button type="button" onclick="typechoLocation('<?php $options->adminUrl('user.php'); ?>');"><?php _e('新增用户'); ?></button>
-                    <!-- <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />                                
-					<button type="submit"><?php _e('筛选'); ?></button> -->
+					<a class="button" href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
                     </p>
                 </form>
                 </div>

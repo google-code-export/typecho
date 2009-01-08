@@ -46,7 +46,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         );
     
         /** 判断父节点 */
-        if ($parentId = $this->request->parent) {
+        if ($parentId = $this->request->filter('int')->parent) {
             if (($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
             ->where('coid = ?', $parentId))) && $this->content->cid == $parent['cid']) {
                 $comment['parent'] = $parentId;
@@ -72,23 +72,23 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
         
-        /** 修正用户提交的url */
-        if (!empty($comment['url'])) {
-            $urlParams = parse_url($comment['url']);
-            if (!isset($urlParams['scheme'])) {
-                $comment['url'] = 'http://' . $comment['url'];
-            }
-        }
-        
         $comment['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
         $this->request->text, $this->options->commentsHTMLTagAllowed)));
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
             /** Anti-XSS */
-            $comment['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->author)));
-            $comment['mail'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->mail)));
-            $comment['url'] = Typecho_Common::safeUrl($this->request->url);
+            $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
+            $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
+            $comment['url'] = $this->request->filter('url')->url;
+            
+            /** 修正用户提交的url */
+            if (!empty($comment['url'])) {
+                $urlParams = parse_url($comment['url']);
+                if (!isset($urlParams['scheme'])) {
+                    $comment['url'] = 'http://' . $comment['url'];
+                }
+            }
         
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
             $this->response->setCookie('__typecho_remember_author', $comment['author'], $expire);
@@ -151,8 +151,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
-        $trackback['author'] = Typecho_Common::removeXSS(trim(strip_tags($this->request->blog_name)));
-        $trackback['url'] = Typecho_Common::safeUrl($this->request->url);
+        $trackback['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->blog_name;
+        $trackback['url'] = $this->request->filter('url')->url;
         $trackback['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
         $this->request->excerpt, $this->options->commentsHTMLTagAllowed)));
         
