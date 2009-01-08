@@ -2654,7 +2654,7 @@ class Textile {
   function encode_html($html, $can_double_encode = FALSE) {
     if (!$html) { return ''; }
     if ($this->Have_Entities && $this->options['char_encoding']) {
-      $html = htmlentities($html);
+      $html = htmlentities($html, ENT_QUOTES, $this->options['char_encoding']);
     } else {
       $html = $this->encode_html_basic($html, $can_double_encode);
     }
