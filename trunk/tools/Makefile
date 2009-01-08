@@ -51,6 +51,15 @@ upgrade:
 	make clear
 
 
+install:
+	make svnup
+	rm -Rf build/mockup/
+	rm -Rf build/tools/
+	rm -Rf build/todo.txt
+	cp -Rf build/* ${DIR}
+	make clear
+
+
 all:
 	make svnup
 	make package
