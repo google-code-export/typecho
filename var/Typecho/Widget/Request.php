@@ -51,7 +51,7 @@ class Typecho_Widget_Request
         'int'       =>  'intval',
         'integer'   =>  'intval',
         'search'    =>  array('Typecho_Common', 'filterSearchQuery'),
-        'xss'       =>  array('Typecho_Common', 'search'),
+        'xss'       =>  array('Typecho_Common', 'removeXSS'),
         'url'       =>  array('Typecho_Common', 'safeUrl')
     );
     
@@ -138,9 +138,8 @@ class Typecho_Widget_Request
         } else {
             $value = Typecho_Request::getParameter($name, $default);
         }
-        
-        return $this->_filter && $this->isSetParameter($name) ? 
-        $this->_applyFilter($value) : $value;
+
+        return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     
     /**

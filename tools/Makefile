@@ -37,6 +37,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/Akismet/
 	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
 	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
+	rm -Rf ${DIR}/usr/plugins/Textile2/
 	rm -Rf ${DIR}/usr/plugins/Helper.php
 	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
 	rm -Rf ${DIR}/usr/upgrade/
@@ -45,6 +46,7 @@ upgrade:
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/WordpressToTypecho/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/Textile2/ ${DIR}/usr/plugins/
 	cp build/usr/plugins/Helper.php ${DIR}/usr/plugins/
 	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
 	cp -Rf build/usr/upgrade/ ${DIR}/usr/upgrade/

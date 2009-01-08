@@ -342,6 +342,6 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function excerpt($length = 100, $trim = '...')
     {
-        echo Typecho_Common::subStr(Typecho_Common::stripTags($this->content), 0, $length, $trim);
+        echo Typecho_Common::subStr(strip_tags($this->content), 0, $length, $trim);
     }
 }

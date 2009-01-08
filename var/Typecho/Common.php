@@ -283,7 +283,8 @@ class Typecho_Common
         . (isset($params['user']) ? $params['user'] . (isset($params['pass']) ? ':' . $params['pass'] : NULL) . '@' : NULL)
         . (isset($params['host']) ? $params['host'] : NULL)
         . (isset($params['path']) ? $params['path'] : NULL)
-        . (isset($params['query']) ? '?' . $params['query'] : NULL);
+        . (isset($params['query']) ? '?' . $params['query'] : NULL)
+        . (isset($params['fragment']) ? '#' . $params['fragment'] : NULL);
     }
     
     /**
