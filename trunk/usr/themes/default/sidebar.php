@@ -47,7 +47,7 @@
 			<h2><?php _e('其它'); ?></h2>
             <ul>
                 <?php if($this->user->hasLogin()): ?>
-					<li class="last"><a href="<?php $this->options->index('Logout.do'); ?>"><?php _e('注销'); ?> <?php $this->user->screenName(); ?></a></li>
+					<li class="last"><a href="<?php $this->options->index('Logout.do'); ?>"><?php $this->user->screenName(); ?> <?php _e('退出'); ?></a></li>
                 <?php else: ?>
 				<li class="last"><a href="<?php $this->options->adminUrl('login.php'); ?>"><?php _e('登录'); ?></a></li>
                 <?php endif; ?>
