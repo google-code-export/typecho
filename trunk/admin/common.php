@@ -12,7 +12,7 @@ Typecho_Widget::widget('Widget_Menu')->to($menu);
 /** 检测版本是否升级 */
 $currentMenu = $menu->getCurrentMenu();
 list($soft, $currentVersion) = explode(' ', $options->generator);
-if ($user->pass('administrator', true)) {
+if ($user->pass('administrator', true) && !empty($currentMenu)) {
     $mustUpgrade = (!isset(Typecho_Common::$config['version']) || version_compare(str_replace('/', '.', Typecho_Common::$config['version']),
     str_replace('/', '.', $currentVersion), '>'));
 

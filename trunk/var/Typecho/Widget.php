@@ -308,7 +308,7 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        return is_array($this->row) && array_key_exists($name, $this->row) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
+        return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
         ? $this->row[$name] = $this->$method() : 
         (isset($this->_helpers[$name]) ? $this->_helpers[$name] : $this->__helper($name)));
     }
