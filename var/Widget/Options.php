@@ -320,8 +320,12 @@ class Widget_Options extends Typecho_Widget
      * @param mixed $pluginName 插件名称
      * @return void
      */
-    public function plugin($pluginName)
+    public function plugin($pluginName = NULL)
     {
+        if (empty($pluginName)) {
+            return parent::plugin();
+        }
+    
         if (!isset($this->_pluginConfig[$pluginName])) {
             if (!empty($this->row['plugin:' . $pluginName])
             && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))) {
