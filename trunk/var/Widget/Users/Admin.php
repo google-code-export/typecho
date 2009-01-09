@@ -72,7 +72,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();
-        $this->_currentPage = Typecho_Request::getParameter('page', 1);
+        $this->_currentPage = $this->request->nil(1)->page;
     
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {

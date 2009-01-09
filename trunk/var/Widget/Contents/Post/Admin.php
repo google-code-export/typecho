@@ -60,7 +60,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     public function execute()
     {
         $this->parameter->setDefault('pageSize=20');
-        $this->_currentPage = $this->request->getParameter('page', 1);
+        $this->_currentPage = $this->request->nil(1)->page;
 
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'post');

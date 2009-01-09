@@ -35,6 +35,22 @@ abstract class Typecho_Widget
     private static $_widgetPool = array();
     
     /**
+     * widget的唯一序列号
+     * 
+     * @access private
+     * @var integer
+     */
+    private static $_widgetResouceId = 0;
+    
+    /**
+     * 当前组件的序列号
+     * 
+     * @access private
+     * @var string
+     */
+    private $_resourceId = NULL;
+    
+    /**
      * 帮手列表
      * 
      * @access private
@@ -344,7 +360,7 @@ abstract class Typecho_Widget
      * @param string $name 帮手名称
      * @return string
      */
-    public function __helper($name)
+    public final function __helper($name)
     {
         switch ($name) {
             case 'request':
@@ -363,5 +379,21 @@ abstract class Typecho_Widget
         }
         
         return $this->_helpers[$name];
+    }
+    
+    /**
+     * 获取当前唯一序列化值
+     * 
+     * @access public
+     * @return unknown
+     */
+    public final function __toString()
+    {
+        if (empty($this->_resourceId)) {
+            self::$_widgetResouceId ++;
+            $this->_resourceId = get_class($this) . '-' . self::$_widgetResouceId;
+        }
+        
+        return $this->_resourceId;
     }
 }

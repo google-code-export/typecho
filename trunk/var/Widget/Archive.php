@@ -1035,11 +1035,11 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item->setTitle($comments->author);
                     $item->setLink($comments->permalink);
                     $item->setDate($comments->date + $this->options->timezone);
-                    $item->setDescription(Typecho_Common::cutParagraph($comments->content));
+                    $item->setDescription($comments->content);
 
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $comments->permalink);
-                        $item->addElement('content:encoded', Typecho_Common::subStr(Typecho_Common::stripTags($comments->content), 0, 100, '...'));
+                        $item->addElement('content:encoded', Typecho_Common::subStr(strip_tags($comments->content), 0, 100, '...'));
                         $item->addElement('author', $comments->author);
                         $item->addElement('dc:creator', $comments->author);
                     }
@@ -1049,6 +1049,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
                 break;
                 
+            case 'index':
+            case 'index_page':
             case 'category':
             case 'category_page':
             case 'tag':
@@ -1070,14 +1072,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** RSS全文输出开关支持 */
                     if ($this->options->feedFullText) {
-                        $item->setDescription($this->text);
+                        $item->setDescription($this->content);
                     } else {
-                        $content = str_replace('<p><!--more--></p>', '<!--more-->', $this->text);
-                        $contents = explode('<!--more-->', $content);
-                        
-                        list($abstract) = $contents;
-                        $item->setDescription(Typecho_Common::fixHtml($abstract) . (count($contents) > 1 ? '<p><a href="'
-                        . $this->permalink . '">' . _t('阅读更多...') . '</a></p>' : NULL));
+                        $item->setDescription(false !== strpos($this->text, '<!--more-->') ? 
+                        $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
                     }
                     
                     $item->setCategory($this->categories);
