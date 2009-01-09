@@ -116,6 +116,7 @@ margin-bottom: 30px;
 
 h2.entry_title {
 margin-bottom: 0;
+overflow: hidden;
 /*font-size: 18px;*/
 color: #BD6800;
 }
@@ -178,6 +179,7 @@ font-weight: bold;
 color: #333;
 }
 .comment_body {
+overflow: hidden;
 }
 
 img.avatar {
@@ -226,6 +228,7 @@ margin: 0;
 list-style-type: none;
 }
 .widget ul li {
+overflow: hidden;
 margin: 0;
 border-bottom: 1px dotted #eaf2ce;
 padding: 3px 0;
