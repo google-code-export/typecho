@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-22 start-02">
-                <div class="message notice">
+                <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <form action="<?php $options->index('Upgrade.do'); ?>" method="post">
                     <h6><?php _e('检测到新版本!'); ?></h6>
                     <blockquote>
