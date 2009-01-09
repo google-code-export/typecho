@@ -1186,6 +1186,7 @@ margin-top: 25px;
     margin: 10px 0 20px 0;
     font-size: 13px;
     border-collapse: collapse;
+	table-layout: fixed;
 }
 
 .typecho-list-table input {
@@ -1209,6 +1210,7 @@ margin-top: 25px;
     height: 32px;
     line-height: 20px;
     padding: 0 5px;
+	overflow: hidden;
 }
 
 .typecho-list-table tbody tr.even, ul.typecho-list-notable li.even {

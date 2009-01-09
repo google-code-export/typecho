@@ -287,7 +287,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
-        $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = trim($contents['text']);
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;
@@ -347,7 +347,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
-        $contents['title'] = $this->request->getParameter('title', _t('未命名文档'));
+        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = trim($contents['text']);
         $contents['created'] = isset($this->request->date) ? 
         strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime;

@@ -52,7 +52,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     {
         $select = $this->select();
         $this->parameter->setDefault('pageSize=20');
-        $this->_currentPage = $this->request->getParameter('page', 1);
+        $this->_currentPage = $this->request->nil(1)->page;
     
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->filter('search')->keywords)) {

@@ -47,8 +47,7 @@ class Typecho_Request
                 $value = $_COOKIE[$key];
                 break;
             default:
-                $value = NULL;
-                break;
+                return $default;
         }
         
         return strlen($value) > 0 ? $value : $default;

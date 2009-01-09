@@ -72,14 +72,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
     protected function ___excerpt()
     {
         $contents = explode('<!--more-->', $this->text);
-        list($abstract) = $contents;
+        list($excerpt) = $contents;
         
-        $abstract = $this->plugin(__CLASS__)->trigger($plugged)->excerpt($abstract);
-        if ($plugged) {
-            return $abstract;
-        } else {
-            return Typecho_Common::cutParagraph($abstract);
+        $excerpt = $this->plugin(__CLASS__)->trigger($plugged)->excerpt($excerpt);
+        if (!$plugged) {
+            $excerpt = Typecho_Common::cutParagraph($excerpt);
         }
+        
+        return $this->plugin(__CLASS__)->excerptEx($excerpt);
     }
     
     /**
@@ -92,11 +92,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         $content = $this->plugin(__CLASS__)->trigger($plugged)->content($this->text);
         
-        if ($plugged) {
-            return $content;
-        } else {
-            return Typecho_Common::cutParagraph($content);
+        if (!$plugged) {
+            $content = Typecho_Common::cutParagraph($content);
         }
+        
+        return $this->plugin(__CLASS__)->contentEx($content);
     }
     
     /**
@@ -385,7 +385,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function content($more = NULL)
     {
         echo NULL !== $more && false !== strpos($this->text, '<!--more-->') ? 
-        $this->excerpt : $this->content;
+        $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">{$more}</a></p>" : $this->content;
     }
 
     /**

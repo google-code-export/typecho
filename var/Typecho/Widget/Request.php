@@ -15,7 +15,7 @@ require_once 'Typecho/Request.php';
  *
  * @package Widget
  */
-class Typecho_Widget_Request
+class Typecho_Widget_Request extends Typecho_Request
 {
     /**
      * 刷新后的参数
@@ -40,6 +40,14 @@ class Typecho_Widget_Request
      * @var array
      */
     private $_filter = array();
+    
+    /**
+     * 默认数据
+     * 
+     * @access private
+     * @var mixed
+     */
+    private $_default = NULL;
     
     /**
      * 支持的过滤器列表
@@ -74,18 +82,6 @@ class Typecho_Widget_Request
         $this->_filter = array();
         return $value;
     }
-
-    /**
-     * 获取参数列表
-     * 
-     * @access public
-     * @return array
-     */
-    public function from()
-    {
-        $args = func_get_args();
-        return call_user_func_array(array($this, 'getParametersFrom'), $args);
-    }
     
     /**
      * 刷新所有request
@@ -104,6 +100,19 @@ class Typecho_Widget_Request
         }
         
         $this->_params = $args;
+    }
+
+    /**
+     * 设置默认值
+     * 
+     * @access public
+     * @param mixed $value 默认值
+     * @return Typecho_Widget_Request
+     */
+    public function nil($value)
+    {
+        $this->_default = $value;
+        return $this;
     }
     
     /**
@@ -124,32 +133,12 @@ class Typecho_Widget_Request
     }
     
     /**
-     * 获取指定的http传递参数
-     *
+     * 获取参数列表
+     * 
      * @access public
-     * @param string $key 指定的参数
-     * @param mixed $default 默认的参数
-     * @return mixed
+     * @return array
      */
-    public function getParameter($name, $default = NULL)
-    {
-        if ($this->_flushed) {
-            $value = isset($this->_params[$name]) ? $this->_params[$name] : $default;
-        } else {
-            $value = Typecho_Request::getParameter($name, $default);
-        }
-
-        return $this->_filter ? $this->_applyFilter($value) : $value;
-    }
-    
-    /**
-     * 从参数列表指定的值中获取http传递参数
-     *
-     * @access public
-     * @param mixed $parameter 指定的参数
-     * @return unknown
-     */
-    public function getParametersFrom($parameter)
+    public function from()
     {
         if (is_array($parameter)) {
             $args = $parameter;
@@ -158,57 +147,11 @@ class Typecho_Widget_Request
             $parameters = array();
         }
 
-        foreach ($args as $arg) {
-            $parameters[$arg] = $this->getParameter($arg);
+        foreach ($args as $name) {
+            $parameters[$name] = $this->{$name};
         }
 
         return $parameters;
-    }
-    
-    /**
-     * 设置http传递参数
-     * 
-     * @access public
-     * @param string $name 指定的参数
-     * @param mixed $value 参数值
-     * @return void
-     */
-    public function setParameter($name, $value)
-    {
-        if ($this->_flushed) {
-            $this->_params[$name] = $value;
-        } else {
-            Typecho_Request::setParameter($name, $value);
-        }
-    }
-    
-    /**
-     * 参数是否存在
-     * 
-     * @access public
-     * @param string $key 指定的参数
-     * @return boolean
-     */
-    public function isSetParameter($key)
-    {
-        if ($this->_flushed) {
-            return isset($this->_params[$key]);
-        } else {
-            return Typecho_Request::isSetParameter($key);
-        }
-    }
-
-    /**
-     * Request包的直接代理
-     * 
-     * @access public
-     * @param string $method 方法名
-     * @param array $args 参数列表
-     * @return mixed
-     */
-    public function __call($method, $args)
-    {
-        return call_user_func_array(array('Typecho_Request', $method), $args);
     }
     
     /**
@@ -220,7 +163,14 @@ class Typecho_Widget_Request
      */
     public function __get($name)
     {
-        return $this->getParameter($name);
+        if ($this->_flushed) {
+            $value = isset($this->_params[$name]) ? $this->_params[$name] : $this->_default;
+        } else {
+            $value = parent::getParameter($name, $this->_default);
+        }
+
+        $this->_default = NULL;
+        return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     
     /**
@@ -233,7 +183,11 @@ class Typecho_Widget_Request
      */
     public function __set($name, $value)
     {
-        $this->setParameter($name, $value);
+        if ($this->_flushed) {
+            $this->_params[$name] = $value;
+        } else {
+            parent::setParameter($name, $value);
+        }
     }
     
     /**
@@ -245,6 +199,10 @@ class Typecho_Widget_Request
      */
     public function __isset($name)
     {
-        return $this->isSetParameter($name);
+        if ($this->_flushed) {
+            return isset($this->_params[$name]);
+        } else {
+            return parent::isSetParameter($name);
+        }
     }
 }
