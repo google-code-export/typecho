@@ -4,7 +4,7 @@
  * 
  * @package Akismet
  * @author qining
- * @version 1.1
+ * @version 1.1.1
  * @link http://typecho.org
  */
 class Akismet_Plugin implements Typecho_Plugin_Interface
@@ -126,7 +126,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
         $url = $options->plugin('Akismet')->url;
         $key = $options->plugin('Akismet')->key;
         
-        $allowedServerVars = array(
+        $allowedServerVars = 'comment-check' == $api ? array(
             'SCRIPT_URI',
             'HTTP_HOST',
             'HTTP_USER_AGENT',
@@ -157,7 +157,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             'REQUEST_URI',
             'SCRIPT_NAME',
             'REQUEST_TIME'
-        );
+        ) : array();
         
         $data = array(
             'blog'                  =>  $options->siteUrl,
