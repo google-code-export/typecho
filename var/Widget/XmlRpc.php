@@ -438,7 +438,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         if (isset($content['dateCreated'])) {
             /** 解决客户端与服务器端时间偏移 */
-            $input['created'] = $content['dateCreated']->getTimestamp() - idate('Z')
+            $input['created'] = $content['dateCreated']->getTimestamp() - $this->options->serverTimezone
             + $this->options->timezone;
         }
         

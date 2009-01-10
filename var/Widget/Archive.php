@@ -292,8 +292,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                     }
                     
                     /** 获取起始GMT时间的unix时间戳 */
-                    $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - idate('z');
-                    $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - idate('z');
+                    $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - $this->options->timezone;
+                    $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - $this->options->timezone;
                     $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
                 }
 
@@ -480,7 +480,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $year = $this->request->filter('int')->year;
                 $month = $this->request->filter('int')->month;
                 $day = $this->request->filter('int')->day;
-                $timezone = idate('Z');
+                $timezone = $this->options->timezone;
                 
                 if (!empty($year) && !empty($month) && !empty($day)) {
                 

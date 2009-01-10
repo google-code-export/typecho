@@ -183,6 +183,17 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 获取系统时区
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___serverTimezone()
+    {
+        return idate('Z');
+    }
+    
+    /**
      * 获取格林尼治标准时间
      * 
      * @access protected
@@ -190,7 +201,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___gmtTime()
     {
-        return time() - idate('Z');
+        return time() - $this->serverTimezone;
     }
 
     /**
