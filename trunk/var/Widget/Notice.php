@@ -99,9 +99,22 @@ class Widget_Notice extends Typecho_Widget
      */
     public function highlight($theId)
     {
+        $this->highlight = $theId;
         $this->response->setCookie('__typecho_notice_highlight', $theId, 
         $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
+    }
+    
+    /**
+     * 获取高亮的id
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getHighlightId()
+    {
+        sscanf($this->highlight, '%s-%d', $type, $id);
+        return $id;
     }
 
     /**
@@ -127,6 +140,9 @@ class Widget_Notice extends Typecho_Widget
                 $notice[$name] = $value;
             }
         }
+        
+        $this->noticeType = $type;
+        $this->push($notice);
         
         $this->response->setCookie('__typecho_notice', $notice, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
