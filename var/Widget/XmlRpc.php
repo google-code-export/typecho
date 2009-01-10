@@ -230,16 +230,16 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             return $this->error;
         }
-        $condition = $this->db->sql()->where('cid = ?', $pageId);
-        if($this->postIsWriteable($condition) && $this->delete($condition))
-        {
-            $this->db->query($this->db->sql()->delete('table.comments')
-                    ->where('cid = ?', $pageId));
+        
+        /** 删除页面 */
+        try {
+            /** 此组件会进行复杂的权限检测 */
+            $page = $this->widget('Widget_Contents_Page_Edit', NULL, "do=delete&cid={$pageId}", false);
+        } catch (Typecho_Widget_Exception $e) {
+            /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        else
-        {
-            return(new IXR_Error(500,_t("无法删除页面")));
-        }
+        
         return true;
     }
 
@@ -311,18 +311,19 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 构建查询*/
         $select = $this->db->select('table.users.uid', 'table.users.name', 'table.users.screenName')->from('table.users');
-        $this->db->fetchAll($select, array($this, 'push'));
+        $authors = $this->db->fetchAll($select);
 
-        $authors = array();
-        while($this->next())
+        $authorStructs = array();
+        foreach ($authors as $author)
         {
-            $authors[] = array(
-                    'user_id'       => $this->uid,
-                    'user_login'    => $this->name,
-                    'display_name'  => $this->screenName,
-                    );
+            $authorStructs[] = array(
+                'user_id'       => $author['uid'],
+                'user_login'    => $author['name'],
+                'display_name'  => $author['screenName']
+            );
         }
-        return $authors;
+        
+        return $authorStructs;
     }
 
     /**
@@ -380,17 +381,20 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $key = Typecho_Common::filterSearchQuery($category);
         $key = '%' . $key . '%';
         $select = $meta->select()->where('table.metas.type = ? AND (table.metas.name LIKE ? OR slug LIKE ?)', 'category', $key, $key);
-        $this->db->fetchAll($select, array($this, 'push'));
+        
+        /** 不要category push到contents的容器中 */
+        $categories = $this->db->fetchAll($select);
+        
         /** 初始化categorise数组*/
-        $categories = array();
-        while($this->next())
-        {
-            $categories[] = array(
-                    'category_id'   => $this->mid,
-                    'category_name' => $this->name,
+        $categoryStructs = array();
+        foreach ($categories as $category) {
+            $categoryStructs[] = array(
+                    'category_id'   => $category['mid'],
+                    'category_name' => $category['name'],
                     );
         }
-        return $categories;
+        
+        return $categoryStructs;
     }
 
     /**about MetaWeblog API, you can see http://www.xmlrpc.com/metaWeblogApi*/
@@ -417,163 +421,61 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input = array();
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
         $input['slug'] = $content['slug'];
+        
         //todo:将IXR_Date转换为时间戳
         //$input['created'] = $content['dateCreated'];
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? $content['description']."\n<!--more-->\n".$content['mt_text_more'] : $content['description'];
-        $input['authorId'] = ('edit' != $content['do'] ? $this->user->uid : NULL);
-        $input['categories'] = $content['categories'];
-        $input['type'] = $content['post_type'];
-        $input['status'] = true == $publish ? 'publish' : 'draft';
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
-            $input['status'] = 'waiting';
-        }
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
-        /** for $input['allowComment']*/
-        if(isset($content["mt_allow_comments"]))
-        {
-            if(!is_numeric($content["mt_allow_comments"]))
-            {
-                switch($content["mt_allow_comments"])
-                {
-                    case "closed":
-                        $input["allowComment"] = 0;
-                        break;
-                    case "open":
-                        $input["allowComment"] = 1;
-                        break;
-                    default:
-                        $input["allowComment"] = $this->options->defaultAllowComment;
-                        break;
-                }
-            }
-            else
-            {
-                switch((int) $content["mt_allow_comments"])
-                {
-                    case 0:
-                        $input["allowComment"] = 0;
-                        break;
-                    case 1:
-                        $input["allowComment"] = 1;
-                        break;
-                    default:
-                        $input["allowComment"] = $this->options->defaultAllowComment;
-                        break;
-                }
+        $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
+        $input['type'] = $content['post_type'];
+        $input['draft'] = !$publish;
+        $input['category'] = array();
+        
+        if (isset($content['postId'])) {
+            $input['cid'] = $content['postId'];
+        }
+        
+        if (isset($content['dateCreated'])) {
+            /** 解决客户端与服务器端时间偏移 */
+            $input['created'] = $content['dateCreated']->getTimestamp() - idate('Z')
+            + $this->options->timezone;
+        }
+        
+        if (!empty($content['categories']) && is_array($content['categories'])) {
+            foreach ($content['categories'] as $category) {
+                $input['category'] = $this->db->fetchObject($this->db->select('mid')
+                ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
+                ->limit(1))->mid;
             }
         }
-        else
-        {
-            $input["allowComment"] = $this->options->defaultAllowComment;
-        }
+        
+        $input['allowComment'] = (isset($content['mt_allow_comments']) && (1 == $content['mt_allow_comments']
+        || 'open' == $content['mt_allow_comments'])) ? 1 : ((isset($content['mt_allow_comments']) && (0 == $content['mt_allow_comments']
+        || 'closed' == $content['mt_allow_comments'])) ? 0 : $this->options->defaultAllowComment);
+        
+        $input['allowPing'] = (isset($content['mt_allow_pings']) && (1 == $content['mt_allow_pings']
+        || 'open' == $content['mt_allow_pings'])) ? 1 : ((isset($content['mt_allow_pings']) && (0 == $content['mt_allow_pings']
+        || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
 
-        /** for $input[allowPing]*/
-        if(isset($content["mt_allow_pings"]))
-        {
-            if(!is_numeric($content["mt_allow_pings"]))
-            {
-                switch($content["mt_allow_pings"])
-                {
-                    case "closed":
-                        $input["allowPing"] = 0;
-                        break;
-                    case "open":
-                        $input["allowPing"] = 1;
-                        break;
-                    default:
-                        $input["allowPing"] = $this->options->defaultAllowPing;
-                        break;
-                }
-            }
-            else
-            {
-                switch((int) $content["mt_allow_pings"])
-                {
-                    case 0:
-                        $input["allowPing"] = 0;
-                        break;
-                    case 1:
-                        $input["allowPing"] = 1;
-                        break;
-                    default:
-                        $input["allowPing"] = $this->options->defaultAllowPing;
-                        break;
-                }
-            }
-        }
-        else
-        {
-            $input["allowPing"] = $this->options->defaultAllowPing;
-        }
         $input['allowFeed'] = $this->options->defaultAllowFeed;
-        if($content['do'] == 'edit')
-        {
-            /** 执行修改动作*/
-            $insertId = $this->update($input, $this->db->sql()->where('cid = ?',
-                        $content['post_id']));
-        }
-        else
-        {
-            /** 执行插入*/
-            if(!$insertId = $this->insert($input))
-            {
-                return new IXR_Error(500, _t('对不起,该文章不能更新.'));
+        
+        /** 调用已有组件 */
+        try {
+            if (isset($input['cid']) {
+                /** 编辑 */
+                $input['do'] = 'edit';
+                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false);
+                return $this->widget('Widget_Notice')->getHighlightId();
+            } else {
+                /** 插入 */
+                $input['do'] = 'insert';
+                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false);
+                return $this->widget('Widget_Notice')->getHighlightId();
             }
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        if($insertId && 'page' != $input['type'] && 'page_draft' != $input['type'])
-        {
-            /** 插入分类 */
-            $categories = array_unique(array_map('trim', $input['categories']));
-
-            /** 取出已有category */
-            $existCategories = Typecho_Common::arrayFlatten($this->db->fetchAll(
-            $this->db->select('table.metas.mid')
-            ->from('table.metas')
-            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-            ->where('table.relationships.cid = ?', $insertId)
-            ->where('table.metas.type = ?', 'category')), 'mid');
-            
-            /** 删除已有category */
-            if ($existCategories) {
-                foreach ($existCategories as $category) {
-                    $this->db->query($this->db->delete('table.relationships')
-                    ->where('cid = ?', $insertId)
-                    ->where('mid = ?', $category));
-                    
-                    if ($count) {
-                        $this->db->query($this->db->update('table.metas')
-                        ->setKeywords('')       //让系统忽略count关键字
-                        ->expression('count', 'count - 1')
-                        ->where('mid = ?', $category));
-                    }
-                }
-            }
-            
-            /** 插入category */
-            if ($input['categories']) {
-                foreach ($input['categories'] as $category) {
-                    $selectCat = $this->db->select()->from('table.metas')->where('table.metas.name = ?',
-                            $category)->where('table.metas.type = ?', 'category')->limit(1);
-                    $cat = $this->db->fetchRow($selectCat);
-                    $this->db->query($this->db->insert('table.relationships')
-                    ->rows(array(
-                        'mid'  =>   $cat['mid'],
-                        'cid'  =>   $insertId
-                    )));
-                    
-                    if ($count) {
-                        $this->db->query($this->db->update('table.metas')
-                        ->setKeywords('')       //让系统忽略count关键字
-                        ->expression('count', 'count + 1')
-                        ->where('mid = ?', $category));
-                    }
-                }
-            }
-        }
-        return $insertId;
-
     }
 
     /**
@@ -589,28 +491,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwEditPost($postId, $userName, $password, $content, $publish)
     {
-        
-        if(!$this->checkAccess($userName, $password))
-        {
-            return $this->error;
-        }
-        /** 过滤id为$postId的post */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
-
-        /** 提交查询 */
-        $post = $this->db->fetchRow($select, array($this, 'filter'));
-
-        /** 验证权限*/
-        if($post['authorId'] != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator'))
-        {
-            return new IXR_Error('503', _t('对不起，你没有权限编辑此文章'));
-        }
-
-        $content['do'] = 'edit';
-        $content['post_id'] = $postId;
-        $content['publish'] = $publish;
-        $data = serialize($content);
-        $this->mwNewPost(1, $userName, $password, $content, $publish);
+        $content['postId'] = $postId;
+        return $this->mwNewPost(1, $userName, $password, $content, $publish);
     }
 
     /**
@@ -638,11 +520,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 对文章内容做截取处理，以获得description和text_more*/
         list($excerpt, $more) = $this->getPostExtended($post->text);
         /** 只需要分类的name*/
-        $theCategory = array();
-        foreach($post->categories as $category)
-        {
-            $theCategory = $category['name'];
-        }
+        $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
+        $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
 
         $postStruct = array(
                 'dateCreated'   => new IXR_Date($this->options->timezone + $post->created),
@@ -652,11 +531,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'title'         => $post->title,
                 'link'          => $post->permalink,
                 'permalink'     => $post->permalink,
-                'categories'    => $theCategory,
+                'categories'    => $categories,
                 'mt_excerpt'    => $excerpt,
                 'mt_text_more'  => $more,
                 'mt_allow_comments' => $post->allowComment,
                 'mt_allow_pings' => $post->allowPing,
+                'mt_keywords'	=> $tags,
                 'wp_slug'       => $post->slug,
                 'wp_password'   => $post->password,
                 'wp_author'     => $post->author->name,
@@ -691,12 +571,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             /** 对文章内容做截取处理，以获得description和text_more*/
             list($excerpt, $more) = $this->getPostExtended($posts->text);
+            
             /** 只需要分类的name*/
-            $theCategory = array();
-            foreach($posts->categories as $category)
-            {
-                $theCategory = $category['name'];
-            }
+            /** 可以用flatten函数处理 */
+            $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
+            $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
              
             $postStruct = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
@@ -706,11 +585,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'title'         => $posts->title,
                     'link'          => $posts->permalink,
                     'permalink'     => $posts->permalink,
-                    'categories'    => $theCategory,
+                    'categories'    => $categories,
                     'mt_excerpt'    => $excerpt,
                     'mt_text_more'  => $more,
                     'mt_allow_comments' => $posts->allowComment,
                     'mt_allow_pings' => $posts->allowPing,
+                    'mt_keywords'	=> $tags,
                     'wp_slug'       => $posts->slug,
                     'wp_password'   => $posts->password,
                     'wp_author'     => $posts->author->name,
@@ -746,23 +626,22 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return ($this->error);
         }
 
-        $meta = $this->widget('Widget_Abstract_Metas');
+        $categories = $this->widget('Widget_Metas_Category_List');
 
-        $this->db->fetchAll($meta->select()->where('type = ?', 'category')
-        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this, 'push'));
         /** 初始化category数组*/
         $categoryStructs = array();
-        while($this->next())
+        while($categories->next())
         {
             $categoryStructs[] = array(
-                    'categoryId'    => $this->mid,
+                    'categoryId'    => $categories->mid,
                     'parentId'      => 0,
-                    'description'   => $this->description,
-                    'categoryName'  => $this->name,
-                    'htmlUrl'       => $this->permalink,
-                    'rssUrl'        => $this->feedRssUrl,
+                    'description'   => $categories->description,
+                    'categoryName'  => $categories->name,
+                    'htmlUrl'       => $categories->permalink,
+                    'rssUrl'        => $categories->feedRssUrl,
                     );
         }
+        
         return $categoryStructs;
     }
 
@@ -809,6 +688,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 读取数据*/
         $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        
         /**初始化*/
         $postTitleStructs = array();
         while($posts->next())
@@ -820,8 +700,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'title'         => $posts->title,
                     );
         }
+        
         return $postTitleStructs;
-
     }
 
     /**
@@ -839,23 +719,20 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             return ($this->error);
         }
-        $meta = $this->widget('Widget_Abstract_Metas');
-
-        /** 构造出查询语句并且查询*/
-        $select = $meta->select()->where('table.metas.type = ?', 'category');
-        $this->db->fetchAll($select, array($this, 'push'));
+        
+        $categories = $this->widget('Widget_Metas_Category_List');
 
         /** 初始化categorise数组*/
-        $categories = array();
-        while($this->next())
+        $categoryStructs = array();
+        while($categories->next())
         {
-            $categories[] = array(
-                    'categoryId'   => $this->mid,
-                    'categoryName' => $this->name,
-                    );
+            $categoryStructs[] = array(
+                'categoryId'   => $category->mid,
+                'categoryName' => $category->name,
+            );
         }
-        return $categories;
-
+        
+        return $categoryStructs;
     }
 
     /**
@@ -909,19 +786,15 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         {
             return $this->error;
         }
-
-        /** 先删除原来的relationships*/
-        $this->db->query($this->db->sql()->where('cid = ?', $postId)->delete('table.relationships'));
-        /** 插入新的relationships*/
-        foreach($categoies as $category)
-        {
-            $categoryId = $category['categoryId'];
-            $array = array(
-                    'cid'   => $postId,
-                    'mid'   => $categoryId,
-                    );
-            $this->db->query($this->db->sql()->insert()->rows($array));
+        
+        try {
+            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
+        
+        $post->setCategories($postId, Typecho_Common::arrayFlatten($categories, 'categoryId'),
+        'publish' == $post->status);
         return true;
     }
 

@@ -148,10 +148,11 @@ abstract class Typecho_Widget
      * @param string $alias 组件别名
      * @param mixed $params 传递的参数
      * @param mixed $request 前端参数
+     * @param boolean $enableResponse 是否允许http回执
      * @return object
      * @throws Typecho_Exception
      */
-    public static function widget($alias, $params = NULL, $request = NULL)
+    public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
         list($className) = explode('@', $alias);
         if (!isset(self::$_widgetPool[$alias])) {
@@ -173,6 +174,10 @@ abstract class Typecho_Widget
             
             if (!empty($request)) {
                 self::$_widgetPool[$alias]->request->flush($request);
+            }
+            
+            if (!$enableResponse) {
+                self::$_widgetPool[$alias]->response->disable();
             }
             
             self::$_widgetPool[$alias]->execute();

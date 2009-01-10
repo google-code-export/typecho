@@ -15,5 +15,50 @@ require_once 'Typecho/Response.php';
  *
  * @package Widget
  */
-class Typecho_Widget_Response extends Typecho_Response
-{}
+class Typecho_Widget_Response
+{
+    /**
+     * 是否激活
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_enabled = true;
+
+    /**
+     * 禁用
+     * 
+     * @access public
+     * @return void
+     */
+    public function disable()
+    {
+        $this->_enabled = false;
+    }
+    
+    /**
+     * 激活
+     * 
+     * @access public
+     * @return void
+     */
+    public function enable()
+    {
+        $this->_enabled = true;
+    }
+
+    /**
+     * 使用代理模式处理闭包
+     * 
+     * @access public
+     * @param unknown $name
+     * @param unknown $args
+     * @return unknown
+     */
+    public function __call($name, $args)
+    {
+        if ($this->_enabled) {
+            return call_user_func_array(array('Typecho_Response', $name), $args);
+        }
+    }
+}
