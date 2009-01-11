@@ -289,7 +289,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = trim($contents['text']);
-        $contents['created'] = isset($this->request->created) ? ($this->request->created - $this->options->timezone)
+        $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime);
 
         /** 提交数据的过滤 */
@@ -349,7 +349,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = trim($contents['text']);
-        $contents['created'] = isset($this->request->created) ? ($this->request->created - $this->options->timezone)
+        $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone : $this->options->gmtTime);
 
         /** 提交数据的过滤 */
