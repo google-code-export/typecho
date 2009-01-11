@@ -462,7 +462,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         /** 调用已有组件 */
         try {
-            if (isset($input['cid']) {
+            if (isset($input['cid'])) {
                 /** 编辑 */
                 $input['do'] = 'edit';
                 $this->widget('Widget_Contents_Post_Edit', NULL, $input, false);
