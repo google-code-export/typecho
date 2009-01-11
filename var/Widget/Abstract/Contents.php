@@ -278,9 +278,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
 
         /** 生成日期 */
-        $value['year'] = date('Y', $value['created'] + $this->options->timezone);
-        $value['month'] = date('m', $value['created'] + $this->options->timezone);
-        $value['day'] = date('d', $value['created'] + $this->options->timezone);
+        $value['year'] = gmdate('Y', $value['created'] + $this->options->timezone);
+        $value['month'] = gmdate('m', $value['created'] + $this->options->timezone);
+        $value['day'] = gmdate('d', $value['created'] + $this->options->timezone);
         
         /** 生成访问权限 */
         $value['hidden'] = false;
@@ -372,7 +372,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo date(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
+        echo gmdate(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
     }
 
     /**

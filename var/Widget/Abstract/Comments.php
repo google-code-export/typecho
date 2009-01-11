@@ -294,7 +294,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo date(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
+        echo gmdate(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
     }
     
     /**
