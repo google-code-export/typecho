@@ -6,7 +6,7 @@
 				<li id="<?php $comments->theId(); ?>">
 					<div class="comment_data"><!-- <?php echo $comments->sequence(); ?> --><strong><?php $comments->author(); ?></strong><br /><?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?></div>
 					<div class="comment_body">
-						<p><?php $comments->content(); ?></p>
+						<?php $comments->content(); ?>
 					</div>
 				</li>
 			<?php endwhile; ?>
