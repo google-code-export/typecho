@@ -69,13 +69,13 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         
         $result = array();
         while ($post = $this->db->fetchRow($resource)) {
-            $date = date($this->parameter->format, $post['created']);
+            $date = gmdate($this->parameter->format, $post['created'] + $this->options->timezone);
             if (isset($result[$date])) {
                 $result[$date]['count'] ++;
             } else {
-                $result[$date]['year'] = date('Y', $post['created']);
-                $result[$date]['month'] = date('m', $post['created']);
-                $result[$date]['day'] = date('d', $post['created']);
+                $result[$date]['year'] = gmdate('Y', $post['created'] + $this->options->timezone);
+                $result[$date]['month'] = gmdate('m', $post['created'] + $this->options->timezone);
+                $result[$date]['day'] = gmdate('d', $post['created'] + $this->options->timezone);
                 $result[$date]['date'] = $date;
                 $result[$date]['count'] = 1;
             }
