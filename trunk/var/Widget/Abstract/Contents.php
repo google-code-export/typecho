@@ -49,7 +49,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___dateWord()
     {
-        return Typecho_I18n::dateWord($this->created + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+        return $this->date->word();
     }
     
     /**
@@ -276,11 +276,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 取出第一个分类作为slug条件 */
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
+        
+        $value['date'] = new Typecho_Date($value['created'], $this->options->timezone);
 
         /** 生成日期 */
-        $value['year'] = gmdate('Y', $value['created'] + $this->options->timezone);
-        $value['month'] = gmdate('m', $value['created'] + $this->options->timezone);
-        $value['day'] = gmdate('d', $value['created'] + $this->options->timezone);
+        $value['year'] = $value['date']->year;
+        $value['month'] = $value['date']->month;
+        $value['day'] = $value['date']->day;
         
         /** 生成访问权限 */
         $value['hidden'] = false;
@@ -372,7 +374,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo gmdate(empty($format) ? $this->options->postDateFormat : $format, $this->created + $this->options->timezone);
+        echo $this->date->format($format);
     }
 
     /**

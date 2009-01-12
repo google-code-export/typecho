@@ -283,7 +283,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $toMonth = $fromMonth;
                         
                         $fromDay = 1;
-                        $toDay = idate('t', gmmktime(0, 0, 0, $toMonth, 1, $year) + $this->options->timezone);
+                        $toDay = gmdate('t', gmmktime(0, 0, 0, $toMonth, 1, $year));
                         
                         if (isset($this->request->day)) {
                             $fromDay = $this->request->filter('int')->day;
@@ -292,8 +292,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                     }
                     
                     /** 获取起始GMT时间的unix时间戳 */
-                    $from = gmmktime(0, 0, 0, $fromMonth, $fromDay, $year) + $this->options->timezone;
-                    $to = gmmktime(23, 59, 59, $toMonth, $toDay, $year) + $this->options->timezone;
+                    $from = gmmktime(0, 0, 0, $fromMonth, $fromDay, $year);
+                    $to = gmmktime(23, 59, 59, $toMonth, $toDay, $year);
                     $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
                 }
 
@@ -485,8 +485,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 if (!empty($year) && !empty($month) && !empty($day)) {
                 
                     /** 如果按日归档 */
-                    $from = gmmktime(0, 0, 0, $month, $day, $year) + $this->options->timezone;
-                    $to = gmmktime(23, 59, 59, $month, $day, $year) + $this->options->timezone;
+                    $from = gmmktime(0, 0, 0, $month, $day, $year);
+                    $to = gmmktime(23, 59, 59, $month, $day, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -495,8 +495,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year) && !empty($month)) {
                 
                     /** 如果按月归档 */
-                    $from = gmmktime(0, 0, 0, $month, 1, $year) + $this->options->timezone;
-                    $to = gmmktime(23, 59, 59, $month, idate('t', $from), $year) + $this->options->timezone;
+                    $from = gmmktime(0, 0, 0, $month, 1, $year);
+                    $to = gmmktime(23, 59, 59, $month, gmdate('t', $from), $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -504,8 +504,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year)) {
                 
                     /** 如果按年归档 */
-                    $from = gmmktime(0, 0, 0, 1, 1, $year) + $this->options->timezone;
-                    $to = gmmktime(23, 59, 59, 12, 31, $year) + $this->options->timezone;
+                    $from = gmmktime(0, 0, 0, 1, 1, $year);
+                    $to = gmmktime(23, 59, 59, 12, 31, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -1010,10 +1010,10 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->_feed->setDescription($this->_description);
         }
 
+        $updateDate = new Typecho_Date($this->options->gmtTime, $this->options->timezone);
         if (Typecho_Feed::RSS2 == $this->_feedType || Typecho_Feed::ATOM1 == $this->_feedType) {
             $this->_feed->setChannelElement(Typecho_Feed::RSS2 == $this->_feedType ? 'pubDate' : 'updated',
-            date(Typecho_Feed::dateFormat($this->_feedType), 
-            $this->options->gmtTime - $this->options->serverTimezone + $this->options->timezone));
+            $updateDate->format(Typecho_Feed::dateFormat($this->_feedType)));
         }
         
         /** 插件接口 */
@@ -1034,7 +1034,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item = $this->_feed->createNewItem();
                     $item->setTitle($comments->author);
                     $item->setLink($comments->permalink);
-                    $item->setDate($comments->date - $this->options->serverTimezone + $this->options->timezone);
+                    $item->setDate($comments->created);
                     $item->setDescription($comments->content);
 
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
@@ -1068,7 +1068,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item = $this->_feed->createNewItem();
                     $item->setTitle($this->title);
                     $item->setLink($this->permalink);
-                    $item->setDate($this->created - $this->options->serverTimezone + $this->options->timezone);
+                    $item->setDate($this->created);
                     
                     /** RSS全文输出开关支持 */
                     if ($this->options->feedFullText) {

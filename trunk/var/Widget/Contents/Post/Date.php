@@ -73,9 +73,9 @@ class Widget_Contents_Post_Date extends Typecho_Widget
             if (isset($result[$date])) {
                 $result[$date]['count'] ++;
             } else {
-                $result[$date]['year'] = gmdate('Y', $post['created'] + $this->options->timezone);
-                $result[$date]['month'] = gmdate('m', $post['created'] + $this->options->timezone);
-                $result[$date]['day'] = gmdate('d', $post['created'] + $this->options->timezone);
+                $result[$date]['year'] = gmdate('Y', $post['created']);
+                $result[$date]['month'] = gmdate('m', $post['created']);
+                $result[$date]['day'] = gmdate('d', $post['created']);
                 $result[$date]['date'] = $date;
                 $result[$date]['count'] = 1;
             }

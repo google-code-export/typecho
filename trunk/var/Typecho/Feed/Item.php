@@ -118,13 +118,13 @@ class Typecho_Feed_Item
 		
 		if ($this->version == Typecho_Feed::ATOM1) {
 			$tag    = 'updated';
-			$value  = date(Typecho_Feed::DATE_ATOM, $date);
+			$value  = gmdate(Typecho_Feed::DATE_ATOM, $date);
 		} elseif ($this->version == Typecho_Feed::RSS2) {
 			$tag    = 'pubDate';
-			$value  = date(Typecho_Feed::DATE_RSS, $date);
+			$value  = gmdate(Typecho_Feed::DATE_RSS, $date);
 		} else {
 			$tag    = 'dc:date';
-			$value  = date("Y-m-d", $date);
+			$value  = gmdate("Y-m-d", $date);
 		}
 		
 		$this->addElement($tag, $value);

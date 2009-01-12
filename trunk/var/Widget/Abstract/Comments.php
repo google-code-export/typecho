@@ -72,7 +72,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___dateWord()
     {
-        return Typecho_I18n::dateWord($this->date + $this->options->timezone, $this->options->gmtTime + $this->options->timezone);
+        return $this->date->word();
     }
     
     /**
@@ -95,7 +95,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function select()
     {
         return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
-        'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', array('table.comments.created' => 'date'))
+        'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', 'table.comments.created')
         ->from('table.comments');
     }
     
@@ -268,6 +268,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function filter(array $value)
     {
+        $value['date'] = new Typecho_Date($value['created'], $this->options->timezone);
         $value = $this->plugin(__CLASS__)->filter($value, $this);
         return $value;
     }
@@ -294,7 +295,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo gmdate(empty($format) ? $this->options->commentDateFormat : $format, $this->date + $this->options->timezone);
+        echo $this->date->format($format);
     }
     
     /**
