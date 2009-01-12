@@ -67,15 +67,18 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         ->where('table.contents.created < ?', $this->options->gmtTime)
         ->order('table.contents.created', Typecho_Db::SORT_DESC));
         
+        $offset = $this->options->timezone - $this->options->serverTimezone;
         $result = array();
         while ($post = $this->db->fetchRow($resource)) {
-            $date = gmdate($this->parameter->format, $post['created'] + $this->options->timezone);
+            $timeStamp = $post['created'] + $offset;
+            $date = date($this->parameter->format, $timeStamp);
+
             if (isset($result[$date])) {
                 $result[$date]['count'] ++;
             } else {
-                $result[$date]['year'] = gmdate('Y', $post['created']);
-                $result[$date]['month'] = gmdate('m', $post['created']);
-                $result[$date]['day'] = gmdate('d', $post['created']);
+                $result[$date]['year'] = date('Y', $timeStamp);
+                $result[$date]['month'] = date('m', $timeStamp);
+                $result[$date]['day'] = date('d', $timeStamp);
                 $result[$date]['date'] = $date;
                 $result[$date]['count'] = 1;
             }
