@@ -45,7 +45,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="425"/>
                         <col width="150"/>
                         <col width="150"/>
-                        <col width="200"/>
+                        <col width="150"/>
                     </colgroup>
                     <thead>
                         <tr>
