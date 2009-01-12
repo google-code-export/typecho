@@ -201,7 +201,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___gmtTime()
     {
-        return time() - $this->serverTimezone;
+        return Typecho_Date::gmtTime();
     }
 
     /**
