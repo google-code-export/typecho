@@ -13,51 +13,60 @@ require_once 'Typecho/I18n.php';
 class Typecho_Date
 {
     /**
-     * GMT时间戳
+     * 期望时区偏移
      * 
-     * @access private
+     * @access public
      * @var integer
      */
-    private $_gmtTime;
-    
-    /**
-     * 时区偏移
-     * 
-     * @access private
-     * @var integer
-     */
-    private $_timezone;
+    public static $timezoneOffset = 0;
     
     /**
      * 服务器时区偏移
      * 
-     * @access private
+     * @access public
      * @var integer
      */
-    private $_serverTimezone;
+    public static $serverTimezoneOffset = 0;
     
     /**
-     * 偏移后的时间
+     * 当前的GMT时间戳
      * 
-     * @access private
+     * @access public
      * @var integer
      */
-    private $_time;
+    public static $gmtTimeStamp;
+    
+    /**
+     * 可以被直接转换的时间戳
+     * 
+     * @access public
+     * @var integer
+     */
+    public $timeStamp = 0;
 
     /**
      * 初始化参数
      * 
      * @access public
      * @param integer $gmtTime GMT时间戳
-     * @param integer $timezone 时区偏移
      * @return void
      */
-    public function __construct($gmtTime, $timezone)
+    public function __construct($gmtTime)
     {
-        $this->_gmtTime = $gmtTime;
-        $this->_timezone = $timezone;
-        $this->_serverTimezone = idate('Z');
-        $this->_time = $gmtTime + ($this->_timezone - $this->_serverTimezone);
+        $this->timeStamp = $gmtTime + (self::$timezoneOffset - self::$serverTimezoneOffset);
+    }
+    
+    /**
+     * 设置当前期望的时区偏移
+     * 
+     * @access public
+     * @param integer $offset
+     * @return void
+     */
+    public static function setTimezoneOffset($offset)
+    {
+        self::$timezoneOffset = $offset;
+        self::$serverTimezoneOffset = idate('Z');
     }
     
     /**
@@ -69,7 +78,7 @@ class Typecho_Date
      */
     public function format($format)
     {
-        return date($format, $this->_time);
+        return date($format, $this->timeStamp);
     }
     
     /**
@@ -80,9 +89,7 @@ class Typecho_Date
      */
     public function word()
     {
-        $now = self::gmtTime() + ($this->_timezone - $this->_serverTimezone);
-        $from = $this->_time;
-        return Typecho_I18n::dateWord($from, $now);
+        return Typecho_I18n::dateWord($this->timeStamp, self::gmtTime() + (self::$timezoneOffset - self::$serverTimezoneOffset));
     }
     
     /**
@@ -96,11 +103,11 @@ class Typecho_Date
     {
         switch ($name) {
             case 'year':
-                return date('Y', $this->_time);
+                return date('Y', $this->timeStamp);
             case 'month':
-                return date('m', $this->_time);
+                return date('m', $this->timeStamp);
             case 'day':
-                return date('d', $this->_time);
+                return date('d', $this->timeStamp);
             default:
                 return;
         }
@@ -114,6 +121,6 @@ class Typecho_Date
      */
     public static function gmtTime()
     {
-        return @gmmktime();
+        return self::$gmtTimeStamp ? self::$gmtTimeStamp : (self::$gmtTimeStamp = @gmmktime());
     }
 }

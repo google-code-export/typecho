@@ -145,7 +145,7 @@ class Typecho_I18n
         
         /** 如果是昨天 */
         if ($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
-            return _t('昨天 %s', gmdate('H:i', $from));
+            return _t('昨天 %s', date('H:i', $from));
         }
         
         /** 如果是一个星期 */
@@ -156,10 +156,10 @@ class Typecho_I18n
         
         /** 如果是 */
         if ($between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
-            return gmdate(_t('n月j日'), $from);
+            return date(_t('n月j日'), $from);
         }
         
-        return gmdate(_t('Y年m月d日'), $from);
+        return date(_t('Y年m月d日'), $from);
     }
     
     /**

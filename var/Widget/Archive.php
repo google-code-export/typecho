@@ -283,7 +283,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                         $toMonth = $fromMonth;
                         
                         $fromDay = 1;
-                        $toDay = gmdate('t', gmmktime(0, 0, 0, $toMonth, 1, $year));
+                        $toDay = date('t', mktime(0, 0, 0, $toMonth, 1, $year));
                         
                         if (isset($this->request->day)) {
                             $fromDay = $this->request->filter('int')->day;
@@ -292,8 +292,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                     }
                     
                     /** 获取起始GMT时间的unix时间戳 */
-                    $from = gmmktime(0, 0, 0, $fromMonth, $fromDay, $year);
-                    $to = gmmktime(23, 59, 59, $toMonth, $toDay, $year);
+                    $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - $this->options->timezone + $this->options->serverTimezone;
+                    $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - $this->options->timezone + $this->options->serverTimezone;
                     $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
                 }
 
@@ -480,13 +480,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $year = $this->request->filter('int')->year;
                 $month = $this->request->filter('int')->month;
                 $day = $this->request->filter('int')->day;
-                $timezone = $this->options->timezone;
                 
                 if (!empty($year) && !empty($month) && !empty($day)) {
                 
                     /** 如果按日归档 */
-                    $from = gmmktime(0, 0, 0, $month, $day, $year);
-                    $to = gmmktime(23, 59, 59, $month, $day, $year);
+                    $from = mktime(0, 0, 0, $month, $day, $year);
+                    $to = mktime(23, 59, 59, $month, $day, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -495,8 +494,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year) && !empty($month)) {
                 
                     /** 如果按月归档 */
-                    $from = gmmktime(0, 0, 0, $month, 1, $year);
-                    $to = gmmktime(23, 59, 59, $month, gmdate('t', $from), $year);
+                    $from = mktime(0, 0, 0, $month, 1, $year);
+                    $to = mktime(23, 59, 59, $month, date('t', $from), $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
@@ -504,15 +503,15 @@ class Widget_Archive extends Widget_Abstract_Contents
                 } else if (!empty($year)) {
                 
                     /** 如果按年归档 */
-                    $from = gmmktime(0, 0, 0, 1, 1, $year);
-                    $to = gmmktime(23, 59, 59, 12, 31, $year);
+                    $from = mktime(0, 0, 0, 1, 1, $year);
+                    $to = mktime(23, 59, 59, 12, 31, $year);
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
                 }
                 
-                $select->where('table.contents.created >= ?', $from - $timezone)
-                ->where('table.contents.created <= ?', $to - $timezone)
+                $select->where('table.contents.created >= ?', $from - $this->options->timezone + $this->options->serverTimezone)
+                ->where('table.contents.created <= ?', $to - $this->options->timezone + $this->options->serverTimezone)
                 ->where('table.contents.type = ?', 'post');
                 
                 /** 设置归档类型 */

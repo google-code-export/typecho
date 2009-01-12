@@ -158,13 +158,13 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
             ->order('post_id', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
             
-            $row['post_content'] = preg_replace(
-            array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-            "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
-            array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
-            $row['post_content']);
-            
             while ($row = $db->fetchRow($result)) {
+                $row['post_content'] = preg_replace(
+                array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+                "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+                array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+                $row['post_content']);
+            
                 $contents->insert(array(
                     'cid'           =>  $row['post_id'],
                     'title'         =>  $row['post_title'],

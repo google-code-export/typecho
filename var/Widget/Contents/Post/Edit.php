@@ -115,7 +115,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if (isset($this->created)) {
             parent::date($format);
         } else {
-            echo gmdate($format, $this->options->gmtTime + $this->options->timezone);
+            echo date($format, $this->options->gmtTime + $this->options->timezone - $this->options->serverTimezone);
         }
     }
     

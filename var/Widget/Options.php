@@ -190,7 +190,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___serverTimezone()
     {
-        return idate('Z');
+        return Typecho_Date::$serverTimezoneOffset;
     }
     
     /**
@@ -216,6 +216,9 @@ class Widget_Options extends Typecho_Widget
         $db->fetchAll($db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
         $this->stack[] = &$this->row;
+        
+        /** 初始化时区 */
+        Typecho_Date::setTimezoneOffset($this->timezone);
         
         /** 初始化站点信息 */
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
