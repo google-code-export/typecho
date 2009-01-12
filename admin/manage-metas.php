@@ -36,8 +36,8 @@ include 'menu.php';
                             <col width="150"/>
                             <col width="50"/>
                             <col width="150"/>
-                            <col width="350"/>
-                            <col width="85"/>
+                            <col width="190"/>
+                            <col width="65"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -64,7 +64,7 @@ include 'menu.php';
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
                                 <td><?php $categories->description(); ?></td>
-                                <td><a class="balloon-button size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
+                                <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
                             </tr>
                             <?php endwhile; ?>
                             <?php else: ?>

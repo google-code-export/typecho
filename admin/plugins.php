@@ -18,7 +18,7 @@ include 'menu.php';
                         <col width="390"/>
                         <col width="100"/>
                         <col width="125"/>
-                        <col width="175"/>
+                        <col width="125"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -70,7 +70,7 @@ include 'menu.php';
                         <col width="390"/>
                         <col width="100"/>
                         <col width="125"/>
-                        <col width="175"/>
+                        <col width="125"/>
                     </colgroup>
                     <thead>
                         <tr>
