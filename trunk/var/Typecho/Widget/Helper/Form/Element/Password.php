@@ -33,7 +33,7 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
     public function input($name = NULL, array $options = NULL)
     {
         $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0', 
-        'name' => $name, 'type' => 'password'));
+        'name' => $name, 'type' => 'password', 'class' => 'password'));
         $this->label->setAttribute('for', $name . '-0');
         $this->container($input);
         return $input;
