@@ -72,8 +72,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
         
-        $comment['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
-        $this->request->text, $this->options->commentsHTMLTagAllowed)));
+        $comment['text'] = $this->request->filter(array($this, 'filterText'))->text;
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
@@ -153,8 +152,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         $trackback['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->blog_name;
         $trackback['url'] = $this->request->filter('url')->url;
-        $trackback['text'] = nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
-        $this->request->excerpt, $this->options->commentsHTMLTagAllowed)));
+        $trackback['text'] = $this->request->filter(array($this, 'filterText'))->excerpt;
         
         //检验格式
         $validator = new Typecho_Validate();
@@ -177,6 +175,22 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 返回正确 */
         $this->response->throwXml(array('success' => 0, 'message' => 'Trackback has registered.'));
+    }
+    
+    /**
+     * 过滤评论内容
+     * 
+     * @access public
+     * @param string $text 评论内容
+     * @return string
+     */
+    public function filterText($text)
+    {
+        $text = str_replace("\r", '', trim($text));
+        $text = preg_replace("/\n{2,}/", "\n\n", $text);
+    
+        return nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
+        $text, $this->options->commentsHTMLTagAllowed)));
     }
     
     /**
