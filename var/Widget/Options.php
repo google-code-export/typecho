@@ -28,6 +28,26 @@ class Widget_Options extends Typecho_Widget
     private $_pluginConfig = array();
     
     /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
+     * 构造函数
+     * 
+     * @access public
+     * @return void
+     */
+    public function __construct()
+    {
+        /** 初始化数据库 */
+        $this->db = Typecho_Db::get();
+    }
+    
+    /**
      * RSS2.0
      * 
      * @access protected
@@ -212,8 +232,7 @@ class Widget_Options extends Typecho_Widget
      */
     public function execute()
     {
-        $db = Typecho_Db::get();
-        $db->fetchAll($db->select()->from('table.options')
+        $this->db->fetchAll($this->db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
         $this->stack[] = &$this->row;
         
@@ -251,9 +270,8 @@ class Widget_Options extends Typecho_Widget
     {
         if ($parsedRoutingTable) {
             $this->routingTable = array_merge(array($parsedRoutingTable), $this->routingTable);
-            $db = Typecho_Db::get();
             $this->widget('Widget_Abstract_Options')->update(array('value' => serialize($this->routingTable)),
-            $db->sql()->where('name = ?', 'routingTable'));
+            $this->db->sql()->where('name = ?', 'routingTable'));
         }
     }
     

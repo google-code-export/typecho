@@ -158,7 +158,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addInput($mail);
         
         /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同，用于前台显示.<br />
+        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
         如果你将此项留空,将默认使用用户名.'));
         $form->addInput($screenName);
         
@@ -168,11 +168,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addInput($password);
         
         /** 用户密码确认 */
-        $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码,与上面输入的密码保持一致.'));
+        $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码, 与上面输入的密码保持一致.'));
         $form->addInput($confirm);
         
         /** 个人主页地址 */
-        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址,请用<strong>http://</strong>开头.'));
+        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址, 请用<strong>http://</strong>开头.'));
         $form->addInput($url);
         
         /** 用户组 */

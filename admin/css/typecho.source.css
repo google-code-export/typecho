@@ -1392,8 +1392,16 @@ ul.typecho-list-notable li {
     width: 475px;
 }
 
+.typecho-page-main .typecho-option input.password {
+	width: 300px;
+}
+
 .typecho-page-main .typecho-mini-panel .typecho-option input.text {
 	width: 280px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option input.password {
+	width: 200px;
 }
 
 .typecho-page-main .typecho-option input.mini {
@@ -1422,6 +1430,39 @@ ul.typecho-list-notable li {
 
 .typecho-page-main .typecho-option-submit {
     border-bottom: none;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option label.typecho-label {
+    width: 100px;
+    margin-left: -110px;
+}
+
+.typecho-page-main .typecho-content-panel ul.typecho-option {
+	border: none;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option-focus {
+	background: #DEE4C5;
+	margin: 0 0 10px 0;
+	padding: 5px;
+}
+
+.typecho-page-main .typecho-content-panel ul.typecho-option-focus li {
+	margin: 10px 0 0 0;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option li {
+	padding-left: 110px;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option-submit li {
+	padding-left: 15px;
+}
+
+.typecho-page-main .typecho-content-panel h3 {
+	font-size: 18px;
+	padding: 0;
+	margin: 30px 0 10px 0;
 }
 
 /**

@@ -14,7 +14,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             
                 <div class="intro-link">
                     <ul>
-                        <li><a href="#"><?php _e('更新我的资料'); ?></a></li>
+                        <li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>
                         <?php if($user->pass('contributor', true)): ?>
                         <li><a href="<?php $options->adminUrl('write-post.php'); ?>"><?php _e('撰写一篇新文章'); ?></a></li>
                         <?php if($user->pass('editor', true) && 'on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?> 
