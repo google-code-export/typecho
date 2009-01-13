@@ -110,7 +110,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $page['author_name'] = $this->author->name;
         $page['author_screen_name'] = $this->author->screenName;
         /** 对文章内容做截取处理，以获得description和text_more*/
-        list($excerpt, $more) = $this->getPostExtended($page->text);
+        list($excerpt, $more) = $this->getPostExtended($page->content);
 
         $pageStruct = array(
                 'dateCreated'   => new IXR_Date($this->options->timezone + $page->created),
@@ -163,7 +163,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         while ($pages->next()) {
             /** 对文章内容做截取处理，以获得description和text_more*/
-            list($excerpt, $more) = $this->getPostExtended($pages->text);
+            list($excerpt, $more) = $this->getPostExtended($pages->content);
             $pageStructs[] = array(
                 'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
                 'userid'        => $pages->authorId,
@@ -515,7 +515,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 对文章内容做截取处理，以获得description和text_more*/
-        list($excerpt, $more) = $this->getPostExtended($post->text);
+        list($excerpt, $more) = $this->getPostExtended($post->content);
         /** 只需要分类的name*/
         $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
         $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
@@ -560,21 +560,21 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize={$postsNum}", 'status=all');
 
         $postStructs = array();
         /** 如果这个post存在则输出，否则输出错误 */
         while($posts->next())
         {
             /** 对文章内容做截取处理，以获得description和text_more*/
-            list($excerpt, $more) = $this->getPostExtended($posts->text);
+            list($excerpt, $more) = $this->getPostExtended($posts->content);
             
             /** 只需要分类的name*/
             /** 可以用flatten函数处理 */
             $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
             $tags = Typecho_Common::arrayFlatten($posts->tags, 'name');
              
-            $postStruct = array(
+            $postStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
                     'userid'        => $posts->authorId,
                     'postid'       => $posts->cid,
@@ -594,17 +594,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'wp_author_id'  => $posts->authorId,
                     'wp_author_display_name' => $posts->author->screenName,
                     );
-            $postStructs[] = $postStruct;
         }
-        if($postStructs)
-        {
-            return $postStructs;
 
-        }
-        else
-        {
-           return new IXR_Error(404, _t('对不起，没有任何文章'));
-        }
+        return $postStructs;
     }
 
     /**

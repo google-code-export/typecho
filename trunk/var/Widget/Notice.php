@@ -113,8 +113,7 @@ class Widget_Notice extends Typecho_Widget
      */
     public function getHighlightId()
     {
-        sscanf($this->highlight, '%s-%d', $type, $id);
-        return $id;
+        return preg_match("/[0-9]+/", $this->highlight, $matches) ? $matches[0] : 0;
     }
 
     /**

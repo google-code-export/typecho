@@ -62,6 +62,7 @@ class Widget_ExceptionHandle extends Typecho_Widget
         
         //~ 执行
         $this->execute();
+        exit;
     }
     
     /**
