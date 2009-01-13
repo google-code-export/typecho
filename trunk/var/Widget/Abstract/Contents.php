@@ -214,8 +214,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
         
         /** 更新缩略名 */
-        $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $cid);
-        $this->db->query($updateCondition->update('table.contents')->rows(array('slug' => $slug)));
+        $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug']);
+        $updateQuery = $updateCondition->update('table.contents')->rows(array('slug' => $slug));
+        
+        if (NULL === $slug) {
+        	$updateQuery->expression('slug', 'cid');
+        }
+        
+        $this->db->query($updateQuery);
 
         return $updateRows;
     }
