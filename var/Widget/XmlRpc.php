@@ -422,8 +422,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
         $input['slug'] = $content['slug'];
         
-        //todo:将IXR_Date转换为时间戳
-        //$input['created'] = $content['dateCreated'];
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? $content['description']."\n<!--more-->\n".$content['mt_text_more'] : $content['description'];
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
@@ -464,12 +462,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             if (isset($input['cid'])) {
                 /** 编辑 */
                 $input['do'] = 'edit';
-                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false);
+                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->updatePost();
                 return $this->widget('Widget_Notice')->getHighlightId();
             } else {
                 /** 插入 */
                 $input['do'] = 'insert';
-                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false);
+                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->insertPost();
                 return $this->widget('Widget_Notice')->getHighlightId();
             }
         } catch (Typecho_Widget_Exception $e) {
@@ -573,8 +571,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             
             /** 只需要分类的name*/
             /** 可以用flatten函数处理 */
-            $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
-            $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
+            $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
+            $tags = Typecho_Common::arrayFlatten($posts->tags, 'name');
              
             $postStruct = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
