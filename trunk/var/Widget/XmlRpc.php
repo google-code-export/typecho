@@ -441,7 +441,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         if (!empty($content['categories']) && is_array($content['categories'])) {
             foreach ($content['categories'] as $category) {
-                $input['category'] = $this->db->fetchObject($this->db->select('mid')
+                $input['category'][] = $this->db->fetchObject($this->db->select('mid')
                 ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
                 ->limit(1))->mid;
             }
@@ -457,11 +457,15 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
         
+        
         /** 调用已有组件 */
         try {
             if (isset($input['cid'])) {
                 /** 编辑 */
                 $input['do'] = 'edit';
+                if(empty($input['slug'])) {
+                    unset($input['slug']);
+                }
                 $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->updatePost();
                 return $this->widget('Widget_Notice')->getHighlightId();
             } else {
