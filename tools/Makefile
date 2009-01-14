@@ -10,7 +10,9 @@ svnup:
 	rm -Rf build/
 	svn up ../
 	svn export ../ build
-	for i in `find -name *.source.css`; do php build.css.php "$$i"; done;
+	for i in `find -name *.source.css`; do java -jar yuicompressor-2.4.2.jar $$i -o $$i -v; done;
+	for i in `find -name *.source.js`; do java -jar yuicompressor-2.4.2.jar $$i -o $$i -v; done;
+
 
 package:
 	@echo 'package'

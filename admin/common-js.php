@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/mootools-1.2.1-core-yc.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/mootools-1.2.1-more.js'); ?>"></script>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho-ui.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho-ui.source.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
