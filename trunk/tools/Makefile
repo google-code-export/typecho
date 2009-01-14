@@ -10,7 +10,7 @@ svnup:
 	rm -Rf build/
 	svn up ../
 	svn export ../ build
-	for i in `find -name *.source.css`; do php build.css.php "$i"; done;
+	for i in `find -name *.source.css`; do php build.css.php "$$i"; done;
 
 package:
 	@echo 'package'
