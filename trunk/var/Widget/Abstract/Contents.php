@@ -157,11 +157,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
+        
         /** 更新缩略名 */
-        $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug'], $insertId);
-        $this->db->query($this->db->update('table.contents')
-        ->rows(array('slug' => $slug))
-        ->where('cid = ?', $insertId));
+        if ($insertId > 0) {
+            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $insertId);
+        }
 
         return $insertId;
     }
@@ -214,14 +214,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
         
         /** 更新缩略名 */
-        $slug = Typecho_Common::slugName(empty($content['slug']) ? NULL : $content['slug']);
-        $updateQuery = $updateCondition->update('table.contents')->rows(array('slug' => $slug));
-        
-        if (NULL === $slug) {
-        	$updateQuery->expression('slug', 'cid');
+        if ($updateRows > 0 && !isset($content['slug'])) {
+            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $condition);
         }
-        
-        $this->db->query($updateQuery);
 
         return $updateRows;
     }
@@ -236,6 +231,39 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function delete(Typecho_Db_Query $condition)
     {
         return $this->db->query($condition->delete('table.contents'));
+    }
+    
+    /**
+     * 为内容应用缩略名
+     * 
+     * @access public
+     * @param string $slug 缩略名
+     * @param mixed $cid 内容id
+     * @return string
+     */
+    public function applySlug($slug, $cid)
+    {
+        if ($cid instanceof Typecho_Db_Query) {
+            $cid = $this->db->fetchObject($cid->select('cid')
+            ->from('table.contents')->limit(1))->cid;
+        }
+    
+        /** 生成一个非空的缩略名 */
+        $slug = Typecho_Common::slugName($slug, $cid);
+        $result = $slug;
+        
+        /** 判断是否在数据库中已经存在 */
+        $count = 1;
+        while ($this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+        ->from('table.contents')->where('slug = ? AND cid <> ?', $result, $cid))->num > 0) {
+            $result = $slug . '-' . $count;
+            $count ++;
+        }
+        
+        $this->db->query($this->db->update('table.contents')->rows(array('slug' => $result))
+        ->where('cid = ?', $cid));
+        
+        return $result;
     }
 
     /**
