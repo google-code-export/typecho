@@ -58,6 +58,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
         
+        /** 用户动作 */
+        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'profile');
+        $form->addInput($do);
+        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新我的档案'));
         $form->addItem($submit);
@@ -85,7 +89,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function optionsForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Writing.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 自动保存 */
@@ -112,6 +116,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->options->defaultAllowFeed, _t('默认允许聚合'));
         $form->addInput($defaultAllowFeed);
         
+        /** 用户动作 */
+        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'options');
+        $form->addInput($do);
+        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
@@ -128,7 +136,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function passwordForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 用户密码 */
@@ -140,10 +148,15 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码, 与上面输入的密码保持一致.'));
         $form->addInput($confirm);
         
+        /** 用户动作 */
+        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'password');
+        $form->addInput($do);
+        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新密码'));
         $form->addItem($submit);
         
+        $password->addRule('required', _t('必须填写密码'));
         $password->addRule('minLength', _t('为了保证账户安全, 请输入至少六位的密码'), 6);
         $confirm->addRule('confirm', _t('两次输入的密码不一致'), 'password');
         
@@ -187,17 +200,52 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function updateOptions()
     {
-        /** 验证格式 */
-        if ($this->form()->validate()) {
-            $this->response->goBack();
-        }
-    
         $settings = $this->request->from('autoSave', 'defaultAllowComment', 'defaultAllowPing', 'defaultAllowFeed');
+
         foreach ($settings as $name => $value) {
-            $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
+            if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
+            ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
+                $this->widget('Widget_Abstract_Options')
+                ->update(array('value' => $value), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
+            } else {
+                $this->widget('Widget_Abstract_Options')->insert(array(
+                    'name'  =>  $name,
+                    'value' =>  $value,
+                    'user'  =>  $this->user->uid
+                ));
+            }
         }
 
         $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->response->goBack();
+    }
+    
+    /**
+     * 更新密码
+     * 
+     * @access public
+     * @return void
+     */
+    public function updatePassword()
+    {
+        /** 验证格式 */
+        if ($this->passwordForm()->validate()) {
+            $this->response->goBack();
+        }
+        
+        $password = Typecho_Common::hash($this->request->password);
+        
+        /** 更新数据 */
+        $this->update(array('password' => $password),
+        $this->db->sql()->where('uid = ?', $this->user->uid));
+        
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
+        
+        /** 提示信息 */
+        $this->widget('Widget_Notice')->set(_t('密码已经成功修改'), NULL, 'success');
+        
+        /** 转向原页 */
         $this->response->goBack();
     }
     
@@ -209,7 +257,9 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function action()
     {
-        $this->onPost()->updateProfile();
+        $this->onRequest('do', 'profile')->updateProfile();
+        $this->onRequest('do', 'options')->updateOptions();
+        $this->onRequest('do', 'password')->updatePassword();
         $this->response->redirect($this->options->adminUrl);
     }
 }

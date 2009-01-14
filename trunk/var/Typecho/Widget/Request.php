@@ -138,7 +138,7 @@ class Typecho_Widget_Request extends Typecho_Request
      * @access public
      * @return array
      */
-    public function from()
+    public function from($parameter)
     {
         if (is_array($parameter)) {
             $args = $parameter;
