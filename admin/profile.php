@@ -11,7 +11,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-16 start-01 typecho-content-panel">
-                <h4><?php $user->name(); ?><cite>(<?php $user->screenName(); ?>)</cite></h4>
+                <h4>
+                <?php echo '<img src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=20&r=X' .
+                '&d=" alt="' . $user->name . '" width="20" height="20" />'; ?>
+                <?php $user->name(); ?><cite>(<?php $user->screenName(); ?>)</cite>
+                </h4>
                 <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
                 <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>

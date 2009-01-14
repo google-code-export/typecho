@@ -1455,9 +1455,23 @@ ul.typecho-list-notable li {
 
 .typecho-page-main .typecho-content-panel h3 {
 	font-size: 18px;
-	padding: 0;
-	margin: 30px 0 20px 0;
+	padding: 10px 0;
+	margin: 20px 0;
 	color: #e47e00;
+	border-bottom: 1px solid #E8EDD6;
+}
+
+.typecho-page-main .typecho-content-panel h4 cite {
+	color: #777;
+	font-style: normal;
+	font-size: 13px;
+	font-weight: normal;
+	margin-left: 5px;
+}
+
+.typecho-page-main .typecho-content-panel h4 img {
+	margin-bottom: -2px;
+	margin-right: -3px;
 }
 
 /**
