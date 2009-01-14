@@ -214,7 +214,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
         
         /** 更新缩略名 */
-        if ($updateRows > 0 && !isset($content['slug'])) {
+        if ($updateRows > 0 && isset($content['slug'])) {
             $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $condition);
         }
 
