@@ -16,7 +16,6 @@ if (!is_file($file)) {
     exit;
 }
 
-$oldSize = filesize($file);
 $lines = file_get_contents($file);
 $result = array();
 $hacks = array();
@@ -61,5 +60,4 @@ foreach ($final as $key => $val) {
 
 $string .= implode('', $hacks);
 file_put_contents($file, $string);
-$newSize = filesize($file);
-echo 'compiled: ' . $file . " {$oldSize} -> {$newSize}\n";
+echo 'compiled: ' . $file . "\n";
