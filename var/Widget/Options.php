@@ -236,13 +236,20 @@ class Widget_Options extends Typecho_Widget
         ->where('user = 0'), array($this, 'push'));
         $this->stack[] = &$this->row;
         
-        /** 初始化时区 */
-        Typecho_Date::setTimezoneOffset($this->timezone);
-        
         /** 初始化站点信息 */
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
+        
+        /** 自动初始化路由表 */
         $this->routingTable = unserialize($this->routingTable);
+        if (!isset($this->routingTable[0])) {
+            /** 解析路由并缓存 */
+            $parser = new Typecho_Router_Parser($this->routingTable);
+            $parsedRoutingTable = $parser->parse();
+            $this->routingTable = array_merge(array($parsedRoutingTable), $this->routingTable);
+            $this->widget('Widget_Abstract_Options')->update(array('value' => serialize($this->routingTable)),
+            $this->db->sql()->where('name = ?', 'routingTable'));
+        }
     }
 
     /**
@@ -257,22 +264,6 @@ class Widget_Options extends Typecho_Widget
         //将行数据按顺序置位
         $this->row[$value['name']] = $value['value'];
         return $value;
-    }
-    
-    /**
-     * 缓存路由表
-     * 
-     * @access public
-     * @param array $parsedTable 已经解析的路由表
-     * @return void
-     */
-    public function cacheRoutingTable($parsedRoutingTable)
-    {
-        if ($parsedRoutingTable) {
-            $this->routingTable = array_merge(array($parsedRoutingTable), $this->routingTable);
-            $this->widget('Widget_Abstract_Options')->update(array('value' => serialize($this->routingTable)),
-            $this->db->sql()->where('name = ?', 'routingTable'));
-        }
     }
     
     /**

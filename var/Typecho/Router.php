@@ -25,14 +25,6 @@ class Typecho_Router
      * @var string
      */
     public static $current;
-    
-    /**
-     * 已经解析的路由表
-     * 
-     * @access public
-     * @var array
-     */
-    public static $parsedRoutingTable;
 
     /**
      * 已经解析完毕的路由表配置
@@ -144,7 +136,7 @@ class Typecho_Router
         } else {
             /** 解析路由配置 */
             $parser = new Typecho_Router_Parser($routes);
-            self::$_routingTable = self::$parsedRoutingTable = $parser->parse($routes);
+            self::$_routingTable = $parser->parse();
         }
     }
 

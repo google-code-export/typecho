@@ -1441,12 +1441,6 @@ ul.typecho-list-notable li {
 	border: none;
 }
 
-.typecho-page-main .typecho-content-panel .typecho-option-focus {
-	background: #DEE4C5;
-	margin: 0 0 10px 0;
-	padding: 5px;
-}
-
 .typecho-page-main .typecho-content-panel ul.typecho-option-focus li {
 	margin: 10px 0 0 0;
 }
@@ -1456,13 +1450,14 @@ ul.typecho-list-notable li {
 }
 
 .typecho-page-main .typecho-content-panel .typecho-option-submit li {
-	padding-left: 15px;
+	padding-top: 15px;
 }
 
 .typecho-page-main .typecho-content-panel h3 {
 	font-size: 18px;
 	padding: 0;
-	margin: 30px 0 10px 0;
+	margin: 30px 0 20px 0;
+	color: #e47e00;
 }
 
 /**

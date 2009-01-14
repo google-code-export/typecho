@@ -44,6 +44,11 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
+        /** 用户昵称 */
+        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
+        如果你将此项留空,将默认使用用户名.'));
+        $form->addInput($screenName);
+        
         /** 个人主页地址 */
         $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址, 请用<strong>http://</strong>开头.'));
         $form->addInput($url);
@@ -52,11 +57,6 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
         请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
-        
-        /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
-        如果你将此项留空,将默认使用用户名.'));
-        $form->addInput($screenName);
         
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新我的档案'));
@@ -87,11 +87,6 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Writing.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
-        
-        /** 编辑器大小 */
-        $editorSize = new Typecho_Widget_Helper_Form_Element_Text('editorSize', NULL, $this->options->editorSize,
-        _t('编辑器大小'), _t('所见即所得编辑器的大小.'));
-        $form->addInput($editorSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',
@@ -197,7 +192,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             $this->response->goBack();
         }
     
-        $settings = $this->request->from('editorSize', 'autoSave', 'defaultAllowComment', 'defaultAllowPing', 'defaultAllowFeed');
+        $settings = $this->request->from('autoSave', 'defaultAllowComment', 'defaultAllowPing', 'defaultAllowFeed');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
