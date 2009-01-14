@@ -226,6 +226,9 @@ Typecho_Router::setRoutes(\$options->routingTable);
 
 /** 初始化插件 */
 Typecho_Plugin::init(\$options->plugins);
+
+/** 初始化时区 */
+Typecho_Date::setTimezoneOffset(\$options->timezone);
 ";
 
                                     file_put_contents('./config.inc.php', implode('', $lines));

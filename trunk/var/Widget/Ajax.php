@@ -52,13 +52,13 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             
             list($soft, $version) = explode(' ', $this->options->generator);
             $current = explode('/', $version);
-            $version = str_replace('/', '.', $version);
             
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
                     $title = trim($matches[2][$key]);
                     if (preg_match("/([0-9\.]+)\(([0-9\.]+)\)\-release/is", $title, $out)) {
-                        if (version_compare($out[1] . '.' . $out[2], $version, '>')) {
+                        if (version_compare($out[1], $current[0], '>=')
+                        && version_compare($out[2], $current[1], '>')) {
                             $result = array('available' => 1, 'latest' => $out[1],
                             'current' => $current[0], 'link' => $matches[1][$key]);
                             break;

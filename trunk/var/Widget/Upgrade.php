@@ -69,7 +69,12 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
             $file = __TYPECHO_ROOT_DIR__ . '/usr/upgrade/' . $package . '/upgrade.php';
             if (is_file($file)) {
                 /** 执行升级脚本 */
-                require_once $file;
+                try {
+                    require_once $file;
+                } catch (Typecho_Exception $e) {
+                    $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                    $this->response->goBack();
+                }
             }
         }
         
