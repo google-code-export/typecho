@@ -1199,7 +1199,7 @@ EOF;
 EOF;
         } else {
             /** 直接把初始化放到这里 */
-            new Ixr_Server(array(
+            new IXR_Server(array(
                 /** WordPress API */
                 'wp.getPage'            => array($this,'wpGetPage'),
                 'wp.getPages'            => array($this,'wpGetPages'),
