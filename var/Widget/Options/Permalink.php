@@ -63,6 +63,8 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
             }
             
             return false;
+        } else if (file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')) {
+            @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
         }
         
         return true;

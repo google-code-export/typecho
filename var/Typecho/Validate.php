@@ -110,12 +110,12 @@ class Typecho_Validate
         // Cycle through the rules and test for errors
         foreach ($rules as $key => $rules) {
             $this->_key = $key;
-            $data[$key] = empty($data[$key]) ? NULL : $data[$key];
+            $data[$key] = (0 == strlen($data[$key])) ? NULL : $data[$key];
 
             foreach ($rules as $params) {
                 $method = $params[0];
                 
-                if ('required' != $method && 'confirm' != $method && empty($data[$key])) {
+                if ('required' != $method && 'confirm' != $method && 0 == strlen($data[$key])) {
                     continue;
                 }
                 
