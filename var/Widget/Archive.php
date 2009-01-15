@@ -732,6 +732,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
         $this->created, $this->options->gmtTime)
+        ->where('table.contents.status = ?', 'publish')
         ->where('table.contents.type = ?', $this->type)
         ->where('table.contents.password IS NULL')
         ->order('table.contents.created', Typecho_Db::SORT_ASC)
@@ -757,6 +758,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function thePrev($format = '%s', $default = NULL)
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
+        ->where('table.contents.status = ?', 'publish')
         ->where('table.contents.type = ?', $this->type)
         ->where('table.contents.password IS NULL')
         ->order('table.contents.created', Typecho_Db::SORT_DESC)

@@ -27,7 +27,7 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
      */
     public function execute()
     {
-        $this->parameter->setDefault(array('sort' => 'count', 'ignoreZeroCount' => false, 'desc' => true));
+        $this->parameter->setDefault(array('sort' => 'count', 'ignoreZeroCount' => false, 'desc' => true, 'limit' => 0));
         $select = $this->select()->where('type = ?', 'tag')->order($this->parameter->sort,
         $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
         
@@ -35,6 +35,12 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
         if($this->parameter->ignoreZeroCount)
         {
             $select->where('count > 0');
+        }
+        
+        /** 总数限制 */
+        if ($this->parameter->limit)
+        {
+            $select->limit($this->parameter->limit);
         }
         
         $this->db->fetchAll($select, array($this, 'push'));
