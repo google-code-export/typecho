@@ -22,6 +22,12 @@ class Typecho_Common
     /** 默认不解析的标签列表 */
     const LOCKED_HTML_TAG = 'code|script';
     
+    /** 布局标签 */
+    const GRID_HTML_TAG = 'div|blockquote|pre|table|tr|th|td|li|ol|ul|h[1-6]';
+    
+    /** 元素标签 */
+    const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
+    
     /** 程序版本 */
     const VERSION = '0.4/9.1.15';
     
@@ -86,33 +92,6 @@ class Typecho_Common
             "/\(\s*(\"|')/i",           //函数开头
             "/(\"|')\s*\)/i",           //函数结尾
         ), '', $string);
-    }
-    
-    /**
-     * 处理段落
-     * 
-     * @access public
-     * @param array $matches 匹配值
-     * @return string
-     */
-    public static function __parseParagraph(array $matches)
-    {
-        $matches[4] = preg_replace(
-        array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
-        array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
-        $matches[4]);
-        
-        if ('/' == $matches[1] && empty($matches[5])) {
-            if (false !== strpos('div|blockquote|pre|table|ol|ul', $matches[2]) && 
-            false !== strpos('div|blockquote|pre|table|ol|ul', $matches[6])) {
-                if ('' != strip_tags($cut = trim($matches[4]))) {
-                    $matches[4] = '<p>' . $cut . '</p>';
-                }
-            }
-        }
-
-        return "<{$matches[1]}{$matches[2]}{$matches[3]}>{$matches[4]}<{$matches[5]}{$matches[6]}{$matches[7]}>";
     }
     
     /**
@@ -641,17 +620,18 @@ class Typecho_Common
         /** 锁定开标签 */
         $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_Common', '__lockHTML'), $string);
 
+        $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>\s*/ise",
+        "'<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>'", $string);
+        $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>/ise",
+        "'<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>'", $string);
+
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
         $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */
-        $string = preg_replace("/\<p\>\s*\<h([1-6])([^\>]*)\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1\\2>\\3</h\\1>\n", $string);
-        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.*?)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1\\2>\\3</\\1>\n", $string);
-        $string = preg_replace_callback("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.+?)\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>/is",
-        array('Typecho_Common', '__parseParagraph'), $string);
-
+        $string = preg_replace("/<p><(" . self::GRID_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }
     
