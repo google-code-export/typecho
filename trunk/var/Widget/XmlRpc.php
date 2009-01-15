@@ -122,7 +122,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $page->permalink,
                 'permalink'     => $page->permalink,
                 'categories'    => $page->categories,
-                'excerpt'       => $excerpt,
+                'excerpt'       => NULL,
                 'text_more'     => $more,
                 'mt_allow_comments' => $page->allowComment,
                 'mt_allow_pings' => $page->allowPing,                          
@@ -131,7 +131,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author'     => $page->author->name,
                 'wp_page_parent_id' => 0,
                 'wp_page_parent_title' => NULL,
-                'wp_page_order' => $page->meta,     //meta是描述字段, 在page时表示顺序
+                'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $page->authorId,
                 'wp_author_display_name' => $page->author->screenName,
             );
@@ -175,7 +175,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $pages->permalink,
                 'permalink'     => $pages->permalink,
                 'categories'    => $pages->categories,
-                'excerpt'       => $excerpt,
+                'excerpt'       => NULL,
                 'text_more'     => $more,
                 'mt_allow_comments' => $pages->allowComment,
                 'mt_allow_pings' => $pages->allowPing,                          
@@ -184,7 +184,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author'     => $pages->author->name,
                 'wp_page_parent_id' => 0,
                 'wp_page_parent_title' => NULL,
-                'wp_page_order' => $pages->meta,     //meta是描述字段, 在page时表示顺序
+                'wp_page_order' => $pages->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $pages->authorId,
                 'wp_author_display_name' => $pages->author->screenName,
             );
@@ -422,7 +422,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
         $input['slug'] = $content['slug'];
         
-        $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? $content['description']."\n<!--more-->\n".$content['mt_text_more'] : $content['description'];
+        $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
+        $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
@@ -533,7 +534,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $post->permalink,
                 'permalink'     => $post->permalink,
                 'categories'    => $categories,
-                'mt_excerpt'    => $excerpt,
+                'mt_excerpt'    => NULL,
                 'mt_text_more'  => $more,
                 'mt_allow_comments' => $post->allowComment,
                 'mt_allow_pings' => $post->allowPing,
@@ -587,7 +588,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'link'          => $posts->permalink,
                     'permalink'     => $posts->permalink,
                     'categories'    => $categories,
-                    'mt_excerpt'    => $excerpt,
+                    'mt_excerpt'    => NULL,
                     'mt_text_more'  => $more,
                     'mt_allow_comments' => $posts->allowComment,
                     'mt_allow_pings' => $posts->allowPing,
@@ -1141,7 +1142,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function action()
     {
-        if (isset($_GET['rsd'])) {
+        if (isset($this->request->rsd)) {
             echo
 <<<EOF
 <?xml version="1.0" encoding="{$this->options->charset}"?>
@@ -1158,6 +1159,43 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         </apis>
     </service>
 </rsd>
+EOF;
+        } else if (isset($this->request->wlw)) {
+            echo
+<<<EOF
+<?xml version="1.0" encoding="{$this->options->charset}"?>
+<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">
+	<options>
+  		<supportsKeywords>Yes</supportsKeywords>
+		<supportsFileUpload>Yes</supportsFileUpload>
+		<supportsExtendedEntries>Yes</supportsExtendedEntries>
+		<supportsCustomDate>Yes</supportsCustomDate>
+		<supportsCategories>Yes</supportsCategories>
+
+		<supportsCategoriesInline>Yes</supportsCategoriesInline>
+		<supportsMultipleCategories>Yes</supportsMultipleCategories>
+		<supportsHierarchicalCategories>No</supportsHierarchicalCategories>
+		<supportsNewCategories>Yes</supportsNewCategories>
+		<supportsNewCategoriesInline>Yes</supportsNewCategoriesInline>
+		<supportsCommentPolicy>Yes</supportsCommentPolicy>
+
+		<supportsPingPolicy>Yes</supportsPingPolicy>
+		<supportsAuthor>Yes</supportsAuthor>
+		<supportsSlug>Yes</supportsSlug>
+		<supportsPassword>Yes</supportsPassword>
+		<supportsExcerpt>Yes</supportsExcerpt>
+		<supportsTrackbacks>Yes</supportsTrackbacks>
+
+		<supportsPostAsDraft>Yes</supportsPostAsDraft>
+
+		<supportsPages>Yes</supportsPages>
+		<supportsPageParent>No</supportsPageParent>
+		<supportsPageOrder>Yes</supportsPageOrder>
+		<requiresXHTML>True</requiresXHTML>
+		<supportsAutoUpdate>No</supportsAutoUpdate>
+
+	</options>
+</manifest>
 EOF;
         } else {
             /** 直接把初始化放到这里 */

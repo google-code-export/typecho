@@ -79,7 +79,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         }
         
         /** 更新版本号 */
-        $this->update(array('value' => 'Typecho ' . Typecho_Common::$config['version']), 
+        $this->update(array('value' => 'Typecho ' . Typecho_Common::VERSION), 
         $this->db->sql()->where('name = ?', 'generator'));
         
         $this->widget('Widget_Notice')->set(_t("升级已经完成"), NULL, 'success');

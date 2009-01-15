@@ -578,7 +578,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 break;
 
             default:
-                $result = $this->archive(Typecho_Router::$current, $select);
+                $result = $this->plugin()->archive(Typecho_Router::$current, $select);
                 
                 if (isset($result['hasPushed'])) {
                     $hasPushed = $result['hasPushed'];
@@ -631,17 +631,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->page($this->_currentPage, $this->parameter->pageSize);
         $this->db->fetchAll($select, array($this, 'push'));
     }
-    
-    /**
-     * 自定义归档
-     * 
-     * @access public
-     * @param string $current 当前路由
-     * @param Typecho_Db_Query $select 数据库选择器
-     * @return void
-     */
-    public function archive($current, Typecho_Db_Query $select)
-    {}
     
     /**
      * 输出文章内容
@@ -821,8 +810,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml',
-        'href' => Typecho_Common::url('wlwmanifest.xml', $this->options->adminUrl))))
+        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml', 'href' => $this->options->xmlRpcUrl . '?wlw')))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->_feedUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->_feedRssUrl)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->_feedAtomUrl)));

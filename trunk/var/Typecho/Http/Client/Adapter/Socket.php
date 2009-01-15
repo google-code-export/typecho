@@ -66,9 +66,13 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         /** 发送POST信息 */
         if (Typecho_Http_Client::METHOD_POST == $this->method) {
             if (empty($this->files)) {
-                $content = http_build_query($this->data);
+                $content = is_array($this->data) ? http_build_query($this->data) : $this->data;
                 $request .= 'Content-Length: ' . strlen($content) . $eol;
-                $request .= 'Content-Type: application/x-www-form-urlencoded' . $eol;
+                
+                if (!isset($this->headers['content-type'])) {
+                    $request .= 'Content-Type: application/x-www-form-urlencoded' . $eol;
+                }
+                
                 $request .= $eol;
                 $request .= $content;
             } else {

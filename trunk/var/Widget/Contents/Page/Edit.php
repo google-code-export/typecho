@@ -30,18 +30,19 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     {
         /** 必须为编辑以上权限 */
         $this->user->pass('editor');
+        $this->parameter->setDefault('pingback=1&trackback=1');
     
         /** 获取文章内容 */
         if ((isset($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do
          && 'insert' != $this->request->do) || 'update' == $this->request->do) {
-            $post = $this->db->fetchRow($this->select()
+            $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'page')
             ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
             
             if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('页面不存在'), 404);
-            } else if ($post && 'update' == $this->request->do && !$this->allow('edit')) {
+            } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
@@ -55,12 +56,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function insertPage()
     {
-        $contents = $this->request->from('text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
+        $contents = $this->request->from('template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = trim($contents['text']);
+        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
+        
         $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
         : $this->options->gmtTime);
@@ -71,6 +72,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         if ($insertId > 0) {
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
+        }
+        
+        /** 发送pingback */
+        if ($this->parameter->pingback) {
+            $this->widget('Widget_Ajax')->sendPingback($this->cid, $this->text);
         }
         
         /** 页面提示信息 */
@@ -103,12 +109,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function updatePage()
     {
-        $contents = $this->request->from('text', 'template',
-        'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
+        $contents = $this->request->from('template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = trim($contents['text']);
+        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
+
         $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
         : $this->options->gmtTime);

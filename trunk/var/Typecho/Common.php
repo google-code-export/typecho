@@ -22,6 +22,9 @@ class Typecho_Common
     /** 默认不解析的标签列表 */
     const LOCKED_HTML_TAG = 'code|script';
     
+    /** 程序版本 */
+    const VERSION = '0.4/9.1.15';
+    
     /**
      * 缓存的包含路径
      * 
@@ -45,7 +48,6 @@ class Typecho_Common
      * @var array
      */
     public static $config = array(
-        'version'       =>  '0.4/9.1.15',
         'autoLoad'      =>  true,
         'exception'     =>  false,
         'gpc'           =>  true,
@@ -84,6 +86,33 @@ class Typecho_Common
             "/\(\s*(\"|')/i",           //函数开头
             "/(\"|')\s*\)/i",           //函数结尾
         ), '', $string);
+    }
+    
+    /**
+     * 处理段落
+     * 
+     * @access public
+     * @param array $matches 匹配值
+     * @return string
+     */
+    public static function __parseParagraph(array $matches)
+    {
+        $matches[4] = preg_replace(
+        array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+        array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+        $matches[4]);
+        
+        if ('/' == $matches[1] && empty($matches[5])) {
+            if (false !== strpos('div|blockquote|pre|table|ol|ul', $matches[2]) && 
+            false !== strpos('div|blockquote|pre|table|ol|ul', $matches[6])) {
+                if ('' != strip_tags($cut = trim($matches[4]))) {
+                    $matches[4] = '<p>' . $cut . '</p>';
+                }
+            }
+        }
+
+        return "<{$matches[1]}{$matches[2]}{$matches[3]}>{$matches[4]}<{$matches[5]}{$matches[6]}{$matches[7]}>";
     }
     
     /**
@@ -282,6 +311,7 @@ class Typecho_Common
         return (isset($params['scheme']) ? $params['scheme'] . '://' : NULL)
         . (isset($params['user']) ? $params['user'] . (isset($params['pass']) ? ':' . $params['pass'] : NULL) . '@' : NULL)
         . (isset($params['host']) ? $params['host'] : NULL)
+        . (isset($params['port']) ? ':' . $params['port'] : NULL)
         . (isset($params['path']) ? $params['path'] : NULL)
         . (isset($params['query']) ? '?' . $params['query'] : NULL)
         . (isset($params['fragment']) ? '#' . $params['fragment'] : NULL);
@@ -581,6 +611,22 @@ class Typecho_Common
     }
     
     /**
+     * 去掉html中的分段
+     * 
+     * @access public
+     * @param string $html 输入串
+     * @return string
+     */
+    public static function removeParagraph($html)
+    {
+        return trim(preg_replace(
+        array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+        array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+        $html));
+    }
+    
+    /**
      * 文本分段函数
      *
      * @param string $string
@@ -602,9 +648,9 @@ class Typecho_Common
         
         /** 去掉不需要的 */
         $string = preg_replace("/\<p\>\s*\<h([1-6])([^\>]*)\>(.*)\<\/h\\1\>\s*\<\/p\>/is", "\n<h\\1\\2>\\3</h\\1>\n", $string);
-        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.*)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1\\2>\\3</\\1>\n", $string);
-        $string = preg_replace("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>\s*\<br\s?\/?\>\s*\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>/is",
-        "<\\1\\2\\3>\n<\\4\\5\\6>", $string);
+        $string = preg_replace("/\<p\>\s*\<(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.*?)\<\/\\1\>\s*\<\/p\>/is", "\n<\\1\\2>\\3</\\1>\n", $string);
+        $string = preg_replace_callback("/\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>(.+?)\<(\/)?(div|blockquote|pre|table|tr|th|td|li|ol|ul)([^\>]*)\>/is",
+        array('Typecho_Common', '__parseParagraph'), $string);
 
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }
