@@ -629,8 +629,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $categoryStructs[] = array(
                     'categoryId'    => $categories->mid,
                     'parentId'      => 0,
-                    'description'   => $categories->description,
                     'categoryName'  => $categories->name,
+                    'description'   => $categories->description,
                     'htmlUrl'       => $categories->permalink,
                     'rssUrl'        => $categories->feedRssUrl,
                     );
@@ -721,11 +721,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         while($categories->next())
         {
             $categoryStructs[] = array(
-                'categoryId'   => $category->mid,
-                'categoryName' => $category->name,
+                'categoryId'   => $categories->mid,
+                'categoryName' => $categories->name,
             );
         }
-        
         return $categoryStructs;
     }
 
