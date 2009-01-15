@@ -45,7 +45,7 @@ class Typecho_Common
      * @var array
      */
     public static $config = array(
-        'version'       =>  '0.4/9.1.14',
+        'version'       =>  '0.4/9.1.15',
         'autoLoad'      =>  true,
         'exception'     =>  false,
         'gpc'           =>  true,
