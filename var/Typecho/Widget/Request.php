@@ -127,7 +127,8 @@ class Typecho_Widget_Request extends Typecho_Request
         $filters = func_get_args();
         
         foreach ($filters as $filter) {
-            $this->_filter[] = isset(self::$_supportFilters[$filter]) ? self::$_supportFilters[$filter] : $filter;
+            $this->_filter[] = is_string($filter) && isset(self::$_supportFilters[$filter]) 
+            ? self::$_supportFilters[$filter] : $filter;
         }
         return $this;
     }
