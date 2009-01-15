@@ -79,14 +79,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 获取文章内容 */
         if ((isset($this->request->cid) && 'delete' != $this->request->do
          && 'insert' != $this->request->do) || 'update' == $this->request->do) {
-            $post = $this->db->fetchRow($this->select()
+            $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'post')
             ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
             
             if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
-            } else if ($post && 'update' == $this->request->do && !$this->allow('edit')) {
+            } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
@@ -281,14 +281,15 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function insertPost()
     {
-        $contents = $this->request->from('password', 'text','allowComment',
+        $contents = $this->request->from('password', 'allowComment',
         'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = trim($contents['text']);
+        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
+
         $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
         : $this->options->gmtTime);
@@ -342,14 +343,15 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function updatePost()
     {
-        $contents = $this->request->from('password', 'text', 'allowComment',
+        $contents = $this->request->from('password', 'allowComment',
         'allowPing', 'allowFeed', 'slug', 'category', 'tags');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = trim($contents['text']);
+        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
+
         $contents['created'] = isset($this->request->created) ? $this->request->created
         : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
         : $this->options->gmtTime);

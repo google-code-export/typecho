@@ -71,7 +71,12 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                 unset($this->headers['User-Agent']);
             }
         
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+            $headers = array();
+            foreach ($this->headers as $key => $val) {
+                $headers[] = $key . ': ' . $val;
+            }
+            
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
 
         /** POST模式 */
@@ -79,7 +84,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             curl_setopt($ch, CURLOPT_POST, true);
             
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
             }
             
             if (!empty($this->files)) {

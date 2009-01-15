@@ -178,7 +178,7 @@ abstract class Typecho_Http_Client_Adapter
         $params = parse_url($url);
         $this->cookies[] = rawurlencode($key) . '=' . rawurlencode($value)
                          . (empty($expire) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $expire) . ' GMT')
-                         . (empty($params['path']) ? '' : '; path=' . $params['path'])
+                         . (empty($params['path']) ? '; path=/' : '; path=' . $params['path'])
                          . (empty($params['host']) ? '' : '; domain=' . $params['host'])
                          . ('https' == $params['scheme'] ? '' : '; secure');
         return $this;

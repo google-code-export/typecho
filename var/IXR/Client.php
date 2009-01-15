@@ -25,6 +25,9 @@ require_once 'IXR/Date.php';
 /** IXR Base64编码 */
 require_once 'IXR/Base64.php';
 
+/** Typecho_Http_Client */
+require_once 'Typecho/Http/Client.php';
+
 /**
  * IXR客户端
  * reload by typecho team(http://www.typecho.org)
@@ -58,6 +61,14 @@ class IXR_Client
      * @var string
      */
     private $path;
+    
+    /**
+     * 地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $url;
     
     /**
      * 客户端
@@ -115,6 +126,8 @@ class IXR_Client
     public function __construct($server, $path = false, $port = 80, $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
     {
         if (!$path) {
+            $this->url = $server;
+            
             // Assume we have been given a Url instead
             $bits = parse_url($server);
             $this->server = $bits['host'];
@@ -126,6 +139,16 @@ class IXR_Client
                 $this->path = '/';
             }
         } else {
+            /** Typecho_Common */
+            require_once 'Typecho/Common.php';
+            
+            $this->url = Typecho_Common::buildUrl(array(
+                'scheme'    =>  'http',
+                'host'      =>  $this->server,
+                'path'      =>  $this->path,
+                'port'      =>  $this->port
+            ));
+            
             $this->server = $server;
             $this->path = $path;
             $this->port = $port;
@@ -156,55 +179,18 @@ class IXR_Client
         $args = func_get_args();
         $method = array_shift($args);
         $request = new IXR_Request($method, $args);
-        $length = $request->getLength();
         $xml = $request->getXml();
         
-        $r = "\r\n";
-        $request  = "POST {$this->path} HTTP/1.0$r";
-        $request .= "Host: {$this->server}$r";
-        $request .= "Content-Type: text/xml$r";
-        $request .= "User-Agent: {$this->useragent}$r";
-        $request .= "Content-length: {$length}$r$r";
-        $request .= $xml;
-        
-        // Now send the request
-        if ($this->debug) {
-            echo '<pre>'.htmlspecialchars($request)."\n</pre>\n\n";
-        }
-        
-        $fp = @fsockopen($this->server, $this->port);
-        
-        if (!$fp) {
+        $client = Typecho_Http_Client::get();
+        if (!$client) {
             $this->error = new IXR_Error(-32300, 'transport error - could not open socket');
             return false;
         }
         
-        fputs($fp, $request);
-        $contents = '';
-        $gotFirstLine = false;
-        $gettingHeaders = true;
-        
-        while (!feof($fp)) {
-            $line = fgets($fp, 4096);
-            
-            if (!$gotFirstLine) {
-                // Check line for '200'
-                if (strstr($line, '200') === false) {
-                    $this->error = new IXR_Error(-32300, 'transport error - HTTP status code was not 200');
-                    return false;
-                }
-                
-                $gotFirstLine = true;
-            }
-            
-            if (trim($line) == '') {
-                $gettingHeaders = false;
-            }
-            
-            if (!$gettingHeaders) {
-                $contents .= trim($line)."\n";
-            }
-        }
+        $contents = $client->setHeader('Content-Type', 'text/xml')
+        ->setHeader('User-Agent', $this->useragent)
+        ->setData($xml)
+        ->send($this->url);
         
         if ($this->debug) {
             echo '<pre>'.htmlspecialchars($contents)."\n</pre>\n\n";

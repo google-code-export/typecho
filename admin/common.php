@@ -13,7 +13,7 @@ Typecho_Widget::widget('Widget_Menu')->to($menu);
 $currentMenu = $menu->getCurrentMenu();
 list($soft, $currentVersion) = explode(' ', $options->generator);
 if ($user->pass('administrator', true) && !empty($currentMenu)) {
-    $mustUpgrade = (!isset(Typecho_Common::$config['version']) || version_compare(str_replace('/', '.', Typecho_Common::$config['version']),
+    $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
     str_replace('/', '.', $currentVersion), '>'));
 
     if ($mustUpgrade && '/admin/upgrade.php' != $currentMenu[2]) {

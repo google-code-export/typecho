@@ -11,6 +11,14 @@
 class Helper implements Typecho_Plugin_Interface
 {
     /**
+     * 帮手版本
+     * 
+     * @access public
+     * @var string
+     */
+    const VERSION = '1.0.0';
+
+    /**
      * 激活插件方法,如果激活失败,直接抛出异常
      * 
      * @access public
@@ -47,6 +55,21 @@ class Helper implements Typecho_Plugin_Interface
     public static function options()
     {
         return Typecho_Widget::widget('Widget_Options');
+    }
+    
+    /**
+     * 依赖帮手版本检测
+     * 
+     * @access public
+     * @param string $version 帮手版本
+     * @return void
+     * @throws Typecho_Plugin_Exception
+     */
+    public static function dependOn($version)
+    {
+        if (version_compare(Helper::VERSION, $version, '<')) {
+            throw new Typecho_Plugin_Exception(_t('此插件正常工作至少需要插件帮手的版本为 <strong>%s</strong>, 而你的版本是 <strong>%s</strong>', $version, Helper::VERSION));
+        }
     }
     
     /**
