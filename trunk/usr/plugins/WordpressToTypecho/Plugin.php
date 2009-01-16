@@ -83,4 +83,13 @@ class WordpressToTypecho_Plugin implements Typecho_Plugin_Interface
         _t('表前缀'), _t('所有 Wordpress 数据表的前缀'));
         $form->addInput($prefix->addRule('required', _t('您必须填写表前缀')));
     }
+    
+    /**
+     * 个人用户的配置面板
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Form $form
+     * @return void
+     */
+    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
 }

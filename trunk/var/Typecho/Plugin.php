@@ -182,14 +182,15 @@ class Typecho_Plugin
         
         /** 初始信息 */
         $info = array(
-            'description' => '',
-            'title'       => '',
-            'author'      => '',
-            'homepage'    => '',
-            'version'     => '',
-            'activate'    => false,
-            'deactivate'  => false,
-            'config'      => false
+            'description'       => '',
+            'title'             => '',
+            'author'            => '',
+            'homepage'          => '',
+            'version'           => '',
+            'activate'          => false,
+            'deactivate'        => false,
+            'config'            => false,
+            'personalConfig'    => false
         );
         
         $map = array(
@@ -248,11 +249,12 @@ class Typecho_Plugin
                         $string = strtolower($token[1]);
                         switch ($string) {
                             case 'typecho_plugin_interface':
-                                $isInClass = true;
+                                $isInClass = $isClass;
                                 break;
                             case 'activate':
                             case 'deactivate':
                             case 'config':
+                            case 'personalConfig':
                                 if ($isFunction) {
                                     $current = $string;
                                 }
@@ -315,10 +317,10 @@ class Typecho_Plugin
     public static function portal($pluginName, $path)
     {
         switch (true) {
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '/Plugin.php'):
+            case is_file($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
                 $className = $pluginName . '_Plugin';
                 break;
-            case is_file($pluginFileName = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/' . $pluginName . '.php'):
+            case is_file($pluginFileName = $path . '/' . $pluginName . '.php'):
                 $className = $pluginName;
                 break;
             default:

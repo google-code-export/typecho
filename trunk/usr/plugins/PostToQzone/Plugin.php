@@ -63,6 +63,15 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
         _t('内容模板'), _t('请填写您的内容模板'));
         $form->addInput($content->addRule('required', _t('必须填写一个内容模板')));
     }
+    
+    /**
+     * 个人用户的配置面板
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Form $form
+     * @return void
+     */
+    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
 
     /**
      * 发送文章到qzone 

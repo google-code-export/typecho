@@ -47,6 +47,15 @@ class Helper implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form){}
     
     /**
+     * 个人用户的配置面板
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Form $form
+     * @return void
+     */
+    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
+    
+    /**
      * 获取Widget_Options对象
      * 
      * @access public
