@@ -23,7 +23,7 @@ class Typecho_Common
     const LOCKED_HTML_TAG = 'code|script';
     
     /** 布局标签 */
-    const GRID_HTML_TAG = 'div|blockquote|pre|table|tr|th|td|li|ol|ul|h[1-6]';
+    const GRID_HTML_TAG = 'div|blockquote|pre|object|embed|table|tr|th|td|li|ol|ul|h[1-6]';
     
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
@@ -621,9 +621,9 @@ class Typecho_Common
         $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>\s*/ise",
-        "'<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>'", $string);
+        "'<\\1\\2>' . nl2br(trim(\"\\3\")) . '</\\1>'", $string);
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>/ise",
-        "'<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>'", $string);
+        "'<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', \"\\3\") . '</\\1>'", $string);
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);

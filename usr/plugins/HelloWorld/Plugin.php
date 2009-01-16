@@ -46,6 +46,15 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
     }
     
     /**
+     * 个人用户的配置面板
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Form $form
+     * @return void
+     */
+    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
+    
+    /**
      * 插件实现方法
      * 
      * @access public
