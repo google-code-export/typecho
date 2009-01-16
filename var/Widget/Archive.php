@@ -806,8 +806,8 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function header()
     {
         $header = new Typecho_Widget_Helper_Layout_Header();
-        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => $this->_description)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => $this->_keywords)))
+        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => htmlspecialchars($this->_description))))
+        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => htmlspecialchars($this->_keywords))))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))
         ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
         ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
