@@ -914,6 +914,29 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     }
 
     /**
+     * bloggerDeletePost 
+     * 删除文章
+     * @param mixed $blogId 
+     * @param mixed $userName 
+     * @param mixed $password 
+     * @param mixed $publish 
+     * @access public
+     * @return bool
+     */
+    public function bloggerDeletePost($blogId, $postId, $userName, $password, $publish)
+    {
+        if(!$this->checkAccess($userName, $password))
+        {
+            return $this->error;
+        }
+        try {
+            $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}")->deletePost();
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
      * 获取当前作者前postsNum个post
      *
      * @param int $blogId
