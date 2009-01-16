@@ -73,7 +73,7 @@ class Typecho_Common
      */
     public static function __lockHTML(array $matches)
     {
-        $guid = uniqid(time());
+        $guid = '<code>' . uniqid(time()) . '</code>';
         self::$_lockedBlocks[$guid] = $matches[0];
         return $guid;
     }
@@ -615,14 +615,13 @@ class Typecho_Common
     {
         /** 锁定自闭合标签 */
         $string = trim($string);
-        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\/\>/is", array('Typecho_Common', '__lockHTML'), $string);
         
-        /** 锁定开标签 */
-        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^\>]*\>.*\<\/\w+\>/is", array('Typecho_Common', '__lockHTML'), $string);
+        /** 锁定标签 */
+        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*+<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
-        $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>\s*/ise",
+        $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>')", $string);
-        $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1>/ise",
+        $string = preg_replace("/<(" . self::GRID_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
 
         /** 区分段落 */
@@ -631,7 +630,8 @@ class Typecho_Common
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */
-        $string = preg_replace("/<p><(" . self::GRID_HTML_TAG . ")([^\>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
+        $string = preg_replace("/<p><(" . self::GRID_HTML_TAG . '|' . self::LOCKED_HTML_TAG
+        . ")([^>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }
     

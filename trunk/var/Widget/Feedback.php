@@ -236,9 +236,14 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                 throw new Typecho_Widget_Exception(_t('来源页不合法'), 403);
             }
             
-            /** 如果文章允许反馈 */
-            if (!$this->_content->allow('comment')) {
+            /** 如果文章不允许反馈 */
+            if ('comment' == $callback && !$this->_content->allow('comment')) {
                 throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
+            }
+            
+            /** 如果文章不允许引用 */
+            if ('trackback' == $callback && !$this->_content->allow('ping')) {
+                throw new Typecho_Widget_Exception(_t('对不起,此内容的引用被禁止.'), 403);
             }
             
             /** 调用函数 */
