@@ -1257,6 +1257,22 @@ margin-top: 25px;
 	display: inline;
 }
 
+.deactivate tbody {
+	color: #999;
+}
+
+.deactivate tbody tr:hover, .deactivate tbody tr:hover {
+	color: #333;
+}
+
+.deactivate tbody a {
+	color: #FFC177;
+}
+
+.deactivate tbody tr:hover a, .deactivate tbody tr:hover a {
+	color: #BD6800;
+}
+
 /**
  * 不使用表格的列表
  */

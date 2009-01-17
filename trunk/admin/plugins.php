@@ -63,7 +63,7 @@ include 'menu.php';
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Deactivated')->to($deactivatedPlugins); ?>
                 <?php if ($deactivatedPlugins->have() || !$activatedPlugins->have()): ?>
                 <h6 class="typecho-list-table-title">禁用的插件</h6>
-                <table class="typecho-list-table" class="operate-table">
+                <table class="typecho-list-table deactivate">
                     <colgroup>
                         <col width="10"/>
                         <col width="200"/>
