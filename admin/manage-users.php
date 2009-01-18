@@ -27,11 +27,11 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
-                        <col width="150"/>
-                        <col width="150"/>
+                        <col width="130"/>
+                        <col width="130"/>
                         <col width="225"/>
                         <col width="250"/>
-                        <col width="150"/>
+                        <col width="130"/>
                     </colgroup>
                     <thead>
                         <tr>

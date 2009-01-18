@@ -15,9 +15,9 @@ include 'menu.php';
                     <colgroup>
                         <col width="10"/>
                         <col width="200"/>
-                        <col width="390"/>
-                        <col width="100"/>
-                        <col width="125"/>
+                        <col width="360"/>
+                        <col width="90"/>
+                        <col width="105"/>
                         <col width="125"/>
                     </colgroup>
                     <thead>
@@ -67,9 +67,9 @@ include 'menu.php';
                     <colgroup>
                         <col width="10"/>
                         <col width="200"/>
-                        <col width="390"/>
-                        <col width="100"/>
-                        <col width="125"/>
+                        <col width="360"/>
+                        <col width="90"/>
+                        <col width="105"/>
                         <col width="125"/>
                     </colgroup>
                     <thead>

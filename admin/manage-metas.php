@@ -33,10 +33,10 @@ include 'menu.php';
                     <table class="typecho-list-table draggable">
                         <colgroup>
                             <col width="25"/>
-                            <col width="150"/>
+                            <col width="130"/>
                             <col width="50"/>
-                            <col width="150"/>
-                            <col width="190"/>
+                            <col width="130"/>
+                            <col width="170"/>
                             <col width="65"/>
                         </colgroup>
                         <thead>
@@ -59,7 +59,7 @@ include 'menu.php';
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="right description"><?php _e('默认'); ?></span>
                                 <?php else: ?>
-                                <span class="right hidden-by-mouse"><a href="<?php $options->index('Metas/Category/Edit.do?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a></span>
+                                <a class="right hidden-by-mouse" href="<?php $options->index('Metas/Category/Edit.do?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $categories->slug(); ?></td>

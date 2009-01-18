@@ -1261,7 +1261,7 @@ margin-top: 25px;
 	color: #999;
 }
 
-.deactivate tbody tr:hover, .deactivate tbody tr:hover {
+.deactivate tbody tr:hover, .deactivate tbody tr.hover {
 	color: #333;
 }
 
@@ -1269,7 +1269,7 @@ margin-top: 25px;
 	color: #FFC177;
 }
 
-.deactivate tbody tr:hover a, .deactivate tbody tr:hover a {
+.deactivate tbody tr:hover a, .deactivate tbody tr.hover a {
 	color: #BD6800;
 }
 

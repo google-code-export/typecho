@@ -2,7 +2,7 @@ var typechoGuid = function (el, config) {
     var _dl  = $(el);
     var _dt  = _dl.getElements('dt');
     var _dd  = _dl.getElements('dd');
-    var _cur = null, _timer = null;
+    var _cur = null, _timer = null, _iframe = null;
 
     var handle = {
        reSet: function() {
@@ -94,13 +94,12 @@ var typechoTable = {
 
     init: function (match) {
         /** 初始化表格风格 */
-        var _el = $(document).getElement(match);
-        if (_el) {
-            typechoTable.table = _el;
-            typechoTable.draggable = _el.hasClass('draggable');
+        $(document).getElements(match).each(function (item) {
+            typechoTable.table = item;
+            typechoTable.draggable = item.hasClass('draggable');
             typechoTable.bindButtons();
             typechoTable.reset();
-        }
+        });
     },
     
     reset: function () {
@@ -168,12 +167,22 @@ var typechoTable = {
     itemMouseOver: function (event) {
         if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
             $(this).addClass('hover');
+            
+            //fix ie
+            if (Browser.Engine.trident) {
+                $(this).getElements('.hidden-by-mouse').setStyle('display', 'inline');
+            }
         }
     },
     
     itemMouseLeave: function (event) {
         if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
             $(this).removeClass('hover');
+            
+            //fix ie
+            if (Browser.Engine.trident) {
+                $(this).getElements('.hidden-by-mouse').setStyle('display', 'none');
+            }
         }
     },
     
@@ -195,6 +204,7 @@ var typechoTable = {
     
     itemMouseMove: function (event) {
         if (typechoTable.draggedEl) {
+        
             if (!typechoTable.draggedFired) {
                 typechoTable.dragStart(this);
                 $(this).setStyle('cursor', 'move');
