@@ -91,7 +91,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="7"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
+                        	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
