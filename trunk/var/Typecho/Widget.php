@@ -35,22 +35,6 @@ abstract class Typecho_Widget
     private static $_widgetPool = array();
     
     /**
-     * widget的唯一序列号
-     * 
-     * @access private
-     * @var integer
-     */
-    private static $_widgetResouceId = 0;
-    
-    /**
-     * 当前组件的序列号
-     * 
-     * @access private
-     * @var string
-     */
-    private $_resourceId = NULL;
-    
-    /**
      * 帮手列表
      * 
      * @access private
@@ -155,6 +139,12 @@ abstract class Typecho_Widget
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
         list($className) = explode('@', $alias);
+        
+        /** 处理循环调用 */
+        if (get_class($this) == $className) {
+            return;
+        }
+        
         if (!isset(self::$_widgetPool[$alias])) {
             $fileName = str_replace('_', '/', $className) . '.php';            
             require_once $fileName;
@@ -378,27 +368,9 @@ abstract class Typecho_Widget
                 $this->_helpers[$name] = Typecho_Config::factory();
                 break;
             default:
-                $method = '___' . $name;
-                $result = $this->plugin()->trigger($plugged)->{$method}($name, $this);
-                return $plugged ? $result : NULL;
+                return NULL;
         }
         
         return $this->_helpers[$name];
-    }
-    
-    /**
-     * 获取当前唯一序列化值
-     * 
-     * @access public
-     * @return unknown
-     */
-    public final function __toString()
-    {
-        if (empty($this->_resourceId)) {
-            self::$_widgetResouceId ++;
-            $this->_resourceId = get_class($this) . '-' . self::$_widgetResouceId;
-        }
-        
-        return $this->_resourceId;
     }
 }

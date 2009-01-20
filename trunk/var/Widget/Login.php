@@ -39,11 +39,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         $validator->addRule('password', 'required', _t('请输入密码'));
         
         /** 截获验证异常 */
-        try {
-            $validator->run($this->request->from('name', 'password'));
-        } catch (Typecho_Validate_Exception $e) {
+        if ($error = $validator->run($this->request->from('name', 'password'))) {
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($e->getMessages());
+            $this->widget('Widget_Notice')->set($error);
             $this->response->goBack();
         }
         
