@@ -139,12 +139,7 @@ abstract class Typecho_Widget
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
         list($className) = explode('@', $alias);
-        
-        /** 处理循环调用 */
-        if (get_class($this) == $className) {
-            return;
-        }
-        
+
         if (!isset(self::$_widgetPool[$alias])) {
             $fileName = str_replace('_', '/', $className) . '.php';            
             require_once $fileName;
