@@ -174,14 +174,14 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->_feedType = Typecho_Feed::RSS2;
                     break;
             }
+            
+            $matched = Typecho_Router::match($this->request->feed);
         
-            if (!Typecho_Router::match($this->request->feed) || 'feed' == Typecho_Router::$current) {
-                if (0 === strpos($this->request->feed, '/comments/') || '/comments' == $this->request->feed) {
-                    /** 专为feed使用的hack */
-                    Typecho_Router::$current = 'comments';
-                } else {
-                    throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
-                }
+            if ('/comments/' == $this->request->feed || '/comments' == $this->request->feed) {
+                /** 专为feed使用的hack */
+                Typecho_Router::$current = 'comments';
+            } else if (!$matched || 'feed' == Typecho_Router::$current) {
+                throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
             }
             
             /** 初始化聚合器 */
@@ -578,44 +578,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 break;
 
             default:
-                $result = $this->plugin()->archive(Typecho_Router::$current, $select);
-                
-                if (isset($result['hasPushed'])) {
-                    $hasPushed = $result['hasPushed'];
-                }
-                
-                if (isset($result['archiveTitle'])) {
-                    $this->_archiveTitle = $result['archiveTitle'];
-                }
-                
-                if (isset($result['archiveType'])) {
-                    $this->_archiveType = $result['archiveType'];
-                }
-                
-                if (isset($result['keywords'])) {
-                    $this->_keywords = $result['keywords'];
-                }
-
-                if (isset($result['description'])) {
-                    $this->_description = $result['description'];
-                }
-                
-                if (isset($result['pageRow'])) {
-                    $this->_pageRow = $result['pageRow'];
-                }
-                
-                if (isset($result['feedUrl'])) {
-                    $this->_feedUrl = $result['feedUrl'];
-                }
-                
-                if (isset($result['feedRssUrl'])) {
-                    $this->_feedRssUrl = $result['feedRssUrl'];
-                }
-                
-                if (isset($result['feedAtomUrl'])) {
-                    $this->_feedAtomUrl = $result['feedAtomUrl'];
-                }
-
                 break;
         }
         
