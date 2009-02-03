@@ -61,12 +61,12 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
     public function upgrade()
     {
         list($prefix, $this->_currentVersion) = explode('/', $this->options->generator);
-        $packages = array_map('basename', glob(__TYPECHO_ROOT_DIR__ . '/usr/upgrade/*'));
+        $packages = array_map('basename', glob(__TYPECHO_ROOT_DIR__ . '/install/upgrade/*'));
         $packages = array_filter($packages, array($this, 'filterPackage'));
         usort($packages, array($this, 'sortPackage'));
         
         foreach ($packages as $package) {
-            $file = __TYPECHO_ROOT_DIR__ . '/usr/upgrade/' . $package . '/upgrade.php';
+            $file = __TYPECHO_ROOT_DIR__ . '/install/upgrade/' . $package . '/upgrade.php';
             if (is_file($file)) {
                 /** 执行升级脚本 */
                 try {

@@ -43,6 +43,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/Helper.php
 	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
 	rm -Rf ${DIR}/usr/upgrade/
+	rm -Rf ${DIR}/install/upgrade/
 	cp -Rf build/usr/plugins/CodeEditor/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
@@ -51,7 +52,7 @@ upgrade:
 	cp -Rf build/usr/plugins/Textile2/ ${DIR}/usr/plugins/
 	cp build/usr/plugins/Helper.php ${DIR}/usr/plugins/
 	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
-	cp -Rf build/usr/upgrade/ ${DIR}/usr/upgrade/
+	cp -Rf build/install/upgrade/ ${DIR}/install/upgrade/
 	make clear
 
 

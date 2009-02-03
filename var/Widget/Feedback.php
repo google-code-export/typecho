@@ -189,8 +189,8 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $text = str_replace("\r", '', trim($text));
         $text = preg_replace("/\n{2,}/", "\n\n", $text);
     
-        return nl2br(Typecho_Common::removeXSS(Typecho_Common::stripTags(
-        $text, $this->options->commentsHTMLTagAllowed)));
+        return Typecho_Common::removeXSS(Typecho_Common::stripTags(
+        $text, $this->options->commentsHTMLTagAllowed));
     }
     
     /**

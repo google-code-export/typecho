@@ -776,18 +776,6 @@ margin-top: 25px;
 	background: #EDF0DF url(../images/sprite.png) right -412px no-repeat;
 }
 
-/* 快捷键
-.typecho-head-guid dd a span.hotkey {
-	float: right;
-	margin: 2px -40px 0 0;
-	font-size: 11px;
-	color: #666;
-}
-
-.typecho-head-guid dd li.focus a span.hotkey, .typecho-head-guid dd li.focus a:hover span.hotkey {
-	color: #fff;
-}*/
-
 .typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
     text-decoration: none;
     color: #333;
