@@ -81,7 +81,9 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
 
         /** POST模式 */
         if (Typecho_Http_Client::METHOD_POST == $this->method) {
-            curl_setopt($ch, CURLOPT_POST, true);
+            if (!isset($this->headers['content-type'])) {
+                curl_setopt($ch, CURLOPT_POST, true);
+            }
             
             if (!empty($this->data)) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
@@ -92,13 +94,6 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                     $file = '@' . $file;
                 }
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->files);
-            }
-        }
-        
-        /** 设置cookie */
-        if (!empty($this->cookies)) {
-            foreach ($this->cookies as $cookie) {
-                curl_setopt($ch, CURLOPT_COOKIE, $cookie);
             }
         }
         

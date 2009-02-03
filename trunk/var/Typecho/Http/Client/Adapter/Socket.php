@@ -56,13 +56,6 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
             }
         }
         
-        /** 设置cookie信息 */
-        if (!empty($this->cookies)) {
-            foreach ($this->cookies as $val) {
-                $request .= 'Set-Cookie: ' . $val . $eol;
-            }
-        }
-        
         /** 发送POST信息 */
         if (Typecho_Http_Client::METHOD_POST == $this->method) {
             if (empty($this->files)) {
@@ -103,7 +96,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         } else {
             $request .= $eol;
         }
-        
+
         /** 打开连接 */
         $socket = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
         if (false === $socket) {

@@ -17,18 +17,18 @@ class IXR_Error
     /**
      * 错误代码
      * 
-     * @access private
+     * @access public
      * @var integer
      */
-    private $code;
+    public $code;
     
     /**
      * 错误消息
      * 
-     * @access private
+     * @access public
      * @var string
      */
-    private $message;
+    public $message;
     
     /**
      * 构造函数
