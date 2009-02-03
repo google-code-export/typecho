@@ -331,9 +331,98 @@ var typechoTable = {
     }
 };
 
-var typechoEditor = function () {
+/** 编辑器组件 */
+var TypechoEditor = function (textarea) {
+    this._init(textarea);
+};
+
+TypechoEditor.prototype = {
     
-}
+    _iframe: null,
+    
+    _body: null,
+    
+    _txt: null,
+    
+    _init: function (textarea) {
+        this._txt = $(document).getElement(textarea);
+        if (this._txt) {
+            var _size = $(this._txt).getSize();
+        
+            this._iframe = new IFrame({
+            
+                designMode: 'On',
+                
+                frameBorder: 0,
+                
+                styles: {
+                    
+                    width: _size.x,
+                    
+                    height: _size.y
+                    
+                },
+                
+                events: {
+                    load: function () {
+                        this._body = $(this.contentWindow.document.body);
+                        var _i = this;
+                        
+                        this._body.set({
+                        
+                            'contentEditable': true,
+                        
+                            'styles': {
+                                'background-color': '#fff',
+                                
+                                'margin': 0,
+                                
+                                'padding': 0,
+                                
+                                'cursor': 'text',
+                                
+                                'width': '100%',
+                                
+                                'height': '100%'
+                            }
+                        });
+                    }
+                }
+            });
+
+            this._iframe
+            .inject(this._txt, 'before')
+            .focus();
+            
+            $(this._txt).setStyle('display', 'none');
+        }
+    },
+    
+    getSel : function() {
+        var t = this, w = this.win;
+
+        return w.getSelection ? w.getSelection() : w.document.selection;
+    },
+
+    getRng : function() {
+        var t = this, s = t.getSel(), r;
+
+        try {
+            if (s)
+                r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
+        } catch (ex) {
+            // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
+        }
+
+        // No range found then create an empty one
+        // This can occur when the editor is placed in a hidden container element on Gecko
+        // Or on IE when there was an exception
+        if (!r)
+            r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
+
+        return r;
+    }
+};
 
 /** 消息窗口淡出 */
 var typechoMessage = function () {
