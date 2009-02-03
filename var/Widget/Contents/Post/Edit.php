@@ -75,6 +75,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         /** 必须为贡献者以上权限 */
         $this->user->pass('contributor');
+        $this->parameter->setDefault('pingback=1&trackback=1');
     
         /** 获取文章内容 */
         if ((isset($this->request->cid) && 'delete' != $this->request->do
@@ -308,6 +309,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
         
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
+        
+        /** 发送pingback */
+        if ($this->parameter->pingback) {
+            $this->widget('Widget_Service')->sendPingback($this->cid);
+        }
         
         /** 文章提示信息 */
         if ('publish' == $contents['status']) {

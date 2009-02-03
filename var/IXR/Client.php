@@ -36,6 +36,7 @@ require_once 'Typecho/Http/Client.php';
  */
 class IXR_Client
 {
+    /** 默认客户端 */
     const DEFAULT_USERAGENT = 'The Incutio XML-RPC PHP Library(Reload By Typecho)';
 
     /**
@@ -108,7 +109,7 @@ class IXR_Client
      * @access private
      * @var string
      */
-    private $_prefix = NULL;
+    private $prefix = NULL;
     
     // Storage place for an error message
     private $error = false;
@@ -133,10 +134,10 @@ class IXR_Client
             $this->server = $bits['host'];
             $this->port = isset($bits['port']) ? $bits['port'] : 80;
             $this->path = isset($bits['path']) ? $bits['path'] : '/';
-            
+
             // Make absolutely sure we have a path
-            if (!$this->path) {
-                $this->path = '/';
+            if (isset($bits['query'])) {
+                $this->path .= '?' . $bits['query'];
             }
         } else {
             /** Typecho_Common */
@@ -144,9 +145,9 @@ class IXR_Client
             
             $this->url = Typecho_Common::buildUrl(array(
                 'scheme'    =>  'http',
-                'host'      =>  $this->server,
-                'path'      =>  $this->path,
-                'port'      =>  $this->port
+                'host'      =>  $server,
+                'path'      =>  $path,
+                'port'      =>  $port
             ));
             
             $this->server = $server;
@@ -154,6 +155,7 @@ class IXR_Client
             $this->port = $port;
         }
         
+        $this->prefix = $prefix;
         $this->useragent = $useragent;
     }
     
@@ -187,10 +189,12 @@ class IXR_Client
             return false;
         }
         
-        $contents = $client->setHeader('Content-Type', 'text/xml')
+        $client->setHeader('Content-Type', 'text/xml')
         ->setHeader('User-Agent', $this->useragent)
         ->setData($xml)
         ->send($this->url);
+        
+        $contents = $client->getResponseBody();
         
         if ($this->debug) {
             echo '<pre>'.htmlspecialchars($contents)."\n</pre>\n\n";
@@ -239,7 +243,7 @@ class IXR_Client
     public function __call($method, $args)
     {
         array_unshift($args, $this->prefix . $method);
-        $return = call_user_func(array($this, '__rpcCall'), $args);
+        $return = call_user_func_array(array($this, '__rpcCall'), $args);
         
         if ($return) {
             return $this->__getResponse();

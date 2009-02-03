@@ -294,11 +294,11 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                         
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => '<p>' . _t('如果您看到这篇文章,表示您的blog已经安装成功.') . '</p>', 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
+                                        'text' => _t('如果您看到这篇文章,表示您的blog已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
                                         
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => (time() - idate('Z')), 'modified' => (time() - idate('Z')),
-                                        'text' => '<p>' . _t('本页面由Typecho创建, 这只是个测试页面.') . '</p>', 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
+                                        'text' => _t('本页面由Typecho创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
                                         
                                         /** 初始评论 */

@@ -169,18 +169,11 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
-     * @param integer $expire 过期时间,默认为0,表示随会话时间结束
-     * @param string $url 路径(可以是域名,也可以是地址)
      * @return Typecho_Http_Client_Adapter
      */
-    public function setCookie($key, $value, $expire = 0, $url = NULL)
+    public function setCookie($key, $value)
     {
-        $params = parse_url($url);
-        $this->cookies[] = rawurlencode($key) . '=' . rawurlencode($value)
-                         . (empty($expire) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $expire) . ' GMT')
-                         . (empty($params['path']) ? '; path=/' : '; path=' . $params['path'])
-                         . (empty($params['host']) ? '' : '; domain=' . $params['host'])
-                         . ('https' == $params['scheme'] ? '' : '; secure');
+        $this->cookies[$key] = $value;
         return $this;
     }
     
@@ -205,9 +198,9 @@ abstract class Typecho_Http_Client_Adapter
      * @param array $data 需要POST的数据
      * @return Typecho_Http_Client_Adapter
      */
-    public function setData(array $data)
+    public function setData($data)
     {
-        $this->data = empty($this->data) ? $data : array_merge($this->data, $data);
+        $this->data = $data;
         $this->setMethod(Typecho_Http_Client::METHOD_POST);
         return $this;
     }
@@ -300,6 +293,11 @@ abstract class Typecho_Http_Client_Adapter
         
         if (!empty($params['port'])) {
             $this->port = $params['port'];
+        }
+        
+        /** 整理cookie */
+        if (!empty($this->cookies)) {
+            $this->setHeader('Cookie', str_replace('&', '; ', http_build_query($this->cookies)));
         }
         
         $response = $this->httpSend($url);

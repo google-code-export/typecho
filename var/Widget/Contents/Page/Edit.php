@@ -76,7 +76,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         /** 发送pingback */
         if ($this->parameter->pingback) {
-            $this->widget('Widget_Ajax')->sendPingback($this->cid, $this->text);
+            $this->widget('Widget_Service')->sendPingback($this->cid);
         }
         
         /** 页面提示信息 */
