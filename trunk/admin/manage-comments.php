@@ -79,7 +79,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                              | 
                             <?php $comments->ip(); ?>
                             <?php endif; ?>
-                            <p><?php $comments->content(); ?></p>
+                            <?php $comments->content(); ?>
                             <div class="line">
                                 <div class="left hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>

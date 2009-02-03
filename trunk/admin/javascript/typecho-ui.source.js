@@ -331,6 +331,10 @@ var typechoTable = {
     }
 };
 
+var typechoEditor = function () {
+    
+}
+
 /** 消息窗口淡出 */
 var typechoMessage = function () {
     var _message = $(document).getElement('.popup');
