@@ -119,7 +119,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
                     'url'       =>  $row['comment_homepage'],
                     'ip'        =>  $row['comment_ip'],
                     'agent'     =>  $row['comment_agent'],
-                    'text'      =>  nl2br($row['comment_text']),
+                    'text'      =>  $row['comment_text'],
                     'type'      =>  $row['comment_type'],
                     'status'    =>  $row['comment_publish'],
                     'parent'    =>  $row['comment_parent']
