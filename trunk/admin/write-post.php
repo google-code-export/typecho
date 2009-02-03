@@ -127,6 +127,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         $('btn-submit').addEvent('click', function () {
             $(document).getElement('input[name=draft]').set('value', 0);
         });
+        
+        new TypechoEditor('#text');
 
         /** 初始化日历 */
         window.addEvent('domready', function() {
