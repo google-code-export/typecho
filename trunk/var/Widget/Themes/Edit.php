@@ -53,8 +53,13 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $path = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
         
         if (is_file($path) && is_writeable($path)) {
-            file_put_contents($path, $this->request->content);
-            $this->widget('Widget_Notice')->set(_t("文件 %s 的更改已经保存", $file), NULL, 'success');
+            $handle = fopen($path, 'wb');
+            if ($handle && fwrite($handle, $this->request->content)) {
+                fclose($handle);
+                $this->widget('Widget_Notice')->set(_t("文件 %s 的更改已经保存", $file), NULL, 'success');
+            } else {
+                $this->widget('Widget_Notice')->set(_t("文件 %s 无法被写入", $file), NULL, 'error');
+            }
             $this->response->goBack();
         } else {
             throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'), 404);
