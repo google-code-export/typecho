@@ -347,13 +347,20 @@ TypechoEditor.prototype = {
     _init: function (textarea) {
         this._txt = $(document).getElement(textarea);
         if (this._txt) {
-            var _size = $(this._txt).getSize();
+            var _size = this._txt.getSize();
+            var _txt = this._txt;
         
             this._iframe = new IFrame({
             
                 designMode: 'On',
                 
                 frameBorder: 0,
+                
+                frameSpacing: 0,
+                
+                border: 0,
+                
+                marginWidth: 0,
                 
                 styles: {
                     
@@ -366,25 +373,31 @@ TypechoEditor.prototype = {
                 events: {
                     load: function () {
                         this._body = $(this.contentWindow.document.body);
-                        var _i = this;
-                        
                         this._body.set({
                         
                             'contentEditable': true,
+                            
+                            'html': _txt.get('text'),
                         
                             'styles': {
                                 'background-color': '#fff',
                                 
-                                'margin': 0,
+                                'font-size': '10pt',
+                                
+                                'font-family': '"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana',
+                                
+                                'margin': '2%',
                                 
                                 'padding': 0,
                                 
                                 'cursor': 'text',
                                 
-                                'width': '100%',
-                                
-                                'height': '100%'
+                                'width': '96%',
                             }
+                        });
+                        
+                        this._body.addEvent('enter', function () {
+                            alert('asdfasdf');
                         });
                     }
                 }

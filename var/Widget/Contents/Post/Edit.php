@@ -101,7 +101,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function content()
     {
-        echo htmlspecialchars(trim($this->text));
+        echo htmlspecialchars($this->content);
     }
     
     /**
