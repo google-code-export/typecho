@@ -14,7 +14,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea id="text" name="text"><?php $page->content(); ?></textarea></p>
+                        <p><textarea id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
+                        <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
@@ -46,6 +47,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                     </select>
                                 </p>
                                 <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
+                                <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOptionLeft($page); ?>
                             </div>
                             <div class="column-06">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
@@ -56,6 +58,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                     <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
                                     <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($page->allow('feed')): ?>checked="true"<?php endif; ?> />
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
+                                    <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOptionRight($page); ?>
                                 </ul>
                             </div>
                         </li>
@@ -73,6 +76,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <p><input type="text" id="slug" name="slug" value="<?php $page->slug(); ?>" class="mini" /></p>
                             <p class="description"><?php _e('为这篇日志自定义链接地址, 有利于搜索引擎收录'); ?></p>
                         </li>
+                        <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
                         <?php if($page->have()): ?>
                         <li>
                             <label class="typecho-label"><?php _e('相关'); ?></label>
@@ -90,6 +94,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
 <?php include 'common-js.php'; ?>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
         /** 绑定按钮 */
@@ -117,6 +122,27 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 }
             );
         });
+        
+        /** 初始化编辑器 */
+        tinyMCE.init({
+            // General options
+            mode : "exact",
+            elements : "text",
+            theme : "advanced",
+            skin : "typecho",
+            plugins : "safari,pagebreak,inlinepopups",
+
+            // Theme options
+            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,cleanup,|,forecolor,backcolor,|,pagebreak,code,help",
+            theme_advanced_buttons2 : "",
+            theme_advanced_buttons3 : "",
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_resizing : true
+        });
     })();
 </script>
-<?php include 'copyright.php'; ?>
+<?php
+Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
+include 'copyright.php';
+?>

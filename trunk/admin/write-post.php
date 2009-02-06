@@ -14,9 +14,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea id="text" name="text"><?php $post->content(); ?></textarea></p>
+                        <p><textarea id="text" name="text"><?php echo htmlspecialchars($post->content); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
+                        <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
@@ -40,6 +41,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
                                     <textarea id="trackback" name="trackback"></textarea>
                                     <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                                    <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionLeft($post); ?>
                             </div>
                             <div class="column-06">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
@@ -50,6 +52,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
                                     <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
+                                    <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionRight($post); ?>
                                 </ul>
                             </div>
                         </li>
@@ -86,6 +89,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <p><input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mini" /></p>
                             <p class="description"><?php _e('为这篇日志自定义链接地址, 有利于搜索引擎收录'); ?></p>
                         </li>
+                        <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
                         <?php if($post->have()): ?>
                         <li>
                             <label class="typecho-label"><?php _e('相关'); ?></label>
@@ -112,7 +116,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
 <?php include 'common-js.php'; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho-editor.source.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
         /** 绑定按钮 */
@@ -129,8 +133,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             $(document).getElement('input[name=draft]').set('value', 0);
         });
         
-        new TypechoEditor('#text');
-
         /** 初始化日历 */
         window.addEvent('domready', function() {
             Calendar.setup(
@@ -142,6 +144,27 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 }
             );
         });
+        
+        /** 初始化编辑器 */
+        tinyMCE.init({
+            // General options
+            mode : "exact",
+            elements : "text",
+            theme : "advanced",
+            skin : "typecho",
+            plugins : "safari,pagebreak,inlinepopups",
+
+            // Theme options
+            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,cleanup,|,forecolor,backcolor,|,pagebreak,code,help",
+            theme_advanced_buttons2 : "",
+            theme_advanced_buttons3 : "",
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_resizing : true
+        });
     })();
 </script>
-<?php include 'copyright.php'; ?>
+<?php
+Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
+include 'copyright.php';
+?>
