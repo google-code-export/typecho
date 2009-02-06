@@ -143,9 +143,11 @@ class Widget_Notice extends Typecho_Widget
         $this->noticeType = $type;
         $this->push($notice);
         
-        $this->response->setCookie('__typecho_notice', $notice, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->response->setCookie('__typecho_notice', $notice,
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('__typecho_notice_type', $type, $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
+        $this->response->setCookie('__typecho_notice_type', $type,
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
     }
 }
