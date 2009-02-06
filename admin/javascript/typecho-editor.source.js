@@ -3,6 +3,38 @@ var TypechoEditor = function (textarea) {
     this._init(textarea);
 };
 
+var TypechoEditorButtonStrong = {
+    
+    btn: null,
+    
+    editor: null,
+    
+    tested: false,
+
+    init: function (btn) {
+        btn.set('html', '<strong>B</strong>')
+    },
+
+    test: function (node) {
+    
+        if ('strong' == node.get('tag') || 'b' == node.get('tag')) {
+            return true;
+        }
+    
+        return false;
+    },
+
+    click: function (t) {
+        var v = t.tested, h = t.editor.getContent().innerHTML;
+        
+        if (!v) {
+            t.editor.setContent('<strong>' + t.editor.getContent().innerHTML + '</strong>');
+        } else {
+            t.editor.setContent('</strong>' + t.editor.getContent().innerHTML + '<strong>');
+        }
+    }
+}
+
 TypechoEditor.prototype = {
     
     _iframe: null,
@@ -10,6 +42,8 @@ TypechoEditor.prototype = {
     _body: null,
     
     _txt: null,
+    
+    _btn: [TypechoEditorButtonStrong],
     
     _init: function (textarea) {
         this._txt = $(document).getElement(textarea);
@@ -40,11 +74,11 @@ TypechoEditor.prototype = {
                 
                 events: {
                     load: function () {
-                        this._body = $(this.contentWindow.document.body);                        
+                        t._body = $(this.contentWindow.document.body);                        
                         var _html = _txt.get('text');
                         _html = ('' == _html) ? '<p></p>' : _html;
 
-                        this._body.set({
+                        t._body.set({
                         
                             'contentEditable': true,
                             
@@ -71,11 +105,11 @@ TypechoEditor.prototype = {
                             'events': {
                                 
                                 'mouseup': function () {
-                                    alert($(t.getNode()).get('tag'));
+                                    t.test($(t.getNode()));
                                 },
                                 
                                 'keyup': function () {
-                                    alert($(t.getNode()).get('tag'));
+                                    t.test($(t.getNode()));
                                 }
                             }
                         });
@@ -86,14 +120,112 @@ TypechoEditor.prototype = {
             this._iframe
             .inject(this._txt, 'before')
             .focus();
+
+            this._btn.each(function (item) {
+                var _btn = $(document.createElement('button'));
+                item.btn = _btn;
+                item.editor = t;
+                item.init(_btn);
+                _btn.set('type', 'button')
+                .inject(t._iframe, 'before')
+                .addEvent('click', function () { item.click(item); t.test($(t.getNode())); });
+            });
             
             $(this._txt).setStyle('display', 'none');
+        }
+    },
+    
+    test: function (node) {
+        var n = node;
+    
+        this._btn.each(function (item) {
+            item.btn.setStyle('color', '#000');
+            item.tested = false;
+        
+            if (item.test(n)) {
+                item.tested = true;
+                item.btn.setStyle('color', '#ddd');
+            }
+        });
+    },
+    
+    
+    /** 以下函数来自tinyMCE */
+    getContent : function() {
+        var t = this, r = t.getRng(), e = document.createElement('body'), se = t.getSel(), wb, wa, n;
+        wb = wa = '';
+        
+        if (r.cloneContents) {
+            n = r.cloneContents();
+
+            if (n)
+                e.appendChild(n);
+        } else if ('undefined' != typeof(r.item) || 'undefined' != typeof(r.htmlText))
+            e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
+        else
+            e.innerHTML = r.toString();
+
+        return e;
+    },
+
+    setContent : function(h) {
+        var t = this, r = t.getRng(), c, d = t._iframe.contentWindow.document;
+
+        if (r.insertNode) {
+            // Make caret marker since insertNode places the caret in the beginning of text after insert
+            h += '<span id="__caret">_</span>';
+
+            // Delete and insert new node
+            r.deleteContents();
+            r.insertNode(t.getRng().createContextualFragment(h));
+
+            // Move to caret marker
+            c = t._body.getElement('#__caret');
+
+            // Make sure we wrap it compleatly, Opera fails with a simple select call
+            r = d.createRange();
+            r.setStartBefore(c);
+            r.setEndAfter(c);
+            t.setRng(r);
+
+            // Delete the marker, and hopefully the caret gets placed in the right location
+            d.execCommand('Delete', false, null);
+
+            // In case it's still there
+            c.destroy();
+        } else {
+            if (r.item) {
+                // Delete content and get caret text selection
+                d.execCommand('Delete', false, null);
+                r = t.getRng();
+            }
+
+            r.pasteHTML(h);
         }
     },
     
     getSel : function() {
         var w = this._iframe.contentWindow;
         return w.getSelection ? w.getSelection() : w.document.selection;
+    },
+    
+    setRng : function(r) {
+        var s;
+
+        if (!Browser.Engine.trident) {
+            s = this.getSel();
+
+            if (s) {
+                s.removeAllRanges();
+                s.addRange(r);
+            }
+        } else {
+            try {
+                r.select();
+            } catch (ex) {
+                // Needed for some odd IE bug #1843306
+            }
+        }
     },
 
     getRng : function() {
