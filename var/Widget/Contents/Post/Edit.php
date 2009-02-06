@@ -94,17 +94,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
     
     /**
-     * 重载获取内容的方法
-     * 
-     * @access public
-     * @return void
-     */
-    public function content()
-    {
-        echo strlen($this->text) ? htmlspecialchars($this->content) : NULL;
-    }
-    
-    /**
      * 输出文章发布日期
      *
      * @access public
