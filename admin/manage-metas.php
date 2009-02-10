@@ -22,7 +22,7 @@ include 'menu.php';
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                             <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="delete" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
                             <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span>
                             <select name="merge">
                                 <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
@@ -84,7 +84,7 @@ include 'menu.php';
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                             <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="delete" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
                             <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span> 
                             <input type="text" name="merge" />
                         </p>
