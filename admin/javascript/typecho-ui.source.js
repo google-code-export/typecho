@@ -1,4 +1,7 @@
-var typechoGuid = function (el, config) {
+/** 初始化全局对象 */
+var Typecho = {};
+
+Typecho.guid = function (el, config) {
     var _dl  = $(el);
     var _dt  = _dl.getElements('dt');
     var _dd  = _dl.getElements('dd');
@@ -82,7 +85,7 @@ var typechoGuid = function (el, config) {
     return handle;
 };
 
-var typechoTable = {
+Typecho.Table = {
     
     table: null,        //当前表格
     
@@ -95,16 +98,16 @@ var typechoTable = {
     init: function (match) {
         /** 初始化表格风格 */
         $(document).getElements(match).each(function (item) {
-            typechoTable.table = item;
-            typechoTable.draggable = item.hasClass('draggable');
-            typechoTable.bindButtons();
-            typechoTable.reset();
+            Typecho.Table.table = item;
+            Typecho.Table.draggable = item.hasClass('draggable');
+            Typecho.Table.bindButtons();
+            Typecho.Table.reset();
         });
     },
     
     reset: function () {
-        var _el = typechoTable.table;
-        typechoTable.draggedEl = null;
+        var _el = Typecho.Table.table;
+        Typecho.Table.draggedEl = null;
         
         if ('undefined' == typeof(_el._childTag)) {
             switch (_el.get('tag')) {
@@ -119,10 +122,10 @@ var typechoTable = {
             }
             
             var _cb = _el.getElements(_el._childTag + ' input[type=checkbox]').each(function (item) {
-                item._parent = item.getParent(typechoTable.table._childTag);
+                item._parent = item.getParent(Typecho.Table.table._childTag);
                
                 /** 监听click事件 */
-                item.addEvent('click', typechoTable.checkBoxClick);
+                item.addEvent('click', Typecho.Table.checkBoxClick);
             });
         }
     
@@ -147,7 +150,7 @@ var typechoTable = {
                 }
             }
             
-            typechoTable.bindEvents(item);
+            Typecho.Table.bindEvents(item);
         });
     },
     
@@ -156,16 +159,16 @@ var typechoTable = {
         if (_el.getProperty('checked')) {
             _el.setProperty('checked', false);
             _el._parent.removeClass(_el._parent.hasClass('even') ? 'checked-even' : 'checked');
-            typechoTable.unchecked(this, _el._parent);
+            Typecho.Table.unchecked(this, _el._parent);
         } else {
             _el.setProperty('checked', true);
             _el._parent.addClass(_el._parent.hasClass('even') ? 'checked-even' : 'checked');
-            typechoTable.checked(this, _el._parent);
+            Typecho.Table.checked(this, _el._parent);
         }
     },
     
     itemMouseOver: function (event) {
-        if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
+        if(!Typecho.Table.draggedEl || Typecho.Table.draggedEl == this) {
             $(this).addClass('hover');
             
             //fix ie
@@ -176,7 +179,7 @@ var typechoTable = {
     },
     
     itemMouseLeave: function (event) {
-        if(!typechoTable.draggedEl || typechoTable.draggedEl == this) {
+        if(!Typecho.Table.draggedEl || Typecho.Table.draggedEl == this) {
             $(this).removeClass('hover');
             
             //fix ie
@@ -195,51 +198,51 @@ var typechoTable = {
     },
     
     itemMouseDown: function (event) {
-        if (!typechoTable.draggedEl) {
-            typechoTable.draggedEl = this;
-            typechoTable.draggedFired = false;
+        if (!Typecho.Table.draggedEl) {
+            Typecho.Table.draggedEl = this;
+            Typecho.Table.draggedFired = false;
             return false;
         }
     },
     
     itemMouseMove: function (event) {
-        if (typechoTable.draggedEl) {
+        if (Typecho.Table.draggedEl) {
         
-            if (!typechoTable.draggedFired) {
-                typechoTable.dragStart(this);
+            if (!Typecho.Table.draggedFired) {
+                Typecho.Table.dragStart(this);
                 $(this).setStyle('cursor', 'move');
-                typechoTable.draggedFired = true;
+                Typecho.Table.draggedFired = true;
             }
             
-            if (typechoTable.draggedEl != this) {
+            if (Typecho.Table.draggedEl != this) {
                 /** 从下面进来的 */
-                if ($(this).getCoordinates(typechoTable.draggedEl).top < 0) {
-                    $(this).inject(typechoTable.draggedEl, 'after');
+                if ($(this).getCoordinates(Typecho.Table.draggedEl).top < 0) {
+                    $(this).inject(Typecho.Table.draggedEl, 'after');
                 } else {
-                    $(this).inject(typechoTable.draggedEl, 'before');
+                    $(this).inject(Typecho.Table.draggedEl, 'before');
                 }
                 
                 if ($(this).hasClass('even')) {
-                    if (!$(typechoTable.draggedEl).hasClass('even')) {
+                    if (!$(Typecho.Table.draggedEl).hasClass('even')) {
                         $(this).removeClass('even');
-                        $(typechoTable.draggedEl).addClass('even');
+                        $(Typecho.Table.draggedEl).addClass('even');
                     }
                     
                     if ($(this).hasClass('checked-even') && 
-                    !$(typechoTable.draggedEl).hasClass('checked-even')) {
+                    !$(Typecho.Table.draggedEl).hasClass('checked-even')) {
                         $(this).removeClass('checked-even');
-                        $(typechoTable.draggedEl).addClass('checked-even');
+                        $(Typecho.Table.draggedEl).addClass('checked-even');
                     }
                 } else {
-                    if ($(typechoTable.draggedEl).hasClass('even')) {
+                    if ($(Typecho.Table.draggedEl).hasClass('even')) {
                         $(this).addClass('even');
-                        $(typechoTable.draggedEl).removeClass('even');
+                        $(Typecho.Table.draggedEl).removeClass('even');
                     }
                     
                     if ($(this).hasClass('checked') && 
-                    $(typechoTable.draggedEl).hasClass('checked')) {
+                    $(Typecho.Table.draggedEl).hasClass('checked')) {
                         $(this).removeClass('checked');
-                        $(typechoTable.draggedEl).addClass('checked');
+                        $(Typecho.Table.draggedEl).addClass('checked');
                     }
                 }
                 
@@ -249,8 +252,8 @@ var typechoTable = {
     },
     
     itemMouseUp: function (event) {
-        if (typechoTable.draggedEl) {
-            var _inputs = typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]');
+        if (Typecho.Table.draggedEl) {
+            var _inputs = Typecho.Table.table.getElements(Typecho.Table.table._childTag + ' input[type=checkbox]');
             var result = '';
             
             for (var i = 0; i< _inputs.length; i ++) {
@@ -258,15 +261,15 @@ var typechoTable = {
                 result += _inputs[i].name + '=' + _inputs[i].value;
             }
             
-            if (typechoTable.draggedFired) {    
+            if (Typecho.Table.draggedFired) {    
                 $(this).fireEvent('click');
                 $(this).setStyle('cursor', '');
-                typechoTable.dragStop(this, result);
-                typechoTable.draggedFired = false;
-                typechoTable.reset();
+                Typecho.Table.dragStop(this, result);
+                Typecho.Table.draggedFired = false;
+                Typecho.Table.reset();
             }
             
-            typechoTable.draggedEl = null;
+            Typecho.Table.draggedEl = null;
             return false;
         }
     },
@@ -283,7 +286,7 @@ var typechoTable = {
         /** 全选按钮 */
         $(document).getElements('.typecho-table-select-all')
         .addEvent('click', function () {
-            typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]')
+            Typecho.Table.table.getElements(Typecho.Table.table._childTag + ' input[type=checkbox]')
             .each(function (item) {
                 if (!item.getProperty('checked')) {
                     item.fireEvent('click');
@@ -294,7 +297,7 @@ var typechoTable = {
         /** 不选按钮 */
         $(document).getElements('.typecho-table-select-none')
         .addEvent('click', function () {
-            typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]')
+            Typecho.Table.table.getElements(Typecho.Table.table._childTag + ' input[type=checkbox]')
             .each(function (item) {
                 if (item.getProperty('checked')) {
                     item.fireEvent('click');
@@ -305,7 +308,7 @@ var typechoTable = {
         /** 提交按钮 */
         $(document).getElements('.typecho-table-select-submit')
         .addEvent('click', function () {
-            var _f = typechoTable.table.getParent('form');
+            var _f = Typecho.Table.table.getParent('form');
             _f.getElement('input[name=do]').set('value', $(this).getProperty('rel'));
             _f.submit();
         });
@@ -315,36 +318,39 @@ var typechoTable = {
         item.removeEvents();
 
         item.addEvents({
-            'mouseover': typechoTable.itemMouseOver,
-            'mouseleave': typechoTable.itemMouseLeave,
-            'click': typechoTable.itemClick
+            'mouseover': Typecho.Table.itemMouseOver,
+            'mouseleave': Typecho.Table.itemMouseLeave,
+            'click': Typecho.Table.itemClick
         });
 
-        if (typechoTable.draggable && 
-        typechoTable.table.getElements(typechoTable.table._childTag + ' input[type=checkbox]').length > 0) {
+        if (Typecho.Table.draggable && 
+        Typecho.Table.table.getElements(Typecho.Table.table._childTag + ' input[type=checkbox]').length > 0) {
             item.addEvents({
-                'mousedown': typechoTable.itemMouseDown,
-                'mousemove': typechoTable.itemMouseMove,
-                'mouseup': typechoTable.itemMouseUp
+                'mousedown': Typecho.Table.itemMouseDown,
+                'mousemove': Typecho.Table.itemMouseMove,
+                'mouseup': Typecho.Table.itemMouseUp
             });
         }
     }
 };
 
 /** 消息窗口淡出 */
-var typechoMessage = function () {
-    var _message = $(document).getElement('.popup');
-    if (_message) {
-        var _messageEffect = new Fx.Morph(_message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-        _messageEffect.addEvent('complete', function () {
-            this.element.style.display = 'none';
-        });
-        _messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
-    }
+Typecho.message = function (el) {
+    var _message = $(document).getElement(el);
+    
+    setTimeout(function () {
+        if (_message) {
+            var _messageEffect = new Fx.Morph(_message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+            _messageEffect.addEvent('complete', function () {
+                this.element.style.display = 'none';
+            });
+            _messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
+        }
+    }, 5000);
 };
 
 /** 在新窗口打开链接 */
-var typechoOpenLink = function (adminPattern, doPattern) {
+Typecho.openLink = function (adminPattern, doPattern) {
     $(document).getElements('a').each(function (item) {
         var _href = item.href;
         if (_href && '#' != _href) {
@@ -362,7 +368,7 @@ var typechoOpenLink = function (adminPattern, doPattern) {
 }
 
 /** 页面滚动 */
-var typechoScroll = function (sel, parentSel) {
+Typecho.scroll = function (sel, parentSel) {
     var _firstError = $(document).getElement(sel);
     
     //增加滚动效果
@@ -371,11 +377,11 @@ var typechoScroll = function (sel, parentSel) {
     }
 }
 
-var typechoLocation = function (url) {
+Typecho.location = function (url) {
     setTimeout('window.location.href="' + url + '"', 0);
 }
 
-var typechoToggle = function (sel, btn, showWord, hideWord) {
+Typecho.toggle = function (sel, btn, showWord, hideWord) {
     var el = $(document).getElement(sel);
     $(btn).toggleClass('close');
     if ('none' == el.getStyle('display')) {
@@ -388,7 +394,7 @@ var typechoToggle = function (sel, btn, showWord, hideWord) {
 }
 
 /** 高亮元素 */
-var typechoHighlight = function (theId) {
+Typecho.highlight = function (theId) {
     if (theId) {
         var el = $(theId);
         if (el) {
@@ -405,7 +411,7 @@ var typechoHighlight = function (theId) {
 }
 
 /** 提交按钮自动失效,防止重复提交 */
-var typechoAutoDisableSubmit = function () {
+Typecho.autoDisableSubmit = function () {
     $(document).getElements('input[type=submit]').removeProperty('disabled');
     $(document).getElements('button[type=submit]').removeProperty('disabled');
 
