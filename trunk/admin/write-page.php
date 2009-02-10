@@ -99,7 +99,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
     (function () {
         /** 绑定按钮 */
         $(document).getElement('span.advance').addEvent('click', function () {
-            typechoToggle('#advance-panel', this,
+            Typecho.toggle('#advance-panel', this,
             '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
         });
         
@@ -130,10 +130,10 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
             elements : "text",
             theme : "advanced",
             skin : "typecho",
-            plugins : "safari,pagebreak,inlinepopups",
+            plugins : "safari,pagebreak,inlinepopups,media",
 
             // Theme options
-            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,cleanup,|,forecolor,backcolor,|,pagebreak,code,help",
+            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
             theme_advanced_buttons2 : "",
             theme_advanced_buttons3 : "",
             theme_advanced_toolbar_location : "top",
