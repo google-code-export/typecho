@@ -1153,6 +1153,11 @@ margin-top: 25px;
 	color: #BD6800;
 }
 
+.typecho-list-operate span.operate-delete {
+	color: #CC0000;
+	font-weight: bold;
+}
+
 .typecho-list-operate a:hover {
 	text-decoration: none;
 }

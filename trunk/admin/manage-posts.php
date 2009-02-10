@@ -37,7 +37,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                         <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                         <?php _e('选中项'); ?>: 
-                        <span rel="delete" class="operate-button typecho-table-select-submit"><?php _e('删除'); ?></span>
+                        <span rel="delete" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
