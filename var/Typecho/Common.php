@@ -616,6 +616,11 @@ class Typecho_Common
         /** 锁定自闭合标签 */
         $string = trim($string);
         
+        /** 返回空字符串 */
+        if (empty($string)) {
+            return '';
+        }
+        
         /** 锁定标签 */
         $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*+<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
