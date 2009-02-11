@@ -117,6 +117,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
 <?php include 'common-js.php'; ?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/langs.php'); ?>"></script>
 <script type="text/javascript">
     (function () {
         /** 绑定按钮 */

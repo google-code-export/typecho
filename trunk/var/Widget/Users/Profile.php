@@ -98,23 +98,24 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护您的文章不会丢失.'));
         $form->addInput($autoSave);
         
-        /** 默认允许评论 */
-        $defaultAllowComment = new Typecho_Widget_Helper_Form_Element_Radio('defaultAllowComment',
-        array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->options->defaultAllowComment, _t('默认允许评论'));
-        $form->addInput($defaultAllowComment);
+        /** 默认允许 */
+        $allow = array();
+        if ($this->options->defaultAllowComment) {
+            $allow[] = 'comment';
+        }
         
-        /** 默认允许广播 */
-        $defaultAllowPing = new Typecho_Widget_Helper_Form_Element_Radio('defaultAllowPing',
-        array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->options->defaultAllowPing, _t('默认允许广播'));
-        $form->addInput($defaultAllowPing);
+        if ($this->options->defaultAllowPing) {
+            $allow[] = 'ping';
+        }
         
-        /** 默认允许聚合*/
-        $defaultAllowFeed = new Typecho_Widget_Helper_Form_Element_Radio('defaultAllowFeed',
-        array('0' => _t('不允许'), '1' => _t('允许')),
-        $this->options->defaultAllowFeed, _t('默认允许聚合'));
-        $form->addInput($defaultAllowFeed);
+        if ($this->options->defaultAllowFeed) {
+            $allow[] = 'feed';
+        }
+        
+        $defaultAllow = new Typecho_Widget_Helper_Form_Element_Checkbox('defaultAllow',
+        array('comment' => _t('可以被评论'), 'ping' => _t('可以被引用'), 'feed' => _t('出现在聚合中')),
+        $allow, _t('默认允许'), _t('设置你经常使用的默认允许权限'));
+        $form->addInput($defaultAllow);
         
         /** 用户动作 */
         $do = new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'options');
@@ -200,7 +201,16 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function updateOptions()
     {
-        $settings = $this->request->from('autoSave', 'defaultAllowComment', 'defaultAllowPing', 'defaultAllowFeed');
+        $settings['autoSave'] = $this->request->autoSave;
+        
+        $settings['defaultAllowComment'] = is_array($this->request->defaultAllow)
+        && in_array('comment', $this->request->defaultAllow) ? 1 : 0;
+        
+        $settings['defaultAllowPing'] = is_array($this->request->defaultAllow)
+        && in_array('ping', $this->request->defaultAllow) ? 1 : 0;
+        
+        $settings['defaultAllowFeed'] = is_array($this->request->defaultAllow)
+        && in_array('feed', $this->request->defaultAllow) ? 1 : 0;
 
         foreach ($settings as $name => $value) {
             if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))

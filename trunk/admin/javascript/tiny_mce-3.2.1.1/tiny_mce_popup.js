@@ -100,6 +100,9 @@ tinyMCEPopup = {
 
 	requireLangPack : function() {
 		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
+        
+        //hacked by qining(typecho)
+        return;
 
 		if (u && this.editor.settings.language) {
 			u += '/langs/' + this.editor.settings.language + '_dlg.js';

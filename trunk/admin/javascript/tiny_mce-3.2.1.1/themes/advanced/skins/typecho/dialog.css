@@ -111,7 +111,7 @@ h3 {font-size:14px;}
 .title {font-size:12px; font-weight:bold; color:#BD6800;}
 
 /* Dialog specific */
-#link .panel_wrapper, #link div.current {height:125px;}
+#link .panel_wrapper, #link div.current {height:90px;}
 #image .panel_wrapper, #image div.current {height:220px;}
 #plugintable thead {font-weight:bold; background:#DDD;}
 #plugintable, #about #plugintable td {border:1px solid #919B9C;}
