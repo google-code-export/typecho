@@ -308,9 +308,14 @@ Typecho.Table = {
         /** 提交按钮 */
         $(document).getElements('.typecho-table-select-submit')
         .addEvent('click', function () {
-            var _f = Typecho.Table.table.getParent('form');
-            _f.getElement('input[name=do]').set('value', $(this).getProperty('rel'));
-            _f.submit();
+            var _lang = this.get('lang');
+            var _c = _lang ? confirm(_lang) : true;
+            
+            if (_c) {
+                var _f = Typecho.Table.table.getParent('form');
+                _f.getElement('input[name=do]').set('value', $(this).getProperty('rel'));
+                _f.submit();
+            }
         });
     },
     

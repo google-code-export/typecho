@@ -22,7 +22,7 @@ include 'menu.php';
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                             <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span rel="delete" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="delete" lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
                             <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span>
                             <select name="merge">
                                 <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
@@ -84,7 +84,7 @@ include 'menu.php';
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                             <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
                             <?php _e('选中项'); ?>: 
-                            <span rel="delete" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
+                            <span rel="delete" lang="<?php _e('此标签下的所有内容将被删除, 你确认要删除这些标签吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
                             <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span> 
                             <input type="text" name="merge" />
                         </p>
@@ -124,14 +124,14 @@ include 'menu.php';
         window.addEvent('domready', function() {
             var _selection;
             
-            if ('tr' == typechoTable.table._childTag) {
-                typechoTable.dragStop = function (obj, result) {
+            if ('tr' == Typecho.Table.table._childTag) {
+                Typecho.Table.dragStop = function (obj, result) {
                     var _r = new Request.JSON({
                         url: '<?php $options->index('Metas/Category/Edit.do'); ?>'
                     }).send(result + '&do=sort');
                 };
             } else {
-                typechoTable.checked = function (input, item) {
+                Typecho.Table.checked = function (input, item) {
                     if (!_selection) {
                         _selection = document.createElement('div');
                         $(_selection).addClass('tag-selection');
@@ -150,7 +150,7 @@ include 'menu.php';
                     item.checkedElement = _a;
                 };
                 
-                typechoTable.unchecked = function (input, item) {
+                Typecho.Table.unchecked = function (input, item) {
                     if (item.checkedElement) {
                         $(item.checkedElement).destroy();
                     }
