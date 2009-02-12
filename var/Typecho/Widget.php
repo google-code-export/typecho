@@ -85,10 +85,32 @@ abstract class Typecho_Widget
      */
     public function onRequest($name, $value = NULL)
     {
-        $request = $this->request->{$name};
+        $validated = false;
         
-        if ((!empty($value) && $request == $value) || 
-        (empty($value) && !empty($request))) {
+        if (NULL === $value) {
+            /** 解析串 */
+            if (is_string($name)) {
+                parse_str($name, $params);
+            } else if (is_array($name)) {
+                $params = $name;
+            }
+            
+            /** 验证串 */
+            if ($params) {
+                $validated = true;
+                foreach ($params as $key => $val) {
+                    if ((!empty($val) && $val != $this->request->{$key}) || 
+                    (empty($val) && !isset($this->request->{$key}))) {
+                        $validated = false;
+                        break;
+                    }
+                }
+            }
+        } else {
+            $validated = ($this->request->{$name} == $value);
+        }
+        
+        if ($validated) {
             return $this;
         } else {
             /** Typecho_Widget_Helper_Empty */
