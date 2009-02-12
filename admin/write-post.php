@@ -62,7 +62,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <ul class="typecho-post-option">
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
-                            <p><input type="text" readonly="readonly" class="date" name="date" id="date" value="<?php $post->date('Y-m-d H:i'); ?>" class="mini" /></p>
+                            <p>
+                            <input type="text" readonly class="date" name="date" id="date" value="<?php $post->date('Y/m/d'); ?>" />
+                             <strong>@</strong> 
+                            <input type="text" class="time" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
+                             <strong>:</strong> 
+                            <input type="text" class="time" name="min" id="min" value="<?php $post->date('i'); ?>" />
+                            </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
                         <li>
@@ -116,8 +122,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
 <?php include 'common-js.php'; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/tiny_mce.js'); ?>"></script>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/langs.php'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
     (function () {
         /** 绑定按钮 */
@@ -145,24 +151,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 }
             );
         });
-        
-        /** 初始化编辑器 */
-        tinyMCE.init({
-            // General options
-            mode : "exact",
-            elements : "text",
-            theme : "advanced",
-            skin : "typecho",
-            plugins : "safari,pagebreak,inlinepopups,media",
 
-            // Theme options
-            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
-            theme_advanced_buttons2 : "",
-            theme_advanced_buttons3 : "",
-            theme_advanced_toolbar_location : "top",
-            theme_advanced_toolbar_align : "left",
-            theme_advanced_resizing : true
-        });
+        Typecho.tinyMCE('text');
     })();
 </script>
 <?php

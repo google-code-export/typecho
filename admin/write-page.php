@@ -94,7 +94,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/lang.php'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jscalendar-1.0/calendar-setup_stripped.js'); ?>"></script>
 <?php include 'common-js.php'; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce-3.2.1.1/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
     (function () {
         /** 绑定按钮 */
@@ -123,23 +124,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
             );
         });
         
-        /** 初始化编辑器 */
-        tinyMCE.init({
-            // General options
-            mode : "exact",
-            elements : "text",
-            theme : "advanced",
-            skin : "typecho",
-            plugins : "safari,pagebreak,inlinepopups,media",
-
-            // Theme options
-            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
-            theme_advanced_buttons2 : "",
-            theme_advanced_buttons3 : "",
-            theme_advanced_toolbar_location : "top",
-            theme_advanced_toolbar_align : "left",
-            theme_advanced_resizing : true
-        });
+        Typecho.tinyMCE('text');
     })();
 </script>
 <?php
