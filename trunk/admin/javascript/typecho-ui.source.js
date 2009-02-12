@@ -339,6 +339,27 @@ Typecho.Table = {
     }
 };
 
+/** tinyMCE编辑器封装 */
+Typecho.tinyMCE = function (id) {
+    
+    tinyMCE.init({
+        // General options
+        mode : "exact",
+        elements : id,
+        theme : "advanced",
+        skin : "typecho",
+        plugins : "safari,pagebreak,inlinepopups,media",
+
+        // Theme options
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
+        theme_advanced_buttons2 : "",
+        theme_advanced_buttons3 : "",
+        theme_advanced_toolbar_location : "top",
+        theme_advanced_toolbar_align : "left",
+        theme_advanced_resizing : true
+    });
+};  
+
 /** 消息窗口淡出 */
 Typecho.message = function (el) {
     var _message = $(document).getElement(el);
@@ -370,7 +391,7 @@ Typecho.openLink = function (adminPattern, doPattern) {
             });
         }
     });
-}
+};
 
 /** 页面滚动 */
 Typecho.scroll = function (sel, parentSel) {
@@ -380,11 +401,11 @@ Typecho.scroll = function (sel, parentSel) {
     if (_firstError) {
         var _errorFx = new Fx.Scroll(window).toElement(_firstError.getParent(parentSel));
     }
-}
+};
 
 Typecho.location = function (url) {
     setTimeout('window.location.href="' + url + '"', 0);
-}
+};
 
 Typecho.toggle = function (sel, btn, showWord, hideWord) {
     var el = $(document).getElement(sel);
@@ -396,7 +417,7 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
         $(btn).set('html', hideWord);
         el.setStyle('display', 'none');
     }
-}
+};
 
 /** 高亮元素 */
 Typecho.highlight = function (theId) {
@@ -413,7 +434,7 @@ Typecho.highlight = function (theId) {
             el.tween('background-color', '#AACB36', _bg);
         }
     }
-}
+};
 
 /** 提交按钮自动失效,防止重复提交 */
 Typecho.autoDisableSubmit = function () {
@@ -433,4 +454,4 @@ Typecho.autoDisableSubmit = function () {
             $(this).getParent('form').submit();
             return false;
     });
-}
+};

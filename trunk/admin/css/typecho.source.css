@@ -237,36 +237,6 @@ button {
 /*]]>*/
 
 /**
- * 弹出层
- */
-.typecho-popup {
-    background: #333;
-	color: #333;
-    height:100%;
-    left:0;
-    overflow:hidden;
-    position:absolute;
-    top:0;
-    width:100%;
-    z-index:999;
-    filter: Alpha(opacity=95);
-    opacity:.95;
-}
-
-.typecho-popup-content {
-    background: #e5ead1;
-    padding: 10px 0px 10px 10px;
-    position: relative;
-    width: 800px;
-    border: 1px solid #dee4c5;
-    margin: 15% auto;
-}
-
-.typecho-popup-content .submit button {
-    margin-right: 5px;
-}
-
-/**
  * 圆角
  */
 .typecho-radius-topleft {
@@ -1601,10 +1571,11 @@ ul.typecho-list-notable li {
 }
 
 .typecho-post-area input.date {
-	width: 150px;
-	background: #DDD url(../images/calendar.gif) right center no-repeat;
-	border: 1px solid #AAA;
-	padding: 4px;
+	width: 80px;
+}
+
+.typecho-post-area input.time {
+	width: 20px;
 }
 
 .typecho-post-area input.mini {
@@ -1699,11 +1670,11 @@ ul.typecho-post-option .description {
 	text-decoration: underline;
 	cursor: pointer;
 	padding-left: 16px;
-	background: url(../images/arrow_up.gif) left center no-repeat;
+	background: url(../images/arrow.gif) left top no-repeat;
 }
 
 .typecho-post-area .close {
-	background: url(../images/arrow_down.gif) left center no-repeat;
+	background: url(../images/arrow.gif) left bottom no-repeat;
 }
 
 /**
