@@ -206,13 +206,7 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                                         $success = false;
                                         echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
-                                    /** 检查数据表是否存在*/
-                                    if($installDb->query('SELECT * FROM ' . $dbConfig[prefix] . 'comments LIMIT 1'))
-                                    {
-                                        $success = false;
-                                        echo '<p class="message error">' .
-                                            _t('数据表已经存在，请先清空数据库然后再继续安装') . '</p>';
-                                    }
+                                    
                                 }
                                 
                                 if($success)
