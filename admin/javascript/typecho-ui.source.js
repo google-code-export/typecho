@@ -380,12 +380,21 @@ Typecho.openLink = function (adminPattern, doPattern) {
     $(document).getElements('a').each(function (item) {
         var _href = item.href;
         if (_href && '#' != _href) {
+            $(item).addEvent('click', function (event) {
+                var _lang = this.get('lang');
+                var _c = _lang ? confirm(_lang) : true;
+                
+                if (!_c) {
+                    event.stop();
+                }
+            });
+        
             /** 如果匹配则继续 */
             if (adminPattern.exec(_href) || doPattern.exec(_href)) {
                 return;
             }
             
-            $(item).addEvent('click', function () {
+            $(item).addEvent('click', function () {            
                 window.open(this.href);
                 return false;
             });
