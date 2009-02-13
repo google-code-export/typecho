@@ -1123,7 +1123,7 @@ margin-top: 25px;
 	color: #BD6800;
 }
 
-.typecho-list-operate span.operate-delete {
+.typecho-list-operate span.operate-delete, a.operate-delete {
 	color: #CC0000;
 	font-weight: bold;
 }
