@@ -59,7 +59,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $form->addInput($commentsUrlNofollow);
         
         /** 评论审核 */
-        $commentsRequireModeration = new Typecho_Widget_Helper_Form_Element_Radio('commentsrequiremoderation', array('0' => _t('不启用'), '1' => _t('启用')),
+        $commentsRequireModeration = new Typecho_Widget_Helper_Form_Element_Radio('commentsRequireModeration', array('0' => _t('不启用'), '1' => _t('启用')),
         $this->options->commentsRequireModeration, _t('评论审核'),
         _t('打开此选项后,所有提交的评论,引用通告和广播将不会立即呈现,而是被标记为待审核,你可以在后台标记它们是否呈现.<br />
         被评论文章的作者和编辑及以上权限的用户不受此选项的约束.'));
@@ -113,7 +113,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
     
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShowUrl', 'commentsUrlNofollow',
                 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail',
-                'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
+                'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
