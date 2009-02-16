@@ -7,6 +7,11 @@
  * @version    $Id$
  */
 
+/** 如果配置文件不存在,启动安装进程 */
+if (!is_file('./config.inc.php') && is_file('./install.php')) {
+    header('Location: install.php');
+}
+
 /** 载入配置支持 */
 require_once 'config.inc.php';
 
