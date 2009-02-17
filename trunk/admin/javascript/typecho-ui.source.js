@@ -340,7 +340,7 @@ Typecho.Table = {
 };
 
 /** tinyMCE编辑器封装 */
-Typecho.tinyMCE = function (id) {
+Typecho.tinyMCE = function (id, url) {
     
     tinyMCE.init({
         // General options
@@ -349,6 +349,100 @@ Typecho.tinyMCE = function (id) {
         theme : "advanced",
         skin : "typecho",
         plugins : "safari,pagebreak,inlinepopups,media",
+        
+        //Event setup
+        setup : function(ed) {
+            ed.onInit.add(function(ed) {
+            
+                var _pressed = false;
+                
+                var _resize = 0, _last = 0, mouseY = 0, sizeOffset = $(id + '_tbl').getSize().y - $(id + '_ifr').getSize().y;
+                
+                var _minFinalY = $(id + '_ifr').getPosition($(id + '_tbl')).y;
+                
+                var _holder = new Element('div', {
+                
+                    styles: {
+                        
+                        'border': '1px dashed #C1CD94',
+                        
+                        'background': '#fff',
+                        
+                        'display': 'none',
+                        
+                        'width': $(id + '_tbl').getSize().x - 2,
+                        
+                        'height': $(id + '_tbl').getSize().y - 2
+                        
+                    }
+                
+                }).inject(id + '_tbl', 'after');
+                
+                setInterval(function () {
+                    if (_pressed) {
+                    
+                        _resize = (0 == _last) ? 0 : mouseY - _last;
+                        _last = mouseY;
+                        
+                        var _finalY = _holder.getSize().y - 2 + _resize;
+                        
+                        if (_finalY > _minFinalY) {
+                            _holder.setStyle('height', _finalY);
+                        }
+                        
+                    }
+                }, 1);
+
+                var _cross = new Element('span', {
+                    'class': 'size-btn',
+                    
+                    'events' : {
+                    
+                        'mousedown': function () {
+                            _pressed = true;
+                            $(id + '_tbl').setStyle('display', 'none');
+                            _holder.setStyle('display', 'block');
+                        }
+                    
+                    }
+                    
+                }).inject(_holder, 'after');
+                
+                $(document).addEvents({
+                    
+                    'mouseup': function (event) {
+                        
+                        if (_pressed) {
+                        
+                            _pressed = false;
+                            $(id + '_tbl').setStyle('display', '');
+                            
+                            $(id).setStyle('height', _holder.getSize().y);
+                            $(id + '_tbl').setStyle('height', _holder.getSize().y);
+                            $(id + '_ifr').setStyle('height',  _holder.getSize().y - sizeOffset);
+                            
+                            var _r = new Request({
+                                'method': 'post',
+                                'url': url
+                            }).send('size=' + (_holder.getSize().y - 17) + '&do=editorResize');
+                            
+                            _holder.setStyle('display', 'none');
+                            _last = 0;
+                            _resize = 0;
+                            mouseY = 0;
+                        }
+                        
+                    },
+                    
+                    'mousemove': function (event) {
+                        if (_pressed) {
+                            mouseY = event.page.y;
+                        }
+                    }
+                });
+                
+            });
+        },
 
         // Theme options
         theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
