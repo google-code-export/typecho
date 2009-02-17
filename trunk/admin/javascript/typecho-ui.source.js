@@ -358,8 +358,7 @@ Typecho.tinyMCE = function (id, url) {
             
                 var _pressed = false;
                 
-                var _resize = 0, _last = 0, mouseY = 0, sizeOffset = $(id + '_tbl').getSize().y - $(id + '_ifr').getSize().y, 
-                editorOffset = 0;
+                var _resize = 0, _last = 0, mouseY = 0, editorOffset = 0;
                 
                 var _minFinalY = $(id + '_ifr').getPosition($(id + '_tbl')).y;
                 
@@ -410,9 +409,10 @@ Typecho.tinyMCE = function (id, url) {
                     'mouseup': function (event) {
                         
                         if (_pressed) {
-                        
+                            
                             _pressed = false;
                             $(id + '_tbl').setStyle('display', '');
+                            var sizeOffset = $(id + '_tbl').getSize().y - $(id + '_ifr').getSize().y;
                             
                             $(id).setStyle('height', _holder.getSize().y);
                             $(id + '_tbl').setStyle('height', _holder.getSize().y);
