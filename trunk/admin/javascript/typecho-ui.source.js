@@ -341,6 +341,8 @@ Typecho.Table = {
 
 /** tinyMCE编辑器封装 */
 Typecho.tinyMCE = function (id, url) {
+
+    var _currentY = parseInt($(id).getStyle('height'));
     
     tinyMCE.init({
         // General options
@@ -356,7 +358,8 @@ Typecho.tinyMCE = function (id, url) {
             
                 var _pressed = false;
                 
-                var _resize = 0, _last = 0, mouseY = 0, sizeOffset = $(id + '_tbl').getSize().y - $(id + '_ifr').getSize().y;
+                var _resize = 0, _last = 0, mouseY = 0, sizeOffset = $(id + '_tbl').getSize().y - $(id + '_ifr').getSize().y, 
+                editorOffset = 0;
                 
                 var _minFinalY = $(id + '_ifr').getPosition($(id + '_tbl')).y;
                 
@@ -377,21 +380,6 @@ Typecho.tinyMCE = function (id, url) {
                     }
                 
                 }).inject(id + '_tbl', 'after');
-                
-                setInterval(function () {
-                    if (_pressed) {
-                    
-                        _resize = (0 == _last) ? 0 : mouseY - _last;
-                        _last = mouseY;
-                        
-                        var _finalY = _holder.getSize().y - 2 + _resize;
-                        
-                        if (_finalY > _minFinalY) {
-                            _holder.setStyle('height', _finalY);
-                        }
-                        
-                    }
-                }, 1);
 
                 var _cross = new Element('span', {
                     'class': 'size-btn',
@@ -399,6 +387,10 @@ Typecho.tinyMCE = function (id, url) {
                     'events' : {
                     
                         'mousedown': function () {
+                            if (0 == editorOffset) {
+                                editorOffset = $(id + '_tbl').getSize().y - _currentY;
+                            }
+                        
                             _pressed = true;
                             $(id + '_tbl').setStyle('display', 'none');
                             _holder.setStyle('display', 'block');
@@ -424,7 +416,7 @@ Typecho.tinyMCE = function (id, url) {
                             var _r = new Request({
                                 'method': 'post',
                                 'url': url
-                            }).send('size=' + (_holder.getSize().y - 17) + '&do=editorResize');
+                            }).send('size=' + (_holder.getSize().y - editorOffset) + '&do=editorResize');
                             
                             _holder.setStyle('display', 'none');
                             _last = 0;
@@ -440,6 +432,21 @@ Typecho.tinyMCE = function (id, url) {
                         }
                     }
                 });
+                
+                setInterval(function () {
+                    if (_pressed) {
+                    
+                        _resize = (0 == _last) ? 0 : mouseY - _last;
+                        _last = mouseY;
+                        
+                        var _finalY = _holder.getSize().y - 2 + _resize;
+                        
+                        if (_finalY > _minFinalY) {
+                            _holder.setStyle('height', _finalY);
+                        }
+                        
+                    }
+                }, 10);
                 
             });
         },

@@ -1606,8 +1606,28 @@ ul.typecho-list-notable li span.trackback {
     width: 700px;
 }
 
-.typecho-post-area input.date {
-	width: 80px;
+.typecho-post-area .out-date {
+	border: 1px solid #D3DBB3;
+	padding: 2px;
+	background: #fff;
+}
+
+.typecho-post-area input#year,
+.typecho-post-area input#month,
+.typecho-post-area input#day,
+.typecho-post-area input#hour,
+.typecho-post-area input#min {
+	width: 34px;
+	border: none;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+	border-width: 0;
+}
+
+.typecho-post-area input#month,
+.typecho-post-area input#day,
+.typecho-post-area input#hour,
+.typecho-post-area input#min {
+	width: 18px;
 }
 
 .typecho-post-area input.time {
