@@ -69,7 +69,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php $comments->gravatar(); ?>
                         </div>
                         <div class="column-21">
-                            <img src="<?php $options->adminUrl('images/' . $comments->type . '.gif'); ?>" class="inline" alt="<?php $comments->type(); ?>" />
+                            <span class="<?php $comments->type(); ?>"></span>
                             <?php $comments->author(true); ?>
                             <?php if($comments->mail): ?>
                              | 

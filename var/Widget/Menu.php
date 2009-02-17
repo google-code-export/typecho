@@ -110,7 +110,8 @@ class Widget_Menu extends Typecho_Widget
             array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), '/admin/option-plugin.php?config=', 'administrator', true),
             array(_t('外观'), _t('网站外观'), '/admin/themes.php', 'administrator'),
             array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), '/admin/theme-editor.php', 'administrator', true),
-            array(_t('升级'), _t('升级程序'), '/admin/upgrade.php', 'administrator', true)
+            array(_t('升级'), _t('升级程序'), '/admin/upgrade.php', 'administrator', true),
+            array(_t('欢迎'), _t('欢迎使用'), '/admin/welcome.php', 'contributor', true)
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
