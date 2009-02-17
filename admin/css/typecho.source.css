@@ -1320,11 +1320,11 @@ ul.typecho-list-notable li span.trackback {
 }
 
 ul.typecho-list-notable li span.pingback {
-	background: url(../images/pingback.gif) top no-repeat;
+	background-position: center;
 }
 
 ul.typecho-list-notable li span.trackback {
-	background: url(../images/trackback.gif) top no-repeat;
+	background-position: center;
 }
 
 /**
