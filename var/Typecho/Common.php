@@ -29,7 +29,7 @@ class Typecho_Common
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
     
     /** 程序版本 */
-    const VERSION = '0.4/9.2.3';
+    const VERSION = '0.5/9.2.17';
     
     /**
      * 缓存的包含路径
