@@ -363,10 +363,14 @@ button {
 	overflow: hidden;
 }
 
-.message a:link, .message a:visited {
+.message a {
     color: #333;
     text-decoration: underline;
 	line-height: 20px;
+}
+
+.message a:hover {
+	text-decoration: none;
 }
 
 .message blockquote {
@@ -381,15 +385,27 @@ button {
 	color: #8A1F11;
 }
 
+.error a {
+	color: #8A1F11;
+}
+
 .notice {
     background: #fff6bf;
     border: 1px solid  #ffd324;
 	color: #514721;
 }
 
+.notice a {
+	color: #514721;
+}
+
 .success {
     background: #e6efc2;
     border: 1px solid #c6d880;
+	color: #264409;
+}
+
+.success a {
 	color: #264409;
 }
 
@@ -1289,6 +1305,26 @@ ul.typecho-list-notable li {
 	margin: 0 0 5px 0;
 	list-style: none;
 	padding: 5px 0;
+}
+
+ul.typecho-list-notable li span.comment,
+ul.typecho-list-notable li span.pingback,
+ul.typecho-list-notable li span.trackback {
+	background: url(../images/comment.gif) top no-repeat;
+	width: 16px;
+	height: 16px;
+	display: block;
+	float: left;
+	margin: 4px 3px -4px 0;
+	_margin-right: 0;
+}
+
+ul.typecho-list-notable li span.pingback {
+	background: url(../images/pingback.gif) top no-repeat;
+}
+
+ul.typecho-list-notable li span.trackback {
+	background: url(../images/trackback.gif) top no-repeat;
 }
 
 /**

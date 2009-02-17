@@ -20,10 +20,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
                 <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>
                 <?php if($user->pass('contributor', true)): ?>
-                <h3><?php _e('撰写设置'); ?></h3>
+                <h3 id="writing-option"><?php _e('撰写设置'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->optionsForm()->render(); ?>
                 <?php endif; ?>
-                <h3><?php _e('设置密码'); ?></h3>
+                <h3 id="change-password"><?php _e('设置密码'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
             </div>
             <div class="column-08 start-17 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
