@@ -390,8 +390,13 @@ Typecho.tinyMCE = function (id, url) {
                             if (0 == editorOffset) {
                                 editorOffset = $(id + '_tbl').getSize().y - _currentY;
                             }
+                            
+                            if (!_pressed) {
+                                _holder.setStyle('height', $(id + '_tbl').getSize().y - 2);
+                            }
                         
                             _pressed = true;
+                            
                             $(id + '_tbl').setStyle('display', 'none');
                             _holder.setStyle('display', 'block');
                         }
