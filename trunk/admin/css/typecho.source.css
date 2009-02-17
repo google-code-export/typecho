@@ -1324,7 +1324,7 @@ ul.typecho-list-notable li span.pingback {
 }
 
 ul.typecho-list-notable li span.trackback {
-	background-position: center;
+	background-position: bottom;
 }
 
 /**
