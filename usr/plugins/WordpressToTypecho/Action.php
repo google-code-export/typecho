@@ -99,6 +99,12 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                 } else {
                     $status = 'approved';
                 }
+                
+                $row['comment_content'] = preg_replace(
+                array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+                "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
+                array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+                $row['comment_content']);
             
                 $comments->insert(array(
                     'coid'      =>  $row['comment_ID'],
