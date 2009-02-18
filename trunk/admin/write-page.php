@@ -69,12 +69,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
-                            <span class="out-date">
-                            <input type="text" maxlength="4" name="date" id="year" value="<?php $page->date('Y'); ?>" />/<input type="text" maxlength="2" name="date" id="month" value="<?php $page->date('m'); ?>" />/<input type="text" maxlength="2" name="date" id="day" value="<?php $page->date('d'); ?>" />
-                            <strong>@</strong>
-                            <input type="text" maxlength="2" name="hour" id="hour" value="<?php $page->date('H'); ?>" />:<input type="text" maxlength="2" name="min" id="min" value="<?php $page->date('i'); ?>" />
-                            </span>
-                            <input type="hidden" name="date" id="date" value="<?php $page->date('r'); ?>" />
+                            <input type="text" class="mini" name="date" id="date" value="<?php $page->date('r'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
@@ -97,10 +92,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
     </div>
 </div>
 <?php include 'common-js.php'; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
-    (function () {
         /** 绑定按钮 */
         $(document).getElement('span.advance').addEvent('click', function () {
             Typecho.toggle('#advance-panel', this,
@@ -115,29 +107,13 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
             $(document).getElement('input[name=draft]').set('value', 0);
         });
 
-        $(document).getElements('.out-date input').each(function (item) {
-            item.addEvents({
-                'keydown': function (event) {
-                    if (-1 == event.key.search(/[0-9]/)) {
-                        event.stop();
-                        return false;
-                    }
-                },
-            
-                'keyup': function () {
-                    var _d = new Date(parseInt($('year').get('value')), 
-                    parseInt($('month').get('value')) - 1,
-                    parseInt($('day').get('value')),
-                    parseInt($('hour').get('value')),
-                    parseInt($('min').get('value')),
-                    0);
-                    
-                    var _p = _d.toString().replace('GMT', '').split(' ');
-                    $('date').set('value', _p[0] + ', ' + _p[2] + ' ' + _p[1] + ' ' + _p[3] + ' ' + _p[4] + ' ' + _p[5]);
-                }
-            });
-        });
-        
+        Typecho.date('date', <?php $page->date('Y'); ?>, <?php $page->date('n'); ?>, <?php $page->date('j'); ?>,
+        <?php $page->date('G'); ?>, <?php $page->date('i'); ?>, 0);
+</script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
+<script type="text/javascript">
+    (function () {        
         Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>');
     })();
 </script>

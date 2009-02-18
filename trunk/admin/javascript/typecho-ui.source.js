@@ -508,6 +508,185 @@ Typecho.openLink = function (adminPattern, doPattern) {
     });
 };
 
+Typecho.date = function (el, year, month, day, hour, min, sec) {
+
+    var _date = new Date(year, month - 1, day, hour, min, sec);
+    $(el).set('type', 'hidden');
+    
+    var _y, _m, _d, _h, _mi, _s;
+    
+    var _fix = function (num, length) {
+    
+        var sNum = num + "", _offset = length - sNum.length;
+        if (_offset > 0) {
+        
+            for (i = 0; i < _offset; i ++) {
+            
+                sNum = "0" + sNum;
+            
+            }
+        
+        }
+        
+        return sNum;
+    
+    };
+    
+    var _int = function (str) {
+    
+        return parseInt(str.replace(/^0+([1-9]*)$/, "$1")); 
+        
+    };
+    
+    var _keyup = function () {
+    
+        var _cd = new Date(_int(_y.get('value')), 
+        _int(_m.get('value')) - 1,
+        _int(_d.get('value')),
+        _int(_h.get('value')),
+        _int(_mi.get('value')),
+        0);
+        
+        var _p = _cd.toString().replace('GMT', '').split(' ');
+        $(el).set('value', _p[0] + ', ' + _p[2] + ' ' + _p[1] + ' ' + _p[3] + ' ' + _p[4] + ' ' + _p[5]);
+        
+    };
+    
+    var _keydown = function (event) {
+    
+        if (-1 == event.key.search(/[0-9]/)) {
+            event.stop();
+            return false;
+        }
+    
+    };
+    
+    var _focus = function () {
+        this.select();
+    };
+    
+    var _o = new Element('span', {
+        'class': 'out-date'
+    }).grab(_y = new Element('input', {
+    
+        id: 'year',
+        
+        name: 'year',
+        
+        type: 'text',
+        
+        maxlength: 4,
+        
+        value: _fix(year, 4),
+        
+        events: {
+        
+            'keyup': _keyup,
+            
+            'keydown': _keydown,
+            
+            'focus': _focus
+        
+        }
+    
+    }))
+    .appendText('/')
+    .grab(_m = new Element('input', {
+    
+        id: 'month',
+        
+        name: 'month',
+        
+        type: 'text',
+        
+        maxlength: 2,
+        
+        value: _fix(month, 2),
+        
+        events: {
+        
+            'keyup': _keyup,
+            
+            'keydown': _keydown,
+            
+            'focus': _focus
+        
+        }
+    
+    })).appendText('/')
+    .grab(_d = new Element('input', {
+    
+        id: 'day',
+        
+        name: 'day',
+        
+        type: 'text',
+        
+        maxlength: 2,
+        
+        value: _fix(day, 2),
+        
+        events: {
+        
+            'keyup': _keyup,
+            
+            'keydown': _keydown,
+            
+            'focus': _focus
+        
+        }
+    
+    })).appendText('@')
+    .grab(_h = new Element('input', {
+    
+        id: 'hour',
+        
+        name: 'hour',
+        
+        type: 'text',
+        
+        maxlength: 2,
+        
+        value: _fix(hour, 2),
+        
+        events: {
+        
+            'keyup': _keyup,
+            
+            'keydown': _keydown,
+            
+            'focus': _focus
+        
+        }
+    
+    })).appendText(':')
+    .grab(_mi = new Element('input', {
+    
+        id: 'min',
+        
+        name: 'min',
+        
+        type: 'text',
+        
+        maxlength: 2,
+        
+        value:_fix(min, 2),
+        
+        events: {
+        
+            'keyup': _keyup,
+            
+            'keydown': _keydown,
+            
+            'focus': _focus
+        
+        }
+    
+    }))
+    .inject($(el), 'before');
+
+};
+
 /** 页面滚动 */
 Typecho.scroll = function (sel, parentSel) {
     var _firstError = $(document).getElement(sel);
