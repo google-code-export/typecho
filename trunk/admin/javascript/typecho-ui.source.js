@@ -357,10 +357,7 @@ Typecho.tinyMCE = function (id, url) {
             ed.onInit.add(function(ed) {
             
                 var _pressed = false;
-                
-                var _resize = 0, _last = 0, mouseY = 0, editorOffset = 0;
-                
-                var _minFinalY = $(id + '_ifr').getPosition($(id + '_tbl')).y;
+                var _resize = 0, _last = 0, mouseY = 0, editorOffset = 0, _minFinalY = 0;
                 
                 var _holder = new Element('div', {
                 
@@ -385,9 +382,13 @@ Typecho.tinyMCE = function (id, url) {
                     
                     'events' : {
                     
-                        'mousedown': function () {
+                        'mousedown': function (event) {
                             if (0 == editorOffset) {
                                 editorOffset = $(id + '_tbl').getSize().y - _currentY;
+                            }
+                            
+                            if (0 == _minFinalY) {
+                                _minFinalY = $(id + '_ifr').getPosition($(id + '_tbl')).y;
                             }
                             
                             if (!_pressed) {
@@ -398,6 +399,8 @@ Typecho.tinyMCE = function (id, url) {
                             
                             $(id + '_tbl').setStyle('display', 'none');
                             _holder.setStyle('display', 'block');
+                            
+                            event.stop();
                         }
                     
                     }
