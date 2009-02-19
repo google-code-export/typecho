@@ -29,7 +29,8 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      */
     private function encodeRule($rule)
     {
-        return str_replace(array('{', '}'), array('[', ']'), $rule);
+        return str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}'),
+            array('[cid:digital]', '[slug]', '[category]', '[year:digital:4]', '[month:digital:2]', '[day:digital:2]'), $rule);
     }
     
     /**
@@ -42,6 +43,35 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
     private function decodeRule($rule)
     {
         return preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $rule);
+    }
+
+    public function checkRule($value)
+    {
+        if ('custom' != $value) {
+            return true;
+        }
+
+        $routingTable = $this->options->routingTable;
+        $currentTable = array('custom' => array('url' => $this->encodeRule($this->request->customPattern)));
+        $parser = new Typecho_Router_Parser($currentTable);
+        $currentTable = $parser->parse();
+        $regx = $currentTable['custom']['regx'];
+
+        //echo $regx; die;
+
+        foreach ($routingTable as $key => $val) {
+            if ('post' != $key) {
+                $pathInfo = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $val['url']);
+                $pathInfo = str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{', '}'),
+                    array('123', 'hello', 'default', '2008', '08', '08', '', ''), $pathInfo);
+
+                if (preg_match($regx, $pathInfo)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -132,7 +162,10 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         
         /** 增加个性化路径 */
         $customPatternValue = NULL;
-        if (!isset($patterns[$postPatternValue])) {
+        if (isset($this->request->__typecho_form_item_postPattern)) {
+            $customPatternValue = $this->request->__typecho_form_item_postPattern;
+            $this->response->deleteCookie('__typecho_form_item_postPattern');
+        } else if (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
         $patterns['custom'] = _t('个性化定义') . ' <input type="text" style="width: 250px;" name="customPattern" value="' . $customPatternValue . '" />';
@@ -143,7 +176,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         if ($customPatternValue) {
             $postPattern->value('custom');
         }
-        $form->addInput($postPattern->multiMode());
+        $form->addInput($postPattern->multiMode()->addRule(array($this, 'checkRule'), _t('您设定路径与当前路径存在冲突')));
         
         /** 独立页面后缀名 */
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
@@ -173,6 +206,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
     {
         /** 验证格式 */
         if ($this->form()->validate()) {
+            $this->response->setCookie('__typecho_form_item_postPattern', $this->request->customPattern);
             $this->response->goBack();
         }
         
