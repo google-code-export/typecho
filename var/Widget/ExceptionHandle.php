@@ -74,11 +74,18 @@ class Widget_ExceptionHandle extends Typecho_Widget
     public function execute()
     {
         @ob_clean();
-    
+
+        if (404 == $this->parameter->code && Typecho_Router::$next) {
+            Typecho_Router::dispatch();
+            return;
+        }
+
         if (503 != $this->parameter->code && 500 != $this->parameter->code &&
         is_file($file = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
         $this->options->theme . '/' . $this->parameter->code . '.php')) {
-            require_once $file;
+
+                require_once $file;
+
         } else {
             $charset = Typecho_Common::$config['charset'];
             $title = $this->parameter->code > 0 ? $this->parameter->code : _t('错误');

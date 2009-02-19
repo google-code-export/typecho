@@ -10,6 +10,9 @@
 /** 载入api支持 */
 require_once 'Typecho/Common.php';
 
+/** Typecho_Request */
+require_once 'Typecho/Request.php';
+
 /**
  * Typecho组件基类
  *
@@ -27,12 +30,28 @@ class Typecho_Router
     public static $current;
 
     /**
+     * 下一个路由
+     *
+     * @access public
+     * @var string
+     */
+    public static $next;
+
+    /**
      * 已经解析完毕的路由表配置
      * 
      * @access private
      * @var mixed
      */
     private static $_routingTable = array();
+
+    /**
+     * 路径映射
+     *
+     * @access private
+     * @var array
+     */
+    private static $_pathMapping = array();
     
     /**
      * 解析路径
@@ -43,27 +62,32 @@ class Typecho_Router
      */
     public static function match($pathInfo)
     {
-        foreach (self::$_routingTable as $key => $route) {
-            if (preg_match($route['regx'], $pathInfo, $matches)) {
-                self::$current = $key;
-                
-                if (!empty($route['params'])) {
-                    /** Typecho_Ruquest */
-                    require_once 'Typecho/Request.php';
-                    
+        if (!isset(self::$_pathMapping[$pathInfo])) {
+            foreach (self::$_routingTable as $key => $route) {
+                if (preg_match($route['regx'], $pathInfo, $matches)) {
                     unset($matches[0]);
-                    $params = array_combine($route['params'], $matches);
-                    
-                    foreach ($params as $key => $val) {
-                        Typecho_Request::setParameter($key, $val);
-                    }
+                    $route['matches'] = $matches;
+                    self::$_pathMapping[$pathInfo][$key] = $route;
                 }
-                
-                return $route;
             }
         }
+
+        $route = current(self::$_pathMapping[$pathInfo]);
+        if ($route) {
+            if (!empty($route['params'])) {
+                $params = array_combine($route['params'], $route['matches']);
+
+                Typecho_Request::reSetParameter();
+                foreach ($params as $key => $val) {
+                    Typecho_Request::setParameter($key, $val);
+                }
+            }
+
+            self::$current = key(self::$_pathMapping[$pathInfo]);
+            self::$next = next(self::$_pathMapping[$pathInfo]);
+        }
         
-        return false;
+        return $route;
     }
 
     /**
@@ -74,15 +98,13 @@ class Typecho_Router
      * @throws Typecho_Route_Exception
      */
     public static function dispatch()
-    {
-        /** 载入request支持 */
-        require_once 'Typecho/Request.php';
-        
+    {        
         /** 获取PATHINFO */
         $pathInfo = Typecho_Request::getPathInfo();
 
         /** 遍历路由 */
-        if (false !== ($route = self::match($pathInfo))) {
+        $route = self::match($pathInfo);
+        if (false !== $route) {
             /** Typecho_Widget */
             require_once 'Typecho/Widget.php';
             
