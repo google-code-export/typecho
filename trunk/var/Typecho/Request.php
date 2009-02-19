@@ -65,17 +65,6 @@ class Typecho_Request
     {
         self::$_params[$name] = $value;
     }
-
-    /**
-     * 重新设置传递参数
-     *
-     * @access public
-     * @return void
-     */
-    public static function reSetParameter()
-    {
-        self::$_params = array();
-    }
     
     /**
      * 参数是否存在
