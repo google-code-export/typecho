@@ -320,7 +320,7 @@ button {
     font-size: 13px;
 }
 
-.typecho-option .desption {
+.typecho-option .description {
     color: #555;
 }
 
@@ -1366,7 +1366,7 @@ ul.typecho-list-notable li span.trackback {
 .typecho-page-main .typecho-option {
     position: relative;
     top: -1px;
-    font-size: 12px;
+    font-size: 13px;
     border-bottom: 1px solid #EBEFDA;
     border-top: 1px solid #fff;
 }
@@ -1391,6 +1391,8 @@ ul.typecho-list-notable li span.trackback {
 
 .typecho-page-main .typecho-option li {
     margin: 15px 0px;
+	_padding-bottom: 5px;
+	display: block;
     padding-left: 200px;
 }
 
@@ -1429,7 +1431,10 @@ ul.typecho-list-notable li span.trackback {
 }
 
 .typecho-page-main .typecho-option span.multiline {
+	*float: left;
 	display: block;
+	line-height: 24px;
+	*width: 100%;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option textarea {
@@ -1437,7 +1442,7 @@ ul.typecho-list-notable li span.trackback {
 	height: 70px;
 }
 
-.typecho-page-main .typecho-option .desption {
+.typecho-page-main .typecho-option .description {
     line-height:18px;
     margin-top:5px;
     text-align:justify;

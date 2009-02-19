@@ -208,7 +208,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     {
         /** 创建描述元素 */
         if (empty($this->description)) {
-            $this->description = new Typecho_Widget_Helper_Layout('p', array('class' => 'desption'));
+            $this->description = new Typecho_Widget_Helper_Layout('p', array('class' => 'description'));
             $this->container($this->description);
         }
         

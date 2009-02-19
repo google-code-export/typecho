@@ -42,11 +42,13 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         /** 每页文章数目 */
         $pageSize = new Typecho_Widget_Helper_Form_Element_Text('pageSize', NULL, $this->options->pageSize,
         _t('每页文章数目'), _t('此数目用于指定文章归档输出时每页显示的文章数目.'));
+        $pageSize->input->setAttribute('class', 'mini');
         $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** 文章列表数目 */
         $postsListSize = new Typecho_Widget_Helper_Form_Element_Text('postsListSize', NULL, $this->options->postsListSize,
         _t('文章列表数目'), _t('此数目用于指定显示在侧边拦中的文章列表数目.'));
+        $postsListSize->input->setAttribute('class', 'mini');
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** FEED全文输出 */

@@ -21,6 +21,30 @@
 class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
+     * 编码自定义的路径
+     * 
+     * @access private
+     * @param string $rule 待编码的路径
+     * @return string
+     */
+    private function encodeRule($rule)
+    {
+        return str_replace(array('{', '}'), array('[', ']'), $rule);
+    }
+    
+    /**
+     * 解析自定义的路径
+     * 
+     * @access private
+     * @param string $rule 待解码的路径
+     * @return string
+     */
+    private function decodeRule($rule)
+    {
+        return preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $rule);
+    }
+
+    /**
      * 检测是否可以rewrite
      * 
      * @access public
@@ -98,17 +122,28 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         }
         
         $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
+        $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <strong>/archives/{cid}/</strong>', 
+        '/archives/[slug].html' => _t('wordpress风格') . ' <strong>/archives/{slug}.html</strong>', 
+        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <strong>/archives/{year}/{month}/{day}/{slug}.html</strong>',
+        '/[category]/[slug].html' => _t('按分类归档') . ' <strong>/{category}/{slug}.html</strong>');
         
         /** 自定义文章路径 */
         $postPatternValue = $this->options->routingTable['post']['url'];
-        $postPattern = new Typecho_Widget_Helper_Form_Element_Select('postPattern',
-        array('/archives/[cid:digital]/' => '/archives/{post_id}/', 
-        '/archives/[slug].html' => '/archives/{post_slug}.html', 
-        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => '/archives/{year}/{month}/{day}/{slug}.html',
-        '/[category]/[slug].html' => '/{category}/{post_slug}.html'),
+        
+        /** 增加个性化路径 */
+        $customPatternValue = NULL;
+        if (!isset($patterns[$postPatternValue])) {
+            $customPatternValue = $this->decodeRule($postPatternValue);
+        }
+        $patterns['custom'] = _t('个性化定义') . ' <input type="text" style="width: 250px;" name="customPattern" value="' . $customPatternValue . '" />';
+        
+        $postPattern = new Typecho_Widget_Helper_Form_Element_Radio('postPattern', $patterns,
         $postPatternValue, _t('自定义文章路径'), _t('选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.<br />
         一旦你选择了某种链接风格请不要轻易修改它.'));
-        $form->addInput($postPattern);
+        if ($customPatternValue) {
+            $postPattern->value('custom');
+        }
+        $form->addInput($postPattern->multiMode());
         
         /** 独立页面后缀名 */
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
@@ -139,6 +174,11 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         /** 验证格式 */
         if ($this->form()->validate()) {
             $this->response->goBack();
+        }
+        
+        /** 解析url pattern */
+        if ('custom' == $this->request->postPattern) {
+            $this->request->postPattern = $this->encodeRule($this->request->customPattern);
         }
         
         $settings = $this->request->from('rewrite');

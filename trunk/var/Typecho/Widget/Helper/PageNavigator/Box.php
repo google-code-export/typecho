@@ -49,8 +49,11 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出第一页
         if ($from > 1) {
             echo '<li><a href="' . str_replace($this->_pageHolder, 1, $this->_pageTemplate) . '">1</a></li>';
-            //输出省略号
-            echo '<li>' . $splitWord . '</li>';
+            
+            if ($from > 2) {
+                //输出省略号
+                echo '<li>' . $splitWord . '</li>';
+            }
         }
 
         //输出中间页
@@ -62,7 +65,10 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
 
         //输出最后页
         if ($to < $this->_totalPage) {
-            echo '<li>' . $splitWord . '</li>';
+            if ($to < $this->_totalPage - 1) {
+                echo '<li>' . $splitWord . '</li>';
+            }
+            
             echo '<li><a href="' . str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) , '">'
             . $this->_totalPage . '</a></li>';
         }

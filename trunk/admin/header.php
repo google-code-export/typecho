@@ -21,6 +21,7 @@ Typecho_Plugin::factory('admin/header.php')->header($header);
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php $options->charset(); ?>" />
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
         <?php $header->render(); ?>
     </head>
     <body>
