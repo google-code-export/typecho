@@ -233,7 +233,7 @@ button {
     font-size: 13px;
 }
 
-.typecho-option .desption {
+.typecho-option .description {
     color: #555;
 }
 
@@ -1204,7 +1204,7 @@ ul.typecho-list-notable li:hover {
     height: 145px;
 }
 
-.typecho-thumb-list .desption {
+.typecho-thumb-list .description {
 
 }
 
@@ -1253,7 +1253,7 @@ ul.typecho-list-notable li:hover {
     height: 150px;
 }
 
-.typecho-page-main .typecho-option .desption {
+.typecho-page-main .typecho-option .description {
     line-height:18px;
     margin-top:5px;
     text-align:justify;

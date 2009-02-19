@@ -16,4 +16,19 @@ include 'menu.php';
 </div>
 
 <?php include 'common-js.php'; ?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+
+            $(document)
+            .getElement('input[name=customPattern]')
+            .addEvent('click', function (event) {
+                $('postPattern-custom').set('checked', true);
+                this.focus();
+                event.stop();
+            });
+
+        });
+    })();
+</script>
 <?php include 'copyright.php'; ?>

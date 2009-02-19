@@ -41,6 +41,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 评论列表数目 */
         $commentsListSize = new Typecho_Widget_Helper_Form_Element_Text('commentsListSize', NULL, $this->options->commentsListSize,
         _t('评论列表数目'), _t('此数目用于指定显示在侧边拦中的评论列表数目.'));
+        $commentsListSize->input->setAttribute('class', 'mini');
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** 是否在列表中的评论者处显示其个人主页链接 */

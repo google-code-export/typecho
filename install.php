@@ -328,13 +328,13 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                 <?php if (_p('Pdo_SQLite')): ?><option value="Pdo_SQLite"<?php if('Pdo_SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动SQLite适配器(SQLite 3.x)') ?></option><?php endif; ?>
                                 <?php if (_p('Pdo_Pgsql')): ?><option value="Pdo_Pgsql"<?php if('Pdo_Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo驱动PostgreSql适配器') ?></option><?php endif; ?>
                             </select>
-                            <p class="desption"><?php _e('请根据你的数据库类型选择合适的适配器'); ?></p>
+                            <p class="description"><?php _e('请根据你的数据库类型选择合适的适配器'); ?></p>
                             </li>
                             <?php require_once './install/' . $type . '.php'; ?>
                             <li>
                             <label class="typecho-label"><?php _e('数据库前缀'); ?></label>
                             <input type="text" class="text mini" name="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
-                            <p class="desption"><?php _e('默认前缀是 "typecho_"'); ?></p>
+                            <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
                             </li>
                         </ul>
                         
@@ -350,17 +350,17 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                             <li>
                             <label class="typecho-label"><?php _e('网站地址'); ?></label>
                             <input type="text" name="userUrl" class="text" value="<?php _v('userUrl', _u()); ?>" />
-                            <p class="desption"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
+                            <p class="description"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('用户名'); ?></label>
                             <input type="text" name="userName" class="text" value="<?php _v('userName', 'admin'); ?>" />
-                            <p class="desption"><?php _e('请填写您的用户名'); ?></p>
+                            <p class="description"><?php _e('请填写您的用户名'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label"><?php _e('邮件地址'); ?></label>
                             <input type="text" name="userMail" class="text" value="<?php _v('userMail', 'webmaster@yourdomain.com'); ?>" />
-                            <p class="desption"><?php _e('请填写一个您的常用邮箱'); ?></p>
+                            <p class="description"><?php _e('请填写一个您的常用邮箱'); ?></p>
                             </li>
                         </ul>
                     </div>
