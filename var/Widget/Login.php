@@ -55,7 +55,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             $this->user->login($user['uid'], 1 == $this->request->remember ?
             $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         } else {
-            $this->widget('Widget_Notice')->set(_t('无法找到匹配的用户'), NULL, 'error');
+            $this->widget('Widget_Notice')->set(_t('用户名或密码无效'), NULL, 'error');
             $this->response->redirect($this->options->loginUrl . ((NULL === $this->request->referer) ? 
             NULL : '?referer=' . urlencode($this->request->referer)));
         }
