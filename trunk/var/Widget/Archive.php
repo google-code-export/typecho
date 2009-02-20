@@ -986,13 +986,18 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item->setTitle($comments->author);
                     $item->setLink($comments->permalink);
                     $item->setDate($comments->created);
-                    $item->setDescription($comments->content);
 
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $comments->permalink);
-                        $item->addElement('content:encoded', Typecho_Common::subStr(strip_tags($comments->content), 0, 100, '...'));
+
+                        //support content rfc
+                        $item->setDescription(Typecho_Common::subStr(strip_tags($comments->content), 0, 100, '...'));
+                        $item->addElement('content:encoded', $comments->content);
+
                         $item->addElement('author', $comments->author);
                         $item->addElement('dc:creator', $comments->author);
+                    } else {
+                        $item->setDescription($comments->content);
                     }
                     
                     $this->plugin()->commentFeedItem($item, $this->_feedType, $this);
@@ -1019,26 +1024,34 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item = $this->_feed->createNewItem();
                     $item->setTitle($this->title);
                     $item->setLink($this->permalink);
-                    $item->setDate($this->created);
-                    
-                    /** RSS全文输出开关支持 */
-                    if ($this->options->feedFullText) {
-                        $item->setDescription($this->content);
-                    } else {
-                        $item->setDescription(false !== strpos($this->text, '<!--more-->') ? 
-                        $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
-                    }
-                    
+                    $item->setDate($this->created);                    
                     $item->setCategory($this->categories);
                     
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $this->permalink);
                         $item->addElement('slash:comments', $this->commentsNum);
                         $item->addElement('comments', $this->permalink . '#comments');
-                        $item->addElement('content:encoded', $this->description);
+
+                        $item->setDescription($this->description);
+                        /** RSS全文输出开关支持 */
+                        if ($this->options->feedFullText) {
+                            $item->addElement('content:encoded', $this->content);
+                        } else {
+                            $item->addElement('content:encoded', false !== strpos($this->text, '<!--more-->') ?
+                            $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
+                        }
+
                         $item->addElement('author', $this->author->screenName);
                         $item->addElement('dc:creator', $this->author->screenName);
                         $item->addElement('wfw:commentRss', $this->feedUrl);
+                    } else {
+                        /** RSS全文输出开关支持 */
+                        if ($this->options->feedFullText) {
+                            $item->setDescription($this->content);
+                        } else {
+                            $item->setDescription(false !== strpos($this->text, '<!--more-->') ?
+                            $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
+                        }
                     }
                     
                     $this->plugin()->feedItem($item, $this->_feedType, $this);
