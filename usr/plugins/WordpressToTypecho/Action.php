@@ -33,6 +33,9 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
         $masterDb->query($masterDb->delete('table.relationships')->where('1 = 1'));
         $userId = $this->widget('Widget_User')->uid;
         
+        /** 获取时区偏移 */
+        $gmtOffset = idate('Z');
+        
         /** 转换全局变量 */
 		/** 
         $rows = $db->fetchAll($db->select()->from('table.statics'));
@@ -109,7 +112,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                 $comments->insert(array(
                     'coid'      =>  $row['comment_ID'],
                     'cid'       =>  $row['comment_post_ID'],
-                    'created'   =>  strtotime($row['comment_date_gmt']),
+                    'created'   =>  strtotime($row['comment_date_gmt']) + $gmtOffset,
                     'author'    =>  $row['comment_author'],
                     'authorId'  =>  $row['user_id'],
                     'ownerId'   =>  1,
@@ -173,8 +176,8 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                     'cid'           =>  $row['ID'],
                     'title'         =>  $row['post_title'],
                     'slug'          =>  $row['post_name'],
-                    'created'       =>  strtotime($row['post_date_gmt']),
-                    'modified'      =>  strtotime($row['post_modified_gmt']),
+                    'created'       =>  strtotime($row['post_date_gmt']) + $gmtOffset,
+                    'modified'      =>  strtotime($row['post_modified_gmt']) + $gmtOffset,
                     'text'          =>  $row['post_content'],
                     'order'         =>  $row['menu_order'],
                     'authorId'      =>  $row['post_author'],
