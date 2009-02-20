@@ -45,6 +45,13 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
         return preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $rule);
     }
 
+    /**
+     * 检验规则是否冲突
+     * 
+     * @access public
+     * @param string $value 路由规则
+     * @return boolean
+     */
     public function checkRule($value)
     {
         if ('custom' != $value) {
@@ -60,7 +67,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
         //echo $regx; die;
 
         foreach ($routingTable as $key => $val) {
-            if ('post' != $key) {
+            if ('post' != $key && 'page' != $key) {
                 $pathInfo = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $val['url']);
                 $pathInfo = str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{', '}'),
                     array('123', 'hello', 'default', '2008', '08', '08', '', ''), $pathInfo);

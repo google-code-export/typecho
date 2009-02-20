@@ -88,7 +88,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-            typechoTable.dragStop = function (item, result) {
+            Typecho.Table.dragStop = function (item, result) {
                 var _r = new Request.JSON({
                     url: '<?php $options->index('Contents/Page/Edit.do'); ?>'
                 }).send(result + '&do=sort');
