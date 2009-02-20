@@ -12,8 +12,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 <div class="column-18 start-01">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
-                        <p><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
-                        <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
+                        <p class="title"><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
+                        <label for="text" class="typecho-label typecho-editor-title"><?php _e('内容'); ?></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" id="text" name="text"><?php echo htmlspecialchars($post->content); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
@@ -137,7 +137,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
     (function () {
-        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>');
+        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',
+        '<?php _e('编辑器'); ?>', '<?php _e('代码'); ?>', 'cw');
     })();
 </script>
 <?php
