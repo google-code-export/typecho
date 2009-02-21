@@ -102,25 +102,14 @@ class Widget_User extends Typecho_Widget
         $expire, $this->widget('Widget_Options')->siteUrl);
 
         $this->_hasLogin = true;
-        
-        if ($this->db->fetchObject($this->db->select()
-                ->from('table.users')
-                ->where('uid = ?', $uid)
-                ->limit(1))->activated > 0) {
-            //更新最后登录时间以及验证码
-            $this->db->query($this->db
-            ->update('table.users')
-            ->expression('logged', 'activated')
-            ->rows(array('authCode' => $authCode))
-            ->where('uid = ?', $uid));
-        } else {
-            //第一次登录
-            $this->db->query($this->db
-            ->update('table.users')
-            ->rows(array('authCode' => $authCode, 'logged' => $this->widget('Widget_Options')->gmtTime))
-            ->where('uid = ?', $uid));
-        }
-    }
+
+		//更新最后登录时间以及验证码
+		$this->db->query($this->db
+				->update('table.users')
+				->expression('logged', 'activated')
+				->rows(array('authCode' => $authCode))
+				->where('uid = ?', $uid));
+	}
     
     /**
      * 用户登出函数
