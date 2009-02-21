@@ -1089,15 +1089,6 @@ margin-top: 25px;
 	margin: 4px 5px 0px 0;
 }
 
-label.typecho-editor-title {
-	float: left;
-	position: absolute;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    label.typecho-editor-title { padding-top: 7px; }
-}
-
 .typecho-editor-tab li {
 	float: right;
 	font-size: 12px;
