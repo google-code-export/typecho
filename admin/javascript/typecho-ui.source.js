@@ -371,6 +371,18 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
     .setStyle('width', $(id).getSize().x)
     .inject(id, 'before');
     
+    var _lb = $(document).getElement('label[for=' + id + ']');
+    if (_lb) {
+        _lb.setStyles({
+            'float': 'left',
+            'position': 'absolute'
+        });
+        
+        if (Browser.Engine.webkit) {
+            _lb.setStyle('padding-top', 7);
+        }
+    }
+    
     $('typecho-editor-tab-' + current).addClass('current');
     
     var _show = function () {
