@@ -518,7 +518,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_archiveType = 'date';
                 
                 /** 设置头部feed */
-                $value = array('year' => $year, 'month' => $month, 'day' => $day);
+                $value = array('year' => $year, 'month' => str_pad($month, 2, '0', STR_PAD_LEFT), 'day' => str_pad($day, 2, '0', STR_PAD_LEFT));
                 
                 /** 设置分页 */
                 $this->_pageRow = $value;
