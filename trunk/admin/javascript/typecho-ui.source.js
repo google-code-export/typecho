@@ -342,58 +342,68 @@ Typecho.Table = {
 /** tinyMCE编辑器封装 */
 Typecho.tinyMCE = function (id, url, vw, cw, current) {
 
-    var _currentY = parseInt($(id).getStyle('height'));
+    var _currentY = parseInt($(id).getStyle('height')), _ed;
     
+    var _transfer = function () {
     
-    var _tab = new Element('ul', {'class': 'typecho-editor-tab'})
-    .grab(new Element('li', {'text': vw, 'id': 'typecho-editor-tab-vw', 'events': {
+        var _r = new Request({
+            'method': 'post',
+            'url': url
+        }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
     
-        'click': function () {
-            $(id + '_parent').setStyle('display', 'block');
-            $(id).setStyle('display', 'none');
-            $(this).addClass('current');
-            $('typecho-editor-tab-cw').removeClass('current');
-            current = 'vw';
-        }
+        _r.addEvent('onSuccess', function (responseText) {
+            $(id).set('value', responseText);
+        });
     
-    }}))
-    .grab(new Element('li', {'text': cw, 'id': 'typecho-editor-tab-cw', 'events': {
+    };
     
-        'click': function () {
+    var _toCode = function () {
+    
+        $('typecho-editor-tab-cw').addClass('loading');
+        var _r = new Request({
+            'method': 'post',
+            'url': url
+        }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
+        
+        _r.addEvent('onSuccess', function (responseText) {
+            $(id).set('value', responseText);
+            $('typecho-editor-tab-cw').removeClass('loading');
             $(id + '_parent').setStyle('display', 'none');
             $(id).setStyle('display', 'block');
-            $(this).addClass('current');
-            $('typecho-editor-tab-vw').removeClass('current');
-            current = 'cw';
-        }
-    
-    }}))
-    .setStyle('width', $(id).getSize().x)
-    .inject(id, 'before');
-    
-    var _lb = $(document).getElement('label[for=' + id + ']');
-    if (_lb) {
-        _lb.setStyles({
-            'float': 'left',
-            'position': 'absolute'
         });
-        
-        if (Browser.Engine.webkit) {
-            _lb.setStyle('padding-top', 7);
-        }
-    }
     
-    $('typecho-editor-tab-' + current).addClass('current');
+    };
+    
+    var _toVisual = function () {
+    
+        $('typecho-editor-tab-vw').addClass('loading');
+        var _r = new Request({
+            'method': 'post',
+            'url': url
+        }).send('content=' + encodeURIComponent($(id).get('value')) + '&do=cutParagraph');
+        
+        _r.addEvent('onSuccess', function (responseText) {
+            _ed.setContent(responseText);
+            $('typecho-editor-tab-vw').removeClass('loading');
+            $(id + '_parent').setStyle('display', 'block');
+            $(id).setStyle('display', 'none');
+        });
+    
+    };
     
     var _show = function () {
         if ('cw' == current) {
             $(id + '_parent').setStyle('display', '');
+        } else {
+            $(id).setStyle('display', '');
         }
     };
     
     var _hide = function () {
         if ('cw' == current) {
             $(id + '_parent').setStyle('display', 'none');
+        } else {
+            $(id).setStyle('display', 'none');
         }
     };
     
@@ -407,10 +417,54 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         
         //Event setup
         setup : function(ed) {
+        
+            var _tab = new Element('ul', {'class': 'typecho-editor-tab'})
+            .grab(new Element('li', {'text': vw, 'id': 'typecho-editor-tab-vw', 'events': {
+            
+                'click': function () {
+
+                    $(this).addClass('current');
+                    $('typecho-editor-tab-cw').removeClass('current');
+                    current = 'vw';
+                    _toVisual();
+                }
+            
+            }}))
+            .grab(new Element('li', {'text': cw, 'id': 'typecho-editor-tab-cw', 'events': {
+            
+                'click': function () {
+
+                    $(this).addClass('current');
+                    $('typecho-editor-tab-vw').removeClass('current');
+                    current = 'cw';
+                    _toCode();
+                }
+            
+            }}))
+            .setStyle('width', $(id).getSize().x)
+            .inject(id, 'before');
+            
+            var _lb = $(document).getElement('label[for=' + id + ']');
+            if (_lb) {
+                _lb.setStyles({
+                    'float': 'left',
+                    'position': 'absolute'
+                });
+                
+                if (Browser.Engine.webkit) {
+                    _lb.setStyle('padding-top', 7);
+                }
+            }
+            
+            $('typecho-editor-tab-' + current).addClass('current');
+        
             ed.onInit.add(function(ed) {
             
                 var _pressed = false;
                 var _resize = 0, _last = 0, mouseY = 0, editorOffset = 0, _minFinalY = 0;
+                _ed = ed;
+                
+                _transfer();
                 
                 var _holder = new Element('div', {
                 
@@ -534,12 +588,14 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
                     $(id).setStyle('display', 'block');
                 }
                 
+                _show();
                 $(id).setStyle('height', $(id).getSize().y + (Browser.Engine.trident ? -1 : 3));
+                _hide();
             });
         },
 
         // Theme options
-        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak,code,help",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak",
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_toolbar_location : "top",

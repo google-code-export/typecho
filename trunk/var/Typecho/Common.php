@@ -22,11 +22,13 @@ class Typecho_Common
     /** 默认不解析的标签列表 */
     const LOCKED_HTML_TAG = 'code|script';
     
-    /** 布局标签 */
-    const GRID_HTML_TAG = 'div|blockquote|pre|table|tr|th|td|li|ol|ul|h[1-6]';
+    /** 需要去除内部换行的标签 */
+    const ESCAPE_HTML_TAG = 'div|blockquote|pre|table|tr|th|td|li|ol|ul|h[1-6]';
     
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
+    
+    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul';
     
     /** 程序版本 */
     const VERSION = '0.5/9.2.18';
@@ -599,9 +601,9 @@ class Typecho_Common
     public static function removeParagraph($html)
     {
         return trim(preg_replace(
-        array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
-        array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"), 
+        array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+        "/\s*<(div|blockquote|pre|code|table|ol|ul)>/is", "/<\/(div|blockquote|pre|code|table|ol|ul)>\s*/is", "/\s*<\!--more-->\s*/is"),
+        array("\n\\1\n", "\n", "\n\n<\\1>", "</\\1>\n\n", "\n\n<!--more-->\n\n"), 
         $html));
     }
     
@@ -626,8 +628,9 @@ class Typecho_Common
 
         $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>')", $string);
-        $string = preg_replace("/<(" . self::GRID_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
+        $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
+        $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
@@ -635,7 +638,7 @@ class Typecho_Common
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */
-        $string = preg_replace("/<p><(" . self::GRID_HTML_TAG . '|' . self::LOCKED_HTML_TAG
+        $string = preg_replace("/<p><(" . self::ESCAPE_HTML_TAG . '|p|' . self::LOCKED_HTML_TAG
         . ")([^>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }

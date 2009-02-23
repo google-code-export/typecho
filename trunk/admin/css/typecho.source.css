@@ -1108,6 +1108,13 @@ margin-top: 25px;
 	background: #D3DBB3;
 }
 
+.typecho-editor-tab li.loading {
+	padding-left: 32px;
+	background-image: url(../images/ajax-loader.gif);
+	background-position: 8px 4px;
+	background-repeat: no-repeat;
+}
+
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
     background: #f7fbe9 url(../images/btn.png) top repeat-x;
 }
