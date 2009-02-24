@@ -23,12 +23,12 @@ class Typecho_Common
     const LOCKED_HTML_TAG = 'code|script';
     
     /** 需要去除内部换行的标签 */
-    const ESCAPE_HTML_TAG = 'div|blockquote|pre|table|tr|th|td|li|ol|ul|h[1-6]';
+    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|tr|th|td|li|ol|ul|h[1-6]';
     
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
     
-    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul';
+    const GRID_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul';
     
     /** 程序版本 */
     const VERSION = '0.5/9.2.18';
@@ -69,7 +69,7 @@ class Typecho_Common
     /**
      * 锁定标签回调函数
      * 
-     * @access public
+     * @access private
      * @param array $matches 匹配的值
      * @return string
      */
@@ -94,6 +94,19 @@ class Typecho_Common
             "/\(\s*(\"|')/i",           //函数开头
             "/(\"|')\s*\)/i",           //函数结尾
         ), '', $string);
+    }
+    
+    /**
+     * 检查是否为安全路径
+     * 
+     * @access public
+     * @param string $path 检查是否为安全路径
+     * @return boolean
+     */
+    public static function __safePath($path)
+    {
+        $safePath = rtrim(__TYPECHO_ROOT_DIR__, '/');
+        return 0 === strpos($path, $safePath);
     }
     
     /**
@@ -210,8 +223,10 @@ class Typecho_Common
     public static function isAvailableClass($className, $path = NULL)
     {
         /** 获取所有include目录 */
-        $dirs = false === self::$_cachedIncludePath ? array_map('realpath', explode(PATH_SEPARATOR, get_include_path()))
-        : self::$_cachedIncludePath;
+        //增加安全目录检测 fix issue 106
+        $dirs = array_map('realpath', array_filter(explode(PATH_SEPARATOR, get_include_path()),
+        array('Typecho_Common', '__safePath')));
+        
         $file = str_replace('_', '/', $className) . '.php';
         
         if (!empty($path)) {
