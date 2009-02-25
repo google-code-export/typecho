@@ -27,7 +27,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
      */
     public static function encodeCallback($matches)
     {
-        return '<code' . $matches[1] . '>' . nl2br(str_replace(' ', '&nbsp;', htmlspecialchars(trim($matches[2])))) . '</code>';
+        return '<code' . $matches[1] . '>' . str_replace(' ', '&nbsp;', htmlspecialchars(trim($matches[2]))) . '</code>';
     }
     
     /**

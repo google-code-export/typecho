@@ -416,8 +416,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         theme : "advanced",
         skin : "typecho",
         plugins : "safari,pagebreak,inlinepopups,media,coder",
-        extended_valid_elements : "code[*],pre[*],script[*],iframe[*],textarea[*]",
-        valid_child_elements : "textarea[#text]",
+        extended_valid_elements : "code[*],pre[*],script[*],iframe[*]",
         
         //Event setup
         setup : function(ed) {

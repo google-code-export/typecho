@@ -19,10 +19,31 @@
             
 			ed.onBeforeSetContent.add(function(ed, o) {
 				o.content = o.content.replace(/<code([^>]*)>([\s\S]*?)<\/code>/ig, function (g, a, b) {
-                    b = b.trim().replace(/ /g, "&nbsp;")
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;")
-                    .replace(/(\r|\n)/g, "<br />");
+                    
+                    b = b.trim().replace(/( |<|>|\r\n|\r|\n)/g, function (a) {
+                    
+                        switch (a) {
+                        
+                            case "<":
+                                return "&lt;";
+                                
+                            case ">":
+                                return "&gt;";
+                            
+                            case "\r\n":
+                            case "\r":
+                            case "\n":
+                                return '<br />';
+                                
+                            case " ":
+                                return '&nbsp;';
+                                
+                            default:
+                                return;
+                        
+                        }
+                    
+                    });
                     
                     return '<code' + a + '>' + b + '</code>';
                 });
