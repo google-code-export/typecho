@@ -14,7 +14,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea style="height: <?php $options->editorSize(); ?>px" id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
+                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                         <p class="submit">
                             <span class="left">
@@ -113,8 +113,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
-    (function () {        
-        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>');
+    (function () {
+        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',
+        '<?php _e('编辑器'); ?>', '<?php _e('代码'); ?>', '<?php echo ($options->useRichEditor ? 'vw' : 'cw'); ?>');
     })();
 </script>
 <?php

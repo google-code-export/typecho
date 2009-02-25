@@ -346,6 +346,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
     
     var _transfer = function () {
     
+        $(id).setProperty('disabled', 'disabled');
         var _r = new Request({
             'method': 'post',
             'url': url
@@ -353,6 +354,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
     
         _r.addEvent('onSuccess', function (responseText) {
             $(id).set('value', responseText);
+            $(id).removeProperty('disabled');
         });
     
     };
@@ -413,7 +415,9 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         elements : id,
         theme : "advanced",
         skin : "typecho",
-        plugins : "safari,pagebreak,inlinepopups,media",
+        plugins : "safari,pagebreak,inlinepopups,media,coder",
+        extended_valid_elements : "code[*],pre[*],script[*],iframe[*],textarea[*]",
+        valid_child_elements : "textarea[#text]",
         
         //Event setup
         setup : function(ed) {
@@ -423,10 +427,13 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
             
                 'click': function () {
 
-                    $(this).addClass('current');
-                    $('typecho-editor-tab-cw').removeClass('current');
-                    current = 'vw';
-                    _toVisual();
+                    if (current == 'cw') {
+                        $(this).addClass('current');
+                        $('typecho-editor-tab-cw').removeClass('current');
+                        current = 'vw';
+                        _toVisual();
+                    }
+                    
                 }
             
             }}))
@@ -434,10 +441,12 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
             
                 'click': function () {
 
-                    $(this).addClass('current');
-                    $('typecho-editor-tab-vw').removeClass('current');
-                    current = 'cw';
-                    _toCode();
+                    if (current == 'vw') {
+                        $(this).addClass('current');
+                        $('typecho-editor-tab-vw').removeClass('current');
+                        current = 'cw';
+                        _toCode();
+                    }
                 }
             
             }}))
@@ -592,6 +601,14 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
                 $(id).setStyle('height', $(id).getSize().y + (Browser.Engine.trident ? -1 : 3));
                 _hide();
             });
+        },
+        
+        save_callback : function (element_id, html, body) {
+            if ('cw' == current) {
+                return $(id).get('value');
+            } else {
+                return html;
+            }
         },
 
         // Theme options

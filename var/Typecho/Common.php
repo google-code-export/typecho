@@ -31,7 +31,7 @@ class Typecho_Common
     const GRID_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul';
     
     /** 程序版本 */
-    const VERSION = '0.5/9.2.18';
+    const VERSION = '0.5/9.2.25';
     
     /**
      * 缓存的包含路径
@@ -639,7 +639,7 @@ class Typecho_Common
         }
         
         /** 锁定标签 */
-        $string = preg_replace_callback("/\<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*+<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
+        $string = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>')", $string);
