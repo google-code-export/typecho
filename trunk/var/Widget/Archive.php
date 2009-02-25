@@ -154,9 +154,11 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function __construct()
     {
         parent::__construct();
+        $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
+        'type' => Typecho_Router::$current));
 
         /** 处理feed模式 **/
-        if ('feed' == Typecho_Router::$current) {
+        if ('feed' == $this->parameter->type) {
         
             /** 判断聚合类型 */
             switch (true) {
@@ -179,8 +181,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         
             if ('/comments/' == $this->request->feed || '/comments' == $this->request->feed) {
                 /** 专为feed使用的hack */
-                Typecho_Router::$current = 'comments';
-            } else if (!$matched || 'feed' == Typecho_Router::$current) {
+                $this->parameter->type = 'comments';
+            } else if (!$matched || 'feed' == $this->parameter->type) {
                 throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
             }
             
@@ -229,7 +231,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
     
         /** 初始化分页变量 */
-        $this->parameter->setDefault(array('pageSize' => $this->options->pageSize));
         $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
         $hasPushed = false;
 
@@ -243,13 +244,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedAtomUrl = $this->options->feedAtomUrl;
         $this->_keywords = $this->options->keywords;
         $this->_description = $this->options->description;
-        
-        /** 强行设置归档类型 */
-        if (isset($this->options->type)) {
-            Typecho_Router::$current = $this->options->type;
-        }
 
-        switch (Typecho_Router::$current) {
+        switch ($this->parameter->type) {
             /** 索引页 */
             case 'index':
             case 'index_page':
@@ -524,7 +520,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_pageRow = $value;
                 
                 /** 获取当前路由,过滤掉翻页情况 */
-                $currentRoute = str_replace('_page', '', Typecho_Router::$current);
+                $currentRoute = str_replace('_page', '', $this->parameter->type);
                 
                 /** RSS 2.0 */
                 $this->_feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
@@ -621,8 +617,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->plugin()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
         
         if (!$hasNav) {
-            $query = Typecho_Router::url(Typecho_Router::$current . 
-            (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
+            $query = Typecho_Router::url($this->parameter->type . 
+            (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
             $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
@@ -643,10 +639,10 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function pageLink($word = '&laquo; Previous Entries', $page = 'render')
     {
         static $nav;
-    
+        
         if (empty($nav)) {
-            $query = Typecho_Router::url(Typecho_Router::$current . 
-            (false === strpos(Typecho_Router::$current, '_page') ? '_page' : NULL),
+            $query = Typecho_Router::url($this->parameter->type . 
+            (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
             $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
@@ -971,11 +967,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->plugin()->feed($this->_feed, $this);
         
         /** 添加聚合频道 */
-        switch (Typecho_Router::$current) {
+        switch ($this->parameter->type) {
             case 'post':
             case 'page':
             case 'comments':
-                if ('comments' == Typecho_Router::$current) {
+                if ('comments' == $this->parameter->type) {
                     $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
                 } else {
                     $comments = $this->comments(NULL, true);
