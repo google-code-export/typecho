@@ -182,7 +182,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             if ('/comments/' == $this->request->feed || '/comments' == $this->request->feed) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
-            } else if (!$matched || 'feed' == $this->parameter->type) {
+            } else if (!$matched || 'feed' == Typecho_Router::$current) {
                 throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
             }
             
