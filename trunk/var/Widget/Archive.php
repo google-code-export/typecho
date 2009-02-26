@@ -178,11 +178,12 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             $matched = Typecho_Router::match($this->request->feed);
+            $this->parameter->type = Typecho_Router::$current;
         
             if ('/comments/' == $this->request->feed || '/comments' == $this->request->feed) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
-            } else if (!$matched || 'feed' == Typecho_Router::$current) {
+            } else if (!$matched || 'feed' == $this->parameter->type) {
                 throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
             }
             
