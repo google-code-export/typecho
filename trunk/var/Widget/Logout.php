@@ -28,6 +28,6 @@ class Widget_Logout extends Widget_Abstract_Users implements Widget_Interface_Do
     public function action()
     {
         $this->user->logout();
-        $this->response->redirect($this->options->index);
+        $this->response->goBack(NULL, $this->options->index);
     }
 }
