@@ -346,7 +346,6 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
     
     var _transfer = function () {
     
-        $(id).setProperty('disabled', 'disabled');
         var _r = new Request({
             'method': 'post',
             'url': url
