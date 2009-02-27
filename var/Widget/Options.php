@@ -181,6 +181,17 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 获取个人档案地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___profileUrl()
+    {
+        return Typecho_Common::url('profile.php', $this->adminUrl);
+    }
+    
+    /**
      * 获取登出地址
      * 
      * @access protected

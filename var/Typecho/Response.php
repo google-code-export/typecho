@@ -242,9 +242,10 @@ class Typecho_Response
      *
      * @access protected
      * @param string $anchor 锚点地址
+     * @param string $default 默认来路
      * @return void
      */
-    public static function goBack($anchor = NULL)
+    public static function goBack($anchor = NULL, $default = NULL)
     {
         /** Typecho_Request */
         require_once 'Typecho/Request.php';
@@ -261,6 +262,8 @@ class Typecho_Response
             }
             
             self::redirect($referer . (empty($anchor) ? NULL : '#' . $anchor), false);
+        } else if (!empty($default)) {
+            self::redirect($default);
         }
     }
     
