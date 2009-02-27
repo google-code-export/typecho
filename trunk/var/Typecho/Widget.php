@@ -59,12 +59,20 @@ abstract class Typecho_Widget
     protected $row = array();
     
     /**
-     * 当前堆栈指针顺序值,从1开始
+     * 当前队列指针顺序值,从1开始
      * 
      * @access public
      * @var integer
      */
     public $sequence = 0;
+    
+    /**
+     * 队列长度
+     * 
+     * @access public
+     * @var integer
+     */
+    public $length = 0;
     
     /**
      * 执行函数
@@ -251,6 +259,7 @@ abstract class Typecho_Widget
     {
         //将行数据按顺序置位
         $this->row = $value;
+        $this->length ++;
 
         $this->stack[] = $value;
         return $value;
@@ -280,6 +289,17 @@ abstract class Typecho_Widget
     public function sequence()
     {
         echo $this->sequence;
+    }
+    
+    /**
+     * 输出数据长度
+     * 
+     * @access public
+     * @return void
+     */
+    public function length()
+    {
+        echo $this->length;
     }
 
     /**
