@@ -1360,10 +1360,23 @@ ul.typecho-list-notable li span.trackback {
 /**
  * 模板列表
  */
+.typecho-theme-list {
+	border-collapse: separate;
+	border-spacing: 0;
+} 
+
 .typecho-theme-list td {
 	line-height: 20px;
 	vertical-align: top;
 	padding: 10px 5px;
+}
+
+.typecho-theme-list td.border-right {
+	border-right: 1px solid #CAD7A2;
+}
+
+.typecho-theme-list td.border-bottom {
+	border-bottom: 1px solid #CAD7A2;
 }
 
 .typecho-theme-list img {

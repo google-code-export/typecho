@@ -19,6 +19,8 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     font-style: inherit;
     font-family: inherit;
     vertical-align: baseline;
+	outline-style: none;
+	outline-width: none;
 }
 
 h1 {

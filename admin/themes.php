@@ -14,7 +14,7 @@ include 'menu.php';
                     <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
                 </ul>
                 
-                <table class="typecho-list-table typecho-theme-list">
+                <table class="typecho-list-table typecho-theme-list" cellspacing="0" cellpadding="0">
                     <colgroup>
                         <col width="450"/>
                         <col width="450"/>
@@ -22,7 +22,10 @@ include 'menu.php';
                     <?php Typecho_Widget::widget('Widget_Themes_List')->to($themes); ?>
                     <?php while($themes->next()): ?>
                     <?php $themes->alt('<tr>', ''); ?>
-                    <td id="theme-<?php $themes->name(); ?>" class="<?php if($themes->activated): ?>current <?php endif; ?>typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <?php
+                    $borderBottom = ($themes->length - $themes->sequence >= ($themes->length % 2 ? 1 : 2));
+                    ?>
+                    <td id="theme-<?php $themes->name(); ?>" class="<?php if($themes->activated): ?>current <?php endif; $themes->alt('border-right', ''); if ($borderBottom): echo ' border-bottom'; endif; ?>">
                         <div class="column-04">
                         <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
                         </div>
