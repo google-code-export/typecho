@@ -1755,9 +1755,10 @@ ul.typecho-post-option li ul li {
 
 ul.typecho-post-option li ul.related li {
 	background: none;
-	list-style: none;
+	list-style-type: square;
 	padding: 0;
-	margin: 0;
+	margin: 0 0 0 20px;
+	height: auto;
 }
 
 ul.typecho-post-option li ul li:hover {
