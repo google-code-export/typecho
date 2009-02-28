@@ -1696,12 +1696,15 @@ ul.typecho-list-notable li span.trackback {
 
 .typecho-post-area textarea#text {
     font-size: 13px;
+	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	line-height: 18px;
     width: 700px;
 	margin: 0;
 	*margin: -1px 0 -1px 0;
 	display: block;
 	border: 1px solid #C1CD94;
 	padding: 3px;
+	resize: none;
 }
 
 .typecho-post-area span.size-btn {
@@ -1793,6 +1796,8 @@ ul.typecho-post-option .description {
 	text-decoration: underline;
 	cursor: pointer;
 	padding-left: 16px;
+	height: 16px;
+	line-height: 16px;
 	background: url(../images/arrow.gif) left top no-repeat;
 }
 
