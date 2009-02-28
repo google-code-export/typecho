@@ -47,7 +47,7 @@ class Typecho_Common
      * @access private
      * @var array
      */
-    private static $_lockedBlocks = array();
+    private static $_lockedBlocks = array('<p></p>' => '');
     
     /**
      * 默认的初始化配置
