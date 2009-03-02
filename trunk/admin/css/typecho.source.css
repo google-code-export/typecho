@@ -365,12 +365,13 @@ button {
 
 .message a {
     color: #333;
-    text-decoration: underline;
+    border-bottom: 1px dashed #aaa;
 	line-height: 20px;
 }
 
 .message a:hover {
 	text-decoration: none;
+	border-style: solid;
 }
 
 .message blockquote {
@@ -387,6 +388,7 @@ button {
 
 .error a {
 	color: #8A1F11;
+	border-color:#8A1F11;
 }
 
 .notice {
@@ -397,6 +399,7 @@ button {
 
 .notice a {
 	color: #514721;
+	border-color:#514721;
 }
 
 .success {
@@ -407,6 +410,7 @@ button {
 
 .success a {
 	color: #264409;
+	border-color:#264409;
 }
 
 /** 增加顶部消息样式 by 70 */

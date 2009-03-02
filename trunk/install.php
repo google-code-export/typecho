@@ -139,9 +139,15 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
             <?php if (isset($_GET['finish'])) : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
-                    <div class="session">
-                    <p><?php _e('您的用户名是'); ?>:<em><?php echo Typecho_Request::getParameter('user'); ?></em></p>
-                    <p><?php _e('您的密码是'); ?>:<em>12345</em></p>
+                    <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <ul>
+                    <li><?php _e('您的用户名是'); ?>:<strong><?php echo Typecho_Request::getParameter('user'); ?></strong></li>
+                    <li><?php _e('您的密码是'); ?>:<strong>12345</strong></li>
+                    </ul>
+                    </div>
+                    
+                    <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <a target="_blank" href="http://spreadsheets.google.com/viewform?key=pd1Gl4Ur_pbniqgebs5JRIg&hl=en">参与用户调查, 帮助我们完善产品</a>
                     </div>
 
                     <div class="session">
