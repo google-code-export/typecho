@@ -897,7 +897,7 @@ margin-top: 25px;
 
 .typecho-page-title div {
     height: 30px;
-    background: url(../images/sprite.png) repeat-x scroll 0px -1485px;
+    background: url(../images/sprite.png) repeat-x scroll 0px -1483px;
 }
 
 .typecho-page-title div a {
@@ -1696,7 +1696,7 @@ ul.typecho-list-notable li span.trackback {
 
 .typecho-post-area textarea#text {
     font-size: 13px;
-	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
 	line-height: 18px;
     width: 700px;
 	margin: 0;
