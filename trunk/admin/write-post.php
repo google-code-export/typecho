@@ -142,7 +142,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         
         // Our instance for the element with id "demo-local"
         new Autocompleter.Local('tags', _tags, {
-            'width': 706,
             'minLength': 1, // We need at least 1 character
             'selectMode': 'type-ahead', // Instant completion
             'multiple': true // Tag support, by default comma separated

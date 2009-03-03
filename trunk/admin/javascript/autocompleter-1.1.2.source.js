@@ -222,6 +222,7 @@ var Autocompleter = new Class({
 		var input = this.selected.inputValue, value = input;
 		var start = this.queryValue.length, end = input.length;
 		if (input.substr(0, start).toLowerCase() != this.queryValue.toLowerCase()) start = 0;
+
 		if (this.options.multiple) {
 			var split = this.options.separatorSplit;
 			value = this.element.value;
@@ -229,10 +230,12 @@ var Autocompleter = new Class({
 			end += this.queryIndex;
 			var old = value.substr(this.queryIndex).split(split, 1)[0];
 			value = value.substr(0, this.queryIndex) + input + value.substr(this.queryIndex + old.length);
+            
 			if (finish) {
 				var tokens = value.split(this.options.separatorSplit).filter(function(entry) {
 					return this.test(entry);
 				}, /[^\s,]+/);
+                
 				if (!this.options.allowDupes) tokens = [].combine(tokens);
 				var sep = this.options.separator;
 				value = tokens.join(sep) + sep;
@@ -254,7 +257,7 @@ var Autocompleter = new Class({
 			this.choices.setStyles({
 				'left': pos.left,
 				'top': pos.bottom,
-				'width': (width === true || width == 'inherit') ? pos.width : width
+				'width': (width === true || width == 'inherit') ? pos.width - 2 : width
 			});
 		}
 		if (!first) return;
