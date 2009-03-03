@@ -16,7 +16,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" disabled autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->content); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
-                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
+                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(', ', false); ?>" class="text" /></p>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                         <p class="submit">
                             <span class="left">
@@ -114,7 +114,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     </div>
 </div>
 <?php include 'common-js.php'; ?>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/autocompleter-1.1.2.source.js'); ?>"></script>
+<?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 <script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+        
         /** 绑定按钮 */
         $(document).getElement('span.advance').addEvent('click', function () {
             Typecho.toggle('#advance-panel', this,
@@ -131,9 +136,24 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             $(document).getElement('form[name=write_post]').submit();
         });
         
+        /** 标签自动完成 */
+        var _tags = [<?php while ($tags->next()) { echo '"' . str_replace('"', '\"', $tags->name) . '"'
+        . ($tags->sequence != $tags->length ? ',' : NULL); } ?>];
+        
+        // Our instance for the element with id "demo-local"
+        new Autocompleter.Local('tags', _tags, {
+            'width': 706,
+            'minLength': 1, // We need at least 1 character
+            'selectMode': 'type-ahead', // Instant completion
+            'multiple': true // Tag support, by default comma separated
+        });
+        
+        /** 日期对象 */
         Typecho.date('date', <?php $post->date('Y'); ?>, <?php $post->date('n'); ?>, <?php $post->date('j'); ?>,
         <?php $post->date('G'); ?>, <?php $post->date('i'); ?>, 0);
         
+        });
+    })();
 </script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>

@@ -10,7 +10,7 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
-                <h6 class="typecho-list-table-title">激活的插件</h6>
+                <h6 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h6>
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="10"/>
@@ -46,7 +46,7 @@ include 'menu.php';
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
-                                        <a href="<?php $options->index('Plugins/Edit.do?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
+                                        <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('Plugins/Edit.do?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
                                         <a href="<?php $options->index('Plugins/Edit.do?activate=' . $activatedPlugins->name); ?>"><?php _e('激活'); ?></a>
                                     <?php endif; ?>
@@ -62,7 +62,7 @@ include 'menu.php';
                 
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Deactivated')->to($deactivatedPlugins); ?>
                 <?php if ($deactivatedPlugins->have() || !$activatedPlugins->have()): ?>
-                <h6 class="typecho-list-table-title">禁用的插件</h6>
+                <h6 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h6>
                 <table class="typecho-list-table deactivate">
                     <colgroup>
                         <col width="10"/>
