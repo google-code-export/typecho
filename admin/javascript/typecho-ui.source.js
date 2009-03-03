@@ -1082,13 +1082,16 @@ Typecho.autoComplete = function (match, token) {
     //绑定事件
     _el.addEvents({
         
-        'click': function (e) {
+        'mouseup': function (e) {
             var _start = _el.getSelectedRange().start,
             _pos = _location(_start);
             _hide();
             _select(_start, _pos);
             e.shoot = true;
             this.fireEvent('keyup', e);
+            
+            e.stop();
+            return false;
         },
         
         'keydown': function (e) {
