@@ -28,7 +28,11 @@ class Typecho_Common
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
     
+    /** 布局标签 */
     const GRID_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul';
+    
+    /** 独立段落标签 */
+    const PARAGRAPH_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul|h[1-6]';
     
     /** 程序版本 */
     const VERSION = '0.5/9.2.25';
@@ -617,8 +621,8 @@ class Typecho_Common
     {
         return trim(preg_replace(
         array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|code|table|ol|ul)>/is", "/<\/(div|blockquote|pre|code|table|ol|ul)>\s*/is", "/\s*<\!--more-->\s*/is"),
-        array("\n\\1\n", "\n", "\n\n<\\1>", "</\\1>\n\n", "\n\n<!--more-->\n\n"), 
+        "/\s*<(" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>/is", "/<\/(" . self::PARAGRAPH_HTML_TAG . ")>\s*/is", "/\s*<\!--more-->\s*/is"),
+        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"), 
         $html));
     }
     
