@@ -264,20 +264,6 @@ button {
 }
 
 /**
- * 选择日历
- */
-.select-date {
-    display: inline-block;
-    outline: none;
-    background: url(../images/sprite.png) no-repeat scroll 0px -293px;
-    width: 15px;
-    height: 15px;
-    overflow: hidden;
-    text-indent: -999px;
-    margin: 0px 7px;
-}
-
-/**
  * logo 的样式
  */
 .logo {
@@ -1792,6 +1778,61 @@ ul.typecho-post-option li ul.related li:hover {
 ul.typecho-post-option .description {
 	color: #999;
 	margin-top: 5px;
+}
+
+ul.autocompleter-choices {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background-color: #fff;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	z-index: 50;
+	border: 1px solid #CED7A8;
+	border-top: none;
+	background: #DCE2C0;
+	color: #000;
+	font-size: 13px;
+	
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	
+	/* hope IE support border radius, God save me! */
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+
+ul.autocompleter-choices li {
+	position: relative;
+	margin: -2px 0 0 0;
+	padding: 0.3em 1.5em 0.3em 1em;
+	display: block;
+	float: none !important; 
+	cursor: pointer;
+	font-weight: normal;
+	white-space: nowrap;
+	font-size: 1em;
+	line-height: 1.5em;
+}
+
+ul.autocompleter-choices li.autocompleter-selected {
+	background-color: #EDF0DF;
+	color: #000;
+}
+
+ul.autocompleter-choices span.autocompleter-queried {
+	display: inline;
+	float: none;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+
+ul.autocompleter-choices li.autocompleter-selected span.autocompleter-queried {
+	color: #E47E00;
 }
 
 .typecho-post-area .advance {

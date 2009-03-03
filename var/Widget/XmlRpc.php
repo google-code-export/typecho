@@ -463,7 +463,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         try {
             if (isset($input['cid'])) {
                 /** 编辑 */
-                $input['do'] = 'edit';
+                $input['do'] = 'update';
                 if(empty($input['slug'])) {
                     unset($input['slug']);
                 }

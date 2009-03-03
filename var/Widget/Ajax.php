@@ -250,6 +250,11 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         ), ENT_QUOTES, $this->options->charset);
     }
     
+    public function autoSave()
+    {
+        
+    }
+    
     /**
      * 异步请求入口
      * 
@@ -265,5 +270,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $this->onRequest('do', 'pingback')->sendPingbackHandle();
         $this->onRequest('do', 'cutParagraph')->cutParagraph();
         $this->onRequest('do', 'removeParagraph')->removeParagraph();
+        $this->onRequest('do', 'autoSave')->autoSave();
     }
 }
