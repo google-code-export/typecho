@@ -1087,7 +1087,6 @@ Typecho.autoComplete = function (match, token) {
             _pos = _location(_start);
             _hide();
             _select(_start, _pos);
-            e.shoot = true;
             this.fireEvent('keyup', e);
             
             e.stop();
@@ -1148,6 +1147,12 @@ Typecho.autoComplete = function (match, token) {
                     e.stop();
                     return false;
                     
+                case 'enter':
+                    _hide();
+                    _el.selectRange(_pos.offsetEnd, _pos.offsetEnd);
+                    e.stop();
+                    return false;
+                    
                 default:
                     break;
             }
@@ -1163,26 +1168,23 @@ Typecho.autoComplete = function (match, token) {
                     
                 case 'left':
                 case 'right':
-                case 'space':
                 case 'backspace':
                 case 'delete':
                 case 'esc':
                     
                     _hide();
                     e.key = 'a';
-                    e.shoot = true;
                     this.fireEvent('keyup', e, 1000);
                     break;
                     
                 case 'enter':
-                    _hide();
-                    _el.selectRange(_pos.offsetEnd, _pos.offsetEnd);
                     return false;
                     
                 case 'up':
                 case 'down':
                     return false;
-                    
+                
+                case 'space':
                 default:
                     _hide();
                     _k = _keyword(_start, _pos);
@@ -1190,11 +1192,13 @@ Typecho.autoComplete = function (match, token) {
                         
                     if (_l.length > 0) {
                         
+                        /*
                         if (0 == _l[0].indexOf(_k) && 'undefined' == typeof(e.shoot)) {
-                            _replace(_l[0], _pos.offsetStart, _pos.offsetEnd);
+                            //_replace(_l[0], _pos.offsetStart, _pos.offsetEnd);
                             _build();
                             _pos = _location(_start);
                         }
+                        */
                         
                         _select(_start, _pos);
                         _show(_k, _l);
