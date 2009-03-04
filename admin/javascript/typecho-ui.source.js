@@ -981,8 +981,8 @@ Typecho.autoComplete = function (match, token) {
     
     //获取当前keyword
     var _keyword = function (s, pos) {
-        return pos.txt.substr(0, s - pos.offsetStart);
-    }
+        return pos ? pos.txt.substr(0, s - pos.offsetStart) : '';
+    };
     
     //搜索token
     var _match = function (keyword) {
@@ -1000,7 +1000,7 @@ Typecho.autoComplete = function (match, token) {
     //选择特定元素
     var _select = function (s, pos) {
         _el.selectRange(pos.offsetStart > s ? pos.offsetStart : s, pos.offsetEnd);
-    }
+    };
     
     //定位
     var _location = function (s) {
@@ -1100,8 +1100,8 @@ Typecho.autoComplete = function (match, token) {
             
             switch (e.key) {
                 case 'up':
-
-                    if (_cur >= 0) {
+                
+                    if (_l.length > 0 && _cur >= 0) {
                         if (_cur < _l.length) {
                             $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').removeClass('autocompleter-selected');
                         }
@@ -1124,7 +1124,7 @@ Typecho.autoComplete = function (match, token) {
                     return false;
                 
                 case 'down':
-                
+
                     if (_l.length > 0 && _cur < _l.length) {
                         if (_cur >= 0) {
                             $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').removeClass('autocompleter-selected');
