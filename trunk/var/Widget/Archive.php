@@ -148,14 +148,15 @@ class Widget_Archive extends Widget_Abstract_Contents
     /**
      * 构造函数
      * 
+     * @param mixed $type 路由类型
      * @access public
      * @return void
      */
-    public function __construct()
+    public function __construct($type = NULL)
     {
         parent::__construct();
         $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
-        'type' => Typecho_Router::$current));
+        'type' => (NUll === $type) ? Typecho_Router::$current : $type));
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
@@ -252,6 +253,28 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'index_page':
             
                 $select->where('table.contents.type = ?', 'post');
+                break;
+                
+            /** 404页面 */
+            case 404:
+                
+                /** 设置标题 */
+                $this->_archiveTitle[] = _t('页面不存在');
+                
+                /** 设置归档类型 */
+                $this->_archiveType = 404;
+                
+                /** 设置归档缩略名 */
+                $this->_archiveSlug = 404;
+                
+                /** 设置归档缩略名 */
+                $this->_themeFile = '404.php';
+                
+                /** 设置单一归档类型 */
+                $this->_archiveSingle = true;
+                
+                $hasPushed = true;
+                
                 break;
                 
             /** 单篇内容 */
@@ -876,14 +899,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         if (!empty($this->_archiveType)) {
             //~ 自定义模板
             if (!empty($this->_themeFile)) {
-                if (is_file($this->_themeFile . $themeFile)) {
-                    $this->_themeFile = $themeFile;
-                    $validated = true;
-                }
+                $validated = true;
             }
         
             //~ 首先找具体路径, 比如 category/default.php
-            if (!empty($this->_archiveSlug)) {
+            if (!$validated && !empty($this->_archiveSlug)) {
                 $themeFile = $this->_archiveType . '/' . $this->_archiveSlug . '.php';
                 if (is_file($themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
@@ -915,8 +935,14 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 文件不存在 */
-        if (!$validated && !is_file($themeDir . $this->_themeFile)) {
-            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+        if (!$validated || !is_file($themeDir . $this->_themeFile)) {
+        
+            /** 单独处理404情况 */
+            if (404 == $this->_archiveType) {
+                Typecho_Common::error(404);
+            } else {
+                throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+            }
         }
     
         /** 输出模板 */

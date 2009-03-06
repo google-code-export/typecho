@@ -18,7 +18,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </h4>
                 <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
-                <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>
+                <p><?php
+                if ($user->logged > 0) {
+                    _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone));
+                }
+                ?></p>
                 <?php if($user->pass('contributor', true)): ?>
                 <h3 id="writing-option"><?php _e('撰写设置'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->optionsForm()->render(); ?>
