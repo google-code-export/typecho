@@ -156,7 +156,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @param boolean $count 是否参与计数
      * @return string
      */
-    public function setTags($cid, $tags, $count = true)
+    public function setTags($cid, $tags, $beforeCount = true, $afterCount = true)
     {
         $tags = str_replace(array(' ', '，', ' '), ',', $tags);
         $tags = array_unique(array_map('trim', explode(',', $tags)));
@@ -176,7 +176,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ->where('cid = ?', $cid)
                 ->where('mid = ?', $tag));
                 
-                if ($count) {
+                if ($beforeCount) {
                     $this->db->query($this->db->update('table.metas')
                     ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count - 1')
@@ -197,7 +197,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     'cid'  =>   $cid
                 )));
                 
-                if ($count) {
+                if ($afterCount) {
                     $this->db->query($this->db->update('table.metas')
                     ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count + 1')
@@ -216,7 +216,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @param boolean $count 是否参与计数
      * @return integer
      */
-    public function setCategories($cid, array $categories, $count = true)
+    public function setCategories($cid, array $categories, $beforeCount = true, $afterCount = true)
     {
         $categories = array_unique(array_map('trim', $categories));
 
@@ -235,7 +235,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ->where('cid = ?', $cid)
                 ->where('mid = ?', $category));
                 
-                if ($count) {
+                if ($beforeCount) {
                     $this->db->query($this->db->update('table.metas')
                     ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count - 1')
@@ -253,7 +253,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     'cid'  =>   $cid
                 )));
                 
-                if ($count) {
+                if ($afterCount) {
                     $this->db->query($this->db->update('table.metas')
                     ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count + 1')
@@ -291,10 +291,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($insertId > 0) {
             /** 插入分类 */
             $this->setCategories($insertId, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'publish' == $contents['status']);
+            $contents['category'] : array(), false, 'publish' == $contents['status']);
             
             /** 插入标签 */
-            $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'], 'publish' == $contents['status']);
+            $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'],
+            false, 'publish' == $contents['status']);
         }
         
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
@@ -356,15 +357,13 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->cid));
 
         if ($updateRows > 0) {
-            /** 取出内容 */
-            $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
-        
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'publish' == $contents['status']);
+            $contents['category'] : array(), 'publish' == $this->status, 'publish' == $contents['status']);
             
             /** 插入标签 */
-            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'publish' == $contents['status']);
+            $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'],
+            'publish' == $this->status, 'publish' == $contents['status']);
             
             /** 取出已修改的文章 */
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)->limit(1), array($this, 'push'));
