@@ -60,7 +60,6 @@ upgrade:
 	cp -Rf build/usr/plugins/WordpressToTypecho/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Textile2/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/PostToQzone/ ${DIR}/usr/plugins/
-	cp build/usr/plugins/Helper.php ${DIR}/usr/plugins/
 	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
 	cp -Rf build/install/upgrade/ ${DIR}/install/upgrade/
 	make clear
