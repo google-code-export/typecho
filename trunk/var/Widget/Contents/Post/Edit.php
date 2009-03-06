@@ -365,6 +365,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
             /** 插入标签 */
             $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'], 'publish' == $contents['status']);
+            
+            /** 取出已修改的文章 */
+            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)->limit(1), array($this, 'push'));
         }
 
         /** 文章提示信息 */
