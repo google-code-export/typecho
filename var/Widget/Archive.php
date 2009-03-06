@@ -899,7 +899,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         if (!empty($this->_archiveType)) {
             //~ 自定义模板
             if (!empty($this->_themeFile)) {
-                $validated = true;
+                if (is_file($themeDir . $this->_themeFile)) {
+                    $validated = true;
+                }
             }
         
             //~ 首先找具体路径, 比如 category/default.php
@@ -929,13 +931,13 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
             }
             
-            if (!$validated) {
+            if (!$validated && '404.php' != $this->_themeFile) {
                 $this->_themeFile = 'index.php';
             }
         }
         
         /** 文件不存在 */
-        if (!$validated || !is_file($themeDir . $this->_themeFile)) {
+        if (!$validated && !is_file($themeDir . $this->_themeFile)) {
         
             /** 单独处理404情况 */
             if (404 == $this->_archiveType) {
