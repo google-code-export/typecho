@@ -248,6 +248,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
 
         switch ($this->parameter->type) {
+        
             /** 索引页 */
             case 'index':
             case 'index_page':
