@@ -50,7 +50,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="status">
                     <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
                     $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
-                    <p><?php _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone)); ?></p>
+                    
+                    <p><?php 
+                    if ($user->logged > 0) {
+                        _e('最后登录: %s', Typecho_I18n::dateWord($user->logged  + $options->timezone, $options->gmtTime + $options->timezone));
+                    }
+                    ?></p>
                 </div>
             </div>
 
@@ -123,7 +128,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 }
             });
             
-            <?php if ($user->pass('editor') && !Typecho_Request::getCookie('__typecho_check_version')): ?>
+            <?php if ($user->pass('editor', true) && !Typecho_Request::getCookie('__typecho_check_version')): ?>
             var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=checkVersion");
             _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
                 if (responseJSON && responseJSON.available) {

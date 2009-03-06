@@ -1,60 +1,15 @@
 <?php
 /**
- * 插件帮手本身也是一个插件, 它将默认出现在所有的typecho发行版中.
+ * 插件帮手将默认出现在所有的typecho发行版中.
  * 因此你可以放心使用它的功能, 以方便你的插件安装在用户的系统里.
  * 
- * @package Plugin Helper 
+ * @package Helper 
  * @author qining
  * @version 1.0.0
  * @link http://typecho.org
  */
-class Helper implements Typecho_Plugin_Interface
+class Helper
 {
-    /**
-     * 帮手版本
-     * 
-     * @access public
-     * @var string
-     */
-    const VERSION = '1.0.0';
-
-    /**
-     * 激活插件方法,如果激活失败,直接抛出异常
-     * 
-     * @access public
-     * @return void
-     * @throws Typecho_Plugin_Exception
-     */
-    public static function activate(){}
-    
-    /**
-     * 禁用插件方法,如果禁用失败,直接抛出异常
-     * 
-     * @static
-     * @access public
-     * @return void
-     * @throws Typecho_Plugin_Exception
-     */
-    public static function deactivate(){}
-    
-    /**
-     * 获取插件配置面板
-     * 
-     * @access public
-     * @param Typecho_Widget_Helper_Form $form 配置面板
-     * @return void
-     */
-    public static function config(Typecho_Widget_Helper_Form $form){}
-    
-    /**
-     * 个人用户的配置面板
-     * 
-     * @access public
-     * @param Typecho_Widget_Helper_Form $form
-     * @return void
-     */
-    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
-    
     /**
      * 获取Widget_Options对象
      * 
@@ -76,8 +31,9 @@ class Helper implements Typecho_Plugin_Interface
      */
     public static function dependOn($version)
     {
-        if (version_compare(Helper::VERSION, $version, '<')) {
-            throw new Typecho_Plugin_Exception(_t('此插件正常工作至少需要插件帮手的版本为 <strong>%s</strong>, 而你的版本是 <strong>%s</strong>', $version, Helper::VERSION));
+        list ($prefix, $currentVersion)  = explode('/', Typecho_Common::VERSION);
+        if (version_compare($currentVersion, $version, '<')) {
+            throw new Typecho_Plugin_Exception(_t('此插件正常工作至少需要版本为 <strong>%s</strong>, 当前版本是 <strong>%s</strong>', $version, $currentVersion));
         }
     }
     

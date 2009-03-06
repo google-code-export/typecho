@@ -26,7 +26,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                    <?php if($user->pass('contributor', true)): ?>
+                    <?php if($user->pass('editor', true)): ?>
                         <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
                         <li class="right<?php if('on' != Typecho_Request::getParameter('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
