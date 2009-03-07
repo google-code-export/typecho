@@ -47,11 +47,13 @@ class PageToLinks implements Typecho_Plugin_Interface
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
     
     /**
-     * 解析
+     * 解析并输出
      * 
      * @access public
-     * @param unknown $matches
-     * @return unknown
+     * @param string $slug 页面标题
+     * @param string $tag 标题的html tag
+     * @param string $listTag 列表的html tag
+     * @return void
      */
     public static function output($slug = 'links', $tag = 'h2', $listTag = 'ul')
     {
