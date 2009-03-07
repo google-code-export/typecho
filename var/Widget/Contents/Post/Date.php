@@ -59,7 +59,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     public function execute()
     {
         /** 设置参数默认值 */
-        $this->parameter->setDefault('format=Y-m&type=month');
+        $this->parameter->setDefault('format=Y-m&type=month&limit=0');
     
         $resource = $this->db->query($this->db->select('created')->from('table.contents')
         ->where('type = ?', 'post')
@@ -82,6 +82,10 @@ class Widget_Contents_Post_Date extends Typecho_Widget
                 $result[$date]['date'] = $date;
                 $result[$date]['count'] = 1;
             }
+        }
+        
+        if ($this->parameter->limit > 0) {
+            $result = array_slice($result, 0, $this->parameter->limit);
         }
         
         foreach ($result as $row) {

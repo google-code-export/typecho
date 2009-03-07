@@ -12,17 +12,18 @@
 			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
-				if (e.nodeName === 'CODE')
+				if (e.nodeName === 'CODE' || e.nodeName === 'PRE')
 					ed.selection.select(e);
 			});
 
             
 			ed.onBeforeSetContent.add(function(ed, o) {
-				o.content = o.content.replace(/<code([^>]*)>([\s\S]*?)<\/code>/ig, function (g, a, b) {
+				
+                var _replace = function (g, a, b, c) {
                     
-                    b = b.trim().replace(/( |<|>|\r\n|\r|\n)/g, function (a) {
+                    c = c.trim().replace(/( |<|>|\r\n|\r|\n)/g, function (e) {
                     
-                        switch (a) {
+                        switch (e) {
                         
                             case "<":
                                 return "&lt;";
@@ -45,8 +46,11 @@
                     
                     });
                     
-                    return '<code' + a + '>' + b + '</code>';
-                });
+                    return '<' + a + b + '>' + c + '</' + a + '>';
+                };
+                
+                o.content = o.content.replace(/<(code)([^>]*)>([\s\S]*?)<\/(code)>/ig, _replace);
+                o.content = o.content.replace(/<(pre)([^>]*)>([\s\S]*?)<\/(pre)>/ig, _replace);
 			});
             
             /*
