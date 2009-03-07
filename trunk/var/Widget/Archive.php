@@ -508,6 +508,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $from = mktime(0, 0, 0, $month, $day, $year);
                     $to = mktime(23, 59, 59, $month, $day, $year);
                     
+                    /** 归档缩略名 */
+                    $this->_archiveSlug = 'day';
+                    
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
                     $this->_archiveTitle[] = $month;
@@ -518,6 +521,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $from = mktime(0, 0, 0, $month, 1, $year);
                     $to = mktime(23, 59, 59, $month, date('t', $from), $year);
                     
+                    /** 归档缩略名 */
+                    $this->_archiveSlug = 'month';
+                    
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;
                     $this->_archiveTitle[] = $month;
@@ -526,6 +532,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                     /** 如果按年归档 */
                     $from = mktime(0, 0, 0, 1, 1, $year);
                     $to = mktime(23, 59, 59, 12, 31, $year);
+                    
+                    /** 归档缩略名 */
+                    $this->_archiveSlug = 'year';
                     
                     /** 设置标题 */
                     $this->_archiveTitle[] = $year;

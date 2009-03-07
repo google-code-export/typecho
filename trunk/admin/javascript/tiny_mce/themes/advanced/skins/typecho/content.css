@@ -20,6 +20,8 @@ acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
 code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
+pre {margin: 10px 0; padding: 5px; display: block; font-size: 12px;
+	background: #EAF7FF; border: 1px solid #D5E7F0; font-family: "Courier New",Helvetica,sans-serif;}
 
 /* IE */
 * html body {

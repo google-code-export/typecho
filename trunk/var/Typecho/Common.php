@@ -20,7 +20,7 @@
 class Typecho_Common
 {
     /** 默认不解析的标签列表 */
-    const LOCKED_HTML_TAG = 'code|script';
+    const LOCKED_HTML_TAG = 'code|pre|script';
     
     /** 需要去除内部换行的标签 */
     const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|tr|th|td|li|ol|ul|h[1-6]';

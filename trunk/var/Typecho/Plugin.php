@@ -345,6 +345,17 @@ class Typecho_Plugin
     }
     
     /**
+     * 判断插件是否存在
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return void
+     */
+    public function exists($pluginName) {
+        return array_search($pluginName, self::$_plugins['activated']);
+    }
+    
+    /**
      * 设置回调函数
      * 
      * @access public
