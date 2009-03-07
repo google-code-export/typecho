@@ -53,8 +53,8 @@ class SimpleCode implements Typecho_Plugin_Interface
      * 解析
      * 
      * @access public
-     * @param unknown $matches
-     * @return unknown
+     * @param array $matches 解析值
+     * @return string
      */
     public static function parseCallback($matches)
     {
