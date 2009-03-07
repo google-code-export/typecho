@@ -231,13 +231,13 @@ class Typecho_Common
         $charset = self::$config['charset'];
         
         /** 设置http code */
-        if (is_numeric($code)) {
+        if (is_numeric($code) && $code > 200) {
             Typecho_Response::setStatus($code);
         }
         
         switch ($code) {
             case 503:
-                $message = 'Database Error';
+                $message = 'Error establishing a database connection';
                 break;
             
             case 500:
@@ -249,6 +249,7 @@ class Typecho_Common
                 break;
                 
             default:
+                $code = 'Error';
                 break;
         }
         
