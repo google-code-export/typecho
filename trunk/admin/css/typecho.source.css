@@ -1633,6 +1633,11 @@ ul.typecho-list-notable li span.trackback {
 
 .typecho-post-area .right {
 	float: right;
+	padding-left: 24px;
+}
+
+.typecho-post-area .loading {
+	background: url(../images/ajax-loader.gif) left center no-repeat;
 }
 
 .typecho-post-area .left {

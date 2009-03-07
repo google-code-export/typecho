@@ -93,24 +93,39 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 </div>
 <?php include 'common-js.php'; ?>
 <script type="text/javascript">
-        /** 绑定按钮 */
-        $(document).getElement('span.advance').addEvent('click', function () {
-            Typecho.toggle('#advance-panel', this,
-            '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
-        });
+    (function () {
+        window.addEvent('domready', function() {
         
-        $('btn-save').addEvent('click', function () {
-            $(document).getElement('input[name=draft]').set('value', 1);
-            $(document).getElement('form[name=write_page]').submit();
-        });
-        
-        $('btn-submit').addEvent('click', function () {
-            $(document).getElement('input[name=draft]').set('value', 0);
-            $(document).getElement('form[name=write_page]').submit();
-        });
+            /** 绑定按钮 */
+            $(document).getElement('span.advance').addEvent('click', function () {
+                Typecho.toggle('#advance-panel', this,
+                '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
+            });
+            
+            $('btn-save').removeProperty('disabled');
+            $('btn-submit').removeProperty('disabled');
+            
+            $('btn-save').addEvent('click', function (e) {
+                this.getParent('span').addClass('loading');
+                this.setProperty('disabled', true);
+                $(document).getElement('input[name=draft]').set('value', 1);
+                $(document).getElement('form[name=write_page]').fireEvent('save', e);
+                //$(document).getElement('form[name=write_post]').submit();
+            });
+            
+            $('btn-submit').addEvent('click', function (e) {
+                this.getParent('span').addClass('loading');
+                this.setProperty('disabled', true);
+                $(document).getElement('input[name=draft]').set('value', 0);
+                $(document).getElement('form[name=write_page]').fireEvent('post', e);
+                //$(document).getElement('form[name=write_post]').submit();
+            });
 
-        Typecho.date('date', <?php $page->date('Y'); ?>, <?php $page->date('n'); ?>, <?php $page->date('j'); ?>,
-        <?php $page->date('G'); ?>, <?php $page->date('i'); ?>, 0);
+            Typecho.date('date', <?php $page->date('Y'); ?>, <?php $page->date('n'); ?>, <?php $page->date('j'); ?>,
+            <?php $page->date('G'); ?>, <?php $page->date('i'); ?>, 0);
+        
+        });
+    })();
 </script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>

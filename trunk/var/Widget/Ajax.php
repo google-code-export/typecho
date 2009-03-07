@@ -19,32 +19,6 @@
 class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
-     * 编码
-     * 
-     * @access public
-     * @param array $matches
-     * @return string
-     */
-    public static function encodeCallback($matches)
-    {
-        return '<' . $matches[1] . $matches[2] . '>' . str_replace(' ', '&nbsp;', htmlspecialchars(trim($matches[3]))) . "</{$matches[1]}>";
-    }
-    
-    /**
-     * 解析
-     * 
-     * @access public
-     * @param array $matches
-     * @return string
-     */
-    public static function decodeCallback($matches)
-    {
-        return '<' . $matches[1] . $matches[2] . ">\n" .
-        trim(htmlspecialchars_decode(str_replace('<br />', "\n", $matches[3])))
-         . "\n</{$matches[1]}>";
-    }
-
-    /**
      * 针对rewrite验证的请求返回
      * 
      * @access public
@@ -232,8 +206,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     public function cutParagraph()
     {
         $this->user->pass('contributor');
-        echo preg_replace_callback("/<(pre|code)([^>]*)>(.*?)<\/\\1>/is",
-        array('Widget_Ajax', 'encodeCallback'), Typecho_Common::cutParagraph($this->request->content));
+        echo Typecho_Common::encodeCode(Typecho_Common::cutParagraph($this->request->content));
     }
     
     /**
@@ -245,9 +218,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     public function removeParagraph()
     {
         $this->user->pass('contributor');
-        echo html_entity_decode(Typecho_Common::removeParagraph(
-        preg_replace_callback("/<(pre|code)([^>]*)>(.*?)<\/\\1>/is", array('Widget_Ajax', 'decodeCallback'), $this->request->content)
-        ), ENT_QUOTES, $this->options->charset);
+        echo Typecho_Common::removeParagraph(Typecho_Common::decodeCode($this->request->content));
     }
     
     public function autoSave()

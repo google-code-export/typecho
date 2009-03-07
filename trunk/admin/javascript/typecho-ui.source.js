@@ -408,6 +408,28 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         }
     };
     
+    var _submit = function () {
+        var _t = this;
+        
+        if ('vw' == current) {
+            var _r = new Request({
+                'method': 'post',
+                'url': url
+            }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
+        
+            _r.addEvent('onSuccess', function (responseText) {
+                $(id).set('value', responseText);
+                _t.submit();
+            });
+        } else {
+            _t.submit();
+        }
+    };
+    
+    /** 监听提交事件 */
+    $(id).getParent('form').addEvent('save', _submit);
+    $(id).getParent('form').addEvent('post', _submit);
+    
     tinyMCE.init({
         // General options
         mode : "exact",
@@ -602,11 +624,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         },
         
         save_callback : function (element_id, html, body) {
-            if ('cw' == current) {
-                return $(id).get('value');
-            } else {
-                return html;
-            }
+            return $(id).get('value');
         },
 
         // Theme options
@@ -614,8 +632,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_resizing : true
+        theme_advanced_toolbar_align : "left"
     });
 };  
 
@@ -887,20 +904,16 @@ Typecho.highlight = function (theId) {
 Typecho.autoDisableSubmit = function () {
     $(document).getElements('input[type=submit]').removeProperty('disabled');
     $(document).getElements('button[type=submit]').removeProperty('disabled');
-
-    $(document).getElements('input[type=submit]').addEvent('click', function (event) {
-            event.stopPropagation();
-            $(this).setProperty('disabled', true);
-            $(this).getParent('form').submit();
-            return false;
-    });
     
-    $(document).getElements('button[type=submit]').addEvent('click', function (event) {
-            event.stopPropagation();
-            $(this).setProperty('disabled', true);
-            $(this).getParent('form').submit();
-            return false;
-    });
+    var _disable = function (event) {
+        event.stopPropagation();
+        $(this).setProperty('disabled', true);
+        $(this).getParent('form').submit();
+        return false;
+    };
+
+    $(document).getElements('input[type=submit]').addEvent('click', _disable);
+    $(document).getElements('button[type=submit]').addEvent('click', _disable);
 };
 
 /** 扩展mootools */

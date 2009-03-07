@@ -119,32 +119,41 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     (function () {
         window.addEvent('domready', function() {
         
-        /** 绑定按钮 */
-        $(document).getElement('span.advance').addEvent('click', function () {
-            Typecho.toggle('#advance-panel', this,
-            '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
-        });
-        
-        $('btn-save').addEvent('click', function () {
-            $(document).getElement('input[name=draft]').set('value', 1);
-            $(document).getElement('form[name=write_post]').submit();
-        });
-        
-        $('btn-submit').addEvent('click', function () {
-            $(document).getElement('input[name=draft]').set('value', 0);
-            $(document).getElement('form[name=write_post]').submit();
-        });
-        
-        /** 标签自动完成 */
-        var _tags = [<?php while ($tags->next()) { echo '"' . str_replace('"', '\"', $tags->name) . '"'
-        . ($tags->sequence != $tags->length ? ',' : NULL); } ?>];
-        
-        /** 自动完成 */
-        Typecho.autoComplete('#tags', _tags);
-        
-        /** 日期对象 */
-        Typecho.date('date', <?php $post->date('Y'); ?>, <?php $post->date('n'); ?>, <?php $post->date('j'); ?>,
-        <?php $post->date('G'); ?>, <?php $post->date('i'); ?>, 0);
+            /** 绑定按钮 */
+            $(document).getElement('span.advance').addEvent('click', function () {
+                Typecho.toggle('#advance-panel', this,
+                '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
+            });
+            
+            $('btn-save').removeProperty('disabled');
+            $('btn-submit').removeProperty('disabled');
+            
+            $('btn-save').addEvent('click', function (e) {
+                this.getParent('span').addClass('loading');
+                this.setProperty('disabled', true);
+                $(document).getElement('input[name=draft]').set('value', 1);
+                $(document).getElement('form[name=write_post]').fireEvent('save', e);
+                //$(document).getElement('form[name=write_post]').submit();
+            });
+            
+            $('btn-submit').addEvent('click', function (e) {
+                this.getParent('span').addClass('loading');
+                this.setProperty('disabled', true);
+                $(document).getElement('input[name=draft]').set('value', 0);
+                $(document).getElement('form[name=write_post]').fireEvent('post', e);
+                //$(document).getElement('form[name=write_post]').submit();
+            });
+            
+            /** 标签自动完成 */
+            var _tags = [<?php while ($tags->next()) { echo '"' . str_replace('"', '\"', $tags->name) . '"'
+            . ($tags->sequence != $tags->length ? ',' : NULL); } ?>];
+            
+            /** 自动完成 */
+            Typecho.autoComplete('#tags', _tags);
+            
+            /** 日期对象 */
+            Typecho.date('date', <?php $post->date('Y'); ?>, <?php $post->date('n'); ?>, <?php $post->date('j'); ?>,
+            <?php $post->date('G'); ?>, <?php $post->date('i'); ?>, 0);
         
         });
     })();
