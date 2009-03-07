@@ -36,6 +36,9 @@ border: 1px solid #e5ead1;
 padding: 2px;
 }
 
+code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px; overflow: auto;
+	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
+
 /*
  * !!! reset container_16 width=840px, and there are 14 columns !!!
  */

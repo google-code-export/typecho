@@ -18,7 +18,7 @@ del {color:red; text-decoration:line-through}
 cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
-code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px;
+code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
 
 /* IE */
