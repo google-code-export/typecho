@@ -69,8 +69,8 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
             }
         }
     
-        $sql['limit'] = empty($sql['limit']) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = empty($sql['offset']) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
         $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
