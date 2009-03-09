@@ -36,7 +36,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             $this->widget('Widget_Notice')->set(_t("外观已经改变"), NULL, 'success');
             $this->response->goBack();
         } else {
-            throw new Typecho_Widget_Exception(_t('您选择的风格不存在'), 404);
+            throw new Typecho_Widget_Exception(_t('您选择的风格不存在'));
         }
     }
     
@@ -62,7 +62,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             }
             $this->response->goBack();
         } else {
-            throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'), 404);
+            throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'));
         }
     }
     

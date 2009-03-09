@@ -27,16 +27,19 @@ include 'menu.php';
                     ?>
                     <td id="theme-<?php $themes->name(); ?>" class="<?php if($themes->activated): ?>current <?php endif; $themes->alt('border-right', ''); if ($borderBottom): echo ' border-bottom'; endif; ?>">
                         <div class="column-04">
-                        <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
+                            <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
                         </div>
                         <div class="column-08">
-                        <h4><?php $themes->title(); ?>
-                        <?php if($options->theme != $themes->name): ?><a class="button" href="<?php $options->index('Themes/Edit.do?change=' . $themes->name); ?>"><?php _e('激活'); ?></a><?php endif; ?></h4>
+                        <h4><?php $themes->title(); ?></h4>
                         <cite><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>
                         &nbsp;&nbsp;&nbsp;<?php _e('版本'); ?>: <?php $themes->version() ?>
                         </cite>
                         <p><?php echo nl2br($themes->description); ?></p>
                         </div>
+                        <?php if($options->theme != $themes->name): ?>
+                            <a class="edit" href="<?php $options->adminUrl('theme-editor.php?theme=' . $themes->name); ?>"><?php _e('编辑'); ?></a>
+                            <a class="activate" href="<?php $options->index('Themes/Edit.do?change=' . $themes->name); ?>"><?php _e('激活'); ?></a>
+                        <?php endif; ?>
                     </td>
                     <?php $last = $themes->sequence; ?>
                     <?php $themes->alt('', '</tr>'); ?>
@@ -51,4 +54,70 @@ include 'menu.php';
 </div>
 
 <?php include 'common-js.php'; ?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+            $(document).getElements('table.typecho-list-table tr td').each(function (item, index) {
+                var _a = item.getElement('a.activate'),
+                _e = item.getElement('a.edit');
+                
+                if (_a && _e) {
+                    item.addEvents({
+                    
+                        'mouseover': function () {
+                            this.addClass('hover');
+                            
+                            if (0 == index % 2) {
+                                _a.setStyles({
+                                
+                                    'right': _a.getParent('td').getNext('td').getSize().x + 1,
+                                    
+                                    'top': _a.getParent('td').getPosition(_a.getParent('.column-24')).y
+                                
+                                });
+                                
+                                _a.addClass('typecho-radius-bottomleft');
+                                
+                                _e.setStyles({
+                                
+                                    'right': _e.getParent('td').getNext('td').getSize().x + 1,
+                                    
+                                    'top': _e.getParent('td').getPosition(_e.getParent('.column-24')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
+                                
+                                });
+                                
+                                _e.addClass('typecho-radius-topleft');
+                            } else {
+                                _a.setStyles({
+                                
+                                    'left': _a.getParent('td').getPosition(_a.getParent('.column-24')).x,
+                                    
+                                    'top': _a.getParent('td').getPosition(_a.getParent('.column-24')).y
+                                
+                                });
+                                
+                                _a.addClass('typecho-radius-bottomright');
+                                
+                                _e.setStyles({
+                                
+                                    'left': _e.getParent('td').getPosition(_e.getParent('.column-24')).x,
+                                    
+                                    'top': _e.getParent('td').getPosition(_e.getParent('.column-24')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
+                                
+                                });
+                                
+                                _e.addClass('typecho-radius-topright');
+                            }
+                        },
+                        
+                        'mouseleave': function () {
+                            this.removeClass('hover');
+                        }
+                    
+                    });
+                }
+            });
+        });
+    })();
+</script>
 <?php include 'copyright.php'; ?>
