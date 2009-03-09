@@ -1353,6 +1353,8 @@ ul.typecho-list-notable li span.trackback {
 .typecho-theme-list {
 	border-collapse: separate;
 	border-spacing: 0;
+	border-top: 1px solid #CAD7A2;
+	border-bottom: 1px solid #CAD7A2;
 } 
 
 .typecho-theme-list td {
@@ -1373,11 +1375,16 @@ ul.typecho-list-notable li span.trackback {
 	background: #FFF;
 	padding: 2px;
     margin: 0 15px 0 5px;
+	float: left;
 }
 
 .typecho-theme-list p {
 	padding: 5px 0;
-	font-size: 13px;
+	font-size: 12px;
+}
+
+.typecho-theme-list .activate, .typecho-theme-list .edit {
+	display: none;
 }
 
 .typecho-theme-list h4 {
@@ -1389,8 +1396,28 @@ ul.typecho-list-notable li span.trackback {
 	background: none;
 }
 
-.typecho-theme-list tbody tr td.current {
+.typecho-theme-list tbody tr td.current, .typecho-theme-list tbody tr td.hover {
     background: #e3eebd;
+}
+
+.typecho-theme-list tbody tr td.hover .activate, .typecho-theme-list tbody tr td.hover .edit {
+	display: block;
+	position: absolute;
+	background: #BD6800;
+	color: #fff;
+	height: 24px;
+	line-height: 24px;
+	padding: 0 5px;
+	font-weight: bold;
+	white-space: nowrap;
+	opacity:0.8;
+	-ms-filter:'alpha(opacity=80)';
+	filter:alpha(opacity=80);
+}
+
+.typecho-theme-list tbody tr td.hover a.activate:hover, .typecho-theme-list tbody tr td.hover a.edit:hover {
+    background: #D29B51;
+	text-decoration: none;
 }
 
 /**
