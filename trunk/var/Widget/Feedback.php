@@ -167,6 +167,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $this->response->throwXml($message);
         }
         
+        /** 截取长度 */
+        $trackback['text'] = Typecho_Common::subStr($trackback['text'], 0, 100, '[...]');
+        
         /** 如果库中已经存在重复url则直接拒绝 */
         if ($this->size($this->select()
         ->where('cid = ? AND url = ? AND type <> ?', $this->_content->cid, $trackback['url'], 'comment')) > 0) {

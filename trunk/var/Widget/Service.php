@@ -24,7 +24,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      * @access public
      * @return void
      */
-    public function sendPingbackHandle()
+    public function sendPingHandle()
     {
         /** 验证权限 */
         $this->user->pass('contributor');
@@ -56,10 +56,39 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                     try {
                         $xmlrpc = new IXR_Client($xmlrpcUrl);
                         $xmlrpc->pingback->ping($post->permalink, $url);
+                        unset($xmlrpc);
                     } catch (Exception $e) {
                         continue;
                     }
                 }
+                
+                unset($spider);
+            }
+        }
+        
+        /** 发送trackback */
+        if ($post->have() && !empty($this->request->trackback)) {
+            $links = $this->request->trackback;
+            foreach ($links as $url) {
+                
+                $client = Typecho_Http_Client::get();
+                
+                if ($client) {
+                    try {
+                        $client->setTimeout(5)
+                        ->setData(array(
+                            'blog_name' => $this->options->title . ' &raquo ' . $post->title,
+                            'url'       => $post->permalink,
+                            'excerpt'   => $post->excerpt
+                        ))
+                        ->send($url);
+                        
+                        unset($client);
+                    } catch (Typecho_Http_Client_Exception $e) {
+                        continue;
+                    }
+                }
+                
             }
         }
     }
@@ -72,20 +101,26 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      * 
      * @access public
      * @param integer $cid 内容id
+     * @param array $trackback trackback的url
      * @return void
      */
-    public function sendPingback($cid)
+    public function sendPing($cid, array $trackback = NULL)
     {
         $this->user->pass('contributor');
 
         if ($client = Typecho_Http_Client::get()) {        
             try {
             
+                $input = array('do' => 'ping', 'cid' => $cid);
+                if (!empty($trackback)) {
+                    $input['trackback'] = $trackback;
+                }
+            
                 $client->setCookie('__typecho_uid', $this->request->getCookie('__typecho_uid'), 0, $this->options->siteUrl)
                 ->setCookie('__typecho_authCode', $this->request->getCookie('__typecho_authCode'), 0, $this->options->siteUrl)
                 ->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(3)
-                ->setData(array('do' => 'pingback', 'cid' => $cid))
+                ->setData($input)
                 ->send(Typecho_Common::url('Service.do', $this->options->index));
 
             } catch (Typecho_Http_Client_Exception $e) {
@@ -102,6 +137,6 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      */
     public function action()
     {
-        $this->onRequest('do', 'pingback')->sendPingbackHandle();
+        $this->onRequest('do', 'ping')->sendPingHandle();
     }
 }
