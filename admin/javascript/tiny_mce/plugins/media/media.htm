@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="../../utils/form_utils.js"></script>
 	<script type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<link href="css/media.css" rel="stylesheet" type="text/css" />
-	<base target="_self" />
 </head>
 <body style="display: none">
     <form onsubmit="insertMedia();return false;" action="#">
@@ -52,7 +51,7 @@
 							</tr>
 							<tr id="linklistrow">
 								<td><label for="linklist">{#media_dlg.list}</label></td>
-								<td id="linklistcontainer">&nbsp;</td>
+								<td id="linklistcontainer"><select id="linklist"><option value=""></option></select></td>
 							</tr>
 							<tr>
 								<td><label for="width">{#media_dlg.size}</label></td>
@@ -176,24 +175,44 @@
 						</tr>
 
 						<tr>
-							<td colspan="4">
+							<td colspan="2">
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_play" name="flash_play" checked="checked" onchange="generatePreview();" /></td>
 										<td><label for="flash_play">{#media_dlg.play}</label></td>
+									</tr>
+								</table>
+							</td>
+
+							<td colspan="2">
+								<table border="0" cellpadding="0" cellspacing="0">
+									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_loop" name="flash_loop" checked="checked" onchange="generatePreview();" /></td>
 										<td><label for="flash_loop">{#media_dlg.loop}</label></td>
 									</tr>
-                                    <tr>
-										<td><input type="checkbox" class="checkbox" id="flash_menu" name="flash_menu" checked="checked" onchange="generatePreview();" /></td>
-										<td><label for="flash_menu">{#media_dlg.menu}</label></td>
-										<td><input type="checkbox" class="checkbox" id="flash_swliveconnect" name="flash_swliveconnect" onchange="generatePreview();" /></td>
-										<td><label for="flash_swliveconnect">{#media_dlg.liveconnect}</label></td>
-                                    </tr>
 								</table>
 							</td>
 						</tr>
-                        
+
+						<tr>
+							<td colspan="2">
+								<table border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td><input type="checkbox" class="checkbox" id="flash_menu" name="flash_menu" checked="checked" onchange="generatePreview();" /></td>
+										<td><label for="flash_menu">{#media_dlg.menu}</label></td>
+									</tr>
+								</table>
+							</td>
+
+							<td colspan="2">
+								<table border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td><input type="checkbox" class="checkbox" id="flash_swliveconnect" name="flash_swliveconnect" onchange="generatePreview();" /></td>
+										<td><label for="flash_swliveconnect">{#media_dlg.liveconnect}</label></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</table>
 
 					<table>
@@ -240,8 +259,7 @@
 							<td><label for="flv_defaultvolume">{#media_dlg.flv_defaultvolume}</label></td>
 							<td><input type="text" id="flv_defaultvolume" name="flv_defaultvolume" onchange="generatePreview();" /></td>
 
-							<td><label for="flv_starttime">{#media_dlg.flv_starttime}</label></td>
-							<td><input type="text" id="flv_starttime" name="flv_starttime" onchange="generatePreview();" /></td>
+
 						</tr>
 
 						<tr>
