@@ -128,7 +128,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
     })();
 </script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/langs.php'); ?>"></script>
 <script type="text/javascript">
     (function () {
         Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',

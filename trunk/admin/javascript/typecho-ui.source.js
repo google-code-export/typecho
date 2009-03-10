@@ -436,7 +436,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         elements : id,
         theme : "advanced",
         skin : "typecho",
-        plugins : "safari,pagebreak,inlinepopups,media,coder",
+        plugins : "safari,morebreak,inlinepopups,media,coder",
         extended_valid_elements : "code[*],pre[*],script[*],iframe[*]",
         
         //Event setup
@@ -628,12 +628,13 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         },
 
         // Theme options
-        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,pagebreak",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,morebreak",
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_toolbar_location : "top",
         theme_advanced_toolbar_align : "left",
-        convert_urls : false
+        convert_urls : false,
+        language : 'typecho'
     });
 };  
 

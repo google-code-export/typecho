@@ -74,6 +74,7 @@ tinymce:
 	rm -Rf examples/
 	rm -Rf tinymce_${TINYMCE}.zip
 	rm -Rf changelog.txt
+	svn ci ../admin/javascript/tiny_mce/ -m "upgrade tiny_mce to ${TINYMCE}"
 
 
 install:
