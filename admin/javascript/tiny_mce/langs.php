@@ -3,7 +3,7 @@ include '../../common.php';
 Typecho_Response::setContentType('text/javascript');
 ?>
 
-tinyMCE.addI18n({en:{
+tinyMCE.addI18n({typecho:{
 common:{
 edit_confirm:"<?php _e('在这个文本域启用所见即所得模式？'); ?>",
 apply:"<?php _e('应用'); ?>",
@@ -158,7 +158,7 @@ morebreak:{
 desc:"<?php _e('插入摘要分割符'); ?>"
 }}});
 
-tinyMCE.addI18n('en.advanced',{
+tinyMCE.addI18n('typecho.advanced',{
 style_select:"<?php _e('样式'); ?>",
 font_size:"<?php _e('字体样式'); ?>",
 fontdefault:"<?php _e('字体'); ?>",
@@ -221,7 +221,7 @@ toolbar_focus:"<?php _e('移至工具栏 - Alt+Q, 移至编辑器 - Alt-Z, 移�
 more_colors:"<?php _e('其它更多颜色'); ?>"
 });
 
-tinyMCE.addI18n('en.advanced_dlg',{
+tinyMCE.addI18n('typecho.advanced_dlg',{
 about_title:"<?php _e('关于TinyMCE'); ?>",
 about_general:"<?php _e('关于'); ?>",
 about_help:"<?php _e('帮助'); ?>",
@@ -273,7 +273,7 @@ link_is_external:"<?php _e('你输入的URL似乎是一个外部链接，是否�
 link_list:"<?php _e('链接列表'); ?>"
 });
 
-tinyMCE.addI18n('en.media_dlg',{
+tinyMCE.addI18n('typecho.media_dlg',{
 title:"<?php _e('插入/编辑 媒体文件'); ?>",
 general:"<?php _e('常规'); ?>",
 advanced:"<?php _e('高级'); ?>",
