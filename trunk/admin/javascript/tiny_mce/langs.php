@@ -154,8 +154,8 @@ sug:"<?php _e('建议'); ?>",
 no_sug:"<?php _e('无建议'); ?>",
 no_mpell:"<?php _e('无拼写错误'); ?>"
 },
-pagebreak:{
-desc:"<?php _e('插入分页符'); ?>"
+morebreak:{
+desc:"<?php _e('插入摘要分割符'); ?>"
 }}});
 
 tinyMCE.addI18n('en.advanced',{
