@@ -218,7 +218,10 @@ clipboard_msg:"<?php _e('复制/剪切/粘贴功能在 Mozilla 和 Firefox 中�
 path:"<?php _e('路径'); ?>",
 newdocument:"<?php _e('你确定要清除所有内容吗？'); ?>",
 toolbar_focus:"<?php _e('移至工具栏 - Alt+Q, 移至编辑器 - Alt-Z, 移至元素路径 - Alt-X'); ?>",
-more_colors:"<?php _e('其它更多颜色'); ?>"
+more_colors:"<?php _e('其它更多颜色'); ?>",
+
+link_delta_height: 0,
+link_delta_width: 10
 });
 
 tinyMCE.addI18n('typecho.advanced_dlg',{
@@ -375,4 +378,9 @@ flv_loop:"<?php _e('循环'); ?>",
 flv_showscalemodes:"<?php _e('显示缩放模式'); ?>",
 flv_smoothvideo:"<?php _e('平滑视图'); ?>",
 flv_jscallback:"<?php _e('JS 回传'); ?>"
+});
+
+/** offset */
+tinyMCE.addI18n('typecho.media',{
+    delta_height:40
 });

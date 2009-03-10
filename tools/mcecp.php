@@ -22,6 +22,17 @@ if (file_exists($out)) {
 	echo $out . "\n";
 	unlink($out);
 	copy($in, $out);
+    
+    switch ($out) {
+    
+        case '../admin/javascript/tiny_mce/plugins/media/editor_plugins.js':
+            file_put_contents($out, str_replace('javascript:;', '#', file_get_contents($out)));
+            break;
+            
+        default:
+            break;
+    
+    }
 }
 
 exit(0);
