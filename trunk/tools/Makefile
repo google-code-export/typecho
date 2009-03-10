@@ -2,6 +2,7 @@
 
 #define root directory
 DIR=../
+TINYMCE=3_2_2
 
 
 #update subversion
@@ -64,6 +65,14 @@ upgrade:
 	cp -Rf build/install/upgrade/ ${DIR}/install/upgrade/
 	make clear
 
+
+tinymce:
+	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
+	unzip tinymce_${TINYMCE}.zip
+	for i in `find jscripts/ -name *.js`; php mcecp "in=$$i&out=../admin/javascript/tiny_mce/$$i"; done;
+	rm -Rf jscripts/
+	rm -Rf examples/
+	rm -Rf tinymce_${TINYMCE}.zip
 
 install:
 	make svnup
