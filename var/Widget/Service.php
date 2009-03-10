@@ -36,8 +36,10 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         $post = $this->widget('Widget_Archive', "type=post", "cid={$this->request->cid}");
         
         if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
+            $links = array_unique($matches[1]);
+        
             /** 发送pingback */
-            foreach ($matches[1] as $url) {
+            foreach ($links as $url) {
                 $spider = Typecho_Http_Client::get();
                 
                 if ($spider) {
@@ -82,10 +84,10 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $client->setCookie('__typecho_uid', $this->request->getCookie('__typecho_uid'), 0, $this->options->siteUrl)
                 ->setCookie('__typecho_authCode', $this->request->getCookie('__typecho_authCode'), 0, $this->options->siteUrl)
                 ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(3)
+                ->setTimeout(2)
                 ->setData(array('do' => 'pingback', 'cid' => $cid))
                 ->send(Typecho_Common::url('Service.do', $this->options->index));
-                
+
             } catch (Typecho_Http_Client_Exception $e) {
                 return;
             }

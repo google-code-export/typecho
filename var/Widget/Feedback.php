@@ -143,7 +143,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $trackback = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
-            'agent'     =>  $this->request->getReferer(),
+            'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getClientIp(),
             'ownerId'   =>  $this->_content->author->uid,
             'type'      =>  'trackback',
@@ -165,6 +165,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         if ($error = $validator->run($trackback)) {
             $message = array('success' => 1, 'message' => current($error));
             $this->response->throwXml($message);
+        }
+        
+        /** 如果库中已经存在重复url则直接拒绝 */
+        if ($this->size($this->select()
+        ->where('cid = ? AND url = ? AND type <> ?', $this->_content->cid, $trackback['url'], 'comment')) > 0) {
+            /** 使用403告诉机器人 */
+            throw new Typecho_Widget_Exception(_t('禁止重复提交'), 403);
         }
         
         /** 生成过滤器 */
