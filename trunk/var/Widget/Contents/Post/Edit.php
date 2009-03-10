@@ -368,6 +368,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 取出已修改的文章 */
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)->limit(1), array($this, 'push'));
         }
+        
+        /** 发送pingback */
+        if ($this->parameter->pingback) {
+            $this->widget('Widget_Service')->sendPingback($this->cid);
+        }
 
         /** 文章提示信息 */
         if ('publish' == $contents['status']) {

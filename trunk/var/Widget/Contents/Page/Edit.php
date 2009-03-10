@@ -127,6 +127,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 取出页面 */
             $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
         }
+        
+        /** 发送pingback */
+        if ($this->parameter->pingback) {
+            $this->widget('Widget_Service')->sendPingback($this->cid);
+        }
 
         /** 页面提示信息 */
         if ('publish' == $contents['status']) {

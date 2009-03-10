@@ -33,7 +33,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         ignore_user_abort(true);
         
         /** 获取post */
-        $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$this->request->cid}");
+        $post = $this->widget('Widget_Archive', "type=post", "cid={$this->request->cid}");
         
         if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
             /** 发送pingback */
@@ -74,12 +74,14 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
 
         if ($client = Typecho_Http_Client::get()) {        
             try {
+            
                 $client->setCookie('__typecho_uid', $this->request->getCookie('__typecho_uid'), 0, $this->options->siteUrl)
                 ->setCookie('__typecho_authCode', $this->request->getCookie('__typecho_authCode'), 0, $this->options->siteUrl)
                 ->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(1)
                 ->setData(array('do' => 'pingback', 'cid' => $cid))
                 ->send(Typecho_Common::url('Service.do', $this->options->index));
+                
             } catch (Typecho_Http_Client_Exception $e) {
                 return;
             }

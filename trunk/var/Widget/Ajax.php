@@ -118,64 +118,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     }
     
     /**
-     * 发送pingback实现
-     * 
-     * @access public
-     * @return void
-     */
-    public function sendPingbackHandle()
-    {
-        /** 验证权限 */
-        $this->user->pass('contributor');
-        
-        /** 忽略超时 */
-        ignore_user_abort(true);
-        
-        /** 获取post */
-        $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$this->request->cid}");
-        
-        /** 发送pingback */
-        foreach ($this->request->links as $url) {
-            $xmlrpc = new IXR_Client($url);
-            $xmlrpc->pingback->ping($post->permalink, $url);
-        }
-    }
-    
-    /**
-     * 发送pingback
-     * <code>
-     * $this->sendPingbacks(array('http://www.example.com/archives/1' => 'http://www.mydomain.com/archives/365'));
-     * </code>
-     * 
-     * @access public
-     * @param integer $cid 内容id
-     * @param integer $text 内容文本
-     * @return void
-     */
-    public function sendPingback($cid, $text)
-    {
-        $this->user->pass('contributor');
-        if (preg_match("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $line, $matches)) {
-            $data = array();
-            $data['do'] = 'pingback';
-            $data['cid'] = $cid;
-            
-            foreach ($matches[1] as $url) {
-                $data['links'][] = $url;
-            }
-            
-            if ($client = Typecho_Http_Client::get()) {
-                $client->setCookie('__typecho_uid', $this->user->uid, 0, $this->options->siteUrl)
-                ->setCookie('__typecho_authCode', $this->user->authCode, 0, $this->options->siteUrl)
-                ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(1)
-                ->setData($data)
-                ->send(Typecho_Common::url('Ajax.do', $this->options->index));
-            }
-        }
-    }
-    
-    /**
      * 自定义编辑器大小
      * 
      * @access public
@@ -238,7 +180,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $this->onRequest('do', 'feed')->feed();
         $this->onRequest('do', 'checkVersion')->checkVersion();
         $this->onRequest('do', 'editorResize')->editorResize();
-        $this->onRequest('do', 'pingback')->sendPingbackHandle();
         $this->onRequest('do', 'cutParagraph')->cutParagraph();
         $this->onRequest('do', 'removeParagraph')->removeParagraph();
         $this->onRequest('do', 'autoSave')->autoSave();
