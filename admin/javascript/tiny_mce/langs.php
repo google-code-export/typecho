@@ -220,7 +220,9 @@ newdocument:"<?php _e('你确定要清除所有内容吗？'); ?>",
 toolbar_focus:"<?php _e('移至工具栏 - Alt+Q, 移至编辑器 - Alt-Z, 移至元素路径 - Alt-X'); ?>",
 more_colors:"<?php _e('其它更多颜色'); ?>",
 
-link_delta_height: 0,
+colorpicker_delta_height: 30,
+image_delta_height: 30,
+link_delta_height: -20,
 link_delta_width: 10
 });
 

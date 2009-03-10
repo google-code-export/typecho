@@ -25,7 +25,7 @@ if (file_exists($out)) {
     
     switch ($out) {
     
-        case '../admin/javascript/tiny_mce/plugins/media/editor_plugins.js':
+        case '../admin/javascript/tiny_mce/tiny_mce.js':
             file_put_contents($out, str_replace('javascript:;', '#', file_get_contents($out)));
             break;
             
