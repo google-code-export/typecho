@@ -43,7 +43,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $spider = Typecho_Http_Client::get();
                 
                 if ($spider) {
-                    $spider->setTimeout(5)
+                    $spider->setTimeout(10)
                     ->send($url);
                     
                     if (!($xmlrpcUrl = $spider->getResponseHeader('x-pingback'))) {
@@ -84,7 +84,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $client->setCookie('__typecho_uid', $this->request->getCookie('__typecho_uid'), 0, $this->options->siteUrl)
                 ->setCookie('__typecho_authCode', $this->request->getCookie('__typecho_authCode'), 0, $this->options->siteUrl)
                 ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(2)
+                ->setTimeout(3)
                 ->setData(array('do' => 'pingback', 'cid' => $cid))
                 ->send(Typecho_Common::url('Service.do', $this->options->index));
 

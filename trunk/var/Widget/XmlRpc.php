@@ -1013,7 +1013,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 检查目标地址是否正确*/
-        $pathInfo = substr($target, strlen($this->options->index));
+        $pathInfo = Typecho_Common::url(substr($target, strlen($this->options->index)), '/');
         Typecho_Router::match($pathInfo);
         $post = $this->widget('Widget_Archive');
         
@@ -1064,7 +1064,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         return new IXR_Error('17', _t('源地址中不包括目标地址'));
                     }
                     
-                    $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200) . '[...]';
+                    $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200, '') . '[...]';
                     
                     $pingback = array(
                         'cid'       =>  $post->cid,
