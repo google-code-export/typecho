@@ -6,19 +6,19 @@
  */
 
 (function() {
-	tinymce.create('tinymce.plugins.PageBreakPlugin', {
+	tinymce.create('tinymce.plugins.MoreBreakPlugin', {
 		init : function(ed, url) {
-			var pb = '<img src="' + url + '/img/trans.gif" class="mcePageBreak mceItemNoResize" />', cls = 'mcePageBreak', sep = ed.getParam('pagebreak_separator', '<!--more-->'), pbRE;
+			var pb = '<img src="' + url + '/img/trans.gif" class="mceMoreBreak mceItemNoResize" />', cls = 'mceMoreBreak', sep = ed.getParam('morebreak_separator', '<!--more-->'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
 
 			// Register commands
-			ed.addCommand('mcePageBreak', function() {
+			ed.addCommand('mceMoreBreak', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
 			});
 
 			// Register buttons
-			ed.addButton('pagebreak', {title : 'pagebreak.desc', cmd : cls});
+			ed.addButton('morebreak', {title : 'morebreak.desc', cmd : cls});
 
 			ed.onInit.add(function() {
 				if (ed.settings.content_css !== false)
@@ -27,7 +27,7 @@
 				if (ed.theme.onResolveName) {
 					ed.theme.onResolveName.add(function(th, o) {
 						if (o.node.nodeName == 'IMG' && ed.dom.hasClass(o.node, cls))
-							o.name = 'pagebreak';
+							o.name = 'morebreak';
 					});
 				}
 			});
@@ -40,7 +40,7 @@
 			});
 
 			ed.onNodeChange.add(function(ed, cm, n) {
-				cm.setActive('pagebreak', n.nodeName === 'IMG' && ed.dom.hasClass(n, cls));
+				cm.setActive('morebreak', n.nodeName === 'IMG' && ed.dom.hasClass(n, cls));
 			});
 
 			ed.onBeforeSetContent.add(function(ed, o) {
@@ -50,7 +50,7 @@
 			ed.onPostProcess.add(function(ed, o) {
 				if (o.get)
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
-						if (im.indexOf('class="mcePageBreak') !== -1)
+						if (im.indexOf('class="mceMoreBreak') !== -1)
 							im = sep;
 
 						return im;
@@ -60,15 +60,15 @@
 
 		getInfo : function() {
 			return {
-				longname : 'PageBreak',
+				longname : 'MoreBreak',
 				author : 'Moxiecode Systems AB',
 				authorurl : 'http://tinymce.moxiecode.com',
-				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/pagebreak',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/morebreak',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('pagebreak', tinymce.plugins.PageBreakPlugin);
+	tinymce.PluginManager.add('morebreak', tinymce.plugins.MoreBreakPlugin);
 })();
