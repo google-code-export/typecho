@@ -69,10 +69,12 @@ upgrade:
 tinymce:
 	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
 	unzip tinymce_${TINYMCE}.zip
-	for i in `find jscripts/ -name *.js`; php mcecp "in=$$i&out=../admin/javascript/tiny_mce/$$i"; done;
+	for i in `find jscripts/ -name *.js`; do php mcecp.php "in=$$i&out=../admin/javascript/tiny_mce/$$i"; done;
 	rm -Rf jscripts/
 	rm -Rf examples/
 	rm -Rf tinymce_${TINYMCE}.zip
+	rm -Rf changelog.txt
+
 
 install:
 	make svnup

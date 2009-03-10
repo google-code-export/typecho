@@ -15,8 +15,13 @@ if (!isset($options['in']) || !isset($options['out'])) {
     exit(1);
 }
 
-if (file_exists($options['out'])) {
-    copy($options['in'], str_replace('jscripts/tiny_mce/', '', $options['out']));
+$in = $options['in'];
+$out = str_replace('jscripts/tiny_mce/', '', $options['out']);
+
+if (file_exists($out)) {
+	echo $out . "\n";
+	unlink($out);
+	copy($in, $out);
 }
 
 exit(0);
