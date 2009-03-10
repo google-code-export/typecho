@@ -91,7 +91,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function wpGetPage($blogId, $pageId, $userName, $password)
     {
         /** 检查权限 */
-        if(!$this->checkAccess($userName, $password)) {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -206,8 +206,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpNewPage($blogId, $userName, $password, $content, $publish)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
         $content['post_type'] = 'page';
@@ -226,8 +225,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpDeletePage($blogId, $userName, $password, $pageId)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
         
@@ -272,16 +270,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpGetPageList($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return ($this->error);
         }
         $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
         /**初始化*/
         $pageStructs = array();
         
-        while($pages->next())
-        {
+        while ($pages->next()) {
             $pageStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
                     'page_id'       => $pages->cid,
@@ -304,8 +300,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpGetAuthors($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return ($this->error);
         }
 
@@ -314,8 +309,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $authors = $this->db->fetchAll($select);
 
         $authorStructs = array();
-        foreach ($authors as $author)
-        {
+        foreach ($authors as $author) {
             $authorStructs[] = array(
                 'user_id'       => $author['uid'],
                 'user_login'    => $author['name'],
@@ -338,8 +332,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpNewCategory($blogId, $userName, $password, $category)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
 
@@ -351,7 +344,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 初始化meta widget，然后插入*/
         $meta = $this->widget('Widget_Abstract_Metas');
-        if(!$meta->insert($option)) {
+        if (!$meta->insert($option)) {
             return new IXR_Error(500, _t('对不起,提交文章时发生错误.'));
         }
         return true;
@@ -370,8 +363,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpSuggestCategories($blogId, $userName, $password, $category, $max_results)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
 
@@ -412,8 +404,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function mwNewPost($blogId, $userName, $password, $content, $publish)
     {
         /** 检查权限*/
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -464,7 +455,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             if (isset($input['cid'])) {
                 /** 编辑 */
                 $input['do'] = 'update';
-                if(empty($input['slug'])) {
+                if (empty($input['slug'])) {
                     unset($input['slug']);
                 }
                 $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->updatePost();
@@ -508,8 +499,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwGetPost($postId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -560,8 +550,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwGetRecentPosts($blogId, $userName, $password, $postsNum)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -569,8 +558,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $postStructs = array();
         /** 如果这个post存在则输出，否则输出错误 */
-        while($posts->next())
-        {
+        while ($posts->next()) {
             /** 对文章内容做截取处理，以获得description和text_more*/
             list($excerpt, $more) = $this->getPostExtended($posts->content);
             
@@ -615,8 +603,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwGetCategories($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
 
@@ -624,8 +611,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 初始化category数组*/
         $categoryStructs = array();
-        while($categories->next())
-        {
+        while ($categories->next()) {
             $categoryStructs[] = array(
                     'categoryId'    => $categories->mid,
                     'parentId'      => 0,
@@ -653,12 +639,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         /** typecho核心并不提供附件功能，如果需要此功能需要调用相关插件*/
         $upload = $this->plugin()->trigger($hasUploaded)->newMediaObject($data);
-        if($hasUpload)
-        {
+        if ($hasUpload) {
             return $upload;
-        }
-        else
-        {
+        } else {
             return IXR_Error(500, '不支持文件上传功能');
         }
     }
@@ -675,8 +658,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mtGetRecentPostTitles($blogId, $userName, $password, $postsNum)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
 
@@ -685,8 +667,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         /**初始化*/
         $postTitleStructs = array();
-        while($posts->next())
-        {
+        while ($posts->next()) {
             $postTitleStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
                     'userid'        => $posts->authorId,
@@ -709,8 +690,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mtGetCategoryList($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
         
@@ -718,8 +698,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 初始化categorise数组*/
         $categoryStructs = array();
-        while($categories->next())
-        {
+        while ($categories->next()) {
             $categoryStructs[] = array(
                 'categoryId'   => $categories->mid,
                 'categoryName' => $categories->name,
@@ -739,8 +718,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mtGetPostCategories($postId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -752,8 +730,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         /** 格式化categories*/
         $categories = array();
-        foreach($post->categories as $category)
-        {
+        foreach ($post->categories as $category) {
             $categories[] = array(
                     'categoryName'      => $category['name'],
                     'categoryId'        => $category['mid'],
@@ -775,8 +752,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mtSetPostCategories($postId, $userName, $password, $categories)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
         
@@ -802,8 +778,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mtPublishPost($postId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password, 'editor'))
-        {
+        if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
 
@@ -812,8 +787,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 提交查询 */
         $post = $this->$db->fetchRow($select, array($this, 'filter'));
-        if($this->authorId != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator'))
-        {
+        if ($this->authorId != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator')) {
             return new IXR_Error(403, '权限不足.');
         }
 
@@ -835,8 +809,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerGetUsersBlogs($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -861,8 +834,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerGetUserInfo($blogId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -889,8 +861,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerGetPost($blogId, $postId, $userName, $password)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
 
@@ -925,8 +896,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerDeletePost($blogId, $postId, $userName, $password, $publish)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
         try {
@@ -948,16 +918,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerGetRecentPosts($blogId, $userName, $password, $postsNum)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
         //todo:限制数量
         $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
         
         $postStructs = array();
-        while($posts->next())
-        {
+        while ($posts->next()) {
             $content = '<title>' . $posts->title . '</title>';
             $content .= '<category>' . $posts->categaries['0']['name'];
             $content .= stripslashes($posts->text);
@@ -970,8 +938,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             );
             $postStructs[] = $struct;
         }
-        if(NULL == $postStructs)
-        {
+        if (NULL == $postStructs) {
             return new IXR_Error('404', '没有任何文章');
         }
         return $postStructs;
@@ -989,8 +956,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerGetTemplate($blogId, $userName, $password, $template)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
         /** todo:暂时先返回true*/
@@ -1010,8 +976,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function bloggerSetTemplate($blogId, $userName, $password, $content, $template)
     {
-        if(!$this->checkAccess($userName, $password))
-        {
+        if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
         /** todo:暂时先返回true*/
@@ -1021,136 +986,114 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function pingbackPing($source, $target)
     {
         /** 检查源地址是否存在*/
-        $http = Typecho_Http_Client::get();
-        if($response = $http->send($source))
-        {
-            if(200 == $http->getResponseStatus())
-            {
-                if(!$http->getResponseHeader('x-pingback'))
-                {
+        if (!($http = Typecho_Http_Client::get())) {
+            return new IXR_Error(16, _t('源地址服务器错误'));
+        }
+        
+        try {
+        
+            $http->setTimeout(5)->send($source);
+            $response = $http->getResponseBody();
+            
+            if (200 == $http->getResponseStatus()) {
+            
+                if (!$http->getResponseHeader('x-pingback')) {
                     preg_match_all("/<link[^>]*rel=[\"']([^\"']*)[\"'][^>]*href=[\"']([^\"']*)[\"'][^>]*>/i", $response, $out);
-                    if(!isset($out[1]['pingback']))
-                    {
+                    if (!isset($out[1]['pingback'])) {
                         return new IXR_Error(50, _t('源地址不支持PingBack'));
                     }
                 }
+                
+            } else {
+                return new IXR_Error(16, _t('源地址服务器错误'));
             }
-            else
-            {
-                 return new IXR_Error(16, _t('源地址服务器错误'));
-            }
-        }
-        else
-        {
+            
+        } catch (Exception $e) {
             return new IXR_Error(16, _t('源地址服务器错误'));
         }
 
         /** 检查目标地址是否正确*/
-        if(($pos = strpos($target, $this->options->siteUrl . 'index.php/')) === 0)
-        {
-            $pathInfo = substr($target, $pos + 1);
-            /** 这样可以得到cid或者slug*/
-            if($route = Typecho_Router::match($pathInfo))
-            {
-                //todo:为什么是type啊？
-                if(NULL != $this->request->type) {
-                    $select = $this->select()->where('table.contents.cid = ?',$this->request->type)->limit(1);
-                }else {
-                    /** 文章不存在*/
-                    return new IXR_Error(33, _t('这个目标地址不存在'));
-                }
-            }
-            else
-            {
-                return new IXR_Error(33, _t('这个目标地址不存在'));
-            }
-
-            /** 提交查询 */
-            $post = $this->db->fetchRow($select, array($this, 'filter'));
-            if($post)
-            {
-                /** 检查是否可以ping*/
-                if($post['allowPing'] && ($post['type'] == 'post' || $post['type'] == 'page'))
-                {
-                    /** 现在可以ping了，但是还得检查下这个pingback是否已经存在了*/
-                    $pingNum = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')->where('table.comments.cid = ? AND table.comments.url = ? AND table.comments.type <> ?', $post['cid'], $source, 'comment'))->num;
-                    if($pingNum <= 0)
-                    {
-                        /** 现在开始插入以及邮件提示了 $response就是第一行请求时返回的数组*/
-                        preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response, $matchTitle);
-                        $finalTitle = $matchTitle[1];
-                        /** 干掉html tag，只留下<a>*/
-                        $text = Typecho_Common::stripTags($response, '<a href="">');
-                        /** 此处将$target quote,留着后面用*/
-                        $pregLink = preg_quote($target);
-                        /** 找出含有target链接的最长的一行作为$finalText*/
-                        $finalText = '';
-                        $lines = explode("\n", $text);
-                        foreach($lines as $line)
-                        {
-                            $line = trim($line);
- 						    if(NULL != $line)
- 						    {
- 						        if(preg_match("|<a[^>]*href=[\"']{$pregLink}[\"'][^>]*>(.*?)</a>|",$line))
- 						        {
- 						            if(strlen($line) > strlen($finalText))
- 						            {
-                                        /** <a>也要干掉，*/
- 						                $finalText = Typecho_Common::stripTags($line);
- 						            }
- 						        }
- 						    }
-                        }
-                        /** 截取一段字*/
-                        if(NULL == trim($finalText))
-                        {
-                            return new IXR_Error('17', _t('源地址中不包括目标地址'));
-                        }
-                        $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200) . '[...]';
-                        /** 组织$input，准备插入*/
-                        $input = array();
-                        $input['cid'] = $post['cid'];
-                        $input['created'] = time() - $this->options->timezone;
-                        $input['author'] = $finalTitle;
-                        $input['ownerId'] = $post['authorId'];
-                        $input['url'] = $source;
-                        $input['ip'] = $_SERVER["REMOTE_ADDR"];
-                        $input['agent'] = $_SERVER["HTTP_USER_AGENT"];
-                        $input['text'] = $finalText;
-                        $input['type'] = 'pingback';
-                        if(0 != $this->options->commentsRequireModeration)
-                        {
-                            $input['status'] = 'waiting';
-                        }
-                        else
-                        {
-                            $input['status'] = 'approved';
-                        }
-
-                        /** 执行插入*/
-                        return $insertId = $this->widget('Widget_Abstract_Comments')->insert($input);
-
-                        /** todo:发送邮件提示*/
-                    }
-                    else
-                    {
-                        return new IXR_Error(48, _t('PingBack已经存在'));
-                    }
-                }
-                else
-                {
-                    return IXR_Error(49, _t('目标地址禁止Ping'));
-                }
-            }
-            else
-            {
-                return new IXR_Error(33, _t('这个目标地址不存在'));
-            }
-
+        $pathInfo = substr($target, strlen($this->options->index));
+        Typecho_Router::match($pathInfo);
+        $post = $this->widget('Widget_Archive');
+        
+        /** 这样可以得到cid或者slug*/
+        if (!$post->have()) {
+            return new IXR_Error(33, _t('这个目标地址不存在'));
         }
-        else
-        {
-            return new IXR_Error(33, _t('这个目标地址错误.'));
+        
+        if ($post) {
+            /** 检查是否可以ping*/
+            if ($post->allowPing) {
+            
+                /** 现在可以ping了，但是还得检查下这个pingback是否已经存在了*/
+                $pingNum = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                ->from('table.comments')->where('table.comments.cid = ? AND table.comments.url = ? AND table.comments.type <> ?',
+                $post->cid, $source, 'comment'))->num;
+                
+                if ($pingNum <= 0) {
+                
+                    /** 现在开始插入以及邮件提示了 $response就是第一行请求时返回的数组*/
+                    preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response, $matchTitle);
+                    $finalTitle = Typecho_Common::removeXSS(trim(strip_tags($matchTitle[1])));
+                    
+                    /** 干掉html tag，只留下<a>*/
+                    $text = Typecho_Common::stripTags($response, '<a href="">');
+                    
+                    /** 此处将$target quote,留着后面用*/
+                    $pregLink = preg_quote($target);
+                    
+                    /** 找出含有target链接的最长的一行作为$finalText*/
+                    $finalText = '';
+                    $lines = explode("\n", $text);
+                    
+                    foreach ($lines as $line) {
+                        $line = trim($line);
+                        if (NULL != $line) {
+                            if (preg_match("|<a[^>]*href=[\"']{$pregLink}[\"'][^>]*>(.*?)</a>|",$line)) {
+                                if (strlen($line) > strlen($finalText)) {
+                                    /** <a>也要干掉，*/
+                                    $finalText = Typecho_Common::stripTags($line);
+                                }
+                            }
+                        }
+                    }
+                    
+                    /** 截取一段字*/
+                    if (NULL == trim($finalText)) {
+                        return new IXR_Error('17', _t('源地址中不包括目标地址'));
+                    }
+                    
+                    $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200) . '[...]';
+                    
+                    $pingback = array(
+                        'cid'       =>  $post->cid,
+                        'created'   =>  $this->options->gmtTime,
+                        'agent'     =>  $this->request->getAgent(),
+                        'ip'        =>  $this->request->getClientIp(),
+                        'author'    =>  $finalTitle,
+                        'url'       =>  Typecho_Common::safeUrl($source),
+                        'text'      =>  $finalText,
+                        'ownerId'   =>  $post->author->uid,
+                        'type'      =>  'pingback',
+                        'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
+                    );
+                    
+                    /** 加入plugin */
+                    $pingback = $this->plugin()->trackback($pingback, $post);
+
+                    /** 执行插入*/
+                    return $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
+
+                    /** todo:发送邮件提示*/
+                } else {
+                    return new IXR_Error(48, _t('PingBack已经存在'));
+                }
+            } else {
+                return IXR_Error(49, _t('目标地址禁止Ping'));
+            }
+        } else {
+            return new IXR_Error(33, _t('这个目标地址不存在'));
         }
     }
 

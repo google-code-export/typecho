@@ -264,10 +264,12 @@ class Typecho_Common
         switch ($code) {
             case 503:
                 $message = 'Error establishing a database connection';
+                error_log($message);
                 break;
             
             case 500:
                 $message = 'Server Error';
+                error_log($message);
                 break;
                 
             case 404:
