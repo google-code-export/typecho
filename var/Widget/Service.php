@@ -51,8 +51,12 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                         }
                     }
                     
-                    $xmlrpc = new IXR_Client($xmlrpcUrl);
-                    $xmlrpc->pingback->ping($post->permalink, $url);
+                    try {
+                        $xmlrpc = new IXR_Client($xmlrpcUrl);
+                        $xmlrpc->pingback->ping($post->permalink, $url);
+                    } catch (Exception $e) {
+                        continue;
+                    }
                 }
             }
         }
@@ -78,7 +82,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $client->setCookie('__typecho_uid', $this->request->getCookie('__typecho_uid'), 0, $this->options->siteUrl)
                 ->setCookie('__typecho_authCode', $this->request->getCookie('__typecho_authCode'), 0, $this->options->siteUrl)
                 ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(1)
+                ->setTimeout(3)
                 ->setData(array('do' => 'pingback', 'cid' => $cid))
                 ->send(Typecho_Common::url('Service.do', $this->options->index));
                 
