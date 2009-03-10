@@ -86,7 +86,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             }
             
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
             }
             
             if (!empty($this->files)) {

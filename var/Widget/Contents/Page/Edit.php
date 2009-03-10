@@ -30,7 +30,6 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     {
         /** 必须为编辑以上权限 */
         $this->user->pass('editor');
-        $this->parameter->setDefault('pingback=1&trackback=1');
     
         /** 获取文章内容 */
         if ((isset($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do
@@ -74,10 +73,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
         }
         
-        /** 发送pingback */
-        if ($this->parameter->pingback) {
-            $this->widget('Widget_Service')->sendPingback($this->cid);
-        }
+        /** 发送ping */
+        $this->widget('Widget_Service')->sendPing($this->cid);
         
         /** 页面提示信息 */
         if ('publish' == $contents['status']) {
@@ -129,9 +126,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         }
         
         /** 发送pingback */
-        if ($this->parameter->pingback) {
-            $this->widget('Widget_Service')->sendPingback($this->cid);
-        }
+        $this->widget('Widget_Service')->sendPing($this->cid);
 
         /** 页面提示信息 */
         if ('publish' == $contents['status']) {
