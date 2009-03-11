@@ -962,7 +962,7 @@ Element.implement({
 
 /** 自动完成 */
 Typecho.autoComplete = function (match, token) {
-    var _sp = ',', _index, _cur = -1,
+    var _sp = ',', _index, _cur = -1, _hoverList = false,
     _el = $(document).getElement(match).setProperty('autocomplete', 'off');
     
     //创建搜索索引
@@ -1037,6 +1037,7 @@ Typecho.autoComplete = function (match, token) {
     //显示
     var _show = function (key, list) {
         _cur = -1;
+        _hoverList = false;
     
         var _ul = new Element('ul', {
             'class': 'autocompleter-choices',
@@ -1056,10 +1057,12 @@ Typecho.autoComplete = function (match, token) {
                 'events': {
                     
                     'mouseover': function () {
+                        _hoverList = true;
                         this.addClass('autocompleter-hover');
                     },
                     
                     'mouseleave': function () {
+                        _hoverList = false;
                         this.removeClass('autocompleter-hover');
                     },
                     
@@ -1087,6 +1090,7 @@ Typecho.autoComplete = function (match, token) {
         
         if (_e) {
             _e.destroy();
+            _hoverList = false;
         }
     };
     
@@ -1106,6 +1110,14 @@ Typecho.autoComplete = function (match, token) {
             
             e.stop();
             return false;
+        },
+        
+        'blur': function () {
+            console.log(_hoverList);
+            
+            if (!_hoverList) {
+                _hide();
+            }
         },
         
         'keydown': function (e) {
