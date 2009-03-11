@@ -683,7 +683,7 @@ Typecho.openLink = function (adminPattern, doPattern) {
 Typecho.date = function (el, year, month, day, hour, min, sec) {
 
     var _date = new Date(year, month - 1, day, hour, min, sec);
-    $(el).fade('hide');
+    $(el).setStyle('display', 'none');
     
     var _y, _m, _d, _h, _mi, _s;
     
