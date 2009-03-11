@@ -10,7 +10,7 @@ include 'header.php';
                 <fieldset>
                     <?php if(!$user->hasLogin()): ?>
                     <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-                    <div class="message <?php $notice->noticeType(); ?>">
+                    <div class="message <?php $notice->noticeType(); ?> typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <ul>
                         <?php $notice->lists(); ?>
                     </ul>
