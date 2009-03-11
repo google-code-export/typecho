@@ -12,7 +12,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 <div class="column-18 start-01">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
-                        <p><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
+                        <p class="title"><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" disabled autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>

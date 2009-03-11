@@ -1757,9 +1757,7 @@ ul.typecho-list-notable li span.trackback {
 
 ul.typecho-post-option {
     border: 0px;
-    margin: 0px 0px 0px 10px;
-	border-top: 1px solid #EBEFDA;
-	border-bottom: 1px solid #fff;
+    margin: -1px 0px -1px 10px;
 }
 
 ul.typecho-post-option li {
