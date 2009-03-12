@@ -10,6 +10,12 @@
 /** 载入api支持 */
 require_once 'Typecho/Common.php';
 
+/** Typecho_Ruquest */
+require_once 'Typecho/Request.php';
+
+/** Typecho_Widget */
+require_once 'Typecho/Widget.php';
+
 /**
  * Typecho组件基类
  *
@@ -48,9 +54,6 @@ class Typecho_Router
                 self::$current = $key;
                 
                 if (!empty($route['params'])) {
-                    /** Typecho_Ruquest */
-                    require_once 'Typecho/Request.php';
-                    
                     unset($matches[0]);
                     $params = array_combine($route['params'], $matches);
                     
@@ -75,22 +78,40 @@ class Typecho_Router
      */
     public static function dispatch()
     {
-        /** 载入request支持 */
-        require_once 'Typecho/Request.php';
-        
         /** 获取PATHINFO */
         $pathInfo = Typecho_Request::getPathInfo();
-
-        /** 遍历路由 */
-        if (false !== ($route = self::match($pathInfo))) {
-            /** Typecho_Widget */
-            require_once 'Typecho/Widget.php';
-            
-            $widget = Typecho_Widget::widget($route['widget']);
-            if (isset($route['action'])) {
-                $widget->{$route['action']}();
+        
+        foreach (self::$_routingTable as $key => $route) {
+            if (preg_match($route['regx'], $pathInfo, $matches)) {
+                self::$current = $key;
+                
+                try {
+                    /** 载入参数 */
+                    if (!empty($route['params'])) {
+                        unset($matches[0]);
+                        $params = array_combine($route['params'], $matches);
+                        
+                        foreach ($params as $key => $val) {
+                            Typecho_Request::setParameter($key, $val);
+                        }
+                    }
+                    
+                    $widget = Typecho_Widget::widget($route['widget']);
+                    
+                    if (isset($route['action'])) {
+                        $widget->{$route['action']}();
+                    }
+                    
+                    return;
+                    
+                } catch (Exception $e) {
+                    if (404 == $e->getCode()) {
+                        continue;
+                    }
+                    
+                    throw $e;
+                }
             }
-            return;
         }
 
         /** 载入路由异常支持 */
