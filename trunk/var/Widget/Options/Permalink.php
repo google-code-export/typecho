@@ -159,10 +159,10 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
         }
         
         $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
-        $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <strong>/archives/{cid}/</strong>', 
-        '/archives/[slug].html' => _t('wordpress风格') . ' <strong>/archives/{slug}.html</strong>', 
-        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <strong>/archives/{year}/{month}/{day}/{slug}.html</strong>',
-        '/[category]/[slug].html' => _t('按分类归档') . ' <strong>/{category}/{slug}.html</strong>');
+        $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <strong><small>/archives/{cid}/</small></strong>', 
+        '/archives/[slug].html' => _t('wordpress风格') . ' <strong><small>/archives/{slug}.html</small></strong>', 
+        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <strong><small>/archives/{year}/{month}/{day}/{slug}.html</small></strong>',
+        '/[category]/[slug].html' => _t('按分类归档') . ' <strong><small>/{category}/{slug}.html</small></strong>');
         
         /** 自定义文章路径 */
         $postPatternValue = $this->options->routingTable['post']['url'];

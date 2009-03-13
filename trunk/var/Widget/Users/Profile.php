@@ -99,10 +99,12 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form->addInput($useRichEditor);
         
         /** 自动保存 */
+        /*
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',
         array('0' => _t('关闭'), '1' => _t('打开')),
         $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护你的文章不会丢失.'));
         $form->addInput($autoSave);
+        */
         
         /** 默认允许 */
         $allow = array();
