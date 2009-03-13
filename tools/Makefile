@@ -21,15 +21,15 @@ package:
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf ${DIR}/usr/plugins/CodeEditor/
-	rm -Rf ${DIR}/usr/plugins/Akismet/
-	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
-	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
-	rm -Rf ${DIR}/usr/plugins/Textile2/
-	rm -Rf ${DIR}/usr/plugins/PostToQzone/
-	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
-	rm -Rf ${DIR}/usr/plugins/Helper.php
-	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
+	rm -Rf build/usr/plugins/CodeEditor/
+	rm -Rf build/usr/plugins/Akismet/
+	rm -Rf build/usr/plugins/MagikeToTypecho/
+	rm -Rf build/usr/plugins/WordpressToTypecho/
+	rm -Rf build/usr/plugins/Textile2/
+	rm -Rf build/usr/plugins/PostToQzone/
+	rm -Rf build/usr/plugins/SimpleCode.php
+	rm -Rf build/usr/plugins/Helper.php
+	rm -Rf build/usr/plugins/PageToLinks.php
 	tar -cvvzf build.tar.gz build/
 
 
