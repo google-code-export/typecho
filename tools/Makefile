@@ -28,6 +28,8 @@ package:
 	rm -Rf ${DIR}/usr/plugins/Textile2/
 	rm -Rf ${DIR}/usr/plugins/PostToQzone/
 	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
+    rm -Rf ${DIR}/usr/plugins/Helper.php
+    rm -Rf ${DIR}/usr/plugins/PageToLinks.php
 	tar -cvvzf build.tar.gz build/
 
 
