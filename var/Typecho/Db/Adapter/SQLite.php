@@ -138,7 +138,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function quoteValue($string)
     {
-        return '\'' . str_replace(array('\'', '\\'), array('\'\'', '\\\\'), $string) . '\'';
+        return '\'' . str_replace('\'', '\'\'', $string) . '\'';
     }
 
     /**
