@@ -95,6 +95,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
         
             /** 首先直接请求远程地址验证 */
             $client = Typecho_Http_Client::get();
+            $hasWrote = false;
             
             if (!file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')) {
                 if (is_writeable(__TYPECHO_ROOT_DIR__)) {
@@ -102,7 +103,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
                     $basePath = empty($parsed['path']) ? '/' : $parsed['path'];
                     $basePath = rtrim($basePath, '/') . '/';
                     
-                    file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
+                    $hasWrote = file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase {$basePath}
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -121,6 +122,10 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
                 if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
                     return true;
                 }
+            }
+            
+            if (false !== $hasWrote) {
+                unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
             }
             
             return false;
