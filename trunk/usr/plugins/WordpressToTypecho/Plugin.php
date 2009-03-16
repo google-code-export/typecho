@@ -4,7 +4,7 @@
  * 
  * @package Wordpress to Typecho
  * @author qining
- * @version 1.0.2 Beta
+ * @version 1.0.3 Beta
  * @link http://typecho.org
  */
 class WordpressToTypecho_Plugin implements Typecho_Plugin_Interface
