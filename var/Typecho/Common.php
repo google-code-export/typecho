@@ -228,7 +228,7 @@ class Typecho_Common
     public static function exceptionHandle(Exception $exception)
     {
         if (!self::$config['exception']) {
-            @ob_clean();
+            //@ob_clean();
             echo nl2br($exception->__toString());
         } else {
             if (404 == $exception->getCode()) {

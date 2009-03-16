@@ -889,7 +889,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function need($fileName)
     {
-        require_once __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
+        require __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
     }
     
     /**

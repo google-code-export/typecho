@@ -116,7 +116,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                     'author'    =>  $row['comment_author'],
                     'authorId'  =>  $row['user_id'],
                     'ownerId'   =>  1,
-                    'mail'      =>  $row['comment_author_mail'],
+                    'mail'      =>  $row['comment_author_email'],
                     'url'       =>  $row['comment_author_url'],
                     'ip'        =>  $row['comment_author_IP'],
                     'agent'     =>  $row['comment_agent'],
