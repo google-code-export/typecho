@@ -105,13 +105,31 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         
         /** 发送数据 */
         fwrite($socket, $request);
-        stream_set_timeout($socket, $this->timeout);
-        stream_set_blocking($socket, 0);
-        $info = stream_get_meta_data($socket);
+        stream_set_timeout($socket, 0, $this->timeout * 1000);
         $response = '';
         
-        while (!feof($socket)  && !$info['timed_out']) {
-            $response .= fgets($socket, 4096);
+        //facebook code
+        while (!feof($socket)) {
+            $buf = fgets($socket, 4096);
+            
+            if (false === $buf || '' === $buf) {
+                $info = stream_get_meta_data($socket);
+                
+                //超时判断
+                if ($info['timed_out']) {
+                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port, 500);
+                } else {
+                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': could not read from ' . $this->host . ':' . $this->port, 500);
+                }
+            } else if (strlen($buf) < 4096) {
+                $info = stream_get_meta_data($socket);
+                
+                if ($info['timed_out']) {
+                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port, 500);
+                }
+            }
+            
+            $response .= $buf;
         }
         
         fclose($socket);
