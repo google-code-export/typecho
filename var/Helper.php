@@ -22,6 +22,52 @@ class Helper
     }
     
     /**
+     * 强行删除某个插件
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @return void
+     */
+    public static function removePlugin($pluginName)
+    {
+        try {
+            /** 获取插件入口 */
+            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+            
+            /** 获取已激活插件 */
+            $plugins = Typecho_Plugin::export();
+            $activatedPlugins = $plugins['activated'];
+            
+            /** 载入插件 */
+            require_once $pluginFileName;
+            
+            /** 判断实例化是否成功 */
+            if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
+            || !method_exists($className, 'deactivate')) {
+                throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
+            }
+            
+            $result = call_user_func(array($className, 'deactivate'));
+            
+        } catch (Exception $e) {
+            //nothing to do
+        }
+        
+        $db = Typecho_Db::get();
+        
+        try {
+            Typecho_Plugin::deactivate($pluginName);
+            $db->query($db->update('table.options')
+            ->rows(array('value' => serialize(Typecho_Plugin::export())))
+            ->where('name = ?', 'plugins'));
+        } catch (Typecho_Plugin_Exception $e) {
+            //nothing to do
+        }
+        
+        $db->query($db->delete('table.options')->where('name = ?', 'plugin:' . $pluginName));
+    }
+    
+    /**
      * 依赖帮手版本检测
      * 
      * @access public
