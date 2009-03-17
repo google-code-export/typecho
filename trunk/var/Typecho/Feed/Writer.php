@@ -235,7 +235,7 @@ class Typecho_Feed_Writer
 	*/
 	private function printHead()
 	{
-		$out  = "<?xml version=\"1.0\" encoding=\"{$this->charset}\"?>" . Typecho_Feed::EOL;
+		$out  = '<?xml version="1.0" encoding="' . $this->charset . '"?>' . Typecho_Feed::EOL;
 		
 		if ($this->version == Typecho_Feed::RSS2) {
 			$out .= '<rss version="2.0"

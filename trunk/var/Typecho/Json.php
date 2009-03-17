@@ -540,4 +540,3 @@ class Typecho_Json
         }
 	}
 }
-?>
