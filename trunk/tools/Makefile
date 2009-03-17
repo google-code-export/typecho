@@ -72,7 +72,7 @@ upgrade:
 
 
 typecho:
-	for i in `find build/var/Typecho/ -name *.php`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
+	for i in `find build/var/Typecho/ -name '*.php'`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
 	rm -Rf build/var/Typecho/
 
 
