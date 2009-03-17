@@ -71,6 +71,11 @@ upgrade:
 	make clear
 
 
+typecho:
+	for i in `find build/var/Typecho/ -name *.php`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
+	rm -Rf build/var/Typecho/
+
+
 tinymce:
 	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
 	unzip tinymce_${TINYMCE}.zip
