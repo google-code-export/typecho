@@ -4,7 +4,7 @@
  * 
  * @package Akismet
  * @author qining
- * @version 1.1.1
+ * @version 1.1.2
  * @link http://typecho.org
  */
 class Akismet_Plugin implements Typecho_Plugin_Interface
@@ -24,6 +24,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
     
         Typecho_Plugin::factory('Widget_Feedback')->comment = array('Akismet_Plugin', 'filter');
         Typecho_Plugin::factory('Widget_Feedback')->trackback = array('Akismet_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_XmlRpc')->pingback = array('Akismet_Plugin', 'filter');
         Typecho_Plugin::factory('Widget_Comments_Edit')->mark = array('Akismet_Plugin', 'mark');
         
         return _t('请配置此插件的API KEY, 以使您的反垃圾策略生效');

@@ -1080,7 +1080,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     );
                     
                     /** 加入plugin */
-                    $pingback = $this->plugin()->trackback($pingback, $post);
+                    $pingback = $this->plugin()->pingback($pingback, $post);
 
                     /** 执行插入*/
                     return $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
