@@ -105,7 +105,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         
         /** 发送数据 */
         fwrite($socket, $request);
-        stream_set_timeout($socket, 0, $this->timeout * 1000);
+        stream_set_timeout($socket, $this->timeout);
         $response = '';
         
         //facebook code
