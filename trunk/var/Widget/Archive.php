@@ -572,7 +572,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     
                 /** 增加自定义搜索引擎接口 */
                 //~ fix issue 40
-                $keywords = $this->request->filter('search')->keywords;
+                $keywords = $this->request->filter('url', 'search')->keywords;
                 $this->plugin()->trigger($hasPushed)->search($keywords, $this);
     
                 if (!$hasPushed) {
