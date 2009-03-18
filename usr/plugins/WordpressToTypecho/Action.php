@@ -145,7 +145,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
             $metas->insert(array(
                 'mid'           =>  $term['term_taxonomy_id'],
                 'name'          =>  $term['name'],
-                'slug'          =>  $term['slug'],
+                'slug'          =>  'post_tag' == $term['taxonomy'] ? Typecho_Common::slugName($term['name']) : $term['slug'],
                 'type'      	=>  'post_tag' == $term['taxonomy'] ? 'tag' : 'category',
                 'description'   =>  $term['description'],
                 'count'      	=>  $term['count'],
