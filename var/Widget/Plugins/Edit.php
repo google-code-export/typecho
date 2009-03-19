@@ -57,7 +57,17 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         
         $form = new Typecho_Widget_Helper_Form();
         call_user_func(array($className, 'config'), $form);
+        
+        $personalForm = new Typecho_Widget_Helper_Form();
+        call_user_func(array($className, 'personalConfig'), $personalForm);
+        
         $options = $form->getValues();
+        $personalOptions = $personalForm->getValues();
+        
+        if ($personalOptions) {
+            $options['personalConfig'] = $personalOptions;
+        }
+        
         if ($options) {
             $this->insert(array(
                 'name'  =>  'plugin:' . $pluginName,

@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_User extends Typecho_Widget
+class Widget_User extends Widget_Abstract_Users
 {
     /**
      * 用户
@@ -25,14 +25,6 @@ class Widget_User extends Typecho_Widget
      * @var boolean
      */
     private $_hasLogin = NULL;
-    
-    /**
-     * 数据库对象
-     * 
-     * @access protected
-     * @var Typecho_Db
-     */
-    protected $db;
     
     /**
      * 用户组
@@ -58,6 +50,7 @@ class Widget_User extends Typecho_Widget
     {
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
+        $this->options = $this->widget('Widget_Options');
     }
 
     /**
@@ -75,13 +68,13 @@ class Widget_User extends Typecho_Widget
             $this->push($this->_user);
 
             foreach ($rows as $row) {
-                $this->widget('Widget_Options')->__set($row['name'], $row['value']);
+                $this->options->__set($row['name'], $row['value']);
             }
 
             //更新最后活动时间
             $this->db->query($this->db
             ->update('table.users')
-            ->rows(array('activated' => $this->widget('Widget_Options')->gmtTime))
+            ->rows(array('activated' => $this->options->gmtTime))
             ->where('uid = ?', $this->_user['uid']));
         }
     }
@@ -97,9 +90,9 @@ class Widget_User extends Typecho_Widget
     public function login($uid, $expire = 0)
     {
         $authCode = sha1(Typecho_Common::randString(20));
-        $this->response->setCookie('__typecho_uid', $uid, $expire, $this->widget('Widget_Options')->siteUrl);
+        $this->response->setCookie('__typecho_uid', $uid, $expire, $this->options->siteUrl);
         $this->response->setCookie('__typecho_authCode', Typecho_Common::hash($authCode),
-        $expire, $this->widget('Widget_Options')->siteUrl);
+        $expire, $this->options->siteUrl);
 
         $this->_hasLogin = true;
 
@@ -119,8 +112,8 @@ class Widget_User extends Typecho_Widget
      */
     public function logout()
     {
-        $this->response->deleteCookie('__typecho_uid', $this->widget('Widget_Options')->siteUrl);
-        $this->response->deleteCookie('__typecho_authCode', $this->widget('Widget_Options')->siteUrl);
+        $this->response->deleteCookie('__typecho_uid', $this->options->siteUrl);
+        $this->response->deleteCookie('__typecho_authCode', $this->options->siteUrl);
     }
     
     /**
@@ -171,7 +164,7 @@ class Widget_User extends Typecho_Widget
             if ($return) {
                 return false;
             } else {
-                $this->response->redirect($this->widget('Widget_Options')->loginUrl
+                $this->response->redirect($this->options->loginUrl
                 . '?referer=' . urlencode($this->request->uri()), false);
             }
         }

@@ -212,16 +212,18 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             $rules[$name] = $input->rules;
         }
         
+        $id = md5(implode('"', array_keys($this->_inputs)));
+        
         /** 表单值 */
         $formData = Typecho_Request::getParametersFrom(array_keys($rules));
         $error = $validator->run($formData, $rules);
         
         if ($error) {
             /** 利用cookie记录错误 */
-            Typecho_Response::setCookie('__typecho_form_message', $error);
+            Typecho_Response::setCookie('__typecho_form_message_' . $id, $error);
             
             /** 利用cookie记录表单值 */
-            Typecho_Response::setCookie('__typecho_form_record', $formData);
+            Typecho_Response::setCookie('__typecho_form_record_' . $id, $formData);
         }
         
         return $error;
@@ -235,9 +237,11 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function render()
     {
+        $id = md5(implode('"', array_keys($this->_inputs)));
+    
         /** 恢复表单值 */
-        if ($record = Typecho_Request::getCookie('__typecho_form_record')) {
-            $message = Typecho_Request::getCookie('__typecho_form_message');
+        if ($record = Typecho_Request::getCookie('__typecho_form_record_' . $id)) {
+            $message = Typecho_Request::getCookie('__typecho_form_message_' . $id);
             foreach ($this->_inputs as $name => $input) {
                 $input->value(isset($record[$name]) ? $record[$name] : $input->value);
                 
@@ -247,10 +251,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
                 }
             }
             
-            Typecho_Response::deleteCookie('__typecho_form_record');
+            Typecho_Response::deleteCookie('__typecho_form_record_' . $id);
         }
     
         parent::render();
-        Typecho_Response::deleteCookie('__typecho_form_message');
+        Typecho_Response::deleteCookie('__typecho_form_message_' . $id);
     }
 }

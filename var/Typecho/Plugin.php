@@ -254,9 +254,9 @@ class Typecho_Plugin
                             case 'activate':
                             case 'deactivate':
                             case 'config':
-                            case 'personalConfig':
+                            case 'personalconfig':
                                 if ($isFunction) {
-                                    $current = $string;
+                                    $current = ('personalconfig' == $string ? 'personalConfig' : $string);
                                 }
                                 break;
                             default:

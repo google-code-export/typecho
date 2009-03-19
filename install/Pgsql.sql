@@ -107,6 +107,7 @@ CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_user
   "logged" INT NULL DEFAULT '0',
   "group" VARCHAR(16) NULL DEFAULT 'visitor',
   "authCode" VARCHAR(64) NULL DEFAULT NULL,
+  "meta" TEXT NULL DEFAULT NULL,
   PRIMARY KEY ("uid"),
   UNIQUE ("name"),
   UNIQUE ("mail")

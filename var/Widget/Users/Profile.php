@@ -137,6 +137,63 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     }
     
     /**
+     * 输出自定义设置选项
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @param string $className 类名称
+     * @param string $pluginFileName 插件文件名
+     * @param string $group 用户组
+     * @return Typecho_Widget_Helper_Form
+     */
+    public function personalForm($pluginName, $className, $pluginFileName, &$group)
+    {
+        /** 构建表格 */
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
+        Typecho_Widget_Helper_Form::POST_METHOD);
+        
+        require_once $pluginFileName;
+        $group = call_user_func(array($className, 'personalConfig'), $form);
+        $group = $group ? $group : 'subscriber';
+        
+        $options = $this->user->meta($pluginName);
+        
+        if (!empty($options)) {
+            foreach ($options as $key => $val) {
+                $form->getInput($key)->value($val);
+            }
+        }
+        
+        $form->addItem(new Typecho_Widget_Helper_Form_Element_Hidden('do', NULL, 'personal'));
+        $form->addItem(new Typecho_Widget_Helper_Form_Element_Hidden('plugin', NULL, $pluginName));
+        $form->addItem(new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置')));
+        return $form;
+    }
+    
+    /**
+     * 自定义设置列表
+     * 
+     * @access public
+     * @return void
+     */
+    public function personalFormList()
+    {
+        $this->widget('Widget_Plugins_List_Activated')->to($plugins);
+        while ($plugins->next()) {
+            if ($plugins->personalConfig) {
+                echo '<h3>' . $plugins->title . '</h3>';
+                list($pluginFileName, $className) = Typecho_Plugin::portal($plugins->name,
+                __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+                
+                $form = $this->personalForm($plugins->name, $className, $pluginFileName, $group);
+                if ($this->user->pass($group, true)) {
+                    $form->render();
+                }
+            }
+        }
+    }
+    
+    /**
      * 生成表单
      * 
      * @access public
@@ -269,6 +326,54 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     }
     
     /**
+     * 更新个人设置
+     * 
+     * @access public
+     * @return void
+     */
+    public function updatePersonal()
+    {
+        /** 获取插件名称 */
+        $pluginName = $this->request->plugin;
+        
+        /** 获取已激活插件 */
+        $plugins = Typecho_Plugin::export();
+        $activatedPlugins = $plugins['activated'];
+        
+        /** 获取插件入口 */
+        list($pluginFileName, $className) = Typecho_Plugin::portal($this->request->plugin,
+        __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        $info = Typecho_Plugin::parseInfo($pluginFileName);
+
+        if (!$info['personalConfig'] || !isset($activatedPlugins[$pluginName])) {
+            throw new Typecho_Widget_Exception(_t('无法配置插件'), 500);
+        }
+        
+        $form = $this->personalForm($pluginName, $className, $pluginFileName, $group);
+        $this->user->pass($group);
+        
+        /** 验证表单 */
+        if ($form->validate()) {
+            $this->response->goBack();
+        }
+        
+        $settings = $form->getAllRequest();
+        unset($settings['do'], $settings['plugin']);
+        
+        $meta = unserialize($this->user->meta);
+        $meta[$pluginName] = $settings;
+        
+        $this->db->query($this->db->update('table.users')->rows(array('meta' => serialize($meta)))
+        ->where('uid = ?', $this->user->uid));
+        
+        /** 提示信息 */
+        $this->widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), NULL, 'success');
+        
+        /** 转向原页 */
+        $this->response->redirect(Typecho_Common::url('profile.php', $this->options->adminUrl));
+    }
+    
+    /**
      * 入口函数
      * 
      * @access public
@@ -279,6 +384,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->onRequest('do', 'profile')->updateProfile();
         $this->onRequest('do', 'options')->updateOptions();
         $this->onRequest('do', 'password')->updatePassword();
+        $this->onRequest('do=personal&plugin')->updatePersonal();
         $this->response->redirect($this->options->adminUrl);
     }
 }
