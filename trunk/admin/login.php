@@ -19,7 +19,7 @@ include 'header.php';
                     <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" id="name" name="name" class="text" /></p>
                     <p><label for="password"><?php _e('密码'); ?>:</label> <input type="password" id="password" name="password" class="text" /></p>
                     <p class="submit">
-                    <label for="remember"><input type="checkbox" name="remember" class="checkbox" id="remember" /> <?php _e('记住我'); ?></label>
+                    <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('登录'); ?></button>
                     <input type="hidden" name="referer" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('referer')); ?>" />
                     </p>
