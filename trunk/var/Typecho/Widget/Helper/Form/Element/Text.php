@@ -32,10 +32,10 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
      */
     public function input($name = NULL, array $options = NULL)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0',
+        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0-' . self::$uniqueId,
         'name' => $name, 'type' => 'text', 'class' => 'text'));
         $this->container($input);
-        $this->label->setAttribute('for', $name . '-0');
+        $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         
         return $input;
     }

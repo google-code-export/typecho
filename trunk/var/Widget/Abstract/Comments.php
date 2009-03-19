@@ -101,7 +101,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function select()
     {
         return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
-        'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', 'table.comments.created')
+        'table.comments.authorId', 'table.comments.ownerId', 'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', 'table.comments.created')
         ->from('table.comments');
     }
     

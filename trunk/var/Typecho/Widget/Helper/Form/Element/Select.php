@@ -42,8 +42,8 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
     {
         $input = new Typecho_Widget_Helper_Layout('select');
         $this->container($input->setAttribute('name', $name)
-        ->setAttribute('id', $name . '-0'));
-        $this->label->setAttribute('for', $name . '-0');
+        ->setAttribute('id', $name . '-0-' . self::$uniqueId));
+        $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         
         foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('option');

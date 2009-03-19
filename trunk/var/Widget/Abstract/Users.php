@@ -20,6 +20,17 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
+     * 获取反序列化的meta数据
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function ___metaData()
+    {
+        return unserialize($this->meta);
+    }
+
+    /**
      * 查询方法
      * 
      * @access public
@@ -77,5 +88,32 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function delete(Typecho_Db_Query $condition)
     {
         return $this->db->query($condition->delete('table.users'));
+    }
+    
+    /**
+     * 获取用户meta信息
+     * 
+     * @access public
+     * @param string $metaName meta名称
+     * @param string $key meta索引
+     * @return mixed
+     */
+    public function meta($metaName, $key = NULL)
+    {
+        $meta = $this->metaData;
+        $result = NULL;
+        
+        if (isset($meta[$metaName])) {
+            $result = $meta[$metaName];
+        } else {
+            $meta = $this->options->plugin($metaName);
+            $result = isset($meta->personalConfig) ? $meta->personalConfig : NULL;
+        }
+        
+        if (NULL !== $key && is_array($result)) {
+            return isset($result[$key]) ? $result[$key] : NULL;
+        } else {
+            return $result;
+        }
     }
 }

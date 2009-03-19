@@ -126,6 +126,7 @@ CREATE TABLE `typecho_users` (
   `logged` int(10) unsigned default '0' COMMENT '上次登录最后活跃时间',
   `group` varchar(16) default 'visitor' COMMENT '用户组',
   `authCode` varchar(64) default NULL COMMENT '登录验证码',
+  `meta` text COMMENT '用户个人数据',
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `mail` (`mail`)

@@ -32,9 +32,9 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
      */
     public function input($name = NULL, array $options = NULL)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0', 
+        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0-' . self::$uniqueId, 
         'name' => $name, 'type' => 'password', 'class' => 'password'));
-        $this->label->setAttribute('for', $name . '-0');
+        $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->container($input);
         return $input;
     }

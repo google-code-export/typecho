@@ -27,6 +27,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <h3 id="writing-option"><?php _e('撰写设置'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->optionsForm()->render(); ?>
                 <?php endif; ?>
+                <?php Typecho_Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
                 <h3 id="change-password"><?php _e('设置密码'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
             </div>

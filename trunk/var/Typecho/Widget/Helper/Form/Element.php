@@ -63,6 +63,14 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     protected $multiline = array();
     
     /**
+     * 单例唯一id
+     * 
+     * @access protected
+     * @var integer
+     */
+    protected static $uniqueId = 0;
+    
+    /**
      * 输入栏
      * 
      * @access public
@@ -108,8 +116,9 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     public function __construct($name = NULL, array $options = NULL, $value = NULL, $label = NULL, $description = NULL)
     {
         /** 创建html元素,并设置class */
-        parent::__construct('ul', array('class' => 'typecho-option', 'id' => 'typecho-option-item-' . $name));
+        parent::__construct('ul', array('class' => 'typecho-option', 'id' => 'typecho-option-item-' . $name . '-' . self::$uniqueId));
         $this->name = $name;
+        self::$uniqueId ++;
         
         /** 运行自定义初始函数 */
         $this->init();
