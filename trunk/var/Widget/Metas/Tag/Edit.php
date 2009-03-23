@@ -316,6 +316,29 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
     }
+    
+    /**
+     * 刷新标签
+     * 
+     * @access public
+     * @return void
+     */
+    public function refreshTag()
+    {
+        $tags = $this->request->filter('int')->mid;
+        if ($tags && is_array($tags)) {
+            foreach ($tags as $tag) {
+                $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
+            }
+            
+            $this->widget('Widget_Notice')->set(_t('标签刷新已经完成'), NULL, 'success');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), NULL, 'notice');
+        }
+        
+        /** 转向原页 */
+        $this->response->goBack();
+    }
 
     /**
      * 入口函数,绑定事件
@@ -329,6 +352,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->onRequest('do', 'update')->updateTag();
         $this->onRequest('do', 'delete')->deleteTag();
         $this->onRequest('do', 'merge')->mergeTag();
+        $this->onRequest('do', 'refresh')->refreshTag();
         $this->response->redirect($this->options->adminUrl);
     }
 }

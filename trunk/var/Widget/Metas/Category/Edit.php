@@ -347,6 +347,29 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     }
     
     /**
+     * 刷新分类
+     * 
+     * @access public
+     * @return void
+     */
+    public function refreshCategory()
+    {
+        $categories = $this->request->filter('int')->mid;
+        if ($categories && is_array($categories)) {
+            foreach ($categories as $category) {
+                $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
+            }
+            
+            $this->widget('Widget_Notice')->set(_t('分类刷新已经完成'), NULL, 'success');
+        } else {
+            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+        }
+        
+        /** 转向原页 */
+        $this->response->goBack();
+    }
+    
+    /**
      * 设置默认分类
      * 
      * @access public
@@ -395,6 +418,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->onRequest('do', 'delete')->deleteCategory();
         $this->onRequest('do', 'merge')->mergeCategory();
         $this->onRequest('do', 'sort')->sortCategory();
+        $this->onRequest('do', 'refresh')->refreshCategory();
         $this->onRequest('do', 'default')->defaultCategory();
         $this->response->redirect($this->options->adminUrl);
     }
