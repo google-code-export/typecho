@@ -1767,6 +1767,10 @@ ul.typecho-post-option li {
 	padding: 5px 0 10px 0;
 }
 
+#advance-panel li {
+	border: none;
+}
+
 ul.typecho-post-option li ul {
 	border: none;
 	margin: 0;
