@@ -212,6 +212,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
             }
         
             $row = $this->db->fetchRow($this->select()
+            ->where('type = ?', 'tag')
             ->where('name = ?', $tag)->limit(1));
             
             if ($row) {
