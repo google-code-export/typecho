@@ -1021,7 +1021,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item->setTitle($comments->author);
                     $item->setLink($comments->permalink);
                     $item->setDate($comments->created);
-                    $item->setDescription(strip_tags($comments->text));
+                    $item->setDescription(strip_tags($comments->content));
 
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $comments->permalink);
