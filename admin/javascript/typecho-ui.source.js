@@ -352,7 +352,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
     
         _r.addEvent('onSuccess', function (responseText) {
-            $(id).set('value', responseText);
+            $(id).set('value', decodeURIComponent(responseText));
             $(id).removeProperty('disabled');
         });
     
@@ -367,7 +367,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
         
         _r.addEvent('onSuccess', function (responseText) {
-            $(id).set('value', responseText);
+            $(id).set('value', decodeURIComponent(responseText));
             $('typecho-editor-tab-cw').removeClass('loading');
             $(id + '_parent').setStyle('display', 'none');
             $(id).setStyle('display', 'block');
@@ -384,7 +384,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
         }).send('content=' + encodeURIComponent($(id).get('value')) + '&do=cutParagraph');
         
         _r.addEvent('onSuccess', function (responseText) {
-            _ed.setContent(responseText);
+            _ed.setContent(decodeURIComponent(responseText));
             $('typecho-editor-tab-vw').removeClass('loading');
             $(id + '_parent').setStyle('display', 'block');
             $(id).setStyle('display', 'none');
@@ -418,7 +418,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
             }).send('content=' + encodeURIComponent(_ed.getContent()) + '&do=removeParagraph');
         
             _r.addEvent('onSuccess', function (responseText) {
-                $(id).set('value', responseText);
+                $(id).set('value', decodeURIComponent(responseText));
                 _t.submit();
             });
         } else {

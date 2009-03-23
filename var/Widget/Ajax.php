@@ -148,7 +148,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     public function cutParagraph()
     {
         $this->user->pass('contributor');
-        echo Typecho_Common::encodeCode(Typecho_Common::cutParagraph($this->request->content));
+        echo rawurlencode(Typecho_Common::encodeCode(Typecho_Common::cutParagraph($this->request->content)));
     }
     
     /**
@@ -160,7 +160,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     public function removeParagraph()
     {
         $this->user->pass('contributor');
-        echo Typecho_Common::removeParagraph(Typecho_Common::decodeCode($this->request->content));
+        echo rawurlencode(Typecho_Common::removeParagraph(Typecho_Common::decodeCode($this->request->content)));
     }
     
     public function autoSave()
