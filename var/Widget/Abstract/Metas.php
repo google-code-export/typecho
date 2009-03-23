@@ -233,4 +233,25 @@ class Widget_Abstract_Metas extends Widget_Abstract
         
         return is_array($inputTags) ? $result : current($result);
     }
+    
+    /**
+     * 根据内容的指定类别和状态更新相关meta的计数信息
+     * 
+     * @access public
+     * @param Tint $mid meta id
+     * @param string $type 类别
+     * @param string $status 状态
+     * @return void
+     */
+    public function refreshCountByTypeAndStatus($mid, $type, $status = 'publish')
+    {
+        $num = $this->db->fetchObject($this->db->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents')
+        ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+        ->where('table.relationships.mid = ?', $mid)
+        ->where('table.contents.type = ?', $type)
+        ->where('table.contents.status = ?', $status))->num;
+        
+        $this->db->query($this->db->update('table.metas')->rows(array('count' => $num))
+        ->where('mid = ?', $mid));
+    }
 }
