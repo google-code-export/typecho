@@ -139,7 +139,7 @@ include 'menu.php';
                         $(_selection).addClass('tag-selection');
                         $(_selection).addClass('clearfix');
                         $(document).getElement('.typecho-mini-panel form')
-                        .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name'));
+                        .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name-0'));
                     }
                     
                     var _href = item.getElement('span').getProperty('rel');
