@@ -3,6 +3,18 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
+$mootoolsCore = new Typecho_Widget_Helper_Layout('script',
+array('type' => 'text/javascript', 'src' => Typecho_Common::url('javascript/mootools-1.2.1-core-yc.js', $options->adminUrl)));
+$mootoolsCore->setClose(false);
+
+$mootoolsMore = new Typecho_Widget_Helper_Layout('script',
+array('type' => 'text/javascript', 'src' => Typecho_Common::url('javascript/mootools-1.2.1-more.js', $options->adminUrl)));
+$mootoolsMore->setClose(false);
+
+$typechoUi = new Typecho_Widget_Helper_Layout('script',
+array('type' => 'text/javascript', 'src' => Typecho_Common::url('javascript/typecho-ui.source.js', $options->adminUrl)));
+$typechoUi->setClose(false);
+
 /** 使用对象方式引用资源 */
 $header = new Typecho_Widget_Helper_Layout_Header();
 $header->addItem(new Typecho_Widget_Helper_Layout('link',
@@ -10,7 +22,10 @@ array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => Typecho_Common::url
 ->addItem(new Typecho_Widget_Helper_Layout('link',
 array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => Typecho_Common::url('css/grid.source.css', $options->adminUrl))))
 ->addItem(new Typecho_Widget_Helper_Layout('link',
-array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => Typecho_Common::url('css/typecho.source.css', $options->adminUrl))));
+array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => Typecho_Common::url('css/typecho.source.css', $options->adminUrl))))
+->addItem($mootoolsCore)
+->addItem($mootoolsMore)
+->addItem($typechoUi);
 
 /** 注册一个初始化插件 */
 Typecho_Plugin::factory('admin/header.php')->header($header);
