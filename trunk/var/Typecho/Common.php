@@ -35,7 +35,7 @@ class Typecho_Common
     const PARAGRAPH_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul|h[1-6]';
     
     /** 程序版本 */
-    const VERSION = '0.5/9.3.19';
+    const VERSION = '0.5/9.3.24';
     
     /**
      * 缓存的包含路径

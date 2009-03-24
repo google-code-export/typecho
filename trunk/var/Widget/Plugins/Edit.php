@@ -64,14 +64,18 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $options = $form->getValues();
         $personalOptions = $personalForm->getValues();
         
-        if ($personalOptions) {
-            $options['personalConfig'] = $personalOptions;
-        }
-        
         if ($options) {
             $this->insert(array(
                 'name'  =>  'plugin:' . $pluginName,
                 'value' =>  serialize($options),
+                'user'  =>  0
+            ));
+        }
+        
+        if ($personalOptions) {
+            $this->insert(array(
+                'name'  =>  '_plugin:' . $pluginName,
+                'value' =>  serialize($personalOptions),
                 'user'  =>  0
             ));
         }
@@ -128,6 +132,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         }
         
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
+        $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
         
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);

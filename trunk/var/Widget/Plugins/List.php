@@ -60,7 +60,7 @@ class Widget_Plugins_List extends Typecho_Widget
                 /** 默认即插即用 */
                 $info['activated'] = true;
                 
-                if ($info['activate'] || $info['deactivate'] || $info['config']) {
+                if ($info['activate'] || $info['deactivate'] || $info['config'] || $info['personalConfig']) {
                     $info['activated'] = isset($activatedPlugins[$pluginName]);
                 }
                 

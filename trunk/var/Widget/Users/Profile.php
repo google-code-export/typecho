@@ -156,7 +156,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $group = call_user_func(array($className, 'personalConfig'), $form);
         $group = $group ? $group : 'subscriber';
         
-        $options = $this->user->meta($pluginName);
+        $options = $this->options->personalPlugin($pluginName);
         
         if (!empty($options)) {
             foreach ($options as $key => $val) {
@@ -359,12 +359,19 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         
         $settings = $form->getAllRequest();
         unset($settings['do'], $settings['plugin']);
+        $name = '_plugin:' . $pluginName;
         
-        $meta = unserialize($this->user->meta);
-        $meta[$pluginName] = $settings;
-        
-        $this->db->query($this->db->update('table.users')->rows(array('meta' => serialize($meta)))
-        ->where('uid = ?', $this->user->uid));
+        if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
+        ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
+            $this->widget('Widget_Abstract_Options')
+            ->update(array('value' => serialize($settings)), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
+        } else {
+            $this->widget('Widget_Abstract_Options')->insert(array(
+                'name'  =>  $name,
+                'value' =>  serialize($settings),
+                'user'  =>  $this->user->uid
+            ));
+        }
         
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), NULL, 'success');

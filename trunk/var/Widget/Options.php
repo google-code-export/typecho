@@ -28,6 +28,14 @@ class Widget_Options extends Typecho_Widget
     private $_pluginConfig = array();
     
     /**
+     * 缓存的个人插件配置
+     * 
+     * @access private
+     * @var array
+     */
+    private $_personalPluginConfig = array();
+    
+    /**
      * 数据库对象
      * 
      * @access protected
@@ -354,12 +362,8 @@ class Widget_Options extends Typecho_Widget
      * @param mixed $pluginName 插件名称
      * @return void
      */
-    public function plugin($pluginName = NULL)
+    public function plugin($pluginName)
     {
-        if (empty($pluginName)) {
-            return parent::plugin();
-        }
-    
         if (!isset($this->_pluginConfig[$pluginName])) {
             if (!empty($this->row['plugin:' . $pluginName])
             && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))) {
@@ -370,5 +374,25 @@ class Widget_Options extends Typecho_Widget
         }
 
         return $this->_pluginConfig[$pluginName];
+    }
+    
+    /**
+     * 获取个人插件系统参数
+     * 
+     * @param mixed $pluginName 插件名称
+     * @return void
+     */
+    public function personalPlugin($pluginName)
+    {
+        if (!isset($this->_personalPluginConfig[$pluginName])) {
+            if (!empty($this->row['_plugin:' . $pluginName])
+            && false !== ($options = unserialize($this->row['_plugin:' . $pluginName]))) {
+                $this->_personalPluginConfig[$pluginName] = new Typecho_Config($options);
+            } else {
+                throw new Typecho_Plugin_Exception(_t('插件%s的配置信息没有找到', $pluginName), 500);
+            }
+        }
+
+        return $this->_personalPluginConfig[$pluginName];
     }
 }

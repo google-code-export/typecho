@@ -40,7 +40,7 @@ include 'menu.php';
                             <td><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage
                             . '">' . $activatedPlugins->author . '</a>'; ?></td>
                             <td>
-                                <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config): ?>
+                                <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config || $activatedPlugins->personalConfig): ?>
                                     <?php if ($activatedPlugins->activated): ?>
                                         <?php if ($activatedPlugins->config): ?>
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
@@ -93,7 +93,7 @@ include 'menu.php';
                             <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
                             . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
                             <td>
-                                <?php if ($deactivatedPlugins->activate || $deactivatedPlugins->deactivate || $deactivatedPlugins->config): ?>
+                                <?php if ($deactivatedPlugins->activate || $deactivatedPlugins->deactivate || $deactivatedPlugins->config || $deactivatedPlugins->personalConfig): ?>
                                     <?php if ($deactivatedPlugins->activated): ?>
                                         <?php if ($deactivatedPlugins->config): ?>
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
