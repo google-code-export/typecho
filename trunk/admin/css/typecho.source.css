@@ -1515,6 +1515,7 @@ ul.typecho-list-notable li span.trackback {
 .typecho-page-main .typecho-content-panel .typecho-option label.typecho-label {
     width: 100px;
     margin-left: -110px;
+	position: absolute;
 }
 
 .typecho-page-main .typecho-content-panel ul.typecho-option {

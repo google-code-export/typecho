@@ -151,6 +151,8 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
+        $form->setAttribute('name', $pluginName);
+        $form->setAttribute('id', $pluginName);
         
         require_once $pluginFileName;
         $group = call_user_func(array($className, 'personalConfig'), $form);
