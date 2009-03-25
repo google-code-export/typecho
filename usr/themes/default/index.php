@@ -11,7 +11,7 @@
  include('header.php');
  ?>
 
-    <div class="grid_10" id="content">
+    <div class="grid_11" id="content">
 	<?php while($this->next()): ?>
         <div class="post">
 			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
