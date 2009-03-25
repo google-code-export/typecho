@@ -13,7 +13,7 @@
 
 <body>
 <div class="container_16 clearfix">
-    <div id="header" class="grid_14">
+    <div id="header" class="grid_16">
 	<div id="logo">
 	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
 	    	<p class="description"><?php $this->options->description() ?></p>

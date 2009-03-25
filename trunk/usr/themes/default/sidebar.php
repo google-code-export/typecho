@@ -1,15 +1,6 @@
 
 
-    <div class="grid_4" id="sidebar">
-    
-	    <div class="widget">
-			<h2><?php _e('最新文章'); ?></h2>
-            <ul>
-                <?php $this->widget('Widget_Contents_Post_Recent')
-                ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-            </ul>
-	    </div>
-    
+    <div class="grid_5" id="sidebar">
     
 	    <div id="search" class="widget">
 	        <form method="post" action="">
@@ -18,11 +9,19 @@
 	    </div>
 
 	    <div class="widget">
+			<h2><?php _e('最新文章'); ?></h2>
+            <ul>
+                <?php $this->widget('Widget_Contents_Post_Recent')
+                ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
+            </ul>
+	    </div>
+    
+	    <div class="widget">
 			<h2><?php _e('最近回复'); ?></h2>
             <ul>
             <?php $this->widget('Widget_Comments_Recent')->to($comments); ?>
             <?php while($comments->next()): ?>
-                <li><a href="<?php $comments->permalink(); ?>"><?php $comments->author(false); ?></a>: <?php $comments->excerpt(10, '...'); ?></li>
+                <li><a href="<?php $comments->permalink(); ?>"><?php $comments->author(false); ?></a>: <?php $comments->excerpt(35, '...'); ?></li>
             <?php endwhile; ?>
             </ul>
 	    </div>

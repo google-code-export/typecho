@@ -15,15 +15,15 @@
  */
 body {
 background: #fff;
-color: #222;
-font-family: "Lucida Sans Unicode", Lucida Grande, sans-serif;
+color: #333;
+font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 line-height: 1.62;
 }
 
-input, textarea { font-family: "Lucida Sans Unicode", Lucida Grande, sans-serif; font-size: 100%; }
+input, textarea { font-family: "Lucida Grande", Helvetica, Arial, sans-serif; font-size: 100%; }
 
 a {
-color: #bd6800;
+color: #36c;
 text-decoration: none;
 }
 a:hover {
@@ -31,18 +31,13 @@ color: #333;
 text-decoration: underline;
 }
 
-p img {
-border: 1px solid #e5ead1;
-padding: 2px;
-}
+img.alignleft { margin: 4px 10px 0 0; }
+img.alignright { margin: 4px 0 0 10px; }
 
 code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
 
-/*
- * !!! reset container_16 width=840px, and there are 14 columns !!!
- */
-.container_16 { width: 840px; }
+ul { list-style-type: disc; }
 
 /*
  * header
@@ -51,17 +46,15 @@ code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #00
 #header {
 color: #666;
 margin: 0 10px 15px;
-height: 115px;
+height: 110px;
 position: relative;
-border-bottom: 1px dotted #EAF2CE;
+border-bottom: 1px dotted #ddd;
 }
 
 #logo {
 position: absolute;
-top: 22px;
+top: 15px;
 left: 0;
-background: url(images/logo_bg.png) no-repeat right top;
-padding-right: 20px;
 }
 
 #logo h1 {
@@ -69,13 +62,13 @@ font-size: 36px;
 margin-bottom: 0;
 }
 #logo h1 a {
-color: #222;
+color: #333;
 }
 #logo h1 a:hover {
 text-decoration: none;
 }
 
-p.description { margin: -5px 0 0; text-align: right; }
+p.description { margin: -5px 0 0; }
 
 /* header nav menu */
 ul#nav_menu {
@@ -88,10 +81,7 @@ overflow: visible;
 }
 ul#nav_menu li {
 display: inline;
-margin: 0 5px 0 0;
-padding-left: 8px;
-border-left: 1px dotted #EAF2CE;
-margin-left: -1px;
+margin: 0 0 0 20px;
 }
 ul#nav_menu li a {
 color: #333;
@@ -101,36 +91,36 @@ ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
 text-decoration: underline;
-color: #BD6800;
+color: #36c;
 }
 
 /*
  * content
  */
-#content {
-/*border-top: 1px solid #eaf2ce;*/
-}
+#content { overflow: hidden; }
 #content a { font-weight: bold; }
+#content p { margin-bottom: 15px; }
 
 .post {
-/*border-bottom: 1px solid #eaf2ce;*/
 margin-bottom: 30px;
 }
 
 h2.entry_title {
 margin-bottom: 0;
-overflow: hidden;
-/*font-size: 18px;*/
-color: #BD6800;
+}
+
+h2.entry_title a {
+color: #333;
 }
 
 .entry_data {
-color: #666;
+color: #999;
 margin-bottom: 15px;
+font-size: 12px;
 }
 
 #post_extra {
-border-top: 1px dotted #EAF2CE;
+border-top: 1px dotted #ddd;
 padding: 5px 0;
 text-align: right;
 }
@@ -140,21 +130,20 @@ ol.pages {
 margin: 20px 0 0 0;
 color: #666;
 list-style: none;
+font-size: 12px;
 }
 
 ol.pages li {
-margin: 0 2px 0 0;
-padding: 0 6px 0 0;
-border-right: 1px solid #EAF2CE;
+margin: 0 5px 0 0;
 display: inline;
 }
 
 ol.pages li a {
-	padding: 0 2px;
+	padding: 0 4px;
 }
 
 ol.pages li.current a {
-background: #BD6800;
+background: #36c;
 color: #fff;
 }
 
@@ -169,15 +158,17 @@ margin: 0;
 list-style: none;
 }
 ol#comment_list li {
-margin: 0 0 25px;
+margin: 0 0 5px;
 }
 .comment_data {
 margin-bottom: 5px;
 padding-bottom: 5px;
-border-bottom: 1px dotted #EAF2CE;
-color: #777;
+border-bottom: 1px dotted #ddd;
+color: #888;
+font-size: 12px;
 }
 .comment_data .author {
+font-size: 13px;
 font-weight: bold;
 color: #333;
 }
@@ -186,13 +177,8 @@ overflow: hidden;
 }
 
 img.avatar {
-background: #fff;
-border: 1px solid #E9F4BF;
-padding: 2px;
 float: left;
-width: 32px;
-height: 32px;
-margin: 0 10px 0 0;
+margin: 4px 10px 0 0;
 }
 
 #comment_form {
@@ -201,7 +187,7 @@ margin: 0 10px 0 0;
 margin-left: 15px;
 }
 #comment_form p {
-margin-bottom: 10px;
+margin-bottom: 15px;
 }
 #comment_form .text {
 width: 40%;
@@ -233,10 +219,13 @@ list-style-type: none;
 .widget ul li {
 overflow: hidden;
 margin: 0;
-border-bottom: 1px dotted #eaf2ce;
 padding: 3px 0;
 /*padding-left: 12px;
 background: url(images/widget_style_li.png) 0 5px no-repeat;*/
+}
+
+#search {
+margin-top: 10px;
 }
 
 /* 
