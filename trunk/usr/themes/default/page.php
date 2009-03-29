@@ -1,11 +1,14 @@
 <?php include('header.php'); ?>
 
-    <div class="grid_11" id="content">
+    <div class="grid_10" id="content">
         <div class="post">
 			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
-			<div class="entry_data"><?php _e('作者：'); ?><?php $this->author(); ?> | <?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></div>
+			<div class="entry_data">
+				<span><?php _e('作者：'); ?><?php $this->author(); ?></span>
+				<span class="no-border"><?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></span>
+			</div>
 			<div class="entry_text">
-				<?php $this->content('阅读剩余部分...'); ?>
+				<?php $this->content(); ?>
 		    </div>
 		</div>
 

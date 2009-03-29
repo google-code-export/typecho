@@ -1,108 +1,116 @@
-/*
+/* ------------------------------------
  * Typecho Default Theme
  *
  * @author	fen1211@gmail.com
  * @link	http://typecho.net/
- * @update	2008-12-22 22:00
- */
+ * @update	2009-03-29 14:30
+ * --------------------------------- */
 
 
-/* import 960.gs css framework */
+/* = import 960.gs css framework */
 @import url(css/960.gs.css);
 
-/*
+/* ------------------
  * gobal settings
- */
+ * --------------- */
 body {
 background: #fff;
 color: #333;
-font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
-line-height: 1.62;
+font-family: /*"Lucida Grande", */Helvetica, Arial, sans-serif;
+line-height: 1.7;
 }
+
+h1 { font-size: 21px; }
+h2 { font-size: 19px; }
+h3 { font-size: 17px; }
+h4 { font-size: 15px; }
+h5 { font-size: 13px; }
 
 input, textarea { font-family: "Lucida Grande", Helvetica, Arial, sans-serif; font-size: 100%; }
 
 a {
-color: #36c;
-text-decoration: none;
+color: #003063;
 }
 a:hover {
 color: #333;
-text-decoration: underline;
 }
 
 img.alignleft { margin: 4px 10px 0 0; }
 img.alignright { margin: 4px 0 0 10px; }
 
-code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #000; line-height: 16px; overflow: auto;
+code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #333; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
 
 ul { list-style-type: disc; }
 
-/*
+/* = reset width to 840px, so there are 14 columns */
+.container_16 { width: 840px; }
+
+/* ------------------
  * header
- */
+ * --------------- */
 
 #header {
-color: #888;
-margin: 0 10px 15px;
-height: 110px;
-position: relative;
-border-bottom: 1px dotted #ddd;
+color: #999;
+margin: 0 10px 20px;
+padding: 15px 0; 
+border-bottom: 1px solid #ddd;
 }
 
 #logo {
-position: absolute;
-top: 15px;
-left: 0;
 }
 
 #logo h1 {
-font-size: 36px;
-margin-bottom: 0;
+margin: 0;
+font-size: 29px;
+float: left;
 }
 #logo h1 a {
 color: #333;
-}
-#logo h1 a:hover {
 text-decoration: none;
 }
+#logo h1 a:hover {
+}
 
-p.description { margin: -5px 0 0; }
+p.description {
+margin: 14px 0 0 10px;
+padding-left: 10px;
+border-left: 1px solid #ddd;
+float: left;
+}
 
-/* header nav menu */
+/* = header navigation menu */
 ul#nav_menu {
+float: right;
+margin: 16px 0 0 0;
 list-style: none;
-position: absolute;
-right: 0;
-top: 50px;
-overflow: hidden !important;
-overflow: visible;
 }
 ul#nav_menu li {
 display: inline;
-margin: 0 0 0 20px;
+margin: 0 0 0 15px;
 }
 ul#nav_menu li a {
 color: #333;
 font-weight: bold;
+text-decoration: none;
 }
 ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
 text-decoration: underline;
-color: #36c;
+color: #003063;
 }
 
-/*
+/* ------------------
  * content
- */
-#content { overflow: hidden; }
-#content a { font-weight: bold; }
+ * --------------- */
+#content { }
 #content p { margin-bottom: 15px; }
 
 .post {
-margin-bottom: 30px;
+margin-bottom: 20px;
+padding-bottom: 10px;
+border-bottom: 1px solid #ddd;
 }
 
 h2.entry_title {
@@ -110,22 +118,31 @@ margin-bottom: 0;
 }
 
 h2.entry_title a {
-color: #333;
+color: #c60;
+text-decoration: none;
 }
 
 .entry_data {
-color: #888;
+color: #ccc;
 margin-bottom: 15px;
 font-size: 12px;
 }
 
-#post_extra {
-border-top: 1px dotted #ddd;
-padding: 5px 0;
-text-align: right;
+.entry_data span {
+margin-right: 3px;
+padding-right: 5px;
+color: #999;
+border-right: 1px solid #ddd;
 }
 
-/* pages nav */
+.entry_data span.no-border { border-color: transparent; }
+
+.entry_text {
+overflow: hidden;
+}
+
+
+/* = pages nav */
 ol.pages {
 margin: 20px 0 0 0;
 color: #666;
@@ -139,17 +156,18 @@ display: inline;
 }
 
 ol.pages li a {
-	padding: 0 4px;
+padding: 0 4px;
+text-decoration: none;
 }
 
 ol.pages li.current a {
-background: #36c;
+background: #003063;
 color: #fff;
 }
 
-/*
+/* ------------------
  * comment list
- */
+ * --------------- */
 #comments {
 margin-top: 20px;
 }
@@ -164,7 +182,7 @@ margin: 0 0 5px;
 margin-bottom: 5px;
 padding-bottom: 5px;
 border-bottom: 1px dotted #ddd;
-color: #888;
+color: #999;
 font-size: 12px;
 }
 .comment_data .author {
@@ -178,7 +196,7 @@ overflow: hidden;
 
 img.avatar {
 float: left;
-margin: 4px 10px 0 0;
+margin: 5px 10px 0 0;
 }
 
 #comment_form {
@@ -186,51 +204,43 @@ margin: 4px 10px 0 0;
 #comment_form label {
 margin-left: 15px;
 }
-#comment_form p {
-margin-bottom: 15px;
-}
 #comment_form .text {
-width: 40%;
+width: 200px;
 }
 #comment_form textarea {
-width: 90%;
+width: 420px;
+height: 220px;
+overflow: auto;
 }
 
-/*
+/* ------------------
  * sidebar
- */
+ * --------------- */
 #sidebar {
-/*background: #f3fade;*/
 }
 .widget {
-/*padding: 20px 25px;
-border-bottom: 1px solid #e5ead1;
-border-top: 1px solid #fff;*/
 margin-bottom: 25px;
 }
-.widget h2 {
-font-size: 15px;
-margin-bottom: 2px;
+.widget h3 {
+font-size: 13px;
+margin-bottom: 5px;
+color: #c60;
 }
 .widget ul {
 margin: 0;
 list-style-type: none;
 }
 .widget ul li {
-overflow: hidden;
 margin: 0;
-padding: 3px 0;
-/*padding-left: 12px;
-background: url(images/widget_style_li.png) 0 5px no-repeat;*/
 }
 
-#search {
-margin-top: 10px;
+#search input.text {
+width: 145px;
 }
 
-/* 
+/* ------------------
  * footer 
- */
+ * --------------- */
 #footer {
 margin-top: 15px;
 padding: 15px 0;
@@ -238,9 +248,9 @@ text-align: center;
 }
 
 
-/*
+/* -----------------
  * misc
- */
+ *--------------- */
 .aligncenter,
 div.aligncenter {
    display: block;
