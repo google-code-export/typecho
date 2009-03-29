@@ -19,12 +19,12 @@
                 <?php if($this->user->hasLogin()): ?>
 				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('登出'); ?> &raquo;</a></p>
                 <?php else: ?>
-				<p><input type="text" name="author" class="text" size="35" value="<?php $this->remember('author'); ?>" /><label><?php _e('名字'); ?> *</label></p>
-				<p><input type="text" name="mail" class="text" size="35" value="<?php $this->remember('mail'); ?>" /><label><?php _e('E-mail'); ?> *</label></p>
-				<p><input type="text" name="url" class="text" size="35" value="<?php $this->remember('url'); ?>" /><label><?php _e('网站 （选填）'); ?></label></p>
+				<p><input type="text" name="author" id="author" class="text" size="35" value="<?php $this->remember('author'); ?>" /><label for="author"><?php _e('名字 （必填）'); ?></label></p>
+				<p><input type="text" name="mail" id="mail" class="text" size="35" value="<?php $this->remember('mail'); ?>" /><label for="mail"><?php _e('E-mail （必填）'); ?></label></p>
+				<p><input type="text" name="url" id="url" class="text" size="35" value="<?php $this->remember('url'); ?>" /><label for="url"><?php _e('网站'); ?></label></p>
                 <?php endif; ?>
 				<p><textarea rows="10" cols="50" name="text"><?php $this->remember('text'); ?></textarea></p>
-				<p><input type="submit" value="提交评论" class="submit" /></p>
+					<p><input type="submit" value="<?php _e('提交评论'); ?>" class="submit" /></p>
 			</form>
             <?php endif; ?>
 		</div>
