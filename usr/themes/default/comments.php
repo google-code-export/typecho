@@ -4,11 +4,12 @@
 			<?php $this->comments()->to($comments); ?>
             <?php while($comments->next()): ?>
 				<li id="<?php $comments->theId(); ?>">
-					<div class="comment_data"><?php $comments->gravatar(32, '', '', 'avatar'); ?><!-- <?php echo $comments->sequence(); ?> -->
-						<span class="author"><?php $comments->author(); ?></span><br /><?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?></div>
-					<div class="comment_body">
-						<?php $comments->content(); ?>
+					<div class="comment_data">
+						<span class="author"><?php $comments->author(); ?></span>
+						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <span class="count">#<?php echo $comments->sequence(); ?></span>
 					</div>
+					<?php $comments->gravatar(32, '', '', 'avatar'); ?>
+					<?php $comments->content(); ?>
 				</li>
 			<?php endwhile; ?>
 			</ol>

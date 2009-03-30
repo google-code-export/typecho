@@ -4,7 +4,7 @@
  * 
  * @package Typecho Default Theme 
  * @author fen
- * @version 1.0.5
+ * @version 1.0.6
  * @link http://typecho.org
  */
  
@@ -15,15 +15,13 @@
 	<?php while($this->next()): ?>
         <div class="post">
 			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
-			<div class="entry_data">
+			<p class="entry_data">
 				<span><?php _e('作者：'); ?><?php $this->author(); ?></span>
 				<span><?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></span>
 				<span><?php _e('分类：'); ?><?php $this->category(','); ?></span>
-				<span class="no-border"><a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('No Comments', '1 Comment', '%d Comments'); ?></a></span>
-			</div>
-			<div class="entry_text">
-				<?php $this->content('阅读剩余部分...'); ?>
-		    </div>
+				<a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('No Comments', '1 Comment', '%d Comments'); ?></a>
+			</p>
+			<?php $this->content('阅读剩余部分...'); ?>
         </div>
 	<?php endwhile; ?>
 
