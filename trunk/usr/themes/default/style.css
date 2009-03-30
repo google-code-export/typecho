@@ -29,7 +29,9 @@ h5 { font-size: 13px; }
 input, textarea { font-family: "Lucida Grande", Helvetica, Arial, sans-serif; font-size: 100%; }
 
 a {
-color: #003063;
+color: #004477;
+font-weight: bold;
+text-decoration: none;
 }
 a:hover {
 color: #333;
@@ -98,7 +100,7 @@ ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
 text-decoration: underline;
-color: #003063;
+color: #004477;
 }
 
 /* ------------------
@@ -111,6 +113,7 @@ color: #003063;
 margin-bottom: 20px;
 padding-bottom: 10px;
 border-bottom: 1px solid #ddd;
+overflow: hidden;
 }
 
 h2.entry_title {
@@ -119,26 +122,18 @@ margin-bottom: 0;
 
 h2.entry_title a {
 color: #c60;
-text-decoration: none;
 }
 
 .entry_data {
 color: #ccc;
-margin-bottom: 15px;
 font-size: 12px;
 }
 
 .entry_data span {
-margin-right: 3px;
-padding-right: 5px;
+margin-right: 4px;
+padding-right: 7px;
 color: #999;
 border-right: 1px solid #ddd;
-}
-
-.entry_data span.no-border { border-color: transparent; }
-
-.entry_text {
-overflow: hidden;
 }
 
 
@@ -161,7 +156,7 @@ text-decoration: none;
 }
 
 ol.pages li.current a {
-background: #003063;
+background: #004477;
 color: #fff;
 }
 
@@ -176,27 +171,37 @@ margin: 0;
 list-style: none;
 }
 ol#comment_list li {
-margin: 0 0 5px;
+margin: 0;
+padding-bottom: 10px;
 }
 .comment_data {
-margin-bottom: 5px;
-padding-bottom: 5px;
-border-bottom: 1px dotted #ddd;
+margin-bottom: 8px;
+padding-bottom: 8px;
+border-bottom: 1px dashed #ddd;
 color: #999;
-font-size: 12px;
+font-size: 11px;
+text-align: right;
 }
 .comment_data .author {
-font-size: 13px;
+float: left;
+font-size: 15px;
 font-weight: bold;
 color: #333;
 }
+.comment_data .count {
+margin-left: 5px;
+font-size: 13px;
+font-weight: bold;
+}
+.comment_data .author a { text-decoration: none; }
 .comment_body {
 overflow: hidden;
 }
 
 img.avatar {
-float: left;
-margin: 5px 10px 0 0;
+/*display: none;*/
+float: right;
+margin: 5px 0 0 10px;
 }
 
 #comment_form {
