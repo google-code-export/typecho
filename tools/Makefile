@@ -71,6 +71,13 @@ upgrade:
 	make clear
 
 
+theme:
+	make svnup
+	rm -Rf ${DIR}/usr/themes/default/
+	cp -Rf build/usr/themes/default/ ${DIR}/usr/themes/
+	make clear
+
+
 typecho:
 	for i in `php list.php "build/var/Typecho/"`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
 	rm -Rf build/var/Typecho/
