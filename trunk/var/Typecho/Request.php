@@ -288,7 +288,7 @@ class Typecho_Request
             $pathInfo = $requestUri;
         }
 
-        return (self::$_pathInfo = (empty($pathInfo) ? '/' : $pathInfo));
+        return (self::$_pathInfo = urldecode(empty($pathInfo) ? '/' : $pathInfo));
     }
 
     /**
