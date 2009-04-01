@@ -80,8 +80,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         
         $this->onRequest('edit')->onRequest('theme')
         ->editThemeFile($this->request->theme, $this->request->edit);
-        
-        changeTheme($this->request->change);
+
         $this->response->redirect($this->options->adminUrl);
     }
 }
