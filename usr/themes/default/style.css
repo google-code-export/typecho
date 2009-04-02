@@ -16,7 +16,7 @@
 body {
 background: #fff;
 color: #333;
-font-family: /*"Lucida Grande", */Helvetica, Arial, sans-serif;
+font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 line-height: 1.7;
 }
 
@@ -29,16 +29,13 @@ h5 { font-size: 13px; }
 input, textarea { font-family: "Lucida Grande", Helvetica, Arial, sans-serif; font-size: 100%; }
 
 a {
-color: #004477;
-font-weight: bold;
+color: #06c;
 text-decoration: none;
 }
 a:hover {
 color: #333;
+text-decoration: underline;
 }
-
-img.alignleft { margin: 4px 10px 0 0; }
-img.alignright { margin: 4px 0 0 10px; }
 
 code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #333; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; font-size: 12px; padding: 10px; margin: 10px 0;}
@@ -93,14 +90,12 @@ margin: 0 0 0 15px;
 }
 ul#nav_menu li a {
 color: #333;
-font-weight: bold;
-text-decoration: none;
 }
 ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
 text-decoration: underline;
-color: #004477;
+color: #06c;
 }
 
 /* ------------------
@@ -121,7 +116,7 @@ margin-bottom: 0;
 }
 
 h2.entry_title a {
-color: #c60;
+color: #333;
 }
 
 .entry_data {
@@ -156,7 +151,7 @@ text-decoration: none;
 }
 
 ol.pages li.current a {
-background: #004477;
+background: #06c;
 color: #fff;
 }
 
@@ -227,9 +222,9 @@ overflow: auto;
 margin-bottom: 25px;
 }
 .widget h3 {
-font-size: 13px;
+font-size: 15px;
 margin-bottom: 5px;
-color: #c60;
+color: #333;
 }
 .widget ul {
 margin: 0;
@@ -270,3 +265,6 @@ div.aligncenter {
 .alignright {
    float: right;
 }
+
+img.alignleft { margin: 4px 10px 0 0; }
+img.alignright { margin: 4px 0 0 10px; }
