@@ -1,6 +1,6 @@
 <?php
 /**
- * 使用 <a href="http://en.wikipedia.org/wiki/Creole_language" target="_blank">Creole 语法</a>发布文章。改进版本支持中文（utf-8 编码）、并除去不必要的标签。
+ * 使用 <a href="http://www.wikicreole.org/" target="_blank">Creole 语法</a>发布文章。改进版本支持中文（utf-8 编码）、并除去不必要的标签。
  * 
  * @package Creole 解析器（改进版）
  * @author 明城<i.feelinglucky@gmail.com>
