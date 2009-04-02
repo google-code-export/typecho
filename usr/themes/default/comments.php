@@ -8,7 +8,7 @@
 						<span class="author"><?php $comments->author(); ?></span>
 						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <span class="count">#<?php echo $comments->sequence(); ?></span>
 					</div>
-					<?php $comments->gravatar(32, '', '', 'avatar'); ?>
+					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 					<?php $comments->content(); ?>
 				</li>
 			<?php endwhile; ?>
