@@ -46,7 +46,7 @@ CREATE TABLE `typecho_comments` (
 CREATE TABLE `typecho_contents` (
   `cid` int(10) unsigned NOT NULL auto_increment COMMENT 'post表主键',
   `title` varchar(200) default NULL COMMENT '内容标题',
-  `slug` varchar(128) default NULL COMMENT '内容缩略名',
+  `slug` varchar(200) default NULL COMMENT '内容缩略名',
   `created` int(10) unsigned default '0' COMMENT '内容生成时的GMT unix时间戳',
   `modified` int(10) unsigned default '0' COMMENT '内容更改时的GMT unix时间戳',
   `text` text COMMENT '内容文字',
@@ -74,7 +74,7 @@ CREATE TABLE `typecho_contents` (
 CREATE TABLE `typecho_metas` (
   `mid` int(10) unsigned NOT NULL auto_increment COMMENT '项目主键',
   `name` varchar(200) default NULL COMMENT '名称',
-  `slug` varchar(128) default NULL COMMENT '项目缩略名',
+  `slug` varchar(200) default NULL COMMENT '项目缩略名',
   `type` varchar(32) NOT NULL COMMENT '项目类型',
   `description` varchar(200) default NULL COMMENT '选项描述',
   `count` int(10) unsigned default '0' COMMENT '项目所属内容个数',
@@ -126,7 +126,6 @@ CREATE TABLE `typecho_users` (
   `logged` int(10) unsigned default '0' COMMENT '上次登录最后活跃时间',
   `group` varchar(16) default 'visitor' COMMENT '用户组',
   `authCode` varchar(64) default NULL COMMENT '登录验证码',
-  `meta` text COMMENT '用户个人数据',
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `mail` (`mail`)
