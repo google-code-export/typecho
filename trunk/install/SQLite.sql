@@ -18,7 +18,7 @@ CREATE INDEX typecho_comments_created ON typecho_comments ("created");
 
 CREATE TABLE typecho_contents ( "cid" INTEGER NOT NULL PRIMARY KEY, 
 "title" varchar(200) default NULL , 
-"slug" varchar(128) default NULL , 
+"slug" varchar(200) default NULL , 
 "created" int(10) default '0' , 
 "modified" int(10) default '0' , 
 "text" text , 
@@ -38,7 +38,7 @@ CREATE INDEX typecho_contents_created ON typecho_contents ("created");
 
 CREATE TABLE typecho_metas ( "mid" INTEGER NOT NULL PRIMARY KEY, 
 "name" varchar(200) default NULL , 
-"slug" varchar(128) default NULL , 
+"slug" varchar(200) default NULL , 
 "type" varchar(32) NOT NULL , 
 "description" varchar(200) default NULL , 
 "count" int(10) default '0' , 
@@ -67,8 +67,7 @@ CREATE TABLE typecho_users ( "uid" INTEGER NOT NULL PRIMARY KEY,
 "activated" int(10) default '0' , 
 "logged" int(10) default '0' , 
 "group" varchar(16) default 'visitor' , 
-"authCode" varchar(64) default NULL,
-"meta" text );
+"authCode" varchar(64) default NULL);
 
 CREATE UNIQUE INDEX typecho_users_name ON typecho_users ("name");
 CREATE UNIQUE INDEX typecho_users_mail ON typecho_users ("mail");

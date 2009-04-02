@@ -32,7 +32,7 @@ CREATE SEQUENCE "typecho_contents_seq";
 
 CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_contents_seq'),
   "title" VARCHAR(200) NULL DEFAULT NULL,
-  "slug" VARCHAR(128) NULL DEFAULT NULL,
+  "slug" VARCHAR(200) NULL DEFAULT NULL,
   "created" INT NULL DEFAULT '0',
   "modified" INT NULL DEFAULT '0',
   "text" TEXT NULL DEFAULT NULL,
@@ -61,7 +61,7 @@ CREATE SEQUENCE "typecho_metas_seq";
 
 CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_metas_seq'),
   "name" VARCHAR(200) NULL DEFAULT NULL,
-  "slug" VARCHAR(128) NULL DEFAULT NULL,
+  "slug" VARCHAR(200) NULL DEFAULT NULL,
   "type" VARCHAR(16) NOT NULL DEFAULT '',
   "description" VARCHAR(200) NULL DEFAULT NULL,
   "count" INT NULL DEFAULT '0',
@@ -107,7 +107,6 @@ CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_user
   "logged" INT NULL DEFAULT '0',
   "group" VARCHAR(16) NULL DEFAULT 'visitor',
   "authCode" VARCHAR(64) NULL DEFAULT NULL,
-  "meta" TEXT NULL DEFAULT NULL,
   PRIMARY KEY ("uid"),
   UNIQUE ("name"),
   UNIQUE ("mail")
