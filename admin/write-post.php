@@ -14,7 +14,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea style="height: <?php $options->editorSize(); ?>px" disabled autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->content); ?></textarea></p>
+                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
                                 <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="button" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>
