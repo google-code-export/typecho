@@ -195,7 +195,7 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                                 if($success)
                                 {
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
-                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbPrefix', 'dbDatabase', 'dbFile', 'dbDsn');
+                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
 
                                     $_dbConfig = array_filter($_dbConfig);
                                     $dbConfig = array();
@@ -315,7 +315,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                         
                                         /** 初始用户 */
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'), 
-                                        'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime(), 'meta' => 'a:0:{}')));
+                                        'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
                                         
                                         Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName'));
                                     } catch (Typecho_Db_Exception $e) {
