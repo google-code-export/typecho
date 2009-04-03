@@ -175,7 +175,7 @@ class WordpressToTypecho_Action extends Typecho_Widget implements Widget_Interfa
                 $contents->insert(array(
                     'cid'           =>  $row['ID'],
                     'title'         =>  $row['post_title'],
-                    'slug'          =>  $row['post_name'],
+                    'slug'          =>  Typecho_Common::slugName(urldecode($row['post_name']), $row['ID'], 128),
                     'created'       =>  strtotime($row['post_date_gmt']) + $gmtOffset,
                     'modified'      =>  strtotime($row['post_modified_gmt']) + $gmtOffset,
                     'text'          =>  $row['post_content'],

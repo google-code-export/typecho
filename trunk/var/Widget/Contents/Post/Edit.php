@@ -64,6 +64,45 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         return $result;
     }
+    
+    /**
+     * 获取当前时间
+     * 
+     * @access protected
+     * @return Typecho_Date
+     */
+    protected function ___date()
+    {
+        return new Typecho_Date($this->options->gmtTime);
+    }
+    
+    /**
+     * 根据提交值获取created字段值
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function getCreated()
+    {
+        $created = $this->options->gmtTime;
+        if (isset($this->request->created)) {
+            $created = $this->request->created;
+        } else if (isset($this->request->date)) {
+            $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone;
+        } else if (isset($this->request->year) && isset($this->request->month) && isset($this->request->day)) {
+            $second = intval($this->request->getParameter('sec', date('s')));
+            $min = intval($this->request->getParameter('min', date('i')));
+            $hour = intval($this->request->getParameter('hour', date('H')));
+            
+            $year = intval($this->request->year);
+            $month = intval($this->request->month);
+            $day = intval($this->request->day);
+            
+            $created = mktime($hour, $min, $second, $month, $day, $year) - $this->options->timezone + $this->options->serverTimezone;
+        }
+        
+        return $created;
+    }
 
     /**
      * 执行函数
@@ -279,9 +318,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
 
-        $contents['created'] = isset($this->request->created) ? $this->request->created
-        : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
-        : $this->options->gmtTime);
+        $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
         $contents = $this->plugin()->insert($contents);
@@ -346,9 +383,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
         $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
 
-        $contents['created'] = isset($this->request->created) ? $this->request->created
-        : (isset($this->request->date) ? strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone
-        : $this->options->gmtTime);
+        $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
         $contents = $this->plugin()->update($contents);

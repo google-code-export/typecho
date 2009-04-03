@@ -210,7 +210,7 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                                         $installDb->query('SELECT 1=1');
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
                                     
                                 }
@@ -243,7 +243,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
-                                        $scripts = str_replace('typecho_', $dbConfig['prefix'], $scripts);
+                                        $scripts = str_replace('typecho_', Typecho_Request::getParameter('dbPrefix'), $scripts);
                                         
                                         if (isset($dbConfig['charset'])) {
                                             $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
@@ -319,7 +319,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                         
                                         Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName'));
                                     } catch (Typecho_Db_Exception $e) {
-                                        echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
                                 }
                             }
