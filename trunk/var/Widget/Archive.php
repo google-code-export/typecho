@@ -1062,10 +1062,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                     
                     /** RSS全文输出开关支持 */
                     if ($this->options->feedFullText) {
-                        $item->setDescription(strip_tags($this->text));
+                        $item->setDescription(strip_tags($this->content));
                     } else {
                         $item->setDescription(strip_tags(false !== strpos($this->text, '<!--more-->') ?
-                        $this->excerpt . Typecho_Feed::EOL . Typecho_Feed::EOL . $this->permalink : $this->text));
+                        $this->excerpt . Typecho_Feed::EOL . Typecho_Feed::EOL . $this->permalink : strip_tags($this->content)));
                     }
                     
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
