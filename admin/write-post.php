@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
                                 <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
+                                <button type="button" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>
@@ -63,7 +63,27 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
-                                <input class="mini" type="text" name="date" id="date" value="<?php $post->date('r'); ?>" />
+                                <select name="month" id="month">
+                                    <option value="1" <?php if (1 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('一月'); ?></option>
+                                    <option value="2" <?php if (2 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('二月'); ?></option>
+                                    <option value="3" <?php if (3 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('三月'); ?></option>
+                                    <option value="4" <?php if (4 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('四月'); ?></option>
+                                    <option value="5" <?php if (5 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('五月'); ?></option>
+                                    <option value="6" <?php if (6 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('六月'); ?></option>
+                                    <option value="7" <?php if (7 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('七月'); ?></option>
+                                    <option value="8" <?php if (8 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('八月'); ?></option>
+                                    <option value="9" <?php if (9 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('九月'); ?></option>
+                                    <option value="10" <?php if (10 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十月'); ?></option>
+                                    <option value="11" <?php if (11 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十一月'); ?></option>
+                                    <option value="12" <?php if (12 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十二月'); ?></option>
+                                </select>
+                                <input size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
+                                ,
+                                <input size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
+                                @
+                                <input size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
+                                :
+                                <input size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
@@ -148,14 +168,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             
             /** 自动完成 */
             Typecho.autoComplete('#tags', _tags);
-            
-            /** 日期对象 */
-            Typecho.date('date', <?php $post->date('Y'); ?>, <?php $post->date('n'); ?>, <?php $post->date('j'); ?>,
-            <?php $post->date('G'); ?>, <?php $post->date('i'); ?>, 0);
-        
         });
     })();
 </script>
+<?php
+Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
+if (!$plugged):
+?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
@@ -164,6 +183,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     })();
 </script>
 <?php
+endif;
 Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
 include 'copyright.php';
 ?>

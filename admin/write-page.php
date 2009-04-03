@@ -7,14 +7,14 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main typecho-post-option typecho-post-area">
+        <div class="container typecho-post-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('Contents/Page/Edit.do'); ?>" method="post" name="write_page">
                 <div class="column-18 start-01">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea style="height: <?php $options->editorSize(); ?>px" disabled autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
+                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->content); ?></textarea></p>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                         <p class="submit">
                             <span class="left">
@@ -69,7 +69,27 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
-                            <input type="text" class="mini" name="date" id="date" value="<?php $page->date('r'); ?>" />
+                                <select name="month" id="month">
+                                    <option value="1" <?php if (1 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('一月'); ?></option>
+                                    <option value="2" <?php if (2 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('二月'); ?></option>
+                                    <option value="3" <?php if (3 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('三月'); ?></option>
+                                    <option value="4" <?php if (4 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('四月'); ?></option>
+                                    <option value="5" <?php if (5 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('五月'); ?></option>
+                                    <option value="6" <?php if (6 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('六月'); ?></option>
+                                    <option value="7" <?php if (7 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('七月'); ?></option>
+                                    <option value="8" <?php if (8 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('八月'); ?></option>
+                                    <option value="9" <?php if (9 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('九月'); ?></option>
+                                    <option value="10" <?php if (10 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十月'); ?></option>
+                                    <option value="11" <?php if (11 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十一月'); ?></option>
+                                    <option value="12" <?php if (12 == $page->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十二月'); ?></option>
+                                </select>
+                                <input size="4" maxlength="4" type="text" name="day" id="day" value="<?php $page->date('d'); ?>" />
+                                ,
+                                <input size="4" maxlength="4" type="text" name="year" id="year" value="<?php $page->date('Y'); ?>" />
+                                @
+                                <input size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $page->date('H'); ?>" />
+                                :
+                                <input size="2" maxlength="2" type="text" name="min" id="min" value="<?php $page->date('i'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
@@ -120,13 +140,13 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 $(document).getElement('form[name=write_page]').fireEvent('post', e);
                 //$(document).getElement('form[name=write_post]').submit();
             });
-
-            Typecho.date('date', <?php $page->date('Y'); ?>, <?php $page->date('n'); ?>, <?php $page->date('j'); ?>,
-            <?php $page->date('G'); ?>, <?php $page->date('i'); ?>, 0);
-        
         });
     })();
 </script>
+<?php
+Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
+if (!$plugged):
+?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
@@ -135,6 +155,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
     })();
 </script>
 <?php
+endif;
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'copyright.php';
 ?>

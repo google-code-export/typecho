@@ -1688,21 +1688,24 @@ ul.typecho-list-notable li span.trackback {
 }
 
 .typecho-post-area input#year,
-.typecho-post-area input#month,
+.typecho-post-area select#month,
 .typecho-post-area input#day,
 .typecho-post-area input#hour,
 .typecho-post-area input#min {
-	width: 34px;
-	border: none;
+	width: 30px;
+	font-size: 8pt;
 	font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-	border-width: 0;
+	padding: 1px;
 }
 
-.typecho-post-area input#month,
 .typecho-post-area input#day,
 .typecho-post-area input#hour,
 .typecho-post-area input#min {
-	width: 18px;
+	width: 16px;
+}
+
+.typecho-post-area select#month {
+	width: 64px;
 }
 
 .typecho-post-area input.time {

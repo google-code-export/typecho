@@ -35,7 +35,7 @@ class Typecho_Common
     const PARAGRAPH_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul|h[1-6]';
     
     /** 程序版本 */
-    const VERSION = '0.5/9.3.24';
+    const VERSION = '0.6/9.4.3';
     
     /**
      * 缓存的包含路径
@@ -738,14 +738,17 @@ EOF;
      * @access public
      * @param string $str 需要生成缩略名的字符串
      * @param string $default 默认的缩略名
+     * @param integer $maxLength 缩略名最大长度
      * @return string
      */
-    public static function slugName($str, $default = NULL)
+    public static function slugName($str, $default = NULL, $maxLength = 200)
     {
         $str = str_replace(array("'", ":", "\\", "/"), "", $str);
         $str = str_replace(array("+", ",", " ", ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
         $str = trim($str, '-');
-        return empty($str) ? $default : $str;
+        $str = empty($str) ? $default : $str;
+        
+        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$config['charset']) : substr($str, $maxLength);
     }
     
     /**
