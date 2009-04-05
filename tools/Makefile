@@ -31,6 +31,7 @@ package:
 	rm -Rf build/usr/plugins/SimpleCode.php
 	rm -Rf build/usr/plugins/Helper.php
 	rm -Rf build/usr/plugins/PageToLinks.php
+	rm -Rf build/usr/plugins/Creole/
 	tar -cvvzf build.tar.gz build/
 
 
