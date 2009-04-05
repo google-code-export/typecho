@@ -160,7 +160,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug($content['slug'], $insertId);
+            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $insertId);
         }
 
         return $insertId;
@@ -215,7 +215,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 更新缩略名 */
         if ($updateRows > 0 && isset($content['slug'])) {
-            $this->applySlug($content['slug'], $condition);
+            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $condition);
         }
 
         return $updateRows;
