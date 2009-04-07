@@ -84,7 +84,7 @@ class FlashMp3Player_Plugin implements Typecho_Plugin_Interface
     public static function toCodeEditor($content)
     {
         $swfUrl = preg_quote(Typecho_Common::url('FlashMp3Player/swf/dewplayer.swf', Helper::options()->pluginUrl), "/");
-        return preg_replace("/<object.*data=\"{$swfUrl}\?mp3\=([^\"]+)\".*>(.*?)<\/object>/is", "<mp3>\\1</mp3>", $content);
+        return preg_replace("/<(object)[^>]*data=\"{$swfUrl}\?mp3\=([^\">]+)\"[^>]*>(.*?)<\/\\1>/is", "<mp3>\\2</mp3>", $content);
     }
     
     /**
