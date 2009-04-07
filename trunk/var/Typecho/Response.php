@@ -135,11 +135,17 @@ class Typecho_Response
      * @param string $name 名称 
      * @param string $value 对应值
      * @param boolean $replace 是否替换重复
+     * @param integer $responseCode 回执代码
      * @return void
      */
-    public static function setHeader($name, $value, $replace = false)
+    public static function setHeader($name, $value, $replace = false, $responseCode = 0)
     {
-        header($name . ': ' . $value, $replace);
+        /** 设置回执代码 */
+        if ($responseCode > 0) {
+            header($name . ': ' . $value, $replace, $responseCode);
+        } else {
+            header($name . ': ' . $value, $replace);
+        }
     }
     
     /**
@@ -152,7 +158,7 @@ class Typecho_Response
     public static function setStatus($code)
     {
         if (isset(self::$_httpCode[$code])) {
-            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true);
+            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true, $code);
         }
     }
     
@@ -215,8 +221,7 @@ class Typecho_Response
         $location = Typecho_Common::safeUrl($location);
     
         if ($isPermanently) {
-            self::setStatus(301);
-            self::setHeader('location', $location);
+            self::setHeader('location', $location, false, 301);
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>301 Moved Permanently</title>
@@ -225,8 +230,7 @@ class Typecho_Response
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
     </body></html>');
         } else {
-            self::setStatus(302);
-            self::setHeader('location', $location);
+            self::setHeader('location', $location, false, 302);
             die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>302 Moved Temporarily</title>
