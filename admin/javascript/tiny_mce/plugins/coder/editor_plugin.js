@@ -12,7 +12,7 @@
 			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
-				if (e.nodeName === 'CODE' || e.nodeName === 'PRE')
+				if (e.nodeName === 'CODE' || e.nodeName === 'PRE' || e.className.indexOf("typecho-plugin") >= 0)
 					ed.selection.select(e);
 			});
 

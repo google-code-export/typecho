@@ -415,6 +415,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
         $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
+        $input['text'] = $this->plugin()->fromOfflineEditor($input['text']);
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
