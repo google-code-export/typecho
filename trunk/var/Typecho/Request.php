@@ -300,14 +300,14 @@ class Typecho_Request
     public static function getClientIp()
     {
         switch (true) {
+            case isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'):
+                return $_SERVER['REMOTE_ADDR'];
             case getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'):
                 return getenv('HTTP_CLIENT_IP');
             case getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'): 
                 return getenv('HTTP_X_FORWARDED_FOR');
             case getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'):
                 return getenv('REMOTE_ADDR');
-            case isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'):
-                return $_SERVER['REMOTE_ADDR'];
             default:
                 return 'unknown';
         }
@@ -321,7 +321,7 @@ class Typecho_Request
      */
     public static function getReferer()
     {
-        return getenv('HTTP_REFERER');
+        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : getenv('HTTP_REFERER');
     }
     
     /**
@@ -332,7 +332,7 @@ class Typecho_Request
      */
     public static function getAgent()
     {
-        return getenv('HTTP_USER_AGENT');
+        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT');
     }
     
     /**
