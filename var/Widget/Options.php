@@ -140,8 +140,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___index()
     {
-        return $this->rewrite && !empty(Typecho_Router::$current) ? 
-        $this->siteUrl : Typecho_Common::url('index.php', $this->siteUrl);
+        return $this->rewrite ? $this->siteUrl : Typecho_Common::url('index.php', $this->siteUrl);
     }
     
     /**

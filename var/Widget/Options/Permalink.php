@@ -170,7 +170,7 @@ RewriteRule . {$basePath}index.php [L]
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Permalink.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('index.php/Options/Permalink.do', $this->options->siteUrl),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 是否使用地址重写功能 */

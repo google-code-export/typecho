@@ -98,7 +98,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         }
 
         /** 打开连接 */
-        $socket = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+        $socket = @fsockopen($this->ip ? $this->ip : $this->host, $this->port, $errno, $errstr, $this->timeout);
         if (false === $socket) {
             throw new Typecho_Http_Client_Exception($errno . ':' . $errstr, 500);
         }
