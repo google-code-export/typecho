@@ -797,18 +797,61 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function header()
     {
+        $allowedMetas = func_num_args() > 0 ? func_get_args() 
+        : array('description', 'keywords', 'generator', 'template', 'pingback', 'xmlrpc', 'wlwmanifest', 'rss2', 'rss1', 'atom');
+    
         $header = new Typecho_Widget_Helper_Layout_Header();
-        $header->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'description', 'content' => htmlspecialchars($this->_description))))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'keywords', 'content' => htmlspecialchars($this->_keywords))))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'generator', 'content' => $this->options->generator)))
-        ->addItem(new Typecho_Widget_Helper_Layout('meta', array('name' => 'template', 'content' => $this->options->theme)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml', 'href' => $this->options->xmlRpcUrl . '?wlw')))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->_feedUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->_feedRssUrl)))
-        ->addItem(new Typecho_Widget_Helper_Layout('link', array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->_feedAtomUrl)));
         
+        if (in_array('description', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
+            array('name' => 'description', 'content' => htmlspecialchars($this->_description))));
+        }
+        
+        if (in_array('keywords', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
+            array('name' => 'keywords', 'content' => htmlspecialchars($this->_keywords))));
+        }
+        
+        if (in_array('generator', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
+            array('name' => 'generator', 'content' => $this->options->generator)));
+        }
+        
+        if (in_array('template', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
+            array('name' => 'template', 'content' => $this->options->theme)));
+        }
+        
+        if (in_array('pingback', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)));
+        }
+        
+        if (in_array('xmlrpc', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')));
+        }
+        
+        if (in_array('wlwmanifest', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml', 'href' => $this->options->xmlRpcUrl . '?wlw')));
+        }
+        
+        if (in_array('rss2', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->_feedUrl)));
+        }
+        
+        if (in_array('rss1', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->_feedRssUrl)));
+        }
+        
+        if (in_array('atom', $allowedMetas)) {
+            $header->addItem(new Typecho_Widget_Helper_Layout('link',
+            array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->_feedAtomUrl)));
+        }
+
         /** 插件支持 */
         $this->plugin()->header($header);
         
