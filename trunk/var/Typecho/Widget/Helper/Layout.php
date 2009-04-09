@@ -90,12 +90,25 @@ class Typecho_Widget_Helper_Layout
      * 增加元素
      * 
      * @access public
-     * @param Typecho_Widget_Helper_Layout $item 表单元素
+     * @param Typecho_Widget_Helper_Layout $item 元素
      * @return Typecho_Widget_Helper_Layout
      */
     public function addItem(Typecho_Widget_Helper_Layout $item)
     {
         $this->_items[] = $item;
+        return $this;
+    }
+    
+    /**
+     * 删除元素
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Layout $item 元素
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function removeItem(Typecho_Widget_Helper_Layout $item)
+    {
+        unset($this->_items[array_search($item, $this->_items)]);
         return $this;
     }
     
