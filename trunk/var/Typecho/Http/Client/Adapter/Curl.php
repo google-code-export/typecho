@@ -43,6 +43,12 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
     public function httpSend($url)
     {
         $ch = curl_init();
+        
+        if ($this->ip) {
+            $url = $this->scheme . '://' . $this->ip . $this->path;
+            $this->headers['Rfc'] = $this->method . ' ' . $this->path . ' ' . $this->rfc;
+            $this->headers['Host'] = $this->host;
+        }
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_PORT, $this->port);
@@ -72,6 +78,12 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             }
         
             $headers = array();
+            
+            if (isset($this->headers['Rfc'])) {
+                $headers[] = $this->headers['Rfc'];
+                unset($this->headers['Rfc']);
+            }
+            
             foreach ($this->headers as $key => $val) {
                 $headers[] = $key . ': ' . $val;
             }
@@ -86,7 +98,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             }
             
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($this->data) ? http_build_query($this->data) : $this->data);
             }
             
             if (!empty($this->files)) {

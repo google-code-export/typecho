@@ -103,12 +103,28 @@ abstract class Typecho_Http_Client_Adapter
     protected $host;
     
     /**
+     * 前缀
+     * 
+     * @access protected
+     * @var string
+     */
+    protected $scheme = 'http';
+    
+    /**
      * 路径
      * 
      * @access protected
      * @var string
      */
     protected $path = '/';
+    
+    /**
+     * 设置ip
+     * 
+     * @access protected
+     * @var string
+     */
+    protected $ip;
     
     /**
      * 端口
@@ -246,6 +262,19 @@ abstract class Typecho_Http_Client_Adapter
     }
     
     /**
+     * 设置ip地址
+     * 
+     * @access public
+     * @param string $ip ip地址
+     * @return Typecho_Http_Client_Adapter
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+        return $this;
+    }
+    
+    /**
      * 设置头信息参数
      * 
      * @access public
@@ -290,6 +319,9 @@ abstract class Typecho_Http_Client_Adapter
         } else {
             $url .= (empty($this->query) ? NULL : '?' . $this->query);
         }
+        
+        $this->scheme = $params['scheme'];
+        $this->port = ('https' == $params['scheme']) ? 443 : 80;
         
         if (!empty($params['port'])) {
             $this->port = $params['port'];

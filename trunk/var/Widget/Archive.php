@@ -246,6 +246,12 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedAtomUrl = $this->options->feedAtomUrl;
         $this->_keywords = $this->options->keywords;
         $this->_description = $this->options->description;
+        
+        /** 支持自定义首页 */
+        if ($this->options->customHomepage && empty($this->_feed)) {
+            $this->parameter->type = 'page';
+            $this->request->cid = $this->options->customHomepage;
+        }
 
         switch ($this->parameter->type) {
         
