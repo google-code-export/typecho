@@ -799,70 +799,76 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 输出头部元数据
      * 
      * @access public
+     * @param string $rule 规则
      * @return void
      */
-    public function header()
+    public function header($rule = NULL)
     {
-        $allowedMetas = func_num_args() > 0 ? func_get_args() 
-        : array('description', 'keywords', 'generator', 'template', 'pingback', 'xmlrpc', 'wlwmanifest', 'rss2', 'rss1', 'atom');
+        $rules = array();
+        $allows = array(
+            'description'   =>  htmlspecialchars($this->_description),
+            'keywords'      =>  htmlspecialchars($this->_keywords),
+            'generator'     =>  $this->options->generator,
+            'template'      =>  $this->options->theme,
+            'pingback'      =>  $this->options->xmlRpcUrl,
+            'xmlrpc'        =>  $this->options->xmlRpcUrl . '?rsd',
+            'wlw'           =>  $this->options->xmlRpcUrl . '?wlw',
+            'rss2'          =>  $this->_feedUrl,
+            'rss1'          =>  $this->_feedRssUrl,
+            'atom'          =>  $this->_feedAtomUrl
+        );
+        
+        if (!empty($rule)) {
+            parse_str($rule, $rules);
+            $allows = array_merge($allows, $rules);
+        }
     
-        $header = new Typecho_Widget_Helper_Layout_Header();
-        
-        if (in_array('description', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
-            array('name' => 'description', 'content' => htmlspecialchars($this->_description))));
+        $header = '';
+        if (!empty($allows['description'])) {
+            $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\r\n";
         }
         
-        if (in_array('keywords', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
-            array('name' => 'keywords', 'content' => htmlspecialchars($this->_keywords))));
+        if (!empty($allows['keywords'])) {
+            $header .= '<meta name="keywords" content="' . $allows['keywords'] . '" />' . "\r\n";
         }
         
-        if (in_array('generator', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
-            array('name' => 'generator', 'content' => $this->options->generator)));
+        if (!empty($allows['generator'])) {
+            $header .= '<meta name="generator" content="' . $allows['generator'] . '" />' . "\r\n";
         }
         
-        if (in_array('template', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('meta',
-            array('name' => 'template', 'content' => $this->options->theme)));
+        if (!empty($allows['template'])) {
+            $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\r\n";
         }
         
-        if (in_array('pingback', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'pingback', 'href' => $this->options->xmlRpcUrl)));
+        if (!empty($allows['pingback'])) {
+            $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\r\n";
         }
         
-        if (in_array('xmlrpc', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'EditURI', 'type' => 'application/rsd+xml', 'title' => 'RSD', 'href' => $this->options->xmlRpcUrl . '?rsd')));
+        if (!empty($allows['xmlrpc'])) {
+            $header .= '<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . $allows['xmlrpc'] . '" />' . "\r\n";
         }
         
-        if (in_array('wlwmanifest', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'wlwmanifest', 'type' => 'application/wlwmanifest+xml', 'href' => $this->options->xmlRpcUrl . '?wlw')));
+        if (!empty($allows['wlw'])) {
+            $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\r\n";
         }
         
-        if (in_array('rss2', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => 'RSS 2.0', 'href' => $this->_feedUrl)));
+        if (!empty($allows['rss2'])) {
+            $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\r\n";
         }
         
-        if (in_array('rss1', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'alternate', 'type' => 'text/xml', 'title' => 'RSS 1.0', 'href' => $this->_feedRssUrl)));
+        if (!empty($allows['rss1'])) {
+            $header .= '<link rel="alternate" type="text/xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\r\n";
         }
         
-        if (in_array('atom', $allowedMetas)) {
-            $header->addItem(new Typecho_Widget_Helper_Layout('link',
-            array('rel' => 'alternate', 'type' => 'application/atom+xml', 'title' => 'ATOM 1.0', 'href' => $this->_feedAtomUrl)));
+        if (!empty($allows['atom'])) {
+            $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\r\n";
         }
 
         /** 插件支持 */
         $this->plugin()->header($header);
         
         /** 输出header */
-        $header->render();
+        echo $header;
     }
     
     /**
