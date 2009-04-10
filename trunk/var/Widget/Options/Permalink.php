@@ -46,42 +46,6 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
     }
 
     /**
-     * 检验规则是否冲突
-     * 
-     * @access public
-     * @param string $value 路由规则
-     * @return boolean
-     */
-    public function checkRule($value)
-    {
-        if ('custom' != $value) {
-            return true;
-        }
-
-        $routingTable = $this->options->routingTable;
-        $currentTable = array('custom' => array('url' => $this->encodeRule($this->request->customPattern)));
-        $parser = new Typecho_Router_Parser($currentTable);
-        $currentTable = $parser->parse();
-        $regx = $currentTable['custom']['regx'];
-
-        //echo $regx; die;
-
-        foreach ($routingTable as $key => $val) {
-            if ('post' != $key && 'page' != $key) {
-                $pathInfo = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $val['url']);
-                $pathInfo = str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{', '}'),
-                    array('123', 'hello', 'default', '2008', '08', '08', '', ''), $pathInfo);
-
-                if (preg_match($regx, $pathInfo)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * 检测是否可以rewrite
      * 
      * @access public
@@ -213,7 +177,6 @@ RewriteRule . {$basePath}index.php [L]
         if ($customPatternValue) {
             $postPattern->value('custom');
         }
-        $form->addInput($postPattern->multiMode()->addRule(array($this, 'checkRule'), _t('您设定路径与当前路径存在冲突')));
         
         /** 独立页面后缀名 */
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
