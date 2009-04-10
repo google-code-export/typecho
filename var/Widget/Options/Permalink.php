@@ -46,6 +46,42 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
     }
 
     /**
+     * 检验规则是否冲突
+     * 
+     * @access public
+     * @param string $value 路由规则
+     * @return boolean
+     */
+    public function checkRule($value)
+    {
+        if ('custom' != $value) {
+            return true;
+        }
+
+        $routingTable = $this->options->routingTable;
+        $currentTable = array('custom' => array('url' => $this->encodeRule($this->request->customPattern)));
+        $parser = new Typecho_Router_Parser($currentTable);
+        $currentTable = $parser->parse();
+        $regx = $currentTable['custom']['regx'];
+
+        //echo $regx; die;
+
+        foreach ($routingTable as $key => $val) {
+            if ('post' != $key && 'page' != $key) {
+                $pathInfo = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $val['url']);
+                $pathInfo = str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{', '}'),
+                    array('123', 'hello', 'default', '2008', '08', '08', '', ''), $pathInfo);
+
+                if (preg_match($regx, $pathInfo)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * 检测是否可以rewrite
      * 
      * @access public
@@ -177,6 +213,7 @@ RewriteRule . {$basePath}index.php [L]
         if ($customPatternValue) {
             $postPattern->value('custom');
         }
+        $form->addInput($postPattern->multiMode());
         
         /** 独立页面后缀名 */
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
@@ -210,6 +247,8 @@ RewriteRule . {$basePath}index.php [L]
             $this->response->goBack();
         }
         
+        $patternValid = $this->checkRule($this->request->postPattern);
+        
         /** 解析url pattern */
         if ('custom' == $this->request->postPattern) {
             $this->request->postPattern = $this->encodeRule($this->request->customPattern);
@@ -235,7 +274,11 @@ RewriteRule . {$basePath}index.php [L]
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
         
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        if ($patternValid) {
+            $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        } else {
+            $this->widget('Widget_Notice')->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), NULL, 'notice');
+        }
         $this->response->goBack();
     }
 
