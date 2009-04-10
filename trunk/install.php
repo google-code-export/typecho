@@ -380,7 +380,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                 <div class="typecho-install-body">
                 <?php
                 $success = true;
-                if (false === ($handle = fopen('wb'))) {
+                if (false === ($handle = fopen('./config.inc.php', 'ab'))) {
                     echo '<p class="message error">' . _t('安装目录不可写, 无法进入下一步创建配置文件, 请设置你的目录权限为可写') . '</p>';
                     $success = false;
                 } else {
