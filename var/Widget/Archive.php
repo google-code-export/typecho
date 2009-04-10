@@ -901,10 +901,10 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $split
      * @return void
      */
-    public function archiveTitle($split = ' &raquo; ')
+    public function archiveTitle($split = ' &raquo; ', $before = ' &raquo; ', $end = '')
     {
         if ($this->_archiveTitle) {
-            echo $split . implode($split, $this->_archiveTitle);
+            echo $before . implode($split, $this->_archiveTitle) . $end;
         }
     }
     
@@ -917,7 +917,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return boolean
      */
     public function is($archiveType, $archiveSlug = NULL)
-    {        
+    {
         return ($archiveType == $this->_archiveType || 
         (($this->_archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->_archiveType))
         && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
