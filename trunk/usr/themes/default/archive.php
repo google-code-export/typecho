@@ -9,7 +9,7 @@
 				<span><?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></span>
 				<?php _e('分类：'); ?><?php $this->category(','); ?>
 			</p>
-			<?php $this->content(); ?>
+			<?php $this->content('阅读剩余部分...'); ?>
 		</div>
 	<?php endwhile; ?>
 

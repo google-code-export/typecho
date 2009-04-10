@@ -418,9 +418,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param string $more 文章截取后缀
      * @return void
      */
-    public function content($more = NULL)
+    public function content($more = false)
     {
-        echo NULL !== $more && false !== strpos($this->text, '<!--more-->') ? 
+        echo false !== $more && false !== strpos($this->text, '<!--more-->') ? 
         $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">{$more}</a></p>" : $this->content;
     }
 

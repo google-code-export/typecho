@@ -7,7 +7,7 @@ TINYMCE=3_2_2
 
 #update subversion
 svnup:
-	@echo 'subverion update'
+	@echo 'subversion update'
 	rm -Rf build/
 	svn up ../
 	svn export ../ build

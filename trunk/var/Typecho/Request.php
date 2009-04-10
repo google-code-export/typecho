@@ -211,10 +211,15 @@ class Typecho_Request
         } elseif (isset($_SERVER['REQUEST_URI'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
             if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
-                $pathInfo    = parse_url($requestUri, PHP_URL_PATH);
-                $queryString = parse_url($requestUri, PHP_URL_QUERY);
-                $requestUri  = $pathInfo
-                             . ((empty($queryString)) ? '' : '?' . $queryString);
+                $parts       = @parse_url($requestUri);
+                
+                if (false !== $parts) {
+                    $pathInfo    = $parts['path'];
+                    $queryString = $parts['query'];
+                    
+                    $requestUri  = $pathInfo
+                                 . ((empty($queryString)) ? '' : '?' . $queryString);
+                }
             }
         } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
             $requestUri = $_SERVER['ORIG_PATH_INFO'];
