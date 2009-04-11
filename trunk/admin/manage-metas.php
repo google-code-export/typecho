@@ -58,9 +58,9 @@ include 'menu.php';
                                 <td><a href="<?php echo Typecho_Request::uri('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
-                                <span class="right description"><?php _e('默认'); ?></span>
+                                <span class="balloon right"><?php _e('默认'); ?></span>
                                 <?php else: ?>
-                                <a class="right hidden-by-mouse" href="<?php $options->index('Metas/Category/Edit.do?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
+                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Metas/Category/Edit.do?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
