@@ -33,7 +33,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     
         /** 获取文章内容 */
         if ((isset($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do
-         && 'insert' != $this->request->do) || 'update' == $this->request->do) {
+         && 'insert' != $this->request->do) || 'update' == $this->request->do || 'customHomePage' == $this->request->do) {
             $this->db->fetchRow($this->select()
             ->where('table.contents.type = ?', 'page')
             ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
@@ -172,11 +172,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         }
         
         /** 设置提示信息 */
-       $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('页面已经被删除') : _t('没有页面被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('页面已经被删除') : _t('没有页面被删除'), NULL,
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
-       $this->response->goBack();
+        $this->response->goBack();
     }
     
     /**
@@ -205,6 +205,46 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     }
     
     /**
+     * 设置自定义首页
+     * 
+     * @access public
+     * @return void
+     */
+    public function customHomePage()
+    {
+        $cid = $this->request->filter('int')->cid;
+        
+        $this->db->query($this->db->update('table.options')
+            ->rows(array('value' => $cid))
+            ->where('name = ?', 'customHomePage'));
+        
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set(_t('"%s" 已经被设置为自定义首页', $this->title), NULL, 'success');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
+    
+    /**
+     * 取消设置自定义首页
+     * 
+     * @access public
+     * @return void
+     */
+    public function disableCustomHomePage()
+    {
+        $this->db->query($this->db->update('table.options')
+            ->rows(array('value' => 0))
+            ->where('name = ?', 'customHomePage'));
+        
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set(_t('自定义首页被取消'), NULL, 'success');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
+    
+    /**
      * 绑定动作
      * 
      * @access public
@@ -216,6 +256,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->onRequest('do', 'update')->updatePage();
         $this->onRequest('do', 'delete')->deletePage();
         $this->onRequest('do', 'sort')->sortPage();
+        $this->onRequest('do', 'customHomePage')->customHomePage();
+        $this->onRequest('do', 'disableCustomHomePage')->disableCustomHomePage();
         $this->response->redirect($this->options->adminUrl);
     }
 }

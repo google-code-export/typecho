@@ -42,7 +42,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="385"/>
+                        <col width="315"/>
+                        <col width="70"/>
                         <col width="140"/>
                         <col width="140"/>
                         <col width="150"/>
@@ -52,6 +53,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th class="typecho-radius-topleft"> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
+                            <th> </th>
                             <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
                             <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
@@ -65,6 +67,13 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php 'publish' == $pages->status ? print($pages->permalink . '#comments') : print('#'); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
+                            <td>
+                            <?php if ($options->customHomePage == $pages->cid): ?>
+                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Contents/Page/Edit.do?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
+                                <?php else: ?>
+                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Contents/Page/Edit.do?do=customHomePage&cid=' . $pages->cid); ?>"><?php _e('首页'); ?></a>
+                            <?php endif; ?>
+                            </td>
                             <td><?php $pages->slug(); ?></td>
                             <td><?php $pages->author(); ?></td>
                             <td><?php $pages->dateWord(); ?></td>
