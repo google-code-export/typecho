@@ -1040,7 +1040,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function feed()
     {
         $this->_feed->setCharset($this->options->charset);
-        $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
         $this->_feed->setSubTitle($this->_description);
 
         if (Typecho_Feed::RSS2 == $this->_feedType) {
@@ -1077,6 +1076,9 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'post':
             case 'page':
             case 'comments':
+                $this->_feed->setTitle(_t('%s 的评论', 
+                $this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL)));
+            
                 if ('comments' == $this->parameter->type) {
                     $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
                 } else {
@@ -1121,6 +1123,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             case 'search_page':
             default:
                 while ($this->next()) {
+                    $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
+                
                     $item = $this->_feed->createNewItem();
                     $item->setTitle($this->title);
                     $item->setLink($this->permalink);
