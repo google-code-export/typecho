@@ -1873,16 +1873,24 @@ ul.autocompleter-choices span.autocompleter-queried {
 .typecho-post-area .advance {
 	font-weight: bold;
 	color: #333;
-	text-decoration: underline;
 	cursor: pointer;
-	padding-left: 16px;
+	padding: 0 0 0 16px;
 	height: 16px;
 	line-height: 16px;
-	background: url(../images/arrow.gif) left top no-repeat;
+	background-image: url(../images/arrow.gif);
+	background-repeat: no-repeat;
+	*background-position: 0 -3px;
+}
+
+.typecho-post-area .swfupload {
+	position: relative;
+	top: 5px;
+	margin-left: 5px;
 }
 
 .typecho-post-area .close {
-	background: url(../images/arrow.gif) left bottom no-repeat;
+	background-position: 0 -16px;
+	*background-position: 0 -19px;
 }
 
 /**
