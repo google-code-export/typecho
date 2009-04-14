@@ -21,6 +21,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
+                                <span class="attach"><span id="swfu-placeholder"></span></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
@@ -132,6 +133,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     </div>
 </div>
 <?php include 'common-js.php'; ?>
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js'); ?>"></script>
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 <script type="text/javascript">
     (function () {
@@ -168,6 +170,36 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             
             /** 自动完成 */
             Typecho.autoComplete('#tags', _tags);
+            
+            var swfu, _w = $(document).getElement('.attach').getSize().x,
+            _h = $(document).getElement('.attach').getSize().y,
+            settings = {
+				flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
+				upload_url: "upload.php",
+				file_size_limit : "100 MB",
+				file_types : "*.*",
+				file_types_description : "<?php _e('所有文件'); ?>",
+				file_upload_limit : 100,
+				file_queue_limit : 0,
+				custom_settings : {
+					progressTarget : "fsUploadProgress"
+				},
+				debug: false,
+                
+                // Button Settings
+                button_placeholder_id : "swfu-placeholder",
+                button_image_url: "<?php $options->adminUrl('images/attach.gif'); ?>",
+                button_height: 18,
+                button_text: '<span class="theFont"><?php _e('上传附件'); ?></span>',
+				button_text_style: ".theFont { font-size: 12px; font-weight: bold; color: #333333; }",
+				button_text_left_padding: 14,
+				button_text_top_padding: 0,
+                button_width: 200,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND
+			};
+
+			swfu = new SWFUpload(settings);
         });
     })();
 </script>
