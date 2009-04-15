@@ -21,7 +21,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
-                                <span class="attach"><span id="swfu-placeholder"></span></span>
+                                <span class="attach"><?php _e('上传附件'); ?></span><span id="swfu"><span id="swfu-placeholder"></span></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
@@ -171,8 +171,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             /** 自动完成 */
             Typecho.autoComplete('#tags', _tags);
             
-            var swfu, _w = $(document).getElement('.attach').getSize().x,
-            _h = $(document).getElement('.attach').getSize().y,
+            var swfu, _size = $(document).getElement('.attach').getCoordinates(),
             settings = {
 				flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
 				upload_url: "upload.php",
@@ -188,17 +187,17 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 
                 // Button Settings
                 button_placeholder_id : "swfu-placeholder",
-                button_image_url: "<?php $options->adminUrl('images/attach.gif'); ?>",
-                button_height: 18,
-                button_text: '<span class="theFont"><?php _e('上传附件'); ?></span>',
-				button_text_style: ".theFont { font-size: 12px; font-weight: bold; color: #333333; }",
+                button_height: 20,
+                button_text: '',
+				button_text_style: '',
 				button_text_left_padding: 14,
 				button_text_top_padding: 0,
-                button_width: 200,
+                button_width: _size.width,
                 button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
                 button_cursor: SWFUpload.CURSOR.HAND
 			};
 
+            $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
 			swfu = new SWFUpload(settings);
         });
     })();
