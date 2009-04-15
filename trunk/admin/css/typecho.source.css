@@ -1870,22 +1870,27 @@ ul.autocompleter-choices span.autocompleter-queried {
 	color: #E47E00;
 }
 
-.typecho-post-area .advance {
+.typecho-post-area .advance, .typecho-post-area .attach {
 	font-weight: bold;
 	color: #333;
 	cursor: pointer;
 	padding: 0 0 0 16px;
 	height: 16px;
 	line-height: 16px;
+	text-decoration: underline;
 	background-image: url(../images/arrow.gif);
 	background-repeat: no-repeat;
 	*background-position: 0 -3px;
 }
 
-.typecho-post-area .swfupload {
-	position: relative;
-	top: 5px;
-	margin-left: 5px;
+.typecho-post-area .attach {
+	background-image: url(../images/attach.gif);
+	margin-left: 10px;
+}
+
+.typecho-post-area #swfu {
+	position: absolute;
+	margin-left: -10px;
 }
 
 .typecho-post-area .close {
