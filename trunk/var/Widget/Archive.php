@@ -822,17 +822,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         if ($this->have()) {
             $allows['rdf'] .= '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 	    xmlns:dc="http://purl.org/dc/elements/1.1/"
-	    xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
-        xmlns:pingback="http://madskills.com/public/xml/rss/module/pingback/"> 
+	    xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"> 
     <rdf:Description rdf:about="' . $this->permalink . '"
     dc:identifier="' . $this->permalink . '"
     dc:title="' . $this->title . '"
     trackback:ping="' . $this->trackbackUrl . '" />
-    <rdf:Description rdf:about="' . $this->permalink . '"
-    dc:title="' . $this->title . '"
-    dc:link="' . $this->permalink . '"
-    pingback:server="' . $allows['pingback'] . '"
-    pingback:target="' . $this->permalink . '" />
 </rdf:RDF>';
         }
         
