@@ -18,6 +18,8 @@ Typecho_Widget::widget('Widget_Menu')->to($menu);
 
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
+list($soft, $currentVersion) = explode(' ', $options->generator);
+list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
 if (!$user->logged && !Typecho_Request::getCookie('__typecho_first_run') && !empty($currentMenu)) {
     
@@ -30,7 +32,6 @@ if (!$user->logged && !Typecho_Request::getCookie('__typecho_first_run') && !emp
 } else {
 
     /** 检测版本是否升级 */
-    list($soft, $currentVersion) = explode(' ', $options->generator);
     if ($user->pass('administrator', true) && !empty($currentMenu)) {
         $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
         str_replace('/', '.', $currentVersion), '>'));
