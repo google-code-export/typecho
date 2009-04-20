@@ -1754,7 +1754,7 @@ ul.typecho-list-notable li span.trackback {
 	line-height: 10px;
 }
 
-.typecho-post-area #advance-panel {
+.typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
 	margin: 0;
 	display: none;
 }
@@ -1771,7 +1771,7 @@ ul.typecho-post-option li {
 	padding: 5px 0 10px 0;
 }
 
-#advance-panel li {
+#advance-panel li, #upload-panel li {
 	border: none;
 }
 
@@ -1870,7 +1870,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 	color: #E47E00;
 }
 
-.typecho-post-area .advance, .typecho-post-area .attach {
+.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
 	font-weight: bold;
 	color: #333;
 	cursor: pointer;
@@ -1886,6 +1886,11 @@ ul.autocompleter-choices span.autocompleter-queried {
 .typecho-post-area .attach {
 	background-image: url(../images/attach.gif);
 	margin-left: 10px;
+}
+
+.typecho-post-area .media {
+	background-image: none;
+	padding: 0;
 }
 
 .typecho-post-area #swfu {
