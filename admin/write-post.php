@@ -22,6 +22,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
                                 <span class="attach"><?php _e('上传附件'); ?></span><span id="swfu"><span id="swfu-placeholder"></span></span>
+                                ,
+                                <span class="media"><?php _e('媒体库'); ?></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
@@ -57,6 +59,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 </ul>
                             </div>
                         </li>
+                    </ul>
+                    <ul id="upload-panel" class="typecho-post-option column-18">
+                        <li class="column-18"></li>
                     </ul>
                 </div>
                 <div class="column-06 start-19">
@@ -133,7 +138,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     </div>
 </div>
 <?php include 'common-js.php'; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js'); ?>"></script>
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 <script type="text/javascript">
     (function () {
@@ -170,38 +174,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             
             /** 自动完成 */
             Typecho.autoComplete('#tags', _tags);
-            
-            var swfu, _size = $(document).getElement('.attach').getCoordinates(),
-            settings = {
-				flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
-				upload_url: "upload.php",
-				file_size_limit : "100 MB",
-				file_types : "*.*",
-				file_types_description : "<?php _e('所有文件'); ?>",
-				file_upload_limit : 100,
-				file_queue_limit : 0,
-				custom_settings : {
-					progressTarget : "fsUploadProgress"
-				},
-				debug: false,
-                
-                // Button Settings
-                button_placeholder_id : "swfu-placeholder",
-                button_height: 20,
-                button_text: '',
-				button_text_style: '',
-				button_text_left_padding: 14,
-				button_text_top_padding: 0,
-                button_width: _size.width,
-                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
-                button_cursor: SWFUpload.CURSOR.HAND
-			};
-
-            $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
-			swfu = new SWFUpload(settings);
         });
     })();
 </script>
+<?php include 'file-upload.php'; ?>
 <?php
 Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
 if (!$plugged):

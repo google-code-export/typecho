@@ -695,16 +695,33 @@ Typecho.location = function (url) {
     setTimeout('window.location.href="' + url + '"', 0);
 };
 
+Typecho.toggleEl = null;
+Typecho.toggleBtn = null;
+Typecho.toggleHideWord = null;
+Typecho.toggleOpened = false;
+
 Typecho.toggle = function (sel, btn, showWord, hideWord) {
     var el = $(document).getElement(sel);
+    
+    if (null != Typecho.toggleBtn && btn != Typecho.toggleBtn) {
+        $(Typecho.toggleBtn).set('html', Typecho.toggleHideWord);
+        Typecho.toggleEl.setStyle('display', 'none');
+    }
+    
     $(btn).toggleClass('close');
     if ('none' == el.getStyle('display')) {
         $(btn).set('html', showWord);
         el.setStyle('display', 'block');
+        Typecho.toggleOpened = true;
     } else {
         $(btn).set('html', hideWord);
         el.setStyle('display', 'none');
+        Typecho.toggleOpened = false;
     }
+    
+    Typecho.toggleEl = el;
+    Typecho.toggleBtn = btn;
+    Typecho.toggleHideWord = hideWord;
 };
 
 /** 高亮元素 */

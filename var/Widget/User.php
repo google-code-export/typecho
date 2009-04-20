@@ -127,13 +127,13 @@ class Widget_User extends Widget_Abstract_Users
         if (NULL !== $this->_hasLogin) {
             return $this->_hasLogin;
         } else {
-            if (NULL !== $this->request->getCookie('__typecho_uid')) {
+            if (NULL !== $this->request->__typecho_uid) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
-                ->where('uid = ?', intval($this->request->getCookie('__typecho_uid')))
+                ->where('uid = ?', intval($this->request->__typecho_uid))
                 ->limit(1));
 
-                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->getCookie('__typecho_authCode'))) {
+                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode)) {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }
