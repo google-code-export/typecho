@@ -60,7 +60,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___description()
     {
-        return Typecho_Common::subStr(strip_tags($this->text), 0, 100, '...');
+        $plainTxt = trim(strip_tags($this->text));
+        $plainTxt = $plainTxt ? $plainTxt : $this->title;
+        return Typecho_Common::subStr($plainTxt, 0, 100, '...');
     }
     
     /**
@@ -342,6 +344,19 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 生成静态链接 */
         $value['permalink'] = Typecho_Common::url($linkPath, $this->options->index);
+        
+        /** 处理附件 */
+        if ('attachment' == $type) {
+            $content = unserialize($value['text']);
+            $src = call_user_func($content['attachmentHandle'], $content['path']);
+            if (in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'))) {
+                $value['text'] = '<img src="' . $src . '" alt="' . 
+                $value['title'] . '" />';
+            } else {
+                $value['text'] = '<a href="' . $src . '" title="' .
+                $value['title'] . '">' . $value['title'] . '</a>';
+            }
+        }
         
         /** 生成聚合链接 */
         /** RSS 2.0 */

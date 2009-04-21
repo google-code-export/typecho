@@ -69,7 +69,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td>
                             <?php if ($options->customHomePage == $pages->cid): ?>
-                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Contents/Page/Edit.do?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
+                                <a class="balloon-button right" href="<?php $options->index('Contents/Page/Edit.do?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
                                 <?php else: ?>
                                 <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Contents/Page/Edit.do?do=customHomePage&cid=' . $pages->cid); ?>"><?php _e('首页'); ?></a>
                             <?php endif; ?>

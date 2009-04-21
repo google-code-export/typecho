@@ -21,7 +21,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
-                                <span class="attach"><?php _e('上传附件'); ?></span><span id="swfu"><span id="swfu-placeholder"></span></span>
+                                <span class="attach"><?php _e('上传附件'); ?><small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></span><span id="swfu"><span id="swfu-placeholder"></span></span>
                                 ,
                                 <span class="media"><?php _e('媒体库'); ?></span>
                             </span>
