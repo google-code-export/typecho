@@ -146,6 +146,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_archiveSlug;
     
     /**
+     * 自定义归档
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_archiveCustom = false;
+    
+    /**
      * 构造函数
      * 
      * @param mixed $type 路由类型
@@ -248,9 +256,12 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
         
         /** 支持自定义首页 */
-        if ($this->options->customHomePage && empty($this->_feed)) {
+        if ($this->options->customHomePage && 'index' == $this->parameter->type && empty($this->_feed)) {
             $this->parameter->type = 'page';
             $this->request->cid = $this->options->customHomePage;
+            
+            //自定义首页标志
+            $this->_archiveCustom = true;
         }
 
         switch ($this->parameter->type) {
@@ -287,6 +298,10 @@ class Widget_Archive extends Widget_Abstract_Contents
             /** 单篇内容 */
             case 'page':
             case 'post':
+            case 'attachment':
+            
+                /** 匹配类型 */
+                $select->where('table.contents.type = ?', $this->parameter->type);
                 
                 /** 如果是单篇文章或独立页面 */
                 if (isset($this->request->cid)) {
@@ -352,22 +367,26 @@ class Widget_Archive extends Widget_Abstract_Contents
                 
                 /** 设置头部feed */
                 /** RSS 2.0 */
-                $this->_feedUrl = $this->feedUrl;
                 
-                /** RSS 1.0 */
-                $this->_feedRssUrl = $this->feedRssUrl;
-                
-                /** ATOM 1.0 */
-                $this->_feedAtomUrl = $this->feedAtomUrl;
-                
-                /** 设置标题 */
-                $this->_archiveTitle[] = $this->title;
+                //对自定义首页使用全局变量
+                if (!$this->_archiveCustom) {
+                    $this->_feedUrl = $this->feedUrl;
+                    
+                    /** RSS 1.0 */
+                    $this->_feedRssUrl = $this->feedRssUrl;
+                    
+                    /** ATOM 1.0 */
+                    $this->_feedAtomUrl = $this->feedAtomUrl;
+                    
+                    /** 设置标题 */
+                    $this->_archiveTitle[] = $this->title;
+                }
                 
                 /** 设置归档类型 */
                 $this->_archiveType = $this->type;
                 
                 /** 设置归档缩略名 */
-                $this->_archiveSlug = 'post' == $this->type ? $this->cid : $this->slug;
+                $this->_archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
                 
                 /** 设置单一归档类型 */
                 $this->_archiveSingle = true;
@@ -818,6 +837,9 @@ class Widget_Archive extends Widget_Abstract_Contents
             'atom'          =>  $this->_feedAtomUrl
         );
         
+        /** 头部是否输出聚合 */
+        $allowFeed = !$this->is('single') || $this->allow('feed') || $this->_archiveCustom;
+        
         /** 增加rdf描述 */
         if ($this->have()) {
             $allows['rdf'] .= '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -864,15 +886,15 @@ class Widget_Archive extends Widget_Abstract_Contents
             $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\r\n";
         }
         
-        if (!empty($allows['rss2'])) {
+        if (!empty($allows['rss2']) && $allowFeed) {
             $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\r\n";
         }
         
-        if (!empty($allows['rss1'])) {
+        if (!empty($allows['rss1']) && $allowFeed) {
             $header .= '<link rel="alternate" type="text/xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\r\n";
         }
         
-        if (!empty($allows['atom'])) {
+        if (!empty($allows['atom']) && $allowFeed) {
             $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\r\n";
         }
         
@@ -1003,6 +1025,17 @@ class Widget_Archive extends Widget_Abstract_Contents
                 }
             }
             
+            //针对attachment的hook
+            if (!$validated && 'attachment' == $this->_archiveType) {
+                if (is_file($themeDir . 'page.php')) {
+                    $this->_themeFile = 'page.php';
+                    $validated = true;
+                } else if (is_file($themeDir . 'post.php')) {
+                    $this->_themeFile = 'post.php';
+                    $validated = true;
+                }
+            }
+            
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
             if (!$validated && 'index' != $this->_archiveType) {
                 $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
@@ -1079,6 +1112,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         switch ($this->parameter->type) {
             case 'post':
             case 'page':
+            case 'attachment':
             case 'comments':
                 $this->_feed->setTitle(_t('%s 的评论', 
                 $this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL)));
@@ -1135,13 +1169,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $item->setDate($this->created);                    
                     $item->setCategory($this->categories);
                     
-                    /** RSS全文输出开关支持 */
-                    if ($this->options->feedFullText) {
-                        $item->setDescription(strip_tags($this->content));
-                    } else {
-                        $item->setDescription(strip_tags(false !== strpos($this->text, '<!--more-->') ?
-                        $this->excerpt . Typecho_Feed::EOL . Typecho_Feed::EOL . $this->permalink : strip_tags($this->content)));
-                    }
+                    //直接设置描述
+                    $item->setDescription($this->description);
                     
                     if (Typecho_Feed::RSS2 == $this->_feedType) {
                         $item->addElement('guid', $this->permalink);

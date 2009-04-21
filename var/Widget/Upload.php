@@ -34,6 +34,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $date = new Typecho_Date($options->gmtTime);
         $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
         
+        //创建上传目录
+        if (!is_dir($path)) {
+            if (!@mkdir($path, 0755)) {
+                return false;
+            }
+        }
+        
         //获取扩展名
         $ext = '';
         $part = explode('.', $file['name']);
@@ -74,9 +81,38 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         return self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName;
     }
     
+    /**
+     * 获取实际文件路径
+     * 
+     * @access public
+     * @param string $file 相对文件路径
+     * @return void
+     */
     public static function attachmentHandle($file)
     {
+        $options = Typecho_Widget::widget('Widget_Options');
+        return Typecho_Common::url($file, $options->siteUrl);
+    }
+    
+    /**
+     * 检查文件名
+     * 
+     * @access private
+     * @param string $fileName 文件名
+     * @return boolean
+     */
+    private function checkFileType($fileName)
+    {
+        $exts = array_filter(explode(';', $this->options->attachmentTypes));
         
+        foreach ($exts as $ext) {
+            $ext = str_replace(array('.', '*'), array('\.', '.*'), $ext);
+            if (preg_match("|^{$ext}$|is", $fileName)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -89,14 +125,40 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     {
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
-            if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
-                $result = self::uploadHandle($file);
+            if (0 == $file['error'] && $this->checkFileType($file['name']) && is_uploaded_file($file['tmp_name'])) {
+                $uploadHandle = unserialize($this->options->uploadHandle);
+                $attachmentHandle = unserialize($this->options->attachmentHandle);
+                $result = call_user_func($uploadHandle, $file);
+                
+                //获取扩展名
+                $ext = '';
+                $part = explode('.', $file['name']);
+                if (($length = count($part)) > 1) {
+                    $ext = strtolower($part[$length - 1]);
+                }
                 
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
-                    die($result);
+                    $this->insert(array(
+                        'title'     =>  $file['name'],
+                        'slug'      =>  $file['name'],
+                        'type'      =>  'attachment',
+                        'text'      =>  serialize(array(
+                            'name'              =>  $file['name'],
+                            'type'              =>  $ext,
+                            'size'              =>  $file['size'],
+                            'path'              =>  $result,
+                            'uploadHandle'      =>  $uploadHandle,
+                            'attachmentHandle'  =>  $attachmentHandle
+                        )),
+                        'allowComment'      =>  1,
+                        'allowPing'         =>  1,
+                        'allowFeed'         =>  1
+                    ));
+                    
+                    die(call_user_func($attachmentHandle, $result));
                 }
             }
         }

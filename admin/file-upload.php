@@ -55,8 +55,21 @@
                 upload_url: "<?php $options->index('Upload.do'); ?>",
                 post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
                 "__typecho_authCode" : "<?php echo Typecho_Request::getCookie('__typecho_authCode'); ?>"},
-                file_size_limit : "100 MB",
-                file_types : "*.*",
+                file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
+    $last = strtolower($val[strlen($val)-1]);
+    switch($last) {
+        // The 'G' modifier is available since PHP 5.1.0
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+
+    echo $val;
+                ?> byte",
+                file_types : "<?php echo $options->attachmentTypes(); ?>",
                 file_types_description : "<?php _e('所有文件'); ?>",
                 file_upload_limit : 100,
                 file_queue_limit : 0,
