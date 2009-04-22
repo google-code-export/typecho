@@ -60,6 +60,11 @@ Typecho_Common::init(array(
     'contentType'       =>  'text/html'
 ));
 
+//判断是否已经安装
+if (file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+    die (_t('请删除安装目录下的 install.php 文件'));
+}
+
 /**
  * 获取传递参数
  * 
