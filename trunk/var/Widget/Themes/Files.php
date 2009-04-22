@@ -54,9 +54,9 @@ class Widget_Themes_Files extends Typecho_Widget
             $this->_currentFile = $this->request->nil('index.php')->file;
 
             if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentFile)
-            && is_file($dir . '/' . $this->_currentFile)) {
+            && file_exists($dir . '/' . $this->_currentFile)) {
                 foreach ($files as $file) {
-                    if (is_file($file)) {
+                    if (file_exists($file)) {
                         $file = basename($file);
                         $this->push(array(
                             'file'      =>  $file,

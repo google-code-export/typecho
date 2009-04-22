@@ -317,10 +317,10 @@ class Typecho_Plugin
     public static function portal($pluginName, $path)
     {
         switch (true) {
-            case is_file($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
+            case file_exists($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
                 $className = $pluginName . '_Plugin';
                 break;
-            case is_file($pluginFileName = $path . '/' . $pluginName . '.php'):
+            case file_exists($pluginFileName = $path . '/' . $pluginName . '.php'):
                 $className = $pluginName;
                 break;
             default:

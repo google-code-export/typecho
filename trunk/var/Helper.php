@@ -96,7 +96,7 @@ class Helper
         if ($currentLang) {
             $currentLang = basename($currentLang);
             $fileName = dirname(__FILE__) . '/' . $domain . '/lang/' . $currentLang;
-            if (is_file($fileName)) {
+            if (file_exists($fileName)) {
                 Typecho_I18n::addLang($fileName);
             }
         }

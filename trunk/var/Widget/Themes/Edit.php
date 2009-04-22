@@ -52,7 +52,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         $path = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
         
-        if (is_file($path) && is_writeable($path)) {
+        if (file_exists($path) && is_writeable($path)) {
             $handle = fopen($path, 'wb');
             if ($handle && fwrite($handle, $this->request->content)) {
                 fclose($handle);

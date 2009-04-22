@@ -70,7 +70,7 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
             $path = __TYPECHO_ROOT_DIR__ . '/data/upload/' . substr($file['file_guid'], 0, 2) . '/' .
             substr($file['file_guid'], 2, 2) . '/' . $file['file_guid'];
             
-            if (is_file($path)) {
+            if (file_exists($path)) {
                 $file['file_time'] = empty($file['file_time']) ? $options->gmtTime : $file['file_time'];
                 $year = idate('Y', $file['file_time']);
                 $month = idate('m', $file['file_time']);

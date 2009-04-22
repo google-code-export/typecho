@@ -24,7 +24,7 @@ function mgGetFile($inpath, $trim = false,$stamp = NULL)
 
         while ($tmp = readdir($handle)) 
         {
-                if(is_file($inpath."/".$tmp) && eregi("^([_@0-9a-zA-Z\x80-\xff\^\.\%-]{0,})[\.]([0-9a-zA-Z]{1,})$",$tmp,$file_name))
+                if(file_exists($inpath."/".$tmp) && eregi("^([_@0-9a-zA-Z\x80-\xff\^\.\%-]{0,})[\.]([0-9a-zA-Z]{1,})$",$tmp,$file_name))
                 {
                         if($stamp != NULL && in_array($file_name[2],$stamp))
                         {

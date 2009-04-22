@@ -5,7 +5,7 @@ if (!defined('__DIR__')) {
 
 /** 载入配置文件 */
 if (!@include_once __DIR__ . '/../config.inc.php') {
-    is_file(__DIR__ . '/../install.php') ? header('Location: ../install.php') : print('Missing Config File');
+    file_exists(__DIR__ . '/../install.php') ? header('Location: ../install.php') : print('Missing Config File');
     exit;
 }
 

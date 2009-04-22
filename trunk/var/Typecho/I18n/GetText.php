@@ -71,7 +71,7 @@ class Typecho_I18n_GetText
     public function __construct($file, $enable_cache = true)
     {
         // If there isn't a StreamReader, turn on short circuit mode.
-        if (!is_file($file)) {
+        if (!file_exists($file)) {
             $this->short_circuit = true;
             return;
         }

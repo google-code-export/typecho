@@ -19,7 +19,7 @@ $str = php_strip_whitespace($options['in']);
 $str = preg_replace("/require_once\s+('|\")[_0-9a-z-\/\.]+\\1\s*;/is", '', $str);
 $str = trim(ltrim($str, '<?php'));
 
-if (is_file($options['out'])) {
+if (file_exists($options['out'])) {
     $str = file_get_contents($options['out']) . $str;
 } else {
     $str = '<?php ' . $str;
