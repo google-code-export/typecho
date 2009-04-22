@@ -382,7 +382,7 @@ EOF;
 
         foreach ($dirs as $dir) {
             if (!empty($dir)) {
-                if (is_file($dir . '/' . $file)) {
+                if (file_exists($dir . '/' . $file)) {
                     return true;
                 }
             }

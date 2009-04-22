@@ -1002,7 +1002,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         if (!empty($this->_archiveType)) {
             //~ 自定义模板
             if (!empty($this->_themeFile)) {
-                if (is_file($themeDir . $this->_themeFile)) {
+                if (file_exists($themeDir . $this->_themeFile)) {
                     $validated = true;
                 }
             }
@@ -1010,7 +1010,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             //~ 首先找具体路径, 比如 category/default.php
             if (!$validated && !empty($this->_archiveSlug)) {
                 $themeFile = $this->_archiveType . '/' . $this->_archiveSlug . '.php';
-                if (is_file($themeDir . $themeFile)) {
+                if (file_exists($themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1019,7 +1019,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             //~ 然后找归档类型路径, 比如 category.php
             if (!$validated) {
                 $themeFile = $this->_archiveType . '.php';
-                if (is_file($themeDir . $themeFile)) {
+                if (file_exists($themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1027,10 +1027,10 @@ class Widget_Archive extends Widget_Abstract_Contents
             
             //针对attachment的hook
             if (!$validated && 'attachment' == $this->_archiveType) {
-                if (is_file($themeDir . 'page.php')) {
+                if (file_exists($themeDir . 'page.php')) {
                     $this->_themeFile = 'page.php';
                     $validated = true;
-                } else if (is_file($themeDir . 'post.php')) {
+                } else if (file_exists($themeDir . 'post.php')) {
                     $this->_themeFile = 'post.php';
                     $validated = true;
                 }
@@ -1039,7 +1039,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
             if (!$validated && 'index' != $this->_archiveType) {
                 $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
-                if (is_file($themeDir . $themeFile)) {
+                if (file_exists($themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1051,7 +1051,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 文件不存在 */
-        if (!$validated && !is_file($themeDir . $this->_themeFile)) {
+        if (!$validated && !file_exists($themeDir . $this->_themeFile)) {
         
             /** 单独处理404情况 */
             if (404 == $this->_archiveType) {

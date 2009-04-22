@@ -9,7 +9,7 @@
 
 /** 载入配置支持 */
 if (!@include_once 'config.inc.php') {
-    is_file('./install.php') ? header('Location: install.php') : print('Missing Config File');
+    file_exists('./install.php') ? header('Location: install.php') : print('Missing Config File');
     exit;
 }
 

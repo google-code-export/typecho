@@ -67,7 +67,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         
         foreach ($packages as $package) {
             $file = __TYPECHO_ROOT_DIR__ . '/install/upgrade/' . $package . '/upgrade.php';
-            if (is_file($file)) {
+            if (file_exists($file)) {
                 /** 执行升级脚本 */
                 try {
                     require_once $file;

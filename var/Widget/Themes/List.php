@@ -39,7 +39,7 @@ class Widget_Themes_List extends Typecho_Widget
             
             foreach ($themes as $key => $theme) {
                 $themeFile = $theme . '/index.php';
-                if (is_file($themeFile)) {
+                if (file_exists($themeFile)) {
                     $info = Typecho_Plugin::parseInfo($themeFile);
                     $info['name'] = basename($theme);
                     
