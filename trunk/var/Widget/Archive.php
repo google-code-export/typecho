@@ -153,6 +153,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     private $_archiveCustom = false;
     
+    
     /**
      * 构造函数
      * 
@@ -202,6 +203,410 @@ class Widget_Archive extends Widget_Abstract_Contents
             /** 默认输出10则文章 **/
             $this->parameter->pageSize = 10;
         }
+    }
+    
+    /**
+     * 处理index
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function indexHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        $select->where('table.contents.type = ?', 'post');
+    }
+    
+    /**
+     * 404页面处理
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function error404Handle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        /** 设置标题 */
+        $this->_archiveTitle[] = _t('页面不存在');
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 404;
+        
+        /** 设置归档缩略名 */
+        $this->_archiveSlug = 404;
+        
+        /** 设置归档缩略名 */
+        $this->_themeFile = '404.php';
+        
+        /** 设置单一归档类型 */
+        $this->_archiveSingle = true;
+        
+        $hasPushed = true;
+    }
+    
+    /**
+     * 独立页处理
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function singleHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        /** 匹配类型 */
+        $select->where('table.contents.type = ?', $this->parameter->type);
+        
+        /** 如果是单篇文章或独立页面 */
+        if (isset($this->request->cid)) {
+            $select->where('table.contents.cid = ?', $this->request->filter('int')->cid);
+        }
+        
+        /** 匹配缩略名 */
+        if (isset($this->request->slug)) {
+            $select->where('table.contents.slug = ?', $this->request->slug);
+        }
+        
+        /** 匹配时间 */
+        if (isset($this->request->year)) {
+            $year = $this->request->filter('int')->year;
+            
+            $fromMonth = 1;
+            $toMonth = 12;
+            
+            if (isset($this->request->month)) {
+                $fromMonth = $this->request->filter('int')->month;
+                $toMonth = $fromMonth;
+                
+                $fromDay = 1;
+                $toDay = date('t', mktime(0, 0, 0, $toMonth, 1, $year));
+                
+                if (isset($this->request->day)) {
+                    $fromDay = $this->request->filter('int')->day;
+                    $toDay = $fromDay;
+                }
+            }
+            
+            /** 获取起始GMT时间的unix时间戳 */
+            $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - $this->options->timezone + $this->options->serverTimezone;
+            $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - $this->options->timezone + $this->options->serverTimezone;
+            $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
+        }
+
+        /** 保存密码至cookie */
+        if ($this->request->isPost() && isset($this->request->protectPassword)) {
+            $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
+        }
+        
+        /** 匹配类型 */
+        $select->limit(1);
+        $this->db->fetchRow($select, array($this, 'push'));
+        
+        if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
+            /** 对没有索引情况下的判断 */
+            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+        }
+
+        /** 设置关键词 */
+        $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+        
+        /** 设置描述 */
+        $this->_description = $this->description;
+        
+        /** 设置模板 */
+        if ($this->template) {
+            /** 应用自定义模板 */
+            $this->_themeFile = $this->template;
+        }
+        
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        
+        //对自定义首页使用全局变量
+        if (!$this->_archiveCustom) {
+            $this->_feedUrl = $this->feedUrl;
+            
+            /** RSS 1.0 */
+            $this->_feedRssUrl = $this->feedRssUrl;
+            
+            /** ATOM 1.0 */
+            $this->_feedAtomUrl = $this->feedAtomUrl;
+            
+            /** 设置标题 */
+            $this->_archiveTitle[] = $this->title;
+        }
+        
+        /** 设置归档类型 */
+        $this->_archiveType = $this->type;
+        
+        /** 设置归档缩略名 */
+        $this->_archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
+        
+        /** 设置单一归档类型 */
+        $this->_archiveSingle = true;
+        
+        /** 设置403头 */
+        if ($this->hidden) {
+            $this->response->setStatus(403);
+        }
+
+        $hasPushed = true;
+    }
+    
+    /**
+     * 处理分类
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function categoryHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        /** 如果是分类 */
+        $categorySelect = $this->db->select()
+        ->from('table.metas')
+        ->where('type = ?', 'category')
+        ->limit(1);
+        
+        if (isset($this->request->mid)) {
+            $categorySelect->where('mid = ?', $this->request->filter('int')->mid);
+        }
+        
+        if (isset($this->request->slug)) {
+            $categorySelect->where('slug = ?', $this->request->slug);
+        }
+        
+        $category = $this->db->fetchRow($categorySelect,
+        array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        
+        if (!$category) {
+            throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
+        }
+    
+        /** fix sql92 by 70 */
+        $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+        ->where('table.relationships.mid = ?', $category['mid'])
+        ->where('table.contents.type = ?', 'post');
+        
+        /** 设置分页 */
+        $this->_pageRow = $category;
+        
+        /** 设置关键词 */
+        $this->_keywords = $category['name'];
+        
+        /** 设置描述 */
+        $this->_description = $category['description'];
+        
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        $this->_feedUrl = $category['feedUrl'];
+        
+        /** RSS 1.0 */
+        $this->_feedRssUrl = $category['feedRssUrl'];
+        
+        /** ATOM 1.0 */
+        $this->_feedAtomUrl = $category['feedAtomUrl'];
+        
+        /** 设置标题 */
+        $this->_archiveTitle[] = $category['name'];
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 'category';
+        
+        /** 设置归档缩略名 */
+        $this->_archiveSlug = $category['slug'];
+    }
+    
+    /**
+     * 处理标签
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function tagHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        $tagSelect = $this->db->select()->from('table.metas')
+        ->where('type = ?', 'tag')->limit(1);
+        
+        if (isset($this->request->mid)) {
+            $tagSelect->where('mid = ?', $this->request->filter('int')->mid);
+        }
+        
+        if (isset($this->request->slug)) {
+            $tagSelect->where('slug = ?', $this->request->slug);
+        }
+
+        /** 如果是标签 */
+        $tag = $this->db->fetchRow($tagSelect,
+        array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        
+        if (!$tag) {
+            throw new Typecho_Widget_Exception(_t('标签不存在'), 404);
+        }
+    
+        /** fix sql92 by 70 */
+        $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+        ->where('table.relationships.mid = ?', $tag['mid'])
+        ->where('table.contents.type = ?', 'post');
+        
+        /** 设置分页 */
+        $this->_pageRow = $tag;
+        
+        /** 设置关键词 */
+        $this->_keywords = $tag['name'];
+        
+        /** 设置描述 */
+        $this->_description = $tag['description'];
+        
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        $this->_feedUrl = $tag['feedUrl'];
+        
+        /** RSS 1.0 */
+        $this->_feedRssUrl = $tag['feedRssUrl'];
+        
+        /** ATOM 1.0 */
+        $this->_feedAtomUrl = $tag['feedAtomUrl'];
+        
+        /** 设置标题 */
+        $this->_archiveTitle[] = $tag['name'];
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 'tag';
+        
+        /** 设置归档缩略名 */
+        $this->_archiveSlug = $tag['slug'];
+    }
+    
+    /**
+     * 处理日期
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function dateHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        /** 如果是按日期归档 */
+        $year = $this->request->filter('int')->year;
+        $month = $this->request->filter('int')->month;
+        $day = $this->request->filter('int')->day;
+        
+        if (!empty($year) && !empty($month) && !empty($day)) {
+        
+            /** 如果按日归档 */
+            $from = mktime(0, 0, 0, $month, $day, $year);
+            $to = mktime(23, 59, 59, $month, $day, $year);
+            
+            /** 归档缩略名 */
+            $this->_archiveSlug = 'day';
+            
+            /** 设置标题 */
+            $this->_archiveTitle[] = $year;
+            $this->_archiveTitle[] = $month;
+            $this->_archiveTitle[] = $day;
+        } else if (!empty($year) && !empty($month)) {
+        
+            /** 如果按月归档 */
+            $from = mktime(0, 0, 0, $month, 1, $year);
+            $to = mktime(23, 59, 59, $month, date('t', $from), $year);
+            
+            /** 归档缩略名 */
+            $this->_archiveSlug = 'month';
+            
+            /** 设置标题 */
+            $this->_archiveTitle[] = $year;
+            $this->_archiveTitle[] = $month;
+        } else if (!empty($year)) {
+        
+            /** 如果按年归档 */
+            $from = mktime(0, 0, 0, 1, 1, $year);
+            $to = mktime(23, 59, 59, 12, 31, $year);
+            
+            /** 归档缩略名 */
+            $this->_archiveSlug = 'year';
+            
+            /** 设置标题 */
+            $this->_archiveTitle[] = $year;
+        }
+        
+        $select->where('table.contents.created >= ?', $from - $this->options->timezone + $this->options->serverTimezone)
+        ->where('table.contents.created <= ?', $to - $this->options->timezone + $this->options->serverTimezone)
+        ->where('table.contents.type = ?', 'post');
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 'date';
+        
+        /** 设置头部feed */
+        $value = array('year' => $year, 'month' => str_pad($month, 2, '0', STR_PAD_LEFT), 'day' => str_pad($day, 2, '0', STR_PAD_LEFT));
+        
+        /** 设置分页 */
+        $this->_pageRow = $value;
+        
+        /** 获取当前路由,过滤掉翻页情况 */
+        $currentRoute = str_replace('_page', '', $this->parameter->type);
+        
+        /** RSS 2.0 */
+        $this->_feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
+        
+        /** RSS 1.0 */
+        $this->_feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedRssUrl);
+        
+        /** ATOM 1.0 */
+        $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
+    }
+    
+    /**
+     * 处理搜索
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function searchHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        /** 增加自定义搜索引擎接口 */
+        //~ fix issue 40
+        $keywords = $this->request->filter('url', 'search')->keywords;
+        $this->plugin()->trigger($hasPushed)->search($keywords, $this);
+
+        if (!$hasPushed) {
+            $searchQuery = '%' . $keywords . '%';
+            
+            /** 搜索无法进入隐私项保护归档 */
+            $select->where('table.contents.password IS NULL')
+            ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
+            ->where('table.contents.type = ?', 'post');
+        }
+        
+        /** 设置关键词 */
+        $this->_keywords = $keywords;
+        
+        /** 设置分页 */
+        $this->_pageRow = array('keywords' => $keywords);
+        
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        $this->_feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedUrl);
+        
+        /** RSS 1.0 */
+        $this->_feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
+        
+        /** ATOM 1.0 */
+        $this->_feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
+        
+        /** 设置标题 */
+        $this->_archiveTitle[] = $keywords;
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 'search';
     }
 
     /**
@@ -263,377 +668,31 @@ class Widget_Archive extends Widget_Abstract_Contents
             //自定义首页标志
             $this->_archiveCustom = true;
         }
-
-        switch ($this->parameter->type) {
         
-            /** 索引页 */
-            case 'index':
-            case 'index_page':
-            
-                $select->where('table.contents.type = ?', 'post');
-                break;
-                
-            /** 404页面 */
-            case 404:
-                
-                /** 设置标题 */
-                $this->_archiveTitle[] = _t('页面不存在');
-                
-                /** 设置归档类型 */
-                $this->_archiveType = 404;
-                
-                /** 设置归档缩略名 */
-                $this->_archiveSlug = 404;
-                
-                /** 设置归档缩略名 */
-                $this->_themeFile = '404.php';
-                
-                /** 设置单一归档类型 */
-                $this->_archiveSingle = true;
-                
-                $hasPushed = true;
-                
-                break;
-                
-            /** 单篇内容 */
-            case 'page':
-            case 'post':
-            case 'attachment':
-            
-                /** 匹配类型 */
-                $select->where('table.contents.type = ?', $this->parameter->type);
-                
-                /** 如果是单篇文章或独立页面 */
-                if (isset($this->request->cid)) {
-                    $select->where('table.contents.cid = ?', $this->request->filter('int')->cid);
-                }
-                
-                /** 匹配缩略名 */
-                if (isset($this->request->slug)) {
-                    $select->where('table.contents.slug = ?', $this->request->slug);
-                }
-                
-                /** 匹配时间 */
-                if (isset($this->request->year)) {
-                    $year = $this->request->filter('int')->year;
-                    
-                    $fromMonth = 1;
-                    $toMonth = 12;
-                    
-                    if (isset($this->request->month)) {
-                        $fromMonth = $this->request->filter('int')->month;
-                        $toMonth = $fromMonth;
-                        
-                        $fromDay = 1;
-                        $toDay = date('t', mktime(0, 0, 0, $toMonth, 1, $year));
-                        
-                        if (isset($this->request->day)) {
-                            $fromDay = $this->request->filter('int')->day;
-                            $toDay = $fromDay;
-                        }
-                    }
-                    
-                    /** 获取起始GMT时间的unix时间戳 */
-                    $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - $this->options->timezone + $this->options->serverTimezone;
-                    $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - $this->options->timezone + $this->options->serverTimezone;
-                    $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
-                }
-
-                /** 保存密码至cookie */
-                if ($this->request->isPost() && isset($this->request->protectPassword)) {
-                    $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
-                }
-                
-                /** 匹配类型 */
-                $select->limit(1);
-                $this->db->fetchRow($select, array($this, 'push'));
-                
-                if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
-                    /** 对没有索引情况下的判断 */
-                    throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
-                }
-
-                /** 设置关键词 */
-                $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
-                
-                /** 设置描述 */
-                $this->_description = $this->description;
-                
-                /** 设置模板 */
-                if ($this->template) {
-                    /** 应用自定义模板 */
-                    $this->_themeFile = $this->template;
-                }
-                
-                /** 设置头部feed */
-                /** RSS 2.0 */
-                
-                //对自定义首页使用全局变量
-                if (!$this->_archiveCustom) {
-                    $this->_feedUrl = $this->feedUrl;
-                    
-                    /** RSS 1.0 */
-                    $this->_feedRssUrl = $this->feedRssUrl;
-                    
-                    /** ATOM 1.0 */
-                    $this->_feedAtomUrl = $this->feedAtomUrl;
-                    
-                    /** 设置标题 */
-                    $this->_archiveTitle[] = $this->title;
-                }
-                
-                /** 设置归档类型 */
-                $this->_archiveType = $this->type;
-                
-                /** 设置归档缩略名 */
-                $this->_archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
-                
-                /** 设置单一归档类型 */
-                $this->_archiveSingle = true;
-                
-                /** 设置403头 */
-                if ($this->hidden) {
-                    $this->response->setStatus(403);
-                }
-
-                $hasPushed = true;
-                break;
-                
-            /** 分类归档 */
-            case 'category':
-            case 'category_page':
-                /** 如果是分类 */
-                $categorySelect = $this->db->select()
-                ->from('table.metas')
-                ->where('type = ?', 'category')
-                ->limit(1);
-                
-                if (isset($this->request->mid)) {
-                    $categorySelect->where('mid = ?', $this->request->filter('int')->mid);
-                }
-                
-                if (isset($this->request->slug)) {
-                    $categorySelect->where('slug = ?', $this->request->slug);
-                }
-                
-                $category = $this->db->fetchRow($categorySelect,
-                array($this->widget('Widget_Abstract_Metas'), 'filter'));
-                
-                if (!$category) {
-                    throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
-                }
-            
-                /** fix sql92 by 70 */
-                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $category['mid'])
-                ->where('table.contents.type = ?', 'post');
-                
-                /** 设置分页 */
-                $this->_pageRow = $category;
-                
-                /** 设置关键词 */
-                $this->_keywords = $category['name'];
-                
-                /** 设置描述 */
-                $this->_description = $category['description'];
-                
-                /** 设置头部feed */
-                /** RSS 2.0 */
-                $this->_feedUrl = $category['feedUrl'];
-                
-                /** RSS 1.0 */
-                $this->_feedRssUrl = $category['feedRssUrl'];
-                
-                /** ATOM 1.0 */
-                $this->_feedAtomUrl = $category['feedAtomUrl'];
-                
-                /** 设置标题 */
-                $this->_archiveTitle[] = $category['name'];
-                
-                /** 设置归档类型 */
-                $this->_archiveType = 'category';
-                
-                /** 设置归档缩略名 */
-                $this->_archiveSlug = $category['slug'];
-                break;
-
-            /** 标签归档 */
-            case 'tag':
-            case 'tag_page':
-
-                $tagSelect = $this->db->select()->from('table.metas')
-                ->where('type = ?', 'tag')->limit(1);
-                
-                if (isset($this->request->mid)) {
-                    $tagSelect->where('mid = ?', $this->request->filter('int')->mid);
-                }
-                
-                if (isset($this->request->slug)) {
-                    $tagSelect->where('slug = ?', $this->request->slug);
-                }
-
-                /** 如果是标签 */
-                $tag = $this->db->fetchRow($tagSelect,
-                array($this->widget('Widget_Abstract_Metas'), 'filter'));
-                
-                if (!$tag) {
-                    throw new Typecho_Widget_Exception(_t('标签不存在'), 404);
-                }
-            
-                /** fix sql92 by 70 */
-                $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-                ->where('table.relationships.mid = ?', $tag['mid'])
-                ->where('table.contents.type = ?', 'post');
-                
-                /** 设置分页 */
-                $this->_pageRow = $tag;
-                
-                /** 设置关键词 */
-                $this->_keywords = $tag['name'];
-                
-                /** 设置描述 */
-                $this->_description = $tag['description'];
-                
-                /** 设置头部feed */
-                /** RSS 2.0 */
-                $this->_feedUrl = $tag['feedUrl'];
-                
-                /** RSS 1.0 */
-                $this->_feedRssUrl = $tag['feedRssUrl'];
-                
-                /** ATOM 1.0 */
-                $this->_feedAtomUrl = $tag['feedAtomUrl'];
-                
-                /** 设置标题 */
-                $this->_archiveTitle[] = $tag['name'];
-                
-                /** 设置归档类型 */
-                $this->_archiveType = 'tag';
-                
-                /** 设置归档缩略名 */
-                $this->_archiveSlug = $tag['slug'];
-                break;
-
-            /** 日期归档 */
-            case 'archive_year':
-            case 'archive_month':
-            case 'archive_day':
-            case 'archive_year_page':
-            case 'archive_month_page':
-            case 'archive_day_page':
-
-                /** 如果是按日期归档 */
-                $year = $this->request->filter('int')->year;
-                $month = $this->request->filter('int')->month;
-                $day = $this->request->filter('int')->day;
-                
-                if (!empty($year) && !empty($month) && !empty($day)) {
-                
-                    /** 如果按日归档 */
-                    $from = mktime(0, 0, 0, $month, $day, $year);
-                    $to = mktime(23, 59, 59, $month, $day, $year);
-                    
-                    /** 归档缩略名 */
-                    $this->_archiveSlug = 'day';
-                    
-                    /** 设置标题 */
-                    $this->_archiveTitle[] = $year;
-                    $this->_archiveTitle[] = $month;
-                    $this->_archiveTitle[] = $day;
-                } else if (!empty($year) && !empty($month)) {
-                
-                    /** 如果按月归档 */
-                    $from = mktime(0, 0, 0, $month, 1, $year);
-                    $to = mktime(23, 59, 59, $month, date('t', $from), $year);
-                    
-                    /** 归档缩略名 */
-                    $this->_archiveSlug = 'month';
-                    
-                    /** 设置标题 */
-                    $this->_archiveTitle[] = $year;
-                    $this->_archiveTitle[] = $month;
-                } else if (!empty($year)) {
-                
-                    /** 如果按年归档 */
-                    $from = mktime(0, 0, 0, 1, 1, $year);
-                    $to = mktime(23, 59, 59, 12, 31, $year);
-                    
-                    /** 归档缩略名 */
-                    $this->_archiveSlug = 'year';
-                    
-                    /** 设置标题 */
-                    $this->_archiveTitle[] = $year;
-                }
-                
-                $select->where('table.contents.created >= ?', $from - $this->options->timezone + $this->options->serverTimezone)
-                ->where('table.contents.created <= ?', $to - $this->options->timezone + $this->options->serverTimezone)
-                ->where('table.contents.type = ?', 'post');
-                
-                /** 设置归档类型 */
-                $this->_archiveType = 'date';
-                
-                /** 设置头部feed */
-                $value = array('year' => $year, 'month' => str_pad($month, 2, '0', STR_PAD_LEFT), 'day' => str_pad($day, 2, '0', STR_PAD_LEFT));
-                
-                /** 设置分页 */
-                $this->_pageRow = $value;
-                
-                /** 获取当前路由,过滤掉翻页情况 */
-                $currentRoute = str_replace('_page', '', $this->parameter->type);
-                
-                /** RSS 2.0 */
-                $this->_feedUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedUrl);
-                
-                /** RSS 1.0 */
-                $this->_feedRssUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedRssUrl);
-                
-                /** ATOM 1.0 */
-                $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
-                break;
-
-            /** 搜索归档 */
-            case 'search':
-            case 'search_page':
-    
-                /** 增加自定义搜索引擎接口 */
-                //~ fix issue 40
-                $keywords = $this->request->filter('url', 'search')->keywords;
-                $this->plugin()->trigger($hasPushed)->search($keywords, $this);
-    
-                if (!$hasPushed) {
-                    $searchQuery = '%' . $keywords . '%';
-                    
-                    /** 搜索无法进入隐私项保护归档 */
-                    $select->where('table.contents.password IS NULL')
-                    ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
-                    ->where('table.contents.type = ?', 'post');
-                }
-                
-                /** 设置关键词 */
-                $this->_keywords = $keywords;
-                
-                /** 设置分页 */
-                $this->_pageRow = array('keywords' => $keywords);
-                
-                /** 设置头部feed */
-                /** RSS 2.0 */
-                $this->_feedUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedUrl);
-                
-                /** RSS 1.0 */
-                $this->_feedRssUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
-                
-                /** ATOM 1.0 */
-                $this->_feedAtomUrl = Typecho_Router::url('search', array('keywords' => $keywords), $this->options->feedAtomUrl);
-                
-                /** 设置标题 */
-                $this->_archiveTitle[] = $keywords;
-                
-                /** 设置归档类型 */
-                $this->_archiveType = 'search';
-                break;
-
-            default:
-                break;
+        $handles = array(
+            'index'             =>  'indexHandle',
+            'index_page'        =>  'indexHandle',
+            404                 =>  'error404Handle',
+            'page'              =>  'singleHandle',
+            'post'              =>  'singleHandle',
+            'attachment'        =>  'singleHandle',
+            'category'          =>  'categoryHandle',
+            'category_page'     =>  'categoryHandle',
+            'tag'               =>  'tagHandle',
+            'tag_page'          =>  'tagHandle',
+            'archive_year'      =>  'dateHandle',
+            'archive_year_page' =>  'dateHandle',
+            'archive_month'     =>  'dateHandle',
+            'archive_month_page'=>  'dateHandle',
+            'archive_day'       =>  'dateHandle',
+            'archive_day_page'  =>  'dateHandle',
+            'search'            =>  'searchHandle',
+            'search_page'       =>  'searchHandle'
+        );
+        
+        if (isset($handles[$this->parameter->type])) {
+            $handle = $handles[$this->parameter->type];
+            $this->{$handle}($select, $hasPushed);
         }
         
         /** 如果已经提前压入则直接返回 */
