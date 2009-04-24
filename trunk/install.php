@@ -61,7 +61,7 @@ Typecho_Common::init(array(
 ));
 
 //判断是否已经安装
-if (file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
     die (_t('请删除安装目录下的 install.php 文件'));
 }
 
@@ -394,6 +394,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                     $success = false;
                 } else {
                     fclose($handle);
+                    unlink('./config.inc.php');
                 }
                 ?>
                 <h2><?php _e('安装说明'); ?></h2>
