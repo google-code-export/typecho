@@ -36,7 +36,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         
         //创建上传目录
         if (!is_dir($path)) {
-            if (!@mkdir($path, 0755)) {
+            if (!@mkdir($path, 0644)) {
                 return false;
             }
         }
@@ -50,21 +50,21 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         
         //创建年份目录
         if (!is_dir($path = $path . '/' . $date->year)) {
-            if (!@mkdir($path, 0755)) {
+            if (!@mkdir($path, 0644)) {
                 return false;
             }
         }
         
         //创建月份目录
         if (!is_dir($path = $path . '/' . $date->month)) {
-            if (!@mkdir($path, 0755)) {
+            if (!@mkdir($path, 0644)) {
                 return false;
             }
         }
         
         //创建日期目录
         if (!is_dir($path = $path . '/' . $date->day)) {
-            if (!@mkdir($path, 0755)) {
+            if (!@mkdir($path, 0644)) {
                 return false;
             }
         }
@@ -158,7 +158,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'allowFeed'         =>  1
                     ));
                     
-                    die(call_user_func($attachmentHandle, $result));
+                    $this->response->throwJson(array(
+                        'title'     =>  $file['name'],
+                        'type'      =>  $ext,
+                        'url'       =>  call_user_func($attachmentHandle, $result)
+                    ));
                 }
             }
         }

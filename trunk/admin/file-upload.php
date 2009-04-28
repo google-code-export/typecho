@@ -4,6 +4,7 @@
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
+            var _imgExt = ['jpg', 'gif', 'png', 'bmp', 'tiff'];
             var _mediaBtn = $(document).getElement('span.media');
             _mediaBtn.addEvent('click', function () {
                 Typecho.toggle('#upload-panel', this,
@@ -30,11 +31,22 @@
                     '<?php _e('媒体库'); ?>', '<?php _e('媒体库'); ?>');
                 }
                 
-                $(document).getElement('ul#upload-panel li').grab(_el);
+                _el.inject($(document).getElement('ul#upload-panel li'), 'top');
             };
             
             var uploadSuccess = function (file, serverData) {
-                console.log(serverData);
+                var _el = $(document).getElement('#' + file.id);
+                var _result = JSON.decode(serverData);
+                
+                _el.set('text', serverData);
+                _el.set('tween', {duration: 1500});
+                
+                _el.setStyles({
+                    'background-image' : 'none',
+                    'background-color' : '#D3DBB3'
+                });
+                
+                _el.tween('background-color', '#D3DBB3', '#F7FBE9');
             };
             
             var uploadComplete = function (file) {
@@ -46,7 +58,9 @@
             };
             
             var uploadProgress = function (file, bytesLoaded, bytesTotal) {
-                
+                var _el = $(document).getElement('#' + file.id);
+                var percent = Math.ceil((1 - (bytesLoaded / bytesTotal)) * _el.getSize().x);
+                _el.setStyle('background-position', '-' + percent + 'px 0');
             };
         
             var swfu, _size = $(document).getElement('.attach').getCoordinates(),
@@ -73,9 +87,6 @@
                 file_types_description : "<?php _e('所有文件'); ?>",
                 file_upload_limit : 100,
                 file_queue_limit : 0,
-                custom_settings : {
-                    progressTarget : "fsUploadProgress"
-                },
                 debug: false,
                 
                 //Handle Settings
