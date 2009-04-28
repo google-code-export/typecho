@@ -1759,6 +1759,12 @@ ul.typecho-list-notable li span.trackback {
 	display: none;
 }
 
+.typecho-post-area #upload-panel .typecho-post-attachment-item {
+	background-image: url(../images/progress.gif);
+	background-repeat: repeat-y;
+	background-position: -1000px 0;
+}
+
 ul.typecho-post-option {
     border: 0px;
     margin: -1px 0px -1px 10px;
