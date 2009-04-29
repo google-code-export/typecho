@@ -38,6 +38,8 @@
                 var _el = $(document).getElement('#' + file.id);
                 var _result = JSON.decode(serverData);
                 
+                alert(serverData);
+                
                 _el.set('text', serverData);
                 _el.set('tween', {duration: 1500});
                 
@@ -50,11 +52,11 @@
             };
             
             var uploadComplete = function (file) {
-                console.dir(file);
+                //console.dir(file);
             };
             
             var uploadError = function (file, errorCode, message) {
-                console.log(message);
+                //console.log(message);
             };
             
             var uploadProgress = function (file, bytesLoaded, bytesTotal) {
@@ -68,7 +70,7 @@
                 flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
                 upload_url: "<?php $options->index('Upload.do'); ?>",
                 post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
-                "__typecho_authCode" : "<?php echo Typecho_Request::getCookie('__typecho_authCode'); ?>"},
+                "__typecho_authCode" : "<?php echo str_replace('"', '\"', Typecho_Request::getCookie('__typecho_authCode')); ?>"},
                 file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
     $last = strtolower($val[strlen($val)-1]);
     switch($last) {

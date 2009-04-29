@@ -1154,6 +1154,13 @@ margin-top: 25px;
 	height: 24px;
 }
 
+.typecho-list-operate p.search a.button {
+	float: right;
+	font-size: 13px;
+	padding: 2px 6px;
+	line-height: 20px;
+}
+
 .typecho-list-operate span.operate-button {
 	cursor: pointer;
 	color: #BD6800;
