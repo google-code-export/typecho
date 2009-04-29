@@ -901,7 +901,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 增加rdf描述 */
         if ($this->have()) {
-            $allows['rdf'] .= '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+            $allows['rdf'] = '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 	    xmlns:dc="http://purl.org/dc/elements/1.1/"
 	    xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"> 
     <rdf:Description rdf:about="' . $this->permalink . '"
