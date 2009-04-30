@@ -3,6 +3,20 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
+//创建上传目录
+$uploadDir = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
+if (is_dir($uploadDir)) {
+    if (!is_writeable($uploadDir)) {
+        if (!@chmod($uploadDir, 0644)) {
+            throw new Typecho_Widget_Exception(_e('上传目录无法写入, 请手动将 %s 目录的权限设置为可写然后继续升级', $dir));
+        }
+    }
+} else {
+    if (!@mkdir($uploadDir, 0644)) {
+        throw new Typecho_Widget_Exception(_e('上传目录无法创建, 请手动创建 %s 目录, 并将它的权限设置为可写然后继续升级', $dir));
+    }
+}
+
 /** 增加自定义主页 */
 $this->db->query($this->db->insert('table.options')
         ->rows(array('name' => 'customHomePage', 'value' => 0)));
