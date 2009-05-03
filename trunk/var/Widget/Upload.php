@@ -70,7 +70,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         //获取文件名
-        $fileName = sprintf('%u', crc32($file['name'])) . $ext;
+        $fileName = sprintf('%u', crc32(uniqid())) . $ext;
 
         //移动上传文件
         if (!move_uploaded_file($file['tmp_name'], $path . '/' . $fileName)) {
@@ -154,13 +154,14 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                             'attachmentHandle'  =>  $attachmentHandle
                         )),
                         'allowComment'      =>  1,
-                        'allowPing'         =>  1,
+                        'allowPing'         =>  0,
                         'allowFeed'         =>  1
                     ));
                     
                     $this->response->throwJson(array(
                         'title'     =>  $file['name'],
                         'type'      =>  $ext,
+                        'size'      =>  $file['size'],
                         'url'       =>  call_user_func($attachmentHandle, $result)
                     ));
                 }

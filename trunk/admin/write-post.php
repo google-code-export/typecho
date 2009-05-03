@@ -21,9 +21,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
-                                <span class="attach"><?php _e('上传附件'); ?><small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></span><span id="swfu"><span id="swfu-placeholder"></span></span>
-                                ,
-                                <span class="media"><?php _e('媒体库'); ?></span>
+                                <span class="attach"><?php _e('展开附件'); ?></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
@@ -60,8 +58,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="typecho-post-option column-18">
-                        <li class="column-18"></li>
+                    <ul id="upload-panel" class="column-18">
+                        <li class="column-18">
+                            <iframe frameBorder="no" width="100%" src="<?php $options->adminUrl('file-upload.php'); ?>"></iframe>
+                        </li>
                     </ul>
                 </div>
                 <div class="column-06 start-19">
@@ -149,6 +149,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
             });
             
+            var _mediaBtn = $(document).getElement('span.attach');
+            _mediaBtn.addEvent('click', function () {
+                Typecho.toggle('#upload-panel', this,
+                '<?php _e('收起附件'); ?>', '<?php _e('展开附件'); ?>');
+            });
+            
             $('btn-save').removeProperty('disabled');
             $('btn-submit').removeProperty('disabled');
             
@@ -177,7 +183,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         });
     })();
 </script>
-<?php include 'file-upload.php'; ?>
 <?php
 Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
 if (!$plugged):
@@ -188,6 +193,27 @@ if (!$plugged):
         Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',
         '<?php _e('编辑器'); ?>', '<?php _e('代码'); ?>', '<?php echo ($options->useRichEditor ? 'vw' : 'cw'); ?>');
     })();
+    
+    var insertImageToEditor = function (title, url, link) {
+        if (Typecho.isRichEditor()) {
+            tinyMCE.activeEditor.execCommand('mceInsertContent', false,
+            '<a href="' + link + '" title="' + title + '"><img src="' + url + '" alt="' + title + '" /></a>');
+            new Fx.Scroll(window).toElement($(document).getElement('.mceEditor'));
+        } else {
+            Typecho.textareaAdd('#text', '<a href="' + link + '" title="' + title + '"><img src="' + url + '" alt="' + title + '" /></a>', '');
+            new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
+        }
+    };
+    
+    var insertLinkToEditor = function (title, url, link) {
+        if (Typecho.isRichEditor()) {
+            tinyMCE.activeEditor.execCommand('mceInsertContent', false, '<a href="' + url + '" title="' + title + '">' + title + '</a>');
+            new Fx.Scroll(window).toElement($(document).getElement('.mceEditor'));
+        } else {
+            Typecho.textareaAdd('#text', '<a href="' + url + '" title="' + title + '">' + title + '</a>', '');
+            new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
+        }
+    };
 </script>
 <?php
 endif;

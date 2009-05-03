@@ -1,118 +1,221 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php
+include 'common.php';
+
+$bodyClass = 'bright no-overflow';
+include 'header.php';
+?>
+
+<?php Typecho_Widget::widget('Widget_Contents_Attachment_Admin', 'pageSize=10')->to($attachment); ?>
+
+<style>
+.upload-progress {
+    font-size: 12px;
+}
+
+html {
+    overflow-y: hidden;
+}
+
+.upload-progress-item {
+	background-image: url(<?php $options->adminUrl('images/progress.gif'); ?>);
+	background-repeat: repeat-y;
+	background-position: -1000px 0;
+    padding: 5px;
+}
+
+.upload-progress-item-finished {
+    background: url(<?php $options->adminUrl('images/attach.gif'); ?>) left top no-repeat;
+    padding-left: 20px;
+}
+</style>
+
+<div id="main-box">
+<div class="typecho-list-operate">
+<p class="search left">
+    <a class="button left"><?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
+    <span id="swfu"><span id="swfu-placeholder"></span></span>
+</p>
+<p class="search">
+    
+</p>
+</div>
+
+<ul class="upload-progress">
+</ul>
+
+<table class="typecho-list-table typecho-list-table-border" cellpadding="0" cellspacing="0">
+    <colgroup>
+        <col width="40"/>
+        <col width="510"/>
+        <col width="100"/>
+    </colgroup>
+    <tbody>
+        <?php while ($attachment->next()): ?>
+        <tr class="<?php $attachment->alt(' even', ''); ?>">
+            <td>
+                <div class="thumb-box">
+                <?php if ($attachment->attachmentIsImage): ?>
+                <img height="45" src="<?php $attachment->attachmentUrl(); ?>" alt="<?php $attachment->title(); ?>" />
+                <?php else: ?>
+                <?php endif; ?>
+                </div>
+            </td>
+            <td><?php $attachment->title(); ?></td>
+            <td>
+                <div class="right">
+                    <a class="hidden-by-mouse button" href="#" onclick="<?php if ($attachment->attachmentIsImage){
+                        echo "parent.insertImageToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
+                    } else {
+                        echo "parent.insertLinkToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
+                    } ?>">插入</a>
+                    <a class="hidden-by-mouse button operate-button-delete" href="#">删除</a>
+                </div>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    </tbody>
+</table>
+
+<?php if($attachment->have()): ?>
+<div class="typecho-pager">
+    <div class="typecho-pager-content">
+        <h5><?php _e('页面'); ?>:&nbsp;</h5>
+        <ul>
+            <?php $attachment->pageNav(); ?>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>
+</div>
+
+<?php include 'common-js.php'; ?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js'); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.queue.js'); ?>"></script>
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-            var _imgExt = ['jpg', 'gif', 'png', 'bmp', 'tiff'];
-            var _mediaBtn = $(document).getElement('span.media');
-            _mediaBtn.addEvent('click', function () {
-                Typecho.toggle('#upload-panel', this,
-                '<?php _e('媒体库'); ?>', '<?php _e('媒体库'); ?>');
+            var _inited = false;
+        
+            <?php if (!Typecho_Request::isSetParameter('page')): ?>
+            //begin parent tabshow
+            parent.$(parent.document).getElement('#upload-panel').addEvent('tabShow', function () {
+            <?php endif; ?>
+                if (_inited) {
+                    return;
+                }
+                _inited = true;
+            
+                var refreshIframeHeight = function () {
+                    parent.$(parent.document).getElement('#upload-panel iframe').setStyle('height', 
+                    $(document).getElement('#main-box').getScrollSize().y + 10);
+                };
+                
+                refreshIframeHeight();
+            
+                var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
+                    try {
+                        this.startUpload();
+                    } catch (ex)  {
+                        this.debug(ex);
+                    }
+                };
+            
+                var uploadStart = function (file) {
+                    var _el = new Element('div', {
+                        'class' : 'upload-progress-item',
+                        'id'    : file.id,
+                        'text'  : file.name
+                    });
+                    
+                    _el.inject($(document).getElement('ul.upload-progress'), 'top');
+                };
+                
+                var uploadSuccess = function (file, serverData) {
+                    var _el = $(document).getElement('#' + file.id);
+                    var _result = JSON.decode(serverData);
+                    
+                    _el.set('html', '<strong>' + file.name + '</strong> <small>' + Math.ceil(_result.size/1024) + 'KB</small>');
+                    _el.set('tween', {duration: 1500});
+                    
+                    _el.setStyles({
+                        'background-image' : 'none',
+                        'background-color' : '#D3DBB3'
+                    });
+                    
+                    _el.tween('background-color', '#D3DBB3', '#F7FBE9');
+                    refreshIframeHeight();
+                };
+                
+                var uploadComplete = function (file) {
+                    //console.dir(file);
+                    Typecho.location('<?php $options->adminUrl('file-upload.php?page=1'); ?>');
+                };
+                
+                var uploadError = function (file, errorCode, message) {
+                    console.log(message);
+                };
+                
+                var uploadProgress = function (file, bytesLoaded, bytesTotal) {
+                    var _el = $(document).getElement('#' + file.id);
+                    var percent = Math.ceil((1 - (bytesLoaded / bytesTotal)) * _el.getSize().x);
+                    _el.setStyle('background-position', '-' + percent + 'px 0');
+                };
+            
+                var swfu, _size = $(document).getElement('.typecho-list-operate a.button').getCoordinates(),
+                settings = {
+                    flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
+                    upload_url: "<?php $options->index('Upload.do'); ?>",
+                    post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
+                    "__typecho_authCode" : "<?php echo str_replace('"', '\"', Typecho_Request::getCookie('__typecho_authCode')); ?>"},
+                    file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        echo $val;
+                    ?> byte",
+                    file_types : "<?php echo $options->attachmentTypes(); ?>",
+                    file_types_description : "<?php _e('所有文件'); ?>",
+                    file_upload_limit : 100,
+                    file_queue_limit : 0,
+                    debug: false,
+                    
+                    //Handle Settings
+                    file_dialog_complete_handler : fileDialogComplete,
+                    upload_start_handler : uploadStart,
+                    upload_progress_handler : uploadProgress,
+                    upload_success_handler : uploadSuccess,
+                    queue_complete_handler : uploadComplete,
+                    upload_error_handler : uploadError,
+                    
+                    // Button Settings
+                    button_placeholder_id : "swfu-placeholder",
+                    button_height: 20,
+                    button_text: '',
+                    button_text_style: '',
+                    button_text_left_padding: 14,
+                    button_text_top_padding: 0,
+                    button_width: _size.width,
+                    button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                    button_cursor: SWFUpload.CURSOR.HAND
+                };
+
+                $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
+                swfu = new SWFUpload(settings);
+                
+            <?php if (!Typecho_Request::isSetParameter('page')): ?>
             });
-        
-            var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
-                try {
-                    this.startUpload();
-                } catch (ex)  {
-                    this.debug(ex);
-                }
-            };
-        
-            var uploadStart = function (file) {
-                var _el = new Element('div', {
-                    'class' : 'typecho-post-attachment-item',
-                    'id'    : file.id,
-                    'text'  : file.name
-                });
-                
-                if (!Typecho.toggleOpened || _mediaBtn != Typecho.toggleBtn) {
-                    Typecho.toggle('#upload-panel', _mediaBtn,
-                    '<?php _e('媒体库'); ?>', '<?php _e('媒体库'); ?>');
-                }
-                
-                _el.inject($(document).getElement('ul#upload-panel li'), 'top');
-            };
-            
-            var uploadSuccess = function (file, serverData) {
-                var _el = $(document).getElement('#' + file.id);
-                var _result = JSON.decode(serverData);
-                
-                alert(serverData);
-                
-                _el.set('text', serverData);
-                _el.set('tween', {duration: 1500});
-                
-                _el.setStyles({
-                    'background-image' : 'none',
-                    'background-color' : '#D3DBB3'
-                });
-                
-                _el.tween('background-color', '#D3DBB3', '#F7FBE9');
-            };
-            
-            var uploadComplete = function (file) {
-                //console.dir(file);
-            };
-            
-            var uploadError = function (file, errorCode, message) {
-                //console.log(message);
-            };
-            
-            var uploadProgress = function (file, bytesLoaded, bytesTotal) {
-                var _el = $(document).getElement('#' + file.id);
-                var percent = Math.ceil((1 - (bytesLoaded / bytesTotal)) * _el.getSize().x);
-                _el.setStyle('background-position', '-' + percent + 'px 0');
-            };
-        
-            var swfu, _size = $(document).getElement('.attach').getCoordinates(),
-            settings = {
-                flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
-                upload_url: "<?php $options->index('Upload.do'); ?>",
-                post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
-                "__typecho_authCode" : "<?php echo str_replace('"', '\"', Typecho_Request::getCookie('__typecho_authCode')); ?>"},
-                file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
-    $last = strtolower($val[strlen($val)-1]);
-    switch($last) {
-        // The 'G' modifier is available since PHP 5.1.0
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
-    }
-
-    echo $val;
-                ?> byte",
-                file_types : "<?php echo $options->attachmentTypes(); ?>",
-                file_types_description : "<?php _e('所有文件'); ?>",
-                file_upload_limit : 100,
-                file_queue_limit : 0,
-                debug: false,
-                
-                //Handle Settings
-                file_dialog_complete_handler : fileDialogComplete,
-                upload_start_handler : uploadStart,
-                upload_progress_handler : uploadProgress,
-                upload_success_handler : uploadSuccess,
-                upload_complete_handler : uploadComplete,
-                upload_error_handler : uploadError,
-                
-                // Button Settings
-                button_placeholder_id : "swfu-placeholder",
-                button_height: 20,
-                button_text: '',
-                button_text_style: '',
-                button_text_left_padding: 14,
-                button_text_top_padding: 0,
-                button_width: _size.width,
-                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
-                button_cursor: SWFUpload.CURSOR.HAND
-			};
-
-            $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
-			swfu = new SWFUpload(settings);
+            //end parent tabshow
+            <?php endif; ?>
         });
     })();
 </script>
+</body>
+</html>

@@ -36,6 +36,9 @@ body.bright, .main {
     color: #333;
 }
 
+body.no-overflow {
+	overflow: hidden;
+}
 
 body.dark {
     background: #333;
@@ -533,7 +536,7 @@ margin-top: 25px;
  */
 .typecho-pager {
     text-align: center;
-    height: 15px;
+    height: 20px;
 }
 
 .typecho-pager .typecho-pager-content {
@@ -1161,6 +1164,10 @@ margin-top: 25px;
 	line-height: 20px;
 }
 
+.typecho-list-operate p.left, .typecho-list-operate p.left a.button {
+	float: left;
+}
+
 .typecho-list-operate span.operate-button {
 	cursor: pointer;
 	color: #BD6800;
@@ -1169,6 +1176,10 @@ margin-top: 25px;
 .typecho-list-operate span.operate-delete, a.operate-delete {
 	color: #CC0000;
 	font-weight: bold;
+}
+
+.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
+	background: #CC0000;
 }
 
 .typecho-list-operate a:hover {
@@ -1194,6 +1205,16 @@ margin-top: 25px;
 	table-layout: fixed;
 }
 
+.typecho-list-table-border {
+	border-collapse: separate;
+	border: 1px solid #DCE2C0;
+	border-bottom: none;
+}
+
+.typecho-list-table-border td {
+	border-bottom: 1px solid #DCE2C0;
+}
+
 .typecho-list-table input {
     border: none; /* 重置 input */
 }
@@ -1216,6 +1237,23 @@ margin-top: 25px;
     line-height: 20px;
     padding: 0 5px;
 	overflow: hidden;
+}
+
+.typecho-list-table td .thumb-box {
+	background: #FFF;
+	margin: 5px;
+	height: 32px;
+	width: 32px;
+	display: block;
+	overflow: hidden;
+	border: 1px solid #C1CD94;
+	text-align: center;
+}
+
+.typecho-list-table td .thumb-box img {
+	max-height: 32px;
+	max-width: 32px;
+	_height: 32px;
 }
 
 .typecho-list-table tbody tr.even, ul.typecho-list-notable li.even {
@@ -1289,6 +1327,10 @@ ul.typecho-list-notable {
 	font-size: 12px;
 }
 
+ul.typecho-list-notable .big {
+	font-size: 13px;
+}
+
 ul.typecho-list-notable .avatar img {
 	background: #FFF;
 	padding: 2px;
@@ -1306,6 +1348,11 @@ ul.typecho-list-notable p {
 ul.typecho-list-notable .line {
 	height: 20px;
 	line-height: 20px;
+}
+
+ul.typecho-list-notable .big-line {
+	height: 32px;
+	line-height: 32px;
 }
 
 ul.typecho-list-notable .weak {
@@ -1766,12 +1813,6 @@ ul.typecho-list-notable li span.trackback {
 	display: none;
 }
 
-.typecho-post-area #upload-panel .typecho-post-attachment-item {
-	background-image: url(../images/progress.gif);
-	background-repeat: repeat-y;
-	background-position: -1000px 0;
-}
-
 ul.typecho-post-option {
     border: 0px;
     margin: -1px 0px -1px 10px;
@@ -1899,14 +1940,10 @@ ul.autocompleter-choices span.autocompleter-queried {
 .typecho-post-area .attach {
 	background-image: url(../images/attach.gif);
 	margin-left: 10px;
+	padding-left: 20px;
 }
 
-.typecho-post-area .media {
-	background-image: none;
-	padding: 0;
-}
-
-.typecho-post-area #swfu {
+.typecho-list-operate #swfu {
 	position: absolute;
 	margin-left: -10px;
 }

@@ -15,7 +15,6 @@
             /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>[_a-zA-Z0-9\/]+\.(do|plugin).*$/);
             Typecho.Table.init('.typecho-list-table');
             Typecho.Table.init('.typecho-list-notable');
-            handle.reSet();
         });
     })();
 </script>
