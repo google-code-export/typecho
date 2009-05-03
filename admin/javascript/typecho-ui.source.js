@@ -3,6 +3,11 @@ var Typecho = {};
 
 Typecho.guid = function (el, config) {
     var _dl  = $(el);
+    
+    if (null == _dl) {
+        return;
+    }
+    
     var _dt  = _dl.getElements('dt');
     var _dd  = _dl.getElements('dd');
     var _cur = null, _timer = null, _iframe = null;
@@ -340,9 +345,16 @@ Typecho.Table = {
 };
 
 /** tinyMCE编辑器封装 */
+Typecho.currentEditor = '';
+
+Typecho.isRichEditor = function () {
+    return 'vw' == Typecho.currentEditor;
+};
+
 Typecho.tinyMCE = function (id, url, vw, cw, current) {
 
     var _currentY = parseInt($(id).getStyle('height')), _ed;
+    Typecho.currentEditor = current;
     
     var _transfer = function () {
     
@@ -452,6 +464,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
                         $(this).addClass('current');
                         $('typecho-editor-tab-cw').removeClass('current');
                         current = 'vw';
+                        Typecho.currentEditor = current;
                         _toVisual();
                     }
                     
@@ -466,6 +479,7 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
                         $(this).addClass('current');
                         $('typecho-editor-tab-vw').removeClass('current');
                         current = 'cw';
+                        Typecho.currentEditor = current;
                         _toCode();
                     }
                 }
@@ -706,16 +720,20 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
     if (null != Typecho.toggleBtn && btn != Typecho.toggleBtn) {
         $(Typecho.toggleBtn).set('html', Typecho.toggleHideWord);
         Typecho.toggleEl.setStyle('display', 'none');
+        Typecho.toggleEl.fireEvent('tabHide');
+        $(Typecho.toggleBtn).toggleClass('close');
     }
     
     $(btn).toggleClass('close');
     if ('none' == el.getStyle('display')) {
         $(btn).set('html', showWord);
         el.setStyle('display', 'block');
+        el.fireEvent('tabShow');
         Typecho.toggleOpened = true;
     } else {
         $(btn).set('html', hideWord);
         el.setStyle('display', 'none');
+        el.fireEvent('tabHide');
         Typecho.toggleOpened = false;
     }
     
@@ -723,6 +741,47 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
     Typecho.toggleBtn = btn;
     Typecho.toggleHideWord = hideWord;
 };
+
+/** 文本编辑器插入文字 */
+Typecho.textareaHasPrepare = false;
+
+Typecho.textareaAdd = function (match, flg1, flg2) {
+    var _el = $(document).getElement(match);
+    var _scrollTop, _start, _end, _range;
+    
+    _scrollTop = _el.scrollTop;
+    if (typeof(_el.selectionStart) == "number") {
+        _el.focus();
+        _start = _el.selectionStart;
+        _end = _el.selectionEnd;
+    }
+    
+    else if(document.selection) {
+        _el.focus();
+        _range = document.selection.createRange();
+    }
+
+    if (typeof(_el.selectionStart) == "number") {
+    
+        var pre = _el.value.substr(0, _start);
+        var post = _el.value.substr(_end);
+        var center = _el.value.substr(_start, _end - _start);
+        _el.value = pre + flg1 + center + flg2 + post;
+        
+        _el.setSelectionRange(_start + flg1.length, _start + flg1.length);
+    } else if (document.selection) {
+        if (_range.text.length > 0) {
+            _range.text = flg1 + _range.text + flg2;
+        } else {
+            _range.text = flg1 + flg2;
+        }
+    }
+
+    setTimeout(function () {_el.scrollTop = _scrollTop}, 0);
+    _el.focus();
+
+    return true;
+}
 
 /** 高亮元素 */
 Typecho.highlight = function (theId) {

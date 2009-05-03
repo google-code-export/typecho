@@ -22,4 +22,4 @@ Typecho_Plugin::factory('admin/header.php')->header($header);
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
         <?php echo $header; ?>
     </head>
-    <body>
+    <body<?php if (isset($bodyClass)) {echo ' class="' . $bodyClass . '"';} ?>>
