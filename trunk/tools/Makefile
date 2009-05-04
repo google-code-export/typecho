@@ -22,7 +22,6 @@ package:
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf build/usr/plugins/CodeEditor/
 	rm -Rf build/usr/plugins/Akismet/
 	rm -Rf build/usr/plugins/MagikeToTypecho/
 	rm -Rf build/usr/plugins/WordpressToTypecho/
@@ -50,7 +49,6 @@ upgrade:
 	cp -Rf build/var/ ${DIR}
 	rm -Rf ${DIR}/index.php
 	cp build/index.php ${DIR}
-	rm -Rf ${DIR}/usr/plugins/CodeEditor/
 	rm -Rf ${DIR}/usr/plugins/HelloWorld/
 	rm -Rf ${DIR}/usr/plugins/Akismet/
 	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
@@ -62,7 +60,6 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
 	rm -Rf ${DIR}/usr/upgrade/
 	rm -Rf ${DIR}/install/upgrade/
-	cp -Rf build/usr/plugins/CodeEditor/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -104,7 +101,6 @@ install:
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf ${DIR}/usr/plugins/CodeEditor/
 	rm -Rf ${DIR}/usr/plugins/Akismet/
 	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
 	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/

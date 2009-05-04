@@ -7,7 +7,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-post-main typecho-post-option typecho-post-area">
+        <div class="container typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('Contents/Page/Edit.do'); ?>" method="post" name="write_page">
                 <div class="column-18 start-01">
                     <div class="column-18">
