@@ -27,7 +27,7 @@ $this->db->query($this->db->insert('table.options')
         
 /** 增加文件删除函数 */
 $this->db->query($this->db->insert('table.options')
-        ->rows(array('name' => 'uploadHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
+        ->rows(array('name' => 'deleteHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
         
 /** 增加文件展现散列函数 */
 $this->db->query($this->db->insert('table.options')
