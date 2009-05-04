@@ -171,7 +171,21 @@ html {
                 };
                 
                 var uploadError = function (file, errorCode, message) {
-                    console.log(message);
+                    var _el = $(document).getElement('#' + file.id);
+                    var _fx = new Fx.Tween(_el, {duration: 3000});
+                    
+                    _el.set('html', '<strong>' + file.name + ' <?php _e('上传失败'); ?></strong>');
+                    _el.setStyles({
+                        'background-image' : 'none',
+                        'color'            : '#FFFFFF',
+                        'background-color' : '#CC0000'
+                    });
+                    
+                    _fx.addEvent('complete', function () {
+                        _el.destory();
+                    });
+                    
+                    _fx.start('background-color', '#CC0000', '#F7FBE9');
                 };
                 
                 var uploadProgress = function (file, bytesLoaded, bytesTotal) {
