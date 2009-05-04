@@ -147,6 +147,7 @@ html {
                     });
                     
                     _el.inject($(document).getElement('ul.upload-progress'), 'top');
+                    refreshIframeHeight();
                 };
                 
                 var uploadSuccess = function (file, serverData) {
@@ -186,6 +187,7 @@ html {
                     });
                     
                     _fx.start('background-color', '#CC0000', '#F7FBE9');
+                    refreshIframeHeight();
                 };
                 
                 var uploadProgress = function (file, bytesLoaded, bytesTotal) {

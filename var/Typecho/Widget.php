@@ -200,6 +200,20 @@ abstract class Typecho_Widget
         
         return self::$_widgetPool[$alias];
     }
+    
+    /**
+     * 释放组件
+     * 
+     * @access public
+     * @param string $alias 组件名称
+     * @return void
+     */
+    public static function destory($alias)
+    {
+        if (isset(self::$_widgetPool[$alias])) {
+            unset(self::$_widgetPool[$alias]);
+        }
+    }
 
     /**
      * 将类本身赋值
