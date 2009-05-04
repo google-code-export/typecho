@@ -28,7 +28,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
                                 <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="button" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>
@@ -161,16 +161,14 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=draft]').set('value', 1);
-                $(document).getElement('form[name=write_post]').fireEvent('save', e);
-                //$(document).getElement('form[name=write_post]').submit();
+                $(document).getElement('form[name=write_post]')['undefined' != typeof tinyMCE ? 'fireEvent' : 'submit']('save', e);
             });
             
             $('btn-submit').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=draft]').set('value', 0);
-                $(document).getElement('form[name=write_post]').fireEvent('post', e);
-                //$(document).getElement('form[name=write_post]').submit();
+                $(document).getElement('form[name=write_post]')['undefined' != typeof tinyMCE ? 'fireEvent' : 'submit']('post', e);
             });
             
             /** 标签自动完成 */
@@ -188,5 +186,6 @@ if (!$plugged) {
     include 'tiny_mce.php';
 }
 Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
+
 include 'copyright.php';
 ?>
