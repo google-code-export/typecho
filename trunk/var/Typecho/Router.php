@@ -96,7 +96,7 @@ class Typecho_Router
                         }
                     }
                     
-                    $widget = Typecho_Widget::widget($route['widget']);
+                    $widget = Typecho_Widget::widget($route['widget'], null, $params);
                     
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
@@ -106,6 +106,7 @@ class Typecho_Router
                     
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
+                        Typecho_Widget::destory($route['widget']);
                         continue;
                     }
                     
