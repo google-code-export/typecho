@@ -33,7 +33,7 @@ package:
 	rm -Rf build/usr/plugins/Creole/
 	rm -Rf build/usr/plugins/FlashMp3Player/
 	mkdir build/usr/uploads/
-	chmod 644 build/usr/uploads/
+	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
 
 
