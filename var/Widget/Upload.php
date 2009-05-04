@@ -82,6 +82,18 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     }
     
     /**
+     * 删除文件
+     * 
+     * @access public
+     * @param string $path 文件路径
+     * @return string
+     */
+    public static function deleteHandle($path)
+    {
+        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $path);
+    }
+    
+    /**
      * 获取实际文件路径
      * 
      * @access public
@@ -127,6 +139,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             $file = array_pop($_FILES);
             if (0 == $file['error'] && $this->checkFileType($file['name']) && is_uploaded_file($file['tmp_name'])) {
                 $uploadHandle = unserialize($this->options->uploadHandle);
+                $deleteHandle = unserialize($this->options->deleteHandle);
                 $attachmentHandle = unserialize($this->options->attachmentHandle);
                 $result = call_user_func($uploadHandle, $file);
                 
@@ -151,6 +164,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                             'size'              =>  $file['size'],
                             'path'              =>  $result,
                             'uploadHandle'      =>  $uploadHandle,
+                            'deleteHandle'      =>  $deleteHandle,
                             'attachmentHandle'  =>  $attachmentHandle
                         )),
                         'allowComment'      =>  1,

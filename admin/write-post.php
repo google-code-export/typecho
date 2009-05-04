@@ -149,8 +149,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
             });
             
-            var _mediaBtn = $(document).getElement('span.attach');
-            _mediaBtn.addEvent('click', function () {
+            $(document).getElement('span.attach').addEvent('click', function () {
                 Typecho.toggle('#upload-panel', this,
                 '<?php _e('收起附件'); ?>', '<?php _e('展开附件'); ?>');
             });
@@ -185,38 +184,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 </script>
 <?php
 Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
-if (!$plugged):
-?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
-<script type="text/javascript">
-    (function () {
-        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',
-        '<?php _e('编辑器'); ?>', '<?php _e('代码'); ?>', '<?php echo ($options->useRichEditor ? 'vw' : 'cw'); ?>');
-    })();
-    
-    var insertImageToEditor = function (title, url, link) {
-        if (Typecho.isRichEditor()) {
-            tinyMCE.activeEditor.execCommand('mceInsertContent', false,
-            '<a href="' + link + '" title="' + title + '"><img src="' + url + '" alt="' + title + '" /></a>');
-            new Fx.Scroll(window).toElement($(document).getElement('.mceEditor'));
-        } else {
-            Typecho.textareaAdd('#text', '<a href="' + link + '" title="' + title + '"><img src="' + url + '" alt="' + title + '" /></a>', '');
-            new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
-        }
-    };
-    
-    var insertLinkToEditor = function (title, url, link) {
-        if (Typecho.isRichEditor()) {
-            tinyMCE.activeEditor.execCommand('mceInsertContent', false, '<a href="' + url + '" title="' + title + '">' + title + '</a>');
-            new Fx.Scroll(window).toElement($(document).getElement('.mceEditor'));
-        } else {
-            Typecho.textareaAdd('#text', '<a href="' + url + '" title="' + title + '">' + title + '</a>', '');
-            new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
-        }
-    };
-</script>
-<?php
-endif;
+if (!$plugged) {
+    include 'tiny_mce.php';
+}
 Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
 include 'copyright.php';
 ?>

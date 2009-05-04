@@ -19,6 +19,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <p class="submit">
                             <span class="left">
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
+                                <span class="attach"><?php _e('展开附件'); ?></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
@@ -61,6 +62,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                     <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOptionRight($page); ?>
                                 </ul>
                             </div>
+                        </li>
+                    </ul>
+                    <ul id="upload-panel" class="column-18">
+                        <li class="column-18">
+                            <iframe frameBorder="no" width="100%" src="<?php $options->adminUrl('file-upload.php'); ?>"></iframe>
                         </li>
                     </ul>
                 </div>
@@ -122,6 +128,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
             });
             
+            $(document).getElement('span.attach').addEvent('click', function () {
+                Typecho.toggle('#upload-panel', this,
+                '<?php _e('收起附件'); ?>', '<?php _e('展开附件'); ?>');
+            });
+            
             $('btn-save').removeProperty('disabled');
             $('btn-submit').removeProperty('disabled');
             
@@ -145,17 +156,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 </script>
 <?php
 Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
-if (!$plugged):
-?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/tiny_mce/tiny_mce.js'); ?>"></script>
-<script type="text/javascript">
-    (function () {
-        Typecho.tinyMCE('text', '<?php $options->index('Ajax.do'); ?>',
-        '<?php _e('编辑器'); ?>', '<?php _e('代码'); ?>', '<?php echo ($options->useRichEditor ? 'vw' : 'cw'); ?>');
-    })();
-</script>
-<?php
-endif;
+if (!$plugged) {
+    include 'tiny_mce.php';
+}
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'copyright.php';
 ?>

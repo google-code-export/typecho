@@ -21,11 +21,22 @@ html {
 	background-repeat: repeat-y;
 	background-position: -1000px 0;
     padding: 5px;
-}
-
-.upload-progress-item-finished {
-    background: url(<?php $options->adminUrl('images/attach.gif'); ?>) left top no-repeat;
-    padding-left: 20px;
+    margin-bottom: 5px;
+    
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+	
+	/* hope IE support border radius, God save me! */
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
 }
 </style>
 
@@ -50,6 +61,7 @@ html {
         <col width="100"/>
     </colgroup>
     <tbody>
+        <?php if ($attachment->have()): ?>
         <?php while ($attachment->next()): ?>
         <tr class="<?php $attachment->alt(' even', ''); ?>">
             <td>
@@ -68,11 +80,18 @@ html {
                     } else {
                         echo "parent.insertLinkToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
                     } ?>">插入</a>
-                    <a class="hidden-by-mouse button operate-button-delete" href="#">删除</a>
+                    <a class="hidden-by-mouse button operate-button-delete" href="<?php $options->index('Contents/Attachment/Edit.do?do=delete&cid=' . $attachment->cid); ?>">删除</a>
                 </div>
             </td>
         </tr>
         <?php endwhile; ?>
+        <?php else: ?>
+        <tr class="even">
+            <td colspan="3">
+                <?php _e('没有附件, 点击上传按钮添加'); ?>
+            </td>
+        </tr>
+        <?php endif; ?>
     </tbody>
 </table>
 
@@ -107,7 +126,7 @@ html {
             
                 var refreshIframeHeight = function () {
                     parent.$(parent.document).getElement('#upload-panel iframe').setStyle('height', 
-                    $(document).getElement('#main-box').getScrollSize().y + 10);
+                    $(document).getElement('#main-box').getScrollSize().y + <?php echo $attachment->have() ? 10 : 20; ?>);
                 };
                 
                 refreshIframeHeight();

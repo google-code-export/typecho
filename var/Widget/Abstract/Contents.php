@@ -355,6 +355,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $value['attachmentSize'] = $content['size'];
             $value['attachmentPath'] = $content['path'];
             $value['attachmentUploadHandle'] = $content['uploadHandle'];
+            $value['attachmentDeleteHandle'] = $content['deleteHandle'];
             $value['attachmentHandle'] = $content['attachmentHandle'];
             $value['attachmentIsImage'] = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
             $value['attachmentUrl'] = call_user_func($content['attachmentHandle'], $content['path']);
