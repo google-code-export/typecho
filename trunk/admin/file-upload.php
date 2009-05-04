@@ -80,7 +80,7 @@ html {
                     } else {
                         echo "parent.insertLinkToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
                     } ?>">插入</a>
-                    <a class="hidden-by-mouse button operate-button-delete" href="<?php $options->index('Contents/Attachment/Edit.do?do=delete&cid=' . $attachment->cid); ?>">删除</a>
+                    <a lang="<?php _e('你确认要删除附件 %s 吗?', $attachment->title); ?>" class="hidden-by-mouse button operate-button-delete" href="<?php $options->index('Contents/Attachment/Edit.do?do=delete&cid=' . $attachment->cid); ?>">删除</a>
                 </div>
             </td>
         </tr>
@@ -115,7 +115,7 @@ html {
         window.addEvent('domready', function() {
             var _inited = false;
         
-            <?php if (!Typecho_Request::isSetParameter('page')): ?>
+            <?php if (0 !== strpos(Typecho_Request::getReferer(), Typecho_Common::url('file-upload.php', $options->adminUrl))): ?>
             //begin parent tabshow
             parent.$(parent.document).getElement('#upload-panel').addEvent('tabShow', function () {
             <?php endif; ?>
@@ -245,7 +245,7 @@ html {
                 $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
                 swfu = new SWFUpload(settings);
                 
-            <?php if (!Typecho_Request::isSetParameter('page')): ?>
+            <?php if (0 !== strpos(Typecho_Request::getReferer(), Typecho_Common::url('file-upload.php', $options->adminUrl))): ?>
             });
             //end parent tabshow
             <?php endif; ?>
