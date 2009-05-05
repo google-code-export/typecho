@@ -40,6 +40,16 @@ html {
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
+
+.message {
+    margin: 0 0 5px 0;
+    width: 300px;
+    padding: 2px 5px;
+    float: right;
+    text-align: center;
+    font-size: 13px;
+    line-height: 20px;
+}
 </style>
 
 <div id="main-box">
@@ -48,9 +58,13 @@ html {
     <a class="button left"><?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
     <span id="swfu"><span id="swfu-placeholder"></span></span>
 </p>
-<p class="search">
-    
-</p>
+<?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
+<div class="right message <?php $notice->noticeType(); ?> popup typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+<ul>
+    <?php $notice->lists(); ?>
+</ul>
+</div>
+<?php endif; ?>
 </div>
 
 <ul class="upload-progress">
@@ -234,7 +248,7 @@ html {
                     
                     // Button Settings
                     button_placeholder_id : "swfu-placeholder",
-                    button_height: 20,
+                    button_height: 25,
                     button_text: '',
                     button_text_style: '',
                     button_text_left_padding: 14,
@@ -244,7 +258,6 @@ html {
                     button_cursor: SWFUpload.CURSOR.HAND
                 };
 
-                $(document).getElement('#swfu').setStyles({'margin-left': - _size.width});
                 swfu = new SWFUpload(settings);
                 
             <?php if (0 !== strpos(Typecho_Request::getReferer(), Typecho_Common::url('file-upload.php', $options->adminUrl))): ?>
