@@ -1945,7 +1945,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 
 .typecho-list-operate #swfu {
 	position: absolute;
-	margin-left: -10px;
+	left: 0;
 }
 
 .typecho-post-area .close {
