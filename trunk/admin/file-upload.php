@@ -20,8 +20,10 @@ html {
 	background-image: url(<?php $options->adminUrl('images/progress.gif'); ?>);
 	background-repeat: repeat-y;
 	background-position: -1000px 0;
+    background-color: #fff;
     padding: 5px;
     margin-bottom: 5px;
+    border: 1px solid #C1CD94;
     
 	-moz-border-radius-topleft: 2px;
 	-moz-border-radius-topright: 2px;
@@ -162,7 +164,7 @@ html {
                         'background-color' : '#D3DBB3'
                     });
                     
-                    _el.tween('background-color', '#D3DBB3', '#F7FBE9');
+                    _el.tween('background-color', '#D3DBB3', '#FFFFFF');
                     refreshIframeHeight();
                 };
                 
