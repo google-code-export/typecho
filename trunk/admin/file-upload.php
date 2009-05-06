@@ -82,8 +82,8 @@ html {
         <tr class="<?php $attachment->alt(' even', ''); ?>">
             <td>
                 <div class="thumb-box">
-                <?php if ($attachment->attachmentIsImage): ?>
-                <img height="45" src="<?php $attachment->attachmentUrl(); ?>" alt="<?php $attachment->title(); ?>" />
+                <?php if ($attachment->attachment->isImage): ?>
+                <img height="45" src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->title(); ?>" />
                 <?php else: ?>
                 <?php endif; ?>
                 </div>
@@ -91,10 +91,10 @@ html {
             <td><?php $attachment->title(); ?></td>
             <td>
                 <div class="right">
-                    <a class="hidden-by-mouse button" href="#" onclick="<?php if ($attachment->attachmentIsImage){
-                        echo "parent.insertImageToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
+                    <a class="hidden-by-mouse button" href="#" onclick="<?php if ($attachment->attachment->isImage){
+                        echo "parent.insertImageToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}');";
                     } else {
-                        echo "parent.insertLinkToEditor('{$attachment->title}', '{$attachment->attachmentUrl}', '{$attachment->permalink}');";
+                        echo "parent.insertLinkToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}');";
                     } ?>">插入</a>
                     <a lang="<?php _e('你确认要删除附件 %s 吗?', $attachment->title); ?>" class="hidden-by-mouse button operate-button-delete" href="<?php $options->index('Contents/Attachment/Edit.do?do=delete&cid=' . $attachment->cid); ?>">删除</a>
                 </div>

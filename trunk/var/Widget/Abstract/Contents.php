@@ -350,21 +350,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $content = unserialize($value['text']);
             
             //增加数据信息
-            $value['attachmentName'] = $content['name'];
-            $value['attachmentType'] = $content['type'];
-            $value['attachmentSize'] = $content['size'];
-            $value['attachmentPath'] = $content['path'];
-            $value['attachmentUploadHandle'] = $content['uploadHandle'];
-            $value['attachmentDeleteHandle'] = $content['deleteHandle'];
-            $value['attachmentHandle'] = $content['attachmentHandle'];
-            $value['attachmentIsImage'] = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
-            $value['attachmentUrl'] = call_user_func($content['attachmentHandle'], $content['path']);
+            $value['attachment'] = new Typecho_Config($content);
+            $value['attachment']->isImage = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
+            $value['attachment']->url = call_user_func($content['attachmentHandle'], $content['path']);
 
-            if ($value['attachmentIsImage']) {
-                $value['text'] = '<img src="' . $value['attachmentUrl'] . '" alt="' . 
+            if ($value['attachment']->isImage) {
+                $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' . 
                 $value['title'] . '" />';
             } else {
-                $value['text'] = '<a href="' . $value['attachmentUrl'] . '" title="' .
+                $value['text'] = '<a href="' . $value['attachment']->url . '" title="' .
                 $value['title'] . '">' . $value['title'] . '</a>';
             }
         }
