@@ -638,12 +638,38 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function mwNewMediaObject($blogId, $userName, $password, $data)
     {
-        /** typecho核心并不提供附件功能，如果需要此功能需要调用相关插件*/
-        $upload = $this->plugin()->trigger($hasUploaded)->newMediaObject($data);
-        if ($hasUpload) {
-            return $upload;
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+    
+        $uploadHandle = unserialize($this->options->uploadHandle);
+        $deleteHandle = unserialize($this->options->deleteHandle);
+        $attachmentHandle = unserialize($this->options->attachmentHandle);
+
+        $result = call_user_func($uploadHandle, $data);
+        
+        if (false === $result) {
+            return IXR_Error(500, _t('上传失败'));
         } else {
-            return IXR_Error(500, '不支持文件上传功能');
+        
+            $result['uploadHandle'] = $uploadHandle;
+            $result['deleteHandle'] = $deleteHandle;
+            $result['attachmentHandle'] = $attachmentHandle;
+        
+            $this->insert(array(
+                'title'     =>  $result['name'],
+                'slug'      =>  $result['name'],
+                'type'      =>  'attachment',
+                'text'      =>  serialize($result),
+                'allowComment'      =>  1,
+                'allowPing'         =>  0,
+                'allowFeed'         =>  1
+            ));
+
+            return array(
+                'url' => $result['name'],
+                'url' => call_user_func($attachmentHandle, $result['path'])
+            );
         }
     }
 

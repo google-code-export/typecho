@@ -30,6 +30,17 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     public static function uploadHandle($file)
     {
+        if (empty($file['name'])) {
+            return false;
+        }
+        
+        $fileName = preg_split("(\/|\\|:)", $file['name']);
+        $file['name'] = array_pop($fileName);
+        
+        if (!self::checkFileType($file['name'])) {
+            return false;
+        }
+    
         $options = Typecho_Widget::widget('Widget_Options');
         $date = new Typecho_Date($options->gmtTime);
         $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
@@ -42,10 +53,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         //获取扩展名
-        $ext = '';
+        $ext = 'bin';
         $part = explode('.', $file['name']);
         if (($length = count($part)) > 1) {
-            $ext = '.' . $part[$length - 1];
+            $ext = strtolower($part[$length - 1]);
         }
         
         //创建年份目录
@@ -70,15 +81,37 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         //获取文件名
-        $fileName = sprintf('%u', crc32(uniqid())) . $ext;
+        $fileName = sprintf('%u', crc32(uniqid())) . '.' . $ext;
+        $path = $path . '/' . $fileName;
 
-        //移动上传文件
-        if (!move_uploaded_file($file['tmp_name'], $path . '/' . $fileName)) {
+        if (isset($file['tmp_name'])) {
+        
+            //移动上传文件
+            if (!move_uploaded_file($file['tmp_name'], $path)) {
+                return false;
+            }
+        } else if (isset($file['bits'])) {
+        
+            //直接写入文件
+            if (!file_put_contents($path, $file['bits'])) {
+                return false;
+            }
+        } else {
             return false;
         }
         
+        if (!isset($file['size'])) {
+            $file['size'] = filesize($path);
+        }
+        
         //返回相对存储路径
-        return self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName;
+        return array(
+            'name' => $file['name'],
+            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName,
+            'size' => $file['size'],
+            'type' => $ext,
+            'mime' => Typecho_Common::mimeContentType($path)
+        );
     }
     
     /**
@@ -113,9 +146,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * @param string $fileName 文件名
      * @return boolean
      */
-    private function checkFileType($fileName)
+    public static function checkFileType($fileName)
     {
-        $exts = array_filter(explode(';', $this->options->attachmentTypes));
+        $options = Typecho_Widget::widget('Widget_Options');
+        $exts = array_filter(explode(';', $options->attachmentTypes));
         
         foreach ($exts as $ext) {
             $ext = str_replace(array('.', '*'), array('\.', '.*'), $ext);
@@ -137,46 +171,36 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     {
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
-            if (0 == $file['error'] && $this->checkFileType($file['name']) && is_uploaded_file($file['tmp_name'])) {
+            if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $uploadHandle = unserialize($this->options->uploadHandle);
                 $deleteHandle = unserialize($this->options->deleteHandle);
                 $attachmentHandle = unserialize($this->options->attachmentHandle);
                 $result = call_user_func($uploadHandle, $file);
                 
-                //获取扩展名
-                $ext = '';
-                $part = explode('.', $file['name']);
-                if (($length = count($part)) > 1) {
-                    $ext = strtolower($part[$length - 1]);
-                }
-                
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
+                
+                    $result['uploadHandle'] = $uploadHandle;
+                    $result['deleteHandle'] = $deleteHandle;
+                    $result['attachmentHandle'] = $attachmentHandle;
+                
                     $this->insert(array(
-                        'title'     =>  $file['name'],
-                        'slug'      =>  $file['name'],
+                        'title'     =>  $result['name'],
+                        'slug'      =>  $result['name'],
                         'type'      =>  'attachment',
-                        'text'      =>  serialize(array(
-                            'name'              =>  $file['name'],
-                            'type'              =>  $ext,
-                            'size'              =>  $file['size'],
-                            'path'              =>  $result,
-                            'uploadHandle'      =>  $uploadHandle,
-                            'deleteHandle'      =>  $deleteHandle,
-                            'attachmentHandle'  =>  $attachmentHandle
-                        )),
+                        'text'      =>  serialize($result),
                         'allowComment'      =>  1,
                         'allowPing'         =>  0,
                         'allowFeed'         =>  1
                     ));
                     
                     $this->response->throwJson(array(
-                        'title'     =>  $file['name'],
-                        'type'      =>  $ext,
-                        'size'      =>  $file['size'],
-                        'url'       =>  call_user_func($attachmentHandle, $result)
+                        'title'     =>  $result['name'],
+                        'type'      =>  $result['ext'],
+                        'size'      =>  $result['size'],
+                        'url'       =>  call_user_func($attachmentHandle, $result['path'])
                     ));
                 }
             }
