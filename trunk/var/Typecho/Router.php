@@ -87,6 +87,8 @@ class Typecho_Router
                 
                 try {
                     /** 载入参数 */
+                    $params = NULL;
+                    
                     if (!empty($route['params'])) {
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
@@ -96,7 +98,7 @@ class Typecho_Router
                         }
                     }
                     
-                    $widget = Typecho_Widget::widget($route['widget'], null, $params);
+                    $widget = Typecho_Widget::widget($route['widget'], NULL, $params);
                     
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
