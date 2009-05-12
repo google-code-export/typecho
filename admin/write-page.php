@@ -25,8 +25,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                                 <input type="hidden" name="draft" value="0" />
                                 <input type="hidden" name="do" value="<?php echo $page->have() ? 'update' : 'insert'; ?>" />
-                                <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="button" id="btn-submit"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
+                                <button type="submit" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
+                                <button type="submit" id="btn-submit"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
                             </span>
                         </p>
                     </div>
@@ -140,16 +140,12 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=draft]').set('value', 1);
-                $(document).getElement('form[name=write_page]').fireEvent('save', e);
-                //$(document).getElement('form[name=write_post]').submit();
             });
             
             $('btn-submit').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=draft]').set('value', 0);
-                $(document).getElement('form[name=write_page]').fireEvent('post', e);
-                //$(document).getElement('form[name=write_post]').submit();
             });
         });
     })();
