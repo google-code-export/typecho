@@ -98,7 +98,7 @@ class Typecho_Router
                         }
                     }
                     
-                    $widget = Typecho_Widget::widget($route['widget'], NULL, $params);
+                    $widget = Typecho_Widget::widget($route['widget']);
                     
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
