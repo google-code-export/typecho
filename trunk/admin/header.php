@@ -7,7 +7,7 @@ $header = '<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url(
 <link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/grid.source.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
 <link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/typecho.source.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
 <script type="text/javascript" src="' . Typecho_Common::url('javascript/mootools-1.2.2-core-yc.js?v=' . $suffixVersion, $options->adminUrl) . '"></script> 
-<script type="text/javascript" src="' . Typecho_Common::url('javascript/mootools-1.2.2.1-more.js?v=' . $suffixVersion, $options->adminUrl) . '"></script> 
+<script type="text/javascript" src="' . Typecho_Common::url('javascript/mootools-1.2.2.2-more.js?v=' . $suffixVersion, $options->adminUrl) . '"></script> 
 <script type="text/javascript" src="' . Typecho_Common::url('javascript/typecho-ui.source.js?v=' . $suffixVersion, $options->adminUrl) . '"></script>';
 
 /** 注册一个初始化插件 */

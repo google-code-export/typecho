@@ -9,12 +9,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('Contents/Post/Edit.do'); ?>" method="post" name="write_post">
-                <div class="column-18 start-01">
+                <div class="column-18 start-01" id="test">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?></label>
-                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
+                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars(trim($post->text)); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
