@@ -64,12 +64,6 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
 
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'attachment');
-
-        /** 过滤分类 */
-        if (NULL != ($category = $this->request->category)) {
-            $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-            ->where('table.relationships.mid = ?', $category);
-        }
         
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
         if (!$this->user->pass('editor', true)) {

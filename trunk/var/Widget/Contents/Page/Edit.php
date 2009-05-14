@@ -69,6 +69,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         if ($insertId > 0) {
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
+            
+            /** 同步附件 */
+            $this->syncAttachment($insertId);
         }
         
         /** 发送ping */
@@ -119,6 +122,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         if ($updateRows > 0) {
             /** 取出页面 */
             $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
+            
+            /** 同步附件 */
+            $this->syncAttachment($this->cid);
         }
         
         /** 发送pingback */

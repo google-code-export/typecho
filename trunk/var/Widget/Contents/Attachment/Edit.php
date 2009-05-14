@@ -71,7 +71,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Abstract_Contents implement
                 
                 if ($this->isWriteable($condition) && $this->delete($condition)) {
                     /** 删除文件 */
-                    call_user_func($this->attachmentDeleteHandle, $this->attachmentPath);
+                    call_user_func($this->attachment->deleteHandle, $this->attachment->path);
                 
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')
@@ -84,12 +84,17 @@ class Widget_Contents_Attachment_Edit extends Widget_Abstract_Contents implement
             }
         }
         
-        /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('附件已经被删除') : _t('没有附件被删除'), NULL,
-        $deleteCount > 0 ? 'success' : 'notice');
-        
-        /** 返回原网页 */
-        $this->response->goBack();
+        if ($this->request->isAjax()) {
+            $this->response->throwJson($deleteCount > 0 ? array('code' => 200, 'message' => _t('附件已经被删除'))
+            : array('code' => 500, 'message' => _t('没有附件被删除')));
+        } else {
+            /** 设置提示信息 */
+            $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('附件已经被删除') : _t('没有附件被删除'), NULL,
+            $deleteCount > 0 ? 'success' : 'notice');
+            
+            /** 返回原网页 */
+            $this->response->goBack();
+        }
     }
     
     /**

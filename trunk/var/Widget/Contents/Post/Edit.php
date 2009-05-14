@@ -103,6 +103,25 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         return $created;
     }
+    
+    /**
+     * 同步附件
+     * 
+     * @access protected
+     * @param integer $cid 内容id
+     * @return void
+     */
+    protected function syncAttachment($cid)
+    {
+        if ($this->request->attachment && is_array($this->request->attachment)) {
+            $attachments = $this->request->filter('int')->attachment;
+            
+            foreach ($attachments as $attachment) {
+                $this->db->query($this->db->update('table.contents')->rows(array('order' => $cid))
+                ->where('cid = ? AND type = ?', $attachment, 'attachment'));
+            }
+        }
+    }
 
     /**
      * 执行函数
@@ -332,6 +351,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 插入标签 */
             $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'],
             false, 'publish' == $contents['status']);
+            
+            /** 同步附件 */
+            $this->syncAttachment($insertId);
         }
         
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
@@ -400,6 +422,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
             /** 取出已修改的文章 */
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)->limit(1), array($this, 'push'));
+            
+            /** 同步附件 */
+            $this->syncAttachment($this->cid);
         }
         
         /** 发送ping */
