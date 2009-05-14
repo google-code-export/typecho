@@ -66,7 +66,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     </ul>
                     <ul id="upload-panel" class="column-18">
                         <li class="column-18">
-                            <iframe frameBorder="no" width="100%" src="<?php $options->adminUrl('file-upload.php'); ?>"></iframe>
+                            <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>
                 </div>
