@@ -14,7 +14,6 @@ svnup:
 	for i in `find -name *.source.css`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
 	for i in `find -name *.source.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
 	for i in `find build/admin/javascript/swfupload/ -name *.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find build/admin/javascript/tiny_mce/ -name *.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
 
 
 package:
@@ -82,18 +81,6 @@ theme:
 typecho:
 	for i in `php list.php "build/var/Typecho/"`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
 	rm -Rf build/var/Typecho/
-
-
-tinymce:
-	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
-	unzip tinymce_${TINYMCE}.zip
-	for i in `find jscripts/ -name *.js`; do php mcecp.php "in=$$i&out=../admin/javascript/tiny_mce/$$i"; done;
-	for i in `find jscripts/ -name *.htm`; do php mcecp.php "in=$$i&out=../admin/javascript/tiny_mce/$$i"; done;
-	rm -Rf jscripts/
-	rm -Rf examples/
-	rm -Rf tinymce_${TINYMCE}.zip
-	rm -Rf changelog.txt
-	svn ci ../admin/javascript/tiny_mce/ -m "upgrade tiny_mce to ${TINYMCE}"
 
 
 install:

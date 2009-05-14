@@ -140,37 +140,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     }
     
     /**
-     * 将文本转化为html
-     * 
-     * @access public
-     * @return void
-     */
-    public function cutParagraph()
-    {
-        $this->user->pass('contributor');
-        echo rawurlencode(Typecho_Common::encodeCode(Typecho_Common::cutParagraph(
-        $this->plugin()->toVisualEditor($this->request->content))));
-    }
-    
-    /**
-     * 将html转化为文本
-     * 
-     * @access public
-     * @return void
-     */
-    public function removeParagraph()
-    {
-        $this->user->pass('contributor');
-        echo rawurlencode($this->plugin()->toCodeEditor(
-        Typecho_Common::removeParagraph(Typecho_Common::decodeCode($this->request->content))));
-    }
-    
-    public function autoSave()
-    {
-        
-    }
-    
-    /**
      * 异步请求入口
      * 
      * @access public
@@ -182,8 +151,5 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $this->onRequest('do', 'feed')->feed();
         $this->onRequest('do', 'checkVersion')->checkVersion();
         $this->onRequest('do', 'editorResize')->editorResize();
-        $this->onRequest('do', 'cutParagraph')->cutParagraph();
-        $this->onRequest('do', 'removeParagraph')->removeParagraph();
-        $this->onRequest('do', 'autoSave')->autoSave();
     }
 }
