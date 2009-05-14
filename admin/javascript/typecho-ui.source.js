@@ -615,10 +615,6 @@ Typecho.tinyMCE = function (id, url, vw, cw, current) {
                 _hide();
             });
         },
-        
-        save_callback : function (element_id, html, body) {
-            return $(id).get('value');
-        },
 
         // Theme options
         theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,morebreak",
