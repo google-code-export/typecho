@@ -127,7 +127,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     }
     
     /**
-     * 获取实际文件路径
+     * 获取实际文件相关数据
      * 
      * @access public
      * @param string $file 相对文件路径
@@ -186,7 +186,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     $result['deleteHandle'] = $deleteHandle;
                     $result['attachmentHandle'] = $attachmentHandle;
                 
-                    $this->insert(array(
+                    $insertId = $this->insert(array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
                         'type'      =>  'attachment',
@@ -196,11 +196,17 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'allowFeed'         =>  1
                     ));
                     
+                    $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
+                    ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
+                    
                     $this->response->throwJson(array(
-                        'title'     =>  $result['name'],
-                        'type'      =>  $result['ext'],
-                        'size'      =>  $result['size'],
-                        'url'       =>  call_user_func($attachmentHandle, $result['path'])
+                        'cid'       =>  $insertId,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
                     ));
                 }
             }
