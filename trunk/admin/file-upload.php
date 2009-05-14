@@ -200,7 +200,7 @@ if (isset($post) || isset($page)) {
                     flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
                     upload_url: "<?php $options->index('Upload.do'); ?>",
                     post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
-                    "__typecho_authCode" : "<?php echo str_replace(array('"', "\\"), array('\"', "\\\\"), Typecho_Request::getCookie('__typecho_authCode')); ?>"},
+                    "__typecho_authCode" : "<?php echo addslashes(Typecho_Request::getCookie('__typecho_authCode')); ?>"},
                     file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {

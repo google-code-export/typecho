@@ -767,6 +767,35 @@ EOF;
         $html));
     }
     
+    public static function beautifyFormat($html)
+    {
+        /** 锁定标签 */
+        $html = trim($html);
+        $html = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
+    
+        $html = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
+        "str_replace('\\\"', '\"', '
+<\\1\\2>' . trim('\\3') . '</\\1>')", $html);
+        
+        $html = preg_replace("/<(" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise", 
+        "str_replace('\\\"', '\"', '
+
+<\\1\\2>' . trim('\\3') . '</\\1>
+
+')", $html);
+
+        $tags = implode('|', array_diff(explode('|', self::GRID_HTML_TAG), explode('|', self::LOCKED_HTML_TAG)));
+        $html = preg_replace("/<(" . $tags . ")([^>]*)>(.*?)<\/\\1>/ise", 
+        "str_replace('\\\"', '\"', '<\\1\\2>
+' . trim('\\3') . '
+</\\1>')", $html);
+
+        $html = preg_replace("/\r*\n\r*/", "\n", $html);
+        $html = preg_replace("/\n{2,}/", "\n\n", $html);
+        
+        return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html);
+    }
+    
     /**
      * 文本分段函数
      *
