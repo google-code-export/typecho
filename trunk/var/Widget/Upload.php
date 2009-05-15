@@ -73,13 +73,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             }
         }
         
-        //创建日期目录
-        if (!is_dir($path = $path . '/' . $date->day)) {
-            if (!@mkdir($path, 0777)) {
-                return false;
-            }
-        }
-        
         //获取文件名
         $fileName = sprintf('%u', crc32(uniqid())) . '.' . $ext;
         $path = $path . '/' . $fileName;
@@ -107,7 +100,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         //返回相对存储路径
         return array(
             'name' => $file['name'],
-            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName,
+            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
             'size' => $file['size'],
             'type' => $ext,
             'mime' => Typecho_Common::mimeContentType($path)
