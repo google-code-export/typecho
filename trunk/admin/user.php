@@ -1,7 +1,6 @@
 <?php
 include 'common.php';
 
-if (!Typecho_Request::isAjax()):
 include 'header.php';
 include 'menu.php';
 ?>
@@ -20,7 +19,7 @@ include 'menu.php';
 </div>
 
 <?php
-include 'common-js.php';
 include 'copyright.php';
-endif;
+include 'common-js.php';
+include 'footer.php';
 ?>

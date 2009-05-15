@@ -110,7 +110,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         </div>
     </div>
 </div>
-<?php include 'common-js.php'; ?>
+
+<?php
+include 'copyright.php';
+include 'common-js.php';
+?>
+
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
@@ -151,4 +156,4 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         });
     })();
 </script>
-<?php include 'copyright.php'; ?>
+<?php include 'footer.php'; ?>

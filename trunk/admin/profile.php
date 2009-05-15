@@ -39,6 +39,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 </div>
 
 <?php
-include 'common-js.php';
 include 'copyright.php';
+include 'common-js.php';
+include 'footer.php';
 ?>

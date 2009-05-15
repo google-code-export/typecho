@@ -137,7 +137,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         </div>
     </div>
 </div>
-<?php include 'common-js.php'; ?>
+
+<?php
+include 'copyright.php';
+include 'common-js.php';
+?>
+
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 <script type="text/javascript">
     (function () {
@@ -185,6 +190,6 @@ if (!$plugged) {
     include 'tiny_mce.php';
 }
 Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
-
-include 'copyright.php';
+include 'file-upload-js.php';
+include 'footer.php';
 ?>
