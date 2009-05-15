@@ -117,7 +117,12 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
         </div>
     </div>
 </div>
-<?php include 'common-js.php'; ?>
+
+<?php
+include 'common-js.php';
+include 'copyright.php';
+?>
+
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
@@ -157,5 +162,6 @@ if (!$plugged) {
     include 'tiny_mce.php';
 }
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
-include 'copyright.php';
+include 'file-upload-js.php';
+include 'footer.php';
 ?>

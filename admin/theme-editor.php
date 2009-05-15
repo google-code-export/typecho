@@ -49,5 +49,9 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
         </div>
     </div>
 </div>
-<?php include 'common-js.php'; ?>
-<?php include 'copyright.php'; ?>
+
+<?php
+include 'copyright.php';
+include 'common-js.php';
+include 'footer.php';
+?>

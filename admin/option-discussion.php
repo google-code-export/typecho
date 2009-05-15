@@ -15,5 +15,8 @@ include 'menu.php';
     </div>
 </div>
 
-<?php include 'common-js.php'; ?>
-<?php include 'copyright.php'; ?>
+<?php
+include 'copyright.php';
+include 'common-js.php';
+include 'footer.php';
+?>
