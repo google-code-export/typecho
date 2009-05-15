@@ -3,7 +3,12 @@
 <?php
 if (isset($post) || isset($page)) {
     $cid = isset($post) ? $post->cid : $page->cid;
-    Typecho_Widget::widget('Widget_Contents_Attachment_Related', 'cid=' . $cid)->to($attachment);
+    
+    if ($cid) {
+        Typecho_Widget::widget('Widget_Contents_Attachment_Related', 'cid=' . $cid)->to($attachment);
+    } else {
+        Typecho_Widget::widget('Widget_Contents_Attachment_Free')->to($attachment);
+    }
 }
 ?>
 

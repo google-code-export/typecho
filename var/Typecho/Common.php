@@ -770,7 +770,6 @@ EOF;
     public static function beautifyFormat($html)
     {
         /** 锁定标签 */
-        $html = trim($html);
         $html = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
     
         $html = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
@@ -793,7 +792,7 @@ EOF;
         $html = preg_replace("/\r*\n\r*/", "\n", $html);
         $html = preg_replace("/\n{2,}/", "\n\n", $html);
         
-        return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html);
+        return trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
     }
     
     /**
