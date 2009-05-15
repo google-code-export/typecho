@@ -141,7 +141,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
-            'order'         =>  empty($content['order']) ? NULL : $content['order'],
+            'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],

@@ -13,20 +13,9 @@
     
     (function () {
         
-        var _pressed = false;
-        var _resize = 0, _last = 0, mouseY = 0, editorOffset = 0, _minFinalY = 70;
-        
-        var _holder = new Element('div', {
-        
-            styles: {
-                'border': '1px dashed #C1CD94',
-                'background': '#fff',
-                'display': 'none',
-                'width': 706,
-                'height': $('text').getSize().y
-            }
-        
-        }).inject('text', 'after');
+        var _pressed = false, _text = $('text'),
+        _resize = 0, _last = 0, mouseY = 0, _minFinalY = 70,
+        _editorOffset = _text.getSize().y - parseInt(_text.getStyle('height'));
 
         var _cross = new Element('span', {
             'class': 'size-btn',
@@ -34,22 +23,13 @@
             'events' : {
             
                 'mousedown': function (event) {
-                    
-                    if (!_pressed) {
-                        _holder.setStyle('height', $('text').getSize().y - 2);
-                    }
-                
                     _pressed = true;
-                    
-                    $('text').setStyle('display', 'none');
-                    _holder.setStyle('display', 'block');
-                    
                     event.stop();
                 }
             
             }
             
-        }).inject(_holder, 'after');
+        }).inject(_text, 'after');
         
         $(document).addEvents({
             
@@ -58,17 +38,13 @@
                 if (_pressed) {
                     
                     _pressed = false;
-                    $('text').setStyle('display', '');
 
-                    var size = _holder.getSize().y - 8;
-                    $('text').setStyle('height', size);
-                    
+                    var size = _text.getSize().y - _editorOffset;
                     var _r = new Request({
                         'method': 'post',
                         'url': '<?php $options->index('Ajax.do'); ?>'
                     }).send('size=' + size + '&do=editorResize');
                     
-                    _holder.setStyle('display', 'none');
                     _last = 0;
                     _resize = 0;
                     mouseY = 0;
@@ -89,10 +65,10 @@
                 _resize = (0 == _last) ? 0 : mouseY - _last;
                 _last = mouseY;
                 
-                var _finalY = _holder.getSize().y - 2 + _resize;
+                var _finalY = _text.getSize().y - _editorOffset + _resize;
                 
                 if (_finalY > _minFinalY) {
-                    _holder.setStyle('height', _finalY);
+                    _text.setStyle('height', _finalY);
                 }
                 
             }

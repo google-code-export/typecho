@@ -11,6 +11,11 @@
 /**
  * Typecho 全局样式
  */
+ 
+html {
+	height: 100%;
+}
+ 
 body {
     /*
     background: #f7fbe9;
@@ -84,6 +89,9 @@ a.button, span.balloon, a.balloon-button, .typecho-pager a {
 	padding: 2px 4px;
     text-decoration: none;
 	font-weight: bold;
+	
+	/** 修正ie中文不对齐 */
+	zoom:1;
 	
 	-moz-border-radius-topleft: 2px;
 	-moz-border-radius-topright: 2px;

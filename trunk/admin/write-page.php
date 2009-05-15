@@ -159,7 +159,7 @@ include 'copyright.php';
 <?php
 Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
 if (!$plugged) {
-    include 'tiny_mce.php';
+    include 'editor-js.php';
 }
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'file-upload-js.php';

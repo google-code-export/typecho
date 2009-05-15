@@ -67,6 +67,7 @@ include 'menu.php';
     </div>
 </div>
 <?php
-include 'common-js.php';
 include 'copyright.php';
+include 'common-js.php';
+include 'footer.php';
 ?>
