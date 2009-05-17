@@ -10,9 +10,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-22 start-02">
-<?php endif; ?>
                 <?php Typecho_Widget::widget('Widget_Users_Edit')->form()->render(); ?>
-<?php if (!Typecho_Request::isAjax()): ?>
             </div>
         </div>
     </div>
