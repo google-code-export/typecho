@@ -23,9 +23,6 @@ include 'header.php';
                     <button type="submit"><?php _e('登录'); ?></button>
                     <input type="hidden" name="referer" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('referer')); ?>" />
                     </p>
-                    <script type="text/javascript">
-                    var _form = document.login.name; _form.focus();
-                    </script>
                     <?php else: ?>
                     <div class="message notice">
                         <ul>
@@ -51,4 +48,10 @@ include 'header.php';
         </div>
     </div>
 </div>
+<script type="text/javascript">
+(function () {
+    var _form = document.login.name;
+    _form.focus();
+})();
+</script>
 <?php include 'footer.php'; ?>

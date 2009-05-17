@@ -329,14 +329,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function insertPost()
     {
         $contents = $this->request->from('password', 'allowComment',
-        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status');
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'status', 'text');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
-
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
@@ -397,14 +395,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function updatePost()
     {
         $contents = $this->request->from('password', 'allowComment',
-        'allowPing', 'allowFeed', 'slug', 'category', 'tags');
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text');
         $contents['type'] = 'post';
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
-
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */

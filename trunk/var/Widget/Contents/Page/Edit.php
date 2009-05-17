@@ -55,12 +55,10 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function insertPage()
     {
-        $contents = $this->request->from('template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
+        $contents = $this->request->from('text', 'template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
-        
         $contents['created'] = $this->getCreated();
         
         /** 提交数据的过滤 */
@@ -107,12 +105,10 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function updatePage()
     {
-        $contents = $this->request->from('template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
+        $contents = $this->request->from('text', 'template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
         $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
-        $contents['text'] = $this->request->filter(array('Typecho_Common', 'removeParagraph'))->text;
-
         $contents['created'] = $this->getCreated();
     
         /** 提交数据的过滤 */
