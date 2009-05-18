@@ -183,6 +183,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
                         'type'      =>  'attachment',
+                        'status'    =>  'unattached',
                         'text'      =>  serialize($result),
                         'allowComment'      =>  1,
                         'allowPing'         =>  0,

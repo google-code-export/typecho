@@ -5,7 +5,13 @@
 <script type="text/javascript">
     var deleteAttachment = function (cid, el) {
     
-        $(el).getParent('li').getElement('strong').addClass('delete');
+        var _title = $(el).getParent('li').getElement('strong');
+        
+        if (!confirm("<?php _e('你确认删除附件 %s 吗?'); ?>".replace("%s", _title.get('text').trim()))) {
+            return;
+        }
+
+        _title.addClass('delete');
         
         new Request.JSON({
             method : 'post',

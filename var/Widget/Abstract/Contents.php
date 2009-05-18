@@ -33,12 +33,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 文章作者
      * 
      * @access protected
-     * @return string
+     * @return Typecho_Config
      */
     protected function ___author()
     {
-        return $this->db->fetchObject($this->db->select()->from('table.users')
-        ->where('uid = ?', $this->authorId));
+        return new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
+        ->where('uid = ?', $this->authorId)));
     }
     
     /**

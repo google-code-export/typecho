@@ -50,6 +50,19 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
      * @var integer
      */
     private $_currentPage;
+    
+    /**
+     * 所属文章
+     * 
+     * @access protected
+     * @return Typecho_Config
+     */
+    protected function ___parentPost()
+    {
+        return new Typecho_Config($this->db->fetchRow(
+        $this->select()->where('table.contents.cid = ?', $this->order)
+        ->limit(1)));
+    }
 
     /**
      * 执行函数
@@ -77,6 +90,19 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
                 }
                 $select->where('table.contents.authorId = ?', $this->user->uid);
             }
+        }
+        
+        /** 过滤状态 */
+        switch ($this->request->status) {
+            case 'unattached':
+                $select->where('table.contents.status = ?', 'unattached');
+                break;
+            case 'all':
+                break;
+            case 'publish':
+            default:
+                $select->where('table.contents.status = ?', 'publish');
+                break;
         }
         
         /** 过滤标题 */
