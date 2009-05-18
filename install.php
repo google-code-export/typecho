@@ -20,8 +20,8 @@ define('__TYPECHO_THEME_DIR__', '/usr/themes');
 define('__TYPECHO_ADMIN_DIR__', '/admin/');
 
 /** 设置包含路径 */
-@set_include_path(get_include_path() . PATH_SEPARATOR . 
-__TYPECHO_ROOT_DIR__ . '/var' . PATH_SEPARATOR . 
+@set_include_path(get_include_path() . PATH_SEPARATOR .
+__TYPECHO_ROOT_DIR__ . '/var' . PATH_SEPARATOR .
 __TYPECHO_ROOT_DIR__ . __TYPECHO_PLUGIN_DIR__);
 
 /** 载入API支持 */
@@ -67,7 +67,7 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
 
 /**
  * 获取传递参数
- * 
+ *
  * @param string $name 参数名称
  * @param string $default 默认值
  * @return string
@@ -79,7 +79,7 @@ function _v($name, $default = '')
 
 /**
  * 判断是否兼容某个环境(perform)
- * 
+ *
  * @param string $adapter 适配器
  * @return boolean
  */
@@ -105,16 +105,16 @@ function _p($adapter)
 
 /**
  * 获取url地址
- * 
+ *
  * @return string
  */
 function _u()
 {
-    $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];	
+    $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     if (isset($_SERVER["QUERY_STRING"])) {
         $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
     }
-    
+
     return dirname($url);
 }
 
@@ -150,7 +150,7 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                     <li><?php _e('您的密码是'); ?>:<strong>12345</strong></li>
                     </ul>
                     </div>
-                    
+
                     <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <a target="_blank" href="http://spreadsheets.google.com/viewform?key=pd1Gl4Ur_pbniqgebs5JRIg&hl=en">参与用户调查, 帮助我们完善产品</a>
                     </div>
@@ -178,7 +178,7 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                         <?php
                             if ('config' == Typecho_Request::getParameter('action')) {
                                 $success = true;
-                                
+
                                 if (NULL == Typecho_Request::getParameter('userUrl')) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('请填写您的网站地址') . '</p>';
@@ -195,8 +195,8 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                                     $success = false;
                                     echo '<p class="message error">' . _t('邮箱长度超过限制, 请不要超过200个字符') . '</p>';
                                 }
-                                
-                                
+
+
                                 if($success)
                                 {
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
@@ -209,17 +209,22 @@ $options->generator = 'Typecho ' . Typecho_Common::VERSION;
                                     }
 
                                     $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
-                                    
+
+
                                     /** 检测数据库配置 */
                                     try {
                                         $installDb->query('SELECT 1=1');
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        if($e->getMessage() != "Unknown database'" . $dbConfig['database'] ."'") {
+                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('对不起，您还没有创建数据库%s，请先创建数据库再继续进行安装', $dbConfig['database']) . '</p>';
+                                        } else {
+                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        }
                                     }
-                                    
+
                                 }
-                                
+
                                 if($success)
                                 {
                                     /** 初始化配置文件 */
@@ -243,17 +248,15 @@ Typecho_Plugin::init(\$options->plugins);
 Typecho_Date::setTimezoneOffset(\$options->timezone);
 ";
 
-                                    file_put_contents('./config.inc.php', implode('', $lines));
-                                
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
                                         $scripts = str_replace('typecho_', Typecho_Request::getParameter('dbPrefix'), $scripts);
-                                        
+
                                         if (isset($dbConfig['charset'])) {
                                             $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
                                         }
-                                        
+
                                         $scripts = explode(';', $scripts);
                                         foreach ($scripts as $script) {
                                             $script = trim($script);
@@ -261,7 +264,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                                 $installDb->query($script, Typecho_Db::WRITE);
                                             }
                                         }
-                                        
+
                                         /** 全局变量 */
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => _t('28800'))));
@@ -302,34 +305,40 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'deleteHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz')));
-                                        
+
                                         /** 初始分类 */
                                         $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
                                         'count' => 1, 'order' => 1)));
-                                        
+
                                         /** 初始关系 */
                                         $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
-                                        
+
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
                                         'text' => _t('如果您看到这篇文章,表示您的blog已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
-                                        
+
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
                                         'text' => _t('本页面由Typecho创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1)));
-                                        
+
                                         /** 初始评论 */
                                         $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::gmtTime(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
                                         'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入Typecho大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
-                                        
+
                                         /** 初始用户 */
-                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'), 
+                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'),
                                         'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-                                        
+
+                                        file_put_contents('./config.inc.php', implode('', $lines));
+
                                         Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName'));
                                     } catch (Typecho_Db_Exception $e) {
-                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        if(preg_match("/Table '(.*)' already exists/i", $e->getMessage(), $table)) {
+                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '</p>';
+                                        } else {
+                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
+                                        }
                                     }
                                 }
                             }
@@ -354,14 +363,14 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                             <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
                             </li>
                         </ul>
-                        
+
                         <script>
                         var _select = document.config.dbAdapter;
                         _select.onchange = function() {
                             setTimeout("window.location.href = 'install.php?config&dbAdapter=" + this.value + "'; ",0);
                         }
                         </script>
-                        
+
                         <h2><?php _e('创建您的管理员帐号'); ?></h2>
                         <ul class="typecho-option">
                             <li>
@@ -419,7 +428,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                 ?>
                 </form>
             <?php endif; ?>
-            
+
             </div>
         </div>
     </div>
