@@ -247,6 +247,35 @@ class Widget_Stat extends Typecho_Widget
     }
     
     /**
+     * 获取未归档附件数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___unattachedAttachmentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'attachment')
+                    ->where('table.contents.status = ?', 'unattached'))->num;
+    }
+    
+    /**
+     * 获取当前用户未归档附件数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___myUnattachedAttachmentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'attachment')
+                    ->where('table.contents.status = ?', 'unattached')
+                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+    }
+    
+    /**
      * 获取分类数目
      * 
      * @access protected

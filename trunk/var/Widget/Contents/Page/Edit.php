@@ -69,7 +69,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
             
             /** 同步附件 */
-            $this->syncAttachment($insertId);
+            $this->attach($insertId);
         }
         
         /** 发送ping */
@@ -120,7 +120,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
             
             /** 同步附件 */
-            $this->syncAttachment($this->cid);
+            $this->attach($this->cid);
         }
         
         /** 发送pingback */
@@ -167,6 +167,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')
                     ->where('cid = ?', $page));
+                    
+                    /** 解除附件关联 */
+                    $this->unattach($page);
                     
                     $deleteCount ++;
                 }

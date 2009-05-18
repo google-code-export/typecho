@@ -127,6 +127,7 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('标签和分类'), _t('标签和分类'), '/admin/manage-metas.php', 'editor'),
             array(_t('附件'), _t('管理附件'), '/admin/manage-medias.php', 'editor'),
+            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), '/admin/media.php?cid=', 'contributor', true),
             array(_t('用户'), _t('管理用户'), '/admin/manage-users.php', 'administrator'),
             array(_t('新增用户'), _t('新增用户'), '/admin/user.php', 'administrator', true),
             array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), '/admin/user.php?uid=', 'administrator', true),

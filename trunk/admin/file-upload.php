@@ -7,7 +7,7 @@ if (isset($post) || isset($page)) {
     if ($cid) {
         Typecho_Widget::widget('Widget_Contents_Attachment_Related', 'cid=' . $cid)->to($attachment);
     } else {
-        Typecho_Widget::widget('Widget_Contents_Attachment_Free')->to($attachment);
+        Typecho_Widget::widget('Widget_Contents_Attachment_Unattached')->to($attachment);
     }
 }
 ?>

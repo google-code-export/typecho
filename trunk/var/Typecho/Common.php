@@ -767,6 +767,13 @@ EOF;
         $html));
     }
     
+    /**
+     * 美化格式
+     * 
+     * @access public
+     * @param string $html 输入串
+     * @return string
+     */
     public static function beautifyFormat($html)
     {
         /** 锁定标签 */
