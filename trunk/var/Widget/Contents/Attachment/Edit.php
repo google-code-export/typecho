@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_Attachment_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
+class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implements Widget_Interface_Do
 {
     /**
      * 执行函数
@@ -40,7 +40,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Abstract_Contents implement
             ->limit(1), array($this, 'push'));
             
             if (!$this->have()) {
-                throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
+                throw new Typecho_Widget_Exception(_t('附件不存在'), 404);
             } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
