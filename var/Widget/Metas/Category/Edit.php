@@ -75,7 +75,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      * 判断分类名转换到缩略名后是否合法
      * 
      * @access public
-     * @param string $name 标签名
+     * @param string $name 分类名
      * @return boolean
      */
     public function nameToSlug($name)

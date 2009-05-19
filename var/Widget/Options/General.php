@@ -48,6 +48,11 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $timezone = new Typecho_Widget_Helper_Form_Element_Select('timezone', array('28800' => _t('中华人民共和国')), $this->options->timezone, _t('时区'));
         $form->addInput($timezone);
         
+        /** 扩展名 */
+        $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Text('attachmentTypes', NULL, $this->options->attachmentTypes, _t('允许上传的文件类型'),
+        _t('用分号 ; 隔开, 例如: *.zip;*.jpg'));
+        $form->addInput($attachmentTypes);
+        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
@@ -68,7 +73,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
         
-        $settings = $this->request->from('title', 'description', 'keywords', 'timezone');
+        $settings = $this->request->from('title', 'description', 'keywords', 'timezone', 'attachmentTypes');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }

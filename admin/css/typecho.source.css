@@ -1790,7 +1790,6 @@ ul.typecho-list-notable li span.trackback {
 	margin: 0;
 	*margin: -1px 0 -1px 0;
 	display: block;
-	padding: 3px;
 	resize: none;
 }
 
@@ -2028,4 +2027,91 @@ ul.autocompleter-choices span.autocompleter-queried {
 	display: block;
 	float: left;
 	white-space:nowrap;
+}
+
+.typecho-attachment-photo-box .description {
+	color: #999;
+	margin: 10px 0;
+	font-size: 14px;
+}
+
+.typecho-attachment-photo-box .description ul li {
+	border-bottom: 1px dashed #E8EDD6;
+	line-height: 28px;
+}
+
+.typecho-attachment-photo-box .description strong {
+	color: #444;
+	font-weight: normal;
+}
+
+.typecho-attachment-photo-box .description input {
+	width: 450px;
+	border: 1px solid #aaa;
+	background: #eee;
+}
+
+.typecho-attachment-photo-box img {
+	border: 1px solid #E8EDD6;
+	background: #fff;
+	padding: 3px;
+	max-width: 610px;
+}
+
+.typecho-mime {
+	background-image: url(../images/mime.gif);
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	font-size: 12px;
+	display: block;
+	float: left;
+	position: relative;
+	bottom: -3px;
+	margin-right: 3px;
+	padding: 0;
+}
+
+.typecho-mime-office {
+	background-position: 0 -160px;
+}
+
+.typecho-mime-text {
+	background-position: 0 -176px;
+}
+
+.typecho-mime-image {
+	background-position: 0 -192px;
+}
+
+.typecho-mime-html {
+	background-position: 0 -208px;
+}
+
+.typecho-mime-archive {
+	background-position: 0 -224px;
+}
+
+.typecho-mime-application {
+	background-position: 0 -240px;
+}
+
+.typecho-mime-audio {
+	background-position: 0 -256px;
+}
+
+.typecho-mime-script {
+	background-position: 0 -272px;
+}
+
+.typecho-mime-video {
+	background-position: 0 -288px;
+}
+
+.typecho-mime-unknow {
+	background-position: 0 -304px;
+}
+
+.typecho-attachment-photo-box .typecho-mime {
+	bottom: -7px;
 }
