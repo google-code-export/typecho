@@ -20,6 +20,13 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
     {
         Typecho_Plugin::factory('admin/write-post.php')->richEditor = array('TinyMCE_Plugin', 'render');
         Typecho_Plugin::factory('admin/write-page.php')->richEditor = array('TinyMCE_Plugin', 'render');
+        
+        //去除段落
+        Typecho_Plugin::factory('Widget_Contents_Post_Edit')->insert = array('TinyMCE_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Contents_Page_Edit')->insert = array('TinyMCE_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Contents_Post_Edit')->update = array('TinyMCE_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Contents_Page_Edit')->update = array('TinyMCE_Plugin', 'filter');
+        
         Helper::addPanel(0, 'TinyMCE/tiny_mce/langs.php','', '', 'contributor');
     }
     
@@ -53,6 +60,19 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
      * @return void
      */
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
+    
+    /**
+     * 去除段落
+     * 
+     * @access public
+     * @param array $post 数据结构体
+     * @return array
+     */
+    public static function filter($post)
+    {
+        $post['text'] = Typecho_Common::removeParagraph($post['text']);
+        return $post;
+    }
     
     /**
      * 插件实现方法
