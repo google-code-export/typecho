@@ -48,7 +48,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="275"/>
+                        <col width="20"/>
+                        <col width="255"/>
                         <col width="140"/>
                         <col width="250"/>
                         <col width="150"/>
@@ -56,6 +57,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <thead>
                         <tr>
                             <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th> </th>
                             <th><?php _e('文件名'); ?></th>
                             <th><?php _e('上传者'); ?></th>
@@ -70,8 +72,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr<?php $attachments->alt(' class="even"', ''); ?> id="<?php $attachments->theId(); ?>">
                             <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $attachments->permalink(); ?>#comments" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
-                            <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span>
-                            <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
+                            <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
+                            <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                             <td><?php $attachments->author(); ?></td>
                             <td>
                             <?php if ($attachments->parentPost->cid): ?>

@@ -2065,10 +2065,8 @@ ul.autocompleter-choices span.autocompleter-queried {
 	line-height: 16px;
 	font-size: 12px;
 	display: block;
-	float: left;
+	float: right;
 	position: relative;
-	bottom: -3px;
-	margin-right: 3px;
 	padding: 0;
 }
 
@@ -2114,4 +2112,6 @@ ul.autocompleter-choices span.autocompleter-queried {
 
 .typecho-attachment-photo-box .typecho-mime {
 	bottom: -7px;
+	margin-right: 3px;
+	float: left;
 }
