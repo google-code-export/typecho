@@ -243,7 +243,10 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** 判断来源 */
             // ~ fix Issue 38
             if ('comment' == $callback && 0 !== strpos($_SERVER['HTTP_REFERER'], $this->_content->permalink)) {
-                throw new Typecho_Widget_Exception(_t('来源页不合法'), 403);
+                //增加对自定义首页的判断
+                if ($this->options->customHomePage != $this->_content->cid) {
+                    throw new Typecho_Widget_Exception(_t('来源页不合法'), 403);
+                }
             }
             
             /** 如果文章不允许反馈 */
