@@ -30,6 +30,7 @@ package:
 	rm -Rf build/usr/plugins/Helper.php
 	rm -Rf build/usr/plugins/PageToLinks.php
 	rm -Rf build/usr/plugins/Creole/
+	rm -Rf build/usr/plugins/TinyMCE/
 	rm -Rf build/usr/plugins/FlashMp3Player/
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
