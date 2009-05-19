@@ -35,5 +35,18 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 <?php
 include 'copyright.php';
 include 'common-js.php';
+?>
+<script type="text/javascript">
+    (function () {
+        window.addEvent('domready', function() {
+            
+            $(document).getElement('.typecho-attachment-photo-box .description input').addEvent('mouseenter', function () {
+                this.select();
+            });
+        
+        });
+    })();
+</script>
+<?php
 include 'footer.php';
 ?>
