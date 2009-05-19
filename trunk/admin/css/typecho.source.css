@@ -2068,6 +2068,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 	float: right;
 	position: relative;
 	padding: 0;
+	margin-right: -3px;
 }
 
 .typecho-mime-office {
@@ -2111,7 +2112,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 .typecho-attachment-photo-box .typecho-mime {
-	bottom: -7px;
+	bottom: -6px;
 	margin-right: 3px;
 	float: left;
 }
