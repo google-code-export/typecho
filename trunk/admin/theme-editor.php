@@ -32,14 +32,16 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                         </ul>
                         <div class="content">
                         <form method="post" name="theme" id="theme" action="<?php $options->index('Themes/Edit.do'); ?>">
-                            <textarea name="content" id="content"><?php echo $files->currentContent(); ?></textarea>
-                            <?php if($files->currentIsWriteable()): ?>
+                            <textarea name="content" id="content" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                             <div class="submit">
+                                <?php if($files->currentIsWriteable()): ?>
                                 <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
                                 <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />
-                                <button type="submit">保存文件</button>
+                                <button type="submit"><?php _e('保存文件'); ?></button>
+                                <?php else: ?>
+                                    <h6 class="typecho-list-table-title"><?php _e('此文件无法写入'); ?></h6>
+                                <?php endif; ?>
                             </div>
-                            <?php endif; ?>
                         </form>
                         <?php Typecho_Plugin::factory('admin/theme-editor.php')->form(); ?>
                         </div>
