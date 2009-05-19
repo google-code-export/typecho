@@ -44,7 +44,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
-        } else {
+        } else if (!isset($this->request->cid)) {
             throw new Typecho_Widget_Exception(_t('附件不存在'), 404);
         }
     }
@@ -202,6 +202,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     {
         $cid = $this->request->filter('int')->cid;
         $deleteCount = 0;
+        $status = 'publish';
 
         if ($cid) {
             /** 格式化文章主键 */
@@ -222,6 +223,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
                     $this->db->query($this->db->delete('table.comments')
                     ->where('cid = ?', $post));
                     
+                    $status = $this->status;
+                    
                     $deleteCount ++;
                 }
                 
@@ -238,7 +241,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             $deleteCount > 0 ? 'success' : 'notice');
             
             /** 返回原网页 */
-            $this->response->redirect(Typecho_Common::url('manage-medias.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-medias.php' .
+             ('publish' == $status ? '' : '?status=' . $status), $this->options->adminUrl));
         }
     }
     
