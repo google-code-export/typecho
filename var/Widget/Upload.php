@@ -20,6 +20,26 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 {
     //上传文件目录
     const UPLOAD_PATH = '/usr/uploads';
+    
+    /**
+     * 创建上传路径
+     * 
+     * @access private
+     * @param string $path 路径
+     * @return boolean
+     */
+    private static function makeUploadDir($path)
+    {
+        if (!@mkdir($path)) {
+            return false;
+        }
+        
+        $stat = @stat($path);
+        $perms = $stat['mode'] & 0007777;
+        @chmod($path, $perms);
+        
+        return true;
+    }
 
     /**
      * 上传文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把uploadHandle改成自己的函数
@@ -47,7 +67,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         
         //创建上传目录
         if (!is_dir($path)) {
-            if (!@mkdir($path, 0777)) {
+            if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
@@ -61,14 +81,14 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         
         //创建年份目录
         if (!is_dir($path = $path . '/' . $date->year)) {
-            if (!@mkdir($path, 0777)) {
+            if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
         
         //创建月份目录
         if (!is_dir($path = $path . '/' . $date->month)) {
-            if (!@mkdir($path, 0777)) {
+            if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
