@@ -148,10 +148,14 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <?php if(isset($_GET['use_old']) ) : ?>
+                    您选择了使用原有的数据，您的用户名和密码和原来的一致
+                    <?php else : ?>
                     <ul>
                     <li><?php _e('您的用户名是'); ?>:<strong><?php echo Typecho_Request::getParameter('user'); ?></strong></li>
                     <li><?php _e('您的密码是'); ?>:<strong>12345</strong></li>
                     </ul>
+                    <?php endif;?>
                     </div>
 
                     <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
@@ -250,7 +254,7 @@ Typecho_Plugin::init(\$options->plugins);
 /** 初始化时区 */
 Typecho_Date::setTimezoneOffset(\$options->timezone);
 ";
-
+file_put_contents('./config.inc.php', implode('', $lines));
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
@@ -332,17 +336,37 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
                                         /** 初始用户 */
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'),
                                         'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-
-                                        file_put_contents('./config.inc.php', implode('', $lines));
-
                                         Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName'));
                                     } catch (Typecho_Db_Exception $e) {
+                                        $success = false;
                                         if(preg_match("/Table '(.*)' already exists/i", $e->getMessage(), $table)) {
-                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '</p>';
+                                            if(Typecho_Request::getParameter('delete')) {
+                                                //删除原有数据
+                                                $dbPrefix = Typecho_Request::getParameter('dbPrefix');
+                                                $tableArray = array($dbPrefix . 'comments', $dbPrefix . 'contents', $dbPrefix . 'metas', $dbPrefix . 'options', $dbPrefix . 'relationships', $dbPrefix . 'users',);
+                                                foreach($tableArray as $table) {
+                                                    if($type == 'Mysql') {
+                                                        $installDb->query("DROP TABLE IF EXISTS `{$table}`");
+                                                    } elseif($type == 'Pgsql') {
+                                                        $installDb->query("DROP TABLE {$table}");
+                                                    } elseif($type == 'SQLite') {
+                                                        $installDb->query("DROP TABLE {$table}");
+                                                    }
+                                                }
+                                                echo '<p class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">已经删除完原有数据，请点击继续安装<button type="submit">下一步</button></p>';
+                                            } elseif (Typecho_Request::getParameter('goahead')) {
+                                                //使用原有数据
+                                                Typecho_Response::redirect('install.php?finish&use_old');
+                                            } else {
+                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '您可以选择删除原有数据<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接使用原有数据安装<button type="submit" name="goahead" value="1">使用原有数据</button></p>';
+                                            }
                                         } else {
                                             echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                         }
                                     }
+                                }
+                                if($success != true && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+                                    unlink(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
                                 }
                             }
                         ?>
