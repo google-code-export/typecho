@@ -99,6 +99,7 @@ include 'copyright.php';
 include 'common-js.php';
 ?>
 
+<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?>
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
@@ -110,5 +111,6 @@ include 'common-js.php';
         });
     })();
 </script>
+<?php endif; ?>
 
 <?php include 'footer.php'; ?>
