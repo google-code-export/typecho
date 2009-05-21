@@ -48,7 +48,7 @@ class Widget_Themes_Files extends Typecho_Widget
         $this->widget('Widget_User')->pass('administrator');
         $this->_currentTheme = $this->request->nil($this->widget('Widget_Options')->theme)->theme;
         
-        if (preg_match("/^([_0-9a-z-\ ])+$/i", $this->_currentTheme)
+        if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentTheme)
         && is_dir($dir = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->_currentTheme)) {
             $files = glob($dir . '/*.{php,PHP,js,JS,css,CSS,vbs,VBS}', GLOB_BRACE);
             $this->_currentFile = $this->request->nil('index.php')->file;
@@ -70,7 +70,7 @@ class Widget_Themes_Files extends Typecho_Widget
             }
         }
         
-        throw new Typecho_Widget_Exception('风格文件不存在');
+        throw new Typecho_Widget_Exception('风格文件不存在', 404);
     }
     
     /**
