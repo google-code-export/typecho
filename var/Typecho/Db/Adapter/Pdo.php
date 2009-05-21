@@ -60,7 +60,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
         } catch (PDOException $e) {
             /** 数据库异常 */
             require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception($e->getMessage(), 503);
+            throw new Typecho_Db_Exception_Connect($e->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
         } catch (PDOException $e) {
             /** 数据库异常 */
             require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception($e->getMessage(), 500);
+            throw new Typecho_Db_Exception_Query($e->getMessage(), $e->getCode());
         }
 
         return $resource;
