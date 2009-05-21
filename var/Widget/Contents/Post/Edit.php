@@ -135,6 +135,20 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->db->query($this->db->update('table.contents')->rows(array('order' => 0, 'status' => 'unattached'))
                 ->where('order = ? AND type = ?', $cid, 'attachment'));
     }
+    
+    /**
+     * 获取页面偏移的URL Query
+     * 
+     * @access protected
+     * @param integer $created 创建时间
+     * @param string $status 状态
+     * @return string
+     */
+    protected function getPageOffsetQuery($created, $status)
+    {
+        return 'page=' . $this->getPageOffset('created', $created, 'post', $status,
+        'on' == $this->request->__typecho_all_posts ? 0 : $this->user->uid);
+    }
 
     /**
      * 执行函数
@@ -390,12 +404,16 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight($this->theId);
+        
+        /** 获取页面偏移 */
+        $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
             $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $insertId, $this->options->adminUrl));
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
+            '&' . $pageQuery, $this->options->adminUrl));
         }
     }
     
@@ -457,12 +475,16 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight($this->theId);
+        
+        /** 获取页面偏移 */
+        $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
 
         /** 跳转页面 */
         if ('draft' == $contents['status']) {
             $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'], $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
+            '&' . $pageQuery, $this->options->adminUrl));
         }
     }
     

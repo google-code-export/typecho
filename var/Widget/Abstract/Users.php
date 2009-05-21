@@ -29,6 +29,29 @@ class Widget_Abstract_Users extends Widget_Abstract
     {
         return unserialize($this->meta);
     }
+    
+    /**
+     * 获取页面偏移
+     * 
+     * @access protected
+     * @param string $column 字段名
+     * @param integer $offset 偏移值
+     * @param string $group 用户组
+     * @param integer $pageSize 分页值
+     * @return integer
+     */
+    protected function getPageOffset($column, $offset, $group = NULL, $pageSize = 20)
+    {
+        $select = $this->db->select(array('COUNT(uid)' => 'num'))->from('table.users')
+        ->where("table.users.{$column} > {$offset}");
+        
+        if (!empty($group)) {
+            $select->where('table.users.group = ?', $group);
+        }
+        
+        $count = $this->db->fetchObject($select)->num + 1;
+        return ceil($count / $pageSize);
+    }
 
     /**
      * 查询方法
@@ -88,32 +111,5 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function delete(Typecho_Db_Query $condition)
     {
         return $this->db->query($condition->delete('table.users'));
-    }
-    
-    /**
-     * 获取用户meta信息
-     * 
-     * @access public
-     * @param string $metaName meta名称
-     * @param string $key meta索引
-     * @return mixed
-     */
-    public function meta($metaName, $key = NULL)
-    {
-        $meta = $this->metaData;
-        $result = NULL;
-        
-        if (isset($meta[$metaName])) {
-            $result = $meta[$metaName];
-        } else {
-            $meta = $this->options->plugin($metaName);
-            $result = isset($meta->personalConfig) ? $meta->personalConfig : NULL;
-        }
-        
-        if (NULL !== $key && is_array($result)) {
-            return isset($result[$key]) ? $result[$key] : NULL;
-        } else {
-            return $result;
-        }
     }
 }
