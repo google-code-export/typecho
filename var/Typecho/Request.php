@@ -58,7 +58,7 @@ class Typecho_Request
                 return $default;
         }
         
-        return strlen($value) > 0 ? $value : $default;
+        return is_array($value) || strlen($value) > 0 ? $value : $default;
     }
     
     /**
@@ -214,11 +214,8 @@ class Typecho_Request
                 $parts       = @parse_url($requestUri);
                 
                 if (false !== $parts) {
-                    $pathInfo    = $parts['path'];
-                    $queryString = $parts['query'];
-                    
-                    $requestUri  = $pathInfo
-                                 . ((empty($queryString)) ? '' : '?' . $queryString);
+                    $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
+                                 . ((empty($parts['query'])) ? '' : '?' . $queryString);
                 }
             }
         } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI

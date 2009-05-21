@@ -120,6 +120,9 @@ function _u()
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
+list($soft, $currentVersion) = explode(' ', $options->generator);
+list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -433,4 +436,7 @@ Typecho_Date::setTimezoneOffset(\$options->timezone);
         </div>
     </div>
 </div>
-<?php include 'admin/copyright.php'; ?>
+<?php
+include 'admin/copyright.php';
+include 'admin/footer.php';
+?>
