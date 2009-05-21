@@ -56,7 +56,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         require_once 'Typecho/Db/Exception.php';
-        throw new Typecho_Db_Exception(@mysql_error($this->_dbLink), 503);
+        throw new Typecho_Db_Exception_Connect(@mysql_error($this->_dbLink));
     }
 
     /**
@@ -77,7 +77,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         require_once 'Typecho/Db/Exception.php';
-        throw new Typecho_Db_Exception(@mysql_error($this->_dbLink), 500);
+        throw new Typecho_Db_Exception_Query(@mysql_error($this->_dbLink), mysql_errno($this->_dbLink));
     }
 
     /**

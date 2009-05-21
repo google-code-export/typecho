@@ -235,7 +235,7 @@ class Typecho_Common
                 $handleClass = self::$config['exception'];
                 new $handleClass($exception);
             } else {
-                self::error($exception->getCode(), $exception->getMessage());
+                self::error($exception);
             }
         }
         
@@ -246,39 +246,59 @@ class Typecho_Common
      * 输出错误页面
      * 
      * @access public
-     * @param int $code
+     * @param mixed $exception 错误信息
      * @return void
      */
-    public static function error($code, $message = NULL)
+    public static function error($exception)
     {
         @ob_clean();
+        
+        $isException = is_object($exception);
+        
+        if ($isException) {
+            $code = $exception->getCode();
+            $message = $exception->getMessage();
+        } else {
+            $code = $exception;
+        }
         
         require_once 'Typecho/Response.php';
         $charset = self::$config['charset'];
         
+        if ($isException && $exception instanceof Typecho_Db_Exception) {
+            $code = 500;
+            @error_log($message);
+            
+            //覆盖原始错误信息
+            $message = 'Database Server Error';
+            
+            if ($exception instanceof Typecho_Db_Exception_Connect) {
+                $code = 503;
+                $message = 'Error establishing a database connection';
+            } else if ($exception instanceof Typecho_Db_Exception_Query) {
+                $message = 'Database Query Error';
+            }
+        } else {
+            switch ($code) {
+                case 500:
+                    @error_log($message);
+                    $message = 'Server Error';
+                    break;
+                    
+                case 404:
+                    $message = 'Page Not Found';
+                    break;
+                    
+                default:
+                    $code = 'Error';
+                    break;
+            }
+        }
+        
+        
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
             Typecho_Response::setStatus($code);
-        }
-        
-        switch ($code) {
-            case 503:
-                $message = 'Error establishing a database connection';
-                error_log($message);
-                break;
-            
-            case 500:
-                $message = 'Server Error';
-                error_log($message);
-                break;
-                
-            case 404:
-                $message = 'Page Not Found';
-                break;
-                
-            default:
-                $code = 'Error';
-                break;
         }
         
         echo 

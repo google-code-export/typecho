@@ -127,7 +127,7 @@ class Typecho_Db
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
         
         if (!call_user_func(array($adapterName, 'isAvailable'))) {
-            throw new Typecho_Db_Exception("Adapter {$adapterName} is not available", 500);
+            throw new Typecho_Db_Exception("Adapter {$adapterName} is not available");
         }
         
         $this->_prefix = $prefix;
