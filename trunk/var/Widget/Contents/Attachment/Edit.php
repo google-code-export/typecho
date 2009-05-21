@@ -21,6 +21,20 @@
 class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implements Widget_Interface_Do
 {
     /**
+     * 获取页面偏移的URL Query
+     * 
+     * @access protected
+     * @param integer $cid 附件id
+     * @param string $status 状态
+     * @return string
+     */
+    protected function getPageOffsetQuery($cid, $status)
+    {
+        return 'page=' . $this->getPageOffset('cid', $cid, 'attachment', $status,
+        'on' == $this->request->__typecho_all_attachments ? 0 : $this->user->uid);
+    }
+
+    /**
      * 执行函数
      * 
      * @access public
@@ -188,8 +202,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         }
         
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-medias.php' . 
-        ('publish' != $this->status ? '?status=' . $this->status : ''), $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-medias.php?status=' . $this->status . '&' .
+        $this->getPageOffsetQuery($cid, $this->status), $this->options->adminUrl));
     }
 
     /**

@@ -20,6 +20,18 @@
 class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interface_Do
 {
     /**
+     * 获取页面偏移的URL Query
+     * 
+     * @access protected
+     * @param integer $uid 用户id
+     * @return string
+     */
+    protected function getPageOffsetQuery($uid)
+    {
+        return 'page=' . $this->getPageOffset('uid', $uid);
+    }
+
+    /**
      * 执行函数
      * 
      * @access public
@@ -304,7 +316,8 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $this->widget('Widget_Notice')->set(_t('用户 %s 已经被更新', $user['screenName']), NULL, 'success');
         
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-users.php?' .
+        $this->getPageOffsetQuery($this->request->uid), $this->options->adminUrl));
     }
     
     /**

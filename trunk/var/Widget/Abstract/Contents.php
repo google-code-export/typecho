@@ -111,6 +111,33 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->type . '-' . $this->cid;
     }
+    
+    /**
+     * 获取页面偏移
+     * 
+     * @access protected
+     * @param string $column 字段名
+     * @param integer $offset 偏移值
+     * @param string $type 类型
+     * @param string $status 状态值
+     * @param integer $authorId 作者
+     * @param integer $pageSize 分页值
+     * @return integer
+     */
+    protected function getPageOffset($column, $offset, $type, $status = 'publish', $authorId = 0, $pageSize = 20)
+    {
+        $select = $this->db->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents')
+        ->where("table.contents.{$column} > {$offset}")
+        ->where("table.contents.type = ?", $type)
+        ->where("table.contents.status = ?", $status);
+        
+        if ($authorId > 0) {
+            $select->where('table.contents.authorId = ?', $authorId);
+        }
+        
+        $count = $this->db->fetchObject($select)->num + 1;
+        return ceil($count / $pageSize);
+    }
 
     /**
      * 获取查询对象
