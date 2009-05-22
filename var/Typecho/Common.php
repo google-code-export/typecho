@@ -1318,7 +1318,13 @@ EOF;
      */
     public static function mimeIconType($mime)
     {
-        list ($type, $stream) = explode('/', $mime);
+        $parts = explode('/', $mime);
+        
+        if (count($parts) < 2) {
+            return 'unknown';
+        }
+        
+        list ($type, $stream) = $parts;
         
         if (in_array($type, array('image', 'video', 'audio', 'text', 'application'))) {
             switch (true) {
