@@ -11,9 +11,9 @@
 require_once 'Typecho/Db/Exception.php';
 
 /**
- * 数据库连接异常类
+ * 数据库查询异常类
  *
  * @package Db
  */
-class Typecho_Db_Exception_Connect extends Typecho_Db_Exception
+class Typecho_Db_Query_Exception extends Typecho_Db_Exception
 {}

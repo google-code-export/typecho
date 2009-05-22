@@ -84,8 +84,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         }
 
         /** 数据库异常 */
-        require_once 'Typecho/Db/Exception.php';
-        throw new Typecho_Db_Exception_Connect($error);
+        require_once 'Typecho/Db/Adapter/Exception.php';
+        throw new Typecho_Db_Adapter_Exception($error);
     }
 
     /**
@@ -104,9 +104,9 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         }
         
         /** 数据库异常 */
-        require_once 'Typecho/Db/Exception.php';
+        require_once 'Typecho/Db/Query/Exception.php';
         $errorCode = sqlite_last_error($this->_dbHandle);
-        throw new Typecho_Db_Exception_Query(sqlite_error_string($errorCode), $errorCode);
+        throw new Typecho_Db_Query_Exception(sqlite_error_string($errorCode), $errorCode);
     }
 
     /**

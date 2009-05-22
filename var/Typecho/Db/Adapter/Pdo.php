@@ -59,8 +59,8 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
             return $this->_object;
         } catch (PDOException $e) {
             /** 数据库异常 */
-            require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception_Connect($e->getMessage());
+            require_once 'Typecho/Db/Adapter/Exception.php';
+            throw new Typecho_Db_Adapter_Exception($e->getMessage());
         }
     }
 
@@ -93,8 +93,8 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
             $resource->execute();
         } catch (PDOException $e) {
             /** 数据库异常 */
-            require_once 'Typecho/Db/Exception.php';
-            throw new Typecho_Db_Exception_Query($e->getMessage(), $e->getCode());
+            require_once 'Typecho/Db/Query/Exception.php';
+            throw new Typecho_Db_Query_Exception($e->getMessage(), $e->getCode());
         }
 
         return $resource;

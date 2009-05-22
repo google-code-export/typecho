@@ -272,10 +272,10 @@ class Typecho_Common
             //覆盖原始错误信息
             $message = 'Database Server Error';
             
-            if ($exception instanceof Typecho_Db_Exception_Connect) {
+            if ($exception instanceof Typecho_Db_Adapter_Exception) {
                 $code = 503;
                 $message = 'Error establishing a database connection';
-            } else if ($exception instanceof Typecho_Db_Exception_Query) {
+            } else if ($exception instanceof Typecho_Db_Query_Exception) {
                 $message = 'Database Query Error';
             }
         } else {
