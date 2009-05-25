@@ -335,8 +335,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
     {
-        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' . md5($this->mail) . '?s=' . $size . '&r=' .
-        $rating . '&d=' . $default . '" alt="' . $this->author . '" width="' . $size . '" height="' . $size . '" />';
+        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
+        md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+        $this->author . '" width="' . $size . '" height="' . $size . '" />';
     }
     
     /**
