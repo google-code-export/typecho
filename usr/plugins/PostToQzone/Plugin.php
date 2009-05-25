@@ -1,10 +1,10 @@
 <?php
 /**
- * 将文章同时发布到您的Qzone 
- * 
- * @package PostToQzone 
+ * 将文章同时发布到您的Qzone
+ *
+ * @package PostToQzone
  * @version 1.0 beta
- * @author blankyao 
+ * @author blankyao
  * @link http://www.blankyao.cn
  */
 include "phpmailer.php";
@@ -12,8 +12,8 @@ include "smtp.php";
 class PostToQzone_Plugin implements Typecho_Plugin_Interface
 {
     /**
-     * activate 
-     * 
+     * activate
+     *
      * @static
      * @access public
      * @return void
@@ -29,8 +29,8 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
     }
 
     /**
-     * deactivate 
-     * 
+     * deactivate
+     *
      * @static
      * @access public
      * @return void
@@ -41,8 +41,8 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
 
     /**
      * 插件配置面板
-     * 
-     * @param Typecho_Widget_Helper_Form $form 
+     *
+     * @param Typecho_Widget_Helper_Form $form
      * @static
      * @access public
      * @return void
@@ -63,10 +63,10 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
         _t('内容模板'), _t('请填写您的内容模板'));
         $form->addInput($content->addRule('required', _t('必须填写一个内容模板')));
     }
-    
+
     /**
      * 个人用户的配置面板
-     * 
+     *
      * @access public
      * @param Typecho_Widget_Helper_Form $form
      * @return void
@@ -74,8 +74,8 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
 
     /**
-     * 发送文章到qzone 
-     * 
+     * 发送文章到qzone
+     *
      * @param mixed $contents 文章结构体
      * @access public
      * @return mixed $contents 处理后的文章结构体
@@ -93,10 +93,9 @@ class PostToQzone_Plugin implements Typecho_Plugin_Interface
             $post_content = str_replace('{post_title}', $contents['title'], $post_content);
 
             $post_title = str_replace('{post_title}', $contents['title'], $config->title);
-            
+
             $m=new Mailer($config->qq,$config->psw);
             $m->Halo($post_title,$post_content);
-            file_put_contents('a.txt', $post_content);
         }
         return $contents;
     }
@@ -147,40 +146,40 @@ class Crypter
 	  $this->key = $clave;
    }
 
-   function keyED($txt) { 
-	  $encrypt_key = md5($this->key); 
-	  $ctr=0; 
-	  $tmp = ""; 
-	  for ($i=0;$i<strlen($txt);$i++) { 
-		 if ($ctr==strlen($encrypt_key)) $ctr=0; 
-		 $tmp.= substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1); 
-		 $ctr++; 
-	  } 
-	  return $tmp; 
-   } 
-   
-   function encrypt($txt){ 
-	  srand((double)microtime()*1000000); 
-	  $encrypt_key = md5(rand(0,32000)); 
-	  $ctr=0; 
-	  $tmp = ""; 
-	  for ($i=0;$i<strlen($txt);$i++){ 
-		 if ($ctr==strlen($encrypt_key)) $ctr=0; 
-		 $tmp.= substr($encrypt_key,$ctr,1) . 
-			 (substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1)); 
-		 $ctr++; 
-	  } 
-	  return base64_encode($this->keyED($tmp)); 
-   } 
+   function keyED($txt) {
+	  $encrypt_key = md5($this->key);
+	  $ctr=0;
+	  $tmp = "";
+	  for ($i=0;$i<strlen($txt);$i++) {
+		 if ($ctr==strlen($encrypt_key)) $ctr=0;
+		 $tmp.= substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1);
+		 $ctr++;
+	  }
+	  return $tmp;
+   }
 
-   function decrypt($txt) { 
-	  $txt = $this->keyED(base64_decode($txt)); 
-	  $tmp = ""; 
-	  for ($i=0;$i<strlen($txt);$i++){ 
-		 $md5 = substr($txt,$i,1); 
-		 $i++; 
-		 $tmp.= (substr($txt,$i,1) ^ $md5); 
-	  } 
-	  return $tmp; 
-   } 
+   function encrypt($txt){
+	  srand((double)microtime()*1000000);
+	  $encrypt_key = md5(rand(0,32000));
+	  $ctr=0;
+	  $tmp = "";
+	  for ($i=0;$i<strlen($txt);$i++){
+		 if ($ctr==strlen($encrypt_key)) $ctr=0;
+		 $tmp.= substr($encrypt_key,$ctr,1) .
+			 (substr($txt,$i,1) ^ substr($encrypt_key,$ctr,1));
+		 $ctr++;
+	  }
+	  return base64_encode($this->keyED($tmp));
+   }
+
+   function decrypt($txt) {
+	  $txt = $this->keyED(base64_decode($txt));
+	  $tmp = "";
+	  for ($i=0;$i<strlen($txt);$i++){
+		 $md5 = substr($txt,$i,1);
+		 $i++;
+		 $tmp.= (substr($txt,$i,1) ^ $md5);
+	  }
+	  return $tmp;
+   }
 }
