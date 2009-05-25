@@ -50,6 +50,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         ->where('name = ?', $this->request->name)
         ->limit(1));
         
+        /** 防止穷举,休眠3秒 */
+        sleep(3);
+        
         /** 比对密码 */
         if ($user && Typecho_Common::hashValidate($this->request->password, $user['password'])) {
             $this->user->login($user['uid'], 1 == $this->request->remember ?

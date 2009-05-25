@@ -144,7 +144,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
     <div class="body body-950">
         <div class="container">
             <div class="column-14 start-06 typecho-install">
-            <?php if (isset($_GET['finish'])) : ?>
+            <?php if (isset($_GET['finish']) && isset($_GET['user']) && isset($_GET['password'])) : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
@@ -152,8 +152,8 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     您选择了使用原有的数据，您的用户名和密码和原来的一致
                     <?php else : ?>
                     <ul>
-                    <li><?php _e('您的用户名是'); ?>:<strong><?php echo Typecho_Request::getParameter('user'); ?></strong></li>
-                    <li><?php _e('您的密码是'); ?>:<strong>12345</strong></li>
+                    <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('user')); ?></strong></li>
+                    <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('password')); ?></strong></li>
                     </ul>
                     <?php endif;?>
                     </div>
@@ -165,7 +165,11 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <div class="session">
                     <p><?php _e('您可以将下面两个链接保存到您的收藏夹'); ?>:</p>
                     <ul>
-                        <li><a href="<?php echo _u(); ?>/admin/index.php"><?php _e('点击这里访问您的控制面板'); ?></a></li>
+                    <?php
+                        $loginUrl = _u() . '/index.php/Login.do?name=' . urlencode($_GET['user']) . '&password=' 
+                        . urlencode($_GET['password']) . '&referer=' . _u() . '/admin/index.php';
+                    ?>
+                        <li><a href="<?php echo $loginUrl; ?>"><?php _e('点击这里访问您的控制面板'); ?></a></li>
                         <li><a href="<?php echo _u(); ?>/index.php"><?php _e('点击这里查看您的 Blog'); ?></a></li>
                     </ul>
                     </div>
@@ -221,13 +225,14 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     /** 检测数据库配置 */
                                     try {
                                         $installDb->query('SELECT 1=1');
+                                    } catch (Typecho_Db_Adapter_Exception $e) {
+                                        $success = false;
+                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' 
+                                        . _t('对不起，无法连接数据库，请先检查数据库配置再继续进行安装') . '</p>';
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        if($e->getMessage() != "Unknown database'" . $dbConfig['database'] ."'") {
-                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('对不起，您还没有创建数据库%s，请先创建数据库再继续进行安装', $dbConfig['database']) . '</p>';
-                                        } else {
-                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
-                                        }
+                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' 
+                                        . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
 
                                 }
@@ -334,12 +339,18 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入Typecho大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
 
                                         /** 初始用户 */
-                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash('12345'), 'mail' => Typecho_Request::getParameter('userMail'),
+                                        $password = substr(uniqid(), 7);
+                                        
+                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash($password), 'mail' => Typecho_Request::getParameter('userMail'),
                                         'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-                                        Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName'));
+                                        Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName') . '&password=' . $password);
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        if(preg_match("/Table '(.*)' already exists/i", $e->getMessage(), $table)) {
+                                        $code = $e->getCode();
+                                        
+                                        if(('Mysql' == $type && 1050 == $code) ||
+                                        ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
+                                        ('Pgsql' == $type && '42P07' == $code)) {
                                             if(Typecho_Request::getParameter('delete')) {
                                                 //删除原有数据
                                                 $dbPrefix = Typecho_Request::getParameter('dbPrefix');
