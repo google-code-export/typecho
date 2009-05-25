@@ -899,18 +899,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 头部是否输出聚合 */
         $allowFeed = !$this->is('single') || $this->allow('feed') || $this->_archiveCustom;
         
-        /** 增加rdf描述 */
-        if ($this->have()) {
-            $allows['rdf'] = '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-	    xmlns:dc="http://purl.org/dc/elements/1.1/"
-	    xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"> 
-    <rdf:Description rdf:about="' . $this->permalink . '"
-    dc:identifier="' . $this->permalink . '"
-    dc:title="' . $this->title . '"
-    trackback:ping="' . $this->trackbackUrl . '" />
-</rdf:RDF>';
-        }
-        
         if (!empty($rule)) {
             parse_str($rule, $rules);
             $allows = array_merge($allows, $rules);
@@ -957,10 +945,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\r\n";
         }
         
-        if (!empty($allows['rdf'])) {
-            $header .= $allows['rdf'] . "\r\n";
-        }
-
         /** 插件支持 */
         $this->plugin()->header($header);
         
