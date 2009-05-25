@@ -369,7 +369,7 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                                 //使用原有数据
                                                 Typecho_Response::redirect('install.php?finish&use_old');
                                             } else {
-                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '您可以选择删除原有数据<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接使用原有数据安装<button type="submit" name="goahead" value="1">使用原有数据</button></p>';
+                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
                                             }
                                         } else {
                                             echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';

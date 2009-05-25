@@ -1046,7 +1046,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $post = $this->widget('Widget_Archive');
         
         /** 这样可以得到cid或者slug*/
-        if (!$post->have()) {
+        if (!$post->have() || !$post->is('single')) {
             return new IXR_Error(33, _t('这个目标地址不存在'));
         }
         
