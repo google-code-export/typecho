@@ -569,6 +569,11 @@ EOF;
     public static function stripTags($string, $allowableTags = NULL)
     {
         if (!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags)) {
+            
+            if (in_array('code', $tags[1])) {
+                $string = preg_replace_callback("/<(code)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
+            }
+        
             $normalizeTags = '<' . implode('><', $tags[1]) . '>';
             $string = strip_tags($string, $normalizeTags);
             $attributes = array_map('trim', $tags[2]);
@@ -600,6 +605,11 @@ EOF;
                         }
                     }
                 }
+            }
+            
+            if (in_array('code', $tags[1])) {
+                $string = str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
+                $string = Typecho_Common::encodeCode($string);
             }
             
             return $string;
