@@ -47,7 +47,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             /** 更新相关内容的评论数 */
             if ('approved' == $comment['status'] && 'approved' != $status) {
                 $this->db->query($this->db->update('table.contents')
-                ->expression('commentsNum', 'commentsNum - 1')->where('cid = ?', $comment['cid']));
+                ->expression('commentsNum', 'commentsNum - 1')->where('cid = ? AND commentsNum > 0', $comment['cid']));
             } else if ('approved' != $comment['status'] && 'approved' == $status) {
                 $this->db->query($this->db->update('table.contents')
                 ->expression('commentsNum', 'commentsNum + 1')->where('cid = ?', $comment['cid']));

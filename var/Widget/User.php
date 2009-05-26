@@ -164,8 +164,13 @@ class Widget_User extends Widget_Abstract_Users
             if ($return) {
                 return false;
             } else {
-                $this->response->redirect($this->options->loginUrl
-                . '?referer=' . urlencode($this->request->uri()), false);
+                //防止循环重定向
+                if (0 === strpos($this->request->getReferer(), $this->options->loginUrl)) {
+                    throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+                } else {
+                    $this->response->redirect($this->options->loginUrl
+                    . '?referer=' . urlencode($this->request->uri()), false);
+                }
             }
         }
 
