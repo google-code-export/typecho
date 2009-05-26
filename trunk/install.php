@@ -144,7 +144,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
     <div class="body body-950">
         <div class="container">
             <div class="column-14 start-06 typecho-install">
-            <?php if (isset($_GET['finish']) && isset($_GET['user']) && isset($_GET['password'])) : ?>
+            <?php if (isset($_GET['finish'])) : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
@@ -152,8 +152,10 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     您选择了使用原有的数据，您的用户名和密码和原来的一致
                     <?php else : ?>
                     <ul>
-                    <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('user')); ?></strong></li>
-                    <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('password')); ?></strong></li>
+                    <?php if (Typecho_Request::isSetParameter('user') && Typecho_Request::isSetParameter('password')): ?>
+                        <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('user')); ?></strong></li>
+                        <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('password')); ?></strong></li>
+                    <?php endif;?>
                     </ul>
                     <?php endif;?>
                     </div>
@@ -166,8 +168,12 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <p><?php _e('您可以将下面两个链接保存到您的收藏夹'); ?>:</p>
                     <ul>
                     <?php
-                        $loginUrl = _u() . '/index.php/Login.do?name=' . urlencode($_GET['user']) . '&password=' 
-                        . urlencode($_GET['password']) . '&referer=' . _u() . '/admin/index.php';
+                        if (Typecho_Request::isSetParameter('user') && Typecho_Request::isSetParameter('password')) {
+                            $loginUrl = _u() . '/index.php/Login.do?name=' . urlencode(Typecho_Request::getParameter('user')) . '&password=' 
+                            . urlencode(Typecho_Request::getParameter('password')) . '&referer=' . _u() . '/admin/index.php';
+                        } else {
+                            $loginUrl = _u() . '/admin/index.php';
+                        }
                     ?>
                         <li><a href="<?php echo $loginUrl; ?>"><?php _e('点击这里访问您的控制面板'); ?></a></li>
                         <li><a href="<?php echo _u(); ?>/index.php"><?php _e('点击这里查看您的 Blog'); ?></a></li>
@@ -369,7 +375,7 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                                 //使用原有数据
                                                 Typecho_Response::redirect('install.php?finish&use_old');
                                             } else {
-                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到 "%s"数据表已经存在，请先删除该表然后再继续进行安装.',$table['1']) . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
+                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到原有数据表已经存在，请先删除该表然后再继续进行安装.') . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
                                             }
                                         } else {
                                             echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
