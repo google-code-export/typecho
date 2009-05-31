@@ -411,16 +411,23 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * 递归输出评论
      * 
      * @access protected
+     * @param integer $maxDeep 最大楼层
      * @param string $func 回调函数
      * @return void
      */
-    public function threadedComments($func = 'threadedComments')
+    public function threadedComments($maxDeep = 25, $func = 'threadedComments')
     {
+        //楼层限制
+        if ($this->_deep > $maxDeep - 2) {
+            return;
+        }
+        
         $children = $this->children;
         if ($children) {
             //缓存变量便于还原
             $tmp = $this->row;
             $this->_deep ++;
+            $this->sequence ++;
         
             foreach ($children as $child) {
                 $this->row = $child;
@@ -428,6 +435,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
                 $this->row = $tmp;
             }
             
+            $this->sequence --;
             $this->_deep --;
         }
     }
