@@ -314,4 +314,90 @@ class Helper
     {
         return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
+    
+    /**
+     * 评论回复按钮
+     * 
+     * @access public
+     * @param string $theId 评论元素id
+     * @param integer $coid 评论id
+     * @param string $word 按钮文字
+     * @param string $formId 表单id
+     * @param integer $style 样式类型
+     * @return void
+     */
+    public static function replyLink($theId, $coid, $word = 'Reply', $formId = 'respond', $style = 2)
+    {
+        echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoAddCommentReply(\'' . 
+        $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
+    }
+    
+    /**
+     * 评论取消按钮
+     * 
+     * @access public
+     * @param string $word 按钮文字
+     * @param string $formId 表单id
+     * @return void
+     */
+    public static function cancleCommentReplyLink($word = 'Cancle', $formId = 'respond')
+    {
+        echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancleCommentReply(\'' .
+        $formId . '\');">' . $word . '</a>';
+    }
+    
+    /**
+     * 评论回复js脚本
+     * 
+     * @access public
+     * @return void
+     */
+    public static function threadedCommentsScript()
+    {
+        echo
+<<<EOF
+<script type="text/javascript">
+var typechoAddCommentReply = function (cid, coid, cfid, style) {
+    var _ce = document.getElementById(cid), _cp = _ce.parentNode;
+    var _cf = document.getElementById(cfid);
+    
+    var _pi = document.getElementById('comment-parent');
+    if (null == _pi) {
+        _pi = document.createElement('input');
+        _pi.setAttribute('type', 'hidden');
+        _pi.setAttribute('name', 'parent');
+        _pi.setAttribute('id', 'comment-parent');
+        
+        var _form = 'form' == _cf.tagName ? _cf : _cf.getElementsByTagName('form')[0];
+        
+        _form.appendChild(_pi);
+    }
+    _pi.setAttribute('value', coid);
+    
+    if (null == document.getElementById('comment-form-place-holder')) {
+        var _cfh = document.createElement('div');
+        _cfh.setAttribute('id', 'comment-form-place-holder');
+        _cf.parentNode.insertBefore(_cfh, _cf);
+    }
+    
+    1 == style ? (null == _ce.nextSibling ? _cp.appendChild(_cf) 
+    : _cp.insertBefore(_cf, _ce.nextSibling)) : _ce.appendChild(_cf);
+    
+    return false;
+};
+
+var typechoCancleCommentReply = function (cfid) {
+    var _cf = document.getElementById(cfid),
+    _cfh = document.getElementById('comment-form-place-holder');
+    
+    if (null == _cfh) {
+        return true;
+    }
+    
+    _cfh.parentNode.insertBefore(_cf, _cfh);
+    return false;
+};
+</script>
+EOF;
+    }
 }

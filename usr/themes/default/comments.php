@@ -1,4 +1,27 @@
-		<div id="comments">
+<?php
+
+function threadedComments($comments)
+{
+?>
+    <li id="<?php $comments->theId(); ?>"<?php $comments->deep(' class="odd"', ''); ?>>
+					<div class="comment_data">
+						<span class="author"><?php $comments->author(); ?></span>
+						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <span class="count">#<?php echo $comments->sequence(); ?></span>
+					</div>
+					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
+					<?php $comments->content(); ?>
+                    <ol>
+                        <?php $comments->threadedComments(); ?>
+                    </ol>
+                    <div class="comment_reply">
+                        <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
+                    </div>
+    </li>
+<?php
+}
+?>
+
+<div id="comments">
 			<h4><?php $this->commentsNum(_t('当前暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?></h4>
 			<ol id="comment_list">
 			<?php $this->comments()->to($comments); ?>
@@ -10,11 +33,19 @@
 					</div>
 					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 					<?php $comments->content(); ?>
+                    <ol>
+                    <?php $comments->threadedComments(); ?>
+                    </ol>
+                    <div class="comment_reply">
+                        <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
+                    </div>
 				</li>
 			<?php endwhile; ?>
 			</ol>
 
             <?php if($this->allow('comment')): ?>
+            <div id="respond">
+            <div class="cancle_comment_reply"><?php Helper::cancleCommentReplyLink('Click here to cancel reply', 'respond'); ?></div>
 			<h4 id="response"><?php _e('添加新评论'); ?></h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
@@ -27,5 +58,6 @@
 				<p><textarea rows="10" cols="50" name="text"><?php $this->remember('text'); ?></textarea></p>
 					<p><input type="submit" value="<?php _e('提交评论'); ?>" class="submit" /></p>
 			</form>
+            </div>
             <?php endif; ?>
 		</div>
