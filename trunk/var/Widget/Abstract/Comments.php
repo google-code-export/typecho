@@ -18,6 +18,22 @@
 class Widget_Abstract_Comments extends Widget_Abstract
 {
     /**
+     * 子父级评论关系
+     * 
+     * @access private
+     * @var array
+     */
+    private $_threadedComments;
+    
+    /**
+     * 递归深度
+     * 
+     * @access private
+     * @var integer
+     */
+    private $_deep = 0;
+
+    /**
      * 获取当前内容结构
      * 
      * @access protected
@@ -74,7 +90,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * 输出词义化日期
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___dateWord()
     {
@@ -85,11 +101,37 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * 锚点id
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___theId()
     {
         return 'comment-' . $this->coid;
+    }
+    
+    /**
+     * 子评论
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function ___children()
+    {
+        $result = array();
+        
+        if (isset($this->_threadedComments[$this->coid])) {
+            //深度清零
+            if (!$this->parent) {
+                $this->_deep = 0;
+            }
+        
+            $threadedComments = $this->_threadedComments[$this->coid];
+            foreach ($threadedComments as $coid) {
+                $result[] = $this->stack[$coid];
+                unset($this->stack[$coid]);
+            }
+        }
+        
+        return $result;
     }
 
     /**
@@ -289,7 +331,19 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function push(array $value)
     {
         $value = $this->filter($value);
-        return parent::push($value);
+        
+        //存储子父级关系
+        if ($value['parent']) {
+            $this->_threadedComments[$value['parent']][] = $value['coid'];
+        }
+        
+        //将行数据按顺序置位
+        $this->row = $value;
+        $this->length ++;
+
+        //重载push函数,使用coid作为数组键值,便于索引
+        $this->stack[$value['coid']] = $value;
+        return $value;
     }
     
     /**
@@ -351,5 +405,45 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function excerpt($length = 100, $trim = '...')
     {
         echo Typecho_Common::subStr(strip_tags($this->content), 0, $length, $trim);
+    }
+    
+    /**
+     * 递归输出评论
+     * 
+     * @access protected
+     * @param string $func 回调函数
+     * @return void
+     */
+    public function threadedComments($func = 'threadedComments')
+    {
+        $children = $this->children;
+        if ($children) {
+            //缓存变量便于还原
+            $tmp = $this->row;
+            $this->_deep ++;
+        
+            foreach ($children as $child) {
+                $this->row = $child;
+                $func($this);
+                $this->row = $tmp;
+            }
+            
+            $this->_deep --;
+        }
+    }
+    
+    /**
+     * 根据深度余数输出
+     * 
+     * @access public
+     * @param string $param 需要输出的值
+     * @return void
+     */
+    public function deep()
+    {
+        $args = func_get_args();
+        $num = func_num_args();
+        $split = $this->_deep % $num;
+        echo $args[(0 == $split ? $num : $split) -1];
     }
 }

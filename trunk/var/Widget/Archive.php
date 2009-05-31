@@ -946,7 +946,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 插件支持 */
-        $this->plugin()->header($header);
+        $this->plugin()->header($header, $this);
         
         /** 输出header */
         echo $header;
