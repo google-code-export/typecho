@@ -390,6 +390,11 @@ var typechoCancleCommentReply = function (cfid) {
     var _cf = document.getElementById(cfid),
     _cfh = document.getElementById('comment-form-place-holder');
     
+    var _pi = document.getElementById('comment-parent');
+    if (null != _pi) {
+        _pi.parentNode.removeChild(_pi);
+    }
+    
     if (null == _cfh) {
         return true;
     }
