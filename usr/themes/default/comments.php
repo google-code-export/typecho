@@ -1,6 +1,6 @@
 <?php
 
-function threadedComments($comments)
+function threadedComments($comments, $deep, $maxDeep)
 {
 ?>
     <li id="<?php $comments->theId(); ?>"<?php $comments->deep(' class="odd"', ''); ?>>
@@ -10,12 +10,12 @@ function threadedComments($comments)
 					</div>
 					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 					<?php $comments->content(); ?>
-                    <ol>
-                        <?php $comments->threadedComments(); ?>
-                    </ol>
+                    <?php $comments->threadedComments('<ol>', '</ol>'); ?>
+                    <?php if ($deep < $maxDeep): ?>
                     <div class="comment_reply">
                         <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
                     </div>
+                    <?php endif; ?>
     </li>
 <?php
 }
@@ -33,9 +33,7 @@ function threadedComments($comments)
 					</div>
 					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 					<?php $comments->content(); ?>
-                    <ol>
-                    <?php $comments->threadedComments(); ?>
-                    </ol>
+                    <?php $comments->threadedComments('<ol>', '</ol>'); ?>
                     <div class="comment_reply">
                         <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
                     </div>
