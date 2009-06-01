@@ -268,8 +268,8 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function updateOptions()
     {
-        $settings['autoSave'] = $this->request->autoSave;
-        $settings['useRichEditor'] = $this->request->useRichEditor;
+        $settings['autoSave'] = $this->request->autoSave ? 1 : 0;
+        //$settings['useRichEditor'] = $this->request->useRichEditor;
         
         $settings['defaultAllowComment'] = is_array($this->request->defaultAllow)
         && in_array('comment', $this->request->defaultAllow) ? 1 : 0;

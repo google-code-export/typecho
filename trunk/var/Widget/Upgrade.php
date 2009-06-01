@@ -36,6 +36,8 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      */
     public function sortPackage($a, $b)
     {
+        $a = str_replace('_', '.', ltrim($a, '_'));
+        $b = str_replace('_', '.', ltrim($b, '_'));
         return version_compare($a, $b, '>') ? 1 : -1;
     }
     
@@ -48,8 +50,8 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      */
     public function filterPackage($version)
     {
-        return preg_match("|^[0-9]+\.[0-9]+\.[0-9]+$|", $version) &&
-        version_compare($version, $this->_currentVersion, '>');
+        return version_compare(str_replace('_', '.', ltrim($version, '_')),
+        $this->_currentVersion, '>');
     }
 
     /**
@@ -61,20 +63,17 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
     public function upgrade()
     {
         list($prefix, $this->_currentVersion) = explode('/', $this->options->generator);
-        $packages = array_map('basename', glob(__TYPECHO_ROOT_DIR__ . '/install/upgrade/*'));
+        $packages = get_class_methods('Upgrade');
         $packages = array_filter($packages, array($this, 'filterPackage'));
         usort($packages, array($this, 'sortPackage'));
         
         foreach ($packages as $package) {
-            $file = __TYPECHO_ROOT_DIR__ . '/install/upgrade/' . $package . '/upgrade.php';
-            if (file_exists($file)) {
-                /** 执行升级脚本 */
-                try {
-                    require_once $file;
-                } catch (Typecho_Exception $e) {
-                    $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
-                    $this->response->goBack();
-                }
+            /** 执行升级脚本 */
+            try {
+                call_user_func(array('Upgrade', $package), $this->db, $this->options);
+            } catch (Typecho_Exception $e) {
+                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->response->goBack();
             }
         }
         

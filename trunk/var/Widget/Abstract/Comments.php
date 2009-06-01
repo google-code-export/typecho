@@ -31,7 +31,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access private
      * @var integer
      */
-    private $_deep = 0;
+    private $_levels = 0;
 
     /**
      * 获取当前内容结构
@@ -132,6 +132,28 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
         
         return $result;
+    }
+    
+    /**
+     * 楼层数
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___levels()
+    {
+        return $this->_levels + 1;
+    }
+    
+    /**
+     * 是否到达顶层
+     * 
+     * @access protected
+     * @return boolean
+     */
+    protected function ___isTopLevel()
+    {
+        return $this->_levels > $this->options->commentsMaxNestingLevels - 2;
     }
 
     /**
@@ -413,14 +435,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @access protected
      * @param string $before 在子评论之前输出
      * @param string $after 在子评论之后输出
-     * @param integer $maxDeep 最大楼层
      * @param string $func 回调函数
      * @return void
      */
-    public function threadedComments($before = '', $after = '', $maxDeep = 10, $func = 'threadedComments')
+    public function threadedComments($before = '', $after = '', $func = 'threadedComments')
     {
         //楼层限制
-        if ($this->_deep > $maxDeep - 2) {
+        if ($this->isTopLevel) {
             return;
         }
         
@@ -428,7 +449,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         if ($children) {
             //缓存变量便于还原
             $tmp = $this->row;
-            $this->_deep ++;
+            $this->_levels ++;
             $this->sequence ++;
             
             //在子评论之前输出
@@ -436,7 +457,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         
             foreach ($children as $child) {
                 $this->row = $child;
-                $func($this, $this->_deep + 1, $maxDeep);
+                $func($this);
                 $this->row = $tmp;
             }
             
@@ -444,7 +465,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             echo $after;
             
             $this->sequence --;
-            $this->_deep --;
+            $this->_levels --;
         }
     }
     
@@ -455,11 +476,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param string $param 需要输出的值
      * @return void
      */
-    public function deep()
+    public function levelsAlt()
     {
         $args = func_get_args();
         $num = func_num_args();
-        $split = $this->_deep % $num;
+        $split = $this->_levels % $num;
         echo $args[(0 == $split ? $num : $split) -1];
     }
 }
