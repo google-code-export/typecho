@@ -59,6 +59,13 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         更多关于nofollow的信息请参考<a href="http://en.wikipedia.org/wiki/Nofollow">wikipedia上的解释</a>.'));
         $form->addInput($commentsUrlNofollow);
         
+        /** 评论嵌套层数限制 */
+        $commentsListSize = new Typecho_Widget_Helper_Form_Element_Text('commentsMaxNestingLevels', NULL, $this->options->commentsMaxNestingLevels,
+        _t('评论嵌套层数限制'), _t('当模板中嵌套出现相关评论回复时,此数值将用于限制嵌套评论最大的层数.<br />
+        我们建议将层数限制在10以下.'));
+        $commentsListSize->input->setAttribute('class', 'mini');
+        $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
+        
         /** 评论审核 */
         $commentsRequireModeration = new Typecho_Widget_Helper_Form_Element_Radio('commentsRequireModeration', array('0' => _t('不启用'), '1' => _t('启用')),
         $this->options->commentsRequireModeration, _t('评论审核'),
@@ -113,7 +120,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         }
     
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShowUrl', 'commentsUrlNofollow',
-                'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail',
+                'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail',
                 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));

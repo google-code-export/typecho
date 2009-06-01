@@ -1,9 +1,9 @@
 <?php
 
-function threadedComments($comments, $deep, $maxDeep)
+function threadedComments($comments)
 {
 ?>
-    <li id="<?php $comments->theId(); ?>"<?php $comments->deep(' class="odd"', ''); ?>>
+    <li id="<?php $comments->theId(); ?>"<?php $comments->levelsAlt(' class="odd"', ''); ?>>
 					<div class="comment_data">
 						<span class="author"><?php $comments->author(); ?></span>
 						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <span class="count">#<?php echo $comments->sequence(); ?></span>
@@ -11,7 +11,7 @@ function threadedComments($comments, $deep, $maxDeep)
 					<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 					<?php $comments->content(); ?>
                     <?php $comments->threadedComments('<ol>', '</ol>'); ?>
-                    <?php if ($deep < $maxDeep): ?>
+                    <?php if (!$comments->isTopLevel): ?>
                     <div class="comment_reply">
                         <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
                     </div>
