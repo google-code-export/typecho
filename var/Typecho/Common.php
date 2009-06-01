@@ -856,6 +856,9 @@ EOF;
         $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
+        
+        /** fix issue 197 */
+        $string = preg_replace("/\s*<p ([^>]*)>(.*?)<\/p>\s*/is", "\n\n<p \\1>\\2</p>\n\n", $string);
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
