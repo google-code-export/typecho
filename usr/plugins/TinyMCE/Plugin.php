@@ -70,7 +70,7 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
      */
     public static function filter($post)
     {
-        $post['text'] = Typecho_Common::removeParagraph($post['text']);
+        $post['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($post['text']));
         return $post;
     }
     

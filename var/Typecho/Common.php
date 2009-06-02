@@ -29,10 +29,10 @@ class Typecho_Common
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
     
     /** 布局标签 */
-    const GRID_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul';
+    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul';
     
     /** 独立段落标签 */
-    const PARAGRAPH_HTML_TAG = 'div|blockquote|object|pre|code|script|table|ol|ul|h[1-6]';
+    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul|h[1-6]';
     
     /** 程序版本 */
     const VERSION = '0.6/9.6.1';
@@ -813,7 +813,7 @@ EOF;
         "str_replace('\\\"', '\"', '
 <\\1\\2>' . trim('\\3') . '</\\1>')", $html);
         
-        $html = preg_replace("/<(" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise", 
+        $html = preg_replace("/<(p|" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise", 
         "str_replace('\\\"', '\"', '
 
 <\\1\\2>' . trim('\\3') . '</\\1>
