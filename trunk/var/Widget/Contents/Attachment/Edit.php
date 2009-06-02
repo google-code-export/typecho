@@ -224,14 +224,14 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             foreach ($posts as $post) {
             
                 $condition = $this->db->sql()->where('cid = ?', $post);
-                $this->db->fetchRow($this->select()
+                $row = $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ?', 'attachment')
                 ->where('table.contents.cid = ?', $post)
                 ->limit(1), array($this, 'push'));
                 
                 if ($this->isWriteable($condition) && $this->delete($condition)) {
                     /** 删除文件 */
-                    call_user_func($this->attachment->deleteHandle, $this->attachment->path);
+                    call_user_func($this->attachment->deleteHandle, $row);
                 
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')

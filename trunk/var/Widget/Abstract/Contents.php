@@ -379,7 +379,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             //增加数据信息
             $value['attachment'] = new Typecho_Config($content);
             $value['attachment']->isImage = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
-            $value['attachment']->url = call_user_func($content['attachmentHandle'], $content['path']);
+            $value['attachment']->url = call_user_func($content['attachmentHandle'], $value);
 
             if ($value['attachment']->isImage) {
                 $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' . 

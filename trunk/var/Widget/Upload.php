@@ -131,25 +131,25 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * 删除文件
      * 
      * @access public
-     * @param string $path 文件路径
+     * @param array $content 文件相关信息
      * @return string
      */
-    public static function deleteHandle($path)
+    public static function deleteHandle(array $content)
     {
-        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $path);
+        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
     }
     
     /**
      * 获取实际文件相关数据
      * 
      * @access public
-     * @param string $file 相对文件路径
+     * @param array $content 文件相关信息
      * @return void
      */
-    public static function attachmentHandle($file)
+    public static function attachmentHandle(array $content)
     {
         $options = Typecho_Widget::widget('Widget_Options');
-        return Typecho_Common::url($file, $options->siteUrl);
+        return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
     }
     
     /**
