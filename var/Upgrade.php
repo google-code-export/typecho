@@ -27,7 +27,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_1_7($db, $options)
+    public static function v0_3r9_1_7($db, $options)
     {
         /** 转换评论 */
         $i = 1;
@@ -98,14 +98,14 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_1_14($db, $options)
+    public static function v0_4r9_1_14($db, $options)
     {
         if (is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
             $handle = fopen(__TYPECHO_ROOT_DIR__ . '/config.inc.php', 'ab');
             fwrite($handle, '
-        /** 初始化时区 */
-        Typecho_Date::setTimezoneOffset($options->timezone);
-        ');
+/** 初始化时区 */
+Typecho_Date::setTimezoneOffset($options->timezone);
+');
             fclose($handle);
         } else {
             throw new Typecho_Exception(_t('config.inc.php 文件无法写入, 请将它的权限设置为可写'));
@@ -120,7 +120,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_2_3($db, $options)
+    public static function v0_5r9_2_3($db, $options)
     {
         /** 转换评论 */
         $i = 1;
@@ -159,7 +159,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_2_18($db, $options)
+    public static function v0_5r9_2_18($db, $options)
     {
         /** 升级编辑器接口 */
         $db->query($db->update('table.options')
@@ -175,7 +175,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_2_25($db, $options)
+    public static function v0_5r9_2_25($db, $options)
     {
         /** 升级编辑器接口 */
         $db->query($db->insert('table.options')
@@ -190,7 +190,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_4_3($db, $options)
+    public static function v0_6r9_4_3($db, $options)
     {
         /** 修改数据库字段 */
         $adapterName = $db->getAdapterName();
@@ -341,7 +341,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_4_21($db, $options)
+    public static function v0_6r9_4_21($db, $options)
     {
         //创建上传目录
         $uploadDir = Typecho_Common::url(Widget_Upload::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
@@ -406,7 +406,7 @@ class Upgrade
      * @param Typecho_Widget $options 全局信息组件
      * @return void
      */
-    public static function _9_6_1($db, $options)
+    public static function v0_6r9_6_1($db, $options)
     {
         /** 去掉所见即所得编辑器 */
         $db->query($db->delete('table.options')
