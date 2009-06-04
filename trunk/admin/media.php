@@ -40,7 +40,7 @@ include 'common-js.php';
     (function () {
         window.addEvent('domready', function() {
             
-            $(document).getElement('.typecho-attachment-photo-box .description input').addEvent('mouseenter', function () {
+            $(document).getElement('.typecho-attachment-photo-box .description input').addEvent('click', function () {
                 this.select();
             });
         

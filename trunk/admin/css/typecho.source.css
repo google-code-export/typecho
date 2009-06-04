@@ -217,6 +217,7 @@ select {
 	padding: 1px;
 }
 
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     select { padding: 0; }
 }
@@ -1186,6 +1187,14 @@ margin-top: 25px;
 	font-weight: bold;
 }
 
+a.operate-edit {
+	color: #007700;
+}
+
+a.operate-reply {
+	color: #545c30;
+}
+
 .typecho-list-operate span.operate-button-delete, a.operate-button-delete {
 	background: #CC0000;
 }
@@ -1407,6 +1416,23 @@ ul.typecho-list-notable li span.pingback {
 
 ul.typecho-list-notable li span.trackback {
 	background-position: bottom;
+}
+
+/**
+ * 评论回复
+ */
+#typecho-respond {
+	padding: 10px;
+	display: none;
+}
+
+ul.typecho-list-notable li #typecho-respond {
+	display: inline;
+}
+
+#typecho-respond textarea {
+	width: 450px;
+	height: 150px;
 }
 
 /**

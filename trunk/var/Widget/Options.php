@@ -176,6 +176,18 @@ class Widget_Options extends Typecho_Widget
         return Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ? 
         __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
     }
+
+	/**
+	 * 获取资源路径 
+	 * 
+	 * @access protected
+	 * @return void
+	 */
+	protected function ___resourceUrl()
+	{
+        return Typecho_Common::url(defined('__TYPECHO_RESOURCE_DIR__') ? 
+        __TYPECHO_ADMIN_DIR__ : '/usr/resources/', $this->siteUrl);
+	}
     
     /**
      * 获取登录地址

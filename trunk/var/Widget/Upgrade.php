@@ -36,8 +36,12 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      */
     public function sortPackage($a, $b)
     {
-        $a = str_replace('_', '.', ltrim($a, '_'));
-        $b = str_replace('_', '.', ltrim($b, '_'));
+        list ($ver, $rev) = explode('r', $a);
+        $a = str_replace('_', '.', $rev);
+        
+        list ($ver, $rev) = explode('r', $b);
+        $b = str_replace('_', '.', $rev);
+        
         return version_compare($a, $b, '>') ? 1 : -1;
     }
     
@@ -50,8 +54,9 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      */
     public function filterPackage($version)
     {
-        return version_compare(str_replace('_', '.', ltrim($version, '_')),
-        $this->_currentVersion, '>');
+        list ($ver, $rev) = explode('r', $version);
+        $rev = str_replace('_', '.', $rev);
+        return version_compare($rev, $this->_currentVersion, '>');
     }
 
     /**
@@ -74,7 +79,16 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
             } catch (Typecho_Exception $e) {
                 $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                 $this->response->goBack();
+                return;
             }
+            
+            list ($ver, $rev) = explode('r', $package);
+            $ver = substr(str_replace('_', '.', $ver), 1);
+            $rev = str_replace('_', '.', $rev);
+            
+            /** 更新版本号 */
+            $this->update(array('value' => 'Typecho ' . $ver . '/' . $rev), 
+            $this->db->sql()->where('name = ?', 'generator'));
         }
         
         /** 更新版本号 */
