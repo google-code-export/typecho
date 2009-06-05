@@ -12,8 +12,7 @@ svnup:
 	svn up ../
 	svn export ../ build
 	for i in `find -name *.source.css`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find -name *.source.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find build/admin/javascript/swfupload/ -name *.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find build/admin/javascript/ -name *.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
 
 
 package:
