@@ -100,7 +100,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     <a href="<?php $options->index('Comments/Edit.do?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                      | 
-                                    <a lang="<?php _e('你确认要删除%s的评论吗?', $comments->author); ?>" href="<?php $options->index('Comments/Edit.do?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
+                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('Comments/Edit.do?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
                                 <div class="right">
                                     <?php $comments->dateWord(); ?>

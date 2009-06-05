@@ -347,62 +347,6 @@ Typecho.Table = {
     }
 };
 
-/** 消息窗口淡出 */
-Typecho.message = function (el) {
-    var _message = $(document).getElement(el);
-    
-    setTimeout(function () {
-        if (_message) {
-            var _messageEffect = new Fx.Morph(_message, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-            _messageEffect.addEvent('complete', function () {
-                this.element.style.display = 'none';
-            });
-            _messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
-        }
-    }, 5000);
-};
-
-/** 在新窗口打开链接 */
-Typecho.openLink = function (adminPattern, doPattern) {
-    $(document).getElements('a').each(function (item) {
-        var _href = item.href;
-        if (_href && '#' != _href) {
-            $(item).addEvent('click', function (event) {
-                var _lang = this.get('lang');
-                var _c = _lang ? confirm(_lang) : true;
-                
-                if (!_c) {
-                    event.stop();
-                }
-            });
-        
-            /** 如果匹配则继续 */
-            if (adminPattern.exec(_href) || doPattern.exec(_href)) {
-                return;
-            }
-            
-            $(item).addEvent('click', function () {            
-                window.open(this.href);
-                return false;
-            });
-        }
-    });
-};
-
-/** 页面滚动 */
-Typecho.scroll = function (sel, parentSel) {
-    var _firstError = $(document).getElement(sel);
-    
-    //增加滚动效果
-    if (_firstError) {
-        var _errorFx = new Fx.Scroll(window).toElement(_firstError.getParent(parentSel));
-    }
-};
-
-Typecho.location = function (url) {
-    setTimeout('window.location.href="' + url + '"', 0);
-};
-
 Typecho.toggleEl = null;
 Typecho.toggleBtn = null;
 Typecho.toggleHideWord = null;
@@ -475,37 +419,4 @@ Typecho.textareaAdd = function (match, flg1, flg2) {
     _el.focus();
 
     return true;
-};
-
-/** 高亮元素 */
-Typecho.highlight = function (theId) {
-    if (theId) {
-        var el = $(theId);
-        if (el) {
-            el.set('tween', {duration: 1500});
-            
-            var _bg = el.getStyle('background-color');
-            if (!_bg || 'transparent' == _bg) {
-                _bg = '#F7FBE9';
-            }
-
-            el.tween('background-color', '#AACB36', _bg);
-        }
-    }
-};
-
-/** 提交按钮自动失效,防止重复提交 */
-Typecho.autoDisableSubmit = function () {
-    $(document).getElements('input[type=submit]').removeProperty('disabled');
-    $(document).getElements('button[type=submit]').removeProperty('disabled');
-    
-    var _disable = function (event) {
-        event.stopPropagation();
-        $(this).setProperty('disabled', true);
-        $(this).getParent('form').submit();
-        return false;
-    };
-
-    $(document).getElements('input[type=submit]').addEvent('click', _disable);
-    $(document).getElements('button[type=submit]').addEvent('click', _disable);
 };
