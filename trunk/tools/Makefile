@@ -26,7 +26,6 @@ package:
 	rm -Rf build/usr/plugins/Textile2/
 	rm -Rf build/usr/plugins/PostToQzone/
 	rm -Rf build/usr/plugins/SimpleCode.php
-	rm -Rf build/usr/plugins/Helper.php
 	rm -Rf build/usr/plugins/PageToLinks.php
 	rm -Rf build/usr/plugins/Creole/
 	rm -Rf build/usr/plugins/TinyMCE/
@@ -54,9 +53,11 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
 	rm -Rf ${DIR}/usr/plugins/Textile2/
 	rm -Rf ${DIR}/usr/plugins/PostToQzone/
-	rm -Rf ${DIR}/usr/plugins/Helper.php
 	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
 	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
+	rm -Rf ${DIR}/usr/plugins/Creole/
+	rm -Rf ${DIR}/usr/plugins/TinyMCE/
+	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -65,6 +66,9 @@ upgrade:
 	cp -Rf build/usr/plugins/PostToQzone/ ${DIR}/usr/plugins/
 	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
 	cp build/usr/plugins/PageToLinks.php ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/Creole/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/TinyMCE/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/FlashMp3Player/ ${DIR}/usr/plugins/
 	make clear
 
 
@@ -91,6 +95,10 @@ install:
 	rm -Rf ${DIR}/usr/plugins/Textile2/
 	rm -Rf ${DIR}/usr/plugins/PostToQzone/
 	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
+	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
+	rm -Rf ${DIR}/usr/plugins/Creole/
+	rm -Rf ${DIR}/usr/plugins/TinyMCE/
+	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	cp -Rf build/* ${DIR}
 	make clear
 
