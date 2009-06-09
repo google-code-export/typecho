@@ -1104,11 +1104,14 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
     
+        /** 挂接插件 */
+        $this->plugin()->beforeRender($this);
+        
         /** 输出模板 */
         require_once $themeDir . $this->_themeFile;
         
         /** 挂接插件 */
-        $this->plugin()->render($this);
+        $this->plugin()->afterRender($this);
     }
 
     /**
