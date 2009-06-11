@@ -1011,6 +1011,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         return true;
     }
 
+    /**
+     * pingbackPing 
+     * 
+     * @param string $source 
+     * @param string $target 
+     * @access public
+     * @return void
+     */
     public function pingbackPing($source, $target)
     {
         /** 检查源地址是否存在*/
@@ -1111,7 +1119,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     $pingback = $this->plugin()->pingback($pingback, $post);
 
                     /** 执行插入*/
-                    return $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
+                    $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
+
+                    /** 评论完成接口 */
+                    $this->plugin()->finishPingback($this);
+
+                    return $insertId;
 
                     /** todo:发送邮件提示*/
                 } else {
