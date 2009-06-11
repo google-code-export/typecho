@@ -116,6 +116,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $this->response->deleteCookie('text');
         $this->db->fetchRow($this->select()->where('coid = ?', $commentId)
         ->limit(1), array($this, 'push'));
+
+        /** 评论完成接口 */
+        $this->plugin()->finishComment($this);
         
         $this->response->goBack($this->theId);
     }
@@ -182,6 +185,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
+        
+        /** 评论完成接口 */
+        $this->plugin()->finishTrackback($this);
         
         /** 返回正确 */
         $this->response->throwXml(array('success' => 0, 'message' => 'Trackback has registered.'));
