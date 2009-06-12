@@ -30,6 +30,7 @@ package:
 	rm -Rf build/usr/plugins/Creole/
 	rm -Rf build/usr/plugins/TinyMCE/
 	rm -Rf build/usr/plugins/FlashMp3Player/
+	rm -Rf build/usr/plugins/ConnectToTwitter/
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -58,6 +59,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/Creole/
 	rm -Rf ${DIR}/usr/plugins/TinyMCE/
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
+	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -69,6 +71,7 @@ upgrade:
 	cp -Rf build/usr/plugins/Creole/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/TinyMCE/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/FlashMp3Player/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/ConnectToTwitter/ ${DIR}/usr/plugins/
 	make clear
 
 
@@ -99,6 +102,7 @@ install:
 	rm -Rf ${DIR}/usr/plugins/Creole/
 	rm -Rf ${DIR}/usr/plugins/TinyMCE/
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
+	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
 	cp -Rf build/* ${DIR}
 	make clear
 
