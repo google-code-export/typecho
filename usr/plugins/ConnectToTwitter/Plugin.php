@@ -129,3 +129,13 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
     }
 
 }
+
+
+function showButton()
+{
+    if(isset($_COOKIE['oauth_access_token']) && isset($_COOKIE['oauth_access_token_secret'])) {
+        echo '<p><input type="checkbox" checked="" value="yes" id="post_to_twitter" name="post_to_twitter"/><label for="post_to_twitter">同时把留言更新到你的 Twitter</label></p>';
+    } else {
+        echo '<p><a href="?connect_to_twitter=yes"><img src="http://s3.amazonaws.com/static.whitleymedia/twitconnect.png" /></a></p>';
+    }
+}
