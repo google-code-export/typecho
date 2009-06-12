@@ -104,7 +104,7 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
         }
     }
 
-    //登录，暂时做为setcookie
+    //登录，暂时做为setcookie,以后要和用户帐号相关联
     public static function twitterLogin($info, $api)
     {
         $api->response->setCookie('__typecho_remember_author', $info['screen_name'], time()+60*60*24*30);
