@@ -122,7 +122,7 @@ class Typecho_Common
      */
     public static function __encodeCodeCallback($matches)
     {
-        return '<' . $matches[1] . $matches[2] . '>' . str_replace(' ', '&nbsp;', htmlspecialchars(trim($matches[3]))) . "</{$matches[1]}>";
+        return '<' . $matches[1] . $matches[2] . '>' . str_replace(array(' ', "\n"), array('&nbsp;', '<br />'), htmlspecialchars(trim($matches[3]))) . "</{$matches[1]}>";
     }
     
     /**
