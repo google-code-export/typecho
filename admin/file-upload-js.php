@@ -19,7 +19,10 @@
             onComplete : function (result) {
                 if (200 == result.code) {
                     $(el).getParent('li').destroy();
-                } 
+                } else {
+                    _title.removeClass('delete');
+                    alert('<?php _e('删除失败'); ?>');
+                }
             }
         }).send('do=delete&cid=' + cid);
     };
@@ -62,7 +65,7 @@
                     _el.set('html', '<strong>' + file.name + 
                     '<input type="hidden" name="attachment[]" value="' + _result.cid + '" /></strong>' + 
                     '<small><span class="insert"><?php _e('插入'); ?></span>' +
-                    ', <span class="delete"><?php _e('删除'); ?></span></small>');
+                    ' , <span class="delete"><?php _e('删除'); ?></span></small>');
                     _el.set('tween', {duration: 1500});
                     
                     _el.setStyles({
@@ -105,7 +108,7 @@
                     });
                     
                     _fx.addEvent('complete', function () {
-                        _el.destory();
+                        _el.destroy();
                     });
                     
                     _fx.start('background-color', '#CC0000', '#F7FBE9');

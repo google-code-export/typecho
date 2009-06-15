@@ -144,7 +144,6 @@ include 'common-js.php';
 ?>
 
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/autocompleter.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
@@ -181,15 +180,7 @@ include 'common-js.php';
             . ($tags->sequence != $tags->length ? ',' : NULL); } ?>];
             
             /** 自动完成 */
-			new Autocompleter.Local('tags', _tags, {
-				'width': 706,
-				'separator': ',',
-				'minLength': 1, // We need at least 1 character
-				'selectMode': 'type-ahead', // Instant completion
-				'multiple': true // Tag support, by default comma separated
-			});
-			
-            //Typecho.autoComplete('#tags', _tags);
+            Typecho.autoComplete('#tags', _tags);
         });
     })();
 </script>
