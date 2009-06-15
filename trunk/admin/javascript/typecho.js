@@ -420,3 +420,285 @@ Typecho.textareaAdd = function (match, flg1, flg2) {
 
     return true;
 };
+
+/** 自动完成 */
+Typecho.autoComplete = function (match, token) {
+    var _sp = ',', _index, _cur = -1, _hoverList = false, _remember = 0,
+    _el = $(document).getElement(match).setProperty('autocomplete', 'off');
+    
+    //创建搜索索引
+    var _build = function () {
+        var _len = 0, _val = _el.get('value');
+        _index = [];
+        
+        if (_val.length > 0) {
+            _val.split(_sp).each(function (item, index) {
+                var _final = _len + item.length,
+                _l = 0, _r = 0;
+                
+                item = item.replace(/(\s*)(.*)(\s*)/, function (v, a, b, c) {
+                    _l = a.length;
+                    _r = c.length;
+                    return b;
+                });
+            
+                _index[index] = {
+                    txt: item,
+                    start: index*1 + _len,
+                    end: index*1 + _final,
+                    offsetStart: index*1 + _len + _l,
+                    offsetEnd: index*1 + _final - _r
+                };
+                
+                _len = _final;
+            });
+        }
+    };
+    
+    //获取当前keyword
+    var _keyword = function (s, pos) {
+        return pos ? pos.txt.substr(0, s - pos.offsetStart) : '';
+    };
+    
+    //搜索token
+    var _match = function (keyword) {
+        var matchCase = keyword.length > 0 ? token.filter(function (item) {
+            return 0 == item.indexOf(keyword);
+        }) : [];
+        
+        var matchOther = keyword.length > 0 ? token.filter(function (item) {
+            return (0 == item.toLowerCase().indexOf(keyword.toLowerCase()) && !matchCase.contains(item));
+        }) : []; 
+        
+        return matchCase.extend(matchOther);
+    };
+    
+    //选择特定元素
+    var _select = function (s, pos) {
+        _el.selectRange(pos.offsetStart > s ? pos.offsetStart : s, pos.offsetEnd);
+    };
+    
+    //定位
+    var _location = function (s) {
+        for (var i in _index) {
+            if (s >= _index[i].start && s <= _index[i].end) {
+                return _index[i];
+            }
+        }
+        
+        return false;
+    };
+    
+    //替换
+    var _replace = function (w, s, e) {
+        var _val = _el.get('value');
+        return _el.set('value', _val.substr(0, s) + w + _val.substr(e));
+    };
+    
+    //显示
+    var _show = function (key, list) {
+        _cur = -1;
+        _hoverList = false;
+    
+        var _ul = new Element('ul', {
+            'class': 'autocompleter-choices',
+            'styles': {
+                'width': _el.getSize().x - 2,
+                'left': _el.getPosition().x,
+                'top': _el.getPosition().y + _el.getSize().y
+            }
+        });
+        
+        list.each(function (item, index) {
+        
+            _ul.grab(new Element('li', {
+                'rel': index,
+                'html': '<span class="autocompleter-queried">' + item.substr(0, key.length)
+                    + '</span>' + item.substr(key.length),
+                'events': {
+                    
+                    'mouseover': function () {
+                        _hoverList = true;
+                        this.addClass('autocompleter-hover');
+                    },
+                    
+                    'mouseleave': function () {
+                        _hoverList = false;
+                        this.removeClass('autocompleter-hover');
+                    },
+                    
+                    'click': function () {
+                        var _i = parseInt(this.get('rel'));
+                        var _start = _remember > 0 ? _remember : _el.getSelectedRange().start,
+                        _pos = _location(_start);
+
+                        _replace(list[_i], _pos.offsetStart, _pos.offsetEnd);
+                        _build();
+                        
+                        _pos = _location(_start);
+                        _el.selectRange(_pos.offsetEnd, _pos.offsetEnd);
+                        _hide();
+                    }
+                }
+            }));
+        });
+        
+       $(document).getElement('body').grab(_ul);
+    };
+    
+    var _hide = function () {
+        var _e = $(document).getElement('.autocompleter-choices');
+        
+        if (_e) {
+            _e.destroy();
+            _hoverList = false;
+        }
+    };
+    
+    _build();
+    
+    var _k, _l;
+    
+    //绑定事件
+    _el.addEvents({
+        
+        'mouseup': function (e) {
+            var _start = _el.getSelectedRange().start,
+            _pos = _location(_start);
+            _hide();
+            _select(_start, _pos);
+            this.fireEvent('keyup', e);
+            
+            _remember = _el.getSelectedRange().end;
+            
+            e.stop();
+            return false;
+        },
+        
+        'blur': function () {            
+            if (!_hoverList) {
+                _hide();
+            }
+        },
+        
+        'keydown': function (e) {
+            _build();
+            var _start = _el.getSelectedRange().start,
+            _pos = _location(_start);
+            
+            _remember = _el.getSelectedRange().end;
+            
+            switch (e.key) {
+                case 'up':
+                
+                    if (_l.length > 0 && _cur >= 0) {
+                        if (_cur < _l.length) {
+                            $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').removeClass('autocompleter-selected');
+                        }
+
+                        if (_cur > 0) {
+                            _cur --;
+                        } else {
+                            _cur = _l.length - 1;
+                        }
+                        
+                        $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').addClass('autocompleter-selected');
+                        _replace(_l[_cur], _pos.offsetStart, _pos.offsetEnd);
+                        _build();
+
+                        _pos = _location(_start);
+                        _select(_start, _pos);
+                    }
+                    
+                    e.stop();
+                    return false;
+                
+                case 'down':
+
+                    if (_l.length > 0 && _cur < _l.length) {
+                        if (_cur >= 0) {
+                            $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').removeClass('autocompleter-selected');
+                        }
+                    
+                        if (_cur < _l.length - 1) {
+                            _cur ++;
+                        } else {
+                            _cur = 0;
+                        }
+                        
+                        $(document).getElement('.autocompleter-choices li[rel=' + _cur + ']').addClass('autocompleter-selected');
+                        _replace(_l[_cur], _pos.offsetStart, _pos.offsetEnd);
+                        _build();
+
+                        _pos = _location(_start);
+                        _select(_start, _pos);
+                    }
+                    
+                    e.stop();
+                    return false;
+                    
+                case 'enter':
+                    _hide();
+                    _el.selectRange(_pos.offsetEnd, _pos.offsetEnd);
+                    e.stop();
+                    return false;
+                    
+                default:
+                    break;
+            }
+        },
+        
+        'keyup': function (e) {
+        
+            _build();
+            var _start = _el.getSelectedRange().start,
+            _pos = _location(_start);
+            
+            _remember = _el.getSelectedRange().end;
+        
+            switch (e.key) {
+                    
+                case 'left':
+                case 'right':
+                case 'backspace':
+                case 'delete':
+                case 'esc':
+                    
+                    _hide();
+                    e.key = 'a';
+                    this.fireEvent('keyup', e, 1000);
+                    break;
+                    
+                case 'enter':
+                    return false;
+                    
+                case 'up':
+                case 'down':
+                    return false;
+                
+                case 'space':
+                default:
+                    _hide();
+                    _k = _keyword(_start, _pos);
+                    _l = _match(_k);
+                        
+                    if (_l.length > 0) {
+                        
+                        /*
+                        if (0 == _l[0].indexOf(_k) && 'undefined' == typeof(e.shoot)) {
+                            //_replace(_l[0], _pos.offsetStart, _pos.offsetEnd);
+                            _build();
+                            _pos = _location(_start);
+                        }
+                        */
+                        
+                        _select(_start, _pos);
+                        _show(_k, _l);
+                    }
+                    
+                    break;
+            }
+        }
+        
+    });
+};

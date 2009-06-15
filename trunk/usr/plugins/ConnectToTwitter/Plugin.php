@@ -71,7 +71,7 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
         $config = $options->plugin('ConnectToTwitter');
 
         //发送请求到twitter
-        if(isset($_GET['connect_to_twitter']))
+        if(isset($api->request->connect_to_twitter))
         {
             $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret);
 
@@ -86,7 +86,7 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
         }
 
         //从twitter返回
-        if(isset($_GET['oauth_token'])) {
+        if(isset($api->request->oauth_token)) {
             if($api->request->getSession('oauth_request_token') && $api->request->getSession('oauth_request_token_secret'))
             {
                 $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, $api->request->getSession('oauth_request_token'), $api->request->getSession('oauth_request_token_secret'));
@@ -97,30 +97,35 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
                 $api->response->setCookie('oauth_access_token_secret', $tok['oauth_token_secret'], time()+60*60*24*30);
 
                 $info_json = $to->OAuthRequest('https://twitter.com/account/verify_credentials.json', array(), 'GET');
-                $info = json_decode($info_json, true);
+                $info = Typecho_Json::decode($info_json, true);
 
                 self::twitterLogin($info, $api);
-            }           
+            }
         }
     }
 
     //登录，暂时做为setcookie,以后要和用户帐号相关联
     public static function twitterLogin($info, $api)
     {
-        $api->response->setCookie('__typecho_remember_author', $info['screen_name'], time()+60*60*24*30);
-        $api->response->setCookie('__typecho_remember_url',  $info['url'], time()+60*60*24*30);
+        if (!empty($info['screen_name'])) {
+            $api->response->setCookie('__typecho_remember_author', $info['screen_name'], time()+60*60*24*30);
+        }
+        
+        if (!empty($info['url'])) {
+            $api->response->setCookie('__typecho_remember_url',  $info['url'], time()+60*60*24*30);
+        }
     }
 
     //发送信息到twitter
     public static function postToTwitter($api)
     {
-        if($api->request->getCookie('oauth_access_token') && $api->request->getCookie('oauth_access_token_secret') && $_POST['post_to_twitter']) {
+        if($api->request->getCookie('oauth_access_token') && $api->request->getCookie('oauth_access_token_secret') && $api->request->post_to_twitter) {
             $options = Typecho_Widget::widget('Widget_Options');
             $config = $options->plugin('ConnectToTwitter');
             $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, $api->request->getCookie('oauth_access_token'), $api->request->getCookie('oauth_access_token_secret'));
 
             $url_array = array();
-            $url_array = explode('?', $_SERVER['HTTP_REFERER']);
+            $url_array = explode('?', $api->request->getReferer());
             $url = $url_array[0] . '#comment-' . $api->coid;
             $post = $api->text . '  ( from ' . $url . '  ) ';
             $twitter = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => $post), 'POST');

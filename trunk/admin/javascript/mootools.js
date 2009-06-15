@@ -4093,3 +4093,44 @@ Fx.Scroll = new Class({
 	}
 
 });
+
+Element.implement({
+
+	getSelectedRange: function() {
+		if (!Browser.Engine.trident) return {start: this.selectionStart, end: this.selectionEnd};
+		var pos = {start: 0, end: 0};
+		var range = this.getDocument().selection.createRange();
+		if (!range || range.parentElement() != this) return pos;
+		var dup = range.duplicate();
+		if (this.type == 'text') {
+			pos.start = 0 - dup.moveStart('character', -100000);
+			pos.end = pos.start + range.text.length;
+		} else {
+			var value = this.value;
+			var offset = value.length - value.match(/[\n\r]*$/)[0].length;
+			dup.moveToElementText(this);
+			dup.setEndPoint('StartToEnd', range);
+			pos.end = offset - dup.text.length;
+			dup.setEndPoint('StartToStart', range);
+			pos.start = offset - dup.text.length;
+		}
+		return pos;
+	},
+
+	selectRange: function(start, end) {
+		if (Browser.Engine.trident) {
+			var diff = this.value.substr(start, end - start).replace(/\r/g, '').length;
+			start = this.value.substr(0, start).replace(/\r/g, '').length;
+			var range = this.createTextRange();
+			range.collapse(true);
+			range.moveEnd('character', start + diff);
+			range.moveStart('character', start);
+			range.select();
+		} else {
+			this.focus();
+			this.setSelectionRange(start, end);
+		}
+		return this;
+	}
+
+});

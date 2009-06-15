@@ -50,14 +50,14 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         ->where('name = ?', $this->request->name)
         ->limit(1));
         
-        /** 防止穷举,休眠3秒 */
-        sleep(3);
-        
         /** 比对密码 */
         if ($user && Typecho_Common::hashValidate($this->request->password, $user['password'])) {
             $this->user->login($user['uid'], 1 == $this->request->remember ?
             $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         } else {
+            /** 防止穷举,休眠3秒 */
+            sleep(3);
+            
             $this->widget('Widget_Notice')->set(_t('用户名或密码无效'), NULL, 'error');
             $this->response->redirect($this->options->loginUrl . ((NULL === $this->request->referer) ? 
             NULL : '?referer=' . urlencode($this->request->referer)));
