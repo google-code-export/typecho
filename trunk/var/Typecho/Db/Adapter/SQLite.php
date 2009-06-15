@@ -128,7 +128,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function fetchObject($resource)
     {
-        return sqlite_fetch_object($resource);
+        return (object) $this->filterColumnName(get_object_vars(sqlite_fetch_object($resource)));
     }
 
     /**
