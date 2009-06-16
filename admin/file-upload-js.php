@@ -32,6 +32,13 @@
         window.addEvent('domready', function() {
             var _inited = false;
             
+            //加强未加载暗示
+            var uploadButton = $(document).getElement('#upload-panel .button')
+            .setStyle('cursor', 'pointer')
+            .addEvent('click', function () {
+                alert('<?php _e('正在加载上传组件, 请稍候再试'); ?>');
+            });
+            
             //begin parent tabshow
             $(document).getElement('#upload-panel').addEvent('tabShow', function () {
             
@@ -39,6 +46,10 @@
                     return;
                 }
                 _inited = true;
+                
+                var swfuploadLoaded = function () {
+                    uploadButton.removeEvent('click');
+                };
             
                 var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
                     try {
@@ -153,6 +164,7 @@
                     upload_success_handler : uploadSuccess,
                     queue_complete_handler : uploadComplete,
                     upload_error_handler : uploadError,
+                    swfupload_loaded_handler : swfuploadLoaded,
                     
                     // Button Settings
                     button_placeholder_id : "swfu-placeholder",

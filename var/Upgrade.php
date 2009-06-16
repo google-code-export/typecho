@@ -421,4 +421,54 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
         ->rows(array('name' => 'commentsMaxNestingLevels', 'value' => 5)));
     }
+    
+    /**
+     * 升级至9.6.16
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_6_16($db, $options)
+    {
+        /** 增加附件handle */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'modifyHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"modifyHandle";}')));
+        
+        /** 增加附件handle */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'attachmentDataHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:20:"attachmentDataHandle";}')));
+        
+        /** 转换附件 */
+        $i = 1;
+
+        while (true) {
+            $result = $db->query($db->select('cid', 'text')->from('table.contents')
+            ->where('type = ?', 'attachment')
+            ->order('cid', Typecho_Db::SORT_ASC)->page($i, 100));
+            $j = 0;
+            
+            while ($row = $db->fetchRow($result)) {
+                $attachment = unserialize($row['text']);
+                $attachment['modifyHandle'] = array('Widget_Upload', 'modifyHandle');
+                $attachment['attachmentDataHandle'] = array('Widget_Upload', 'attachmentDataHandle');
+
+                $db->query($db->update('table.contents')
+                ->rows(array('text' => serialize($attachment)))
+                ->where('cid = ?', $row['cid']));
+                
+                $j ++;
+                unset($text);
+                unset($row);
+            }
+            
+            if ($j < 100) {
+                break;
+            }
+            
+            $i ++;
+            unset($result);
+        }
+    }
 }

@@ -128,6 +128,59 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     }
     
     /**
+     * 修改文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把modifyHandle改成自己的函数
+     * 
+     * @access public
+     * @param array $content 老文件
+     * @param array $file 新上传的文件
+     * @return mixed
+     */
+    public static function modifyHandle($content, $file)
+    {
+        if (empty($file['name'])) {
+            return false;
+        }
+        
+        $fileName = preg_split("(\/|\\|:)", $file['name']);
+        $file['name'] = array_pop($fileName);
+        
+        if (!self::checkFileType($file['name'])) {
+            return false;
+        }
+        
+        $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
+
+        if (isset($file['tmp_name'])) {
+        
+            //移动上传文件
+            if (!move_uploaded_file($file['tmp_name'], $path)) {
+                return false;
+            }
+        } else if (isset($file['bits'])) {
+        
+            //直接写入文件
+            if (!file_put_contents($path, $file['bits'])) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+        if (!isset($file['size'])) {
+            $file['size'] = filesize($path);
+        }
+        
+        //返回相对存储路径
+        return array(
+            'name' => $file['name'],
+            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
+            'size' => $file['size'],
+            'type' => $ext,
+            'mime' => Typecho_Common::mimeContentType($path)
+        );
+    }
+    
+    /**
      * 删除文件
      * 
      * @access public
@@ -140,16 +193,28 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     }
     
     /**
-     * 获取实际文件相关数据
+     * 获取实际文件绝对访问路径
      * 
      * @access public
      * @param array $content 文件相关信息
-     * @return void
+     * @return string
      */
     public static function attachmentHandle(array $content)
     {
         $options = Typecho_Widget::widget('Widget_Options');
         return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
+    }
+    
+    /**
+     * 获取实际文件数据
+     * 
+     * @access public
+     * @param array $content
+     * @return string
+     */
+    public static function attachmentDataHandle(array $content)
+    {
+        return file_get_contents(Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__));
     }
     
     /**
@@ -187,7 +252,9 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $uploadHandle = unserialize($this->options->uploadHandle);
                 $deleteHandle = unserialize($this->options->deleteHandle);
+                $modifyHandle = unserialize($this->options->modifyHandle);
                 $attachmentHandle = unserialize($this->options->attachmentHandle);
+                $attachmentDataHandle = unserialize($this->options->attachmentDataHandle);
                 $result = call_user_func($uploadHandle, $file);
                 
                 if (false === $result) {
@@ -197,7 +264,9 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 
                     $result['uploadHandle'] = $uploadHandle;
                     $result['deleteHandle'] = $deleteHandle;
+                    $result['modifyHandle'] = $modifyHandle;
                     $result['attachmentHandle'] = $attachmentHandle;
+                    $result['attachmentDataHandle'] = $attachmentDataHandle;
                 
                     $insertId = $this->insert(array(
                         'title'     =>  $result['name'],
@@ -212,6 +281,9 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
+                    
+                    /** 增加插件接口 */
+                    $this->plugin()->upload($this);
                     
                     $this->response->throwJson(array(
                         'cid'       =>  $insertId,
