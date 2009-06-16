@@ -37,7 +37,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('Contents/Page/Edit.do'); ?>">
+                <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('/action/contents-page-edit'); ?>">
                 <table class="typecho-list-table draggable">
                     <colgroup>
                         <col width="25"/>
@@ -69,9 +69,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td>
                             <?php if ($options->customHomePage == $pages->cid): ?>
-                                <a class="balloon-button right" href="<?php $options->index('Contents/Page/Edit.do?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
+                                <a class="balloon-button right" href="<?php $options->index('/action/contents-page-edit?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
                                 <?php else: ?>
-                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Contents/Page/Edit.do?do=customHomePage&cid=' . $pages->cid); ?>"><?php _e('首页'); ?></a>
+                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('/action/contents-page-edit?do=customHomePage&cid=' . $pages->cid); ?>"><?php _e('首页'); ?></a>
                             <?php endif; ?>
                             </td>
                             <td><?php $pages->slug(); ?></td>
@@ -105,7 +105,7 @@ include 'common-js.php';
         window.addEvent('domready', function() {
             Typecho.Table.dragStop = function (item, result) {
                 var _r = new Request.JSON({
-                    url: '<?php $options->index('Contents/Page/Edit.do'); ?>'
+                    url: '<?php $options->index('/action/contents-page-edit'); ?>'
                 }).send(result + '&do=sort');
             };
         });

@@ -95,7 +95,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         
         /** 载入插件 */
         require_once $this->_pluginFileName;
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('Plugins/Edit.do?config=' . $pluginName,
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/plugins-edit?config=' . $pluginName,
         $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
         call_user_func(array($this->_className, 'config'), $form);
         

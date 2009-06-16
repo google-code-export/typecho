@@ -22,7 +22,7 @@ include 'menu.php';
                 </form>
                 </div>
             
-                <form method="post" name="manage_users" class="operate-form" action="<?php $options->index('Users/Edit.do'); ?>">
+                <form method="post" name="manage_users" class="operate-form" action="<?php $options->index('/action/users-edit'); ?>">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>

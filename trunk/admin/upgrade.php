@@ -10,7 +10,7 @@ include 'menu.php';
         <div class="container typecho-page-main">
             <div class="column-22 start-02">
                 <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
-                    <form action="<?php $options->index('Upgrade.do'); ?>" method="post">
+                    <form action="<?php echo Typecho_Router::url('do', array('action' => 'upgrade', 'widget' => 'Upgrade'), $options->index); ?>" method="post">
                     <h6><?php _e('检测到新版本!'); ?></h6>
                     <blockquote>
                     <ul>

@@ -471,4 +471,36 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             unset($result);
         }
     }
+    
+    /**
+     * 升级至9.6.16.1
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_6_16_1($db, $options)
+    {
+        //修改action路由
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        $routingTable['do'] = array (
+            'url' => '/action/[action:alpha]',
+            'widget' => 'Widget_Do',
+            'action' => 'action'
+        );
+        
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+                
+        //干掉垃圾数据
+        $db->query($db->update('table.options')
+                ->rows(array('value' => 'a:0:{}'))
+                ->where('name = ?', 'actionTable'));
+    }
 }

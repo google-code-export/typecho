@@ -43,7 +43,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <form method="post" name="manage_medias" class="operate-form" action="<?php $options->index('Contents/Attachment/Edit.do'); ?>">
+                <form method="post" name="manage_medias" class="operate-form" action="<?php $options->index('/action/contents-attachment-edit'); ?>">
                 <table class="typecho-list-table draggable">
                     <colgroup>
                         <col width="25"/>

@@ -46,9 +46,9 @@ include 'menu.php';
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
-                                        <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('Plugins/Edit.do?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
+                                        <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
-                                        <a href="<?php $options->index('Plugins/Edit.do?activate=' . $activatedPlugins->name); ?>"><?php _e('激活'); ?></a>
+                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $activatedPlugins->name); ?>"><?php _e('激活'); ?></a>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <span class="important"><?php _e('即插即用'); ?></span>
@@ -99,9 +99,9 @@ include 'menu.php';
                                             <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
-                                        <a href="<?php $options->index('Plugins/Edit.do?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
+                                        <a href="<?php $options->index('/action/plugins-edit?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
-                                        <a href="<?php $options->index('Plugins/Edit.do?activate=' . $deactivatedPlugins->name); ?>"><?php _e('激活'); ?></a>
+                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('激活'); ?></a>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </td>

@@ -124,7 +124,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Metas/Tag/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/metas-tag-edit', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 标签名称 */

@@ -31,7 +31,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                             <?php endwhile; ?>
                         </ul>
                         <div class="content">
-                        <form method="post" name="theme" id="theme" action="<?php $options->index('Themes/Edit.do'); ?>">
+                        <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
                             <textarea name="content" id="content" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                             <div class="submit">
                                 <?php if($files->currentIsWriteable()): ?>

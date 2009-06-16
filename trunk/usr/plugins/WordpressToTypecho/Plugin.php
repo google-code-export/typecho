@@ -30,7 +30,7 @@ class WordpressToTypecho_Plugin implements Typecho_Plugin_Interface
 		*/
     
         Helper::addPanel(1, 'WordpressToTypecho/panel.php', _t('从Wordpress导入数据'), _t('从Wordpress导入数据'), 'administrator');
-        Helper::addAction('WordpressToTypecho_Action');
+        Helper::addAction('wordpress-to-typecho', 'WordpressToTypecho_Action');
         return _t('请在插件设置里设置 Wordpress 所在的数据库参数') . $error;
     }
     
@@ -44,7 +44,7 @@ class WordpressToTypecho_Plugin implements Typecho_Plugin_Interface
      */
     public static function deactivate()
     {
-        Helper::removeAction('WordpressToTypecho_Action');
+        Helper::removeAction('wordpress-to-typecho');
         Helper::removePanel(1, 'WordpressToTypecho/panel.php');
     }
     

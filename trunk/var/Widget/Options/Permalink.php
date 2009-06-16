@@ -117,7 +117,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
                 /** 发送一个rewrite地址请求 */
                 $client->setData(array('do' => 'remoteCallback'))
                 ->setHeader('User-Agent', $this->options->generator)
-                ->send(Typecho_Common::url('Ajax.do', $this->options->siteUrl));
+                ->send(Typecho_Common::url('/action/ajax', $this->options->siteUrl));
                 
                 if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
                     return true;
@@ -143,7 +143,7 @@ RewriteRule . {$basePath}index.php [L]
                     /** 发送一个rewrite地址请求 */
                     $client->setData(array('do' => 'remoteCallback'))
                     ->setHeader('User-Agent', $this->options->generator)
-                    ->send(Typecho_Common::url('Ajax.do', $this->options->siteUrl));
+                    ->send(Typecho_Common::url('/action/ajax', $this->options->siteUrl));
                     
                     if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
                         return true;
@@ -170,7 +170,7 @@ RewriteRule . {$basePath}index.php [L]
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('index.php/Options/Permalink.do', $this->options->siteUrl),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('index.php/action/options-permalink', $this->options->siteUrl),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 是否使用地址重写功能 */

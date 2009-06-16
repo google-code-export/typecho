@@ -8,7 +8,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main typecho-post-option typecho-post-area">
-            <form action="<?php $options->index('Contents/Post/Edit.do'); ?>" method="post" name="write_post">
+            <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
                 <div class="column-18 start-01" id="test">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>

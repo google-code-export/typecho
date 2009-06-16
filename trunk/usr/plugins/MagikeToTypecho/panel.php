@@ -43,7 +43,7 @@ include 'menu.php';
             <div class="column-22 start-02">
                 <?php if ($success): ?>
                 <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
-                <form action="<?php $options->index('MagikeToTypecho/Action.do'); ?>" method="post">
+                <form action="<?php $options->index('/action/magike-to-typecho'); ?>" method="post">
                     <?php _e('我们检测到了 Magike 系统信息, 点击下方的按钮开始数据转换, 数据转换可能会耗时较长.'); ?>
                     <blockquote>
                     <ul>

@@ -41,7 +41,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 用户昵称 */
@@ -89,7 +89,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function optionsForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 编辑器 */
@@ -149,7 +149,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function personalForm($pluginName, $className, $pluginFileName, &$group)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         $form->setAttribute('name', $pluginName);
         $form->setAttribute('id', $pluginName);
@@ -204,7 +204,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function passwordForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Profile.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 用户密码 */

@@ -115,7 +115,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Contents/Attachment/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/contents-attachment-edit', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 附件名称 */
@@ -143,7 +143,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('提交修改'));
         $delete = new Typecho_Widget_Helper_Layout('a', array('href' => 
-        Typecho_Common::url('Contents/Attachment/Edit.do?do=delete&cid=' . $this->cid, $this->options->index),
+        Typecho_Common::url('/action/contents-attachment-edit?do=delete&cid=' . $this->cid, $this->options->index),
         'class' => 'operate-delete',
         'lang'  => _t('你确认删除附件 %s 吗?', $this->attachment->name)));
         $submit->container($delete->html(_t('删除附件')));

@@ -42,7 +42,7 @@
                     var size = _text.getSize().y - _editorOffset;
                     var _r = new Request({
                         'method': 'post',
-                        'url': '<?php $options->index('Ajax.do'); ?>'
+                        'url': '<?php $options->index('/action/ajax'); ?>'
                     }).send('size=' + size + '&do=editorResize');
                     
                     _last = 0;
