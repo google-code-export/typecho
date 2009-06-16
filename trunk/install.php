@@ -321,7 +321,9 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'customHomePage', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'uploadHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"uploadHandle";}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'deleteHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'modifyHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"modifyHandle";}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentDataHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:20:"attachmentDataHandle";}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz')));
 
                                         /** 初始分类 */

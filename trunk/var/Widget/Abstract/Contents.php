@@ -377,7 +377,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $content = unserialize($value['text']);
             
             //增加数据信息
-            $value['attachment'] = new Typecho_Config($content);
+            $value['attachment'] = (object) $content;
             $value['attachment']->isImage = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
             $value['attachment']->url = call_user_func($content['attachmentHandle'], $value);
 
