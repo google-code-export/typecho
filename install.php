@@ -62,7 +62,7 @@ Typecho_Common::init(array(
 
 //判断是否已经安装
 if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
-    die (_t('请删除安装目录下的 install.php 文件'));
+    die (_t('请删除安装目录下的 config.inc.php 文件'));
 }
 
 /**
