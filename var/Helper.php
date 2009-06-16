@@ -157,15 +157,15 @@ class Helper
      * 增加action扩展
      * 
      * @access public
+     * @param string $actionName 需要扩展的action名称
      * @param string $widgetName 需要扩展的widget名称
      * @return integer
      */
-    public static function addAction($widgetName)
+    public static function addAction($actionName, $widgetName)
     {
         $actionTable = unserialize(self::options()->actionTable);
         $actionTable = empty($actionTable) ? array() : $actionTable;
-        $actionTable[] = $widgetName;
-        $actionTable = array_unique($actionTable);
+        $actionTable[$actionName] = $widgetName;
         
         $db = Typecho_Db::get();
         return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($actionTable))
@@ -176,16 +176,16 @@ class Helper
      * 删除action扩展
      * 
      * @access public
-     * @param unknown $widgetName
+     * @param unknown $actionName
      * @return unknown
      */
-    public static function removeAction($widgetName)
+    public static function removeAction($actionName)
     {
         $actionTable = unserialize(self::options()->actionTable);
         $actionTable = empty($actionTable) ? array() : $actionTable;
         
-        if (false !== ($index = array_search($widgetName, $actionTable))) {
-            unset($actionTable[$index]);
+        if (isset($actionTable[$actionName])) {
+            unset($actionTable[$actionName]);
             reset($actionTable);
         }
         

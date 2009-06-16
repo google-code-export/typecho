@@ -38,7 +38,7 @@ include 'menu.php';
                         </div>
                         <?php if($options->theme != $themes->name): ?>
                             <a class="edit" href="<?php $options->adminUrl('theme-editor.php?theme=' . $themes->name); ?>"><?php _e('编辑'); ?></a>
-                            <a class="activate" href="<?php $options->index('Themes/Edit.do?change=' . $themes->name); ?>"><?php _e('激活'); ?></a>
+                            <a class="activate" href="<?php $options->index('/action/themes-edit?change=' . $themes->name); ?>"><?php _e('激活'); ?></a>
                         <?php endif; ?>
                     </td>
                     <?php $last = $themes->sequence; ?>

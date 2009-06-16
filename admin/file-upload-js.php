@@ -15,7 +15,7 @@
         
         new Request.JSON({
             method : 'post',
-            url : '<?php $options->index('Contents/Attachment/Edit.do'); ?>',
+            url : '<?php $options->index('/action/contents-attachment-edit'); ?>',
             onComplete : function (result) {
                 if (200 == result.code) {
                     $(el).getParent('li').destroy();
@@ -134,7 +134,7 @@
                 var swfu, _size = $(document).getElement('.typecho-list-operate a.button').getCoordinates(),
                 settings = {
                     flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
-                    upload_url: "<?php $options->index('Upload.do'); ?>",
+                    upload_url: "<?php $options->index('/action/upload'); ?>",
                     post_params: {"__typecho_uid" : "<?php echo Typecho_Request::getCookie('__typecho_uid'); ?>", 
                     "__typecho_authCode" : "<?php echo addslashes(Typecho_Request::getCookie('__typecho_authCode')); ?>"},
                     file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));

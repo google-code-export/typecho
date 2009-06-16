@@ -56,7 +56,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <form method="post" name="manage_posts" class="operate-form" action="<?php $options->index('Contents/Post/Edit.do'); ?>">
+                <form method="post" name="manage_posts" class="operate-form" action="<?php $options->index('/action/contents-post-edit'); ?>">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>

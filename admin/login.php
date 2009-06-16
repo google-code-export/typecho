@@ -6,7 +6,7 @@ include 'header.php';
     <div class="container">
         <div class="column-07 start-09 typecho-login">
             <h2 class="logo-dark">typecho</h2>
-            <form action="<?php $options->siteUrl('index.php/Login.do'); ?>" method="post" name="login">
+            <form action="<?php $options->loginAction(); ?>" method="post" name="login">
                 <fieldset>
                     <?php if(!$user->hasLogin()): ?>
                     <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>

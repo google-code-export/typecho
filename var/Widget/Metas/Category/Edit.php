@@ -123,7 +123,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Metas/Category/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/metas-category-edit', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 分类名称 */

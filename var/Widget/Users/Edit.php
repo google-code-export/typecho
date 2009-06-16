@@ -156,7 +156,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Users/Edit.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-edit', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 用户名称 */

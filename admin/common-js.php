@@ -95,7 +95,7 @@
         
                         /** 如果匹配则继续 */
                         if (/^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(_href) 
-                            || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>[_a-zA-Z0-9\/]+\.(do|plugin).*$/.exec(_href)) {
+                            || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(_href)) {
                             return;
                         }
             

@@ -29,7 +29,7 @@ class MagikeToTypecho_Plugin implements Typecho_Plugin_Interface
         }
     
         Helper::addPanel(1, 'MagikeToTypecho/panel.php', _t('从Magike导入数据'), _t('从Magike导入数据'), 'administrator');
-        Helper::addAction('MagikeToTypecho_Action');
+        Helper::addAction('magike-to-typecho', 'MagikeToTypecho_Action');
         return _t('请在插件设置里设置 Magike 所在的数据库参数') . $error;
     }
     
@@ -43,7 +43,7 @@ class MagikeToTypecho_Plugin implements Typecho_Plugin_Interface
      */
     public static function deactivate()
     {
-        Helper::removeAction('MagikeToTypecho_Action');
+        Helper::removeAction('magike-to-typecho');
         Helper::removePanel(1, 'MagikeToTypecho/panel.php');
     }
     

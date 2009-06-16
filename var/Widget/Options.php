@@ -129,7 +129,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___xmlRpcUrl()
     {
-        return Typecho_Router::url('do', array('widget' => 'XmlRpc'), $this->index);
+        return Typecho_Router::url('do', array('action' => 'xmlrpc'), $this->index);
     }
     
     /**
@@ -201,6 +201,18 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 获取登录提交地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___loginAction()
+    {
+        return Typecho_Router::url('do', array('action' => 'login', 'widget' => 'Login'), 
+        Typecho_Common::url('index.php', $this->siteUrl));
+    }
+    
+    /**
      * 获取个人档案地址
      * 
      * @access protected
@@ -219,7 +231,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___logoutUrl()
     {
-        return Typecho_Common::url('Logout.do', $this->index);
+        return Typecho_Common::url('/action/logout', $this->index);
     }
     
     /**

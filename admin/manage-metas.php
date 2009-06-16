@@ -16,7 +16,7 @@ include 'menu.php';
                     
                     <?php if(!Typecho_Request::isSetParameter('type') || 'category' == Typecho_Request::getParameter('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
-                    <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('Metas/Category/Edit.do'); ?>">
+                    <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('/action/metas-category-edit'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
@@ -60,7 +60,7 @@ include 'menu.php';
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="balloon right"><?php _e('默认'); ?></span>
                                 <?php else: ?>
-                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('Metas/Category/Edit.do?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
+                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
@@ -79,7 +79,7 @@ include 'menu.php';
                     </form>
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>
-                    <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('Metas/Tag/Edit.do'); ?>">
+                    <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('/action/metas-tag-edit'); ?>">
                     <div class="typecho-list-operate">
                         <p class="operate"><?php _e('操作'); ?>: 
                             <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
@@ -133,7 +133,7 @@ include 'common-js.php';
             if ('tr' == Typecho.Table.table._childTag) {
                 Typecho.Table.dragStop = function (obj, result) {
                     var _r = new Request.JSON({
-                        url: '<?php $options->index('Metas/Category/Edit.do'); ?>'
+                        url: '<?php $options->index('/action/metas-category-edit'); ?>'
                     }).send(result + '&do=sort');
                 };
             } else {

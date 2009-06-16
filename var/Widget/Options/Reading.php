@@ -29,7 +29,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/Options/Reading.do', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/options-reading', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
         
         /** 文章日期格式 */

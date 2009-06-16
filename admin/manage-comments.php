@@ -55,7 +55,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
 
-                <form method="post" name="manage_comments" class="operate-form" action="<?php $options->index('Comments/Edit.do'); ?>">
+                <form method="post" name="manage_comments" class="operate-form" action="<?php $options->index('/action/comments-edit'); ?>">
                     <?php Typecho_Widget::widget('Widget_Comments_Admin')->to($comments); ?>
                     
                     <ul class="typecho-list-notable clearfix">
@@ -85,22 +85,22 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('Comments/Edit.do?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
                                     <?php endif; ?>
                                      | 
                                     <?php if('waiting' == $comments->status): ?>
                                     <span class="weak"><?php _e('待审核'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('Comments/Edit.do?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
                                     <?php endif; ?>
                                      | 
                                     <?php if('spam' == $comments->status): ?>
                                     <span class="weak"><?php _e('垃圾'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('Comments/Edit.do?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                      | 
-                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('Comments/Edit.do?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
+                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
                                 <div class="right">
                                     <?php $comments->dateWord(); ?>

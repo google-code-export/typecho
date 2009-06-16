@@ -119,7 +119,7 @@ include 'common-js.php';
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-            var _feedRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=feed");
+            var _feedRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=feed");
             _feedRequest.addEvent('onSuccess', function (responseJSON) {
                 $(document).getElement('#typecho-message ul li').destroy();
                 
@@ -134,7 +134,7 @@ include 'common-js.php';
             });
             
             <?php if ($user->pass('editor', true) && !Typecho_Request::getCookie('__typecho_check_version')): ?>
-            var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('Ajax.do'); ?>'}).send("do=checkVersion");
+            var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=checkVersion");
             _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
                 if (responseJSON && responseJSON.available) {
                     var _div = document.createElement('div');
