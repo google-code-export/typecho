@@ -53,12 +53,14 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                         }
                     }
                     
-                    try {
-                        $xmlrpc = new IXR_Client($xmlrpcUrl);
-                        $xmlrpc->pingback->ping($post->permalink, $url);
-                        unset($xmlrpc);
-                    } catch (Exception $e) {
-                        continue;
+                    if (!empty($xmlrpcUrl)) {
+                        try {
+                            $xmlrpc = new IXR_Client($xmlrpcUrl);
+                            $xmlrpc->pingback->ping($post->permalink, $url);
+                            unset($xmlrpc);
+                        } catch (Exception $e) {
+                            continue;
+                        }
                     }
                 }
                 
