@@ -778,7 +778,7 @@ EOF;
         $str = trim($str, '-');
         $str = empty($str) ? $default : $str;
         
-        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$config['charset']) : substr($str, $maxLength);
+        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$config['charset']) : substr($str, 0, $maxLength);
     }
     
     /**
