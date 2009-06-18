@@ -45,9 +45,10 @@ class Typecho_Router
      * 
      * @access public
      * @param string $pathInfo 全路径
+     * @param array $params 参数列表
      * @return mixed
      */
-    public static function match($pathInfo)
+    public static function match($pathInfo, &$params)
     {
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
@@ -56,10 +57,6 @@ class Typecho_Router
                 if (!empty($route['params'])) {
                     unset($matches[0]);
                     $params = array_combine($route['params'], $matches);
-                    
-                    foreach ($params as $key => $val) {
-                        Typecho_Request::setParameter($key, $val);
-                    }
                 }
                 
                 return $route;
@@ -93,8 +90,8 @@ class Typecho_Router
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
                         
-                        foreach ($params as $key => $val) {
-                            Typecho_Request::setParameter($key, $val);
+                        foreach ($params as $name => $value) {
+                            Typecho_Request::setParameter($name, $value);
                         }
                     }
                     
@@ -109,6 +106,14 @@ class Typecho_Router
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
                         Typecho_Widget::destory($route['widget']);
+                        
+                        //销毁参数
+                        if (!empty($params)) {
+                            foreach ($params as $name => $value) {
+                                Typecho_Request::unSetParameter($name);
+                            }
+                        }
+                        
                         continue;
                     }
                     
