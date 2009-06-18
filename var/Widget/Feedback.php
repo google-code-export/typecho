@@ -240,10 +240,11 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         /** 回调方法 */
         $callback = $this->request->type;
+        $result = Typecho_Router::match($this->request->permalink, $params);
     
         /** 判断内容是否存在 */
-        if (false !== Typecho_Router::match($this->request->permalink) && 
-        $this->widget('Widget_Archive')->to($this->_content)->have() && 
+        if (false !== $result &&
+        $this->widget('Widget_Archive', NULL, $params)->to($this->_content)->have() && 
         $this->_content->is('single') && 
         in_array($callback, array('comment', 'trackback'))) {
             /** 判断来源 */

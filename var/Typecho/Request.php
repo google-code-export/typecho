@@ -75,6 +75,18 @@ class Typecho_Request
     }
     
     /**
+     * 删除参数
+     * 
+     * @access public
+     * @param string $name 指定的参数
+     * @return void
+     */
+    public static function unSetParameter($name)
+    {
+        unset(self::$_params[$name]);
+    }
+    
+    /**
      * 参数是否存在
      * 
      * @access public
