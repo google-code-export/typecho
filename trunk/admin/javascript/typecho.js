@@ -381,45 +381,42 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
 };
 
 /** 文本编辑器插入文字 */
-Typecho.textareaHasPrepare = false;
-
-Typecho.textareaAdd = function (match, flg1, flg2) {
-    var _el = $(document).getElement(match);
-    var _scrollTop, _start, _end, _range;
-    
-    _scrollTop = _el.scrollTop;
-    if (typeof(_el.selectionStart) == "number") {
-        _el.focus();
-        _start = _el.selectionStart;
-        _end = _el.selectionEnd;
-    }
-    
-    else if(document.selection) {
-        _el.focus();
-        _range = document.selection.createRange();
-    }
-
-    if (typeof(_el.selectionStart) == "number") {
-    
-        var pre = _el.value.substr(0, _start);
-        var post = _el.value.substr(_end);
-        var center = _el.value.substr(_start, _end - _start);
-        _el.value = pre + flg1 + center + flg2 + post;
+Typecho.textarea = new Class({
+    initialize: function (el) {
+        this.textarea = $(document).getElement(el);
+        this.range = null;
         
-        _el.setSelectionRange(_start + flg1.length, _start + flg1.length);
-    } else if (document.selection) {
-        if (_range.text.length > 0) {
-            _range.text = flg1 + _range.text + flg2;
-        } else {
-            _range.text = flg1 + flg2;
-        }
+        this.textarea.addEvents({
+            
+            blur: (function () {
+                this.range = this.textarea.getSelectedRange();
+            }).bind(this),
+            
+            focus: (function () {
+                this.range = null;
+            }).bind(this)
+        });
+    },
+    
+    setContent: function (before, after) {
+        var range = (null == this.range) ? this.textarea.getSelectedRange() : this.range,
+        text = this.textarea.get('value'),
+        selectedText = text.substr(range.start, range.end - range.start),
+        scrollTop = this.textarea.scrollTop;
+        
+        //alert(textarea.selectionStart);
+        
+        this.textarea.set('value', text.substr(0, range.start) + before + selectedText
+        + after + text.substr(range.end));
+        
+        (function () {
+            this.textarea.scrollTop = scrollTop;
+        }).bind(this).delay(0);
+
+        this.textarea.focus();
+        this.textarea.selectRange(range.start, range.end + before.length + after.length);
     }
-
-    setTimeout(function () {_el.scrollTop = _scrollTop}, 0);
-    _el.focus();
-
-    return true;
-};
+});
 
 /** 自动完成 */
 Typecho.autoComplete = function (match, token) {
