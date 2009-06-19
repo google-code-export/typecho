@@ -528,15 +528,24 @@ class Typecho_Json
      * 
      * @access public
      * @param string $var 需要解码的字符串
+     * @param boolean $assoc 是否强制解释为数组
      * @return mixed
      */
-	public static function decode($var)
+	public static function decode($var, $assoc = false)
 	{
         if (function_exists('json_decode')) {
             /** from php 5.1 */
-            return json_decode($var);
+            $result = json_decode($var);
         } else {
-            return self::_decode($var);
+            $result = self::_decode($var);
         }
+        
+        if ($assoc && is_object($result)) {
+            return (array) $result;
+        } else if (!$assoc && is_array($result)) {
+            return (object) $result;
+        }
+        
+        return $result;
 	}
 }
