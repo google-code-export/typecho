@@ -141,7 +141,7 @@ class Typecho_Plugin
         if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
             foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
                 self::$_plugins['handles'][$handle] = array_diff(self::$_plugins['handles'][$handle], $handles);
-                if (!empty(self::$_plugins['handles'][$handle])) {
+                if (empty(self::$_plugins['handles'][$handle])) {
                     unset(self::$_plugins['handles'][$handle]);
                 }
             }
