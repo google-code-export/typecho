@@ -382,9 +382,22 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
 
 /** 文本编辑器插入文字 */
 Typecho.textarea = new Class({
-    initialize: function (el) {
+
+    //继承自Options
+    Implements: [Options],
+
+    //内部选项
+    options: {
+        resizeAble: false,  //能否调整大小
+        resizeClass: 'size-btn',    //调整大小的class名
+        resizeUrl: '',  //调整大小后的请求地址
+        minSize: 30
+    },
+
+    initialize: function (el, options) {
         this.textarea = $(document).getElement(el);
         this.range = null;
+        this.setOptions(options);
         
         this.textarea.addEvents({
             
@@ -396,8 +409,88 @@ Typecho.textarea = new Class({
                 this.range = null;
             }).bind(this)
         });
+
+        if (this.options.resizeAble) {
+            this.makeResizeAble();
+        }
     },
     
+    //设置当前编辑域为可调整大小
+    makeResizeAble: function () {
+        this.resizeOffset = this.textarea.getStyle('height') ? 
+        this.textarea.getSize().y - parseInt(this.textarea.getStyle('height')) : 0;
+        this.resizeMouseY = 0;
+        this.lastMouseY = 0;
+        
+        //是否在调整区域按下鼠标
+        this.isResizePressed = false;
+        
+        //创建调整区
+        var cross = new Element('span', {
+            
+            'class': this.options.resizeClass,
+            
+            'events': {
+                mousedown: this.resizeMouseDown.bind(this)
+            }
+        }).inject(this.textarea, 'after');
+        
+        //截获事件
+        $(document).addEvents({
+            mouseup: this.resizeMouseUp.bind(this),
+            mousemove: this.resizeMouseMove.bind(this)
+        });
+        
+        //监听事件
+        this.resizeListener.periodical(10, this);
+    },
+    
+    //监听调整区
+    resizeListener: function () {
+        if (this.isResizePressed) {
+            var resize = (0 == this.lastMouseY) ? 0 : this.resizeMouseY - this.lastMouseY;
+            this.lastMouseY = this.resizeMouseY;
+            
+            var finalY = this.textarea.getSize().y - this.resizeOffset + resize;
+            
+            if (finalY > this.options.minSize) {
+                this.textarea.setStyle('height', finalY);
+            }
+        }
+    },
+    
+    //按下调整区
+    resizeMouseDown: function (e) {
+        this.isResizePressed = true;
+        e.stop();
+    },
+    
+    //松开调整区
+    resizeMouseUp: function (e) {
+        if (this.isResizePressed) {
+            this.isResizePressed = false;
+            
+            var size = this.textarea.getSize().y - this.resizeOffset;
+            
+            //发送ajax请求
+            new Request({
+                'method': 'post',
+                'url': this.options.resizeUrl
+            }).send('size=' + size + '&do=editorResize');
+            
+            this.resizeMouseY = 0;
+            this.lastMouseY = 0;
+        }
+    },
+    
+    //移动调整区
+    resizeMouseMove: function (e) {
+        if (this.isResizePressed) {
+            this.resizeMouseY = e.page.y;
+        }
+    },
+    
+    //设置当前选定的内容
     setContent: function (before, after) {
         var range = (null == this.range) ? this.textarea.getSelectedRange() : this.range,
         text = this.textarea.get('value'),
