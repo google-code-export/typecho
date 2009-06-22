@@ -843,11 +843,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array();
         $struct[] = array(
-			'isAdmin' => true,
-			'url'	    => $this->options->siteUrl,
-			'blogid'   => 1,
-			'blogName' => $this->options->title
-		);
+            'isAdmin' => true,
+            'url'	    => $this->options->siteUrl,
+            'blogid'   => 1,
+            'blogName' => $this->options->title
+        );
         return $struct;
     }
 
@@ -1171,36 +1171,36 @@ EOF;
 <<<EOF
 <?xml version="1.0" encoding="{$this->options->charset}"?>
 <manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">
-	<options>
-  		<supportsKeywords>Yes</supportsKeywords>
-		<supportsFileUpload>Yes</supportsFileUpload>
-		<supportsExtendedEntries>Yes</supportsExtendedEntries>
-		<supportsCustomDate>Yes</supportsCustomDate>
-		<supportsCategories>Yes</supportsCategories>
+    <options>
+        <supportsKeywords>Yes</supportsKeywords>
+        <supportsFileUpload>Yes</supportsFileUpload>
+        <supportsExtendedEntries>Yes</supportsExtendedEntries>
+        <supportsCustomDate>Yes</supportsCustomDate>
+        <supportsCategories>Yes</supportsCategories>
 
-		<supportsCategoriesInline>Yes</supportsCategoriesInline>
-		<supportsMultipleCategories>Yes</supportsMultipleCategories>
-		<supportsHierarchicalCategories>No</supportsHierarchicalCategories>
-		<supportsNewCategories>Yes</supportsNewCategories>
-		<supportsNewCategoriesInline>Yes</supportsNewCategoriesInline>
-		<supportsCommentPolicy>Yes</supportsCommentPolicy>
+        <supportsCategoriesInline>Yes</supportsCategoriesInline>
+        <supportsMultipleCategories>Yes</supportsMultipleCategories>
+        <supportsHierarchicalCategories>No</supportsHierarchicalCategories>
+        <supportsNewCategories>Yes</supportsNewCategories>
+        <supportsNewCategoriesInline>Yes</supportsNewCategoriesInline>
+        <supportsCommentPolicy>Yes</supportsCommentPolicy>
 
-		<supportsPingPolicy>Yes</supportsPingPolicy>
-		<supportsAuthor>Yes</supportsAuthor>
-		<supportsSlug>Yes</supportsSlug>
-		<supportsPassword>Yes</supportsPassword>
-		<supportsExcerpt>Yes</supportsExcerpt>
-		<supportsTrackbacks>Yes</supportsTrackbacks>
+        <supportsPingPolicy>Yes</supportsPingPolicy>
+        <supportsAuthor>Yes</supportsAuthor>
+        <supportsSlug>Yes</supportsSlug>
+        <supportsPassword>Yes</supportsPassword>
+        <supportsExcerpt>Yes</supportsExcerpt>
+        <supportsTrackbacks>Yes</supportsTrackbacks>
 
-		<supportsPostAsDraft>Yes</supportsPostAsDraft>
+        <supportsPostAsDraft>Yes</supportsPostAsDraft>
 
-		<supportsPages>Yes</supportsPages>
-		<supportsPageParent>No</supportsPageParent>
-		<supportsPageOrder>Yes</supportsPageOrder>
-		<requiresXHTML>True</requiresXHTML>
-		<supportsAutoUpdate>No</supportsAutoUpdate>
+        <supportsPages>Yes</supportsPages>
+        <supportsPageParent>No</supportsPageParent>
+        <supportsPageOrder>Yes</supportsPageOrder>
+        <requiresXHTML>True</requiresXHTML>
+        <supportsAutoUpdate>No</supportsAutoUpdate>
 
-	</options>
+    </options>
 </manifest>
 EOF;
         } else {

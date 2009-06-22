@@ -4099,8 +4099,6 @@ Element.implement({
 	getSelectedRange: function() {
 		if ('number' == typeof(this.selectionStart)) return {start: this.selectionStart, end: this.selectionEnd};
 		var pos = {start: 0, end: 0};
-		
-		this.focus();
 		var range = this.getDocument().selection.createRange();
 		if (!range || range.parentElement() != this) return pos;
 		var dup = range.duplicate();
