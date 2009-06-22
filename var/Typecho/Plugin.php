@@ -85,6 +85,25 @@ class Typecho_Plugin
         /** 初始化变量 */
         $this->_handle = $handle;
     }
+    
+    /**
+     * 插件handle比对
+     * 
+     * @access private
+     * @param array $pluginHandles
+     * @param array $otherPluginHandles
+     * @return void
+     */
+    private static function pluginHandlesDiff(array $pluginHandles, array $otherPluginHandles)
+    {
+        foreach ($otherPluginHandles as $handle) {
+            while (false !== ($index = array_search($handle, $pluginHandles))) {
+                unset($pluginHandles[$index]);
+            }
+        }
+        
+        return $pluginHandles;
+    }
 
     /**
      * 插件初始化
@@ -140,7 +159,7 @@ class Typecho_Plugin
         /** 去掉所有相关回调函数 */
         if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
             foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
-                self::$_plugins['handles'][$handle] = array_diff(self::$_plugins['handles'][$handle], $handles);
+                self::$_plugins['handles'][$handle] = self::pluginHandlesDiff(self::$_plugins['handles'][$handle], $handles);
                 if (empty(self::$_plugins['handles'][$handle])) {
                     unset(self::$_plugins['handles'][$handle]);
                 }
