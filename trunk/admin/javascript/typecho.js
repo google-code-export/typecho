@@ -399,20 +399,21 @@ Typecho.textarea = new Class({
         this.range = null;
         this.setOptions(options);
         
+        var recordRangeCallback = this.recordRange.bind(this);
+        
         this.textarea.addEvents({
-            
-            blur: (function () {
-                this.range = this.textarea.getSelectedRange();
-            }).bind(this),
-            
-            focus: (function () {
-                this.range = null;
-            }).bind(this)
+            mouseup: recordRangeCallback,
+            keyup: recordRangeCallback
         });
 
         if (this.options.resizeAble) {
             this.makeResizeAble();
         }
+    },
+    
+    //记录当前位置
+    recordRange: function () {
+        this.range = this.textarea.getSelectedRange();
     },
     
     //设置当前编辑域为可调整大小
