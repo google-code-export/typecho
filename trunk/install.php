@@ -214,8 +214,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                 }
 
 
-                                if($success)
-                                {
+                                if ($success) {
                                     $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
                                     $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
 
@@ -375,9 +374,11 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                                 echo '<p class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">已经删除完原有数据，请点击继续安装<button type="submit">下一步</button></p>';
                                             } elseif (Typecho_Request::getParameter('goahead')) {
                                                 //使用原有数据
+                                                //但是要更新用户网站
+                                                $installDb->query($installDb->update('table.options')->rows(array('value' => Typecho_Request::getParameter('userUrl')))->where('name = ?', 'siteUrl'));
                                                 Typecho_Response::redirect('install.php?finish&use_old');
                                             } else {
-                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到原有数据表已经存在，请先删除该表然后再继续进行安装.') . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
+                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到原有数据表已经存在,请先删除该表然后再继续进行安装.') . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
                                             }
                                         } else {
                                             echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
