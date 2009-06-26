@@ -187,11 +187,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                     break;
             }
             
+            $feedQuery = $this->request->feed;
             $matched = Typecho_Router::match($this->request->feed, $params);
             $this->parameter->type = Typecho_Router::$current;
             $this->request->flush($params);
         
-            if ('/comments/' == $this->request->feed || '/comments' == $this->request->feed) {
+            if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
             } else if (!$matched || 'feed' == $this->parameter->type) {
