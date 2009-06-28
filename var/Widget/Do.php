@@ -41,7 +41,7 @@ class Widget_Do extends Typecho_Widget
         'options-reading'           =>  'Widget_Options_Reading',
         'plugins-edit'              =>  'Widget_Plugins_Edit',
         'themes-edit'               =>  'Widget_Themes_Edit',
-        'users-edit'                =>  'Widget_Users_Eidt',
+        'users-edit'                =>  'Widget_Users_Edit',
         'users-profile'             =>  'Widget_Users_Profile'
     );
 
