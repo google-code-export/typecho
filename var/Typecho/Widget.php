@@ -75,66 +75,51 @@ abstract class Typecho_Widget
     public $length = 0;
     
     /**
-     * 执行函数
+     * request对象
+     * 
+     * @var Typecho_Request
+     * @access public
+     */
+    public $request;
+    
+    /**
+     * response对象
+     * 
+     * @var Typecho_Response
+     * @access public
+     */
+    public $response;
+    
+    /**
+     * 初始化函数
      * 
      * @access public
      * @return void
      */
-    public function execute()
-    {}
+    public function __construct(Typecho_Request $request, Typecho_Response $response)
+    {
+        //设置函数内部对象
+        $this->request = $request;
+        $this->response = $response;
+    }
     
     /**
-     * request事件触发
+     * execute function.
      * 
      * @access public
-     * @param string $name 触发条件名
-     * @param string $value 触发条件值
-     * @return mixed
+     * @return void
      */
-    public function onRequest($name, $value = NULL)
-    {
-        $validated = false;
-        
-        if (NULL === $value) {
-            /** 解析串 */
-            if (is_string($name)) {
-                parse_str($name, $params);
-            } else if (is_array($name)) {
-                $params = $name;
-            }
-            
-            /** 验证串 */
-            if ($params) {
-                $validated = true;
-                foreach ($params as $key => $val) {
-                    if ((!empty($val) && $val != $this->request->{$key}) || 
-                    (empty($val) && !isset($this->request->{$key}))) {
-                        $validated = false;
-                        break;
-                    }
-                }
-            }
-        } else {
-            $validated = ($this->request->{$name} == $value);
-        }
-        
-        if ($validated) {
-            return $this;
-        } else {
-            /** Typecho_Widget_Helper_Empty */
-            require_once 'Typecho/Widget/Helper/Empty.php';
-            return new Typecho_Widget_Helper_Empty();
-        }
-    }
+    public function execute(){};
     
     /**
      * post事件触发
      * 
+     * @param boolean $condition 触发条件
      * @return mixed
      */
-    public function onPost()
+    public function on($condition)
     {
-        if ($this->request->isPost()) {
+        if ($condition) {
             return $this;
         } else {
             /** Typecho_Widget_Helper_Null */
@@ -371,8 +356,7 @@ abstract class Typecho_Widget
     public function __get($name)
     {
         return isset($this->row[$name]) ? $this->row[$name] : (method_exists($this, $method = '___' . $name)
-        ? $this->row[$name] = $this->$method() : 
-        (isset($this->_helpers[$name]) ? $this->_helpers[$name] : $this->__helper($name)));
+        ? $this->row[$name] = $this->$method() : NULL);
     }
     
     /**
@@ -397,31 +381,5 @@ abstract class Typecho_Widget
     public function __isSet($name)
     {
         return isset($this->row[$name]);
-    }
-    
-    /**
-     * 载入组件帮手
-     * 
-     * @access public
-     * @param string $name 帮手名称
-     * @return string
-     */
-    public final function __helper($name)
-    {
-        switch ($name) {
-            case 'request':
-                $this->_helpers[$name] = new Typecho_Widget_Request();
-                break;
-            case 'response':
-                $this->_helpers[$name] = new Typecho_Widget_Response();
-                break;
-            case 'parameter':
-                $this->_helpers[$name] = Typecho_Config::factory();
-                break;
-            default:
-                return NULL;
-        }
-        
-        return $this->_helpers[$name];
     }
 }
