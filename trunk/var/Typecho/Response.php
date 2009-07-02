@@ -28,7 +28,7 @@ class Typecho_Response
      * @access private
      * @var array
      */
-    private static $_httpCode = array(
+    private $_httpCode = array(
         100 => 'Continue',
         101	=> 'Switching Protocols',
         200	=> 'OK',
@@ -70,14 +70,17 @@ class Typecho_Response
         504	=> 'Gateway Timeout',
         505	=> 'HTTP Version Not Supported'
     );
-
+    
     /**
-     * 默认的字符编码
+     * 字符编码
      * 
+     * @var mixed
      * @access private
-     * @var string
      */
-    private static $_defaultCharset = 'UTF-8';
+    private $_charset;
+
+    //默认的字符编码
+    const CHARSET = 'UTF-8';
 
     /**
      * 解析ajax回执的内部函数
@@ -86,7 +89,7 @@ class Typecho_Response
      * @param mixed $message 格式化数据
      * @return string
      */
-    private static function _parseXml($message)
+    private function _parseXml($message)
     {
         /** 对于数组型则继续递归 */
         if (is_array($message)) {
@@ -94,7 +97,7 @@ class Typecho_Response
             
             foreach ($message as $key => $val) {
                 $tagName = is_int($key) ? 'item' : $key;
-                $result .= '<' . $tagName . '>' . self::_parseXml($val) . '</' . $tagName . '>';
+                $result .= '<' . $tagName . '>' . $this->_parseXml($val) . '</' . $tagName . '>';
             }
             
             return $result;
@@ -110,9 +113,24 @@ class Typecho_Response
      * @param string $charset 字符集
      * @return void
      */
-    public static function setDefaultCharset($charset)
+    public function setCharset($charset = null)
     {
-        self::$_defaultCharset = $charset;
+        $this->_charset = empty($charset) ? self::CHARSET : $charset;
+    }
+    
+    /**
+     * 获取字符集
+     * 
+     * @access public
+     * @return void
+     */
+    public function getCharset()
+    {
+        if (empty($this->_charset)) {
+            $this->setCharset();
+        }
+        
+        return $this->_charset;
     }
     
     /**
@@ -120,12 +138,11 @@ class Typecho_Response
      * 
      * @access public
      * @param string $contentType 文档类型
-     * @param string $charset 字符集
      * @return void
      */
-    public static function setContentType($contentType = 'text/html', $charset = NULL)
+    public function setContentType($contentType = 'text/html')
     {
-        header('content-Type: ' . $contentType . '; charset=' . (empty($charset) ? self::$_defaultCharset : $charset), true);
+        header('Content-Type: ' . $contentType . '; charset=' . $this->getCharset(), true);
     }
     
     /**
@@ -134,18 +151,11 @@ class Typecho_Response
      * @access public
      * @param string $name 名称 
      * @param string $value 对应值
-     * @param boolean $replace 是否替换重复
-     * @param integer $responseCode 回执代码
      * @return void
      */
-    public static function setHeader($name, $value, $replace = false, $responseCode = 0)
+    public function setHeader($name, $value)
     {
-        /** 设置回执代码 */
-        if ($responseCode > 0) {
-            header($name . ': ' . $value, $replace, $responseCode);
-        } else {
-            header($name . ': ' . $value, $replace);
-        }
+        header($name . ': ' . $value);
     }
     
     /**
@@ -155,10 +165,10 @@ class Typecho_Response
      * @param integer $code http代码
      * @return void
      */
-    public static function setStatus($code)
+    public function setStatus($code)
     {
-        if (isset(self::$_httpCode[$code])) {
-            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true, $code);
+        if (isset($this->_httpCode[$code])) {
+            header('HTTP/1.1 ' . $code . ' ' . $this->_httpCode[$code], true, $code);
         }
     }
     
@@ -167,18 +177,17 @@ class Typecho_Response
      * 
      * @access public
      * @param string $message 消息体
-     * @param string $charset 信息编码
      * @return void
      */
-    public static function throwXml($message, $charset = NULL)
+    public function throwXml($message)
     {
         /** 设置http头信息 */
-        self::setContentType('text/xml', $charset);
+        $this->setContentType('text/xml');
         
         /** 构建消息体 */
-        echo '<?xml version="1.0" encoding="' . self::$_defaultCharset . '"?>',
+        echo '<?xml version="1.0" encoding="' . $this->getCharset() . '"?>',
         '<response>',
-        self::_parseXml($message),
+        $this->_parseXml($message),
         '</response>';
         
         /** 终止后续输出 */
@@ -190,13 +199,12 @@ class Typecho_Response
      * 
      * @access public
      * @param string $message 消息体
-     * @param string $charset 信息编码
      * @return void
      */
-    public static function throwJson($message, $charset = NULL)
+    public function throwJson($message)
     {
         /** 设置http头信息 */
-        self::setContentType('application/json', $charset);
+        $this->setContentType('application/json');
         
         /** Typecho_Json */
         require_once 'Typecho/Json.php';
@@ -214,46 +222,47 @@ class Typecho_Response
      * @param boolean $isPermanently 是否为永久重定向
      * @return void
      */
-    public static function redirect($location, $isPermanently = false)
+    public function redirect($location, $isPermanently = false)
     {
         /** Typecho_Common */
         require_once 'Typecho/Common.php';
         $location = Typecho_Common::safeUrl($location);
     
         if ($isPermanently) {
-            self::setHeader('location', $location, false, 301);
-            die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+            header('Location: ' . $location, false, 301);
+            echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>301 Moved Permanently</title>
     </head><body>
     <h1>Moved Permanently</h1>
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
-    </body></html>');
+    </body></html>';
+            exit;
         } else {
-            self::setHeader('location', $location, false, 302);
-            die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+            header('Location: ' . $location, false, 302);
+            echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
     <html><head>
     <title>302 Moved Temporarily</title>
     </head><body>
     <h1>Moved Temporarily</h1>
     <p>The document has moved <a href="' . $location . '">here</a>.</p>
-    </body></html>');
+    </body></html>';
+            exit;
         }
     }
     
     /**
      * 返回来路
      *
-     * @access protected
+     * @access public
      * @param string $anchor 锚点地址
      * @param string $default 默认来路
      * @return void
      */
-    public static function goBack($anchor = NULL, $default = NULL)
+    public function goBack($anchor = NULL, $default = NULL)
     {
-        /** Typecho_Request */
-        require_once 'Typecho/Request.php';
-        $referer = Typecho_Request::getReferer();
+        //获取来源
+        $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     
         //判断来源
         if (!empty($referer)) {
@@ -265,9 +274,9 @@ class Typecho_Response
                 }
             }
             
-            self::redirect($referer . (empty($anchor) ? NULL : '#' . $anchor), false);
+            $this->redirect($referer . (empty($anchor) ? NULL : '#' . $anchor), false);
         } else if (!empty($default)) {
-            self::redirect($default);
+            $this->redirect($default);
         }
     }
     
@@ -281,7 +290,7 @@ class Typecho_Response
      * @param string $url 路径(可以是域名,也可以是地址)
      * @return void
      */
-    public static function setCookie($key, $value, $expire = 0, $url = NULL)
+    public function setCookie($key, $value, $expire = 0, $url = NULL)
     {
         $path = '/';
         if (!empty($url)) {
@@ -308,7 +317,7 @@ class Typecho_Response
      * @param string $key 指定的参数
      * @return void
      */
-    public static function deleteCookie($key, $url = NULL)
+    public function deleteCookie($key, $url = NULL)
     {
         if (!isset($_COOKIE[$key])) {
             return;
@@ -330,41 +339,5 @@ class Typecho_Response
         } else {
             setcookie($key, '', time() - 2592000, $path);
         }
-    }
-    
-    /**
-     * 设置指定的SESSION值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param string $value 设置的值
-     * @return void
-     */
-    public static function setSession($key, $value)
-    {
-        $_SESSION[$key] = $value;
-    }
-
-    /**
-     * 删除指定的SESSION值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @return void
-     */
-    public static function deleteSession($key)
-    {
-        session_unregister($key);
-    }
-
-    /**
-     * 销毁所有SESSION值
-     *
-     * @access public
-     * @return void
-     */
-    public static function destorySession()
-    {
-        session_unset();
     }
 }

@@ -21,7 +21,7 @@ class Typecho_Request
      * @access private
      * @var array
      */
-    private static $_params = array();
+    private $_params = array();
     
     /**
      * 路径信息
@@ -29,7 +29,72 @@ class Typecho_Request
      * @access private
      * @var string
      */
-    private static $_pathInfo = NULL;
+    private $_pathInfo = NULL;
+    
+    /**
+     * 服务端参数
+     * 
+     * @access private
+     * @var array
+     */
+    private $_server = array();
+    
+    /**
+     * 客户端ip地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $_ip = null;
+    
+    /**
+     * 获取实际传递参数(magic)
+     * 
+     * @access public
+     * @param string $key 指定参数
+     * @return void
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+    
+    /**
+     * 判断参数是否存在
+     * 
+     * @access public
+     * @param string $key 指定参数
+     * @return void
+     */
+    public function __isset($key)
+    {
+        return isset($_GET[$key])
+        || isset($_POST[$key])
+        || isset($_COOKIE[$key])
+        || $this->isSetParam($key);
+    }
+    
+    /**
+     * 获取实际传递参数
+     * 
+     * @access public
+     * @param string $key 指定参数
+     * @param mixed $default 默认参数 (default: NULL)
+     * @return void
+     */
+    public function get($key, $default = NULL)
+    {
+        switch (true) {
+            case isset($_GET[$key]):
+                return $_GET[$key];
+            case isset($_POST[$key]):
+                return $_POST[$key];
+            case isset($_COOKIE[$key]):
+                return $_COOKIE[$key];
+            default:
+                return $this->getParam($key, $default);
+        }
+    }
 
     /**
      * 获取指定的http传递参数
@@ -39,26 +104,9 @@ class Typecho_Request
      * @param mixed $default 默认的参数
      * @return mixed
      */
-    public static function getParameter($key, $default = NULL)
+    public function getParam($key, $default = NULL)
     {
-        switch (true) {
-            case isset(self::$_params[$key]):
-                $value = self::$_params[$key];
-                break;
-            case isset($_GET[$key]):
-                $value = $_GET[$key];
-                break;
-            case isset($_POST[$key]):
-                $value = $_POST[$key];
-                break;
-            case isset($_COOKIE[$key]):
-                $value = $_COOKIE[$key];
-                break;
-            default:
-                return $default;
-        }
-        
-        return is_array($value) || strlen($value) > 0 ? $value : $default;
+        return isset($this->_params[$key]) ? $this->_params[$key] : $default;
     }
     
     /**
@@ -69,9 +117,9 @@ class Typecho_Request
      * @param mixed $value 参数值
      * @return void
      */
-    public static function setParameter($name, $value)
+    public function setParam($name, $value)
     {
-        self::$_params[$name] = $value;
+        $this->_params[$name] = $value;
     }
     
     /**
@@ -81,9 +129,9 @@ class Typecho_Request
      * @param string $name 指定的参数
      * @return void
      */
-    public static function unSetParameter($name)
+    public function unSetParam($name)
     {
-        unset(self::$_params[$name]);
+        unset($this->_params[$name]);
     }
     
     /**
@@ -93,12 +141,21 @@ class Typecho_Request
      * @param string $key 指定的参数
      * @return boolean
      */
-    public static function isSetParameter($key)
+    public function isSetParam($key)
     {
-        return isset(self::$_params[$key])
-        || isset($_GET[$key])
-        || isset($_POST[$key])
-        || isset($_COOKIE[$key]);
+        return isset($this->_params[$key]);
+    }
+    
+    /**
+     * 设置多个参数
+     * 
+     * @access public
+     * @param array $params 参数列表
+     * @return void
+     */
+    public function setParams(array $params)
+    {
+        array_merge($this->_params, $params);
     }
 
     /**
@@ -106,22 +163,22 @@ class Typecho_Request
      *
      * @access public
      * @param mixed $parameter 指定的参数
-     * @return unknown
+     * @return array
      */
-    public static function getParametersFrom($parameter)
+    public function getParams($params)
     {
-        if (is_array($parameter)) {
-            $args = $parameter;
+        if (is_array($params)) {
+            $args = $params;
         } else {
             $args = func_get_args();
-            $parameters = array();
+            $params = array();
         }
 
         foreach ($args as $arg) {
-            $parameters[$arg] = self::getParameter($arg);
+            $params[$arg] = $this->get($arg);
         }
 
-        return $parameters;
+        return $params;
     }
     
     /**
@@ -131,7 +188,7 @@ class Typecho_Request
      * @param mixed $parameter 指定的参数
      * @return string
      */
-    public static function uri($parameter = NULL)
+    public function getRequestUri($parameter = NULL)
     {
         /** 初始化地址 */
         list($scheme) = explode('/', $_SERVER["SERVER_PROTOCOL"]);
@@ -169,33 +226,9 @@ class Typecho_Request
      * @param string $default 默认的参数
      * @return mixed
      */
-    public static function getCookie($key, $default = NULL)
+    public function getCookie($key, $default = NULL)
     {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
-    }
-
-    /**
-     * 获取指定的SESSION值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param mixed $default 默认的参数
-     * @return string
-     */
-    public static function getSession($key, $default = NULL)
-    {
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
-    }
-    
-    /**
-     * 判断请求是否为Ajax请求
-     * 
-     * @access public
-     * @return boolean
-     */
-    public static function isAjax()
-    {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'XMLHTTPREQUEST' == strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
     
 
@@ -205,7 +238,7 @@ class Typecho_Request
      * @access public
      * @return string
      */
-    public static function getPathInfo()
+    public function getPathInfo()
     {
         /** 缓存信息 */
         if (NULL !== self::$_pathInfo) {
@@ -304,78 +337,153 @@ class Typecho_Request
 
         return (self::$_pathInfo = urldecode(empty($pathInfo) ? '/' : $pathInfo));
     }
-
+        
     /**
-     * 获取客户端ip
-     *
+     * 设置服务端参数
+     * 
      * @access public
+     * @param string $name 参数名称
+     * @param mixed $value 参数值
+     * @return void
+     */
+    public function setServer($name, $value = null)
+    {
+        if (null == $value) {
+            if (isset($_SERVER[$name])) {
+                $value = $_SERVER[$name];
+            } else if (isset($_ENV[$name])) {
+                $value = $_ENV[$name];
+            }
+        }
+        
+        $this->_server[$name] = $value;
+    }
+    
+    /**
+     * 获取环境变量
+     * 
+     * @access public
+     * @param string $name 获取环境变量名
      * @return string
      */
-    public static function getClientIp()
+    public function getServer($name)
+    {
+        if (!isset($this->_server[$name])) {
+            $this->setServer($name);
+        }
+        
+        return $this->_server[$name];
+    }
+    
+    /**
+     * 设置ip地址
+     * 
+     * @access public
+     * @param unknown $ip
+     * @return unknown
+     */
+    public function setIp($ip = null)
     {
         switch (true) {
-            case isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'):
-                return $_SERVER['REMOTE_ADDR'];
-            case getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'):
-                return getenv('HTTP_CLIENT_IP');
-            case getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'): 
-                return getenv('HTTP_X_FORWARDED_FOR');
-            case getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'):
-                return getenv('REMOTE_ADDR');
+            case null !== $this->getServer('REMOTE_ADDR'):
+                $this->_ip = $this->getServer('REMOTE_ADDR');
+                return;
+            case null !== $this->getServer('HTTP_CLIENT_IP'):
+                $this->_ip = $this->getServer('HTTP_CLIENT_IP');
+                return;
+            case null !== $this->getServer('HTTP_X_FORWARDED_FOR'):
+                $this->_ip = $this->getServer('HTTP_X_FORWARDED_FOR');
+                return;
             default:
-                return 'unknown';
+                break;
         }
+        
+        $this->_ip = 'unknown';
     }
     
     /**
-     * 获取网页来源
+     * 获取ip地址
      * 
      * @access public
      * @return string
      */
-    public static function getReferer()
+    public function getIp()
     {
-        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : getenv('HTTP_REFERER');
+        if (null === $this->_ip) {
+            $this->setIp();
+        }
+        
+        return $this->_ip;
     }
     
     /**
-     * 获取客户端
+     * 判断输入是否满足要求
      * 
      * @access public
-     * @return string
-     */
-    public static function getAgent()
-    {
-        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT');
-    }
-    
-    /**
-     * 请求方法是否为POST
-     *
+     * @param mixed $query 条件
      * @return boolean
      */
-    public static function isPost()
+    public function is($query)
     {
-        return ('POST' == $_SERVER['REQUEST_METHOD']);
-    }
+        $validated = false;
+        $querys = func_get_args();
 
-    /**
-     * 请求方法是否为GET
-     *
-     * @return boolean
-     */
-    public static function isGet()
-    {
-        return ('GET' == $_SERVER['REQUEST_METHOD']);
-    }
-
-    /**
-     * 请求方法是否为PUT
-     *
-     * @return boolean
-     */
-    public static function isPut()
-    {
-        return ('PUT' == $_SERVER['REQUEST_METHOD']);
+        foreach ($querys as $query) {
+            switch ($query) {
+                case 'GET':
+                case 'POST':
+                case 'PUT':
+                case 'DELETE':
+                case 'HEAD':
+                case 'OPTIONS':
+                
+                    /** 各种http方法 */
+                    $validated = ($query == $this->getServer('REQUEST_METHOD'));
+                    break;
+                    
+                case 'SECURE':
+                    
+                    /** 是否为https连接 */
+                    $validated = ('on' == $this->getServer('HTTPS'));
+                    break;
+                    
+                case 'AJAX':
+                
+                    /** 是否为ajax方法 */
+                    $validated = ('XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH'));
+                    break;
+                    
+                case 'FLASH':
+                
+                    /** 是否为flash方法 */
+                    $validated = ('Shockwave Flash' == $this->getServer('USER_AGENT'));
+                    break;
+                    
+                default:
+                
+                    /** 解析串 */
+                    if (is_string($query)) {
+                        parse_str($query, $params);
+                    } else if (is_array($query)) {
+                        $params = $query;
+                    }
+                    
+                    /** 验证串 */
+                    if ($params) {
+                        $validated = true;
+                        foreach ($params as $key => $val) {
+                            if ($val != $this->{$key}) {
+                                $validated = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    break;
+            }
+        }
+        
+        return $validated;
+        
     }
 }
