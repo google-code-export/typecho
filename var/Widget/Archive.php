@@ -155,17 +155,20 @@ class Widget_Archive extends Widget_Abstract_Contents
     
     
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
-     * @param mixed $type 路由类型
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct($type = NULL)
+    public function __construct($request, $response, $params = NULL)
     {
-        parent::__construct();
+        parent::__construct($request, $response, $params);
+        
         $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
-        'type' => (NUll === $type) ? Typecho_Router::$current : $type));
+        'type' => Typecho_Router::$current));
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
@@ -229,7 +232,10 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     private function error404Handle(Typecho_Db_Query $select, &$hasPushed)
-    {
+    {    
+        /** 设置header */
+        $this->response->setStatus(404);
+    
         /** 设置标题 */
         $this->_archiveTitle[] = _t('页面不存在');
         
@@ -277,7 +283,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             
             $fromMonth = 1;
             $toMonth = 12;
-            
+
             if (isset($this->request->month)) {
                 $fromMonth = $this->request->filter('int')->month;
                 $toMonth = $fromMonth;

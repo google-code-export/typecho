@@ -25,13 +25,10 @@ class Widget_ExceptionHandle extends Widget_Archive
      * @param Exception $excepiton 抛出的异常
      * @return void
      */
-    public function __construct(Exception $excepiton)
+    public function __construct()
     {
         @ob_clean();
-        Typecho_Response::setStatus(404);
-        parent::__construct(404);
-        $this->execute();
-        $this->render();
+        $this->widget('Widget_Archive@404', 'type=404')->render();
         exit;
     }
 }

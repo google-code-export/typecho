@@ -20,14 +20,17 @@
 class Widget_Comments_Archive extends Widget_Abstract_Comments
 {
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct()
+    public function __construct($request, $response, $params = NULL)
     {
-        parent::__construct();
+        parent::__construct($request, $response, $params);
         $this->parameter->setDefault('desc=0');
     }
     

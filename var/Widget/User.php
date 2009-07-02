@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_User extends Widget_Abstract_Users
+class Widget_User extends Typecho_Widget
 {
     /**
      * 用户
@@ -41,13 +41,18 @@ class Widget_User extends Widget_Abstract_Users
             );
     
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct()
+    public function __construct($request, $response, $params = NULL)
     {
+        parent::__construct($request, $response, $params);
+        
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
         $this->options = $this->widget('Widget_Options');

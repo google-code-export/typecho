@@ -45,7 +45,107 @@ class Typecho_Request
      * @access private
      * @var string
      */
-    private $_ip = null;
+    private $_ip = NULL;
+    
+    /**
+     * 客户端字符串
+     * 
+     * @access private
+     * @var string
+     */
+    private $_agent = NULL;
+    
+    /**
+     * 来源页
+     * 
+     * @access private
+     * @var string
+     */
+    private $_referer = NULL;
+    
+    /**
+     * 单例句柄
+     * 
+     * @access private
+     * @var Typecho_Request
+     */
+    private static $_instance = NULL;
+    
+    /**
+     * 当前过滤器
+     * 
+     * @access private
+     * @var array
+     */
+    private $_filter = array();
+    
+    /**
+     * 支持的过滤器列表
+     * 
+     * @access private
+     * @var string
+     */
+    private static $_supportFilters = array(
+        'int'       =>  'intval',
+        'integer'   =>  'intval',
+        'search'    =>  array('Typecho_Common', 'filterSearchQuery'),
+        'xss'       =>  array('Typecho_Common', 'removeXSS'),
+        'url'       =>  array('Typecho_Common', 'safeUrl')
+    );
+    
+    /**
+     * 获取单例句柄
+     * 
+     * @access public
+     * @return Typecho_Request
+     */
+    public static function getInstance()
+    {
+        if (NULL === self::$_instance) {
+            self::$_instance = new Typecho_Request();
+        }
+        
+        return self::$_instance;
+    }
+    
+    /**
+     * 应用过滤器
+     * 
+     * @access private
+     * @param mixed $value
+     * @return void
+     */
+    private function _applyFilter($value)
+    {
+        if ($this->_filter) {
+            foreach ($this->_filter as $filter) {
+                $value = is_array($value) ? array_map($filter, $value) :
+                call_user_func($filter, $value);
+            }
+        }
+        
+        $this->_filter = array();
+        return $value;
+    }
+    
+    /**
+     * 设置过滤器
+     * 
+     * @access public
+     * @param mixed $filter 过滤器名称
+     * @return Typecho_Widget_Request
+     */
+    public function filter()
+    {
+        $filters = func_get_args();
+        
+        foreach ($filters as $filter) {
+            $this->_filter[] = is_string($filter) && isset(self::$_supportFilters[$filter]) 
+            ? self::$_supportFilters[$filter] : $filter;
+        }
+        
+        return $this;
+    }
     
     /**
      * 获取实际传递参数(magic)
@@ -84,16 +184,27 @@ class Typecho_Request
      */
     public function get($key, $default = NULL)
     {
+        $value = $default;
+        
         switch (true) {
+            case isset($this->_params[$key]):
+                $value = $this->_params[$key];
+                break;
             case isset($_GET[$key]):
-                return $_GET[$key];
+                $value = $_GET[$key];
+                break;
             case isset($_POST[$key]):
-                return $_POST[$key];
+                $value = $_POST[$key];
+                break;
             case isset($_COOKIE[$key]):
-                return $_COOKIE[$key];
+                $value = $_COOKIE[$key];
+                break;
             default:
-                return $this->getParam($key, $default);
+                $value = $default;
+                break;
         }
+        
+        return $this->_filter ? $this->_applyFilter($value) : $value;
     }
 
     /**
@@ -106,7 +217,8 @@ class Typecho_Request
      */
     public function getParam($key, $default = NULL)
     {
-        return isset($this->_params[$key]) ? $this->_params[$key] : $default;
+        $value = isset($this->_params[$key]) ? $this->_params[$key] : $default;
+        return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     
     /**
@@ -150,12 +262,18 @@ class Typecho_Request
      * 设置多个参数
      * 
      * @access public
-     * @param array $params 参数列表
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function setParams(array $params)
+    public function setParams($params)
     {
-        array_merge($this->_params, $params);
+        //处理字符串
+        if (!is_array($params)) {
+            parse_str($params, $out);
+            $params = $out;
+        }
+    
+        $this->_params = array_merge($this->_params, $params);
     }
 
     /**
@@ -230,7 +348,6 @@ class Typecho_Request
     {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
-    
 
     /**
      * 获取当前pathinfo
@@ -241,8 +358,8 @@ class Typecho_Request
     public function getPathInfo()
     {
         /** 缓存信息 */
-        if (NULL !== self::$_pathInfo) {
-            return self::$_pathInfo;
+        if (NULL !== $this->_pathInfo) {
+            return $this->_pathInfo;
         }
     
         //参考Zend Framework对pahtinfo的处理, 更好的兼容性
@@ -269,7 +386,7 @@ class Typecho_Request
                 $requestUri .= '?' . $_SERVER['QUERY_STRING'];
             }
         } else {
-            return self::$_pathInfo = '/';
+            return $this->_pathInfo = '/';
         }
         
         //处理baseUrl
@@ -326,16 +443,16 @@ class Typecho_Request
             $requestUri = substr($requestUri, 0, $pos);
         }
         
-        if ((null !== $finalBaseUrl)
+        if ((NULL !== $finalBaseUrl)
             && (false === ($pathInfo = substr($requestUri, strlen($finalBaseUrl)))))
         {
             // If substr() returns false then PATH_INFO is set to an empty string
             $pathInfo = '/';
-        } elseif (null === $finalBaseUrl) {
+        } elseif (NULL === $finalBaseUrl) {
             $pathInfo = $requestUri;
         }
 
-        return (self::$_pathInfo = urldecode(empty($pathInfo) ? '/' : $pathInfo));
+        return ($this->_pathInfo = urldecode(empty($pathInfo) ? '/' : $pathInfo));
     }
         
     /**
@@ -346,9 +463,9 @@ class Typecho_Request
      * @param mixed $value 参数值
      * @return void
      */
-    public function setServer($name, $value = null)
+    public function setServer($name, $value = NULL)
     {
-        if (null == $value) {
+        if (NULL == $value) {
             if (isset($_SERVER[$name])) {
                 $value = $_SERVER[$name];
             } else if (isset($_ENV[$name])) {
@@ -382,16 +499,16 @@ class Typecho_Request
      * @param unknown $ip
      * @return unknown
      */
-    public function setIp($ip = null)
+    public function setIp($ip = NULL)
     {
         switch (true) {
-            case null !== $this->getServer('REMOTE_ADDR'):
+            case NULL !== $this->getServer('REMOTE_ADDR'):
                 $this->_ip = $this->getServer('REMOTE_ADDR');
                 return;
-            case null !== $this->getServer('HTTP_CLIENT_IP'):
+            case NULL !== $this->getServer('HTTP_CLIENT_IP'):
                 $this->_ip = $this->getServer('HTTP_CLIENT_IP');
                 return;
-            case null !== $this->getServer('HTTP_X_FORWARDED_FOR'):
+            case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
                 $this->_ip = $this->getServer('HTTP_X_FORWARDED_FOR');
                 return;
             default:
@@ -409,11 +526,131 @@ class Typecho_Request
      */
     public function getIp()
     {
-        if (null === $this->_ip) {
+        if (NULL === $this->_ip) {
             $this->setIp();
         }
         
         return $this->_ip;
+    }
+    
+    /**
+     * 设置客户端
+     * 
+     * @access public
+     * @param string $agent 客户端字符串
+     * @return void
+     */
+    public function setAgent($agent = NULL)
+    {
+        $this->_agent = (NULL === $agent) ? $this->getServer('HTTP_USER_AGENT') : $agent;
+    }
+    
+    /**
+     * 获取客户端
+     * 
+     * @access public
+     * @return void
+     */
+    public function getAgent()
+    {
+        if (NULL === $this->_agent) {
+            $this->setAgent();
+        }
+        
+        return $this->_agent;
+    }
+    
+    /**
+     * 设置来源页
+     * 
+     * @access public
+     * @param string $referer 客户端字符串
+     * @return void
+     */
+    public function setReferer($referer = NULL)
+    {
+        $this->_referer = (NULL === $referer) ? $this->getServer('HTTP_REFERER') : $referer;
+    }
+    
+    /**
+     * 获取客户端
+     * 
+     * @access public
+     * @return void
+     */
+    public function getReferer()
+    {
+        if (NULL === $this->_referer) {
+            $this->setReferer();
+        }
+        
+        return $this->_referer;
+    }
+    
+    /**
+     * 判断是否为get方法
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isGet()
+    {
+        return 'GET' == $this->getServer('REQUEST_METHOD');
+    }
+    
+    /**
+     * 判断是否为post方法
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isPost()
+    {
+        return 'POST' == $this->getServer('REQUEST_METHOD');
+    }
+    
+    /**
+     * 判断是否为put方法
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isPut()
+    {
+        return 'PUT' == $this->getServer('REQUEST_METHOD');
+    }
+    
+    /**
+     * 判断是否为https
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isSecure()
+    {
+        return 'on' == $this->getServer('HTTPS');
+    }
+    
+    /**
+     * 判断是否为ajax
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isAjax()
+    {
+        return 'XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH');
+    }
+    
+    /**
+     * 判断是否为flash
+     * 
+     * @access public
+     * @return boolean
+     */
+    public function isFlash()
+    {
+        return 'Shockwave Flash' == $this->getServer('USER_AGENT');
     }
     
     /**
@@ -426,64 +663,25 @@ class Typecho_Request
     public function is($query)
     {
         $validated = false;
-        $querys = func_get_args();
 
-        foreach ($querys as $query) {
-            switch ($query) {
-                case 'GET':
-                case 'POST':
-                case 'PUT':
-                case 'DELETE':
-                case 'HEAD':
-                case 'OPTIONS':
-                
-                    /** 各种http方法 */
-                    $validated = ($query == $this->getServer('REQUEST_METHOD'));
+        /** 解析串 */
+        if (is_string($query)) {
+            parse_str($query, $params);
+        } else if (is_array($query)) {
+            $params = $query;
+        }
+        
+        /** 验证串 */
+        if ($params) {
+            $validated = true;
+            foreach ($params as $key => $val) {
+                if ($val != $this->{$key}) {
+                    $validated = false;
                     break;
-                    
-                case 'SECURE':
-                    
-                    /** 是否为https连接 */
-                    $validated = ('on' == $this->getServer('HTTPS'));
-                    break;
-                    
-                case 'AJAX':
-                
-                    /** 是否为ajax方法 */
-                    $validated = ('XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH'));
-                    break;
-                    
-                case 'FLASH':
-                
-                    /** 是否为flash方法 */
-                    $validated = ('Shockwave Flash' == $this->getServer('USER_AGENT'));
-                    break;
-                    
-                default:
-                
-                    /** 解析串 */
-                    if (is_string($query)) {
-                        parse_str($query, $params);
-                    } else if (is_array($query)) {
-                        $params = $query;
-                    }
-                    
-                    /** 验证串 */
-                    if ($params) {
-                        $validated = true;
-                        foreach ($params as $key => $val) {
-                            if ($val != $this->{$key}) {
-                                $validated = false;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    break;
+                }
             }
         }
         
         return $validated;
-        
     }
 }

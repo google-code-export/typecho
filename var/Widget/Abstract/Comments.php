@@ -187,7 +187,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
             'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
             'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'ip'        =>  empty($comment['ip']) ? $this->request->getClientIp() : $comment['ip'],
+            'ip'        =>  empty($comment['ip']) ? $this->request->getIp() : $comment['ip'],
             'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
             'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
             'type'      =>  empty($comment['type']) ? 'comment' : $comment['type'],

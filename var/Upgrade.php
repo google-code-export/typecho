@@ -179,7 +179,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 升级编辑器接口 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'useRichEditor', 'value' => 1)));
+        ->rows(array('name' => 'useRichEditor', 'user' => 0, 'value' => 1)));
     }
     
     /**
@@ -359,23 +359,23 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
         /** 增加自定义主页 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'customHomePage', 'value' => 0)));
+                ->rows(array('name' => 'customHomePage', 'user' => 0, 'value' => 0)));
                 
         /** 增加文件上传散列函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'uploadHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"uploadHandle";}')));
+                ->rows(array('name' => 'uploadHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"uploadHandle";}')));
                 
         /** 增加文件删除函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'deleteHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
+                ->rows(array('name' => 'deleteHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
                 
         /** 增加文件展现散列函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'attachmentHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}')));
+                ->rows(array('name' => 'attachmentHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}')));
                 
         /** 增加文件扩展名 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'attachmentTypes', 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz')));
+                ->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz')));
                 
         /** 增加路由 */
         $routingTable = $options->routingTable;
@@ -419,7 +419,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         
         /** 增加堆楼楼层数目限制 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsMaxNestingLevels', 'value' => 5)));
+        ->rows(array('name' => 'commentsMaxNestingLevels', 'user' => 0, 'value' => 5)));
     }
     
     /**
@@ -502,5 +502,24 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->update('table.options')
                 ->rows(array('value' => 'a:0:{}'))
                 ->where('name = ?', 'actionTable'));
+    }
+    
+    /**
+     * 升级至9.7.2
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_7_2($db, $options)
+    {
+        /** 增加默认内容格式 */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'contentType', 'user' => 0, 'value' => 'text/html')));
+        
+        /** 增加gzip开关 */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
     }
 }

@@ -36,13 +36,18 @@ class Widget_Contents_Post_Date extends Typecho_Widget
     protected $db;
     
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct()
+    public function __construct($request, $response, $params = NULL)
     {
+        parent::__construct($request, $response, $params);
+        
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
         

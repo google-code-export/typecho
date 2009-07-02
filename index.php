@@ -13,6 +13,9 @@ if (!@include_once 'config.inc.php') {
     exit;
 }
 
+/** 初始化组件 */
+Typecho_Widget::widget('Widget_Init');
+
 /** 注册一个初始化插件 */
 Typecho_Plugin::factory('index.php')->begin();
 
