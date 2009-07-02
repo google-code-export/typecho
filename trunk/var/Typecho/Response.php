@@ -28,7 +28,7 @@ class Typecho_Response
      * @access private
      * @var array
      */
-    private $_httpCode = array(
+    private static $_httpCode = array(
         100 => 'Continue',
         101	=> 'Switching Protocols',
         200	=> 'OK',
@@ -81,6 +81,29 @@ class Typecho_Response
 
     //默认的字符编码
     const CHARSET = 'UTF-8';
+    
+    /**
+     * 单例句柄
+     * 
+     * @access private
+     * @var Typecho_Response
+     */
+    private static $_instance = null;
+    
+    /**
+     * 获取单例句柄
+     * 
+     * @access public
+     * @return Typecho_Response
+     */
+    public static function getInstance()
+    {
+        if (null === self::$_instance) {
+            self::$_instance = new Typecho_Response();
+        }
+        
+        return self::$_instance;
+    }
 
     /**
      * 解析ajax回执的内部函数
@@ -155,7 +178,7 @@ class Typecho_Response
      */
     public function setHeader($name, $value)
     {
-        header($name . ': ' . $value);
+        header($name . ': ' . $value, true);
     }
     
     /**
@@ -165,10 +188,10 @@ class Typecho_Response
      * @param integer $code http代码
      * @return void
      */
-    public function setStatus($code)
+    public static function setStatus($code)
     {
-        if (isset($this->_httpCode[$code])) {
-            header('HTTP/1.1 ' . $code . ' ' . $this->_httpCode[$code], true, $code);
+        if (isset(self::$_httpCode[$code])) {
+            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true, $code);
         }
     }
     

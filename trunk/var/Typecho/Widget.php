@@ -91,16 +91,32 @@ abstract class Typecho_Widget
     public $response;
     
     /**
-     * 初始化函数
+     * config对象
      * 
      * @access public
+     * @var public
+     */
+    public $parameter;
+    
+    /**
+     * 构造函数,初始化组件
+     * 
+     * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct(Typecho_Request $request, Typecho_Response $response)
+    public function __construct($request, $response, $params = NULL)
     {
         //设置函数内部对象
         $this->request = $request;
         $this->response = $response;
+        $this->parameter = new Typecho_Config();
+        
+        if (!empty($params)) {
+            $this->parameter->setDefault($params);
+        }
     }
     
     /**
@@ -109,7 +125,7 @@ abstract class Typecho_Widget
      * @access public
      * @return void
      */
-    public function execute(){};
+    public function execute(){}
     
     /**
      * post事件触发
@@ -166,21 +182,23 @@ abstract class Typecho_Widget
                 throw new Typecho_Widget_Exception($className);
             }
             
-            self::$_widgetPool[$alias] = new $className();
-            
-            if (!empty($params)) {
-                self::$_widgetPool[$alias]->parameter->setDefault($params, true);
-            }
-            
+            /** 初始化request */
             if (!empty($request)) {
-                self::$_widgetPool[$alias]->request->flush($request);
+                $requestObject = new Typecho_Request($request);
+                $requestObject->setParams($request);
+            } else {
+                $requestObject = Typecho_Request::getInstance();
             }
             
-            if (!$enableResponse) {
-                self::$_widgetPool[$alias]->response->disable();
-            }
+            /** 初始化response */
+            $responseObject = $enableResponse ? Typecho_Response::getInstance() 
+            : Typecho_Widget_Helper_Empty::getInstance();
             
-            self::$_widgetPool[$alias]->execute();
+            /** 初始化组件 */
+            $widget = new $className($requestObject, $responseObject, $params);
+
+            $widget->execute();
+            self::$_widgetPool[$alias] = $widget;
         }
         
         return self::$_widgetPool[$alias];

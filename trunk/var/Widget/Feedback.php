@@ -39,7 +39,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $this->request->getAgent(),
-            'ip'        =>  $this->request->getClientIp(),
+            'ip'        =>  $this->request->getIp(),
             'ownerId'   =>  $this->_content->author->uid,
             'type'      =>  'comment',
             'status'    =>  !$this->_content->allow('edit') && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
@@ -138,7 +138,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     
         /** 如果库中已经存在当前ip为spam的trackback则直接拒绝 */
         if ($this->size($this->select()
-        ->where('status = ? AND ip = ?', 'spam', $this->request->getClientIp())) > 0) {
+        ->where('status = ? AND ip = ?', 'spam', $this->request->getIp())) > 0) {
             /** 使用404告诉机器人 */
             throw new Typecho_Widget_Exception(_t('找不到内容'), 404);
         }
@@ -147,7 +147,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
             'agent'     =>  $this->request->getAgent(),
-            'ip'        =>  $this->request->getClientIp(),
+            'ip'        =>  $this->request->getIp(),
             'ownerId'   =>  $this->_content->author->uid,
             'type'      =>  'trackback',
             'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'

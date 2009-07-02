@@ -1106,7 +1106,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         'cid'       =>  $post->cid,
                         'created'   =>  $this->options->gmtTime,
                         'agent'     =>  $this->request->getAgent(),
-                        'ip'        =>  $this->request->getClientIp(),
+                        'ip'        =>  $this->request->getIp(),
                         'author'    =>  $finalTitle,
                         'url'       =>  Typecho_Common::safeUrl($source),
                         'text'      =>  $finalText,

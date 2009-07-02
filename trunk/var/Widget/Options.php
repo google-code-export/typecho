@@ -44,13 +44,18 @@ class Widget_Options extends Typecho_Widget
     protected $db;
     
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct()
+    public function __construct($request, $response, $params = NULL)
     {
+        parent::__construct($request, $response, $params);
+
         /** 初始化数据库 */
         $this->db = Typecho_Db::get();
     }
@@ -235,17 +240,6 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
-     * 获取编码
-     * 
-     * @access protected
-     * @return string
-     */
-    protected function ___charset()
-    {
-        return Typecho_Common::$config['charset'];
-    }
-    
-    /**
      * 获取系统时区
      * 
      * @access protected
@@ -265,6 +259,17 @@ class Widget_Options extends Typecho_Widget
     protected function ___gmtTime()
     {
         return Typecho_Date::gmtTime();
+    }
+    
+    /**
+     * 获取格式
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___contentType()
+    {
+        return isset($this->contentType) ? $this->contentType : 'text/html';
     }
 
     /**

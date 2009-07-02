@@ -90,9 +90,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         } else if (isset($this->request->date)) {
             $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone;
         } else if (isset($this->request->year) && isset($this->request->month) && isset($this->request->day)) {
-            $second = intval($this->request->getParameter('sec', date('s')));
-            $min = intval($this->request->getParameter('min', date('i')));
-            $hour = intval($this->request->getParameter('hour', date('H')));
+            $second = intval($this->request->get('sec', date('s')));
+            $min = intval($this->request->get('min', date('i')));
+            $hour = intval($this->request->get('hour', date('H')));
             
             $year = intval($this->request->year);
             $month = intval($this->request->month);

@@ -41,6 +41,14 @@ class Typecho_Router
     private static $_routingTable = array();
     
     /**
+     * 全路径
+     * 
+     * @access private
+     * @var string
+     */
+    private static $_pathInfo = NULL;
+    
+    /**
      * 解析路径
      * 
      * @access public
@@ -65,6 +73,33 @@ class Typecho_Router
         
         return false;
     }
+    
+    /**
+     * 设置全路径
+     * 
+     * @access public
+     * @param string $pathInfo
+     * @return void
+     */
+    public static function setPathInfo($pathInfo = '/')
+    {
+        self::$_pathInfo = $pathInfo;
+    }
+    
+    /**
+     * 获取全路径
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getPathInfo()
+    {
+        if (NULL === self::$_pathInfo) {
+            $this->setPathInfo();
+        }
+        
+        return self::$_pathInfo;
+    }
 
     /**
      * 路由分发函数
@@ -76,7 +111,7 @@ class Typecho_Router
     public static function dispatch()
     {
         /** 获取PATHINFO */
-        $pathInfo = Typecho_Request::getPathInfo();
+        $pathInfo = self::getPathInfo();
         
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
@@ -89,13 +124,9 @@ class Typecho_Router
                     if (!empty($route['params'])) {
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
-                        
-                        foreach ($params as $name => $value) {
-                            Typecho_Request::setParameter($name, $value);
-                        }
                     }
                     
-                    $widget = Typecho_Widget::widget($route['widget']);
+                    $widget = Typecho_Widget::widget($route['widget'], NULL, $params);
                     
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
@@ -106,14 +137,6 @@ class Typecho_Router
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
                         Typecho_Widget::destory($route['widget']);
-                        
-                        //销毁参数
-                        if (!empty($params)) {
-                            foreach ($params as $name => $value) {
-                                Typecho_Request::unSetParameter($name);
-                            }
-                        }
-                        
                         continue;
                     }
                     

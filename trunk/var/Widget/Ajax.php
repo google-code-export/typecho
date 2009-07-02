@@ -178,12 +178,12 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
      */
     public function action()
     {
-        $this->onRequest('do', 'remoteCallback')->remoteCallback();
-        $this->onRequest('do', 'feed')->feed();
-        $this->onRequest('do', 'checkVersion')->checkVersion();
-        $this->onRequest('do', 'editorResize')->editorResize();
-        $this->onRequest('do', 'cutParagraph')->cutParagraph();
-        $this->onRequest('do', 'removeParagraph')->removeParagraph();
-        $this->onRequest('do', 'autoSave')->autoSave();
+        $this->on($this->request->is('do=remoteCallback'))->remoteCallback();
+        $this->on($this->request->is('do=feed'))->feed();
+        $this->on($this->request->is('do=checkVersion'))->checkVersion();
+        $this->on($this->request->is('do=editorResize'))->editorResize();
+        $this->on($this->request->is('do=cutParagraph'))->cutParagraph();
+        $this->on($this->request->is('do=removeParagraph'))->removeParagraph();
+        $this->on($this->request->is('do=autoSave'))->autoSave();
     }
 }

@@ -182,39 +182,9 @@ class Typecho_Common
             }
         }
         
-        if (isset(self::$config['timezone'])) {
-            if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
-                @date_default_timezone_set($timezone);
-            }
-        }
-        
-        if (isset(self::$config['session']) && self::$config['session']) {
-            session_start();
-        }
-        
-        if (isset(self::$config['gzip'])) {
-            //开始监视输出区
-            //~ fix issue 39
-            if (self::$config['gzip'] && !empty($_SERVER['HTTP_ACCEPT_ENCODING'])
-               && false !== strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-                ob_start("ob_gzhandler");
-            } else {
-                ob_start();
-            }
-        }
-        
-        if (isset(self::$config['charset']) || isset(self::$config['contentType'])) {
-            /** Typecho_Response */
-            require_once 'Typecho/Response.php';
-        }
-        
         if (isset(self::$config['exception'])) {
             /** 设置异常截获函数 */
             set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
-        }
-        
-        if (isset(self::$config['contentType'])) {
-            Typecho_Response::setContentType(self::$config['contentType']);
         }
     }
     

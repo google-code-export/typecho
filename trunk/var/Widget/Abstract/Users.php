@@ -20,17 +20,6 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
-     * 获取反序列化的meta数据
-     * 
-     * @access protected
-     * @return array
-     */
-    protected function ___metaData()
-    {
-        return unserialize($this->meta);
-    }
-    
-    /**
      * 获取页面偏移
      * 
      * @access protected
