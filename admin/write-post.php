@@ -101,7 +101,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 if ($post->have()) {
                                     $categories = Typecho_Common::arrayFlatten($post->categories, 'mid');
                                 } else {
-                                    $categories = array($options->defaultCategory);
+                                    $categories = array();
                                 }
                                 ?>
                                 <?php while($category->next()): ?>

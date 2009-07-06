@@ -371,7 +371,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($insertId > 0) {
             /** 插入分类 */
             $this->setCategories($insertId, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), false, 'publish' == $contents['status']);
+            $contents['category'] : array($this->options->defaultCategory), false, 'publish' == $contents['status']);
             
             /** 插入标签 */
             $this->setTags($insertId, empty($contents['tags']) ? NULL : $contents['tags'],
@@ -441,7 +441,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($updateRows > 0) {
             /** 插入分类 */
             $this->setCategories($this->cid, !empty($contents['category']) && is_array($contents['category']) ? 
-            $contents['category'] : array(), 'publish' == $this->status, 'publish' == $contents['status']);
+            $contents['category'] : array($this->options->defaultCategory), 'publish' == $this->status, 'publish' == $contents['status']);
             
             /** 插入标签 */
             $this->setTags($this->cid, empty($contents['tags']) ? NULL : $contents['tags'],
