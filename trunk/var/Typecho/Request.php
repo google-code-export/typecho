@@ -187,16 +187,16 @@ class Typecho_Request
         $value = $default;
         
         switch (true) {
-            case isset($this->_params[$key]):
+            case !empty($this->_params[$key]):
                 $value = $this->_params[$key];
                 break;
-            case isset($_GET[$key]):
+            case !empty($_GET[$key]):
                 $value = $_GET[$key];
                 break;
-            case isset($_POST[$key]):
+            case !empty($_POST[$key]):
                 $value = $_POST[$key];
                 break;
-            case isset($_COOKIE[$key]):
+            case !empty($_COOKIE[$key]):
                 $value = $_COOKIE[$key];
                 break;
             default:
@@ -240,7 +240,7 @@ class Typecho_Request
      */
     public function getParam($key, $default = NULL)
     {
-        $value = isset($this->_params[$key]) ? $this->_params[$key] : $default;
+        $value = !empty($this->_params[$key]) ? $this->_params[$key] : $default;
         return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     
