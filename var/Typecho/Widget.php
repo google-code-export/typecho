@@ -7,12 +7,6 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** Typecho_Widget_Request */
-require_once 'Typecho/Widget/Request.php';
-
-/** Typecho_Widget_Response */
-require_once 'Typecho/Widget/Response.php';
-
 /** Typecho_Config */
 require_once 'Typecho/Config.php';
 
