@@ -72,10 +72,15 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         $packages = array_filter($packages, array($this, 'filterPackage'));
         usort($packages, array($this, 'sortPackage'));
         
+        $message = array();
+        
         foreach ($packages as $package) {
             /** 执行升级脚本 */
             try {
-                call_user_func(array('Upgrade', $package), $this->db, $this->options);
+                $result = call_user_func(array('Upgrade', $package), $this->db, $this->options);
+                if (!empty($result)) {
+                    $message[] = $result;
+                }
             } catch (Typecho_Exception $e) {
                 $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
                 $this->response->goBack();
@@ -95,7 +100,8 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         $this->update(array('value' => 'Typecho ' . Typecho_Common::VERSION), 
         $this->db->sql()->where('name = ?', 'generator'));
         
-        $this->widget('Widget_Notice')->set(_t("升级已经完成"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
+        NULL, empty($message) ? 'success' : 'notice');
     }
 
     /**
@@ -107,7 +113,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onPost()->upgrade();
+        $this->on($this->request->isPost())->upgrade();
         $this->response->redirect($this->options->adminUrl);
     }
 }

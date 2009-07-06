@@ -13,7 +13,7 @@
 require_once 'Typecho/Widget/Helper/Layout.php';
 
 /** Typecho_Request */
-require_once 'Typecho/Request.php';
+require_once 'Typecho/Cookie.php';
 
 /** Typecho_Validate */
 require_once 'Typecho/Validate.php';
@@ -136,12 +136,13 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function getAllRequest()
     {
-        $values = array();
+        $result = array();
+        $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
         
         foreach ($this->_inputs as $name => $input) {
-            $values[$name] = Typecho_Request::getParameter($name);
+            $result[$name] = isset($source[$name]) ? $source[$name] : NULL;
         }
-        return $values;
+        return $result;
     }
     
     /**
@@ -198,6 +199,25 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 获取提交数据源
+     * 
+     * @access public
+     * @param array $params 数据参数集
+     * @return array
+     */
+    public function getParams(array $params)
+    {
+        $result = array();
+        $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
+    
+        foreach ($params as $param) {
+            $result[$param] = isset($source[$param]) ? $source[$param] : NULL;
+        }
+        
+        return $result;
+    }
+    
+    /**
      * 验证表单
      * 
      * @access public
@@ -215,15 +235,15 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $id = md5(implode('"', array_keys($this->_inputs)));
         
         /** 表单值 */
-        $formData = Typecho_Request::getParametersFrom(array_keys($rules));
+        $formData = $this->getParams(array_keys($rules));
         $error = $validator->run($formData, $rules);
         
         if ($error) {
             /** 利用cookie记录错误 */
-            Typecho_Response::setCookie('__typecho_form_message_' . $id, $error);
+            Typecho_Cookie::set('__typecho_form_message_' . $id, $error);
             
             /** 利用cookie记录表单值 */
-            Typecho_Response::setCookie('__typecho_form_record_' . $id, $formData);
+            Typecho_Cookie::set('__typecho_form_record_' . $id, $formData);
         }
         
         return $error;
@@ -240,8 +260,8 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $id = md5(implode('"', array_keys($this->_inputs)));
     
         /** 恢复表单值 */
-        if ($record = Typecho_Request::getCookie('__typecho_form_record_' . $id)) {
-            $message = Typecho_Request::getCookie('__typecho_form_message_' . $id);
+        if ($record = Typecho_Cookie::get('__typecho_form_record_' . $id)) {
+            $message = Typecho_Cookie::get('__typecho_form_message_' . $id);
             foreach ($this->_inputs as $name => $input) {
                 $input->value(isset($record[$name]) ? $record[$name] : $input->value);
                 
@@ -251,10 +271,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
                 }
             }
             
-            Typecho_Response::deleteCookie('__typecho_form_record_' . $id);
+            Typecho_Cookie::delete('__typecho_form_record_' . $id);
         }
     
         parent::render();
-        Typecho_Response::deleteCookie('__typecho_form_message_' . $id);
+        Typecho_Cookie::delete('__typecho_form_message_' . $id);
     }
 }

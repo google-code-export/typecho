@@ -521,5 +521,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         /** 增加gzip开关 */
         $db->query($db->insert('table.options')
         ->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
+        
+        /** 升级提示 */
+        return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="http://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
     }
 }

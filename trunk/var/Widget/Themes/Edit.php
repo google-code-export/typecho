@@ -76,10 +76,8 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         /** 需要管理员权限 */
         $this->user->pass('administrator');
-        $this->onRequest('change')->changeTheme($this->request->change);
-        
-        $this->onRequest('edit')->onRequest('theme')
-        ->editThemeFile($this->request->theme, $this->request->edit);
+        $this->on($this->request->is('change'))->changeTheme($this->request->change);
+        $this->on($this->request->is('edit&theme'))->editThemeFile($this->request->theme, $this->request->edit);
 
         $this->response->redirect($this->options->adminUrl);
     }

@@ -201,7 +201,7 @@ RewriteRule . {$basePath}index.php [L]
         $customPatternValue = NULL;
         if (isset($this->request->__typecho_form_item_postPattern)) {
             $customPatternValue = $this->request->__typecho_form_item_postPattern;
-            $this->response->deleteCookie('__typecho_form_item_postPattern');
+            Typecho_Cookie::delete('__typecho_form_item_postPattern');
         } else if (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
@@ -243,7 +243,7 @@ RewriteRule . {$basePath}index.php [L]
     {
         /** 验证格式 */
         if ($this->form()->validate()) {
-            $this->response->setCookie('__typecho_form_item_postPattern', $this->request->customPattern);
+            Typecho_Cookie::set('__typecho_form_item_postPattern', $this->request->customPattern);
             $this->response->goBack();
         }
         
@@ -291,7 +291,7 @@ RewriteRule . {$basePath}index.php [L]
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onPost()->updatePermalinkSettings();
+        $this->on($this->request->isPost())->updatePermalinkSettings();
         $this->response->redirect($this->options->adminUrl);
     }
 }

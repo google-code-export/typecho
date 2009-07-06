@@ -21,7 +21,7 @@ include 'header.php';
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('登录'); ?></button>
-                    <input type="hidden" name="referer" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('referer')); ?>" />
+                    <input type="hidden" name="referer" value="<?php echo htmlspecialchars($request->get('referer')); ?>" />
                     </p>
                     <?php else: ?>
                     <div class="message notice">

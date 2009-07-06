@@ -413,13 +413,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function action()
     {
-        $this->onRequest('do', 'insert')->insertCategory();
-        $this->onRequest('do', 'update')->updateCategory();
-        $this->onRequest('do', 'delete')->deleteCategory();
-        $this->onRequest('do', 'merge')->mergeCategory();
-        $this->onRequest('do', 'sort')->sortCategory();
-        $this->onRequest('do', 'refresh')->refreshCategory();
-        $this->onRequest('do', 'default')->defaultCategory();
+        $this->on($this->request->is('do=insert'))->insertCategory();
+        $this->on($this->request->is('do=update'))->updateCategory();
+        $this->on($this->request->is('do=delete'))->deleteCategory();
+        $this->on($this->request->is('do=merge'))->mergeCategory();
+        $this->on($this->request->is('do=sort'))->sortCategory();
+        $this->on($this->request->is('do=refresh'))->refreshCategory();
+        $this->on($this->request->is('do=default'))->defaultCategory();
         $this->response->redirect($this->options->adminUrl);
     }
 }

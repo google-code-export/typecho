@@ -360,9 +360,9 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onRequest('do', 'insert')->insertUser();
-        $this->onRequest('do', 'update')->updateUser();
-        $this->onRequest('do', 'delete')->deleteUser();
+        $this->on($this->request->is('do=insert'))->insertUser();
+        $this->on($this->request->is('do=update'))->updateUser();
+        $this->on($this->request->is('do=delete'))->deleteUser();
         $this->response->redirect($this->options->adminUrl);
     }
 }

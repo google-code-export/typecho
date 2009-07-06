@@ -58,7 +58,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $contents = $this->request->from('text', 'template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
-        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
+        $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
         
         /** 提交数据的过滤 */
@@ -108,7 +108,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $contents = $this->request->from('text', 'template', 'allowComment', 'allowPing', 'allowFeed', 'slug', 'order');
         $contents['type'] = 'page';
         $contents['status'] = $this->request->draft ? 'draft' :  'publish';
-        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
+        $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
     
         /** 提交数据的过滤 */
@@ -257,12 +257,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function action()
     {
-        $this->onRequest('do', 'insert')->insertPage();
-        $this->onRequest('do', 'update')->updatePage();
-        $this->onRequest('do', 'delete')->deletePage();
-        $this->onRequest('do', 'sort')->sortPage();
-        $this->onRequest('do', 'customHomePage')->customHomePage();
-        $this->onRequest('do', 'disableCustomHomePage')->disableCustomHomePage();
+        $this->on($this->request->is('do=insert'))->insertPage();
+        $this->on($this->request->is('do=update'))->updatePage();
+        $this->on($this->request->is('do=delete'))->deletePage();
+        $this->on($this->request->is('do=sort'))->sortPage();
+        $this->on($this->request->is('do=customHomePage'))->customHomePage();
+        $this->on($this->request->is('do=disableCustomHomePage'))->disableCustomHomePage();
         $this->response->redirect($this->options->adminUrl);
     }
 }

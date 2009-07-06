@@ -11,8 +11,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?>
+                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?>
                     <?php if($stat->draftPagesNum > 0): ?> 
                         <span class="balloon"><?php $stat->draftPagesNum(); ?></span>
                     <?php endif; ?>
@@ -28,8 +28,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />            
-                    <?php if(Typecho_Request::isSetParameter('status')): ?>
-                        <input type="hidden" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('status')); ?>" name="status" />
+                    <?php if(isset($request->status)): ?>
+                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>
                     
                     <button type="submit"><?php _e('筛选'); ?></button>
@@ -99,7 +99,7 @@ include 'copyright.php';
 include 'common-js.php';
 ?>
 
-<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?>
+<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?>
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {

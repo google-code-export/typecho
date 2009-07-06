@@ -206,6 +206,29 @@ class Typecho_Request
         
         return $this->_filter ? $this->_applyFilter($value) : $value;
     }
+    
+    /**
+     * 从参数列表指定的值中获取http传递参数
+     *
+     * @access public
+     * @param mixed $parameter 指定的参数
+     * @return array
+     */
+    public function from($params)
+    {
+        if (is_array($params)) {
+            $args = $params;
+        } else {
+            $args = func_get_args();
+            $params = array();
+        }
+
+        foreach ($args as $arg) {
+            $params[$arg] = $this->get($arg);
+        }
+
+        return $params;
+    }
 
     /**
      * 获取指定的http传递参数
@@ -275,29 +298,6 @@ class Typecho_Request
     
         $this->_params = array_merge($this->_params, $params);
     }
-
-    /**
-     * 从参数列表指定的值中获取http传递参数
-     *
-     * @access public
-     * @param mixed $parameter 指定的参数
-     * @return array
-     */
-    public function getParams($params)
-    {
-        if (is_array($params)) {
-            $args = $params;
-        } else {
-            $args = func_get_args();
-            $params = array();
-        }
-
-        foreach ($args as $arg) {
-            $params[$arg] = $this->get($arg);
-        }
-
-        return $params;
-    }
     
     /**
      * 根据当前uri构造指定参数的uri
@@ -334,19 +334,6 @@ class Typecho_Request
         
         /** 返回地址 */
         return Typecho_Common::buildUrl($parts);
-    }
-
-    /**
-     * 获取指定的COOKIE值
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param string $default 默认的参数
-     * @return mixed
-     */
-    public function getCookie($key, $default = NULL)
-    {
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
     /**
@@ -675,8 +662,13 @@ class Typecho_Request
         if ($params) {
             $validated = true;
             foreach ($params as $key => $val) {
-                if ($val != $this->{$key}) {
-                    $validated = false;
+                if (empty($val)) {
+                    $validated = $this->__isSet($key);
+                } else {
+                    $validated = ($this->get($key) == $val);
+                }
+                
+                if (!$validated) {
                     break;
                 }
             }

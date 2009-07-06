@@ -348,11 +348,11 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      */
     public function action()
     {
-        $this->onRequest('do', 'insert')->insertTag();
-        $this->onRequest('do', 'update')->updateTag();
-        $this->onRequest('do', 'delete')->deleteTag();
-        $this->onRequest('do', 'merge')->mergeTag();
-        $this->onRequest('do', 'refresh')->refreshTag();
+        $this->on($this->request->is('do=insert'))->insertTag();
+        $this->on($this->request->is('do=update'))->updateTag();
+        $this->on($this->request->is('do=delete'))->deleteTag();
+        $this->on($this->request->is('do=merge'))->mergeTag();
+        $this->on($this->request->is('do=refresh'))->refreshTag();
         $this->response->redirect($this->options->adminUrl);
     }
 }

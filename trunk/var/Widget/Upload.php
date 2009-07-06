@@ -310,7 +310,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     public function action()
     {
         if ($this->user->pass('contributor', true)) {
-            $this->onPost()->upload();
+            $this->on($this->request->isPost())->upload();
         } else {
             $this->response->setStatus(403);
         }

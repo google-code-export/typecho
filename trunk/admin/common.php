@@ -12,21 +12,29 @@ if (!@include_once __DIR__ . '/../config.inc.php') {
 /** 注册一个初始化插件 */
 Typecho_Plugin::factory('admin/common.php')->begin();
 
+/** 初始化组件 */
+Typecho_Widget::widget('Widget_Init');
+
+Typecho_Widget::widget('Widget_Options')->to($options);
 Typecho_Widget::widget('Widget_User')->to($user);
 Typecho_Widget::widget('Widget_Notice')->to($notice);
 Typecho_Widget::widget('Widget_Menu')->to($menu);
+
+/** 初始化上下文 */
+$request = $options->request;
+$response = $options->response;
 
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
 list($soft, $currentVersion) = explode(' ', $options->generator);
 list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
-if (!$user->logged && !Typecho_Request::getCookie('__typecho_first_run') && !empty($currentMenu)) {
+if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($currentMenu)) {
     
     if ('/admin/welcome.php' != $currentMenu[2]) {
-        Typecho_Response::redirect(Typecho_Common::url('welcome.php', $options->adminUrl));
+        $response->redirect(Typecho_Common::url('welcome.php', $options->adminUrl));
     } else {
-        Typecho_Response::setCookie('__typecho_first_run', 1);
+        Typecho_Cookie::set('__typecho_first_run', 1);
     }
     
 } else {
@@ -37,11 +45,11 @@ if (!$user->logged && !Typecho_Request::getCookie('__typecho_first_run') && !emp
         str_replace('/', '.', $currentVersion), '>'));
 
         if ($mustUpgrade && '/admin/upgrade.php' != $currentMenu[2]) {
-            Typecho_Response::redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));
+            $response->redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));
         } else if (!$mustUpgrade && '/admin/upgrade.php' == $currentMenu[2]) {
-            Typecho_Response::redirect(Typecho_Common::url('index.php', $options->adminUrl));
+            $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
         } else if (!$mustUpgrade && '/admin/welcome.php' == $currentMenu[2] && $user->logged) {
-            Typecho_Response::redirect(Typecho_Common::url('index.php', $options->adminUrl));
+            $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
         }
     }
 

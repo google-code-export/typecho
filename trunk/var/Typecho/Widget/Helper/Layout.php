@@ -178,6 +178,18 @@ class Typecho_Widget_Helper_Layout
     }
     
     /**
+     * 获取属性
+     * 
+     * @access public
+     * @param string $attributeName 属性名
+     * @return string
+     */
+    public function getAttribute($attributeName)
+    {
+        return isset($this->_attributes[$attributeName]) ? $this->_attributes[$attributeName] : NULL;
+    }
+    
+    /**
      * 设置是否自闭合
      * 
      * @access public
