@@ -27,6 +27,22 @@ class Widget_User extends Typecho_Widget
     private $_hasLogin = NULL;
     
     /**
+     * 全局选项
+     * 
+     * @access protected
+     * @var Widget_Options
+     */
+    protected $options;
+    
+    /**
+     * 数据库对象
+     * 
+     * @access protected
+     * @var Typecho_Db
+     */
+    protected $db;
+    
+    /**
      * 用户组
      *
      * @access public
@@ -95,8 +111,8 @@ class Widget_User extends Typecho_Widget
     public function login($uid, $expire = 0)
     {
         $authCode = sha1(Typecho_Common::randString(20));
-        $this->response->setCookie('__typecho_uid', $uid, $expire, $this->options->siteUrl);
-        $this->response->setCookie('__typecho_authCode', Typecho_Common::hash($authCode),
+        Typecho_Cookie::set('__typecho_uid', $uid, $expire, $this->options->siteUrl);
+        Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode),
         $expire, $this->options->siteUrl);
 
         $this->_hasLogin = true;
@@ -117,8 +133,8 @@ class Widget_User extends Typecho_Widget
      */
     public function logout()
     {
-        $this->response->deleteCookie('__typecho_uid', $this->options->siteUrl);
-        $this->response->deleteCookie('__typecho_authCode', $this->options->siteUrl);
+        Typecho_Cookie::delete('__typecho_uid', $this->options->siteUrl);
+        Typecho_Cookie::delete('__typecho_authCode', $this->options->siteUrl);
     }
     
     /**
@@ -174,7 +190,7 @@ class Widget_User extends Typecho_Widget
                     throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
                 } else {
                     $this->response->redirect($this->options->loginUrl
-                    . '?referer=' . urlencode($this->request->uri()), false);
+                    . '?referer=' . urlencode($this->request->getRequestUri()), false);
                 }
             }
         }

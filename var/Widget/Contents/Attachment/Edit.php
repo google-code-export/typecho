@@ -268,8 +268,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      */
     public function action()
     {
-        $this->onRequest('do', 'delete')->deleteAttachment();
-        $this->onRequest('do', 'update')->updateAttachment();
+        $this->on($this->request->is('do=delete'))->deleteAttachment();
+        $this->on($this->request->is('do=update'))->updateAttachment();
         $this->response->redirect($this->options->adminUrl);
     }
 }

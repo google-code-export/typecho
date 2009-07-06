@@ -390,10 +390,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function action()
     {
-        $this->onRequest('do', 'profile')->updateProfile();
-        $this->onRequest('do', 'options')->updateOptions();
-        $this->onRequest('do', 'password')->updatePassword();
-        $this->onRequest('do=personal&plugin')->updatePersonal();
+        $this->on($this->request->is('do=profile'))->updateProfile();
+        $this->on($this->request->is('do=options'))->updateOptions();
+        $this->on($this->request->is('do=password'))->updatePassword();
+        $this->on($this->request->is('do=personal&plugin'))->updatePersonal();
         $this->response->redirect($this->options->adminUrl);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 include 'common.php';
 
-$panel = Typecho_Request::getParameter('panel');
+$panel = $request->get('panel');
 $panelTable = unserialize($options->panelTable);
 
 if (!isset($panelTable['file']) || !in_array(urlencode($panel), $panelTable['file'])) {

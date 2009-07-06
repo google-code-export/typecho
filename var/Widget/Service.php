@@ -140,6 +140,6 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      */
     public function action()
     {
-        $this->onRequest('do', 'ping')->sendPingHandle();
+        $this->on($this->request->is('do=ping'))->sendPingHandle();
     }
 }

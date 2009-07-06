@@ -91,7 +91,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onPost()->updateGeneralSettings();
+        $this->on($this->request->isPost())->updateGeneralSettings();
         $this->response->redirect($this->options->adminUrl);
     }
 }

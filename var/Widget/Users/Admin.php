@@ -72,7 +72,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();
-        $this->_currentPage = $this->request->nil(1)->page;
+        $this->_currentPage = $this->request->get('page', 1);
     
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {
@@ -97,7 +97,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      */
     public function pageNav()
     {
-        $query = $this->request->uri('page={page}');;
+        $query = $this->request->getRequestUri('page={page}');;
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,

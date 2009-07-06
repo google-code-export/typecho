@@ -11,24 +11,24 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'approved' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('已通过'); ?></a></li>
-                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?>
-                    <?php if('on' != Typecho_Request::getParameter('__typecho_all_comments') && $stat->myWaitingCommentsNum > 0): ?> 
+                    <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('已通过'); ?></a></li>
+                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?>
+                    <?php if('on' != $request->get('__typecho_all_comments') && $stat->myWaitingCommentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
-                    <?php elseif('on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?>
+                    <?php elseif('on' == $request->get('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?>
                         <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                    <li<?php if('spam' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?>
-                    <?php if('on' != Typecho_Request::getParameter('__typecho_all_comments') && $stat->mySpamCommentsNum > 0): ?> 
+                    <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?>
+                    <?php if('on' != $request->get('__typecho_all_comments') && $stat->mySpamCommentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
-                    <?php elseif('on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?>
+                    <?php elseif('on' == $request->get('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?>
                         <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
                     <?php if($user->pass('editor', true)): ?>
-                        <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if('on' != Typecho_Request::getParameter('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
+                        <li class="right<?php if('on' == $request->get('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="right<?php if('on' != $request->get('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
                 </ul>
             
@@ -41,14 +41,14 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <span rel="approved" class="operate-button typecho-table-select-submit"><?php _e('通过'); ?></span>, 
                     <span rel="waiting" class="operate-button typecho-table-select-submit"><?php _e('待审核'); ?></span>, 
                     <span rel="spam" class="operate-button typecho-table-select-submit"><?php _e('标记垃圾'); ?></span>, 
-                    <span rel="delete" lang="<?php _e('你确认要删除这些评论吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span><?php if('spam' == Typecho_Request::getParameter('status')): ?>, 
+                    <span rel="delete" lang="<?php _e('你确认要删除这些评论吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span><?php if('spam' == $request->get('status')): ?>, 
                     <span rel="delete-spam" lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除所有垃圾评论'); ?></span>
                     <?php endif; ?>
                     </p>
                     <p class="search">
                     <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
-                    <?php if(Typecho_Request::isSetParameter('status')): ?>
-                        <input type="hidden" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('status')); ?>" name="status" />
+                    <?php if(isset($request->status)): ?>
+                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>

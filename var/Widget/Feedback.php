@@ -90,9 +90,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             }
         
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
-            $this->response->setCookie('__typecho_remember_author', $comment['author'], $expire);
-            $this->response->setCookie('__typecho_remember_mail', $comment['mail'], $expire);
-            $this->response->setCookie('__typecho_remember_url', $comment['url'], $expire);
+            Typecho_Cookie::set('__typecho_remember_author', $comment['author'], $expire);
+            Typecho_Cookie::set('__typecho_remember_mail', $comment['mail'], $expire);
+            Typecho_Cookie::set('__typecho_remember_url', $comment['url'], $expire);
         } else {
             $comment['author'] = $this->user->screenName;
             $comment['mail'] = $this->user->mail;
@@ -104,7 +104,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         if ($error = $validator->run($comment)) {
             /** 记录文字 */
-            $this->response->setCookie('__typecho_remember_text', $comment['text']);
+            Typecho_Cookie::set('__typecho_remember_text', $comment['text']);
             throw new Typecho_Widget_Exception(implode("\n", $error));
         }
         
@@ -113,7 +113,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
-        $this->response->deleteCookie('text');
+        Typecho_Cookie::delete('text');
         $this->db->fetchRow($this->select()->where('coid = ?', $commentId)
         ->limit(1), array($this, 'push'));
 

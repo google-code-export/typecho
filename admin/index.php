@@ -17,7 +17,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>
                         <?php if($user->pass('contributor', true)): ?>
                         <li><a href="<?php $options->adminUrl('write-post.php'); ?>"><?php _e('撰写一篇新文章'); ?></a></li>
-                        <?php if($user->pass('editor', true) && 'on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?> 
+                        <?php if($user->pass('editor', true) && 'on' == $request->get('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?> 
                             <li><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('等待审核的评论'); ?></a>
                             <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
                             </li>
@@ -26,7 +26,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
                             </li>
                         <?php endif; ?>
-                        <?php if($user->pass('editor', true) && 'on' == Typecho_Request::getParameter('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?> 
+                        <?php if($user->pass('editor', true) && 'on' == $request->get('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?> 
                             <li><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾评论'); ?></a>
                             <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
                             </li>
@@ -90,7 +90,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             </div>
 
             <div class="column-06 start-19 typecho-dashboard-nav">
-                <?php $version = Typecho_Request::getCookie('__typecho_check_version'); ?>
+                <?php $version = Typecho_Cookie::get('__typecho_check_version'); ?>
                 <?php if ($version && $version['available']): ?>
                 <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <p class="current"><?php _e('您当前使用的版本是'); ?> <em><?php echo $version['current']; ?></em></p>
@@ -133,7 +133,7 @@ include 'common-js.php';
                 }
             });
             
-            <?php if ($user->pass('editor', true) && !Typecho_Request::getCookie('__typecho_check_version')): ?>
+            <?php if ($user->pass('editor', true) && !Typecho_Cookie::get('__typecho_check_version')): ?>
             var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=checkVersion");
             _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
                 if (responseJSON && responseJSON.available) {

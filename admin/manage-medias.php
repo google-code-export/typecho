@@ -14,17 +14,17 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="column-24 start-01">
                 <?php if($user->pass('editor', true)): ?>
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('已归档'); ?></a></li>
-                    <li<?php if('unattached' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未归档'); ?>
-                    <?php if('on' != Typecho_Request::getParameter('__typecho_all_attachments') && $stat->myUnattachedAttachmentsNum > 0): ?> 
+                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('已归档'); ?></a></li>
+                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未归档'); ?>
+                    <?php if('on' != $request->get('__typecho_all_attachments') && $stat->myUnattachedAttachmentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myUnattachedAttachmentsNum(); ?></span>
-                    <?php elseif('on' == Typecho_Request::getParameter('__typecho_all_attachments') && $stat->unattachedAttachmentsNum > 0): ?>
+                    <?php elseif('on' == $request->get('__typecho_all_attachments') && $stat->unattachedAttachmentsNum > 0): ?>
                         <span class="balloon"><?php $stat->unattachedAttachmentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
                 
-                    <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_attachments=on'); ?>"><?php _e('所有'); ?></a></li>
-                    <li class="right<?php if('on' != Typecho_Request::getParameter('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_attachments=off'); ?>"><?php _e('我的'); ?></a></li>
+                    <li class="right<?php if('on' == $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_attachments=on'); ?>"><?php _e('所有'); ?></a></li>
+                    <li class="right<?php if('on' != $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_attachments=off'); ?>"><?php _e('我的'); ?></a></li>
                 </ul>
                 <?php endif; ?>
                 

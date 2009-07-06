@@ -73,7 +73,7 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
     public function execute()
     {
         $this->parameter->setDefault('pageSize=20');
-        $this->_currentPage = $this->request->nil(1)->page;
+        $this->_currentPage = $this->request->get('page', 1);
 
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'attachment');
@@ -83,10 +83,10 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
             $select->where('table.contents.authorId = ?', $this->user->uid);
         } else {
             if ('on' == $this->request->__typecho_all_attachments) {
-                $this->response->setCookie('__typecho_all_attachments', 'on');
+                Typecho_Cookie::set('__typecho_all_attachments', 'on');
             } else {
                 if ('off' == $this->request->__typecho_all_attachments) {
-                    $this->response->setCookie('__typecho_all_attachments', 'off');
+                    Typecho_Cookie::set('__typecho_all_attachments', 'off');
                 }
                 $select->where('table.contents.authorId = ?', $this->user->uid);
             }
@@ -136,7 +136,7 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
      */
     public function pageNav()
     {
-        $query = $this->request->uri('page={page}');
+        $query = $this->request->getRequestUri('page={page}');
         
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,

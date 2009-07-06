@@ -361,7 +361,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
-        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
+        $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
@@ -431,7 +431,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['status'] = $this->request->draft ? 'draft' :
         (($this->user->pass('editor', true) && !$this->request->draft) ? 'publish' : 'waiting');
         
-        $contents['title'] = $this->request->nil(_t('未命名文档'))->title;
+        $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
@@ -543,9 +543,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function action()
     {
-        $this->onRequest('do', 'insert')->insertPost();
-        $this->onRequest('do', 'update')->updatePost();
-        $this->onRequest('do', 'delete')->deletePost();
+        $this->on($this->request->is('do=insert'))->insertPost();
+        $this->on($this->request->is('do=update'))->updatePost();
+        $this->on($this->request->is('do=delete'))->deletePost();
         $this->response->redirect($this->options->adminUrl);
     }
 }

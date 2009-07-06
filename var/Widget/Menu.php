@@ -77,13 +77,18 @@ class Widget_Menu extends Typecho_Widget
     public $title;
     
     /**
-     * 构造函数
+     * 构造函数,初始化组件
      * 
      * @access public
+     * @param mixed $request request对象
+     * @param mixed $response response对象
+     * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct()
+    public function __construct($request, $response, $params = NULL)
     {
+        parent::__construct($request, $response, $params);
+        
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
@@ -161,7 +166,7 @@ class Widget_Menu extends Typecho_Widget
         }
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-        $this->_currentUrl = $this->request->uri();
+        $this->_currentUrl = $this->request->getRequestUri();
         $childMenu = $this->_childMenu;
         $match = 0;
         $adminUrl = $this->options->siteUrl;

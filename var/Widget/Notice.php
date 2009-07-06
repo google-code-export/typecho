@@ -38,16 +38,16 @@ class Widget_Notice extends Typecho_Widget
      */
     public function execute()
     {
-        if (NULL !== $this->request->getCookie('__typecho_notice')) {
-            $this->noticeType = $this->request->getCookie('__typecho_notice_type');
-            $this->push($this->request->getCookie('__typecho_notice'));
-            $this->response->deleteCookie('__typecho_notice', $this->widget('Widget_Options')->siteUrl);
-            $this->response->deleteCookie('__typecho_notice_type', $this->widget('Widget_Options')->siteUrl);
+        if (NULL !== Typecho_Cookie::get('__typecho_notice')) {
+            $this->noticeType = Typecho_Cookie::get('__typecho_notice_type');
+            $this->push(Typecho_Cookie::get('__typecho_notice'));
+            Typecho_Cookie::delete('__typecho_notice', $this->widget('Widget_Options')->siteUrl);
+            Typecho_Cookie::delete('__typecho_notice_type', $this->widget('Widget_Options')->siteUrl);
         }
         
-        if (NULL !== $this->request->getCookie('__typecho_notice_highlight')) {
-            $this->highlight = $this->request->getCookie('__typecho_notice_highlight');
-            $this->response->deleteCookie('__typecho_notice_highlight', $this->widget('Widget_Options')->siteUrl);
+        if (NULL !== Typecho_Cookie::get('__typecho_notice_highlight')) {
+            $this->highlight = Typecho_Cookie::get('__typecho_notice_highlight');
+            Typecho_Cookie::delete('__typecho_notice_highlight', $this->widget('Widget_Options')->siteUrl);
         }
     }
     
@@ -100,7 +100,7 @@ class Widget_Notice extends Typecho_Widget
     public function highlight($theId)
     {
         $this->highlight = $theId;
-        $this->response->setCookie('__typecho_notice_highlight', $theId, 
+        Typecho_Cookie::set('__typecho_notice_highlight', $theId, 
         $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
     }
@@ -143,10 +143,10 @@ class Widget_Notice extends Typecho_Widget
         $this->noticeType = $type;
         $this->push($notice);
         
-        $this->response->setCookie('__typecho_notice', $notice,
+        Typecho_Cookie::set('__typecho_notice', $notice,
         $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
-        $this->response->setCookie('__typecho_notice_type', $type,
+        Typecho_Cookie::set('__typecho_notice_type', $type,
         $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
         $this->widget('Widget_Options')->siteUrl);
     }

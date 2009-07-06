@@ -52,12 +52,7 @@ require_once 'Typecho/Router.php';
 Typecho_Common::init(array(
     'autoLoad'          =>  true,
     'exception'         =>  'Widget_ExceptionHandle',
-    'gpc'               =>  true,
-    'timezone'          =>  'UTC',
-    'session'           =>  false,
-    'gzip'              =>  false,
-    'charset'           =>  'UTF-8',
-    'contentType'       =>  'text/html'
+    'gpc'               =>  true
 ));
 
 //判断是否已经安装
@@ -72,9 +67,38 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
  * @param string $default 默认值
  * @return string
  */
+function _r($name, $default = NULL)
+{
+    return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+}
+
+/**
+ * 获取多个传递参数
+ * 
+ * @return array
+ */
+function _rFrom()
+{
+    $result = array();
+    $params = func_get_args();
+    
+    foreach ($params as $param) {
+        $result[$param] = isset($_REQUEST[$param]) ? $_REQUEST[$param] : NULL;
+    }
+    
+    return $result;
+}
+
+/**
+ * 输出传递参数
+ *
+ * @param string $name 参数名称
+ * @param string $default 默认值
+ * @return string
+ */
 function _v($name, $default = '')
 {
-    echo isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+    echo _r($name, $default);
 }
 
 /**
@@ -126,7 +150,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Typecho_Common::$config['charset']; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php _e('UTF-8'); ?>" />
 	<title><?php _e('Typecho安装程序'); ?></title>
     <link rel="stylesheet" type="text/css" href="admin/css/reset.source.css" />
     <link rel="stylesheet" type="text/css" href="admin/css/grid.source.css" />
@@ -149,12 +173,12 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <div class="typecho-install-body">
                     <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <?php if(isset($_GET['use_old']) ) : ?>
-                    您选择了使用原有的数据，您的用户名和密码和原来的一致
+                    <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
                     <?php else : ?>
                     <ul>
-                    <?php if (Typecho_Request::isSetParameter('user') && Typecho_Request::isSetParameter('password')): ?>
-                        <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('user')); ?></strong></li>
-                        <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(Typecho_Request::getParameter('password')); ?></strong></li>
+                    <?php if (isset($_REQUEST['user']) && isset($_REQUEST['password'])): ?>
+                        <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(_r('user')); ?></strong></li>
+                        <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(_r('password')); ?></strong></li>
                     <?php endif;?>
                     </ul>
                     <?php endif;?>
@@ -168,9 +192,9 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <p><?php _e('您可以将下面两个链接保存到您的收藏夹'); ?>:</p>
                     <ul>
                     <?php
-                        if (Typecho_Request::isSetParameter('user') && Typecho_Request::isSetParameter('password')) {
-                            $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(Typecho_Request::getParameter('user')) . '&password=' 
-                            . urlencode(Typecho_Request::getParameter('password')) . '&referer=' . _u() . '/admin/index.php';
+                        if (isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
+                            $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(_r('user')) . '&password=' 
+                            . urlencode(_r('password')) . '&referer=' . _u() . '/admin/index.php';
                         } else {
                             $loginUrl = _u() . '/admin/index.php';
                         }
@@ -184,7 +208,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 </div>
             <?php  elseif (isset($_GET['config'])) : ?>
             <?php
-                    $adapter = Typecho_Request::getParameter('dbAdapter', 'Mysql');
+                    $adapter = _r('dbAdapter', 'Mysql');
                     $type = explode('_', $adapter);
                     $type = array_pop($type);
             ?>
@@ -193,30 +217,30 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <div class="typecho-install-body">
                         <h2><?php _e('数据库配置'); ?></h2>
                         <?php
-                            if ('config' == Typecho_Request::getParameter('action')) {
+                            if ('config' == _r('action')) {
                                 $success = true;
 
-                                if (NULL == Typecho_Request::getParameter('userUrl')) {
+                                if (NULL == _r('userUrl')) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('请填写您的网站地址') . '</p>';
-                                } else if (NULL == Typecho_Request::getParameter('userName')) {
+                                } else if (NULL == _r('userName')) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('请填写您的用户名') . '</p>';
-                                } else if (NULL == Typecho_Request::getParameter('userMail')) {
+                                } else if (NULL == _r('userMail')) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('请填写您的邮箱地址') . '</p>';
-                                } else if (32 < strlen(Typecho_Request::getParameter('userName'))) {
+                                } else if (32 < strlen(_r('userName'))) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('用户名长度超过限制, 请不要超过32个字符') . '</p>';
-                                } else if (200 < strlen(Typecho_Request::getParameter('userMail'))) {
+                                } else if (200 < strlen(_r('userMail'))) {
                                     $success = false;
                                     echo '<p class="message error">' . _t('邮箱长度超过限制, 请不要超过200个字符') . '</p>';
                                 }
 
 
                                 if ($success) {
-                                    $installDb = new Typecho_Db ($adapter, Typecho_Request::getParameter('dbPrefix'));
-                                    $_dbConfig = Typecho_Request::getParametersFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
+                                    $installDb = new Typecho_Db ($adapter, _r('dbPrefix'));
+                                    $_dbConfig = _rFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
 
                                     $_dbConfig = array_filter($_dbConfig);
                                     $dbConfig = array();
@@ -245,30 +269,18 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                 if($success)
                                 {
                                     /** 初始化配置文件 */
-                                    $lines = array_slice(file(__FILE__), 0, 61);
+                                    $lines = array_slice(file(__FILE__), 0, 56);
                                     $lines[] = "
 /** 定义数据库参数 */
-\$db = new Typecho_Db('{$adapter}', '" . Typecho_Request::getParameter('dbPrefix') . "');
+\$db = new Typecho_Db('{$adapter}', '" . _r('dbPrefix') . "');
 \$db->addServer(" . var_export($dbConfig, true) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
-
-/** 初始化全局参数 */
-Typecho_Widget::widget('Widget_Options')->to(\$options);
-
-/** 定义路由参数 */
-Typecho_Router::setRoutes(\$options->routingTable);
-
-/** 初始化插件 */
-Typecho_Plugin::init(\$options->plugins);
-
-/** 初始化时区 */
-Typecho_Date::setTimezoneOffset(\$options->timezone);
 ";
 file_put_contents('./config.inc.php', implode('', $lines));
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
-                                        $scripts = str_replace('typecho_', Typecho_Request::getParameter('dbPrefix'), $scripts);
+                                        $scripts = str_replace('typecho_', _r('dbPrefix'), $scripts);
 
                                         if (isset($dbConfig['charset'])) {
                                             $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
@@ -298,7 +310,7 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'Y-m-d H:i:s')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => Typecho_Request::getParameter('userUrl'))));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => _r('userUrl'))));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
@@ -350,9 +362,10 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         /** 初始用户 */
                                         $password = substr(uniqid(), 7);
                                         
-                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => Typecho_Request::getParameter('userName'), 'password' => Typecho_Common::hash($password), 'mail' => Typecho_Request::getParameter('userMail'),
-                                        'url' => 'http://www.typecho.org', 'screenName' => Typecho_Request::getParameter('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-                                        Typecho_Response::redirect('install.php?finish&user=' . Typecho_Request::getParameter('userName') . '&password=' . $password);
+                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => _r('userName'), 'password' => Typecho_Common::hash($password), 'mail' => _r('userMail'),
+                                        'url' => 'http://www.typecho.org', 'screenName' => _r('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
+                                        header('Location: install.php?finish&user=' . _r('userName') . '&password=' . $password);
+                                        exit;
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
                                         $code = $e->getCode();
@@ -360,9 +373,9 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         if(('Mysql' == $type && 1050 == $code) ||
                                         ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
                                         ('Pgsql' == $type && '42P07' == $code)) {
-                                            if(Typecho_Request::getParameter('delete')) {
+                                            if(_r('delete')) {
                                                 //删除原有数据
-                                                $dbPrefix = Typecho_Request::getParameter('dbPrefix');
+                                                $dbPrefix = _r('dbPrefix');
                                                 $tableArray = array($dbPrefix . 'comments', $dbPrefix . 'contents', $dbPrefix . 'metas', $dbPrefix . 'options', $dbPrefix . 'relationships', $dbPrefix . 'users',);
                                                 foreach($tableArray as $table) {
                                                     if($type == 'Mysql') {
@@ -374,11 +387,12 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                                     }
                                                 }
                                                 echo '<p class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">已经删除完原有数据，请点击继续安装<button type="submit">下一步</button></p>';
-                                            } elseif (Typecho_Request::getParameter('goahead')) {
+                                            } elseif (_r('goahead')) {
                                                 //使用原有数据
                                                 //但是要更新用户网站
-                                                $installDb->query($installDb->update('table.options')->rows(array('value' => Typecho_Request::getParameter('userUrl')))->where('name = ?', 'siteUrl'));
-                                                Typecho_Response::redirect('install.php?finish&use_old');
+                                                $installDb->query($installDb->update('table.options')->rows(array('value' => _r('userUrl')))->where('name = ?', 'siteUrl'));
+                                                header('Location: install.php?finish&use_old');
+                                                exit;
                                             } else {
                                                  echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到原有数据表已经存在,请先删除该表然后再继续进行安装.') . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
                                             }

@@ -183,9 +183,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onRequest('activate')->activate($this->request->activate);
-        $this->onRequest('deactivate')->deactivate($this->request->deactivate);
-        $this->onRequest('config')->config($this->request->config);
+        $this->on($this->request->is('activate'))->activate($this->request->activate);
+        $this->on($this->request->is('deactivate'))->deactivate($this->request->deactivate);
+        $this->on($this->request->is('config'))->config($this->request->config);
         $this->response->redirect($this->options->adminUrl);
     }
 }

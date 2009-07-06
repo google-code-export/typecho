@@ -11,24 +11,24 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!Typecho_Request::isSetParameter('status') || 'publish' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('draft' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>"><?php _e('草稿'); ?>
-                    <?php if('on' != Typecho_Request::getParameter('__typecho_all_posts') && $stat->myDraftPostsNum > 0): ?> 
+                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>"><?php _e('草稿'); ?>
+                    <?php if('on' != $request->get('__typecho_all_posts') && $stat->myDraftPostsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myDraftPostsNum(); ?></span>
-                    <?php elseif('on' == Typecho_Request::getParameter('__typecho_all_posts') && $stat->draftPostsNum > 0): ?>
+                    <?php elseif('on' == $request->get('__typecho_all_posts') && $stat->draftPostsNum > 0): ?>
                         <span class="balloon"><?php $stat->draftPostsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                    <li<?php if('waiting' == Typecho_Request::getParameter('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?>
-                    <?php if('on' != Typecho_Request::getParameter('__typecho_all_posts') && $stat->myWaitingPostsNum > 0): ?> 
+                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'); ?>"><?php _e('待审核'); ?>
+                    <?php if('on' != $request->get('__typecho_all_posts') && $stat->myWaitingPostsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myWaitingPostsNum(); ?></span>
-                    <?php elseif('on' == Typecho_Request::getParameter('__typecho_all_posts') && $stat->waitingPostsNum > 0): ?>
+                    <?php elseif('on' == $request->get('__typecho_all_posts') && $stat->waitingPostsNum > 0): ?>
                         <span class="balloon"><?php $stat->waitingPostsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
                     <?php if($user->pass('editor', true)): ?>
-                        <li class="right<?php if('on' == Typecho_Request::getParameter('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if('on' != Typecho_Request::getParameter('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo Typecho_Request::uri('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
+                        <li class="right<?php if('on' == $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="right<?php if('on' != $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
                 </ul>
                 <div class="typecho-list-operate">
@@ -45,12 +45,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<option value=""><?php _e('所有分类'); ?></option>
                     	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                     	<?php while($category->next()): ?>
-                    	<option value="<?php $category->mid(); ?>"<?php if(Typecho_Request::getParameter('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
+                    	<option value="<?php $category->mid(); ?>"<?php if($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
                     	<?php endwhile; ?>
                     </select>
                     <button type="submit"><?php _e('筛选'); ?></button>
-                    <?php if(Typecho_Request::isSetParameter('status')): ?>
-                        <input type="hidden" value="<?php echo htmlspecialchars(Typecho_Request::getParameter('status')); ?>" name="status" />
+                    <?php if(isset($request->status)): ?>
+                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>
                     </p>
                 </form>

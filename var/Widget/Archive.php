@@ -193,7 +193,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $feedQuery = $this->request->feed;
             $matched = Typecho_Router::match($this->request->feed, $params);
             $this->parameter->type = Typecho_Router::$current;
-            $this->request->flush($params);
+            $this->request->setParams($params);
         
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
@@ -305,7 +305,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 保存密码至cookie */
         if ($this->request->isPost() && isset($this->request->protectPassword)) {
-            $this->response->setCookie('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
+            Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
         }
         
         /** 匹配类型 */
@@ -980,7 +980,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function remember($cookieName)
     {
-        echo $this->request->getCookie('__typecho_remember_' . $cookieName);
+        echo Typecho_Cookie::get('__typecho_remember_' . $cookieName);
     }
     
     /**

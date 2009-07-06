@@ -139,7 +139,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onPost()->updateDiscussionSettings();
+        $this->on($this->request->isPost())->updateDiscussionSettings();
         $this->response->redirect($this->options->adminUrl);
     }
 }

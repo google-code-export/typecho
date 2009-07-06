@@ -211,11 +211,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     public function action()
     {
         $this->user->pass('contributor');
-        $this->onRequest('do', 'waiting')->waitingComment();
-        $this->onRequest('do', 'spam')->spamComment();
-        $this->onRequest('do', 'approved')->approvedComment();
-        $this->onRequest('do', 'delete')->deleteComment();
-        $this->onRequest('do', 'delete-spam')->deleteSpamComment();
+        $this->on($this->request->is('do=waiting'))->waitingComment();
+        $this->on($this->request->is('do=spam'))->spamComment();
+        $this->on($this->request->is('do=approved'))->approvedComment();
+        $this->on($this->request->is('do=delete'))->deleteComment();
+        $this->on($this->request->is('do=delete-spam'))->deleteSpamComment();
         
         $this->response->redirect($this->options->adminUrl);
     }

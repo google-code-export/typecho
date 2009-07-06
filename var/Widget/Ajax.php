@@ -67,7 +67,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                 }
             }
             
-            $this->response->setCookie('__typecho_check_version', $result);
+            Typecho_Cookie::set('__typecho_check_version', $result);
             $this->response->throwJson($result);
             return;
         }

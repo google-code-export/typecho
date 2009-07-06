@@ -95,7 +95,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
     public function action()
     {
         $this->user->pass('administrator');
-        $this->onPost()->updateReadingSettings();
+        $this->on($this->request->isPost())->updateReadingSettings();
         $this->response->redirect($this->options->adminUrl);
     }
 }
