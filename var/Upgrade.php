@@ -522,7 +522,24 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
         ->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
         
-        /** 升级提示 */
-        return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="http://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
+        
+        if(is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+            
+            $contents = file_get_contents(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
+            $contents = preg_replace("/Typecho_Common::init([^;]+);/is", "Typecho_Common::init(array(
+    'autoLoad'          =>  true,
+    'exception'         =>  'Widget_ExceptionHandle',
+    'gpc'               =>  true
+));", $contents);
+            $contents = preg_replace("/\s*(\/[^\/]+\/)?\s*Typecho_Widget::widget([^;]+);/is", '', $contents);
+            $contents = preg_replace("/\s*(\/[^\/]+\/)?\s*Typecho_Router::setRoutes([^;]+);/is", '', $contents);
+            $contents = preg_replace("/\s*(\/[^\/]+\/)?\s*Typecho_Plugin::init([^;]+);/is", '', $contents);
+            $contents = preg_replace("/\s*(\/[^\/]+\/)?\s*Typecho_Date::setTimezoneOffset([^;]+);/is", '', $contents);
+            file_put_contents(__TYPECHO_ROOT_DIR__ . '/config.inc.php', $contents);
+            
+        } else {
+            /** 升级提示 */
+            return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="http://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
+        }
     }
 }
