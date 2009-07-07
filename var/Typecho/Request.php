@@ -360,7 +360,7 @@ class Typecho_Request
                 
                 if (false !== $parts) {
                     $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
-                                 . ((empty($parts['query'])) ? '' : '?' . $queryString);
+                                 . ((empty($parts['query'])) ? '' : '?' . $parts['query']);
                 }
             }
         } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI

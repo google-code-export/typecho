@@ -209,6 +209,6 @@ class MagikeToTypecho_Action extends Typecho_Widget implements Widget_Interface_
     public function action()
     {
         $this->widget('Widget_User')->pass('administrator');
-        $this->onPost()->doImport();
+        $this->on($this->request->isPost())->doImport();
     }
 }

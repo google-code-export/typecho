@@ -196,12 +196,14 @@ Typecho.Table = {
     
     itemClick: function (event) {
         /** 触发多选框点击事件 */
-        var _el = $(this).getElement('input[type=checkbox]'), _t = $(event.target);
-        
-        if (_el && ('a' != _t.get('tag')
-        && 'textarea' != _t.get('tag')
-        && 'button' != _t.get('tag'))) {
-            _el.fireEvent('click');
+        if ('undefined' != typeof(event)) {
+            var _el = $(this).getElement('input[type=checkbox]'), _t = $(event.target);
+            
+            if (_el && ('a' != _t.get('tag')
+            && 'textarea' != _t.get('tag')
+            && 'button' != _t.get('tag'))) {
+                _el.fireEvent('click');
+            }
         }
     },
     
