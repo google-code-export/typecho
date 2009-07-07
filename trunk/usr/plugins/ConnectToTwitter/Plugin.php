@@ -77,8 +77,8 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
 
             $tok = $to->getRequestToken();
             
-            $api->response->setSession('oauth_request_token', $tok['oauth_token']);
-            $api->response->setSession('oauth_request_token_secret', $tok['oauth_token_secret']);
+            Typecho_Cookie::set('oauth_request_token', $tok['oauth_token']);
+            Typecho_Cookie::set('oauth_request_token_secret', $tok['oauth_token_secret']);
 
             /* Build the authorization URL */
             $request_link = $to->getAuthorizeURL($tok['oauth_token']);
@@ -87,14 +87,14 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
 
         //从twitter返回
         if(isset($api->request->oauth_token)) {
-            if($api->request->getSession('oauth_request_token') && $api->request->getSession('oauth_request_token_secret'))
+            if(Typecho_Cookie::get('oauth_request_token') && Typecho_Cookie::get('oauth_request_token_secret'))
             {
-                $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, $api->request->getSession('oauth_request_token'), $api->request->getSession('oauth_request_token_secret'));
+                $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, Typecho_Cookie::get('oauth_request_token'), Typecho_Cookie::get('oauth_request_token_secret'));
 
                 $tok = $to->getAccessToken();
 
-                $api->response->setCookie('oauth_access_token', $tok['oauth_token'], time()+60*60*24*30);
-                $api->response->setCookie('oauth_access_token_secret', $tok['oauth_token_secret'], time()+60*60*24*30);
+                Typecho_Cookie::set('oauth_access_token', $tok['oauth_token'], time()+60*60*24*30);
+                Typecho_Cookie::set('oauth_access_token_secret', $tok['oauth_token_secret'], time()+60*60*24*30);
 
                 $info_json = $to->OAuthRequest('https://twitter.com/account/verify_credentials.json', array(), 'GET');
                 $info = Typecho_Json::decode($info_json, true);
@@ -108,21 +108,21 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
     public static function twitterLogin($info, $api)
     {
         if (!empty($info['screen_name'])) {
-            $api->response->setCookie('__typecho_remember_author', $info['screen_name'], time()+60*60*24*30);
+            Typecho_Cookie::set('__typecho_remember_author', $info['screen_name'], time()+60*60*24*30);
         }
         
         if (!empty($info['url'])) {
-            $api->response->setCookie('__typecho_remember_url',  $info['url'], time()+60*60*24*30);
+            Typecho_Cookie::set('__typecho_remember_url',  $info['url'], time()+60*60*24*30);
         }
     }
 
     //发送信息到twitter
     public static function postToTwitter($api)
     {
-        if($api->request->getCookie('oauth_access_token') && $api->request->getCookie('oauth_access_token_secret') && $api->request->post_to_twitter) {
+        if(Typecho_Cookie::get('oauth_access_token') && Typecho_Cookie::get('oauth_access_token_secret') && $api->request->post_to_twitter) {
             $options = Typecho_Widget::widget('Widget_Options');
             $config = $options->plugin('ConnectToTwitter');
-            $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, $api->request->getCookie('oauth_access_token'), $api->request->getCookie('oauth_access_token_secret'));
+            $to = new TwitterOAuth($config->consumerKey, $config->consumerSecret, Typecho_Cookie::get('oauth_access_token'), Typecho_Cookie::get('oauth_access_token_secret'));
 
             $url_array = array();
             $url_array = explode('?', $api->request->getReferer());
@@ -135,7 +135,7 @@ class ConnectToTwitter_Plugin implements Typecho_Plugin_Interface
 
     function showButton()
     {
-        if(Typecho_Request::getCookie('oauth_access_token') && Typecho_Request::getCookie('oauth_access_token_secret')) {
+        if(Typecho_Cookie::get('oauth_access_token') && Typecho_Cookie::get('oauth_access_token_secret')) {
             echo '<p><input type="checkbox" checked="" value="yes" id="post_to_twitter" name="post_to_twitter"/><label for="post_to_twitter">同时把留言更新到你的 Twitter</label></p>';
         } else {
             echo '<p><a href="?connect_to_twitter=yes"><img src="http://s3.amazonaws.com/static.whitleymedia/twitconnect.png" /></a></p>';
