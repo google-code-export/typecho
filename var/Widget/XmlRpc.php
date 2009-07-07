@@ -50,7 +50,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         /** 验证用户名和密码 */
         $select = $this->db->select()->from('table.users')->where('name = ?', $userName)->limit(1);
-        $user = $this->db->fetchRow($select, array($this->user, push));
+        $user = $this->db->fetchRow($select);
+        
         if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
             /** 登录操作 */
             /** 登录后用$this->user即可调用当前用户 */
@@ -411,7 +412,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 取得content内容 */
         $input = array();
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
-        $input['slug'] = $content['slug'];
+        $input['slug'] = isset($content['slug']) ? $content['slug'] : NULL;
         
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
         $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
@@ -420,7 +421,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
-        $input['type'] = $content['post_type'];
+        $input['type'] = isset($content['post_type']) ? $content['post_type'] : 'post';
         $input['draft'] = !$publish;
         $input['category'] = array();
         
