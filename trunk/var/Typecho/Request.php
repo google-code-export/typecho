@@ -216,18 +216,14 @@ class Typecho_Request
      */
     public function from($params)
     {
-        if (is_array($params)) {
-            $args = $params;
-        } else {
-            $args = func_get_args();
-            $params = array();
-        }
+        $result = array();
+        $args = is_array($params) ? $params : func_get_args();
 
         foreach ($args as $arg) {
-            $params[$arg] = $this->get($arg);
+            $result[$arg] = $this->get($arg);
         }
 
-        return $params;
+        return $result;
     }
 
     /**
