@@ -295,8 +295,8 @@ class Widget_Options extends Typecho_Widget
             $parser = new Typecho_Router_Parser($this->routingTable);
             $parsedRoutingTable = $parser->parse();
             $this->routingTable = array_merge(array($parsedRoutingTable), $this->routingTable);
-            $this->widget('Widget_Abstract_Options')->update(array('value' => serialize($this->routingTable)),
-            $this->db->sql()->where('name = ?', 'routingTable'));
+            $this->db->query($this->db->update('table.options')->rows(array('value' => serialize($this->routingTable)))
+            ->where('name = ?', 'routingTable'));
         }
     }
 
