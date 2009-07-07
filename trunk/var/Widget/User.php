@@ -99,6 +99,33 @@ class Widget_User extends Typecho_Widget
             ->where('uid = ?', $this->_user['uid']));
         }
     }
+    
+    /**
+     * 以用户名和密码登录
+     * 
+     * @access public
+     * @param string $name 用户名
+     * @param string $password 密码
+     * @param boolean $temporarily 是否为临时登录
+     * @return mixed
+     */
+    public function loginByNameAndPassword($name, $password, $temporarily = false)
+    {
+        /** 开始验证用户 **/
+        $user = $this->db->fetchRow($this->select()
+        ->where('name = ?', $name)
+        ->limit(1));
+        
+        if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
+            
+            if (!$temporarily) {
+                $authCode = sha1(Typecho_Common::randString(20));
+            }
+            
+            /** 压入数据 */
+            $this->push($user);
+        }
+    }
 
     /**
      * 用户登录函数
@@ -155,7 +182,7 @@ class Widget_User extends Typecho_Widget
                 ->limit(1));
 
                 if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode)) {
-                    $this->_user = $user;
+                    $this->push($user);
                     return ($this->_hasLogin = true);
                 }
                 
