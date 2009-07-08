@@ -302,7 +302,7 @@ class Typecho_Request
      * @param mixed $parameter 指定的参数
      * @return string
      */
-    public function getRequestUri($parameter = NULL)
+    public function makeUriByRequest($parameter = NULL)
     {
         /** 初始化地址 */
         list($scheme) = explode('/', $_SERVER["SERVER_PROTOCOL"]);
