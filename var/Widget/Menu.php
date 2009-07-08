@@ -189,8 +189,10 @@ class Widget_Menu extends Typecho_Widget
             }
         }
 
-        if ('visitor' != $this->_childMenu[$this->_currentParent][$this->_currentChild][3]) {
-            $this->user->pass($this->_childMenu[$this->_currentParent][$this->_currentChild][3]);
+        $level = isset($this->_childMenu[$this->_currentParent][$this->_currentChild][3]) ? 
+        $this->_childMenu[$this->_currentParent][$this->_currentChild][3] : 'administrator';
+        if ('visitor' != $level) {
+            $this->user->pass($level);
         }
         
         if (is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1])) {
