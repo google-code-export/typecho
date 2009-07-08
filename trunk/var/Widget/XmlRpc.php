@@ -611,7 +611,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'categoryId'    => $categories->mid,
                     'parentId'      => 0,
                     'categoryName'  => $categories->name,
-                    'description'   => $categories->description,
+                    'description'   => $categories->name,
                     'htmlUrl'       => $categories->permalink,
                     'rssUrl'        => $categories->feedRssUrl,
                     );
