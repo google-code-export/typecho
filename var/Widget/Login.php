@@ -46,15 +46,11 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         }
         
         /** 开始验证用户 **/
-        $user = $this->db->fetchRow($this->select()
-        ->where('name = ?', $this->request->name)
-        ->limit(1));
+        $valid = $this->user->login($this->request->name, $this->request->password,
+        false, 1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
         
         /** 比对密码 */
-        if ($user && Typecho_Common::hashValidate($this->request->password, $user['password'])) {
-            $this->user->login($user['uid'], 1 == $this->request->remember ?
-            $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
-        } else {
+        if (!$valid) {
             /** 防止穷举,休眠3秒 */
             sleep(3);
             

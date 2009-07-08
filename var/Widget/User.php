@@ -107,12 +107,14 @@ class Widget_User extends Typecho_Widget
      * @param string $name 用户名
      * @param string $password 密码
      * @param boolean $temporarily 是否为临时登录
-     * @return mixed
+     * @param integer $expire 过期时间
+     * @return boolean
      */
-    public function loginByNameAndPassword($name, $password, $temporarily = false)
+    public function login($name, $password, $temporarily = false, $expire = 0)
     {
         /** 开始验证用户 **/
-        $user = $this->db->fetchRow($this->select()
+        $user = $this->db->fetchRow($this->db->select()
+        ->from('table.users')
         ->where('name = ?', $name)
         ->limit(1));
         
@@ -120,37 +122,29 @@ class Widget_User extends Typecho_Widget
             
             if (!$temporarily) {
                 $authCode = sha1(Typecho_Common::randString(20));
+                $user['authCode'] = $authCode;
+                
+                Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire, $this->options->siteUrl);
+                Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode),
+                $expire, $this->options->siteUrl);
+                
+                //更新最后登录时间以及验证码
+                $this->db->query($this->db
+                ->update('table.users')
+                ->expression('logged', 'activated')
+                ->rows(array('authCode' => $authCode))
+                ->where('uid = ?', $user['uid']));
             }
             
             /** 压入数据 */
             $this->push($user);
+            $this->_hasLogin = true;
+            
+            return true;
         }
+        
+        return false;
     }
-
-    /**
-     * 用户登录函数
-     *
-     * @access public
-     * @param integer $uid 用户id
-     * @param integer $expire 过期时间
-     * @return void
-     */
-    public function login($uid, $expire = 0)
-    {
-        $authCode = sha1(Typecho_Common::randString(20));
-        Typecho_Cookie::set('__typecho_uid', $uid, $expire, $this->options->siteUrl);
-        Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode),
-        $expire, $this->options->siteUrl);
-
-        $this->_hasLogin = true;
-
-		//更新最后登录时间以及验证码
-		$this->db->query($this->db
-				->update('table.users')
-				->expression('logged', 'activated')
-				->rows(array('authCode' => $authCode))
-				->where('uid = ?', $uid));
-	}
     
     /**
      * 用户登出函数
@@ -181,8 +175,11 @@ class Widget_User extends Typecho_Widget
                 ->where('uid = ?', intval($this->request->__typecho_uid))
                 ->limit(1));
 
+                //var_dump(Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode));
+                //die;
+
                 if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode)) {
-                    $this->push($user);
+                    $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }
                 
