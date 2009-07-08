@@ -214,7 +214,7 @@ class Widget_User extends Typecho_Widget
                     throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
                 } else {
                     $this->response->redirect($this->options->loginUrl
-                    . '?referer=' . urlencode($this->request->getRequestUri()), false);
+                    . '?referer=' . urlencode($this->request->makeUriByRequest()), false);
                 }
             }
         }

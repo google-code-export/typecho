@@ -97,7 +97,7 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      */
     public function pageNav()
     {
-        $query = $this->request->getRequestUri('page={page}');;
+        $query = $this->request->makeUriByRequest('page={page}');;
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,

@@ -55,7 +55,7 @@ include 'menu.php';
                             <?php while ($categories->next()): ?>
                             <tr<?php $categories->alt(' class="even"', ''); ?> id="<?php $categories->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
-                                <td><a href="<?php echo $request->getRequestUri('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
+                                <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="balloon right"><?php _e('默认'); ?></span>
@@ -97,7 +97,7 @@ include 'menu.php';
                         <?php while ($tags->next()): ?>
                         <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
-                        <span rel="<?php echo $request->getRequestUri('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
+                        <span rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>

@@ -23,8 +23,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php endif; ?>
                     </a></li>
                 
-                    <li class="right<?php if('on' == $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_attachments=on'); ?>"><?php _e('所有'); ?></a></li>
-                    <li class="right<?php if('on' != $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_attachments=off'); ?>"><?php _e('我的'); ?></a></li>
+                    <li class="right<?php if('on' == $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_attachments=on'); ?>"><?php _e('所有'); ?></a></li>
+                    <li class="right<?php if('on' != $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_attachments=off'); ?>"><?php _e('我的'); ?></a></li>
                 </ul>
                 <?php endif; ?>
                 

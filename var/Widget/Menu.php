@@ -166,7 +166,7 @@ class Widget_Menu extends Typecho_Widget
         }
         
         $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-        $this->_currentUrl = $this->request->getRequestUri();
+        $this->_currentUrl = $this->request->makeUriByRequest();
         $childMenu = $this->_childMenu;
         $match = 0;
         $adminUrl = $this->options->siteUrl;

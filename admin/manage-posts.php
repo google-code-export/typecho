@@ -27,8 +27,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php endif; ?>
                     </a></li>
                     <?php if($user->pass('editor', true)): ?>
-                        <li class="right<?php if('on' == $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if('on' != $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->getRequestUri('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
+                        <li class="right<?php if('on' == $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="right<?php if('on' != $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
                 </ul>
                 <div class="typecho-list-operate">
