@@ -46,17 +46,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @access public
      * @return void
      */
-    public function checkAccess($userName, $password, $level = 'contributor')
+    public function checkAccess($name, $password, $level = 'contributor')
     {
-        /** 验证用户名和密码 */
-        $select = $this->db->select()->from('table.users')->where('name = ?', $userName)->limit(1);
-        $user = $this->db->fetchRow($select);
-        
-        if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
-            /** 登录操作 */
-            /** 登录后用$this->user即可调用当前用户 */
-            $this->user->login($user['uid']);
-            
+        if ($this->user->login($name, $password, true)) {
             /** 验证权限 */
             if ($this->user->pass($level, true)) {
                 return true;
