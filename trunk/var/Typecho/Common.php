@@ -165,7 +165,7 @@ class Typecho_Common
                  * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
                  * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
                  */
-                require_once str_replace('_', '/', $className) . '.php';
+                @include_once str_replace('_', '/', $className) . '.php';
             }
         }
         
