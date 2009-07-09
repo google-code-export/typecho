@@ -153,6 +153,14 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     private $_archiveCustom = false;
     
+    /**
+     * 设置分页对象
+     * 
+     * @access private
+     * @var Typecho_Widget_Helper_PageNavigator
+     */
+    private $_pageNav;
+    
     
     /**
      * 构造函数,初始化组件
@@ -203,12 +211,268 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             /** 初始化聚合器 */
-            $this->_feed = Typecho_Feed::generator($this->_feedType);
+            $this->setFeed(Typecho_Feed::generator($this->_feedType));
             
             /** 默认输出10则文章 **/
             $this->parameter->pageSize = 10;
         }
     }
+    
+    /**
+     * 设置分页对象
+     * @param $pageRow
+     * @return void
+     */
+    public function setPageRow(array $pageRow)
+    {
+        $this->_pageRow = $pageRow;
+    }
+    
+	/**
+	 * @param $_archiveCustom the $_archiveCustom to set
+	 */
+	public function setArchiveCustom($archiveCustom)
+	{
+		$this->_archiveCustom = $archiveCustom;
+	}
+
+	/**
+	 * @param $_archiveSlug the $_archiveSlug to set
+	 */
+	public function setArchiveSlug($archiveSlug)
+	{
+		$this->_archiveSlug = $archiveSlug;
+	}
+
+	/**
+	 * @param $_archiveSingle the $_archiveSingle to set
+	 */
+	public function setArchiveSingle($archiveSingle)
+	{
+		$this->_archiveSingle = $archiveSingle;
+	}
+
+	/**
+	 * @param $_archiveType the $_archiveType to set
+	 */
+	public function setArchiveType($archiveType)
+	{
+		$this->_archiveType = $archiveType;
+	}
+
+	/**
+	 * @param $_archiveTitle the $_archiveTitle to set
+	 */
+	public function setArchiveTitle(array $archiveTitle)
+	{
+		$this->_archiveTitle = $archiveTitle;
+	}
+	
+	/**
+	 * 增加标题
+	 * @param string $archiveTitle 标题
+	 * @return void
+	 */
+	public function addArchiveTitle($archiveTitle)
+	{
+	    $current = $this->getArchiveTitle();
+	    $current[] = $archiveTitle;
+	    $this->setArchiveTitle($current);
+	}
+
+	/**
+	 * @param $_feedType the $_feedType to set
+	 */
+	public function setFeedType($feedType)
+	{
+		$this->_feedType = $feedType;
+	}
+
+	/**
+	 * @param $_description the $_description to set
+	 */
+	public function setDescription($description)
+	{
+		$this->_description = $description;
+	}
+
+	/**
+	 * @param $_keywords the $_keywords to set
+	 */
+	public function setKeywords($keywords)
+	{
+		$this->_keywords = $keywords;
+	}
+
+	/**
+	 * @param $_feedAtomUrl the $_feedAtomUrl to set
+	 */
+	public function setFeedAtomUrl($feedAtomUrl)
+	{
+		$this->_feedAtomUrl = $feedAtomUrl;
+	}
+
+	/**
+	 * @param $_feedRssUrl the $_feedRssUrl to set
+	 */
+	public function setFeedRssUrl($feedRssUrl)
+	{
+		$this->_feedRssUrl = $feedRssUrl;
+	}
+
+	/**
+	 * @param $_feedUrl the $_feedUrl to set
+	 */
+	public function setFeedUrl($feedUrl)
+	{
+		$this->_feedUrl = $feedUrl;
+	}
+
+	/**
+	 * @param $_feed the $_feed to set
+	 */
+	public function setFeed($feed)
+	{
+		$this->_feed = $feed;
+	}
+
+	/**
+	 * @param $_countSql the $_countSql to set
+	 */
+	public function setCountSql(Typecho_Db_Query $countSql)
+	{
+		$this->_countSql = $countSql;
+	}
+
+	/**
+	 * @param $_themeFile the $_themeFile to set
+	 */
+	public function setThemeFile($themeFile)
+	{
+		$this->_themeFile = $themeFile;
+	}
+	
+	/**
+	 * 获取分页对象
+	 * @return array
+	 */
+	public function getPageRow()
+	{
+	    return $this->_pageRow;
+	}
+
+	/**
+	 * @return the $_archiveCustom
+	 */
+	public function getArchiveCustom()
+	{
+		return $this->_archiveCustom;
+	}
+
+	/**
+	 * @return the $_archiveSlug
+	 */
+	public function getArchiveSlug()
+	{
+		return $this->_archiveSlug;
+	}
+
+	/**
+	 * @return the $_archiveSingle
+	 */
+	public function getArchiveSingle()
+	{
+		return $this->_archiveSingle;
+	}
+
+	/**
+	 * @return the $_archiveType
+	 */
+	public function getArchiveType()
+	{
+		return $this->_archiveType;
+	}
+
+	/**
+	 * @return the $_archiveTitle
+	 */
+	public function getArchiveTitle()
+	{
+		return $this->_archiveTitle;
+	}
+
+	/**
+	 * @return the $_feedType
+	 */
+	public function getFeedType()
+	{
+		return $this->_feedType;
+	}
+
+	/**
+	 * @return the $_description
+	 */
+	public function getDescription()
+	{
+		return $this->_description;
+	}
+
+	/**
+	 * @return the $_keywords
+	 */
+	public function getKeywords()
+	{
+		return $this->_keywords;
+	}
+
+	/**
+	 * @return the $_feedAtomUrl
+	 */
+	public function getFeedAtomUrl()
+	{
+		return $this->_feedAtomUrl;
+	}
+
+	/**
+	 * @return the $_feedRssUrl
+	 */
+	public function getFeedRssUrl()
+	{
+		return $this->_feedRssUrl;
+	}
+
+	/**
+	 * @return the $_feedUrl
+	 */
+	public function getFeedUrl()
+	{
+		return $this->_feedUrl;
+	}
+
+	/**
+	 * @return the $_feed
+	 */
+	public function getFeed()
+	{
+		return $this->_feed;
+	}
+
+	/**
+	 * @return the $_countSql
+	 */
+	public function getCountSql()
+	{
+		return $this->_countSql;
+	}
+
+	/**
+	 * @return the $_themeFile
+	 */
+	public function getThemeFile()
+	{
+		return $this->_themeFile;
+	}
+
     
     /**
      * 处理index
@@ -237,7 +501,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->response->setStatus(404);
     
         /** 设置标题 */
-        $this->_archiveTitle[] = _t('页面不存在');
+        $this->_archiveTitle[] = array(_t('页面不存在'));
         
         /** 设置归档类型 */
         $this->_archiveType = 404;
@@ -701,6 +965,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
             $this->{$handle}($select, $hasPushed);
+        } else {
+            $hasPushed = $this->plugin()->handle($this->parameter->type, $this, $select);
         }
         
         /** 如果已经提前压入则直接返回 */
@@ -740,6 +1006,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
+        $hasNav = false;
         $this->plugin()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
         
         if (!$hasNav) {
@@ -764,19 +1031,17 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageLink($word = '&laquo; Previous Entries', $page = 'render')
     {
-        static $nav;
-        
-        if (empty($nav)) {
+        if (empty($this->_pageNav)) {
             $query = Typecho_Router::url($this->parameter->type . 
             (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
             $this->_pageRow, $this->options->index);
 
             /** 使用盒状分页 */
-            $nav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
+            $this->_pageNav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
             $this->_currentPage, $this->parameter->pageSize, $query);
         }
         
-        $nav->{$page}($word);
+        $this->_pageNav->{$page}($word);
     }
     
     /**
@@ -1013,18 +1278,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
-     * 设置主题文件
-     * 
-     * @access public
-     * @param string $fileName 主题文件
-     * @return void
-     */
-    public function setTheme($fileName)
-    {
-        $this->_themeFile = $fileName;
-    }
-    
-    /**
      * 获取主题文件
      * 
      * @access public
@@ -1162,92 +1415,70 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 插件接口 */
         $this->plugin()->feed($this->_feed, $this);
         
-        /** 添加聚合频道 */
-        switch ($this->parameter->type) {
-            case 'post':
-            case 'page':
-            case 'attachment':
-            case 'comments':
-                $this->_feed->setTitle(_t('%s 的评论', 
-                $this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL)));
+        if ($this->is('single') || 'comments' == $this->parameter->type) {
+            $this->_feed->setTitle(_t('%s 的评论', 
+            $this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL)));
+        
+            if ('comments' == $this->parameter->type) {
+                $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
+            } else {
+                $comments = $this->comments(NULL, true);
+            }
             
-                if ('comments' == $this->parameter->type) {
-                    $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
-                } else {
-                    $comments = $this->comments(NULL, true);
+            while ($comments->next()) {
+                $item = $this->_feed->createNewItem();
+                $item->setTitle($comments->author);
+                $item->setLink($comments->permalink);
+                $item->setDate($comments->created);
+                $item->setDescription(strip_tags($comments->content));
+
+                if (Typecho_Feed::RSS2 == $this->_feedType) {
+                    $item->addElement('guid', $comments->permalink);
+
+                    //support content rfc
+                    $item->addElement('content:encoded', $comments->content);
+
+                    $item->addElement('author', $comments->author);
+                    $item->addElement('dc:creator', $comments->author);
                 }
                 
-                while ($comments->next()) {
-                    $item = $this->_feed->createNewItem();
-                    $item->setTitle($comments->author);
-                    $item->setLink($comments->permalink);
-                    $item->setDate($comments->created);
-                    $item->setDescription(strip_tags($comments->content));
+                $this->plugin()->commentFeedItem($item, $this->_feedType, $this);
+                $this->_feed->addItem($item);
+            }
+        } else {
+            while ($this->next()) {
+                $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
+            
+                $item = $this->_feed->createNewItem();
+                $item->setTitle($this->title);
+                $item->setLink($this->permalink);
+                $item->setDate($this->created);                    
+                $item->setCategory($this->categories);
+                
+                //直接设置描述
+                $item->setDescription($this->description);
+                
+                if (Typecho_Feed::RSS2 == $this->_feedType) {
+                    $item->addElement('guid', $this->permalink);
+                    $item->addElement('slash:comments', $this->commentsNum);
+                    $item->addElement('comments', $this->permalink . '#comments');
 
-                    if (Typecho_Feed::RSS2 == $this->_feedType) {
-                        $item->addElement('guid', $comments->permalink);
-
-                        //support content rfc
-                        $item->addElement('content:encoded', $comments->content);
-
-                        $item->addElement('author', $comments->author);
-                        $item->addElement('dc:creator', $comments->author);
+                    /** RSS全文输出开关支持 */
+                    if ($this->options->feedFullText) {
+                        $item->addElement('content:encoded', $this->content);
+                    } else {
+                        $item->addElement('content:encoded', false !== strpos($this->text, '<!--more-->') ?
+                        $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
                     }
-                    
-                    $this->plugin()->commentFeedItem($item, $this->_feedType, $this);
-                    $this->_feed->addItem($item);
-                }
-                break;
-                
-            case 'index':
-            case 'index_page':
-            case 'category':
-            case 'category_page':
-            case 'tag':
-            case 'tag_page':
-            case 'archive_year':
-            case 'archive_month':
-            case 'archive_day':
-            case 'archive_year_page':
-            case 'archive_month_page':
-            case 'archive_day_page':
-            case 'search':
-            case 'search_page':
-            default:
-                while ($this->next()) {
-                    $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
-                
-                    $item = $this->_feed->createNewItem();
-                    $item->setTitle($this->title);
-                    $item->setLink($this->permalink);
-                    $item->setDate($this->created);                    
-                    $item->setCategory($this->categories);
-                    
-                    //直接设置描述
-                    $item->setDescription($this->description);
-                    
-                    if (Typecho_Feed::RSS2 == $this->_feedType) {
-                        $item->addElement('guid', $this->permalink);
-                        $item->addElement('slash:comments', $this->commentsNum);
-                        $item->addElement('comments', $this->permalink . '#comments');
 
-                        /** RSS全文输出开关支持 */
-                        if ($this->options->feedFullText) {
-                            $item->addElement('content:encoded', $this->content);
-                        } else {
-                            $item->addElement('content:encoded', false !== strpos($this->text, '<!--more-->') ?
-                            $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
-                        }
-
-                        $item->addElement('author', $this->author->screenName);
-                        $item->addElement('dc:creator', $this->author->screenName);
-                        $item->addElement('wfw:commentRss', $this->feedUrl);
-                    }
-                    
-                    $this->plugin()->feedItem($item, $this->_feedType, $this);
-                    $this->_feed->addItem($item);
+                    $item->addElement('author', $this->author->screenName);
+                    $item->addElement('dc:creator', $this->author->screenName);
+                    $item->addElement('wfw:commentRss', $this->feedUrl);
                 }
-                break;
+                
+                $this->plugin()->feedItem($item, $this->_feedType, $this);
+                $this->_feed->addItem($item);
+            }
         }
         
         $this->_feed->generateFeed();

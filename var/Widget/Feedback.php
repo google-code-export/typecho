@@ -66,7 +66,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
 
-        if ($this->options->commentsRequireUrl && !$user->hasLogin()) {
+        if ($this->options->commentsRequireUrl && !$this->user->hasLogin()) {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
 
@@ -240,6 +240,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         /** 回调方法 */
         $callback = $this->request->type;
+        $params = NULL;
         $result = Typecho_Router::match($this->request->permalink, $params);
     
         /** 判断内容是否存在 */
