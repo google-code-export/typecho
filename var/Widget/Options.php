@@ -206,6 +206,28 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 获取自定义登录地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___customLoginUrl()
+    {
+        return Typecho_Router::url('page', array('slug' => 'login'), $this->index);
+    }
+    
+    /**
+     * 获取自定义注册地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___customRegisterUrl()
+    {
+        return Typecho_Router::url('page', array('slug' => 'register'), $this->index);
+    }
+    
+    /**
      * 获取登录提交地址
      * 
      * @access protected

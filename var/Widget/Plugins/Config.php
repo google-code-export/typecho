@@ -88,7 +88,6 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         $activatedPlugins = $plugins['activated'];
         
         /** 判断实例化是否成功 */
-        
         if (!$this->info['config'] || !isset($activatedPlugins[$pluginName])) {
             throw new Typecho_Widget_Exception(_t('无法配置插件'), 500);
         }

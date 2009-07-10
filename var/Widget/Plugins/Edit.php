@@ -64,7 +64,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $options = $form->getValues();
         $personalOptions = $personalForm->getValues();
         
-        if ($options) {
+        if ($options && !$this->configHandle($pluginName, $options, true)) {
             $this->insert(array(
                 'name'  =>  'plugin:' . $pluginName,
                 'value' =>  serialize($options),
@@ -72,7 +72,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             ));
         }
         
-        if ($personalOptions) {
+        if ($personalOptions && !$this->personalConfigHandle($className, $personalOptions)) {
             $this->insert(array(
                 'name'  =>  '_plugin:' . $pluginName,
                 'value' =>  serialize($personalOptions),
@@ -161,8 +161,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         }
         
         $settings = $form->getAllRequest();
-        $this->update(array('value' => serialize($settings)),
-        $this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
+        
+        if (!$this->configHandle($pluginName, $settings, false)) {
+            $this->update(array('value' => serialize($settings)),
+            $this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
+        }
         
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
@@ -172,6 +175,46 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('plugins.php', $this->options->adminUrl));
+    }
+    
+    /**
+     * 用自有函数处理配置信息
+     * 
+     * @access public
+     * @param string $pluginName 插件名称
+     * @param array $settings 配置值
+     * @param boolean $isInit 是否为初始化
+     * @return boolean
+     */
+    public function configHandle($pluginName, array $settings, $isInit)
+    {
+        /** 获取插件入口 */
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        
+        if (method_exists($className, 'configHandle')) {
+            call_user_func(array($className, 'configHandle'), $settings, $isInit);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * 用自有函数处理自定义配置信息
+     * 
+     * @access public
+     * @param string $className 类名
+     * @param array $settings 配置值
+     * @return boolean
+     */
+    public function personalConfigHandle($className, array $settings)
+    {
+        if (method_exists($className, 'personalConfigHandle')) {
+            call_user_func(array($className, 'personalConfigHandle'), $settings, true);
+            return true;
+        }
+        
+        return false;
     }
 
     /**
