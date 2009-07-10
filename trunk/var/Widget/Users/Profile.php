@@ -363,16 +363,18 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         unset($settings['do'], $settings['plugin']);
         $name = '_plugin:' . $pluginName;
         
-        if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
-        ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
-            $this->widget('Widget_Abstract_Options')
-            ->update(array('value' => serialize($settings)), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
-        } else {
-            $this->widget('Widget_Abstract_Options')->insert(array(
-                'name'  =>  $name,
-                'value' =>  serialize($settings),
-                'user'  =>  $this->user->uid
-            ));
+        if (!$this->personalConfigHandle($className, $settings)) {
+            if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
+            ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
+                $this->widget('Widget_Abstract_Options')
+                ->update(array('value' => serialize($settings)), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
+            } else {
+                $this->widget('Widget_Abstract_Options')->insert(array(
+                    'name'  =>  $name,
+                    'value' =>  serialize($settings),
+                    'user'  =>  $this->user->uid
+                ));
+            }
         }
         
         /** 提示信息 */
@@ -380,6 +382,24 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('profile.php', $this->options->adminUrl));
+    }
+    
+    /**
+     * 用自有函数处理自定义配置信息
+     * 
+     * @access public
+     * @param string $className 类名
+     * @param array $settings 配置值
+     * @return boolean
+     */
+    public function personalConfigHandle($className, array $settings)
+    {
+        if (method_exists($className, 'personalConfigHandle')) {
+            call_user_func(array($className, 'personalConfigHandle'), $settings, false);
+            return true;
+        }
+        
+        return false;
     }
     
     /**
