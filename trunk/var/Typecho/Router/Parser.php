@@ -81,7 +81,7 @@ class Typecho_Router_Parser
         } else if (2 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '+');
         } else if (3 == $paramsNum) {
-            return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . ',}');
+            return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . '}');
         } else if (4 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . ',' . $params[3] . '}');
         }
