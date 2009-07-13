@@ -485,6 +485,19 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * 输出标题
+     * 
+     * @access public
+     * @param integer $length 标题截取长度
+     * @param string $trim 截取后缀
+     * @return void
+     */
+    public function title($length = 0, $trim = '...')
+    {
+        echo $length > 0 ? Typecho_Common::subStr($this->title, 0, $length, $trim) : $this->title;
+    }
+
+    /**
      * 输出文章评论数
      *
      * @access public

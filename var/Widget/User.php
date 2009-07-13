@@ -118,7 +118,8 @@ class Widget_User extends Typecho_Widget
         ->where('name = ?', $name)
         ->limit(1));
         
-        if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
+        if ($user && (Typecho_Common::hashValidate($password, $user['password']) 
+        || $this->plugin()->validate($password, $user['password']))) {
             
             if (!$temporarily) {
                 $authCode = sha1(Typecho_Common::randString(20));
