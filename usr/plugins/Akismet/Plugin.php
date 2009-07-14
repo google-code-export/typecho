@@ -4,7 +4,7 @@
  * 
  * @package Akismet
  * @author qining
- * @version 1.1.2
+ * @version 1.1.3
  * @link http://typecho.org
  */
 class Akismet_Plugin implements Typecho_Plugin_Interface
@@ -188,19 +188,24 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             }
         }
 
-        $client = Typecho_Http_Client::get();
-        if (false != $client && $key) {
-            $params = parse_url($url);
-            $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
+        try {
+            $client = Typecho_Http_Client::get();
+            if (false != $client && $key) {
+                $params = parse_url($url);
+                $url = $params['scheme'] . '://' . $key . '.' . $params['host'] . (isset($params['path']) ? $params['path'] : NULL);
 
-            $client->setHeader('User-Agent', $options->generator . ' | Akismet/1.1')
-            ->setTimeout(5)
-            ->setData($data)
-            ->send(Typecho_Common::url('/1.1/' . $api, $url));
+                $client->setHeader('User-Agent', $options->generator . ' | Akismet/1.1')
+                ->setTimeout(5)
+                ->setData($data)
+                ->send(Typecho_Common::url('/1.1/' . $api, $url));
 
-            if ('true' == $client->getResponseBody()) {
-                $comment['status'] = 'spam';
+                if ('true' == $client->getResponseBody()) {
+                    $comment['status'] = 'spam';
+                }
             }
+        } catch (Typecho_Http_Client_Exception $e) {
+            //do nothing
+            error_log($e->getMessage());
         }
         
         return $comment;
