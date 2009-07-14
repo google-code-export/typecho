@@ -79,7 +79,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
     public static function validate($key)
     {
         $options = Typecho_Widget::widget('Widget_Options');
-        $url = Typecho_Request::getParameter('url');
+        $url = Typecho_Request::getInstance()->url;
         
         $data = array(
             'key'   =>  $key,
@@ -173,7 +173,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             'blog'                  =>  $options->siteUrl,
             'user_ip'               =>  $comment['ip'],
             'user_agent'            =>  $comment['agent'],
-            'referrer'              =>  Typecho_Request::getReferer(),
+            'referrer'              =>  Typecho_Request::getInstance()->getReferer(),
             'permalink'             =>  $post->permalink,
             'comment_type'          =>  $comment['mode'],
             'comment_author'        =>  $comment['author'],
