@@ -78,7 +78,6 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $this->user->pass('administrator');
         $this->on($this->request->is('change'))->changeTheme($this->request->change);
         $this->on($this->request->is('edit&theme'))->editThemeFile($this->request->theme, $this->request->edit);
-
         $this->response->redirect($this->options->adminUrl);
     }
 }
