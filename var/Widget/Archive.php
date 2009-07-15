@@ -1326,15 +1326,13 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
         $themeDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
         $validated = false;
-
-        /** 个性化模板系统 */
-        if (!empty($this->_archiveType)) {
-            //~ 自定义模板
-            if (!empty($this->_themeFile)) {
-                if (file_exists($themeDir . $this->_themeFile)) {
-                    $validated = true;
-                }
+        
+        //~ 自定义模板
+        if (!empty($this->_themeFile)) {
+            if (file_exists($themeDir . $this->_themeFile)) {
+                $validated = true;
             }
+        } else if (!empty($this->_archiveType)) {
         
             //~ 首先找具体路径, 比如 category/default.php
             if (!$validated && !empty($this->_archiveSlug)) {
