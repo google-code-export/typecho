@@ -402,18 +402,34 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
         }
         
-        /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
-        
-        /** 获取页面偏移 */
-        $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
-
-        /** 跳转页面 */
-        if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $insertId, $this->options->adminUrl));
+        if ($this->request->isAjax()) {
+            if ($insertId > 0) {
+                $created = new Typecho_Date($contents['created']);
+                $this->response->throwJson(array(
+                    'success'  =>  1,
+                    'message'  =>  _t('文章保存于 %s', $created->word()),
+                    'cid'      =>  $insertId
+                ));
+            } else {
+                $this->response->throwJson(array(
+                    'success'  =>  0,
+                    'message'  =>  _t('文章保存失败')
+                ));
+            }
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
-            '&' . $pageQuery, $this->options->adminUrl));
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->theId);
+            
+            /** 获取页面偏移 */
+            $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
+
+            /** 跳转页面 */
+            if ('draft' == $contents['status']) {
+                $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $insertId, $this->options->adminUrl));
+            } else {
+                $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
+                '&' . $pageQuery, $this->options->adminUrl));
+            }
         }
     }
     
@@ -472,19 +488,35 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             _t('文章 "%s" 等待审核', $this->title) :
             _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
         }
-
-        /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
         
-        /** 获取页面偏移 */
-        $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
-
-        /** 跳转页面 */
-        if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
+        if ($this->request->isAjax()) {
+            if ($updateRows > 0) {
+                $created = new Typecho_Date($contents['created']);
+                $this->response->throwJson(array(
+                    'success'  =>  1,
+                    'message'  =>  _t('文章保存于 %s', $created->word()),
+                    'cid'      =>  $this->cid
+                ));
+            } else {
+                $this->response->throwJson(array(
+                    'success'  =>  0,
+                    'message'  =>  _t('文章保存失败')
+                ));
+            }
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
-            '&' . $pageQuery, $this->options->adminUrl));
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->theId);
+            
+            /** 获取页面偏移 */
+            $pageQuery = $this->getPageOffsetQuery($this->created, $this->status);
+
+            /** 跳转页面 */
+            if ('draft' == $contents['status']) {
+                $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
+            } else {
+                $this->response->redirect(Typecho_Common::url('manage-posts.php?status=' . $contents['status'] .
+                '&' . $pageQuery, $this->options->adminUrl));
+            }
         }
     }
     

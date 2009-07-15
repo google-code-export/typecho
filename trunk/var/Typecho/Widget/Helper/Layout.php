@@ -68,6 +68,14 @@ class Typecho_Widget_Helper_Layout
     private $_html;
     
     /**
+     * 父节点
+     * 
+     * @access private
+     * @var Typecho_Widget_Helper_Layout
+     */
+    private $_parent;
+    
+    /**
      * 构造函数,设置标签名称
      * 
      * @access public
@@ -95,6 +103,7 @@ class Typecho_Widget_Helper_Layout
      */
     public function addItem(Typecho_Widget_Helper_Layout $item)
     {
+        $item->setParent($this);
         $this->_items[] = $item;
         return $this;
     }
@@ -200,6 +209,30 @@ class Typecho_Widget_Helper_Layout
     {
         $this->_forceClose = $close;
         return $this;
+    }
+    
+    /**
+     * 设置父节点
+     * 
+     * @access public
+     * @param Typecho_Widget_Helper_Layout $parent 父节点
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function setParent(Typecho_Widget_Helper_Layout $parent)
+    {
+        $this->_parent = $parent;
+        return $this;
+    }
+    
+    /**
+     * 获取父节点
+     * 
+     * @access public
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function getParent()
+    {
+        return $this->_parent;
     }
     
     /**

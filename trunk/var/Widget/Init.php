@@ -47,8 +47,8 @@ class Widget_Init extends Typecho_Widget
         Typecho_Date::setTimezoneOffset($options->timezone);
         
         /** gzip开关 */
-        if ($options->gzip && NULL !== $this->response->getServer('HTTP_ACCEPT_ENCODING')
-           && false !== strpos($this->response->getServer('HTTP_ACCEPT_ENCODING'), 'gzip')) {
+        if ($options->gzip && NULL !== $this->request->getServer('HTTP_ACCEPT_ENCODING')
+           && false !== strpos($this->request->getServer('HTTP_ACCEPT_ENCODING'), 'gzip')) {
             ob_start("ob_gzhandler");
         } else {
             ob_start();

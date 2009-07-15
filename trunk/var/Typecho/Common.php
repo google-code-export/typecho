@@ -268,8 +268,11 @@ class Typecho_Common
         
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
+            require_once 'Typecho/Response.php';
             Typecho_Response::setStatus($code);
         }
+        
+        $message = nl2br($message);
         
         echo 
 <<<EOF
