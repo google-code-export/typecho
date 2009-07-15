@@ -165,11 +165,6 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         Typecho_Common::removeParagraph(Typecho_Common::decodeCode($this->request->content))));
     }
     
-    public function autoSave()
-    {
-        
-    }
-    
     /**
      * 异步请求入口
      * 
@@ -184,6 +179,5 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $this->on($this->request->is('do=editorResize'))->editorResize();
         $this->on($this->request->is('do=cutParagraph'))->cutParagraph();
         $this->on($this->request->is('do=removeParagraph'))->removeParagraph();
-        $this->on($this->request->is('do=autoSave'))->autoSave();
     }
 }

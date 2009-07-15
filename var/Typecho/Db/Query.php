@@ -288,8 +288,7 @@ class Typecho_Db_Query
     public function rows(array $rows)
     {
         foreach ($rows as $key => $row) {
-            $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = empty($row) 
-            && 0 !== $row && '0' !== $row && false !== $row ? 'NULL' : $this->_adapter->quoteValue($row);
+            $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = is_null($row) ? 'NULL' : $this->_adapter->quoteValue($row);
         }
         return $this;
     }

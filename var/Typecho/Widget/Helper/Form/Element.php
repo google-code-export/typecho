@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-/** Typecho_Widget_Helper_Decorator_Form_Default */
+/** Typecho_Widget_Helper_Layout */
 require_once 'Typecho/Widget/Helper/Layout.php';
 
 /**
