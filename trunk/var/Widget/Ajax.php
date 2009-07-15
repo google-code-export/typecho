@@ -59,8 +59,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                     if (preg_match("/([0-9\.]+)\(([0-9\.]+)\)\-release/is", $title, $out)) {
                         if (version_compare($out[1], $current[0], '>=')
                         && version_compare($out[2], $current[1], '>')) {
-                            $result = array('available' => 1, 'latest' => $out[1],
-                            'current' => $current[0], 'link' => $matches[1][$key]);
+                            $result = array('available' => 1, 'latest' => $out[1] . '-' . $out[2],
+                            'current' => $current[0] . '-' . $current[1], 'link' => $matches[1][$key]);
                             break;
                         }
                     }
