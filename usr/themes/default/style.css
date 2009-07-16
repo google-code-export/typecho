@@ -135,7 +135,7 @@ color: #16387C;
 
 .post {
 margin-bottom: 20px;
-overflow: hidden;
+width: 100%;
 }
 
 h2.entry_title {
