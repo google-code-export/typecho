@@ -187,23 +187,23 @@ class Typecho_Request
         $value = $default;
         
         switch (true) {
-            case array_key_exists($key, $this->_params):
+            case isset($this->_params[$key]):
                 $value = $this->_params[$key];
                 break;
-            case array_key_exists($key, $_GET):
+            case isset($_GET[$key]):
                 $value = $_GET[$key];
                 break;
-            case array_key_exists($key, $_POST):
+            case isset($_POST[$key]):
                 $value = $_POST[$key];
                 break;
-            case array_key_exists($key, $_COOKIE):
+            case isset($_COOKIE[$key]):
                 $value = $_COOKIE[$key];
                 break;
             default:
-                $value = $default;
-                break;
+                return $default;
         }
         
+        $value = is_array($value) || strlen($value) > 0 ? $value : $default;
         return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     
@@ -236,7 +236,8 @@ class Typecho_Request
      */
     public function getParam($key, $default = NULL)
     {
-        $value = array_key_exists($key, $this->_params) ? $this->_params[$key] : $default;
+        $value = isset($this->_params[$key]) ? $this->_params[$key] : $default;
+        $value = is_array($value) || strlen($value) > 0 ? $value : $default;
         return $this->_filter ? $this->_applyFilter($value) : $value;
     }
     

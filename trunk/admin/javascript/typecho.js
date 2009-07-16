@@ -382,6 +382,59 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
     Typecho.toggleHideWord = hideWord;
 };
 
+/** 自动保存组件 */
+Typecho.autoSave = new Class({
+
+    //继承自Options
+    Implements: [Options],
+    
+    //内部选项
+    options: {
+        time: 10,   //间隔
+        getContentHandle: null, //获取内容函数
+        form: null
+    },
+
+    initialize: function (url, options) {
+        this.setOptions(options);
+        this.duration = 0;
+        this.start = false;
+        this.url = url;
+        
+        //时间间隔计数器
+        (function () {
+            if (this.start) {
+                this.duration ++;
+            }
+            
+            if (this.duration > this.options.time) {
+                this.start = false;
+            }
+        }).periodical(1000, this);
+    },
+    
+    //内容改变监听器
+    onContentChange: function () {
+        this.start = true;
+        console.log(this.duration);
+        
+        if (this.duration > this.options.time) {
+            new Request.JSON({
+                url: this.url,
+                
+                onSuccess: (function (responseJSON) {
+                    this.start = false;
+                    this.duration = 0;
+                    
+                    $(this.options.form).getElement('input[name=cid]').set('value', responseJSON.cid);
+                    $(this.options.form).getElement('input[name=do]').set('value', 'update');
+                    
+                }).bind(this)
+            }).send($(this.options.form).toQueryString() + '&draft=1');
+        }
+    }
+});
+
 /** 文本编辑器插入文字 */
 Typecho.textarea = new Class({
 
@@ -393,6 +446,7 @@ Typecho.textarea = new Class({
         resizeAble: false,  //能否调整大小
         resizeClass: 'size-btn',    //调整大小的class名
         resizeUrl: '',  //调整大小后的请求地址
+        autoSave: false,
         minSize: 30
     },
 
@@ -400,6 +454,13 @@ Typecho.textarea = new Class({
         this.textarea = $(document).getElement(el);
         this.range = null;
         this.setOptions(options);
+        
+        if (this.options.autoSave) {
+            this.autoSave = new Typecho.autoSave(this.textarea.getParent('form').getProperty('action'), {
+                getContentHandle: this.getContent,
+                form: this.textarea.getParent('form')
+            });
+        }
         
         var recordRangeCallback = this.recordRange.bind(this);
         
@@ -416,6 +477,10 @@ Typecho.textarea = new Class({
     //记录当前位置
     recordRange: function () {
         this.range = this.textarea.getSelectedRange();
+        
+        if (this.options.autoSave) {
+            this.autoSave.onContentChange();
+        }
     },
     
     //设置当前编辑域为可调整大小
@@ -491,6 +556,11 @@ Typecho.textarea = new Class({
         if (this.isResizePressed) {
             this.resizeMouseY = e.page.y;
         }
+    },
+    
+    //获取内容
+    getContent: function () {
+        return this.textarea.get('value');
     },
     
     //设置当前选定的内容

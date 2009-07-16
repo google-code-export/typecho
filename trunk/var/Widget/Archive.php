@@ -528,7 +528,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     private function singleHandle(Typecho_Db_Query $select, &$hasPushed)
     {
-        if ('login' == $this->request->slug || 'register' == $this->request->slug) {
+        if (false !== strpos('login,register', $this->request->slug)) {
             
             $this->_themeFile = $this->request->slug . '.php';
             

@@ -387,21 +387,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
         $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
         
-        /** 文章提示信息 */
-        if ('publish' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t('文章 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
-            : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        } else if ('draft' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t('草稿 "%s" 已经被保存', $this->title) :
-            _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        } else if ('waiting' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t('文章 "%s" 等待审核', $this->title) :
-            _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
-        }
-        
         if ($this->request->isAjax()) {
             if ($insertId > 0) {
                 $created = new Typecho_Date($contents['created']);
@@ -417,6 +402,21 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ));
             }
         } else {
+            /** 文章提示信息 */
+            if ('publish' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($insertId > 0 ? 
+                _t('文章 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
+                : _t('文章提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
+            } else if ('draft' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($insertId > 0 ? 
+                _t('草稿 "%s" 已经被保存', $this->title) :
+                _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
+            } else if ('waiting' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($insertId > 0 ? 
+                _t('文章 "%s" 等待审核', $this->title) :
+                _t('文章提交失败'), NULL, $insertId > 0 ? 'notice' : 'error');
+            }
+        
             /** 设置高亮 */
             $this->widget('Widget_Notice')->highlight($this->theId);
             
@@ -473,21 +473,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 发送ping */
         $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
         $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
-
-        /** 文章提示信息 */
-        if ('publish' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t('文章 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
-            : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else if ('draft' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t('草稿 "%s" 已经被保存', $this->title) :
-            _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else if ('waiting' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t('文章 "%s" 等待审核', $this->title) :
-            _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
-        }
         
         if ($this->request->isAjax()) {
             if ($updateRows > 0) {
@@ -504,6 +489,21 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ));
             }
         } else {
+            /** 文章提示信息 */
+            if ('publish' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+                _t('文章 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
+                : _t('文章提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+            } else if ('draft' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+                _t('草稿 "%s" 已经被保存', $this->title) :
+                _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+            } else if ('waiting' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+                _t('文章 "%s" 等待审核', $this->title) :
+                _t('文章提交失败'), NULL, $updateRows > 0 ? 'notice' : 'error');
+            }
+        
             /** 设置高亮 */
             $this->widget('Widget_Notice')->highlight($this->theId);
             
