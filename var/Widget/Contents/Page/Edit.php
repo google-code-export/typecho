@@ -75,25 +75,41 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         /** 发送ping */
         $this->widget('Widget_Service')->sendPing($this->cid);
         
-        /** 页面提示信息 */
-        if ('publish' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t('页面 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
-            : _t('页面提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
+        if ($this->request->isAjax()) {
+            if ($insertId > 0) {
+                $created = new Typecho_Date($contents['created']);
+                $this->response->throwJson(array(
+                    'success'  =>  1,
+                    'message'  =>  _t('页面保存于 %s', $created->word()),
+                    'cid'      =>  $insertId
+                ));
+            } else {
+                $this->response->throwJson(array(
+                    'success'  =>  0,
+                    'message'  =>  _t('页面保存失败')
+                ));
+            }
         } else {
-            $this->widget('Widget_Notice')->set($insertId > 0 ? 
-            _t('草稿 "%s" 已经被保存', $this->title) :
-            _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
-        }
-        
-        /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
+            /** 页面提示信息 */
+            if ('publish' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($insertId > 0 ? 
+                _t('页面 "<a href="%s">%s</a>" 已经被创建', $this->permalink, $this->title)
+                : _t('页面提交失败'), NULL, $insertId > 0 ? 'success' : 'error');
+            } else {
+                $this->widget('Widget_Notice')->set($insertId > 0 ? 
+                _t('草稿 "%s" 已经被保存', $this->title) :
+                _t('草稿保存失败'), NULL, $insertId > 0 ? 'success' : 'error');
+            }
+            
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->theId);
 
-        /** 跳转页面 */
-        if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $insertId, $this->options->adminUrl));
-        } else {
-            $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
+            /** 跳转页面 */
+            if ('draft' == $contents['status']) {
+                $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $insertId, $this->options->adminUrl));
+            } else {
+                $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
+            }
         }
     }
     
@@ -125,26 +141,42 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         /** 发送pingback */
         $this->widget('Widget_Service')->sendPing($this->cid);
-
-        /** 页面提示信息 */
-        if ('publish' == $contents['status']) {
-            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t('页面 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
-            : _t('页面提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        } else {
-            $this->widget('Widget_Notice')->set($updateRows > 0 ? 
-            _t('草稿 "%s" 已经被保存', $this->title) :
-            _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
-        }
         
-        /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
-
-        /** 跳转页面 */
-        if ('draft' == $contents['status']) {
-            $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
+        if ($this->request->isAjax()) {
+            if ($updateRows > 0) {
+                $created = new Typecho_Date($contents['created']);
+                $this->response->throwJson(array(
+                    'success'  =>  1,
+                    'message'  =>  _t('页面保存于 %s', $created->word()),
+                    'cid'      =>  $this->cid
+                ));
+            } else {
+                $this->response->throwJson(array(
+                    'success'  =>  0,
+                    'message'  =>  _t('页面保存失败')
+                ));
+            }
         } else {
-            $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
+            /** 页面提示信息 */
+            if ('publish' == $contents['status']) {
+                $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+                _t('页面 "<a href="%s">%s</a>" 已经被更新', $this->permalink, $this->title)
+                : _t('页面提交失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+            } else {
+                $this->widget('Widget_Notice')->set($updateRows > 0 ? 
+                _t('草稿 "%s" 已经被保存', $this->title) :
+                _t('草稿保存失败'), NULL, $updateRows > 0 ? 'success' : 'error');
+            }
+            
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->theId);
+
+            /** 跳转页面 */
+            if ('draft' == $contents['status']) {
+                $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
+            } else {
+                $this->response->redirect(Typecho_Common::url('manage-pages.php?status=' . $contents['status'], $this->options->adminUrl));
+            }
         }
     }
     

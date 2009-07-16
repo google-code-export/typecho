@@ -2,6 +2,7 @@
 <script type="text/javascript">
     var textEditor = new Typecho.textarea('#text', {
         resizeAble: true,
+        autoSave: true,
         resizeUrl: '<?php $options->index('/action/ajax'); ?>'
     });
 
