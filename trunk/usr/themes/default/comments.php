@@ -22,7 +22,7 @@ function threadedComments($comments)
 ?>
 
 <div id="comments">
-			<h4 class="alt"><?php $this->commentsNum(_t('当前暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?> &raquo;</h4>
+			<h4><?php $this->commentsNum(_t('当前暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?> &raquo;</h4>
 			<ol id="comment_list">
 			<?php $this->comments()->to($comments); ?>
             <?php while($comments->next()): ?>
@@ -44,7 +44,7 @@ function threadedComments($comments)
             <?php if($this->allow('comment')): ?>
             <div id="respond">
             <div class="cancle_comment_reply"><?php Helper::cancleCommentReplyLink('Click here to cancel reply', 'respond'); ?></div>
-			<h4 id="response" class="alt"><?php _e('添加新评论'); ?> &raquo;</h4>
+			<h4 id="response"><?php _e('添加新评论'); ?> &raquo;</h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
 				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('登出'); ?> &raquo;</a></p>

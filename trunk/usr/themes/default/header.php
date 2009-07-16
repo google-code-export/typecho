@@ -19,7 +19,7 @@
 	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
 	</ul>
 	<div id="logo">
-	    <h1 class="alt"><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
+	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
 	    <p class="description"><?php $this->options->description() ?></p>
     </div>
 </div><!-- end #header -->

@@ -14,7 +14,7 @@
     <div class="grid_10" id="content">
 	<?php while($this->next()): ?>
         <div class="post">
-			<h2 class="entry_title alt"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
+			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
 			<p class="entry_data">
 				<span><?php _e('作者：'); ?><?php $this->author(); ?></span>
 				<span><?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></span>
@@ -25,7 +25,7 @@
         </div>
 	<?php endwhile; ?>
 
-        <ol class="pages clearfix alt">
+        <ol class="pages clearfix">
 	    <li>页码:</li>
             <?php $this->pageNav(); ?>
         </ol>
