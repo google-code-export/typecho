@@ -106,47 +106,47 @@ class Widget_Menu extends Typecho_Widget
         
         $this->_childMenu =  array(
         array(
-            array(_t('登录'), _t('登录到%s', $this->options->title), '/admin/login.php', 'visitor'),
+            array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor'),
         ),
         array(
-            array(_t('概要'), _t('网站概要'), '/admin/index.php', 'subscriber'),
-            array(_t('个人设置'), _t('个人设置'), '/admin/profile.php', 'subscriber'),
-            array(_t('插件'), _t('插件管理'), '/admin/plugins.php', 'administrator'),
-            array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), '/admin/option-plugin.php?config=', 'administrator', true),
-            array(_t('外观'), _t('网站外观'), '/admin/themes.php', 'administrator'),
-            array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), '/admin/theme-editor.php', 'administrator', true),
-            array(_t('升级'), _t('升级程序'), '/admin/upgrade.php', 'administrator', true),
-            array(_t('欢迎'), _t('欢迎使用'), '/admin/welcome.php', 'contributor', true)
+            array(_t('概要'), _t('网站概要'), 'index.php', 'subscriber'),
+            array(_t('个人设置'), _t('个人设置'), 'profile.php', 'subscriber'),
+            array(_t('插件'), _t('插件管理'), 'plugins.php', 'administrator'),
+            array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), 'option-plugin.php?config=', 'administrator', true),
+            array(_t('外观'), _t('网站外观'), 'themes.php', 'administrator'),
+            array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), 'theme-editor.php', 'administrator', true),
+            array(_t('升级'), _t('升级程序'), 'upgrade.php', 'administrator', true),
+            array(_t('欢迎'), _t('欢迎使用'), 'welcome.php', 'contributor', true)
         ),
         array(
-            array(_t('撰写文章'), _t('撰写新文章'), '/admin/write-post.php', 'contributor'),
-            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), '/admin/write-post.php?cid=', 'contributor', true),
-            array(_t('创建页面'), _t('创建新页面'), '/admin/write-page.php', 'editor'),
-            array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), '/admin/write-page.php?cid=', 'editor', true),
+            array(_t('撰写文章'), _t('撰写新文章'), 'write-post.php', 'contributor'),
+            array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), 'write-post.php?cid=', 'contributor', true),
+            array(_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'),
+            array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), 'write-page.php?cid=', 'editor', true),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
-            array(_t('文章'), _t('管理文章'), '/admin/manage-posts.php', 'contributor'),
-            array(_t('独立页面'), _t('管理独立页面'), '/admin/manage-pages.php', 'editor'),
-            array(_t('评论'), _t('管理评论'), '/admin/manage-comments.php', 'contributor'),
+            array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor'),
+            array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor'),
+            array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
-            array(_t('标签和分类'), _t('标签和分类'), '/admin/manage-metas.php', 'editor'),
-            array(_t('附件'), _t('管理附件'), '/admin/manage-medias.php', 'editor'),
-            array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), '/admin/media.php?cid=', 'contributor', true),
-            array(_t('用户'), _t('管理用户'), '/admin/manage-users.php', 'administrator'),
-            array(_t('新增用户'), _t('新增用户'), '/admin/user.php', 'administrator', true),
-            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), '/admin/user.php?uid=', 'administrator', true),
+            array(_t('标签和分类'), _t('标签和分类'), 'manage-metas.php', 'editor'),
+            array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
+            array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), 'media.php?cid=', 'contributor', true),
+            array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator'),
+            array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true),
+            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
         //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
-            array(_t('基本'), _t('基本设置'), '/admin/option-general.php', 'administrator'),
-            array(_t('评论'), _t('评论设置'), '/admin/option-discussion.php', 'administrator'),
-            array(_t('文章'), _t('阅读设置'), '/admin/option-reading.php', 'administrator'),
+            array(_t('基本'), _t('基本设置'), 'option-general.php', 'administrator'),
+            array(_t('评论'), _t('评论设置'), 'option-discussion.php', 'administrator'),
+            array(_t('文章'), _t('阅读设置'), 'option-reading.php', 'administrator'),
         //    array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
         //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
-            array(_t('永久链接'), _t('永久链接设置'), '/admin/option-permalink.php', 'administrator'),
+            array(_t('永久链接'), _t('永久链接设置'), 'option-permalink.php', 'administrator'),
         ));
         
         /** 获取扩展菜单 */
@@ -165,11 +165,10 @@ class Widget_Menu extends Typecho_Widget
             }
         }
         
-        $host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
         $this->_currentUrl = $this->request->makeUriByRequest();
         $childMenu = $this->_childMenu;
         $match = 0;
-        $adminUrl = $this->options->siteUrl;
+        $adminUrl = $this->options->adminUrl;
         
         foreach ($childMenu as $parentKey => $parentVal) {
             foreach ($parentVal as $childKey => $childVal) {
@@ -226,7 +225,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
-        $adminUrl = $this->options->siteUrl;
+        $adminUrl = $this->options->adminUrl;
         
         foreach ($this->_parentMenu as $key => $title) {
             $current = reset($this->_childMenu[$key]);
