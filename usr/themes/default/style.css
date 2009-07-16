@@ -20,12 +20,11 @@ line-height: 1.7;
 }
 
 h1, h2, h3, h4, h5, h6 { font-weight: normal; }
-h2 { font-size: 19px; }
 
 input, textarea { font-family: Helvetica, Arial, sans-serif; font-size: 100%; }
 
 a {
-color: #6385A1;
+color: #16387C;
 text-decoration: none;
 border-bottom: 1px solid #D7E1E9;
 }
@@ -39,13 +38,40 @@ pre, code {
 display: block;
 overflow: auto;
 background: #eee;
-padding: 5px;
+padding: 5px 10px;
 border-bottom: 1px solid #ddd;
 border-top: 1px solid #ddd;
 }
 
+/* Remove possible quote marks (") from <q>, <blockquote>. */
+blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+blockquote  { margin: 1.5em; color: #666; font-style: italic; }
+
 /*code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #444; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; padding: 10px; margin: 10px 0;}*/
+
+/* Tables
+-------------------------------------------------------------- */
+
+/* Tables still need 'cellspacing="0"' in the markup. */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+table, td, th { vertical-align: middle; }
+
+table       { margin-bottom: 1.4em; width:100%; }
+th          { font-weight: bold; }
+thead th 		{ background: #c3d9ff; }
+th,td,caption { padding: 4px 10px 4px 5px; }
+tr.even td  { background: #e5ecf9; }
+tfoot       { font-style: italic; }
+caption     { background: #eee; }
+
+label       { font-weight: bold; }
+fieldset    { padding:1.4em; margin: 0 0 1.5em 0; border: 1px solid #ccc; }
+legend      { font-weight: bold; }
+
 
 ul { list-style-type: disc; }
 
@@ -65,6 +91,7 @@ padding: 30px 0;
 }
 
 #logo h1 {
+font-size: 29px;
 font-weight: bold;
 margin-bottom: 0;
 }
@@ -97,7 +124,7 @@ ul#nav_menu li a.current {
 }
 ul#nav_menu li a:hover {
 text-decoration: underline;
-color: #6385A1;
+color: #16387C;
 }
 
 /* ------------------
@@ -150,11 +177,12 @@ display: inline;
 
 ol.pages li a {
 padding: 0 4px;
+border: none;
 text-decoration: none;
 }
 
 ol.pages li.current a {
-background: #6385A1;
+background: #16387C;
 color: #fff;
 }
 
@@ -242,6 +270,10 @@ img.avatar {
 /*display: none;*/
 float: left;
 margin: 6px 10px 0 0;
+}
+
+#respond {
+	margin-top: 20px;
 }
 
 #comment_form {
