@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
-Typecho_Response::setContentType('text/javascript');
+$response->setContentType('text/javascript');
 ?>
 
 tinyMCE.addI18n({typecho:{

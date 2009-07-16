@@ -1876,8 +1876,8 @@ ul.typecho-post-option li {
 ul.typecho-post-option li ul {
     border: none;
     margin: 0;
-    max-height: 130px;
-    _height: 130px;
+    max-height: 140px;
+    _height: 140px;
     overflow: auto;
 }
 
