@@ -808,10 +808,11 @@ EOF;
     /**
      * 文本分段函数
      *
-     * @param string $string
+     * @param string $string 需要分段的字符串
+     * @param boolean $paragraph 是否分段
      * @return string
      */
-    public static function cutParagraph($string)
+    public static function cutParagraph($string, $paragraph = true)
     {
         /** 锁定自闭合标签 */
         $string = trim($string);
@@ -825,7 +826,7 @@ EOF;
         $string = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
-        "str_replace('\\\"', '\"', '<\\1\\2>' . Typecho_Common::cutParagraph(trim('\\3')) . '</\\1>')", $string);
+        "str_replace('\\\"', '\"', '<\\1\\2>' . Typecho_Common::cutParagraph(trim('\\3'), false) . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
@@ -836,7 +837,7 @@ EOF;
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
         
-        if (false !== strpos($string, "\n\n")) {
+        if ($paragraph || false !== strpos($string, "\n\n")) {
             $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
         }
         
