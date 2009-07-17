@@ -77,10 +77,10 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         if ($this->request->isAjax()) {
             if ($insertId > 0) {
-                $created = new Typecho_Date($contents['created']);
+                $created = new Typecho_Date($this->options->gmtTime);
                 $this->response->throwJson(array(
                     'success'  =>  1,
-                    'message'  =>  _t('页面保存于 %s', $created->word()),
+                    'message'  =>  _t('页面保存于 %s', $created->format('H:i A')),
                     'cid'      =>  $insertId
                 ));
             } else {
@@ -144,10 +144,10 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         
         if ($this->request->isAjax()) {
             if ($updateRows > 0) {
-                $created = new Typecho_Date($contents['created']);
+                $created = new Typecho_Date($this->options->gmtTime);
                 $this->response->throwJson(array(
                     'success'  =>  1,
-                    'message'  =>  _t('页面保存于 %s', $created->word()),
+                    'message'  =>  _t('页面保存于 %s', $created->format('H:i A')),
                     'cid'      =>  $this->cid
                 ));
             } else {
