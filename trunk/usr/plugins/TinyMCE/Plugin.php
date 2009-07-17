@@ -99,29 +99,48 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
         new Fx.Scroll(window).toElement($(document).getElement('.mceEditor'));
     };
 
-        tinyMCE.init({
-        // General options
-        mode : 'exact',
-        elements : 'text',
-        theme : 'advanced',
-        skin : 'typecho',
-        plugins : 'safari,morebreak,inlinepopups,media,coder',
-        extended_valid_elements : 'code[*],pre[*],script[*],iframe[*]',
+    //自动保存
+    var autoSave;
+    
+    tinyMCE.init({
+    // General options
+    mode : 'exact',
+    elements : 'text',
+    theme : 'advanced',
+    skin : 'typecho',
+    plugins : 'safari,morebreak,inlinepopups,media,coder',
+    extended_valid_elements : 'code[*],pre[*],script[*],iframe[*]',
+    
+    init_instance_callback : function(ed) {
         
-        init_instance_callback : function(ed) {
-            
-            ed.setContent(\"" . addslashes($post->content) . "\");
-            
-        },
+        ed.setContent(\"" . addslashes($post->content) . "\");
+        "
+        . ($options->autoSave ? 
+        "autoSave = new Typecho.autoSave($('text').getParent('form').getProperty('action'), {
+            time: 60,
+            getContentHandle: tinyMCE.activeEditor.getContent.bind(ed),
+            messageElement: 'auto-save-message',
+            leaveMessage: '" . _t('您的内容尚未保存, 是否离开此页面?') . "'
+            form: $('text').getParent('form')
+        });" : "") .
         
-        // Theme options
-        theme_advanced_buttons1 : 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,morebreak,code',
-        theme_advanced_buttons2 : '',
-        theme_advanced_buttons3 : '',
-        theme_advanced_toolbar_location : 'top',
-        theme_advanced_toolbar_align : 'left',
-        convert_urls : false,
-        language : 'typecho'
+        "
+    },
+    
+    onchange_callback: function (inst) {
+        if ('undefined' != typeof(autoSave)) {
+            autoSave.onContentChange();
+        }
+    },
+    
+    // Theme options
+    theme_advanced_buttons1 : 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,morebreak,code',
+    theme_advanced_buttons2 : '',
+    theme_advanced_buttons3 : '',
+    theme_advanced_toolbar_location : 'top',
+    theme_advanced_toolbar_align : 'left',
+    convert_urls : false,
+    language : 'typecho'
 });
 </script>";
     }

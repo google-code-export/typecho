@@ -392,6 +392,8 @@ Typecho.autoSave = new Class({
     options: {
         time: 10,   //间隔
         getContentHandle: null, //获取内容函数
+        messageElement: null,
+        leaveMessage: 'leave?',
         form: null
     },
 
@@ -400,6 +402,10 @@ Typecho.autoSave = new Class({
         this.duration = 0;
         this.start = false;
         this.url = url;
+        this.rev = 0;
+        this.saveRev = 0;
+        
+        window.onbeforeunload = this.leaveListener.bind(this);
         
         //时间间隔计数器
         (function () {
@@ -413,24 +419,42 @@ Typecho.autoSave = new Class({
         }).periodical(1000, this);
     },
     
+    //离开页面监听器
+    leaveListener: function () {
+        if (this.saveRev != this.rev) {
+            return this.options.leaveMessage;
+        }
+    },
+    
     //内容改变监听器
     onContentChange: function () {
         this.start = true;
-        console.log(this.duration);
+        this.rev ++;
         
         if (this.duration > this.options.time) {
+        
+            var o = {text: this.options.getContentHandle()};
+            this.start = false;
+            this.duration = 0;
+            this.saveText = o.text;
+            this.saveRev = this.rev;
+        
             new Request.JSON({
                 url: this.url,
                 
                 onSuccess: (function (responseJSON) {
-                    this.start = false;
-                    this.duration = 0;
+                    if (responseJSON.success) {
+                        $(this.options.form).getElement('input[name=cid]').set('value', responseJSON.cid);
+                        $(this.options.form).getElement('input[name=do]').set('value', 'update');
+                    }
                     
-                    $(this.options.form).getElement('input[name=cid]').set('value', responseJSON.cid);
-                    $(this.options.form).getElement('input[name=do]').set('value', 'update');
+                    if (null != this.options.messageElement) {
+                        $(this.options.messageElement).set('html', responseJSON.message);
+                        $(this.options.messageElement).highlight('#ff0000');
+                    }
                     
                 }).bind(this)
-            }).send($(this.options.form).toQueryString() + '&draft=1');
+            }).send($(this.options.form).toQueryString() + '&draft=1&' + Hash.toQueryString(o));
         }
     }
 });
@@ -447,6 +471,8 @@ Typecho.textarea = new Class({
         resizeClass: 'size-btn',    //调整大小的class名
         resizeUrl: '',  //调整大小后的请求地址
         autoSave: false,
+        autoSaveMessageElement: null,
+        autoSaveLeaveMessage: 'leave?',
         minSize: 30
     },
 
@@ -457,7 +483,10 @@ Typecho.textarea = new Class({
         
         if (this.options.autoSave) {
             this.autoSave = new Typecho.autoSave(this.textarea.getParent('form').getProperty('action'), {
-                getContentHandle: this.getContent,
+                time: 60,
+                getContentHandle: this.getContent.bind(this),
+                messageElement: this.options.autoSaveMessageElement,
+                leaveMessage: this.options.autoSaveLeaveMessage,
                 form: this.textarea.getParent('form')
             });
         }
@@ -466,7 +495,12 @@ Typecho.textarea = new Class({
         
         this.textarea.addEvents({
             mouseup: recordRangeCallback,
-            keyup: recordRangeCallback
+            keyup: (function () {
+                recordRangeCallback();
+                if (this.options.autoSave) {
+                    this.autoSave.onContentChange();
+                }
+            }).bind(this)
         });
 
         if (this.options.resizeAble) {
@@ -477,10 +511,6 @@ Typecho.textarea = new Class({
     //记录当前位置
     recordRange: function () {
         this.range = this.textarea.getSelectedRange();
-        
-        if (this.options.autoSave) {
-            this.autoSave.onContentChange();
-        }
     },
     
     //设置当前编辑域为可调整大小

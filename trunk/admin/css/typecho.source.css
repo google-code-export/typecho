@@ -1753,6 +1753,12 @@ ul.typecho-list-notable li #typecho-respond {
     display: block;
 }
 
+.typecho-post-area label.typecho-label cite {
+	font-weight: normal;
+	color: #777;
+	margin-left: 10px;
+}
+
 .typecho-post-area .submit {
     height: 24px;
     line-height: 24px;
