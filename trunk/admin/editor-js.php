@@ -5,7 +5,7 @@
         resizeAble: true,
         autoSave: <?php echo ($options->autoSave ? 'true' : 'false'); ?>,
         autoSaveMessageElement: 'auto-save-message',
-        autoSaveLeaveMessage: '<?php _t('您的内容尚未保存, 是否离开此页面?'); ?>',
+        autoSaveLeaveMessage: '<?php _e('您的内容尚未保存, 是否离开此页面?'); ?>',
         resizeUrl: '<?php $options->index('/action/ajax'); ?>'
     });
 

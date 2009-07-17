@@ -406,6 +406,9 @@ Typecho.autoSave = new Class({
         this.saveRev = 0;
         
         window.onbeforeunload = this.leaveListener.bind(this);
+        $(this.options.form).getElements('.submit button').addEvent('mousedown', (function () {
+            this.saveRev = this.rev;
+        }).bind(this));
         
         //时间间隔计数器
         (function () {
