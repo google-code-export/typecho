@@ -23,7 +23,7 @@ class Typecho_Common
     const LOCKED_HTML_TAG = 'code|pre|script';
     
     /** 需要去除内部换行的标签 */
-    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|tr|th|td|li|ol|ul|h[1-6]';
+    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|fieldset|tr|th|td|li|ol|ul|h[1-6]';
     
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
@@ -32,7 +32,7 @@ class Typecho_Common
     const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul';
     
     /** 独立段落标签 */
-    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul|h[1-6]';
+    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|fieldset|ol|ul|h[1-6]';
     
     /** 程序版本 */
     const VERSION = '0.7/9.7.2';
@@ -825,7 +825,7 @@ EOF;
         $string = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
         $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
-        "str_replace('\\\"', '\"', '<\\1\\2>' . nl2br(trim('\\3')) . '</\\1>')", $string);
+        "str_replace('\\\"', '\"', '<\\1\\2>' . Typecho_Common::cutParagraph(trim('\\3')) . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
@@ -835,7 +835,11 @@ EOF;
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
-        $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
+        
+        if (false !== strpos($string, "\n\n")) {
+            $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
+        }
+        
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */

@@ -256,7 +256,7 @@ class Helper
         $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
         $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
         $fileName = urlencode(trim($fileName, '/'));
-        $panelTable['child'][$index][] = array($title, $subTitle, '/admin/extending.php?panel=' . $fileName, $level, $hidden);
+        $panelTable['child'][$index][] = array($title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden);
         
         $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
         $panelTable['file'][] = $fileName;
