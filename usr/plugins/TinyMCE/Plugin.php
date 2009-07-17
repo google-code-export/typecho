@@ -120,7 +120,7 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
             time: 60,
             getContentHandle: tinyMCE.activeEditor.getContent.bind(ed),
             messageElement: 'auto-save-message',
-            leaveMessage: '" . _t('您的内容尚未保存, 是否离开此页面?') . "'
+            leaveMessage: '" . _t('您的内容尚未保存, 是否离开此页面?') . "',
             form: $('text').getParent('form')
         });" : "") .
         
