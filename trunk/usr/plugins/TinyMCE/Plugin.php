@@ -133,6 +133,12 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
         }
     },
     
+    save_callback: function (element_id, html, body) {
+        if ('undefined' != typeof(autoSave)) {
+            autoSave.saveRev = autoSave.rev;
+        }
+    },
+    
     // Theme options
     theme_advanced_buttons1 : 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,blockquote,|,link,unlink,image,media,|,forecolor,backcolor,|,morebreak,code',
     theme_advanced_buttons2 : '',
