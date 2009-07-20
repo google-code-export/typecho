@@ -137,6 +137,8 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
         if ('undefined' != typeof(autoSave)) {
             autoSave.saveRev = autoSave.rev;
         }
+        
+        return html;
     },
     
     // Theme options
