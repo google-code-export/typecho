@@ -1513,6 +1513,15 @@ ul.typecho-list-notable li #typecho-respond {
     border-top: 1px solid #fff;
 }
 
+.typecho-page-main .typecho-option-clear {
+	border-bottom: 1px solid #F7FBE9;
+    border-top: 1px solid #F7FBE9;
+	margin: -1px 0;
+	top: -1px;
+	bottom: -1px;
+	z-index: 100;
+}
+
 .typecho-page-main .typecho-mini-panel {
     background: #DEE4C5;
 }
@@ -1596,7 +1605,15 @@ ul.typecho-list-notable li #typecho-respond {
 
 
 .typecho-page-main .typecho-option li.typecho-option-title {
-	padding-left: 10px;
+	padding: 10px;
+	background: #DEE4C5;
+	
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 4px;
 }
 
 .typecho-page-main .typecho-option li.typecho-option-title h3 {
