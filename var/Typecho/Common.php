@@ -746,8 +746,8 @@ EOF;
      */
     public static function slugName($str, $default = NULL, $maxLength = 200)
     {
-        $str = str_replace(array("'", ":", "\\", "/"), "", $str);
-        $str = str_replace(array("+", ",", " ", ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
+        $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
+        $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
         $str = trim($str, '-');
         $str = empty($str) ? $default : $str;
         
