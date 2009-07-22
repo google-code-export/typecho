@@ -26,7 +26,7 @@ class Typecho_Widget_Helper_Form_Title extends Typecho_Widget_Helper_Layout
     public function __construct($title, $description = NULL)
     {
         /** 创建html元素,并设置class */
-        parent::__construct('ul', array('class' => 'typecho-option'));
+        parent::__construct('ul', array('class' => 'typecho-option typecho-option-clear'));
         $container = new Typecho_Widget_Helper_Layout('li', array('class' => 'typecho-option-title'));
         $this->addItem($container);
         
