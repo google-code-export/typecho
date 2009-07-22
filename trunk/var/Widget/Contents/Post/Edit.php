@@ -242,7 +242,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function setTags($cid, $tags, $beforeCount = true, $afterCount = true)
     {
-        $tags = str_replace(array(' ', '，', ' '), ',', $tags);
+        $tags = str_replace('，', ',', $tags);
         $tags = array_unique(array_map('trim', explode(',', $tags)));
 
         /** 取出已有tag */
