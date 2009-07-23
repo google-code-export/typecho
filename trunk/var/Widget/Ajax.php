@@ -173,6 +173,10 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
      */
     public function action()
     {
+        if (!$this->request->isAjax()) {
+            $this->response->goBack();
+        }
+    
         $this->on($this->request->is('do=remoteCallback'))->remoteCallback();
         $this->on($this->request->is('do=feed'))->feed();
         $this->on($this->request->is('do=checkVersion'))->checkVersion();

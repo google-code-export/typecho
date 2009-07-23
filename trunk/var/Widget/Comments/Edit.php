@@ -191,7 +191,12 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     public function deleteSpamComment()
     {
-        $deleteRows = $this->db->query($this->db->delete('table.comments')->where('status = ?', 'spam'));
+        $deleteQuery = $this->db->delete('table.comments')->where('status = ?', 'spam');
+        if (!$this->request->__typecho_all_comments || !$this->user->pass('editor', true)) {
+            $deleteQuery->where('ownerId = ?', $this->user->uid);
+        }
+        
+        $deleteRows = $this->db->query($deleteQuery);
         
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($deleteRows > 0 ?
@@ -200,6 +205,98 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         
         /** 返回原网页 */
         $this->response->goBack();
+    }
+    
+    /**
+     * 获取可编辑的评论
+     * 
+     * @access public
+     * @return void
+     */
+    public function getComment()
+    {
+        if (!$this->request->isAjax()) {
+            $this->response->goBack();
+        }
+        
+        $coid = $this->request->filter('int')->coid;
+        $comment = $this->db->fetchRow($this->select()
+            ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
+        
+        if ($comment && $this->commentIsWriteable()) {
+            
+            $this->response->throwJson(array(
+                'success'   => 1,
+                'comment'   => $comment
+            ));
+            
+        } else {
+            
+            $this->response->throwJson(array(
+                'success'   => 0,
+                'message'   => _t('获取评论失败')
+            ));
+            
+        }
+    }
+    
+    /**
+     * 编辑评论
+     * 
+     * @access public
+     * @return void
+     */
+    public function editComment()
+    {
+        if (!$this->request->isAjax()) {
+            $this->response->goBack();
+        }
+        
+        $coid = $this->request->filter('int')->coid;
+        $commentSelect = $this->db->fetchRow($this->select()
+            ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
+        
+        if ($commentSelect && $this->commentIsWriteable()) {
+        
+            //检验格式
+            $validator = new Typecho_Validate();
+            $validator->addRule('author', 'required', _t('必须填写用户名'));
+            
+            if ($this->options->commentsRequireMail) {
+                $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
+            }
+            
+            $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
+            
+            if ($this->options->commentsRequireUrl && !$this->user->hasLogin()) {
+                $validator->addRule('url', 'required', _t('必须填写个人主页'));
+            }
+            
+            $validator->addRule('text', 'required', _t('必须填写评论内容'));
+            $comment['text'] = $this->request->text;
+            
+            $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
+            $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
+            $comment['url'] = $this->request->filter('url')->url;
+        
+            /** 更新评论 */
+            $this->db->query($this->db->update('table.comments')
+            ->rows($comment)->where('coid = ?', $coid));
+
+            $updatedComment = $this->db->fetchRow($this->select()
+                ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
+            $updatedComment['content'] = $this->content;
+        
+            $this->response->throwJson(array(
+                'success'   => 1,
+                'comment'   => $updatedComment
+            ));
+        }
+        
+        $this->response->throwJson(array(
+            'success'   => 0,
+            'message'   => _t('修改评论失败')
+        ));
     }
 
     /**
@@ -216,6 +313,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $this->on($this->request->is('do=approved'))->approvedComment();
         $this->on($this->request->is('do=delete'))->deleteComment();
         $this->on($this->request->is('do=delete-spam'))->deleteSpamComment();
+        $this->on($this->request->is('do=get&coid'))->getComment();
+        $this->on($this->request->is('do=edit&coid'))->editComment();
         
         $this->response->redirect($this->options->adminUrl);
     }
