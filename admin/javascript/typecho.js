@@ -200,7 +200,9 @@ Typecho.Table = {
             var _el = $(this).getElement('input[type=checkbox]'), _t = $(event.target);
             
             if (_el && ('a' != _t.get('tag')
+            && ('input' != _t.get('tag') && ('text' != _t.get('type') || 'button' != _t.get('type') || 'submit' != _t.get('type')))
             && 'textarea' != _t.get('tag')
+            && 'label' != _t.get('tag')
             && 'button' != _t.get('tag'))) {
                 _el.fireEvent('click');
             }

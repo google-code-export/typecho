@@ -288,6 +288,12 @@ button {
     background: url(../images/sprite.png) no-repeat scroll 0px -150px;
 }
 
+.loading {
+    background-image: url(../images/ajax-loader.gif);
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
 
 /**
  * 典型配置选项
@@ -1412,6 +1418,30 @@ ul.typecho-list-notable li code {
     border: 1px solid #E8EDD6;
 }
 
+ul.typecho-list-notable li form {
+	padding: 5px 0 10px 0;
+}
+
+ul.typecho-list-notable li form label {
+	padding: 0 10px 0 0;
+	line-height: 20px;
+}
+
+ul.typecho-list-notable li form input {
+	margin: 0 10px 0 0;
+	width: 155px;
+}
+
+ul.typecho-list-notable li form textarea {
+	margin: 10px 0;
+	width: 750px;
+	height: 100px;
+}
+
+ul.typecho-list-notable li .loading {
+	background-position: center top;
+}
+
 /**
  * 评论回复
  */
@@ -1785,10 +1815,6 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-post-area .right {
     float: right;
     padding-left: 24px;
-}
-
-.typecho-post-area .loading {
-    background: url(../images/ajax-loader.gif) left center no-repeat;
 }
 
 .typecho-post-area .left {
