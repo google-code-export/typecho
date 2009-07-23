@@ -200,7 +200,8 @@ class Typecho_Request
                 $value = $_COOKIE[$key];
                 break;
             default:
-                return $default;
+                $value = $default;
+                break;
         }
         
         $value = is_array($value) || strlen($value) > 0 ? $value : $default;
