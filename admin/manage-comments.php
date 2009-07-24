@@ -108,7 +108,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                      | 
-                                    <a href="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
                                      | 
                                     <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
@@ -164,7 +164,8 @@ include 'common-js.php';
                         request.cancle();
                     }
                     
-                    form.destory();
+                    console.dir(form);
+                    form.destroy();
                     this.getParent('li').getElement('.content').setStyle('display', 'inline');
                     this.clicked = false;
                     
@@ -174,7 +175,7 @@ include 'common-js.php';
                         this.getParent('.line').addClass('loading');
                         
                         request = new Request.JSON({
-                            url: this.getProperty('href'),
+                            url: this.getProperty('rel'),
                             
                             onComplete: (function () {
                                 this.clicked = false;
@@ -195,8 +196,8 @@ include 'common-js.php';
                                         '<label for="url"><?php _e('个人主页'); ?></label>' +
                                         '<input type="text" class="text" name="url" id="url-' + coid + '" />' +
                                         '<textarea name="text" id="text-' + coid + '"></textarea>' +
-                                        '<button id="_submit"><?php _e('保存评论'); ?></button>' +
-                                        '<input type="hidden" name="coid" id="coid-' + coid + '" />' +
+                                        '<p><button id="submit-' + coid + '"><?php _e('保存评论'); ?></button>' +
+                                        '<input type="hidden" name="coid" id="coid-' + coid + '" /></p>' +
                                         '</form>'
                                     
                                     });
@@ -209,11 +210,11 @@ include 'common-js.php';
                                     
                                     this.getParent('li').getElement('.content').setStyle('display', 'none');
                                     form.inject(this.getParent('li').getElement('.line'), 'before');
-                                    form.getElement('#_submit').addEvent('click', (function () {
+                                    form.getElement('#submit-' + coid).addEvent('click', (function () {
                                         var query = this.getParent('li').getElement('form').toQueryString();
                                         
                                         var sRequest = new Request.JSON({
-                                            url: this.getProperty('href').replace('do=get', 'do=edit'),
+                                            url: this.getProperty('rel').replace('do=get', 'do=edit'),
                                             
                                             onComplete: (function () {
                                                 var li = this.getParent('li');
@@ -247,7 +248,7 @@ include 'common-js.php';
                                                     }
                                                     
                                                     if (json.comment.mail) {
-                                                        commentMeta += '<a href="mailto:' + json.comment.mail + '>' + json.comment.mail + '</a> | ';
+                                                        commentMeta += '<a href="mailto:' + json.comment.mail + '">' + json.comment.mail + '</a> | ';
                                                     }
                                                     
                                                     commentMeta += json.comment.ip;
@@ -272,8 +273,6 @@ include 'common-js.php';
                     }
                     
                 }
-                
-                return false;
             });
         
         });

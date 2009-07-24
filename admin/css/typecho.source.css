@@ -1438,6 +1438,11 @@ ul.typecho-list-notable li form textarea {
 	height: 100px;
 }
 
+ul.typecho-list-notable li form p {
+	margin: 0;
+	padding: 0;
+}
+
 ul.typecho-list-notable li .loading {
 	background-position: center top;
 }
