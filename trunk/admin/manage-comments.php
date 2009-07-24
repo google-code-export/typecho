@@ -155,7 +155,7 @@ include 'common-js.php';
         
             $(document).getElements('.typecho-list-notable li .operate-edit').addEvent('click', function () {
                 
-                var form = this.getParent('li').getElement('form');
+                var form = this.getParent('li').getElement('.comment-form');
                 var request;
                 
                 if (form) {
@@ -164,7 +164,6 @@ include 'common-js.php';
                         request.cancle();
                     }
                     
-                    console.dir(form);
                     form.destroy();
                     this.getParent('li').getElement('.content').setStyle('display', 'inline');
                     this.clicked = false;
@@ -186,10 +185,10 @@ include 'common-js.php';
                                 if (json.success) {
                                     var coid = this.getParent('li').getElement('input[type=checkbox]').get('value');
                                     
-                                    var form = new Element('form', {
+                                    var form = new Element('div', {
+                                        'class': 'comment-form',
                                     
-                                        'html': '<form>' +
-                                        '<label for="author-' + coid + '"><?php _e('名称'); ?></label>' +
+                                        'html': '<label for="author-' + coid + '"><?php _e('名称'); ?></label>' +
                                         '<input type="text" class="text" name="author" id="author-' + coid + '" />' +
                                         '<label for="mail"><?php _e('电子邮件'); ?></label>' +
                                         '<input type="text" class="text" name="mail" id="mail-' + coid + '" />' +
@@ -197,8 +196,7 @@ include 'common-js.php';
                                         '<input type="text" class="text" name="url" id="url-' + coid + '" />' +
                                         '<textarea name="text" id="text-' + coid + '"></textarea>' +
                                         '<p><button id="submit-' + coid + '"><?php _e('保存评论'); ?></button>' +
-                                        '<input type="hidden" name="coid" id="coid-' + coid + '" /></p>' +
-                                        '</form>'
+                                        '<input type="hidden" name="coid" id="coid-' + coid + '" /></p>'
                                     
                                     });
                                     
@@ -211,7 +209,7 @@ include 'common-js.php';
                                     this.getParent('li').getElement('.content').setStyle('display', 'none');
                                     form.inject(this.getParent('li').getElement('.line'), 'before');
                                     form.getElement('#submit-' + coid).addEvent('click', (function () {
-                                        var query = this.getParent('li').getElement('form').toQueryString();
+                                        var query = this.getParent('li').getElement('.comment-form').toQueryString();
                                         
                                         var sRequest = new Request.JSON({
                                             url: this.getProperty('rel').replace('do=get', 'do=edit'),
@@ -220,7 +218,7 @@ include 'common-js.php';
                                                 var li = this.getParent('li');
                                             
                                                 li.getElement('.content').setStyle('display', 'inline');
-                                                li.getElement('form').destroy();
+                                                li.getElement('.comment-form').destroy();
                                                 var myFx = new Fx.Tween(li);
                                                 
                                                 var bg = li.getStyle('background-color');
@@ -273,6 +271,8 @@ include 'common-js.php';
                     }
                     
                 }
+                
+                return false;
             });
         
         });
