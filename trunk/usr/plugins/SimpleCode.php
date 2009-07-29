@@ -73,7 +73,7 @@ class SimpleCode implements Typecho_Plugin_Interface
         $value = empty($lastResult) ? $value : $lastResult;
         if ($widget instanceof Widget_Archive) {
             $value['text'] = preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $value['text']);
-        } else if ($widget instanceof Widget_Comments_Archive) {
+        } else if ($widget instanceof Widget_Comments_Archive || $widget instanceof Widget_Comments_Admin) {
             $value['text'] = Typecho_Common::decodeCode($value['text']);
             $value['text'] = preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $value['text']);
         }
