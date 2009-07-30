@@ -206,6 +206,7 @@ class Typecho_Plugin
             'author'            => '',
             'homepage'          => '',
             'version'           => '',
+            'dependence'        => '',
             'activate'          => false,
             'deactivate'        => false,
             'config'            => false,
@@ -216,6 +217,7 @@ class Typecho_Plugin
             'package'   =>  'title',
             'author'    =>  'author',
             'link'      =>  'homepage',
+            'dependence'=>  'dependence',
             'version'   =>  'version'
         );
 
@@ -347,6 +349,39 @@ class Typecho_Plugin
         }
         
         return array($pluginFileName, $className);
+    }
+    
+    /**
+     * 版本依赖性检测
+     * 
+     * @access public
+     * @param string $version 程序版本
+     * @param string $versionRange 依赖的版本规则
+     * @return boolean
+     */
+    public static function checkDependence($version, $versionRange)
+    {
+        //如果没有检测规则,直接掠过
+        if (empty($versionRange)) {
+            return true;
+        }
+    
+        $items = array_map('trim', explode('-', $versionRange));
+        if (count($items) < 2) {
+            $items[1] = $items[0];
+        }
+        
+        list ($minVersion, $maxVersion) = $items;
+        
+        //对*和?的支持,4个9是最大版本
+        $minVersion = str_replace(array('*', '?'), array('9999', '9'), $minVersion);
+        $maxVersion = str_replace(array('*', '?'), array('9999', '9'), $maxVersion);
+        
+        if (version_compare($version, $minVersion, '>=') && version_compare($version, $minVersion, '<=')) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**

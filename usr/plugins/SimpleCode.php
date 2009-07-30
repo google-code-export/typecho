@@ -4,7 +4,8 @@
  * 
  * @package Simple Code 
  * @author qining
- * @version 1.0.0
+ * @version 1.0.1
+ * @dependence 9.8.?-9.9.?
  * @link http://typecho.org
  */
 class SimpleCode implements Typecho_Plugin_Interface
@@ -18,8 +19,8 @@ class SimpleCode implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        Typecho_Plugin::factory('Widget_Abstract_Contents')->filter = array('SimpleCode', 'parse');
-        Typecho_Plugin::factory('Widget_Abstract_Comments')->filter = array('SimpleCode', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('SimpleCode', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Comments')->contentEx = array('SimpleCode', 'parse');
     }
     
     /**
@@ -68,16 +69,9 @@ class SimpleCode implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($value, $widget, $lastResult)
+    public static function parse($text, $lastResult)
     {
-        $value = empty($lastResult) ? $value : $lastResult;
-        if ($widget instanceof Widget_Archive) {
-            $value['text'] = preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $value['text']);
-        } else if ($widget instanceof Widget_Comments_Archive || $widget instanceof Widget_Comments_Admin) {
-            $value['text'] = Typecho_Common::decodeCode($value['text']);
-            $value['text'] = preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $value['text']);
-        }
-        
-        return $value;
+        $text = empty($lastResult) ? $text : $lastResult;
+        return preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $text);
     }
 }
