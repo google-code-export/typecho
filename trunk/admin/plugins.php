@@ -34,7 +34,11 @@ include 'menu.php';
                         <?php while ($activatedPlugins->next()): ?>
                         <tr<?php $activatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $activatedPlugins->name(); ?>">
                             <td></td>
-                            <td><?php $activatedPlugins->title(); ?></td>
+                            <td><?php $activatedPlugins->title(); ?>
+                            <?php if (!$activatedPlugins->dependence): ?>
+                            <img src="<?php $options->adminUrl('images/notice.gif'); ?>" title="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" alt="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" class="tiny" />
+                            <?php endif; ?>
+                            </td>
                             <td><?php $activatedPlugins->description(); ?></td>
                             <td><?php $activatedPlugins->version(); ?></td>
                             <td><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage

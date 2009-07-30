@@ -57,6 +57,9 @@ class Widget_Plugins_List extends Typecho_Widget
                 $info = Typecho_Plugin::parseInfo($pluginFileName);
                 $info['name'] = $pluginName;
                 
+                list ($version, $build) = explode('/', Typecho_Common::VERSION);
+                $info['dependence'] = Typecho_Plugin::checkDependence($build, $info['dependence']);
+                
                 /** 默认即插即用 */
                 $info['activated'] = true;
                 

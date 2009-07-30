@@ -30,54 +30,65 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     {
         /** 获取插件入口 */
         list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        $info = Typecho_Plugin::parseInfo($pluginFileName);
         
-        /** 获取已激活插件 */
-        $plugins = Typecho_Plugin::export();
-        $activatedPlugins = $plugins['activated'];
-        
-        /** 载入插件 */
-        require_once $pluginFileName;
-        
-        /** 判断实例化是否成功 */
-        if (isset($activatedPlugins[$pluginName]) || !class_exists($className)
-        || !method_exists($className, 'activate')) {
-            throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
-        }
-        
-        try {
-            $result = call_user_func(array($className, 'activate'));
-            Typecho_Plugin::activate($pluginName);
-            $this->update(array('value' => serialize(Typecho_Plugin::export())),
-            $this->db->sql()->where('name = ?', 'plugins'));
-        } catch (Typecho_Plugin_Exception $e) {
-            /** 截获异常 */
-            $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
-            $this->response->goBack();
-        }
-        
-        $form = new Typecho_Widget_Helper_Form();
-        call_user_func(array($className, 'config'), $form);
-        
-        $personalForm = new Typecho_Widget_Helper_Form();
-        call_user_func(array($className, 'personalConfig'), $personalForm);
-        
-        $options = $form->getValues();
-        $personalOptions = $personalForm->getValues();
-        
-        if ($options && !$this->configHandle($pluginName, $options, true)) {
-            $this->insert(array(
-                'name'  =>  'plugin:' . $pluginName,
-                'value' =>  serialize($options),
-                'user'  =>  0
-            ));
-        }
-        
-        if ($personalOptions && !$this->personalConfigHandle($className, $personalOptions)) {
-            $this->insert(array(
-                'name'  =>  '_plugin:' . $pluginName,
-                'value' =>  serialize($personalOptions),
-                'user'  =>  0
-            ));
+        /** 检测依赖信息 */
+        list ($version, $build) = explode('/', Typecho_Common::VERSION);
+        if (Typecho_Plugin::checkDependence($build, $info['dependence'])) {
+
+            /** 获取已激活插件 */
+            $plugins = Typecho_Plugin::export();
+            $activatedPlugins = $plugins['activated'];
+            
+            /** 载入插件 */
+            require_once $pluginFileName;
+            
+            /** 判断实例化是否成功 */
+            if (isset($activatedPlugins[$pluginName]) || !class_exists($className)
+            || !method_exists($className, 'activate')) {
+                throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
+            }
+            
+            try {
+                $result = call_user_func(array($className, 'activate'));
+                Typecho_Plugin::activate($pluginName);
+                $this->update(array('value' => serialize(Typecho_Plugin::export())),
+                $this->db->sql()->where('name = ?', 'plugins'));
+            } catch (Typecho_Plugin_Exception $e) {
+                /** 截获异常 */
+                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->response->goBack();
+            }
+            
+            $form = new Typecho_Widget_Helper_Form();
+            call_user_func(array($className, 'config'), $form);
+            
+            $personalForm = new Typecho_Widget_Helper_Form();
+            call_user_func(array($className, 'personalConfig'), $personalForm);
+            
+            $options = $form->getValues();
+            $personalOptions = $personalForm->getValues();
+            
+            if ($options && !$this->configHandle($pluginName, $options, true)) {
+                $this->insert(array(
+                    'name'  =>  'plugin:' . $pluginName,
+                    'value' =>  serialize($options),
+                    'user'  =>  0
+                ));
+            }
+            
+            if ($personalOptions && !$this->personalConfigHandle($className, $personalOptions)) {
+                $this->insert(array(
+                    'name'  =>  '_plugin:' . $pluginName,
+                    'value' =>  serialize($personalOptions),
+                    'user'  =>  0
+                ));
+            }
+
+        } else {
+            
+            $result = _t('<a href="%s">%s</a> 无法在此版本的typecho下正常工作', $info['link'], $info['title']);
+            
         }
         
         /** 设置高亮 */

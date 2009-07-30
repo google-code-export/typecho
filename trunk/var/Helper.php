@@ -68,22 +68,6 @@ class Helper
     }
     
     /**
-     * 依赖帮手版本检测
-     * 
-     * @access public
-     * @param string $version 帮手版本
-     * @return void
-     * @throws Typecho_Plugin_Exception
-     */
-    public static function dependOn($version)
-    {
-        list ($prefix, $currentVersion)  = explode('/', Typecho_Common::VERSION);
-        if (version_compare($currentVersion, $version, '<')) {
-            throw new Typecho_Plugin_Exception(_t('此插件正常工作至少需要版本为 <strong>%s</strong>, 当前版本是 <strong>%s</strong>', $version, $currentVersion));
-        }
-    }
-    
-    /**
      * 导入语言项
      * 
      * @access public
