@@ -274,18 +274,18 @@ class Helper
             unset($panelTable['file'][$key]);
         }
         
+        $return = 0;
         foreach ($panelTable['child'][$index] as $key => $val) {
-            if ($val[2] == '/admin/extending.php?panel=' . $fileName) {
+            if ($val[2] == 'extending.php?panel=' . $fileName) {
                 unset($panelTable['child'][$index][$key]);
-                $index = $key;
-                break;
+                $return = $key;
             }
         }
 
         $db = Typecho_Db::get();
         Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->panelTable = serialize($panelTable)))
         , $db->sql()->where('name = ?', 'panelTable'));
-        return $index;
+        return $return;
     }
     
     /**
