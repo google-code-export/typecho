@@ -5,7 +5,6 @@
  * @package Simple Code 
  * @author qining
  * @version 1.0.1
- * @dependence 9.8.?-9.9.?
  * @link http://typecho.org
  */
 class SimpleCode implements Typecho_Plugin_Interface

@@ -71,7 +71,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php $mime = Typecho_Common::mimeIconType($attachments->attachment->mime); ?>
                         <tr<?php $attachments->alt(' class="even"', ''); ?> id="<?php $attachments->theId(); ?>">
                             <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $attachments->permalink(); ?>#comments" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
+                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
                             <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
                             <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                             <td><?php $attachments->author(); ?></td>

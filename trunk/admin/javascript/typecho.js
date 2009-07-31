@@ -420,6 +420,7 @@ Typecho.autoSave = new Class({
             
             if (this.duration > this.options.time) {
                 this.start = false;
+                this.onContentChange();
             }
         }).periodical(1000, this);
     },
@@ -478,6 +479,7 @@ Typecho.textarea = new Class({
         autoSave: false,
         autoSaveMessageElement: null,
         autoSaveLeaveMessage: 'leave?',
+        autoSaveTime: 60,
         minSize: 30
     },
 
@@ -488,7 +490,7 @@ Typecho.textarea = new Class({
         
         if (this.options.autoSave) {
             this.autoSave = new Typecho.autoSave(this.textarea.getParent('form').getProperty('action'), {
-                time: 60,
+                time: this.options.autoSaveTime,
                 getContentHandle: this.getContent.bind(this),
                 messageElement: this.options.autoSaveMessageElement,
                 leaveMessage: this.options.autoSaveLeaveMessage,
