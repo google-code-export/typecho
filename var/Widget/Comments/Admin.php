@@ -50,9 +50,10 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
      */
     protected function ___parentContent()
     {
-        return isset($this->request->cid) ? $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-        ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
-        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter')) : array();
+        $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
+        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+        ->where('table.contents.cid = ?', $cid)
+        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
     }
     
     /**
@@ -93,7 +94,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         }
         
         //增加按文章归档功能
-        if (isset($this->request->cid) && $this->parentContent) {
+        if (isset($this->request->cid)) {
             $select->where('table.comments.cid = ?', $this->request->filter('int')->cid);
         }
     
