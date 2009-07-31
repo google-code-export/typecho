@@ -211,6 +211,9 @@ include 'common-js.php';
                                     form.getElement('input[name=coid]').set('value', coid);
                                     form.getElement('textarea[name=text]').set('value', json.comment.text);
                                     
+                                    var commentHeight = this.getParent('li').getElement('.comment-content').getSize().y;
+                                    form.getElement('textarea[name=text]').setStyle('height', commentHeight > 150 ? commentHeight : 150);
+                                    
                                     this.getParent('li').getElement('.content').setStyle('display', 'none');
                                     form.inject(this.getParent('li').getElement('.line'), 'before');
                                     form.getElement('#submit-' + coid).addEvent('click', (function () {

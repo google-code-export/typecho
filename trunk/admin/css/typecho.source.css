@@ -183,6 +183,7 @@ input, textarea {
 
 textarea {
     overflow: auto;
+	line-height: 150%;
 }
 
 em {
