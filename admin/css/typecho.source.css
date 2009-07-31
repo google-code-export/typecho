@@ -196,7 +196,7 @@ input:hover {
 }
 
 input, select, textarea {
-    font-family: Verdana, Geneva, sans-serif;
+    font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
 }
 
 /** hack webkit border by 70 */
@@ -1882,7 +1882,6 @@ ul.typecho-list-notable li #typecho-respond {
 
 .typecho-post-area textarea#text {
     font-size: 13px;
-    font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
     line-height: 18px;
     width: 700px;
     margin: 0;

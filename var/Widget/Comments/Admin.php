@@ -43,6 +43,19 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     private $_total = false;
     
     /**
+     * 获取当前内容结构
+     * 
+     * @access protected
+     * @return array
+     */
+    protected function ___parentContent()
+    {
+        return isset($this->request->cid) ? $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+        ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter')) : array();
+    }
+    
+    /**
      * 执行函数
      * 
      * @access public
@@ -77,6 +90,11 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             $select->where('table.comments.status = ?', $this->request->status);
         } else if ('all' != $this->request->status) {
             $select->where('table.comments.status = ?', 'approved');
+        }
+        
+        //增加按文章归档功能
+        if (isset($this->request->cid) && $this->parentContent) {
+            $select->where('table.comments.cid = ?', $this->request->filter('int')->cid);
         }
     
         $this->_countSql = clone $select;

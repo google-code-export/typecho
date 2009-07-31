@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <script type="text/javascript">
     var textEditor = new Typecho.textarea('#text', {
-        time: 60,
+        autoSaveTime: 5,
         resizeAble: true,
         autoSave: <?php echo ($options->autoSave ? 'true' : 'false'); ?>,
         autoSaveMessageElement: 'auto-save-message',

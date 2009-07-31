@@ -4,6 +4,7 @@ include 'header.php';
 include 'menu.php';
 
 $stat = Typecho_Widget::widget('Widget_Stat');
+$comments = Typecho_Widget::widget('Widget_Comments_Admin');
 ?>
 <div class="main">
     <div class="body body-950">
@@ -11,21 +12,27 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('已通过'); ?></a></li>
-                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?>
+                    <?php
+                    $hasArchive = isset($request->cid) && (NULL != $comments->parentContent);
+                    ?>
+                    <li<?php if(!$hasArchive && (!isset($request->status) || 'approved' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'); ?>"><?php _e('已通过'); ?></a></li>
+                    <li<?php if(!$hasArchive && ('waiting' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核'); ?>
                     <?php if('on' != $request->get('__typecho_all_comments') && $stat->myWaitingCommentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
                     <?php elseif('on' == $request->get('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?>
                         <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                    <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?>
+                    <li<?php if(!$hasArchive && ('spam' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'); ?>"><?php _e('垃圾'); ?>
                     <?php if('on' != $request->get('__typecho_all_comments') && $stat->mySpamCommentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
                     <?php elseif('on' == $request->get('__typecho_all_comments') && $stat->spamCommentsNum > 0): ?>
                         <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
+                    <?php if($hasArchive): ?>
+                    <li class="current"><a href="<?php $request->makeUriByRequest(); ?>"><?php $comments->title(); ?></a></li>
+                    <?php endif; ?>
                     <?php if($user->pass('editor', true)): ?>
                         <li class="right<?php if('on' == $request->get('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
                         <li class="right<?php if('on' != $request->get('__typecho_all_comments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
@@ -56,8 +63,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
 
                 <form method="post" name="manage_comments" class="operate-form" action="<?php $options->index('/action/comments-edit'); ?>">
-                    <?php Typecho_Widget::widget('Widget_Comments_Admin')->to($comments); ?>
-                    
                     <ul class="typecho-list-notable clearfix">
                     <?php if($comments->have()): ?>
                     <?php while($comments->next()): ?>
