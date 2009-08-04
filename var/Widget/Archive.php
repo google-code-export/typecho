@@ -527,32 +527,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     private function singleHandle(Typecho_Db_Query $select, &$hasPushed)
-    {
-        if (false !== strpos('login,register', $this->request->slug)) {
-            
-            $this->_themeFile = $this->request->slug . '.php';
-            
-            $this->_archiveType = 'page';
-            $this->_archiveSlug = $this->request->slug;
-            $this->_archiveSingle = true;
-            
-            switch ($this->request->slug) {
-                case 'login':
-                    $this->_archiveTitle[] = _t('登录到 %s', $this->options->title);
-                    break;
-                case 'register':
-                    $this->_archiveTitle[] = _t('注册到 %s', $this->options->title);
-                    break;
-                default:
-                    break;
-            }
-            
-            $hasPushed = true;
-            
-            return;
-            
-        }
-    
+    {    
         /** 匹配类型 */
         $select->where('table.contents.type = ?', $this->parameter->type);
         

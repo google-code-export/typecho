@@ -38,9 +38,7 @@ include 'header.php';
                 <a href="<?php $options->siteUrl(); ?>" class="important"><?php _e('&laquo; 返回%s', $options->title); ?></a>
                 </p>
                 <p class="forgot-password">
-                <?php if(!$user->hasLogin()): ?>
-                <a href="<?php $options->adminUrl('get-password.php'); ?>"><?php _e('忘记密码 &raquo;'); ?></a>
-                <?php else: ?>
+                <?php if($user->hasLogin()): ?>
                 <a href="<?php $options->adminUrl(); ?>"><?php _e('进入后台 &raquo;'); ?></a>
                 <?php endif; ?>
                 </p>
