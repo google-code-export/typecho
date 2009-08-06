@@ -19,6 +19,7 @@ class SimpleCode implements Typecho_Plugin_Interface
     public static function activate()
     {
         Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('SimpleCode', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerpt = array('SimpleCode', 'parse');
         Typecho_Plugin::factory('Widget_Abstract_Comments')->contentEx = array('SimpleCode', 'parse');
     }
     
