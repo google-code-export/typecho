@@ -55,6 +55,8 @@ Typecho_Common::init(array(
     'gpc'               =>  true
 ));
 
+ob_start();
+
 //判断是否已经安装
 if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
     exit;
