@@ -17,6 +17,7 @@ Typecho_Plugin::factory('admin/header.php')->header($header);
         <meta http-equiv="Content-Type" content="text/html; charset=<?php $options->charset(); ?>" />
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="robots" content="noindex,nofollow" />
         <?php echo $header; ?>
     </head>
     <body<?php if (isset($bodyClass)) {echo ' class="' . $bodyClass . '"';} ?>>
