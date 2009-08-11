@@ -221,7 +221,8 @@ class Typecho_Common
      */
     public static function error($exception)
     {
-        @ob_clean();
+        @ob_end_clean();
+        header('Content-Encoding:', true);
         
         $isException = is_object($exception);
         
@@ -340,21 +341,6 @@ class Typecho_Common
 EOF;
         
         exit;
-    }
-    
-    /**
-     * 自定义gzip函数
-     * 
-     * @access public
-     * @param string $buffer 缓冲区
-     * @param integer $mode 模式
-     * @return string
-     */
-    public static function gzipHandle($buffer, $mode)
-    {
-        $buffer = ob_gzhandler($buffer, $mode);
-        header('Content-Encoding:');
-        return gzuncompress($buffer);
     }
     
     /**
