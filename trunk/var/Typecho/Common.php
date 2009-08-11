@@ -343,6 +343,21 @@ EOF;
     }
     
     /**
+     * 自定义gzip函数
+     * 
+     * @access public
+     * @param string $buffer 缓冲区
+     * @param integer $mode 模式
+     * @return string
+     */
+    public static function gzipHandle($buffer, $mode)
+    {
+        $buffer = ob_gzhandler($buffer, $mode);
+        header('Content-Encoding:');
+        return gzuncompress($buffer);
+    }
+    
+    /**
      * 判断类是否能被加载
      * 此函数会遍历所有的include目录, 所以会有一定的性能消耗, 但是不会很大
      * 可是我们依然建议你在必须检测一个类能否被加载时使用它, 它通常表现为以下两种情况
