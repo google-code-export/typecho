@@ -49,7 +49,7 @@ class Widget_Init extends Typecho_Widget
         /** gzip开关 */
         if ($options->gzip && NULL !== $this->request->getServer('HTTP_ACCEPT_ENCODING')
            && false !== strpos($this->request->getServer('HTTP_ACCEPT_ENCODING'), 'gzip')) {
-            ob_start("ob_gzhandler");
+            ob_start(array('Typecho_Common', 'gzipHandle'));
         } else {
             ob_start();
         }
