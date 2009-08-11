@@ -27,7 +27,8 @@ class Widget_ExceptionHandle extends Widget_Archive
      */
     public function __construct()
     {
-        @ob_clean();
+        @ob_end_clean();
+        header('Content-Encoding:', true);
         $this->widget('Widget_Archive@404', 'type=404')->render();
         exit;
     }
