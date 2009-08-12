@@ -197,6 +197,10 @@ class Typecho_Common
      */
     public static function exceptionHandle(Exception $exception)
     {
+        @ob_end_clean();
+        ob_start();
+        header('Content-Encoding:', true);
+    
         if (!self::$config['exception']) {
             //@ob_clean();
             echo nl2br($exception->__toString());
@@ -221,9 +225,6 @@ class Typecho_Common
      */
     public static function error($exception)
     {
-        @ob_end_clean();
-        header('Content-Encoding:', true);
-        
         $isException = is_object($exception);
         
         if ($isException) {
