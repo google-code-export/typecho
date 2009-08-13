@@ -1386,19 +1386,16 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         if (Typecho_Feed::RSS2 == $this->_feedType) {
             $this->_feed->setChannelElement('language', _t('zh-cn'));
-            $this->_feed->setLink($this->_feedUrl);
         }
         
         if (Typecho_Feed::RSS1 == $this->_feedType) {
             /** 如果是RSS1标准 */
             $this->_feed->setChannelAbout($this->_feedRssUrl);
-            $this->_feed->setLink($this->_feedRssUrl);
         }
         
-        if (Typecho_Feed::ATOM1 == $this->_feedType) {
-            /** 如果是ATOM标准 */
-            $this->_feed->setLink($this->_feedAtomUrl);
-        }
+        $this->_feed->setLink(('/' == $this->request->feed || 0 == strlen($this->request->feed)
+        || '/comments' == $this->request->feed || '/comments/' == $this->request->feed) ?
+        $this->options->siteUrl : Typecho_Common::url($this->request->feed, $this->options->index));
 
         if (Typecho_Feed::RSS1 == $this->_feedType || Typecho_Feed::RSS2 == $this->_feedType) {
             $this->_feed->setDescription($this->_description);
