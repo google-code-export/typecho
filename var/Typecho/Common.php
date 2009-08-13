@@ -199,7 +199,7 @@ class Typecho_Common
     {
         @ob_end_clean();
         ob_start();
-        header('Content-Encoding:', true);
+        header('Content-Encoding: ', true);
     
         if (!self::$config['exception']) {
             //@ob_clean();
