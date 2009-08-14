@@ -50,8 +50,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="50"/>
                         <col width="20"/>
                         <col width="255"/>
-                        <col width="140"/>
-                        <col width="250"/>
+                        <col width="50"/>
+                        <col width="120"/>
+                        <col width="220"/>
                         <col width="150"/>
                     </colgroup>
                     <thead>
@@ -60,6 +61,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th> </th>
                             <th> </th>
                             <th><?php _e('文件名'); ?></th>
+                            <th> </th>
                             <th><?php _e('上传者'); ?></th>
                             <th><?php _e('所属文章'); ?></th>
                             <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
@@ -74,6 +76,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
                             <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
                             <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
+                            <td>
+                            <?php if ('publish' == $attachments->status): ?>
+                            <a class="balloon-button right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><?php _e('浏览'); ?></a>
+                            <?php endif; ?>
+                            </td>
                             <td><?php $attachments->author(); ?></td>
                             <td>
                             <?php if ($attachments->parentPost->cid): ?>
