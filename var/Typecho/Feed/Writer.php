@@ -297,7 +297,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 		}
 		
 		
-		$attrText .= (in_array($tagName, $this->CDATAEncoding) && $this->version == Typecho_Feed::ATOM1)? ' type="html" ' : '';
+		$attrText .= (in_array($tagName, $this->CDATAEncoding) && $this->version == Typecho_Feed::ATOM1) ? ' type="html" ' : '';
         
         if (empty($tagContent)) {
             $nodeText .= "<{$tagName}{$attrText}";
@@ -310,7 +310,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . Typecho_Feed::EOL;;
 				$nodeText .= $this->makeNode($key, $value);
 			}
 		} else {
-			$nodeText .= (in_array($tagName, $this->CDATAEncoding))? $tagContent : htmlentities($tagContent);
+			$nodeText .= (in_array($tagName, $this->CDATAEncoding) || 'content' == $tagName)? $tagContent : htmlentities($tagContent);
 		}           
         
         if (empty($tagContent)) {

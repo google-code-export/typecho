@@ -1426,13 +1426,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $item->setLink($comments->permalink);
                 $item->setDate($comments->created);
                 $item->setDescription(strip_tags($comments->content));
+                
+                //support content rfc
+                $item->setContent($comments->content);
 
                 if (Typecho_Feed::RSS2 == $this->_feedType) {
                     $item->addElement('guid', $comments->permalink);
-
-                    //support content rfc
-                    $item->addElement('content:encoded', $comments->content);
-
                     $item->addElement('author', $comments->author);
                     $item->addElement('dc:creator', $comments->author);
                 }
@@ -1453,18 +1452,18 @@ class Widget_Archive extends Widget_Abstract_Contents
                 //直接设置描述
                 $item->setDescription($this->description);
                 
+                /** RSS全文输出开关支持 */
+                if ($this->options->feedFullText) {
+                    $item->setContent($this->content);
+                } else {
+                    $item->setContent(false !== strpos($this->text, '<!--more-->') ?
+                    $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
+                }
+                
                 if (Typecho_Feed::RSS2 == $this->_feedType) {
                     $item->addElement('guid', $this->permalink);
                     $item->addElement('slash:comments', $this->commentsNum);
                     $item->addElement('comments', $this->permalink . '#comments');
-
-                    /** RSS全文输出开关支持 */
-                    if ($this->options->feedFullText) {
-                        $item->addElement('content:encoded', $this->content);
-                    } else {
-                        $item->addElement('content:encoded', false !== strpos($this->text, '<!--more-->') ?
-                        $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
-                    }
 
                     $item->addElement('author', $this->author->screenName);
                     $item->addElement('dc:creator', $this->author->screenName);

@@ -82,6 +82,25 @@ class Typecho_Feed_Item
 	}
 	
 	/**
+	 * setContent function.
+	 * 
+	 * @access public
+	 * @param string $content the conent of 'content' element
+	 * @return void
+	 */
+	public function setContent($content)
+	{
+	   if (Typecho_Feed::RSS2 == $this->version) {
+	       $this->addElement('content:encoded', $content);
+	   } else if (Typecho_Feed::ATOM1 == $this->version) {
+	       $this->addElement('content', $content, array(
+	           'type'  =>  'xhtml',
+	           'xml:base' => 'http://diveintomark.org/'
+	       ));
+	   }
+	}
+	
+	/**
 	* @desc     Set the 'title' element of feed item
 	* @access   public
 	* @param    string  The content of 'title' element
