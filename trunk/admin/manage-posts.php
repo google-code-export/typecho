@@ -62,8 +62,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="25"/>
                         <col width="50"/>
                         <col width="320"/>
-                        <col width="115"/>
-                        <col width="230"/>
+                        <col width="50"/>
+                        <col width="100"/>
+                        <col width="195"/>
                         <col width="150"/>
                     </colgroup>
                     <thead>
@@ -71,6 +72,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th class="typecho-radius-topleft"> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
+                            <th> </th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('分类'); ?></th>
                             <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
@@ -84,6 +86,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
+                            <td>
+                            <?php if ('publish' == $posts->status): ?>
+                            <a class="balloon-button right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><?php _e('浏览'); ?></a>
+                            <?php endif; ?>
+                            </td>
                             <td><?php $posts->author(); ?></td>
                             <td><?php $posts->category(', '); ?></td>
                             <td><?php $posts->dateWord(); ?></td>
