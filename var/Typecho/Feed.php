@@ -355,7 +355,7 @@ xml:base="' . $this->_baseUrl . '"
                 $content .= '<entry>' . self::EOL;
                 $content .= '<title type="html"><![CDATA[' . $item['title'] . ']]></title>' . self::EOL;
                 $content .= '<link rel="alternate" type="text/html" href="' . $item['link'] . '" />' . self::EOL;
-                $content .= '<id>urn:uuid:' . chunk_split(md5($item['link']), 4, '-') . '</id>' . self::EOL;
+                $content .= '<id>' . $item['link'] . '</id>' . self::EOL;
                 $content .= '<updated>' . $this->dateFormat($item['date']) . '</updated>' . self::EOL;
                 $content .= '<published>' . $this->dateFormat($item['date']) . '</published>' . self::EOL;
                 $content .= '<author>
