@@ -114,6 +114,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_feedType;
     
     /**
+     * 当前feed地址
+     * 
+     * @access private
+     * @var string
+     */
+    private $_currentFeedUrl;
+    
+    /**
      * 归档标题
      * 
      * @access private
@@ -181,20 +189,25 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
         
+            $this->_currentFeedUrl = '';
+            
             /** 判断聚合类型 */
             switch (true) {
                 case 0 === strpos($this->request->feed, '/rss/') || '/rss' == $this->request->feed:
                     /** 如果是RSS1标准 */
                     $this->request->feed = substr($this->request->feed, 4);
                     $this->_feedType = Typecho_Feed::RSS1;
+                    $this->_currentFeedUrl = $this->options->feedRssUrl;
                     break;
                 case 0 === strpos($this->request->feed, '/atom/') || '/atom' == $this->request->feed:
                     /** 如果是ATOM标准 */
                     $this->request->feed = substr($this->request->feed, 5);
                     $this->_feedType = Typecho_Feed::ATOM1;
+                    $this->_currentFeedUrl = $this->options->feedAtomUrl;
                     break;
                 default:
                     $this->_feedType = Typecho_Feed::RSS2;
+                    $this->_currentFeedUrl = $this->options->feedUrl;
                     break;
             }
             
@@ -211,7 +224,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             /** 初始化聚合器 */
-            $this->setFeed(Typecho_Feed::generator($this->_feedType));
+            $this->setFeed(new Typecho_Feed(Typecho_Common::VERSION, $this->_feedType, $this->options->charset, _t('zh-CN')));
             
             /** 默认输出10则文章 **/
             $this->parameter->pageSize = 10;
@@ -1381,34 +1394,13 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function feed()
     {
-        $this->_feed->setCharset($this->options->charset);
         $this->_feed->setSubTitle($this->_description);
-
-        if (Typecho_Feed::RSS2 == $this->_feedType) {
-            $this->_feed->setChannelElement('language', _t('zh-cn'));
-        }
+        $this->_feed->setFeedUrl($this->_currentFeedUrl);
         
-        if (Typecho_Feed::RSS1 == $this->_feedType) {
-            /** 如果是RSS1标准 */
-            $this->_feed->setChannelAbout($this->_feedRssUrl);
-        }
-        
-        $this->_feed->setLink(('/' == $this->request->feed || 0 == strlen($this->request->feed)
+        $this->_feed->setBaseUrl(('/' == $this->request->feed || 0 == strlen($this->request->feed)
         || '/comments' == $this->request->feed || '/comments/' == $this->request->feed) ?
         $this->options->siteUrl : Typecho_Common::url($this->request->feed, $this->options->index));
-
-        if (Typecho_Feed::RSS1 == $this->_feedType || Typecho_Feed::RSS2 == $this->_feedType) {
-            $this->_feed->setDescription($this->_description);
-        }
-
-        $updateDate = new Typecho_Date($this->options->gmtTime, $this->options->timezone);
-        if (Typecho_Feed::RSS2 == $this->_feedType || Typecho_Feed::ATOM1 == $this->_feedType) {
-            $this->_feed->setChannelElement(Typecho_Feed::RSS2 == $this->_feedType ? 'pubDate' : 'updated',
-            $updateDate->format(Typecho_Feed::dateFormat($this->_feedType)));
-        }
-        
-        /** 插件接口 */
-        $this->plugin()->feed($this->_feed, $this);
+        $this->_feed->setFeedUrl($this->request->makeUriByRequest());
         
         if ($this->is('single') || 'comments' == $this->parameter->type) {
             $this->_feed->setTitle(_t('%s 的评论', 
@@ -1421,60 +1413,58 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             while ($comments->next()) {
-                $item = $this->_feed->createNewItem();
-                $item->setTitle($comments->author);
-                $item->setLink($comments->permalink);
-                $item->setDate($comments->created);
-                $item->setDescription(strip_tags($comments->content));
-                
-                //support content rfc
-                $item->setContent($comments->content);
-
-                if (Typecho_Feed::RSS2 == $this->_feedType) {
-                    $item->addElement('guid', $comments->permalink);
-                    $item->addElement('author', $comments->author);
-                    $item->addElement('dc:creator', $comments->author);
+                $suffix = $this->plugin()->trigger($plugged)->commentFeedItem($this->_feedType, $comments);
+                if (!$plugged) {
+                    $suffix = NULL;
                 }
                 
-                $this->plugin()->commentFeedItem($item, $this->_feedType, $this);
-                $this->_feed->addItem($item);
+                $this->_feed->addItem(array(
+                    'title'     =>  $comments->author,
+                    'content'   =>  $comments->content,
+                    'date'      =>  $comments->created,
+                    'link'      =>  $comments->permalink,
+                    'author'    =>  (object) array(
+                        'name'  =>  $comments->author,
+                        'url'   =>  $comments->url,
+                        'mail'  =>  $comments->mail
+                    ),
+                    'excerpt'   =>  strip_tags($comments->content),
+                    'suffix'    =>  $suffix
+                ));
             }
         } else {
-            while ($this->next()) {
-                $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
+            $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
             
-                $item = $this->_feed->createNewItem();
-                $item->setTitle($this->title);
-                $item->setLink($this->permalink);
-                $item->setDate($this->created);                    
-                $item->setCategory($this->categories);
-                
-                //直接设置描述
-                $item->setDescription($this->description);
-                
-                /** RSS全文输出开关支持 */
-                if ($this->options->feedFullText) {
-                    $item->setContent($this->content);
-                } else {
-                    $item->setContent(false !== strpos($this->text, '<!--more-->') ?
-                    $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content);
+            $feedUrl = '';
+            if (Typecho_Feed::RSS2 == $this->_feedType) {
+                $feedUrl = $this->feedUrl;
+            } else if (Typecho_Feed::RSS1 == $this->_feedType) {
+                $feedUrl = $this->feedRssUrl;
+            } else if (Typecho_Feed::ATOM1 == $this->_feedType) {
+                $feedUrl = $this->feedAtomUrl;
+            }
+            
+            while ($this->next()) {
+                $suffix = $this->plugin()->trigger($plugged)->feedItem($this->_feedType, $this);
+                if (!$plugged) {
+                    $suffix = NULL;
                 }
                 
-                if (Typecho_Feed::RSS2 == $this->_feedType) {
-                    $item->addElement('guid', $this->permalink);
-                    $item->addElement('slash:comments', $this->commentsNum);
-                    $item->addElement('comments', $this->permalink . '#comments');
-
-                    $item->addElement('author', $this->author->screenName);
-                    $item->addElement('dc:creator', $this->author->screenName);
-                    $item->addElement('wfw:commentRss', $this->feedUrl);
-                }
-                
-                $this->plugin()->feedItem($item, $this->_feedType, $this);
-                $this->_feed->addItem($item);
+                $this->_feed->addItem(array(
+                    'title'     =>  $this->title,
+                    'content'   =>  $this->options->feedFullText ? $this->content : (false !== strpos($this->text, '<!--more-->') ?
+                    $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>" : $this->content),
+                    'date'      =>  $this->created,
+                    'link'      =>  $this->permalink,
+                    'author'    =>  $this->author,
+                    'excerpt'   =>  $this->description,
+                    'comments'  =>  $this->commentsNum,
+                    'commentsFeedUrl' => $feedUrl,
+                    'suffix'    =>  $suffix
+                ));
             }
         }
         
-        $this->_feed->generateFeed();
+        echo $this->_feed->__toString();
     }
 }
