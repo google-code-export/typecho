@@ -41,6 +41,7 @@ class Widget_Contents_Related extends Widget_Abstract_Contents
             ->where('table.contents.created < ?', $this->options->gmtTime)
             ->where('table.contents.type = ?', $this->parameter->type)
             ->order('table.contents.created', Typecho_Db::SORT_DESC)
+            ->group('table.contents.cid')
             ->limit($this->parameter->limit), array($this, 'push'));
         }
     }
