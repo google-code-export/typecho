@@ -10,7 +10,7 @@
  */
 
 /**
- * 相关内容组件(根据标签关联)
+ * 相关内容组件(根据作者关联)
  * 
  * @author qining
  * @category typecho

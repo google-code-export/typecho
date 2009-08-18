@@ -288,11 +288,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
                 $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
                 $content .= '<guid>' . $item['link'] . '</guid>' . self::EOL;
                 $content .= '<pubDate>' . $this->dateFormat($item['date']) . '</pubDate>' . self::EOL;
-                $content .= '<author>
-    <name>' . $item['author']->name . '</name>' . self::EOL .
-    (!empty($item['author']->url) ? '<uri>' . $item['author']->url . '</uri>' . self::EOL : NULL)
-. '</author>' . self::EOL;
-                $content .= '<dc:creator>' . $item['author']->name . '</dc:creator>';
+                $content .= '<dc:creator>' . htmlspecialchars($item['author']->name) . '</dc:creator>';
                 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
@@ -313,6 +309,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
                 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
                     $content .= '<slash:comments>' . $item['comments'] . '</slash:comments>' . self::EOL;
+                    $content .= '<lastBuildDate>' . $this->dateFormat($item['date']) . '</lastBuildDate>' . self::EOL;
                 }
                 
                 $content .= '<comments>' . $item['link'] . '#comments</comments>' . self::EOL;
