@@ -198,16 +198,19 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->request->feed = substr($this->request->feed, 4);
                     $this->_feedType = Typecho_Feed::RSS1;
                     $this->_currentFeedUrl = $this->options->feedRssUrl;
+                    $this->response->setContentType('application/rdf+xml');
                     break;
                 case 0 === strpos($this->request->feed, '/atom/') || '/atom' == $this->request->feed:
                     /** 如果是ATOM标准 */
                     $this->request->feed = substr($this->request->feed, 5);
                     $this->_feedType = Typecho_Feed::ATOM1;
                     $this->_currentFeedUrl = $this->options->feedAtomUrl;
+                    $this->response->setContentType('application/atom+xml');
                     break;
                 default:
                     $this->_feedType = Typecho_Feed::RSS2;
                     $this->_currentFeedUrl = $this->options->feedUrl;
+                    $this->response->setContentType('application/rss+xml');
                     break;
             }
             
