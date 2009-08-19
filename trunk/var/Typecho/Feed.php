@@ -182,9 +182,9 @@ class Typecho_Feed
      */
     public function dateFormat($stamp)
     {
-        if (self::RSS1 == $this->_type || self::RSS2 == $this->_type) {
+        if (self::RSS2 == $this->_type) {
             return date(self::DATE_RSS, $stamp);
-        } else {
+        } else if (self::RSS1 == $this->_type || self::ATOM1 == $this->_type) {
             return date(self::DATE_ATOM, $stamp);
         }
     }
@@ -256,7 +256,6 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
 <title>' . htmlspecialchars($this->_title) . '</title>
 <link>' . $this->_baseUrl . '</link>
 <description>' . htmlspecialchars($this->_subTitle) . '</description>
-<lastBuildDate>' . $this->dateFormat($lastUpdate) . '</lastBuildDate>
 <items>
 <rdf:Seq>' . self::EOL;
             
@@ -309,7 +308,6 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
                 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
                     $content .= '<slash:comments>' . $item['comments'] . '</slash:comments>' . self::EOL;
-                    $content .= '<lastBuildDate>' . $this->dateFormat($item['date']) . '</lastBuildDate>' . self::EOL;
                 }
                 
                 $content .= '<comments>' . $item['link'] . '#comments</comments>' . self::EOL;
@@ -333,6 +331,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
 <atom:link href="' . $this->_feedUrl . '" rel="self" type="application/rss+xml" />
 <language>' . $this->_lang . '</language>
 <description>' . htmlspecialchars($this->_subTitle) . '</description>
+<lastBuildDate>' . $this->dateFormat($lastUpdate) . '</lastBuildDate>
 <pubDate>' . $this->dateFormat($lastUpdate) . '</pubDate>' . self::EOL;
 
             $result .= $content . '</channel>

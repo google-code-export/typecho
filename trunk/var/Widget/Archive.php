@@ -1227,7 +1227,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         if (!empty($allows['rss1']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="text/xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\r\n";
+            $header .= '<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\r\n";
         }
         
         if (!empty($allows['atom']) && $allowFeed) {
