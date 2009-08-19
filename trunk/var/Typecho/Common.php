@@ -197,9 +197,14 @@ class Typecho_Common
      */
     public static function exceptionHandle(Exception $exception)
     {
+        $obHandles = ob_list_handlers();
+        
         @ob_end_clean();
-        ob_start();
-        header('Content-Encoding: ', true);
+        if (in_array('ob_gzhandler', $obHandles)) {
+            ob_start('ob_gzhandler');
+        } else {
+            ob_start();
+        }
     
         if (!self::$config['exception']) {
             //@ob_clean();
