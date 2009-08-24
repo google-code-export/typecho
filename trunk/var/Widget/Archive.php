@@ -517,7 +517,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->response->setStatus(404);
     
         /** 设置标题 */
-        $this->_archiveTitle[] = array(_t('页面不存在'));
+        $this->_archiveTitle[] = _t('页面不存在');
         
         /** 设置归档类型 */
         $this->_archiveType = 404;

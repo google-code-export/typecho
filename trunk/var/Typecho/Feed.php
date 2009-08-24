@@ -31,10 +31,10 @@ class Typecho_Feed
     const ATOM1 = 'ATOM 1.0';
     
     /** 定义RSS时间格式 */
-    const DATE_RSS = 'r';
+    const DATE_RFC822 = 'r';
     
     /** 定义ATOM时间格式 */
-    const DATE_ATOM = 'c';
+    const DATE_W3CDTF = 'c';
     
     /** 定义行结束符 */
     const EOL = "\n";
@@ -183,9 +183,9 @@ class Typecho_Feed
     public function dateFormat($stamp)
     {
         if (self::RSS2 == $this->_type) {
-            return date(self::DATE_RSS, $stamp);
+            return date(self::DATE_RFC822, $stamp);
         } else if (self::RSS1 == $this->_type || self::ATOM1 == $this->_type) {
-            return date(self::DATE_ATOM, $stamp);
+            return date(self::DATE_W3CDTF, $stamp);
         }
     }
     
