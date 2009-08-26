@@ -1279,6 +1279,17 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 输出关键字
+     * 
+     * @access public
+     * @return unknown
+     */
+    public function keywords($split = ',', $default = '')
+    {
+        echo empty($this->_keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->_keywords));
+    }
+    
+    /**
      * 判断归档类型和名称
      * 
      * @access public
