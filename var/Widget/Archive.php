@@ -512,7 +512,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     private function error404Handle(Typecho_Db_Query $select, &$hasPushed)
-    {    
+    {
         /** 设置header */
         $this->response->setStatus(404);
     
