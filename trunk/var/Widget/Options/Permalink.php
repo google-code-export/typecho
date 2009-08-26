@@ -226,29 +226,6 @@ RewriteRule . {$basePath}index.php [L]
         Typecho_Common::url('example.html', $this->options->index)));
         $form->addInput($pageSuffix);
         
-        $form->addItem(new Typecho_Widget_Helper_Form_Title(_t('归档页根目录调整'), _t('以下选项允许你调整各个归档页的根目录路径<br />
-比如, 你可以将分类归档页的路径改成类似 <strong>/cat/uncategorized/</strong>, 以满足个性化的需要')));
-        
-        /** 分类归档页前缀 */
-        $categoryPrefixValue = substr($this->options->routingTable['category']['url'], 0, -8);
-        $categoryPrefix = new Typecho_Widget_Helper_Form_Element_Text('categoryPrefix', NULL, $categoryPrefixValue,
-        _t('分类页'));
-        $categoryPrefix->input->setAttribute('class', 'mini');
-        $categoryPrefixWord = new Typecho_Widget_Helper_Layout('strong');
-        $categoryPrefixWord->html('/uncategorized/');
-        $categoryPrefix->input->getParent()->addItem($categoryPrefixWord);
-        $form->addInput($categoryPrefix);
-        
-        /** 标签归档页前缀 */
-        $tagPrefixValue = substr($this->options->routingTable['tag']['url'], 0, -8);
-        $tagPrefix = new Typecho_Widget_Helper_Form_Element_Text('tagPrefix', NULL, $tagPrefixValue,
-        _t('标签页'));
-        $tagPrefix->input->setAttribute('class', 'mini');
-        $tagPrefixWord = new Typecho_Widget_Helper_Layout('strong');
-        $tagPrefixWord->html('/typecho/');
-        $tagPrefix->input->getParent()->addItem($tagPrefixWord);
-        $form->addInput($tagPrefix);
-        
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $form->addItem($submit);
@@ -285,16 +262,6 @@ RewriteRule . {$basePath}index.php [L]
             $pageValue = false !== ($pos = strrpos($routingTable['page']['url'], '.')) ?
             substr($routingTable['page']['url'], 0, $pos) : rtrim($routingTable['page']['url'], '/');
             $routingTable['page']['url'] = $pageValue . $this->request->pageSuffix;
-            
-            $categoryPrefixValue = trim($this->request->categoryPrefix, '/');
-            $categoryPrefixValue = empty($categoryPrefixValue) ? '/category' : '/' . $categoryPrefixValue;
-            $routingTable['category']['url'] = $categoryPrefixValue . substr($routingTable['category']['url'], -8);
-            $routingTable['category_page']['url'] = $categoryPrefixValue . substr($routingTable['category_page']['url'], -23);
-            
-            $tagPrefixValue = trim($this->request->tagPrefix, '/');
-            $tagPrefixValue = empty($tagPrefixValue) ? '/tag' : '/' . $tagPrefixValue;
-            $routingTable['tag']['url'] = $tagPrefixValue . substr($routingTable['tag']['url'], -8);
-            $routingTable['tag_page']['url'] = $tagPrefixValue . substr($routingTable['tag_page']['url'], -23);
 
             if (isset($routingTable[0])) {
                 unset($routingTable[0]);
