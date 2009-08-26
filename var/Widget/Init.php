@@ -25,6 +25,9 @@ class Widget_Init extends Typecho_Widget
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
         
+        /** 初始化charset */
+        Typecho_Common::$config['charset'] = $options->charset;
+        
         /** 设置路径 */
         Typecho_Router::setPathInfo($this->request->getPathInfo());
         

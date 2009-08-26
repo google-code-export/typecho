@@ -63,6 +63,7 @@ class Typecho_Common
         'autoLoad'          =>  true,
         'exception'         =>  false,
         'exception_file'    =>  false,      //除了404页面以外的异常处理页
+        'charset'           =>  'UTF-8',
         'gpc'               =>  true
     );
 
