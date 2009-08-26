@@ -60,14 +60,10 @@ class Typecho_Common
      * @var array
      */
     public static $config = array(
-        'autoLoad'      =>  true,
-        'exception'     =>  false,
-        'gpc'           =>  true,
-        'timezone'      =>  'UTC',
-        'gzip'          =>  false,
-        'charset'       =>  'UTF-8',
-        'session'       =>  false,
-        'contentType'   =>  'text/html'
+        'autoLoad'          =>  true,
+        'exception'         =>  false,
+        'exception_file'    =>  false,      //除了404页面以外的异常处理页
+        'gpc'               =>  true
     );
 
     /**
@@ -281,7 +277,10 @@ class Typecho_Common
         
         $message = nl2br($message);
         
-        echo 
+        if (!empty(self::$config['exception_file'])) {
+            require_once self::$config['exception_file'];
+        } else {
+            echo 
 <<<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -345,6 +344,7 @@ class Typecho_Common
 </body>
 </html>
 EOF;
+        }
         
         exit;
     }
