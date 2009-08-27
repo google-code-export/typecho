@@ -130,7 +130,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @param integer $cid 内容id
      * @return void
      */
-    protected function unattach($cid)
+    protected function unAttach($cid)
     {
         $this->db->query($this->db->update('table.contents')->rows(array('order' => 0, 'status' => 'unattached'))
                 ->where('order = ? AND type = ?', $cid, 'attachment'));
@@ -331,6 +331,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 插入category */
         if ($categories) {
             foreach ($categories as $category) {
+                /** 如果分类不存在 */
+                if (!$this->db->fetchRow($this->db->select('mid')
+                ->from('table.metas')
+                ->where('mid = ?', $category)
+                ->limit(1))) {
+                    continue;
+                }
+            
                 $this->db->query($this->db->insert('table.relationships')
                 ->rows(array(
                     'mid'  =>   $category,
@@ -550,7 +558,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     ->where('cid = ?', $post));
                     
                     /** 解除附件关联 */
-                    $this->unattach($post);
+                    $this->unAttach($post);
                     
                     $deleteCount ++;
                 }

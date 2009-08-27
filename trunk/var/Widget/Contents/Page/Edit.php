@@ -201,7 +201,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                     ->where('cid = ?', $page));
                     
                     /** 解除附件关联 */
-                    $this->unattach($page);
+                    $this->unAttach($page);
+                    
+                    /** 解除自定义首页 */
+                    if ($page == $this->options->customHomePage) {
+                        $this->disableCustomHomePage();
+                    }
                     
                     $deleteCount ++;
                 }
