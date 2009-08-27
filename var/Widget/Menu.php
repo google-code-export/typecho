@@ -129,6 +129,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor'),
             array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor'),
             array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
+            array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('标签和分类'), _t('标签和分类'), 'manage-metas.php', 'editor'),
             array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
@@ -167,15 +168,41 @@ class Widget_Menu extends Typecho_Widget
         
         $this->_currentUrl = $this->request->makeUriByRequest();
         $childMenu = $this->_childMenu;
-        $match = 0;
         $adminUrl = $this->options->adminUrl;
         
         foreach ($childMenu as $parentKey => $parentVal) {
             foreach ($parentVal as $childKey => $childVal) {
                 $link = Typecho_Common::url($childVal[2], $adminUrl);
-                if (0 === strpos($this->_currentUrl, $link) && strlen($link) > $match) {
-                    $this->_currentParent =  $parentKey;
-                    $this->_currentChild =  $childKey;
+                
+                $currentParts = parse_url($this->_currentUrl);
+                $parts = parse_url($link);
+                
+                /** 精准比对 */
+                if ($currentParts['path'] == $parts['path']) {
+                    $validate = true;
+                    
+                    if (!empty($parts['query'])) {
+                        parse_str($parts['query'], $out);
+                        parse_str($currentParts['query'], $currentOut);
+                        
+                        if (!empty($out)) {
+                            if (!empty($currentOut)) {
+                                foreach ($out as $outKey => $outVal) {
+                                    if (!isset($currentOut[$outKey])) {
+                                        $validate = false;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $validate = false;
+                            }
+                        }
+                    }
+                    
+                    if ($validate) {
+                        $this->_currentParent =  $parentKey;
+                        $this->_currentChild =  $childKey;
+                    }
                 }
                 
                 if ('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true)) {

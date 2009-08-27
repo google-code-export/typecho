@@ -196,6 +196,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $deleteQuery->where('ownerId = ?', $this->user->uid);
         }
         
+        if (isset($this->request->cid)) {
+            $deleteQuery->where('cid = ?', $this->request->cid);
+        }
+        
         $deleteRows = $this->db->query($deleteQuery);
         
         /** 设置提示信息 */

@@ -57,6 +57,23 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     }
     
     /**
+     * 获取菜单标题
+     * 
+     * @access public
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        $content = $this->parentContent;
+        
+        if ($content) {
+            return _t('%s的评论', $content['title']);
+        }
+        
+        throw new Typecho_Widget_Exception(_t('内容不存在'), 404);
+    }
+    
+    /**
      * 执行函数
      * 
      * @access public

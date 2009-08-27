@@ -287,7 +287,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
                 $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
                 $content .= '<guid>' . $item['link'] . '</guid>' . self::EOL;
                 $content .= '<pubDate>' . $this->dateFormat($item['date']) . '</pubDate>' . self::EOL;
-                $content .= '<dc:creator>' . htmlspecialchars($item['author']->name) . '</dc:creator>';
+                $content .= '<dc:creator>' . htmlspecialchars($item['author']->screenName) . '</dc:creator>' . self::EOL;
                 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
@@ -355,7 +355,7 @@ xml:base="' . $this->_baseUrl . '"
                 $content .= '<updated>' . $this->dateFormat($item['date']) . '</updated>' . self::EOL;
                 $content .= '<published>' . $this->dateFormat($item['date']) . '</published>' . self::EOL;
                 $content .= '<author>
-    <name>' . $item['author']->name . '</name>
+    <name>' . $item['author']->screenName . '</name>
     <uri>' . $item['author']->url . '</uri>
 </author>' . self::EOL;
                 

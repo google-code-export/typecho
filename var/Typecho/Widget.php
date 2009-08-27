@@ -178,7 +178,7 @@ abstract class Typecho_Widget
             
             /** 初始化request */
             if (!empty($request)) {
-                $requestObject = new Typecho_Request($request);
+                $requestObject = new Typecho_Request();
                 $requestObject->setParams($request);
             } else {
                 $requestObject = Typecho_Request::getInstance();

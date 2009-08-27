@@ -1438,9 +1438,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                     'date'      =>  $comments->created,
                     'link'      =>  $comments->permalink,
                     'author'    =>  (object) array(
-                        'name'  =>  $comments->author,
-                        'url'   =>  $comments->url,
-                        'mail'  =>  $comments->mail
+                        'screenName'  =>  $comments->author,
+                        'url'         =>  $comments->url,
+                        'mail'        =>  $comments->mail
                     ),
                     'excerpt'   =>  strip_tags($comments->content),
                     'suffix'    =>  $suffix

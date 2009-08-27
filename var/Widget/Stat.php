@@ -252,6 +252,48 @@ class Widget_Stat extends Typecho_Widget
     }
     
     /**
+     * 获取当前文章显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___currentPublishedCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'approved')
+                    ->where('table.comments.cid = ?', $this->request->cid))->num;
+    }
+    
+    /**
+     * 获取当前文章显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___currentWaitingCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'waiting')
+                    ->where('table.comments.cid = ?', $this->request->cid))->num;
+    }
+    
+    /**
+     * 获取当前文章显示的评论数目
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___currentSpamCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.status = ?', 'spam')
+                    ->where('table.comments.cid = ?', $this->request->cid))->num;
+    }
+    
+    /**
      * 获取未归档附件数目
      * 
      * @access protected
