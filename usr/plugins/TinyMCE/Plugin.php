@@ -113,7 +113,7 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
     
     init_instance_callback : function(ed) {
         
-        ed.setContent(\"" . addslashes($post->content) . "\");
+        ed.setContent(\"" . str_replace("\n", "\\n", addslashes($post->content)) . "\");
         "
         . ($options->autoSave ? 
         "autoSave = new Typecho.autoSave($('text').getParent('form').getProperty('action'), {
