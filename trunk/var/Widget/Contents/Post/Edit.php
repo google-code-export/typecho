@@ -77,6 +77,24 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
     
     /**
+     * 获取文章内容
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___content()
+    {
+        /** 编辑文章做单独插件挂载点 */
+        $content = $this->plugin()->trigger($plugged)->content($this->text);
+        
+        if (!$plugged) {
+            $content = Typecho_Common::cutParagraph($content);
+        }
+        
+        return $this->plugin()->contentEx($content);
+    }
+    
+    /**
      * 根据提交值获取created字段值
      * 
      * @access protected
