@@ -542,4 +542,23 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="http://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
         }
     }
+    
+    /**
+     * 升级至9.9.2
+     * 修改contents表的text字段类型为longtext(仅限mysql, pgsql和sqlite都是不限制长度的)
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_9_2($db, $options)
+    {
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+        
+        if (false !== strpos($adapterName, 'Mysql')) {
+            $db->query("ALTER TABLE  `{$prefix}contents` CHANGE  `text`  `text` LONGTEXT NULL DEFAULT NULL COMMENT  '内容文字'", Typecho_Db::WRITE);
+        }
+    }
 }
