@@ -4,7 +4,8 @@
  * 
  * @package Dewplayer
  * @author qining
- * @version 1.0.0
+ * @version 1.0.1
+ * @dependence 9.9.2-*
  * @link http://typecho.org
  */
 class FlashMp3Player_Plugin implements Typecho_Plugin_Interface
@@ -17,16 +18,13 @@ class FlashMp3Player_Plugin implements Typecho_Plugin_Interface
      * @throws Typecho_Plugin_Exception
      */
     public static function activate()
-    {
-        /** 以下三个为编辑器接口 */
-        Typecho_Plugin::factory('Widget_Ajax')->toVisualEditor = array('FlashMp3Player_Plugin', 'toVisualEditor');
-        Typecho_Plugin::factory('Widget_Ajax')->toCodeEditor = array('FlashMp3Player_Plugin', 'toCodeEditor');
-        
+    {        
         //离线浏览器都是所见即所得模式
         Typecho_Plugin::factory('Widget_XmlRpc')->fromOfflineEditor = array('FlashMp3Player_Plugin', 'toCodeEditor');
         
         /** 前端输出处理接口 */
-        Typecho_Plugin::factory('Widget_Abstract_Contents')->filter = array('FlashMp3Player_Plugin', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('FlashMp3Player_Plugin', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('FlashMp3Player_Plugin', 'parse');
     }
     
     /**
@@ -93,18 +91,19 @@ class FlashMp3Player_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($value, $widget, $lastResult)
+    public static function parse($text, $widget, $lastResult)
     {
-        $value = empty($lastResult) ? $value : $lastResult;
+        $text = empty($lastResult) ? $text : $lastResult;
+        
         if ($widget instanceof Widget_Archive) {
             $swfUrl = Typecho_Common::url('FlashMp3Player/swf/dewplayer.swf', Helper::options()->pluginUrl);
-            $value['text'] = preg_replace("/<(mp3)>(.*?)<\/\\1>/is", 
+            $text = preg_replace("/<(mp3)>(.*?)<\/\\1>/is", 
             "<object class=\"typecho-plugin\" type=\"application/x-shockwave-flash\" data=\"{$swfUrl}?mp3=\\2\" width=\"200\" height=\"20\">
 <param name=\"movie\" value=\"{$swfUrl}?mp3=\\2\" />
 </object>",
-            $value['text']);
+            $text);
         }
         
-        return $value;
+        return $text;
     }
 }

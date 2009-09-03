@@ -4,7 +4,7 @@
  * 
  * @package Creole 解析器（改进版）
  * @author 明城<i.feelinglucky@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @link http://www.gracecode.com/
  */
 
@@ -64,7 +64,7 @@ class Creole_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($text, $lastResult) {
+    public static function parse($text, $widget, $lastResult) {
         $text = empty($lastResult) ? $text : $lastResult;
         $creole_parse = new Creole_Wiki;
         return $creole_parse->transform(trim($text));

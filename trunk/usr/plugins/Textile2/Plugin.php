@@ -4,7 +4,8 @@
  * 
  * @package Textile 2 (Improved)
  * @author Jim Riggs
- * @version 2.1
+ * @version 2.1.1
+ * @dependence 9.9.2-*
  * @link http://jimandlissa.com/project/textilephp
  */
  
@@ -94,9 +95,10 @@ class Textile2_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($text, $lastResult)
+    public static function parse($text, $widget, $lastResult)
     {
         $text = empty($lastResult) ? $text : $lastResult;
+        
         $settings = Helper::options()->plugin('Textile2');
         
         if ($settings->version == 'Textile') {

@@ -4,7 +4,8 @@
  * 
  * @package Simple Code 
  * @author qining
- * @version 1.0.1
+ * @version 1.0.2
+ * @dependence 9.9.2-*
  * @link http://typecho.org
  */
 class SimpleCode implements Typecho_Plugin_Interface
@@ -19,7 +20,7 @@ class SimpleCode implements Typecho_Plugin_Interface
     public static function activate()
     {
         Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('SimpleCode', 'parse');
-        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerpt = array('SimpleCode', 'parse');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('SimpleCode', 'parse');
         Typecho_Plugin::factory('Widget_Abstract_Comments')->contentEx = array('SimpleCode', 'parse');
     }
     
@@ -69,9 +70,14 @@ class SimpleCode implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($text, $lastResult)
+    public static function parse($text, $widget, $lastResult)
     {
         $text = empty($lastResult) ? $text : $lastResult;
-        return preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $text);
+        
+        if ($widget instanceof Widget_Archive) {
+            return preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $text);
+        } else {
+            return $text;
+        }
     }
 }

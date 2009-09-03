@@ -78,12 +78,12 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
         
-        $text = $this->plugin(__CLASS__)->trigger($plugged)->content($text);
+        $text = $this->plugin(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
             $text = Typecho_Common::cutParagraph($text);
         }
         
-        return $this->plugin(__CLASS__)->contentEx($text);
+        return $this->plugin(__CLASS__)->contentEx($text, $this);
     }
     
     /**
