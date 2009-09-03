@@ -4,7 +4,8 @@
  * 
  * @package tinyMCE Editor 
  * @author qining
- * @version 1.0.0
+ * @version 1.0.1
+ * @dependence 9.9.2-*
  * @link http://typecho.org
  */
 class TinyMCE_Plugin implements Typecho_Plugin_Interface
