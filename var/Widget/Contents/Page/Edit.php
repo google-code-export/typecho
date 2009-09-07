@@ -205,7 +205,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                     
                     /** 解除自定义首页 */
                     if ($page == $this->options->customHomePage) {
-                        $this->disableCustomHomePage();
+                        $this->db->query($this->db->update('table.options')
+                        ->rows(array('value' => 0))
+                        ->where('name = ?', 'customHomePage'));
                     }
                     
                     $deleteCount ++;
@@ -247,46 +249,6 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     }
     
     /**
-     * 设置自定义首页
-     * 
-     * @access public
-     * @return void
-     */
-    public function customHomePage()
-    {
-        $cid = $this->request->filter('int')->cid;
-        
-        $this->db->query($this->db->update('table.options')
-            ->rows(array('value' => $cid))
-            ->where('name = ?', 'customHomePage'));
-        
-        /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set(_t('"%s" 已经被设置为自定义首页', $this->title), NULL, 'success');
-        
-        /** 返回原网页 */
-        $this->response->goBack();
-    }
-    
-    /**
-     * 取消设置自定义首页
-     * 
-     * @access public
-     * @return void
-     */
-    public function disableCustomHomePage()
-    {
-        $this->db->query($this->db->update('table.options')
-            ->rows(array('value' => 0))
-            ->where('name = ?', 'customHomePage'));
-        
-        /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set(_t('自定义首页被取消'), NULL, 'success');
-        
-        /** 返回原网页 */
-        $this->response->goBack();
-    }
-    
-    /**
      * 绑定动作
      * 
      * @access public
@@ -298,8 +260,6 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->on($this->request->is('do=update'))->updatePage();
         $this->on($this->request->is('do=delete'))->deletePage();
         $this->on($this->request->is('do=sort'))->sortPage();
-        $this->on($this->request->is('do=customHomePage'))->customHomePage();
-        $this->on($this->request->is('do=disableCustomHomePage'))->disableCustomHomePage();
         $this->response->redirect($this->options->adminUrl);
     }
 }

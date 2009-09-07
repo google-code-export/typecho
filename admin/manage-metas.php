@@ -34,10 +34,10 @@ include 'menu.php';
                     <table class="typecho-list-table draggable">
                         <colgroup>
                             <col width="25"/>
+                            <col width="270"/>
+                            <col width="30"/>
                             <col width="130"/>
                             <col width="50"/>
-                            <col width="130"/>
-                            <col width="170"/>
                             <col width="65"/>
                         </colgroup>
                         <thead>
@@ -46,7 +46,7 @@ include 'menu.php';
                                 <th><?php _e('名称'); ?></th>
                                 <th> </th>
                                 <th><?php _e('缩略名'); ?></th>
-                                <th><?php _e('描述'); ?></th>
+                                <th> </th>
                                 <th class="typecho-radius-topright"><?php _e('文章数'); ?></th>
                             </tr>
                         </thead>
@@ -57,15 +57,17 @@ include 'menu.php';
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                 <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
+                                <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
+                                </td>
+                                <td><?php $categories->slug(); ?></td>
+                                <td>
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="balloon right"><?php _e('默认'); ?></span>
                                 <?php else: ?>
                                 <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
-                                <td><?php $categories->slug(); ?></td>
-                                <td><?php $categories->description(); ?></td>
-                                <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $categories->permalink(); ?>"><?php $categories->count(); ?></a></td>
+                                <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
                             </tr>
                             <?php endwhile; ?>
                             <?php else: ?>

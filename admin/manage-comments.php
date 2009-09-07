@@ -12,9 +12,9 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!$hasArchive && (!isset($request->status) || 'approved' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
+                    <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                     . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
-                    <li<?php if(!$hasArchive && ('waiting' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'
+                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'
                     . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('待审核'); ?>
                     <?php if('on' != $request->get('__typecho_all_comments') && $stat->myWaitingCommentsNum > 0 && !isset($request->cid)): ?> 
                         <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
@@ -24,7 +24,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <span class="balloon"><?php $stat->currentWaitingCommentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                    <li<?php if(!$hasArchive && ('spam' == $request->get('status'))): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'
+                    <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'
                     . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('垃圾'); ?>
                     <?php if('on' != $request->get('__typecho_all_comments') && $stat->mySpamCommentsNum > 0 && !isset($request->cid)): ?> 
                         <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>

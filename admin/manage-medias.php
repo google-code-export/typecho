@@ -49,8 +49,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="25"/>
                         <col width="50"/>
                         <col width="20"/>
-                        <col width="255"/>
-                        <col width="50"/>
+                        <col width="275"/>
+                        <col width="30"/>
                         <col width="120"/>
                         <col width="220"/>
                         <col width="150"/>
@@ -78,7 +78,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                             <td>
                             <?php if ('publish' == $attachments->status): ?>
-                            <a class="balloon-button right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><?php _e('浏览'); ?></a>
+                            <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
                             <td><?php $attachments->author(); ?></td>

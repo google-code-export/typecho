@@ -42,12 +42,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="305"/>
-                        <col width="50"/>
-                        <col width="140"/>
+                        <col width="355"/>
+                        <col width="30"/>
+                        <col width="180"/>
                         <col width="120"/>
                         <col width="150"/>
-                        <col width="50"/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -57,8 +56,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th> </th>
                             <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th><?php _e('发布日期'); ?></th>
-                            <th class="typecho-radius-topright"> </th>
+                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,19 +69,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
                             <td>
                             <?php if ('publish' == $pages->status): ?>
-                            <a class="balloon-button right hidden-by-mouse" href="<?php $pages->permalink(); ?>"><?php _e('浏览'); ?></a>
+                            <a class="right hidden-by-mouse" href="<?php $pages->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $pages->title); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
                             <td><?php $pages->slug(); ?></td>
                             <td><?php $pages->author(); ?></td>
                             <td><?php $pages->dateWord(); ?></td>
-                            <td>
-                            <?php if ($options->customHomePage == $pages->cid): ?>
-                                <a class="balloon-button right" href="<?php $options->index('/action/contents-page-edit?do=disableCustomHomePage'); ?>"><?php _e('取消'); ?></a>
-                                <?php else: ?>
-                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('/action/contents-page-edit?do=customHomePage&cid=' . $pages->cid); ?>"><?php _e('首页'); ?></a>
-                            <?php endif; ?>
-                            </td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>

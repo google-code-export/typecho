@@ -62,9 +62,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="25"/>
                         <col width="50"/>
                         <col width="320"/>
-                        <col width="50"/>
-                        <col width="100"/>
-                        <col width="195"/>
+                        <col width="30"/>
+                        <col width="110"/>
+                        <col width="205"/>
                         <col width="150"/>
                     </colgroup>
                     <thead>
@@ -88,7 +88,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>
-                            <a class="balloon-button right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><?php _e('浏览'); ?></a>
+                            <a class="right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $posts->title); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
                             <td><?php $posts->author(); ?></td>
@@ -98,7 +98,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
+                        	<td colspan="7"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
