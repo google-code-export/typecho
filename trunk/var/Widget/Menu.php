@@ -106,7 +106,7 @@ class Widget_Menu extends Typecho_Widget
         
         $this->_childMenu =  array(
         array(
-            array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor'),
+            array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor')
         ),
         array(
             array(_t('概要'), _t('网站概要'), 'index.php', 'subscriber'),
@@ -183,18 +183,22 @@ class Widget_Menu extends Typecho_Widget
                     
                     if (!empty($parts['query'])) {
                         parse_str($parts['query'], $out);
-                        parse_str($currentParts['query'], $currentOut);
-                        
-                        if (!empty($out)) {
-                            if (!empty($currentOut)) {
-                                foreach ($out as $outKey => $outVal) {
-                                    if (!isset($currentOut[$outKey])) {
-                                        $validate = false;
-                                        break;
+                        if (empty($currentParts['query'])) {
+                            $validate = false;
+                        } else {
+                            parse_str($currentParts['query'], $currentOut);
+                            
+                            if (!empty($out)) {
+                                if (!empty($currentOut)) {
+                                    foreach ($out as $outKey => $outVal) {
+                                        if (!isset($currentOut[$outKey])) {
+                                            $validate = false;
+                                            break;
+                                        }
                                     }
+                                } else {
+                                    $validate = false;
                                 }
-                            } else {
-                                $validate = false;
                             }
                         }
                     }
