@@ -29,7 +29,7 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
+        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize));
     }
 
     /**
