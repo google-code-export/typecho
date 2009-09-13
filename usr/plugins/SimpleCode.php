@@ -74,7 +74,7 @@ class SimpleCode implements Typecho_Plugin_Interface
     {
         $text = empty($lastResult) ? $text : $lastResult;
         
-        if ($widget instanceof Widget_Archive) {
+        if ($widget instanceof Widget_Archive || $widget instanceof Widget_Abstract_Comments) {
             return preg_replace_callback("/<code(\s*[^>]*)>(.*?)<\/code>/is", array('SimpleCode', 'parseCallback'), $text);
         } else {
             return $text;
