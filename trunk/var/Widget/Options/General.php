@@ -48,19 +48,6 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $timezone = new Typecho_Widget_Helper_Form_Element_Select('timezone', array('28800' => _t('中华人民共和国')), $this->options->timezone, _t('时区'));
         $form->addInput($timezone);
         
-        /** 自定义首页 */
-        $pagesResult = $this->widget('Widget_Contents_Page_List');
-        $pages = array(0 => _t('无'));
-        
-        while ($pagesResult->next()) {
-            $pages[$pagesResult->cid] = $pagesResult->title;
-        }
-        
-        if ($pages) {
-            $customHomePage = new Typecho_Widget_Helper_Form_Element_Select('customHomePage', $pages, $this->options->customHomePage, _t('自定义首页'));
-            $form->addInput($customHomePage);
-        }
-        
         /** gzip */
         $gzip = new Typecho_Widget_Helper_Form_Element_Radio('gzip', array('0' => _t('不启用'), '1' => _t('启用')), $this->options->gzip, _t('是否启用gzip'),
         _t('启用gzip压缩可以减小网页尺寸大小, 从而降低下载时间, 但是它会消耗一部分服务器附载.'));
@@ -91,7 +78,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
         
-        $settings = $this->request->from('title', 'description', 'keywords', 'timezone', 'gzip', 'customHomePage', 'attachmentTypes');
+        $settings = $this->request->from('title', 'description', 'keywords', 'timezone', 'gzip', 'attachmentTypes');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
