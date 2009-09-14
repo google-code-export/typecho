@@ -236,8 +236,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___registerAction()
     {
-        return Typecho_Router::url('do', array('action' => 'register', 'widget' => 'Register'), 
-        Typecho_Common::url('index.php', $this->siteUrl));
+        return Typecho_Router::url('do', array('action' => 'register', 'widget' => 'Register'), $this->index);
     }
     
     /**
@@ -359,6 +358,18 @@ class Widget_Options extends Typecho_Widget
     public function index($path = NULL)
     {
         echo Typecho_Common::url($path, $this->index);
+    }
+    
+    /**
+     * 输出自定义页面链接
+     * 
+     * @access public
+     * @param string $slug
+     * @return void
+     */
+    public function customPage($slug)
+    {
+        echo Typecho_Router::url('page', array('slug' => $slug), $this->index);
     }
     
     /**
