@@ -24,6 +24,7 @@ class Widget_Do extends Typecho_Widget
         'ajax'                      =>  'Widget_Ajax',
         'login'                     =>  'Widget_Login',
         'logout'                    =>  'Widget_Logout',
+        'register'                  =>  'Widget_Register',
         'upgrade'                   =>  'Widget_Upgrade',
         'upload'                    =>  'Widget_Upload',
         'service'                   =>  'Widget_Service',

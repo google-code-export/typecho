@@ -888,13 +888,20 @@ EOF;
      * 
      * @access public
      * @param integer $length 字符串长度
+     * @param string $specialChars 是否有特殊字符
      * @return string
      */
-    public static function randString($length)
+    public static function randString($length, $specialChars = false)
     {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        if ($special_chars) {
+			$chars .= '!@#$%^&*()';
+        }
+    
         $result = '';
+        $max = strlen($chars) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $result .= chr(rand(32, 126));
+            $result .= $chars[rand(0, $max)];
         }
         return $result;
     }

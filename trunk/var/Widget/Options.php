@@ -218,6 +218,29 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 获取注册地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___registerUrl()
+    {
+        return Typecho_Common::url('register.php', $this->adminUrl);
+    }
+    
+    /**
+     * 获取登录提交地址
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___registerAction()
+    {
+        return Typecho_Router::url('do', array('action' => 'register', 'widget' => 'Register'), 
+        Typecho_Common::url('index.php', $this->siteUrl));
+    }
+    
+    /**
      * 获取个人档案地址
      * 
      * @access protected

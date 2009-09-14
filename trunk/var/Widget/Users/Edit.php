@@ -81,72 +81,6 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     }
     
     /**
-     * 判断用户名称是否存在
-     * 
-     * @access public
-     * @param string $name 用户名称
-     * @return boolean
-     */
-    public function nameExists($name)
-    {
-        $select = $this->db->select()
-        ->from('table.users')
-        ->where('name = ?', $name)
-        ->limit(1);
-        
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-
-        $user = $this->db->fetchRow($select);
-        return $user ? false : true;
-    }
-    
-    /**
-     * 判断电子邮件是否存在
-     * 
-     * @access public
-     * @param string $mail 电子邮件
-     * @return boolean
-     */
-    public function mailExists($mail)
-    {
-        $select = $this->db->select()
-        ->from('table.users')
-        ->where('mail = ?', $mail)
-        ->limit(1);
-        
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-
-        $user = $this->db->fetchRow($select);
-        return $user ? false : true;
-    }
-    
-    /**
-     * 判断用户昵称是否存在
-     * 
-     * @access public
-     * @param string $screenName 昵称
-     * @return boolean
-     */
-    public function screenNameExists($screenName)
-    {
-        $select = $this->db->select()
-        ->from('table.users')
-        ->where('screenName = ?', $screenName)
-        ->limit(1);
-        
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-    
-        $user = $this->db->fetchRow($select);
-        return $user ? false : true;
-    }
-    
-    /**
      * 生成表单
      * 
      * @access public
@@ -239,7 +173,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         
         if ('insert' == $action) {
             $name->addRule('required', _t('必须填写用户名称'));
-            $name->addRule(array($this, 'nameExists'), _t('用户名称已经存在'));
+            $name->addRule(array($this, 'nameExists'), _t('用户名已经存在'));
             $password->label(_t('用户密码*'));
             $confirm->label(_t('用户密码确认*'));
             $password->addRule('required', _t('必须填写密码'));
