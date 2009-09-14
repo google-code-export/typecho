@@ -106,7 +106,8 @@ class Widget_Menu extends Typecho_Widget
         
         $this->_childMenu =  array(
         array(
-            array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor')
+            array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor'),
+            array(_t('注册'), _t('注册到%s', $this->options->title), 'register.php', 'visitor')
         ),
         array(
             array(_t('概要'), _t('网站概要'), 'index.php', 'subscriber'),
@@ -116,7 +117,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('外观'), _t('网站外观'), 'themes.php', 'administrator'),
             array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), 'theme-editor.php', 'administrator', true),
             array(_t('升级'), _t('升级程序'), 'upgrade.php', 'administrator', true),
-            array(_t('欢迎'), _t('欢迎使用'), 'welcome.php', 'contributor', true)
+            array(_t('欢迎'), _t('欢迎使用'), 'welcome.php', 'subscriber', true)
         ),
         array(
             array(_t('撰写文章'), _t('撰写新文章'), 'write-post.php', 'contributor'),

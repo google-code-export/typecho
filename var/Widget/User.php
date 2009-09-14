@@ -112,13 +112,24 @@ class Widget_User extends Typecho_Widget
      */
     public function login($name, $password, $temporarily = false, $expire = 0)
     {
+        //插件接口
+        $result = $this->plugin()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
+        if ($loginPluggable) {
+            return $result;
+        }
+    
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->db->select()
         ->from('table.users')
         ->where('name = ?', $name)
         ->limit(1));
         
-        if ($user && Typecho_Common::hashValidate($password, $user['password'])) {
+        $hashValidate = $this->plugin()->trigger($hashPluggable)->hashValidate($password, $user['password']);
+        if (!$hashPluggable) {
+            $hashCheck = Typecho_Common::hashValidate($password, $user['password']);
+        }
+        
+        if ($user && $hashValidate) {
             
             if (!$temporarily) {
                 $authCode = sha1(Typecho_Common::randString(20));

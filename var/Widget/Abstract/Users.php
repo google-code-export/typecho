@@ -20,6 +20,72 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
+     * 判断用户名称是否存在
+     * 
+     * @access public
+     * @param string $name 用户名称
+     * @return boolean
+     */
+    public function nameExists($name)
+    {
+        $select = $this->db->select()
+        ->from('table.users')
+        ->where('name = ?', $name)
+        ->limit(1);
+        
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
+        }
+
+        $user = $this->db->fetchRow($select);
+        return $user ? false : true;
+    }
+    
+    /**
+     * 判断电子邮件是否存在
+     * 
+     * @access public
+     * @param string $mail 电子邮件
+     * @return boolean
+     */
+    public function mailExists($mail)
+    {
+        $select = $this->db->select()
+        ->from('table.users')
+        ->where('mail = ?', $mail)
+        ->limit(1);
+        
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
+        }
+
+        $user = $this->db->fetchRow($select);
+        return $user ? false : true;
+    }
+    
+    /**
+     * 判断用户昵称是否存在
+     * 
+     * @access public
+     * @param string $screenName 昵称
+     * @return boolean
+     */
+    protected function screenNameExists($screenName)
+    {
+        $select = $this->db->select()
+        ->from('table.users')
+        ->where('screenName = ?', $screenName)
+        ->limit(1);
+        
+        if ($this->request->uid) {
+            $select->where('uid <> ?', $this->request->uid);
+        }
+    
+        $user = $this->db->fetchRow($select);
+        return $user ? false : true;
+    }
+
+    /**
      * 获取页面偏移
      * 
      * @access protected
