@@ -42,6 +42,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_total = false;
     
     /**
+     * 标记是否为从外部调用
+     * 
+     * @access private
+     * @var boolean
+     */
+    private $_invokeFromOutside = false;
+    
+    /**
      * 当前页
      * 
      * @access private
@@ -184,7 +192,14 @@ class Widget_Archive extends Widget_Abstract_Contents
         parent::__construct($request, $response, $params);
         
         $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
-        'type' => Typecho_Router::$current));
+        'type' => NULL));
+        
+        /** 用于判断是路由调用还是外部调用 */
+        if (NULL == $this->parameter->type) {
+            $this->parameter->type = Typecho_Router::$current;
+        } else {
+            $this->_invokeFromOutside = true;
+        }
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
@@ -967,7 +982,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
         
         /** 支持自定义首页 */
-        if ('index' == $this->parameter->type && empty($this->_feed) && $this->renderCustomIndex()) {
+        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type &&
+        empty($this->_feed) && $this->checkCustomIndex()) {
             //自定义首页标志
             $this->_archiveCustom = true;
             
@@ -1340,22 +1356,12 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access public
      * @return void
      */
-    public function renderCustomIndex()
+    public function checkCustomIndex()
     {
-        /** 添加Pingback */
-        $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
         $themeFile = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/custom/index.php';
         
         if (file_exists($themeFile)) {
-            /** 挂接插件 */
-            $this->plugin()->beforeRender($this);
-            
-            /** 输出模板 */
-            require_once $themeFile;
-            
-            /** 挂接插件 */
-            $this->plugin()->afterRender($this);
-            
+            $this->_themeFile = '/custom/index.php';
             return true;
         }
         
@@ -1377,7 +1383,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         //~ 自定义模板
         if (!empty($this->_themeFile)) {
-            if (file_exists($themeDir . $this->_themeFile)) {
+            if ($this->_archiveCustom || file_exists($themeDir . $this->_themeFile)) {
                 $validated = true;
             }
         } else if (!empty($this->_archiveType)) {
