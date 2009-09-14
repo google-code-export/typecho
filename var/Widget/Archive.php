@@ -982,7 +982,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
         
         /** 支持自定义首页 */
-        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type &&
+        if (!$this->_invokeFromOutside && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type) &&
         empty($this->_feed) && $this->checkCustomIndex()) {
             //自定义首页标志
             $this->_archiveCustom = true;
@@ -1079,7 +1079,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $page 页面链接
      * @return void
      */
-    public function pageLink($word = '&laquo; Previous Entries', $page = 'render')
+    public function pageLink($word = '&laquo; Previous Entries', $page = 'prev')
     {
         if (empty($this->_pageNav)) {
             $query = Typecho_Router::url($this->parameter->type . 
