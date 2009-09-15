@@ -561,4 +561,34 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             $db->query("ALTER TABLE  `{$prefix}contents` CHANGE  `text`  `text` LONGTEXT NULL DEFAULT NULL COMMENT  '内容文字'", Typecho_Db::WRITE);
         }
     }
+    
+    /**
+     * 升级至9.9.15
+     * 优化路由表结构
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_9_15($db, $options)
+    {
+        /** 增加路由 */
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        $do = $routingTable['do'];
+        unset($routingTable['do']);
+
+        $pre = array_slice($routingTable, 0, 1);
+        $next = array_slice($routingTable, 1);
+
+        $routingTable = array_merge($pre, array('do' => $do), $next);
+
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+    }
 }
