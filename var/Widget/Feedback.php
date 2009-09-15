@@ -125,7 +125,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 评论完成接口 */
         $this->plugin()->finishComment($this);
         
-        $this->response->goBack($this->theId);
+        $this->response->goBack('#' . $this->theId);
     }
     
     /**
