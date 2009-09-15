@@ -982,8 +982,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
         
         /** 支持自定义首页 */
-        if (!$this->_invokeFromOutside && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type) &&
-        empty($this->_feed) && $this->checkCustomIndex()) {
+        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type && empty($this->_feed) && $this->checkCustomIndex()) {
             //自定义首页标志
             $this->_archiveCustom = true;
             
