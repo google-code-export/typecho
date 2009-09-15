@@ -178,7 +178,7 @@ RewriteRule . {$basePath}index.php [L]
         $this->options->rewrite, _t('是否使用地址重写功能'), _t('地址重写即rewrite功能是某些服务器软件提供的优化内部连接的功能.<br />
         打开此功能可以让你的链接看上去完全是静态地址.'));
         
-        $errorStr = _t('无法启用重写功能, 请检查你的服务器设置');
+        $errorStr = _t('重写功能检测失败, 请检查你的服务器设置');
         
         /** 如果是apache服务器, 可能存在无法写入.htaccess文件的现象 */
         if (((isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache'))
@@ -187,6 +187,8 @@ RewriteRule . {$basePath}index.php [L]
             $errorStr .= '<br /><strong>' . _t('我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.
             请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
         }
+        
+        $errorStr = _t('<br />如果你仍然想启用此功能, <a href="%s">请点击这里</a>', Typecho_Common::url('index.php/action/options-permalink?do=enableRewriteAnyway', $this->options->siteUrl));
         
         $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
         $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <strong><small>/archives/{cid}/</small></strong>', 
@@ -281,6 +283,22 @@ RewriteRule . {$basePath}index.php [L]
         }
         $this->response->goBack();
     }
+    
+    /**
+     * 强行打开rewrite
+     * 
+     * @access public
+     * @return void
+     */
+    public function enableRewriteAnyway()
+    {
+        $db->query($db->update('table.options')
+                ->rows(array('value' => 1))
+                ->where('name = ?', 'rewrite'));
+                
+        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->response->goBack();
+    }
 
     /**
      * 绑定动作
@@ -291,6 +309,7 @@ RewriteRule . {$basePath}index.php [L]
     public function action()
     {
         $this->user->pass('administrator');
+        $this->on($this->request->isGet() && $this->request->is('do=enableRewriteAnyway'))->enableRewriteAnyway();
         $this->on($this->request->isPost())->updatePermalinkSettings();
         $this->response->redirect($this->options->adminUrl);
     }
