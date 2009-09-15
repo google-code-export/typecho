@@ -62,6 +62,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         /** 跳转验证后地址 */
         if (NULL != $this->request->referer) {
             $this->response->redirect($this->request->referer);
+        } else if (!$this->user->pass('contributor')) {
+            /** 不允许普通用户直接跳转后台 */
+            $this->response->redirect($this->options->siteUrl);
         } else {
             $this->response->redirect($this->options->adminUrl);
         }
