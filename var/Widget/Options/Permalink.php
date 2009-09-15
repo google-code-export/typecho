@@ -299,9 +299,7 @@ RewriteRule . {$basePath}index.php [L]
      */
     public function enableRewriteAnyway()
     {
-        $db->query($db->update('table.options')
-                ->rows(array('value' => 1))
-                ->where('name = ?', 'rewrite'));
+        $this->update(array('value' => 1), $this->db->sql()->where('name = ?', 'rewrite'));
                 
         $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
         $this->response->goBack();
