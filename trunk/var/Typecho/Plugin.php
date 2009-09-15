@@ -377,7 +377,7 @@ class Typecho_Plugin
         $minVersion = str_replace(array('*', '?'), array('9999', '9'), $minVersion);
         $maxVersion = str_replace(array('*', '?'), array('9999', '9'), $maxVersion);
         
-        if (version_compare($version, $minVersion, '>=') && version_compare($version, $minVersion, '<=')) {
+        if (version_compare($version, $minVersion, '>=') && version_compare($version, $maxVersion, '<=')) {
             return true;
         }
         
