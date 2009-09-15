@@ -40,6 +40,8 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         
         /** 截获验证异常 */
         if ($error = $validator->run($this->request->from('name', 'password'))) {
+            Typecho_Cookie::set('__typecho_remember_name', $this->request->name);
+        
             /** 设置提示信息 */
             $this->widget('Widget_Notice')->set($error);
             $this->response->goBack();

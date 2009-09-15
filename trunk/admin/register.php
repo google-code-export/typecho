@@ -1,6 +1,11 @@
 <?php
 include 'common.php';
 include 'header.php';
+
+$rememberName = Typecho_Cookie::get('__typecho_remember_name');
+$rememberMail = Typecho_Cookie::get('__typecho_remember_mail');
+Typecho_Cookie::delete('__typecho_remember_name');
+Typecho_Cookie::delete('__typecho_remember_mail');
 ?>
 <div class="body body-950">
     <div class="container">
@@ -16,8 +21,8 @@ include 'header.php';
                     </ul>
                     </div>
                     <?php endif; ?>
-                    <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" id="name" name="name" value="<?php echo Typecho_Cookie::get('__typecho_remember_name'); ?>" class="text" /></p>
-                    <p><label for="mail"><?php _e('电子邮件'); ?>:</label> <input type="text" id="mail" name="mail" value="<?php echo Typecho_Cookie::get('__typecho_remember_mail'); ?>" class="text" /></p>
+                    <p><label for="name"><?php _e('用户名'); ?>:</label> <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" class="text" /></p>
+                    <p><label for="mail"><?php _e('电子邮件'); ?>:</label> <input type="text" id="mail" name="mail" value="<?php echo $rememberMail; ?>" class="text" /></p>
                     <p class="submit">
                     <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('记住我'); ?></label>
                     <button type="submit"><?php _e('注册'); ?></button>

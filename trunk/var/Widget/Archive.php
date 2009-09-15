@@ -1291,11 +1291,17 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 
      * @access public
      * @param string $cookieName 已经记忆的cookie名称
+     * @param string $clear 及时清理cookie
      * @return string
      */
-    public function remember($cookieName)
+    public function remember($cookieName, $clear = false)
     {
-        echo Typecho_Cookie::get('__typecho_remember_' . $cookieName);
+        $value = Typecho_Cookie::get('__typecho_remember_' . $cookieName);
+        if ($clear) {
+            Typecho_Cookie::delete('__typecho_remember_' . $cookieName);
+        }
+        
+        echo htmlspecialchars($value);
     }
     
     /**
