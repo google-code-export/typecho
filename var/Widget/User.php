@@ -126,7 +126,7 @@ class Widget_User extends Typecho_Widget
         
         $hashValidate = $this->plugin()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
-            $hashCheck = Typecho_Common::hashValidate($password, $user['password']);
+            $hashValidate = Typecho_Common::hashValidate($password, $user['password']);
         }
         
         if ($user && $hashValidate) {
