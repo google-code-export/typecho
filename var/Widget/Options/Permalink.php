@@ -113,32 +113,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
                 }
             }
             
-            if ($client) {
-                /** 发送一个rewrite地址请求 */
-                $client->setData(array('do' => 'remoteCallback'))
-                ->setHeader('User-Agent', $this->options->generator)
-                ->send(Typecho_Common::url('/action/ajax', $this->options->siteUrl));
-                
-                if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
-                    return true;
-                }
-            }
-            
-            if (false !== $hasWrote) {
-                unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
-                
-                //增强兼容性,使用wordpress的redirect式rewrite规则,虽然效率有点地下,但是对fastcgi模式兼容性较好
-                $hasWrote = file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase {$basePath}
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . {$basePath}index.php [L]
-</IfModule>");
-                
-                //再次进行验证
-                $client = Typecho_Http_Client::get();
-                
+            try {
                 if ($client) {
                     /** 发送一个rewrite地址请求 */
                     $client->setData(array('do' => 'remoteCallback'))
@@ -150,7 +125,39 @@ RewriteRule . {$basePath}index.php [L]
                     }
                 }
                 
-                unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
+                if (false !== $hasWrote) {
+                    @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
+                    
+                    //增强兼容性,使用wordpress的redirect式rewrite规则,虽然效率有点地下,但是对fastcgi模式兼容性较好
+                    $hasWrote = file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase {$basePath}
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . {$basePath}index.php [L]
+</IfModule>");
+                    
+                    //再次进行验证
+                    $client = Typecho_Http_Client::get();
+                    
+                    if ($client) {
+                        /** 发送一个rewrite地址请求 */
+                        $client->setData(array('do' => 'remoteCallback'))
+                        ->setHeader('User-Agent', $this->options->generator)
+                        ->send(Typecho_Common::url('/action/ajax', $this->options->siteUrl));
+                        
+                        if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
+                            return true;
+                        }
+                    }
+                    
+                    unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
+                }
+            } catch (Typecho_Http_Client_Exception $e) {
+                if (false !== $hasWrote) {
+                    @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
+                }
+                return false;
             }
             
             return false;
