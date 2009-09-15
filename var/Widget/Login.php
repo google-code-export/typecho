@@ -58,8 +58,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             
             Typecho_Cookie::set('__typecho_remember_name', $this->request->name);
             $this->widget('Widget_Notice')->set(_t('用户名或密码无效'), NULL, 'error');
-            $this->response->redirect($this->options->loginUrl . ((NULL === $this->request->referer) ? 
-            NULL : '?referer=' . urlencode($this->request->referer)));
+            $this->response->goBack();
         }
         
         /** 跳转验证后地址 */
