@@ -278,11 +278,11 @@ class Typecho_Response
      * 返回来路
      *
      * @access public
-     * @param string $anchor 锚点地址
+     * @param string $anchor 附加地址
      * @param string $default 默认来路
      * @return void
      */
-    public function goBack($anchor = NULL, $default = NULL)
+    public function goBack($suffix = NULL, $default = NULL)
     {
         //获取来源
         $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
@@ -290,14 +290,29 @@ class Typecho_Response
         //判断来源
         if (!empty($referer)) {
             // ~ fix Issue 38
-            if (!empty($anchor)) {
+            if (!empty($suffix)) {
                 $parts = parse_url($referer);
-                if (isset($parts['fragment'])) {
-                    $referer = substr($referer, 0, strlen($referer) - strlen($parts['fragment']) - 1);
+                $myParts = parse_url($suffix);
+                
+                if (isset($myParts['fragment'])) {
+                    $parts['fragment'] = $myParts['fragment'];
                 }
+                
+                if (isset($myParts['query'])) {
+                    $args = array();
+                    if (isset($parts['query'])) {
+                        parse_str($parts['query'], $args);
+                    }
+                
+                    parse_str($myParts['query'], $currentArgs);
+                    $args = array_merge($args, $currentArgs);
+                    $parts['query'] = http_build_query($args);
+                }
+                
+                $referer = Typecho_Common::buildUrl($parts);
             }
             
-            $this->redirect($referer . (empty($anchor) ? NULL : '#' . $anchor), false);
+            $this->redirect($referer, false);
         } else if (!empty($default)) {
             $this->redirect($default);
         }
