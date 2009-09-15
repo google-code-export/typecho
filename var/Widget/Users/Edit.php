@@ -173,6 +173,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         
         if ('insert' == $action) {
             $name->addRule('required', _t('必须填写用户名称'));
+            $name->addRule('xssCheck', _t('请不要在用户名中使用特殊字符'));
             $name->addRule(array($this, 'nameExists'), _t('用户名已经存在'));
             $password->label(_t('用户密码*'));
             $confirm->label(_t('用户密码确认*'));

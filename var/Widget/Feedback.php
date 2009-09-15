@@ -58,17 +58,22 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         //检验格式
         $validator = new Typecho_Validate();
         $validator->addRule('author', 'required', _t('必须填写用户名'));
+        $validator->addRule('author', 'xssCheck', _t('请不要在用户名中使用特殊字符'));
         $validator->addRule('author', array($this, 'requireUserLogin'), _t('您所使用的用户名已经被注册,请登录后再次提交'));
+        $validator->addRule('author', 'maxLength', _t('用户名最多包含200个字符'), 200);
 
         if ($this->options->commentsRequireMail && !$this->user->hasLogin()) {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
+        $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含200个字符'), 200);
 
         if ($this->options->commentsRequireUrl && !$this->user->hasLogin()) {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
+        $validator->addRule('url', 'url', _t('个人主页地址格式错误'));
+        $validator->addRule('url', 'maxLength', _t('个人主页地址最多包含200个字符'), 200);
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
         
@@ -77,9 +82,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
             /** Anti-XSS */
-            $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
-            $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
-            $comment['url'] = $this->request->filter('url')->url;
+            $comment['author'] = $this->request->filter('trim')->author;
+            $comment['mail'] = $this->request->filter('trim')->mail;
+            $comment['url'] = $this->request->filter('trim')->url;
             
             /** 修正用户提交的url */
             if (!empty($comment['url'])) {
@@ -153,16 +158,19 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
         
-        $trackback['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->blog_name;
-        $trackback['url'] = $this->request->filter('url')->url;
+        $trackback['author'] = $this->request->filter('trim')->blog_name;
+        $trackback['url'] = $this->request->filter('trim')->url;
         $trackback['text'] = $this->request->filter(array($this, 'filterText'))->excerpt;
         
         //检验格式
         $validator = new Typecho_Validate();
         $validator->addRule('url', 'required', 'We require all Trackbacks to provide an url.')
         ->addRule('url', 'url', 'Your url is not valid.')
+        ->addRule('url', 'maxLength', 'Your url is not valid.', 200)
         ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
-        ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.');
+        ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.')
+        ->addRule('author', 'xssCheck', 'Your blog name is not valid.')
+        ->addRule('author', 'maxLength', 'Your blog name is not valid.', 200);
         
         $validator->setBreak();
         if ($error = $validator->run($trackback)) {

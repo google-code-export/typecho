@@ -210,7 +210,7 @@ class Typecho_Validate
      */
     public function email($str)
     {
-        return preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str);
+        return preg_match("/^[^@\s<&>]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
     }
 
     /**
@@ -222,7 +222,14 @@ class Typecho_Validate
      */
     public function url($str)
     {
-        return preg_match("|^http://[_=&///?\.a-zA-Z0-9-]+$|i", $str);
+        $parts = @parse_url($str);
+        if (!$parts) {
+            return false;
+        }
+        
+        return isset($parts['scheme']) && 
+        in_array($parts['scheme'], array('http', 'https', 'ftp')) &&
+        !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 
     /**
@@ -259,6 +266,33 @@ class Typecho_Validate
     public function alphaDash($str)
     {
         return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
+    }
+    
+    /**
+     * 对xss字符串的检测
+     * 
+     * @access public
+     * @param string $str
+     * @return boolean
+     */
+    public function xssCheck($str)
+    {
+        $search = 'abcdefghijklmnopqrstuvwxyz';
+        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $search .= '1234567890!@#$%^&*()';
+        $search .= '~`";:?+/={}[]-_|\'\\';
+
+        for ($i = 0; $i < strlen($search); $i++) {
+            // ;? matches the ;, which is optional 
+            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars 
+
+            // &#x0040 @ search for the hex values 
+            $str = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $str); // with a ; 
+            // &#00064 @ 0{0,7} matches '0' zero to seven times 
+            $str = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $str); // with a ; 
+        }
+        
+        return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 
     /**

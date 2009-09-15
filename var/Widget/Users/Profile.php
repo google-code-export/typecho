@@ -414,6 +414,6 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->on($this->request->is('do=options'))->updateOptions();
         $this->on($this->request->is('do=password'))->updatePassword();
         $this->on($this->request->is('do=personal&plugin'))->updatePersonal();
-        $this->response->redirect($this->options->adminUrl);
+        $this->response->redirect($this->options->siteUrl);
     }
 }
