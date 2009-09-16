@@ -10,14 +10,17 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate"><?php _e('操作'); ?>: 
+                    <p class="operate">
+                    <a class="button" href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
+                    <?php _e('操作'); ?>: 
                     <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
+                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>,&nbsp;&nbsp;&nbsp;
                     <?php _e('选中项'); ?>: 
                     <span rel="delete" lang="<?php _e('你确认要删除这些用户吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
-					<a class="button" href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
+                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                    <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>
                 </div>
