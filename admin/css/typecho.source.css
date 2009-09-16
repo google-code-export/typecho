@@ -638,7 +638,8 @@ margin-top: 25px;
 
 .typecho-login form p.submit button {
     position: absolute;
-    right: 0px; top: 0px;
+    right: 0px;
+	top: 0px;
 }
 
 .typecho-login .more-link {
@@ -1164,8 +1165,12 @@ margin-top: 25px;
     line-height: 20px;
 }
 
-.typecho-list-operate p.left, .typecho-list-operate p.left a.button {
+.typecho-list-operate p.operate a.button {
     float: left;
+	padding: 2px 6px;
+	font-size: 13px;
+	line-height: 20px;
+	margin-right: 10px;
 }
 
 .typecho-list-operate span.operate-button {
