@@ -150,10 +150,12 @@ class Widget_User extends Typecho_Widget
             /** 压入数据 */
             $this->push($user);
             $this->_hasLogin = true;
+            $this->plugin()->loginSucceed($this, $name, $password, $temporarily, $expire);
             
             return true;
         }
         
+        $this->plugin()->loginFail($this, $name, $password, $temporarily, $expire);
         return false;
     }
     
