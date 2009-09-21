@@ -31,6 +31,7 @@ package:
 	rm -Rf build/usr/plugins/TinyMCE/
 	rm -Rf build/usr/plugins/FlashMp3Player/
 	rm -Rf build/usr/plugins/ConnectToTwitter/
+	rm -Rf build/usr/plugins/ShareCode/
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -60,6 +61,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/TinyMCE/
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
+	rm -Rf ${DIR}/usr/plugins/ShareCode/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -72,6 +74,7 @@ upgrade:
 	cp -Rf build/usr/plugins/TinyMCE/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/FlashMp3Player/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/ConnectToTwitter/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/ShareCode/ ${DIR}/usr/plugins/
 	make clear
 
 
@@ -103,6 +106,7 @@ install:
 	rm -Rf ${DIR}/usr/plugins/TinyMCE/
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
+	rm -Rf ${DIR}/usr/plugins/ShareCode/
 	cp -Rf build/* ${DIR}
 	make clear
 
@@ -110,12 +114,10 @@ install:
 tinymce:
 	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
 	unzip tinymce_${TINYMCE}.zip
-	for i in `find jscripts/ -name *.js`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
-	for i in `find jscripts/ -name *.htm`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
-	rm -Rf jscripts/
-	rm -Rf examples/
+	for i in `find tinymce/jscripts/ -name *.js`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
+	for i in `find tinymce/jscripts/ -name *.htm`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
+	rm -Rf tinymce/
 	rm -Rf tinymce_${TINYMCE}.zip
-	rm -Rf changelog.txt
 	svn ci ../usr/plugins/TinyMCE/tiny_mce/ -m "upgrade tiny_mce to ${TINYMCE}"
 
 
