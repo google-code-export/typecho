@@ -16,7 +16,7 @@ if (!isset($options['in']) || !isset($options['out'])) {
 }
 
 $in = $options['in'];
-$out = str_replace('jscripts/tiny_mce/', '', $options['out']);
+$out = str_replace('tinymce/jscripts/tiny_mce/', '', $options['out']);
 
 if (file_exists($out)) {
 	echo $out . "\n";
@@ -25,7 +25,7 @@ if (file_exists($out)) {
     
     switch ($out) {
     
-        case '../admin/javascript/tiny_mce/tiny_mce.js':
+        case '../usr/plugins/TinyMCE/tiny_mce/tiny_mce.js':
             file_put_contents($out, str_replace('javascript:;', '#', file_get_contents($out)));
             break;
             
