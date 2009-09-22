@@ -75,9 +75,11 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         $message = array();
         
         foreach ($packages as $package) {
+            $options = $this->widget('Widget_Options@' . $package);
+        
             /** 执行升级脚本 */
             try {
-                $result = call_user_func(array('Upgrade', $package), $this->db, $this->options);
+                $result = call_user_func(array('Upgrade', $package), $this->db, $options);
                 if (!empty($result)) {
                     $message[] = $result;
                 }
@@ -94,6 +96,8 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
             /** 更新版本号 */
             $this->update(array('value' => 'Typecho ' . $ver . '/' . $rev), 
             $this->db->sql()->where('name = ?', 'generator'));
+            
+            $this->destory('Widget_Options@' . $package);
         }
         
         /** 更新版本号 */

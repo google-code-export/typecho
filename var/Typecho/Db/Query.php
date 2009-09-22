@@ -50,14 +50,6 @@ class Typecho_Db_Query
      * @var string
      */
     private $_prefix;
-    
-    /**
-     * 数据库关键字
-     * 
-     * @access private
-     * @var string
-     */
-    private $_keywords;
 
     /**
      * 构造函数,引用数据库适配器作为内部数据
@@ -70,7 +62,6 @@ class Typecho_Db_Query
     {
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
-        $this->_keywords = self::KEYWORDS;
         
         $this->_sqlPreBuild = array(
             'action' => NULL,
@@ -101,12 +92,61 @@ class Typecho_Db_Query
      * 过滤数组键值
      *
      * @access private
-     * @param string $string 待处理字段值
+     * @param string $str 待处理字段值
      * @return string
      */
-    private function filterColumn($string)
+    private function filterColumn($str)
     {
-        return preg_replace_callback("/(['\"]?)(\s*)([_0-9a-zA-Z\.]+)(\(?)/", array($this, 'filterColumnCallback'), $string);
+        $str = $str . ' 0';
+        $length = strlen($str);
+        $lastIsAlnum = false;
+        $result = '';
+        $word = '';
+        $split = '';
+        $quotes = 0;
+
+        for ($i = 0; $i < $length; $i ++) {
+            $cha = $str[$i];
+
+            if (ctype_alnum($cha)) {
+                if (!$lastIsAlnum) {
+                    if ($quotes > 0 && !ctype_digit($word) && '.' != $split
+                    && false === strpos(self::KEYWORDS, strtoupper($word))) {
+                        $word = $this->_adapter->quoteColumn($word);
+                    } else if ('.' == $split && 'table' == $word) {
+                        $word = $this->_prefix;
+                        $split = '';
+                    }
+                
+                    $result .= $word . $split;
+                    $word = '';
+                    $quotes = 0;
+                }
+            
+                $word .= $cha;
+                $lastIsAlnum = true;
+            } else {
+                
+                if ($lastIsAlnum) {
+                    
+                    if (0 == $quotes) {
+                        if (false !== strpos(' ,)=<>.+-*/', $cha)) {
+                            $quotes = 1;
+                        } else if ('(' == $cha) {
+                            $quotes = -1;
+                        }
+                    }
+                    
+                    $split = '';
+                }
+                
+                $split .= $cha;
+                $lastIsAlnum = false;
+            }
+            
+        }
+        
+        return $result;
     }
     
     /**
@@ -134,26 +174,6 @@ class Typecho_Db_Query
     }
 
     /**
-     * 数组正则匹配回调函数
-     * 
-     * @access public
-     * @param array $matches 匹配数组
-     * @return string
-     */
-    public function filterColumnCallback(array $matches)
-    {
-        if (empty($matches[1]) && empty($matches[4]) && !is_numeric($matches[3][0]) &&
-        !preg_match('/^(' . $this->_keywords . ')$/i', $matches[3])) {
-            $pos = strrpos($matches[3], '.');
-            $pos = (false === $pos) ? 0 : $pos + 1;
-            $column = $this->_adapter->quoteColumn(substr($matches[3], $pos));
-            return $matches[2] . $this->filterPrefix(substr_replace($matches[3], $column, $pos));
-        } else {
-            return $matches[1] . $matches[2] . $matches[3] . $matches[4];
-        }
-    }
-
-    /**
      * 获取查询字串属性值
      *
      * @access public
@@ -163,19 +183,6 @@ class Typecho_Db_Query
     public function getAttribute($attributeName)
     {
         return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
-    }
-
-    /**
-     * 设置关键字
-     * 
-     * @access public
-     * @param string $keywords 关键字
-     * @return Typecho_Db_Query
-     */
-    public function setKeywords($keywords = self::KEYWORDS)
-    {
-        $this->_keywords = $keywords;
-        return $this;
     }
 
     /**
