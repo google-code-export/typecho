@@ -167,6 +167,11 @@ class Widget_User extends Typecho_Widget
      */
     public function logout()
     {
+        $this->plugin()->trigger($logoutPluggable)->logout();
+        if ($logoutPluggable) {
+            return;
+        }
+    
         Typecho_Cookie::delete('__typecho_uid', $this->options->siteUrl);
         Typecho_Cookie::delete('__typecho_authCode', $this->options->siteUrl);
     }
