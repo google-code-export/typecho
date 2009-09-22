@@ -70,7 +70,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param string $screenName 昵称
      * @return boolean
      */
-    protected function screenNameExists($screenName)
+    public function screenNameExists($screenName)
     {
         $select = $this->db->select()
         ->from('table.users')
