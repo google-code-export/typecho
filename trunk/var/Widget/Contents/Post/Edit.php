@@ -262,7 +262,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 
                 if ($beforeCount) {
                     $this->db->query($this->db->update('table.metas')
-                    ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count - 1')
                     ->where('mid = ?', $tag));
                 }
@@ -283,7 +282,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 
                 if ($afterCount) {
                     $this->db->query($this->db->update('table.metas')
-                    ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count + 1')
                     ->where('mid = ?', $tag));
                 }
@@ -321,7 +319,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 
                 if ($beforeCount) {
                     $this->db->query($this->db->update('table.metas')
-                    ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count - 1')
                     ->where('mid = ?', $category));
                 }
@@ -347,7 +344,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 
                 if ($afterCount) {
                     $this->db->query($this->db->update('table.metas')
-                    ->setKeywords('')       //让系统忽略count关键字
                     ->expression('count', 'count + 1')
                     ->where('mid = ?', $category));
                 }

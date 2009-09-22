@@ -591,4 +591,40 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('value' => serialize($routingTable)))
                 ->where('name = ?', 'routingTable'));
     }
+    
+    /**
+     * 升级至9.9.22
+     * 此升级用于修复从0.6升级时损坏的路由表
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_9_22($db, $options)
+    {
+        /** 修改路由 */
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        $routingTable['do'] = array (
+            'url' => '/action/[action:alpha]',
+            'widget' => 'Widget_Do',
+            'action' => 'action'
+        );
+        
+        $do = $routingTable['do'];
+        unset($routingTable['do']);
+        
+        $pre = array_slice($routingTable, 0, 1);
+        $next = array_slice($routingTable, 1);
+
+        $routingTable = array_merge($pre, array('do' => $do), $next);
+
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+    }
 }
