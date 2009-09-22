@@ -29,7 +29,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         /** 注册用户以上权限 */
         $this->user->pass('subscriber');
-        $this->request->uid = $this->user->uid;
+        $this->request->setParam('uid', $this->user->uid);
     }
     
     /**
