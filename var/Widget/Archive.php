@@ -613,7 +613,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_archiveType = 'custom';
                 
                 /** 设置归档缩略名 */
-                $this->_archiveSlug = trim($this->request->slug, './');
+                $this->_archiveSlug = str_replace(array('.', '/', '\\'), '', $this->request->slug);
                 
                 /** 设置单一归档类型 */
                 $this->_archiveSingle = true;
@@ -982,7 +982,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_description = $this->options->description;
         
         /** 支持自定义首页 */
-        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type && empty($this->_feed) && $this->checkCustomIndex()) {
+        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type &&
+        empty($this->_feed) && $this->checkCustomIndex()) {
             //自定义首页标志
             $this->_archiveCustom = true;
             
@@ -1363,7 +1364,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function checkCustomIndex()
     {
-        $themeFile = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/custom/index.php';
+        $themeFile = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ .
+        '/' . $this->options->theme . '/custom/index.php';
         
         if (file_exists($themeFile)) {
             $this->_themeFile = '/custom/index.php';
