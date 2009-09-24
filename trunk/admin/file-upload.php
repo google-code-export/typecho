@@ -70,8 +70,8 @@ if (isset($post) || isset($page)) {
 </style>
 
 <div class="typecho-list-operate">
-<p class="search left">
-    <a class="button left"><?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
+<p class="operate">
+    <a class="button"><?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
     <span id="swfu"><span id="swfu-placeholder"></span></span>
 </p>
 </div>
