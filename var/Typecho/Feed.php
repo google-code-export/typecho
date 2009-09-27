@@ -239,7 +239,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
                 $content .= '<title>' . htmlspecialchars($item['title']) . '</title>' . self::EOL;
                 $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
                 $content .= '<dc:date>' . $this->dateFormat($item['date']) . '</dc:date>' . self::EOL;
-                $content .= '<description>' . htmlspecialchars(strip_tags($item['content'])) . '</description>' . self::EOL;
+                $content .= '<description>' . strip_tags($item['content']) . '</description>' . self::EOL;
                 if (!empty($item['suffix'])) {
                     $content .= $item['suffix'];
                 }
@@ -296,7 +296,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
                 }
                 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<description><![CDATA[' . htmlspecialchars($item['excerpt']) . ']]></description>' . self::EOL;
+                    $content .= '<description><![CDATA[' . strip_tags($item['excerpt']) . ']]></description>' . self::EOL;
                 }
                 
                 if (!empty($item['content'])) {
