@@ -111,32 +111,6 @@ class Typecho_Common
     }
     
     /**
-     * 编码
-     * 
-     * @access public
-     * @param array $matches
-     * @return string
-     */
-    public static function __encodeCodeCallback($matches)
-    {
-        return '<' . $matches[1] . $matches[2] . '>' . str_replace(array(' ', "\n"), array('&nbsp;', '<br />'), htmlspecialchars(trim($matches[3]))) . "</{$matches[1]}>";
-    }
-    
-    /**
-     * 解析
-     * 
-     * @access public
-     * @param array $matches
-     * @return string
-     */
-    public static function __decodeCodeCallback($matches)
-    {
-        return '<' . $matches[1] . $matches[2] . ">\n" .
-        trim(htmlspecialchars_decode(str_replace('<br />', "\n", $matches[3])))
-         . "\n</{$matches[1]}>";
-    }
-    
-    /**
      * 程序初始化方法
      * 
      * @access public
@@ -850,32 +824,6 @@ EOF;
         $string = preg_replace("/<p><(" . self::ESCAPE_HTML_TAG . '|p|' . self::LOCKED_HTML_TAG
         . ")([^>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
-    }
-    
-    /**
-     * 对未知段进行编码
-     * 
-     * @access public
-     * @param string $string 输入文本
-     * @return string
-     */
-    public static function encodeCode($string)
-    {
-        return preg_replace_callback("/<(pre|code)([^>]*)>(.*?)<\/\\1>/is",
-        array('Typecho_Common', '__encodeCodeCallback'), $string);
-    }
-    
-    /**
-     * 对未知段进行解码
-     * 
-     * @access public
-     * @param string $string 输出文本
-     * @return string
-     */
-    public static function decodeCode($string)
-    {
-        return preg_replace_callback("/<(pre|code)([^>]*)>(.*?)<\/\\1>/is",
-        array('Typecho_Common', '__decodeCodeCallback'), html_entity_decode($string, ENT_QUOTES, self::$config['charset']));
     }
     
     /**
