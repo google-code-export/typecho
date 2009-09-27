@@ -93,7 +93,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
-        } else {
+        } else if (!isset($this->request->cid)) {
             if ('on' == $this->request->__typecho_all_comments) {
                 Typecho_Cookie::set('__typecho_all_comments', 'on');
             } else {

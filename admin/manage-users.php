@@ -29,20 +29,22 @@ include 'menu.php';
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
-                        <col width="130"/>
-                        <col width="130"/>
-                        <col width="225"/>
-                        <col width="250"/>
-                        <col width="130"/>
+                        <col width="150"/>
+                        <col width="150"/>
+                        <col width="30"/>
+                        <col width="300"/>
+                        <col width="165"/>
+                        <col width="70"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th class="typecho-radius-topleft"> </th>
                             <th><?php _e('用户名'); ?></th>
                             <th><?php _e('昵称'); ?></th>
-                            <th><?php _e('个人主页'); ?></th>
+                            <th> </th>
                             <th><?php _e('电子邮件'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('用户组'); ?></th>
+                            <th><?php _e('用户组'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('文章'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,7 +54,9 @@ include 'menu.php';
                             <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
                             <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
                             <td><?php $users->screenName(); ?></td>
-                            <td><?php if($users->url): ?><a href="<?php $users->url(); ?>"><?php $users->domainPath(); ?></a><?php else: _e('暂无'); endif; ?></td>
+                            <td>
+                            <a class="right hidden-by-mouse" href="<?php $users->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>" width="16" height="16" alt="view" /></a>
+                            </td>
                             <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
                             <td><?php switch ($users->group) {
                                 case 'administrator':
@@ -73,6 +77,7 @@ include 'menu.php';
                                 default:
                                     break;
                             } ?></td>
+                            <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

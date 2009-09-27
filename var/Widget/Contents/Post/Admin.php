@@ -50,6 +50,36 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * @var integer
      */
     private $_currentPage;
+    
+    /**
+     * 文章作者
+     * 
+     * @access protected
+     * @return Typecho_Config
+     */
+    protected function ___author()
+    {
+        return isset($this->request->uid) ? new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
+        ->where('uid = ?', $this->request->filter('int')->uid))) : new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
+        ->where('uid = ?', $this->authorId)));
+    }
+    
+    /**
+     * 获取菜单标题
+     * 
+     * @access public
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        $author = $this->author;
+        
+        if (isset($author->uid)) {
+            return _t('%s的文章', $author->screenName);
+        }
+        
+        throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
+    }
 
     /**
      * 执行函数
@@ -75,13 +105,17 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
         } else {
-            if ('on' == $this->request->__typecho_all_posts) {
-                Typecho_Cookie::set('__typecho_all_posts', 'on');
+            if (isset($this->request->uid)) {
+                $select->where('table.contents.authorId = ?', $this->request->filter('int')->uid);
             } else {
-                if ('off' == $this->request->__typecho_all_posts) {
-                    Typecho_Cookie::set('__typecho_all_posts', 'off');
+                if ('on' == $this->request->__typecho_all_posts) {
+                    Typecho_Cookie::set('__typecho_all_posts', 'on');
+                } else {
+                    if ('off' == $this->request->__typecho_all_posts) {
+                        Typecho_Cookie::set('__typecho_all_posts', 'off');
+                    }
+                    $select->where('table.contents.authorId = ?', $this->user->uid);
                 }
-                $select->where('table.contents.authorId = ?', $this->user->uid);
             }
         }
         

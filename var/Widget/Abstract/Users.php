@@ -107,6 +107,47 @@ class Widget_Abstract_Users extends Widget_Abstract
         $count = $this->db->fetchObject($select)->num + 1;
         return ceil($count / $pageSize);
     }
+    
+    /**
+     * 通用过滤器
+     * 
+     * @access public
+     * @param array $value 需要过滤的行数据
+     * @return array
+     */
+    public function filter(array $value)
+    {
+        //生成静态链接
+        $routeExists = (NULL != Typecho_Router::get('author'));
+        
+        $value['permalink'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->index) : '#';
+        
+        /** 生成聚合链接 */
+        /** RSS 2.0 */
+        $value['feedUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedUrl) : '#';
+        
+        /** RSS 1.0 */
+        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedRssUrl) : '#';
+        
+        /** ATOM 1.0 */
+        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedAtomUrl) : '#';
+
+        $value = $this->plugin(__CLASS__)->filter($value, $this);
+        return $value;
+    }
+    
+    /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param array $value 每行的值
+     * @return array
+     */
+    public function push(array $value)
+    {
+        $value = $this->filter($value);
+        return parent::push($value);
+    }
 
     /**
      * 查询方法

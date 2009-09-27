@@ -38,7 +38,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     protected function ___author()
     {
         return new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
-        ->where('uid = ?', $this->authorId)));
+        ->where('uid = ?', $this->authorId), array($this->widget('Widget_Abstract_Users'), 'filter')));
     }
     
     /**

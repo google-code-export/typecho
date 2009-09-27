@@ -54,12 +54,27 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      * 仅仅输出域名和路径
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___domainPath()
     {
         $parts = parse_url($this->url);
         return $parts['host'] . (isset($parts['path']) ? $parts['path'] : NULL);
+    }
+    
+    /**
+     * 发布文章数
+     * 
+     * @access protected
+     * @return integer
+     */
+    protected function ___postsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
+                    ->from('table.contents')
+                    ->where('table.contents.type = ?', 'post')
+                    ->where('table.contents.status = ?', 'publish')
+                    ->where('table.contents.authorId = ?', $this->uid))->num;
     }
     
     /**
