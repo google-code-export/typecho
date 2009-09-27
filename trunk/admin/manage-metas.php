@@ -34,9 +34,9 @@ include 'menu.php';
                     <table class="typecho-list-table draggable">
                         <colgroup>
                             <col width="25"/>
-                            <col width="270"/>
+                            <col width="230"/>
                             <col width="30"/>
-                            <col width="130"/>
+                            <col width="170"/>
                             <col width="50"/>
                             <col width="65"/>
                         </colgroup>
@@ -131,6 +131,20 @@ include 'common-js.php';
     (function () {
         window.addEvent('domready', function() {
             var _selection;
+            
+            <?php if (isset($request->mid)): ?>
+            var _hl = $(document).getElement('.typecho-mini-panel');
+            if (_hl) {
+                _hl.set('tween', {duration: 1500});
+    
+                var _bg = _hl.getStyle('background-color');
+                if (!_bg || 'transparent' == _bg) {
+                    _bg = '#F7FBE9';
+                }
+
+                _hl.tween('background-color', '#AACB36', _bg);
+            }
+            <?php endif; ?>
             
             if ('tr' == Typecho.Table.table._childTag) {
                 Typecho.Table.dragStop = function (obj, result) {

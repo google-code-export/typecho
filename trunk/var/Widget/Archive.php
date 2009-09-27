@@ -805,6 +805,57 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 处理作者
+     * 
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     */
+    private function authorHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        $uid = $this->request->filter('int')->uid;
+        
+        $author = $this->db->fetchRow($this->db->select()->from('table.users')
+        ->where('uid = ?', $uid),
+        array($this->widget('Widget_Abstract_Users'), 'filter'));
+        
+        if (!$author) {
+            throw new Typecho_Widget_Exception(_t('作者不存在'), 404);
+        }
+        
+        $select->where('table.contents.authorId = ?', $uid);
+        
+        /** 设置分页 */
+        $this->_pageRow = $author;
+        
+        /** 设置关键词 */
+        $this->_keywords = $author['screenName'];
+        
+        /** 设置描述 */
+        $this->_description = $author['screenName'];
+        
+        /** 设置头部feed */
+        /** RSS 2.0 */
+        $this->_feedUrl = $author['feedUrl'];
+        
+        /** RSS 1.0 */
+        $this->_feedRssUrl = $author['feedRssUrl'];
+        
+        /** ATOM 1.0 */
+        $this->_feedAtomUrl = $author['feedAtomUrl'];
+        
+        /** 设置标题 */
+        $this->_archiveTitle[] = $author['screenName'];
+        
+        /** 设置归档类型 */
+        $this->_archiveType = 'author';
+        
+        /** 设置归档缩略名 */
+        $this->_archiveSlug = $author['uid'];
+    }
+    
+    /**
      * 处理日期
      * 
      * @access private
@@ -1002,6 +1053,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             'category_page'     =>  'categoryHandle',
             'tag'               =>  'tagHandle',
             'tag_page'          =>  'tagHandle',
+            'author'            =>  'authorHandle',
+            'author_page'       =>  'authorHandle',
             'archive_year'      =>  'dateHandle',
             'archive_year_page' =>  'dateHandle',
             'archive_month'     =>  'dateHandle',

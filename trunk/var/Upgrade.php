@@ -627,4 +627,46 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('value' => serialize($routingTable)))
                 ->where('name = ?', 'routingTable'));
     }
+    
+    /**
+     * 升级至9.9.27
+     * 增加按作者归档
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_9_27($db, $options)
+    {
+        /** 修改路由 */
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        $pre = array_slice($routingTable, 0, 6);
+        $next = array_slice($routingTable, 6);
+        $next_pre = array_slice($next, 0, 5);
+        $next_next = array_slice($next, 5);
+        
+        $author = array (
+            'url' => '/author/[uid:digital]/',
+            'widget' => 'Widget_Archive',
+            'action' => 'render',
+        );
+        
+        $author_page = array (
+            'url' => '/author/[uid:digital]/[page:digital]/',
+            'widget' => 'Widget_Archive',
+            'action' => 'render',
+        );
+
+        $routingTable = array_merge($pre, array('author' => $author), $next_pre,
+        array('author_page' => $author_page), $next_next);
+
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+    }
 }

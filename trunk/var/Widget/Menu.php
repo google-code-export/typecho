@@ -128,6 +128,7 @@ class Widget_Menu extends Typecho_Widget
         ),
         array(
             array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor'),
+            array(array('Widget_Contents_Post_Admin', 'getMenuTitle'), array('Widget_Contents_Post_Admin', 'getMenuTitle'), 'manage-posts.php?uid=', 'contributor', true),
             array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor'),
             array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
             array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),

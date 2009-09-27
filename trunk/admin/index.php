@@ -10,7 +10,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-06 start-01 typecho-dashboard-nav">
-                <h3 class="intro"><?php _e('欢迎使用 Typecho,您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
+                <h3 class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
             
                 <div class="intro-link">
                     <ul>
