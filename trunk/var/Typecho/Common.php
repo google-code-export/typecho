@@ -588,12 +588,7 @@ EOF;
                 }
             }
             
-            if (in_array('code', $tags[1])) {
-                $string = str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
-                $string = Typecho_Common::encodeCode($string);
-            }
-            
-            return $string;
+            return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
         } else {
             return strip_tags($string);
         }
