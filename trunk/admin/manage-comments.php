@@ -58,6 +58,9 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                     <?php if(isset($request->status)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>
+                    <?php if(isset($request->cid)): ?>
+                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
+                    <?php endif; ?>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>

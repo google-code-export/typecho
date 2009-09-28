@@ -1749,7 +1749,7 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-edit-theme ul {
-    width: 120px;
+    width: 150px;
     float: left;
     overflow: hidden;
     padding: 10px 0px 10px 10px;
@@ -1757,10 +1757,11 @@ ul.typecho-list-notable li #typecho-respond {
 
 .typecho-edit-theme li {
     line-height: 25px;
-    height: 25px;
+	height: 25px;
     margin-bottom: 5px;
-    font-size: 12px;
-    padding: 0px 0px 0px 10px;
+    font-size: 11px;
+	text-align: right;
+    padding: 0px 10px 0px 0px;
 }
 
 .typecho-edit-theme li a:link, .typecho-edit-theme li a:visited {
@@ -1785,7 +1786,7 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-edit-theme .content {
-    width: 810px;
+    width: 780px;
     float: left;
     overflow: hidden;
     padding: 10px 10px 10px 0px;
@@ -1797,7 +1798,7 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-edit-theme textarea {
-    width: 800px;
+    width: 770px;
     height: 500px;
     font-family: "Courier New",Courier,monospace;
 }
