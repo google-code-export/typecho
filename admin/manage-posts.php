@@ -59,6 +59,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php if(isset($request->status)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>
+                    <?php if(isset($request->uid)): ?>
+                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
+                    <?php endif; ?>
                     </p>
                 </form>
                 </div>
