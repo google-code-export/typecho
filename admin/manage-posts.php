@@ -102,7 +102,15 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php endif; ?>
                             </td>
                             <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
-                            <td><?php $posts->category(', '); ?></td>
+                            <td><?php $categories = $posts->categories; $length = count($categories); ?>
+                            <?php foreach ($categories as $key => $val): ?>
+                                <?php echo '<a href="';
+                                $options->adminUrl('manage-posts.php?category=' . $val['mid']
+                                . (isset($request->uid) ? '&uid=' . $request->uid : '')
+                                . (isset($request->status) ? '&status=' . $request->status : ''));
+                                echo '">' . $val['name'] . '</a>' . ($key < $length - 1 ? ', ' : ''); ?>
+                            <?php endforeach; ?>
+                            </td>
                             <td><?php $posts->dateWord(); ?></td>
                         </tr>
                         <?php endwhile; ?>
