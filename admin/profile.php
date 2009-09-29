@@ -10,7 +10,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
-            <div class="column-16 start-01 typecho-content-panel">
+            <div class="column-16 suffix typecho-content-panel">
                 <h4>
                 <?php echo '<img src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=20&r=X' .
                 '&d=" alt="' . $user->name . '" width="20" height="20" />'; ?>
@@ -31,7 +31,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <h3 id="change-password"><?php _e('设置密码'); ?></h3>
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
             </div>
-            <div class="column-08 start-17 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+            <div class="column-08 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->form()->render(); ?>
             </div>
         </div>

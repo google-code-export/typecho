@@ -10,7 +10,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
-            <div class="column-24 start-01">
+            <div class="column-24">
                 <ul class="typecho-option-tabs">
                     <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">

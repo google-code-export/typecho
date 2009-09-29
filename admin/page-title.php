@@ -7,7 +7,7 @@
 </div>
 <?php endif; ?>
 <div class="container typecho-page-title">
-    <div class="column-24 start-01">
+    <div class="column-24">
         <h2><?php echo $menu->title; ?></h2>
         <p><a href="<?php $options->siteUrl(); ?>"><?php _e('查看我的站点'); ?></a></p>
     </div>

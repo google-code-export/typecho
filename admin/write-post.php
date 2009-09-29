@@ -9,7 +9,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-                <div class="column-18 start-01" id="test">
+                <div class="column-18 suffix" id="test">
                     <div class="column-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
@@ -64,7 +64,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </li>
                     </ul>
                 </div>
-                <div class="column-06 start-19">
+                <div class="column-06">
                     <ul class="typecho-post-option">
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>

@@ -228,12 +228,9 @@ class Widget_User extends Typecho_Widget
                 return false;
             } else {
                 //防止循环重定向
-                if (0 === strpos($this->request->getReferer(), $this->options->loginUrl)) {
-                    throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
-                } else {
-                    $this->response->redirect($this->options->loginUrl
-                    . '?referer=' . urlencode($this->request->makeUriByRequest()), false);
-                }
+                $this->response->redirect($this->options->loginUrl .
+                (0 === strpos($this->request->getReferer(), $this->options->loginUrl) ? '' :
+                '?referer=' . urlencode($this->request->makeUriByRequest())), false);
             }
         }
 

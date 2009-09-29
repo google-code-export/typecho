@@ -8,7 +8,7 @@ include 'menu.php';
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main manage-metas">
-                <div class="column-16 start-01">
+                <div class="column-16 suffix">
                     <ul class="typecho-option-tabs">
                         <li<?php if(!isset($request->type) || 'category' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php'); ?>"><?php _e('分类'); ?></a></li>
                         <li<?php if('tag' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php?type=tag'); ?>"><?php _e('标签'); ?></a></li>
@@ -111,7 +111,7 @@ include 'menu.php';
                     <?php endif; ?>
                     
                 </div>
-                <div class="column-08 start-17 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                <div class="column-08 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                         <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
                     <?php else: ?>
