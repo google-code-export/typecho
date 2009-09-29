@@ -7,7 +7,7 @@ include 'menu.php';
     <div class="body body-950">
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
-            <div class="column-24 start-01 typecho-list">
+            <div class="column-24 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
                 <h6 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h6>

@@ -41,6 +41,14 @@ body.bright, .main {
     color: #333;
 }
 
+.main:after {
+    content: "."; 
+    display: block;
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
 body.no-overflow {
     overflow: hidden;
 }
@@ -652,10 +660,14 @@ margin-top: 25px;
 
 .typecho-login .more-link .back-to-site {
     float: left;
+	width: 120px;
+	text-align: left;
 }
 
 .typecho-login .more-link .forgot-password {
     float: right;
+	width: 120px;
+	text-align: right;
 }
 
 
@@ -930,7 +942,7 @@ margin-top: 25px;
  */
 .typecho-page-main {
     margin: 10px auto;
-    *padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .typecho-page-main .typecho-option-tabs {
@@ -1132,7 +1144,7 @@ margin-top: 25px;
  * 列表页选项
  */
 .typecho-list .typecho-pager {
-    margin: 10px 0px 20px;
+    margin: 10px 0px;
 }
 
 .typecho-list-operate {
