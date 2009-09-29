@@ -13,7 +13,7 @@
 
 <body>
 <div class="container_16 clearfix">
-<div id="header" class="grid_14">
+<div id="header" class="grid_16">
 	<ul class="clearfix" id="nav_menu">
 		<li><a href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a></li>
 	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
