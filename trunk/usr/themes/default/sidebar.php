@@ -1,5 +1,5 @@
 
-    <div class="grid_4" id="sidebar">
+    <div class="grid_5" id="sidebar">
 
 	    <div class="widget">
 			<h3><?php _e('最新文章'); ?></h3>
