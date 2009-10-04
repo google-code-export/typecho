@@ -75,6 +75,10 @@ legend      { font-weight: bold; }
 
 ul { list-style-type: disc; }
 
+/* -------------------------
+ * reset width to 840px
+ * ---------------------- */
+.container_16 { width: 840px; }
 
 /* ------------------
  * header
@@ -106,9 +110,13 @@ p.description {
 margin-bottom: 0;
 }
 
+#search {
+float: right;
+margin-top: 30px;
+}
+
 /* = header navigation menu */
 ul#nav_menu {
-display: none;
 background: #444;
 height: 30px;
 line-height: 30px;
@@ -179,13 +187,14 @@ display: inline;
 }
 
 ol.pages li a {
-padding: 0 4px;
-border: none;
+padding: 2px 6px;
+border: 1px solid #eee;
 text-decoration: none;
 }
 
 ol.pages li.current a {
 background: #3354AA;
+border-color: #3354AA;
 color: #fff;
 }
 
@@ -324,9 +333,6 @@ list-style-type: none;
 margin: 0;
 padding: 5px 0;
 border-bottom: 1px solid #eee;
-}
-
-#search input.text {
 }
 
 /* ------------------

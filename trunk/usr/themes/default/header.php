@@ -13,11 +13,14 @@
 
 <body>
 <div class="container_16 clearfix">
-<div id="header" class="grid_16">
-	<ul class="clearfix" id="nav_menu">
+<div id="header" class="grid_14">
+	<!-- <ul class="clearfix" id="nav_menu">
 		<li><a href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a></li>
 	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-	</ul>
+	</ul> -->
+	<form id="search" method="post" action="">
+		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="Search" /></div>
+    </form>
 	<div id="logo">
 	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
 	    <p class="description"><?php $this->options->description() ?></p>

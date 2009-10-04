@@ -9,17 +9,16 @@
 ----------------------------------------------------------------------------------------------------*/
 
 body {
-	font: 13px/1.5 Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
+	font: 13px/1.5 'Helvetica Neue', Arial, 'Liberation Sans', FreeSans, sans-serif;
 }
 
 a:focus {
-	outline: 1px dotted invert;
+	outline: 1px dotted;
 }
 
 hr {
-	border-color: #ccc;
-	border-style: solid;
-	border-width: 1px 0 0;
+	border: 0 #ccc solid;
+	border-top-width: 1px;
 	clear: both;
 	height: 0;
 }
@@ -59,7 +58,7 @@ ol {
 }
 
 ul {
-	list-style: square;
+	list-style: disc;
 }
 
 li {
