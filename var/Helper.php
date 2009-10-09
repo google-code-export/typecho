@@ -300,6 +300,26 @@ class Helper
     }
     
     /**
+     * 自定义静态链接
+     * 
+     * @access public
+     * @param string $type 路由类型
+     * @param mixed $value 输入值
+     * @return void
+     */
+    public static function permalink($type, $value)
+    {
+        /** 初始化参数 */
+        if (is_string($value)) {
+            parse_str($value, $params);
+        } else {
+            $params = $value;
+        }
+    
+        echo Typecho_Router::url($type, $params, self::options()->index);
+    }
+    
+    /**
      * 评论回复按钮
      * 
      * @access public
