@@ -108,7 +108,7 @@ class Typecho_Db_Query
         for ($i = 0; $i < $length; $i ++) {
             $cha = $str[$i];
 
-            if (ctype_alnum($cha)) {
+            if (ctype_alnum($cha) || '_' == $cha) {
                 if (!$lastIsAlnum) {
                     if ($quotes > 0 && !ctype_digit($word) && '.' != $split
                     && false === strpos(self::KEYWORDS, strtoupper($word))) {
