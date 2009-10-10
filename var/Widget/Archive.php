@@ -547,6 +547,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSingle = true;
         
         $hasPushed = true;
+        
+        /** 插件接口 */
+        $this->plugin()->error404Handle($select, $this);
     }
     
     /**
@@ -674,6 +677,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         $hasPushed = true;
+        
+        /** 插件接口 */
+        $this->plugin()->singleHandle($select, $this);
     }
     
     /**
@@ -739,6 +745,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 设置归档缩略名 */
         $this->_archiveSlug = $category['slug'];
+        
+        /** 插件接口 */
+        $this->plugin()->categoryHandle($select, $this);
     }
     
     /**
@@ -802,6 +811,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 设置归档缩略名 */
         $this->_archiveSlug = $tag['slug'];
+        
+        /** 插件接口 */
+        $this->plugin()->tagHandle($select, $this);
     }
     
     /**
@@ -853,6 +865,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 设置归档缩略名 */
         $this->_archiveSlug = $author['uid'];
+        
+        /** 插件接口 */
+        $this->plugin()->authorHandle($select, $this);
     }
     
     /**
@@ -932,6 +947,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** ATOM 1.0 */
         $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
+        
+        /** 插件接口 */
+        $this->plugin()->dateHandle($select, $this);
     }
     
     /**
@@ -979,6 +997,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 设置归档类型 */
         $this->_archiveType = 'search';
+        
+        /** 插件接口 */
+        $this->plugin()->searchHandle($select, $this);
     }
 
     /**
