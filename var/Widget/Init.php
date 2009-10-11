@@ -49,12 +49,7 @@ class Widget_Init extends Typecho_Widget
         /** 初始化时区 */
         Typecho_Date::setTimezoneOffset($options->timezone);
         
-        /** gzip开关 */
-        if ($options->gzip && NULL !== $this->request->getServer('HTTP_ACCEPT_ENCODING')
-           && false !== strpos($this->request->getServer('HTTP_ACCEPT_ENCODING'), 'gzip')) {
-            ob_start('ob_gzhandler');
-        } else {
-            ob_start();
-        }
+        /** 监听缓冲区 */
+        ob_start();
     }
 }

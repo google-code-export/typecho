@@ -54,9 +54,11 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $form->addInput($timezone);
         
         /** gzip */
+        /*
         $gzip = new Typecho_Widget_Helper_Form_Element_Radio('gzip', array('0' => _t('不启用'), '1' => _t('启用')), $this->options->gzip, _t('是否启用gzip'),
         _t('启用gzip压缩可以减小网页尺寸大小, 从而降低下载时间, 但是它会消耗一部分服务器附载.'));
         $form->addInput($gzip);
+        */
         
         /** 扩展名 */
         $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Text('attachmentTypes', NULL, $this->options->attachmentTypes, _t('允许上传的文件类型'),
@@ -83,7 +85,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
         
-        $settings = $this->request->from('title', 'description', 'keywords', 'allowRegister', 'timezone', 'gzip', 'attachmentTypes');
+        $settings = $this->request->from('title', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
