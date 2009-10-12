@@ -91,7 +91,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             
             /** 匹配内容体 */
             $response = $client->getResponseBody();
-            preg_match_all("/<item>\s*<title><\!\[CDATA\[([^>]*)\]\]><\/title>\s*<link>([^>]*)<\/link>\s*<pubDate>([^>]*)<\/pubDate>/is", $response, $matches);
+            preg_match_all("/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is", $response, $matches);
             
             $data = array();
             
