@@ -35,7 +35,7 @@ color: #444;
 border-bottom: none;
 }
 
-pre, code, tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+pre, code, tt { font: 12px 'andale mono', 'lucida console', monospace; line-height: 1.5; }
 code { margin-bottom: 20px; }
 pre, code {
 display: block;
