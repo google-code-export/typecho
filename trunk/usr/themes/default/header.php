@@ -12,12 +12,7 @@
 </head>
 
 <body>
-<div class="container_16 clearfix">
-<div id="header" class="grid_14">
-	<!-- <ul class="clearfix" id="nav_menu">
-		<li><a href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a></li>
-	    <?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-	</ul> -->
+<div id="header" class="container_16 clearfix">
 	<form id="search" method="post" action="">
 		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="Search" /></div>
     </form>
@@ -26,3 +21,15 @@
 	    <p class="description"><?php $this->options->description() ?></p>
     </div>
 </div><!-- end #header -->
+
+<div id="nav_box" class="clearfix">
+<ul class="container_16 clearfix" id="nav_menu">
+    <li<?php if($this->is('index')): ?> class="current"<?php endif; ?>><a href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a></li>
+    <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
+    <?php while($pages->next()): ?>
+    <li<?php if($this->is('page', $pages->slug)): ?> class="current"<?php endif; ?>><a href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>"><?php $pages->title(); ?></a></li>
+    <?php endwhile; ?>
+</ul>
+</div>
+
+<div class="container_16 clearfix">

@@ -16,13 +16,6 @@
 	        </form>
 	    </div> -->
     
-        <div class="widget">
-			<h3><?php _e('页面'); ?></h3>
-            <ul>	 
-				<?php $this->widget('Widget_Contents_Page_List')->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
-            </ul>
-		</div>
-    
 	    <div class="widget">
 			<h3><?php _e('最近回复'); ?></h3>
             <ul>

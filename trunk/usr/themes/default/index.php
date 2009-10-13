@@ -26,7 +26,6 @@
 	<?php endwhile; ?>
 
         <ol class="pages clearfix">
-	    <li>页码:</li>
             <?php $this->pageNav(); ?>
         </ol>
     </div><!-- end #content-->
