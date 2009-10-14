@@ -51,16 +51,16 @@ function threadedComments($comments)
 				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('登出'); ?> &raquo;</a></p>
                 <?php else: ?>
 				<p>
+                    <label for="author"><?php _e('称呼'); ?><span class="required">*</span></label>
 					<input type="text" name="author" id="author" class="text" size="15" value="<?php $this->remember('author'); ?>" />
-					<label for="author"><?php _e('称呼'); ?></label>
 				</p>
 				<p>
+                    <label for="mail"><?php _e('E-mail'); ?><?php if ($this->options->commentsRequireMail): ?><span class="required">*</span><?php endif; ?></label>
 					<input type="text" name="mail" id="mail" class="text" size="15" value="<?php $this->remember('mail'); ?>" />
-					<label for="mail"><?php _e('E-mail'); ?></label>
 				</p>
 				<p>
+                    <label for="url"><?php _e('网站'); ?><?php if ($this->options->commentsRequireURL): ?><span class="required">*</span><?php endif; ?></label>
 					<input type="text" name="url" id="url" class="text" size="15" value="<?php $this->remember('url'); ?>" />
-					<label for="url"><?php _e('网站（选填）'); ?></label>
 				</p>
                 <?php endif; ?>
 				<p><textarea rows="5" cols="50" name="text" class="textarea"><?php $this->remember('text'); ?></textarea></p>
