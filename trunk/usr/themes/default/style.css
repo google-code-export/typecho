@@ -72,7 +72,6 @@ tr.even td  { background: #e5ecf9; }
 tfoot       { font-style: italic; }
 caption     { background: #eee; }
 
-label       { font-weight: bold; }
 fieldset    { padding:1.4em; margin: 0 0 1.5em 0; border: 1px solid #ccc; }
 legend      { font-weight: bold; }
 
@@ -177,6 +176,7 @@ h2.entry_title {
 margin-bottom: 0;
 font-size: 18px;
 font-weight: bold;
+font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif;
 }
 
 h2.entry_title a {
@@ -272,6 +272,11 @@ ol#comment_list li .comment_reply {
 ol#comment_list li .comment_reply a {
 	font-size: 11px;
 	border: none;
+	color: #aaa;
+}
+
+ol#comment_list li .comment_reply a:hover {
+	color: #444;
 }
 
 .comment_data {
@@ -321,6 +326,11 @@ padding-top: 10px;
 
 #respond .cancle_comment_reply a {
 	border: none;
+	color: #aaa;
+}
+
+#respond .cancle_comment_reply a:hover {
+	color: #444;
 }
 
 ol#comment_list li #respond .cancle_comment_reply {
@@ -328,13 +338,23 @@ ol#comment_list li #respond .cancle_comment_reply {
 }
 
 #comment_form label {
+	font-size: 12px;
+	border-bottom: 1px dotted #555;
+	color: #555;
+	font-weight: bold;
+}
+
+#comment_form label .required {
+	color: #C04E37;
+	padding-left: 5px;
+	font-size: 14px;
 }
 #comment_form .text {
-width: 230px;
+width: 100%;
 margin-right: 15px;
 }
 #comment_form textarea {
-width: 470px;
+width: 100%;
 height: 180px;
 overflow: auto;
 }
