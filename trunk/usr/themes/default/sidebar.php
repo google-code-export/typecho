@@ -8,13 +8,6 @@
                 ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
             </ul>
 	    </div>
-
-	    <!-- <div id="search" class="widget">
-			<h3><?php _e('站内搜索'); ?></h3>
-	        <form method="post" action="">
-            	<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="搜索" /></div>
-	        </form>
-	    </div> -->
     
 	    <div class="widget">
 			<h3><?php _e('最近回复'); ?></h3>
