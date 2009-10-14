@@ -162,7 +162,7 @@ text-decoration: underline;
 /* ------------------
  * content
  * --------------- */
-#content { }
+#content { overflow: hidden; }
 #content p { margin-bottom: 20px; }
 
 .post {
@@ -170,6 +170,10 @@ margin-bottom: 20px;
 padding-bottom: 5px;
 border-bottom: 1px solid #eee;
 width: 100%;
+}
+
+.post img {
+max-width: 570px;
 }
 
 h2.entry_title {
