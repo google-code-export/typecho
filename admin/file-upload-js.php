@@ -153,7 +153,7 @@
                     ?> byte",
                     file_types : "<?php echo $options->attachmentTypes(); ?>",
                     file_types_description : "<?php _e('所有文件'); ?>",
-                    file_upload_limit : 100,
+                    file_upload_limit : 0,
                     file_queue_limit : 0,
                     debug: false,
                     
