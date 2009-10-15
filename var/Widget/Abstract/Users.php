@@ -132,7 +132,7 @@ class Widget_Abstract_Users extends Widget_Abstract
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedAtomUrl) : '#';
 
-        $value = $this->plugin(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
         return $value;
     }
     

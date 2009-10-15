@@ -118,7 +118,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
         
         $value['slug'] = $tmpSlug;
-        $value = $this->plugin(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
         return $value;
     }
     

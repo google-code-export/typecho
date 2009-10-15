@@ -79,12 +79,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
         //检查标签闭合
         $excerpt = Typecho_Common::fixHtml($excerpt);
         
-        $excerpt = $this->plugin(__CLASS__)->trigger($plugged)->excerpt($excerpt, $this);
+        $excerpt = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($excerpt, $this);
         if (!$plugged) {
             $excerpt = Typecho_Common::cutParagraph($excerpt);
         }
         
-        return $this->plugin(__CLASS__)->excerptEx($excerpt, $this);
+        return $this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this);
     }
     
     /**
@@ -95,13 +95,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___content()
     {
-        $content = $this->plugin(__CLASS__)->trigger($plugged)->content($this->text, $this);
+        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
         
         if (!$plugged) {
             $content = Typecho_Common::cutParagraph($content);
         }
         
-        return $this->plugin(__CLASS__)->contentEx($content, $this);
+        return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
     }
     
     /**
@@ -418,7 +418,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             }
         }
         
-        $value = $this->plugin(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {

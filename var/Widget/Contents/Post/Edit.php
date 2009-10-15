@@ -369,7 +369,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
-        $contents = $this->plugin()->insert($contents);
+        $contents = $this->pluginHandle()->insert($contents);
         $insertId = $this->insert($contents);
         
         if ($insertId > 0) {
@@ -455,7 +455,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $contents['created'] = $this->getCreated();
 
         /** 提交数据的过滤 */
-        $contents = $this->plugin()->update($contents);
+        $contents = $this->pluginHandle()->update($contents);
         $updateRows = $this->update($contents, $this->db->sql()->where('cid = ?', $this->cid));
 
         if ($updateRows > 0) {

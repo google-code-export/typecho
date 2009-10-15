@@ -114,7 +114,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $comment = $this->plugin()->comment($comment, $this->_content);
+        $comment = $this->pluginHandle()->comment($comment, $this->_content);
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
@@ -123,7 +123,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         ->limit(1), array($this, 'push'));
 
         /** 评论完成接口 */
-        $this->plugin()->finishComment($this);
+        $this->pluginHandle()->finishComment($this);
         
         $this->response->goBack('#' . $this->theId);
     }
@@ -189,13 +189,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $trackback = $this->plugin()->trackback($trackback, $this->_content);
+        $trackback = $this->pluginHandle()->trackback($trackback, $this->_content);
         
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
         
         /** 评论完成接口 */
-        $this->plugin()->finishTrackback($this);
+        $this->pluginHandle()->finishTrackback($this);
         
         /** 返回正确 */
         $this->response->throwXml(array('success' => 0, 'message' => 'Trackback has registered.'));

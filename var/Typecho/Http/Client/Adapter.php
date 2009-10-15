@@ -164,7 +164,10 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @return boolean
      */
-    abstract public static function isAvailable();
+    public static function isAvailable()
+    {
+        return true;
+    }
     
     /**
      * 设置方法名

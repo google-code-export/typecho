@@ -2162,9 +2162,21 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 .typecho-attachment-photo-box .description input {
-    width: 450px;
+    width: 500px;
     border: 1px solid #aaa;
-    background: #eee;
+    background-color: #eee;
+	background-image: url(../images/progress.gif);
+	background-repeat: repeat-y;
+	background-position: -1000px 0;
+}
+
+.typecho-attachment-photo-box .description button {
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.typecho-attachment-photo-box .description ul li object {
+	position: relative;
 }
 
 .typecho-attachment-photo-box img {

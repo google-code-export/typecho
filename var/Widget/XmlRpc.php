@@ -409,7 +409,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
         $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
         $input['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($input['text']));
-        $input['text'] = $this->plugin()->fromOfflineEditor($input['text']);
+        $input['text'] = $this->pluginHandle()->fromOfflineEditor($input['text']);
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
@@ -1109,13 +1109,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     );
                     
                     /** 加入plugin */
-                    $pingback = $this->plugin()->pingback($pingback, $post);
+                    $pingback = $this->pluginHandle()->pingback($pingback, $post);
 
                     /** 执行插入*/
                     $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
 
                     /** 评论完成接口 */
-                    $this->plugin()->finishPingback($this);
+                    $this->pluginHandle()->finishPingback($this);
 
                     return $insertId;
 

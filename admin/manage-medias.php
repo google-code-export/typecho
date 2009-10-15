@@ -85,6 +85,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td>
                             <?php if ($attachments->parentPost->cid): ?>
                             <a href="<?php $options->adminUrl('write-' . $attachments->parentPost->type . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
+                            <?php else: ?>
+                            <span class="description"><?php _e('未归档'); ?></span>
                             <?php endif; ?>
                             </td>
                             <td><?php $attachments->dateWord(); ?></td>

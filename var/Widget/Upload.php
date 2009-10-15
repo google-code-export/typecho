@@ -73,7 +73,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         //获取扩展名
-        $ext = 'bin';
+        $ext = '';
         $part = explode('.', $file['name']);
         if (($length = count($part)) > 1) {
             $ext = strtolower($part[$length - 1]);
@@ -172,11 +172,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         
         //返回相对存储路径
         return array(
-            'name' => $file['name'],
-            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
+            'name' => $content['attachment']->name,
+            'path' => $content['attachment']->path,
             'size' => $file['size'],
-            'type' => $ext,
-            'mime' => Typecho_Common::mimeContentType($path)
+            'type' => $content['attachment']->type,
+            'mime' => $content['attachment']->mime
         );
     }
     
@@ -283,10 +283,78 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
                     
                     /** 增加插件接口 */
-                    $this->plugin()->upload($this);
+                    $this->pluginHandle()->upload($this);
                     
                     $this->response->throwJson(array(
                         'cid'       =>  $insertId,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
+                    ));
+                }
+            }
+        }
+        
+        $this->response->setStatus(500);
+    }
+    
+    /**
+     * 执行升级程序
+     * 
+     * @access public
+     * @return void
+     */
+    public function modify()
+    {
+        if (!empty($_FILES)) {
+            $file = array_pop($_FILES);
+            if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
+                $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+                    ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
+                
+                if (!$this->have()) {
+                    $this->response->setStatus(404);
+                    exit;
+                }
+                
+                if (!$this->allow('edit')) {
+                    $this->response->setStatus(403);
+                    exit;
+                }
+            
+                $uploadHandle = $this->attachment->uploadHandle;
+                $deleteHandle = $this->attachment->deleteHandle;
+                $modifyHandle = $this->attachment->modifyHandle;
+                $attachmentHandle = $this->attachment->attachmentHandle;
+                $attachmentDataHandle = $this->attachment->attachmentDataHandle;
+                $result = call_user_func($modifyHandle, $this->row, $file);
+                
+                if (false === $result) {
+                    $this->response->setStatus(502);
+                    exit;
+                } else {
+                
+                    $result['uploadHandle'] = $uploadHandle;
+                    $result['deleteHandle'] = $deleteHandle;
+                    $result['modifyHandle'] = $modifyHandle;
+                    $result['attachmentHandle'] = $attachmentHandle;
+                    $result['attachmentDataHandle'] = $attachmentDataHandle;
+                
+                    $this->update(array(
+                        'text'      =>  serialize($result)
+                    ), $this->db->sql()->where('cid = ?', $this->cid));
+                    
+                    $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)
+                    ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
+                    
+                    /** 增加插件接口 */
+                    $this->pluginHandle()->modify($this);
+                    
+                    $this->response->throwJson(array(
+                        'cid'       =>  $this->cid,
                         'title'     =>  $this->attachment->name,
                         'type'      =>  $this->attachment->type,
                         'size'      =>  $this->attachment->size,
@@ -309,8 +377,12 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function action()
     {
-        if ($this->user->pass('contributor', true)) {
-            $this->on($this->request->isPost())->upload();
+        if ($this->user->pass('contributor', true) && $this->request->isPost()) {
+            if ($this->request->is('do=modify&cid')) {
+                $this->modify();
+            } else {
+                $this->upload();
+            }
         } else {
             $this->response->setStatus(403);
         }
