@@ -2154,6 +2154,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 .typecho-attachment-photo-box .description ul li {
     border-bottom: 1px dashed #E8EDD6;
     line-height: 28px;
+	height: 28px;
 }
 
 .typecho-attachment-photo-box .description strong {
@@ -2175,7 +2176,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 	margin-left: 5px;
 }
 
-.typecho-attachment-photo-box .description ul li object {
+.typecho-attachment-photo-box .description ul li #swfu {
+	display: block;
+	_display: inline;
 	position: relative;
 }
 
