@@ -149,7 +149,7 @@ height: 29px;
 line-height: 29px;
 display: block;
 float: left;
-padding: 0 10px;
+padding: 0 20px;
 }
 
 ul#nav_menu li.current a {
@@ -186,6 +186,11 @@ font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial
 h2.entry_title a {
 border: none;
 }
+
+.post h3 { font-size: 16px; }
+.post h4 { font-size: 15px; }
+.post h5 { font-size: 14px; font-weight: bold; }
+.post h6 { font-size: 13px; font-weight: bold; }
 
 .entry_data {
 color: #999;

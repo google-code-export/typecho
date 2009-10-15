@@ -75,16 +75,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         $contents = explode('<!--more-->', $this->text);
         list($excerpt) = $contents;
-        
-        //检查标签闭合
-        $excerpt = Typecho_Common::fixHtml($excerpt);
-        
+
         $excerpt = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($excerpt, $this);
         if (!$plugged) {
             $excerpt = Typecho_Common::cutParagraph($excerpt);
         }
         
-        return $this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this);
+        return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
     }
     
     /**
