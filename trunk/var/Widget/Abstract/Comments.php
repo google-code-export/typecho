@@ -78,12 +78,12 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
         
-        $text = $this->plugin(__CLASS__)->trigger($plugged)->content($text, $this);
+        $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
             $text = Typecho_Common::cutParagraph($text);
         }
         
-        return $this->plugin(__CLASS__)->contentEx($text, $this);
+        return $this->pluginHandle(__CLASS__)->contentEx($text, $this);
     }
     
     /**
@@ -339,7 +339,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function filter(array $value)
     {
         $value['date'] = new Typecho_Date($value['created']);
-        $value = $this->plugin(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
         return $value;
     }
 

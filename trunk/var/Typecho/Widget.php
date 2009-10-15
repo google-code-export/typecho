@@ -145,7 +145,7 @@ abstract class Typecho_Widget
      * @param string $handle 句柄
      * @return Typecho_Plugin
      */
-    public function plugin($handle = NULL)
+    public function pluginHandle($handle = NULL)
     {
         return Typecho_Plugin::factory(empty($handle) ? get_class($this) : $handle);
     }

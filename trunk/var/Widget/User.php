@@ -113,7 +113,7 @@ class Widget_User extends Typecho_Widget
     public function login($name, $password, $temporarily = false, $expire = 0)
     {
         //插件接口
-        $result = $this->plugin()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
+        $result = $this->pluginHandle()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
         if ($loginPluggable) {
             return $result;
         }
@@ -124,7 +124,7 @@ class Widget_User extends Typecho_Widget
         ->where('name = ?', $name)
         ->limit(1));
         
-        $hashValidate = $this->plugin()->trigger($hashPluggable)->hashValidate($password, $user['password']);
+        $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
             $hashValidate = Typecho_Common::hashValidate($password, $user['password']);
         }
@@ -150,12 +150,12 @@ class Widget_User extends Typecho_Widget
             /** 压入数据 */
             $this->push($user);
             $this->_hasLogin = true;
-            $this->plugin()->loginSucceed($this, $name, $password, $temporarily, $expire);
+            $this->pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
             
             return true;
         }
         
-        $this->plugin()->loginFail($this, $name, $password, $temporarily, $expire);
+        $this->pluginHandle()->loginFail($this, $name, $password, $temporarily, $expire);
         return false;
     }
     
@@ -167,7 +167,7 @@ class Widget_User extends Typecho_Widget
      */
     public function logout()
     {
-        $this->plugin()->trigger($logoutPluggable)->logout();
+        $this->pluginHandle()->trigger($logoutPluggable)->logout();
         if ($logoutPluggable) {
             return;
         }

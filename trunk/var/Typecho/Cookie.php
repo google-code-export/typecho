@@ -29,7 +29,7 @@ class Typecho_Cookie
      * @param string $default 默认的参数
      * @return mixed
      */
-    public function get($key, $default = NULL)
+    public static function get($key, $default = NULL)
     {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
@@ -44,7 +44,7 @@ class Typecho_Cookie
      * @param string $url 路径(可以是域名,也可以是地址)
      * @return void
      */
-    public function set($key, $value, $expire = 0, $url = NULL)
+    public static function set($key, $value, $expire = 0, $url = NULL)
     {
         $path = '/';
         if (!empty($url)) {
@@ -71,7 +71,7 @@ class Typecho_Cookie
      * @param string $key 指定的参数
      * @return void
      */
-    public function delete($key, $url = NULL)
+    public static function delete($key, $url = NULL)
     {
         if (!isset($_COOKIE[$key])) {
             return;

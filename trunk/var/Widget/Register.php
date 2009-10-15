@@ -63,13 +63,13 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
             'group'     =>  'subscriber'
         );
         
-        $dataStruct = $this->plugin()->register($dataStruct);
+        $dataStruct = $this->pluginHandle()->register($dataStruct);
         
         $insertId = $this->insert($dataStruct);
         $this->db->fetchRow($this->select()->where('uid = ?', $insertId)
         ->limit(1), array($this, 'push'));
         
-        $this->plugin()->finishRegister($this);
+        $this->pluginHandle()->finishRegister($this);
         
         $this->user->login($this->request->name, $generatedPassword);
         

@@ -56,7 +56,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             /** 防止穷举,休眠3秒 */
             sleep(3);
             
-            $this->plugin()->loginFail($this->user, $this->request->name,
+            $this->pluginHandle()->loginFail($this->user, $this->request->name,
             $this->request->password, 1 == $this->request->remember);
             
             Typecho_Cookie::set('__typecho_remember_name', $this->request->name);
@@ -64,7 +64,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             $this->response->goBack('?referer=' . urlencode($this->request->referer));
         }
         
-        $this->plugin()->loginSucceed($this->user, $this->request->name,
+        $this->pluginHandle()->loginSucceed($this->user, $this->request->name,
         $this->request->password, 1 == $this->request->remember);
         
         /** 跳转验证后地址 */

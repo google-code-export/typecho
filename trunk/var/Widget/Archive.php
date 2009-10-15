@@ -549,7 +549,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $hasPushed = true;
         
         /** 插件接口 */
-        $this->plugin()->error404Handle($select, $this);
+        $this->pluginHandle()->error404Handle($select, $this);
     }
     
     /**
@@ -679,7 +679,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $hasPushed = true;
         
         /** 插件接口 */
-        $this->plugin()->singleHandle($select, $this);
+        $this->pluginHandle()->singleHandle($select, $this);
     }
     
     /**
@@ -747,7 +747,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $category['slug'];
         
         /** 插件接口 */
-        $this->plugin()->categoryHandle($select, $this);
+        $this->pluginHandle()->categoryHandle($select, $this);
     }
     
     /**
@@ -813,7 +813,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $tag['slug'];
         
         /** 插件接口 */
-        $this->plugin()->tagHandle($select, $this);
+        $this->pluginHandle()->tagHandle($select, $this);
     }
     
     /**
@@ -867,7 +867,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $author['uid'];
         
         /** 插件接口 */
-        $this->plugin()->authorHandle($select, $this);
+        $this->pluginHandle()->authorHandle($select, $this);
     }
     
     /**
@@ -949,7 +949,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
         
         /** 插件接口 */
-        $this->plugin()->dateHandle($select, $this);
+        $this->pluginHandle()->dateHandle($select, $this);
     }
     
     /**
@@ -965,7 +965,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 增加自定义搜索引擎接口 */
         //~ fix issue 40
         $keywords = $this->request->filter('url', 'search')->keywords;
-        $this->plugin()->trigger($hasPushed)->search($keywords, $this);
+        $this->pluginHandle()->trigger($hasPushed)->search($keywords, $this);
 
         if (!$hasPushed) {
             $searchQuery = '%' . $keywords . '%';
@@ -999,7 +999,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveType = 'search';
         
         /** 插件接口 */
-        $this->plugin()->searchHandle($select, $this);
+        $this->pluginHandle()->searchHandle($select, $this);
     }
 
     /**
@@ -1090,7 +1090,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $handle = $handles[$this->parameter->type];
             $this->{$handle}($select, $hasPushed);
         } else {
-            $hasPushed = $this->plugin()->handle($this->parameter->type, $this, $select);
+            $hasPushed = $this->pluginHandle()->handle($this->parameter->type, $this, $select);
         }
         
         /** 如果已经提前压入则直接返回 */
@@ -1131,7 +1131,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
         $hasNav = false;
-        $this->plugin()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
+        $this->pluginHandle()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
         
         if (!$hasNav) {
             $query = Typecho_Router::url($this->parameter->type . 
@@ -1343,7 +1343,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 插件支持 */
-        $this->plugin()->header($header, $this);
+        $this->pluginHandle()->header($header, $this);
         
         /** 输出header */
         echo $header;
@@ -1357,7 +1357,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function footer()
     {
-        $this->plugin()->footer($this);
+        $this->pluginHandle()->footer($this);
     }
     
     /**
@@ -1524,13 +1524,13 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
     
         /** 挂接插件 */
-        $this->plugin()->beforeRender($this);
+        $this->pluginHandle()->beforeRender($this);
         
         /** 输出模板 */
         require_once $themeDir . $this->_themeFile;
         
         /** 挂接插件 */
-        $this->plugin()->afterRender($this);
+        $this->pluginHandle()->afterRender($this);
     }
 
     /**
@@ -1560,7 +1560,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             while ($comments->next()) {
-                $suffix = $this->plugin()->trigger($plugged)->commentFeedItem($this->_feedType, $comments);
+                $suffix = $this->pluginHandle()->trigger($plugged)->commentFeedItem($this->_feedType, $comments);
                 if (!$plugged) {
                     $suffix = NULL;
                 }
@@ -1592,7 +1592,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             while ($this->next()) {
-                $suffix = $this->plugin()->trigger($plugged)->feedItem($this->_feedType, $this);
+                $suffix = $this->pluginHandle()->trigger($plugged)->feedItem($this->_feedType, $this);
                 if (!$plugged) {
                     $suffix = NULL;
                 }
