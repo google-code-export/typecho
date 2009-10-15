@@ -22,7 +22,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                             <li><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span><strong><?php $attachment->attachment->name(); ?></strong> <small><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</small></li>
                             <li><input id="attachment-url" type="text" readonly class="text" value="<?php $attachment->attachment->url(); ?>" />
                             <button id="exchange" disabled><?php _e('替换'); ?></button>
-                            <span id="swfu-placeholder"></span></li>
+                            <span id="swfu"><span id="swfu-placeholder"></span></span></li>
                         </ul>
                     </div>
                 </div>
@@ -53,12 +53,14 @@ include 'common-js.php';
                 .getElement('.typecho-attachment-photo-box button#exchange');
                 
                 var obj = $(document)
-                .getElement('.typecho-attachment-photo-box .description ul li object');
+                .getElement('.typecho-attachment-photo-box .description ul li #swfu');
                 
                 offset = obj.getCoordinates(btn);
                 obj.setStyles({
-                    left: 0 - offset.left,
-                    top: 0 - offset.top
+                    'width': btn.getSize().x,
+                    'height': btn.getSize().y,
+                    'left': 0 - offset.left,
+                    'top': 0 - offset.top
                 });
                 
                 btn.removeAttribute('disabled');
@@ -86,7 +88,7 @@ include 'common-js.php';
                 _el.set('tween', {duration: 1500});
                 
                 _el.setStyles({
-                    'background-image' : 'none',
+                    'background-position' : '-1000px 0',
                     'background-color' : '#D3DBB3'
                 });
                 
