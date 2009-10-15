@@ -73,7 +73,10 @@ include 'common-js.php';
             };
         
             var uploadStart = function (file) {
-                // do nothing
+                $(document)
+                .getElement('.typecho-attachment-photo-box button#exchange')
+                .set('html', '<?php _e('上传中'); ?>')
+                .setAttribute('disabled', '');
             };
             
             var uploadSuccess = function (file, serverData) {
@@ -104,7 +107,10 @@ include 'common-js.php';
             };
             
             var uploadComplete = function (file) {
-                //console.dir(file);
+                $(document)
+                .getElement('.typecho-attachment-photo-box button#exchange')
+                .set('html', '<?php _e('替换'); ?>')
+                .removeAttribute('disabled');
             };
             
             var uploadError = function (file, errorCode, message) {
@@ -143,8 +149,8 @@ include 'common-js.php';
                 file_types : "<?php echo '' == $attachment->attachment->type ? $attachment->attachment->name :
                 '*.' . $attachment->attachment->type; ?>",
                 file_types_description : "<?php _e('所有文件'); ?>",
-                file_upload_limit : 100,
-                file_queue_limit : 0,
+                file_upload_limit : 0,
+                file_queue_limit : 1,
                 debug: false,
                 
                 //Handle Settings
