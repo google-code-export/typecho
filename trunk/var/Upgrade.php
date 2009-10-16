@@ -669,4 +669,37 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('value' => serialize($routingTable)))
                 ->where('name = ?', 'routingTable'));
     }
+    
+    /**
+     * 升级至9.10.16
+     * 增加评论分页
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_10_16($db, $options)
+    {
+        /** 修改路由 */
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        $pre = array_slice($routingTable, 0, 20);
+        $next = array_slice($routingTable, 20);
+        
+        $commentPage = array (
+            'url' => '[permalink:string]/[commentType:alpha]-page-[commentPage:digital]',
+            'widget' => 'Widget_Archive',
+            'action' => 'render',
+        );
+
+        $routingTable = array_merge($pre, array('comment_page' => $commentPage), $next);
+
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+    }
 }

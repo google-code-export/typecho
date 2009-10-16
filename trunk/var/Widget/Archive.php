@@ -561,7 +561,14 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     private function singleHandle(Typecho_Db_Query $select, &$hasPushed)
-    {    
+    {
+        if ('comment_page' == $this->parameter->type) {
+            $params = array();
+            $matched = Typecho_Router::match($this->request->permalink, $params);
+            $this->parameter->type = Typecho_Router::$current;
+            $this->request->setParams($params);
+        }
+    
         /** 匹配类型 */
         $select->where('table.contents.type = ?', $this->parameter->type);
         
@@ -1064,26 +1071,27 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         $handles = array(
-            'index'             =>  'indexHandle',
-            'index_page'        =>  'indexHandle',
-            404                 =>  'error404Handle',
-            'page'              =>  'singleHandle',
-            'post'              =>  'singleHandle',
-            'attachment'        =>  'singleHandle',
-            'category'          =>  'categoryHandle',
-            'category_page'     =>  'categoryHandle',
-            'tag'               =>  'tagHandle',
-            'tag_page'          =>  'tagHandle',
-            'author'            =>  'authorHandle',
-            'author_page'       =>  'authorHandle',
-            'archive_year'      =>  'dateHandle',
-            'archive_year_page' =>  'dateHandle',
-            'archive_month'     =>  'dateHandle',
-            'archive_month_page'=>  'dateHandle',
-            'archive_day'       =>  'dateHandle',
-            'archive_day_page'  =>  'dateHandle',
-            'search'            =>  'searchHandle',
-            'search_page'       =>  'searchHandle'
+            'index'                     =>  'indexHandle',
+            'index_page'                =>  'indexHandle',
+            404                         =>  'error404Handle',
+            'page'                      =>  'singleHandle',
+            'post'                      =>  'singleHandle',
+            'attachment'                =>  'singleHandle',
+            'comment_page'              =>  'singleHandle',
+            'category'                  =>  'categoryHandle',
+            'category_page'             =>  'categoryHandle',
+            'tag'                       =>  'tagHandle',
+            'tag_page'                  =>  'tagHandle',
+            'author'                    =>  'authorHandle',
+            'author_page'               =>  'authorHandle',
+            'archive_year'              =>  'dateHandle',
+            'archive_year_page'         =>  'dateHandle',
+            'archive_month'             =>  'dateHandle',
+            'archive_month_page'        =>  'dateHandle',
+            'archive_day'               =>  'dateHandle',
+            'archive_day_page'          =>  'dateHandle',
+            'search'                    =>  'searchHandle',
+            'search_page'               =>  'searchHandle'
         );
         
         if (isset($handles[$this->parameter->type])) {
@@ -1174,23 +1182,18 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access public
      * @param string $type 评论类型
      * @param boolean $desc 是否倒序输出
+     * @param boolean $pageSize 评论分页数目,如果为0则代表不分页
+     * @param boolean $focusLast 是否自动聚焦到最后一页
      * @return Widget_Abstract_Comments
      */
-    public function comments($type = NULL, $desc = false)
+    public function comments($type = NULL, $desc = 0, $pageSize = 0, $focusLast = 0)
     {
         $type = strtolower($type);
-        $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'desc' => $desc, 'parentContent' => $this->row);
-        
-        switch ($type) {
-            case 'comment':
-                return $this->widget('Widget_Comments_Archive_Comment', $parameter);
-            case 'trackback':
-                return $this->widget('Widget_Comments_Archive_Trackback', $parameter);
-            case 'pingback':
-                return $this->widget('Widget_Comments_Archive_Pingback', $parameter);
-            default:
-                return $this->widget('Widget_Comments_Archive', $parameter);
-        }
+        $parameter = array('cid' => $this->hidden ? 0 : $this->cid, 'type' => $type, 'desc' => $desc,
+        'pageSize' => $pageSize, 'focusLast' => $focusLast, 'parentContent' => $this->row,
+        'commentPage' => $this->request->filter('int')->commentPage);
+
+        return $this->widget('Widget_Comments_Archive' . (empty($type) ? '' : '@' . $type), $parameter);
     }
     
     /**
