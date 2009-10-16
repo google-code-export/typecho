@@ -1432,7 +1432,7 @@ ul.typecho-list-notable li span.trackback {
     background-position: bottom;
 }
 
-ul.typecho-list-notable li code {
+ul.typecho-list-notable li code, ul.typecho-list-notable li pre {
     display: block;
     background: #fff;
     margin: 10px;
