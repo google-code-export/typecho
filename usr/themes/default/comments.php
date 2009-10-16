@@ -22,16 +22,9 @@ function threadedComments($comments)
 ?>
 
 <div id="comments">
-            <?php $this->comments(NULL, 0, 50, 1)->to($comments); ?>
+            <?php $this->comments()->to($comments); ?>
             <?php if ($comments->have()): ?>
 			<h4><?php $this->commentsNum(_t('当前暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?> &raquo;</h4>
-            
-            <?php if ($this->commentsNum > 50): ?>
-            <ol class="pages clearfix">
-                <li><?php _e('评论分页'); ?></li>
-                <?php $comments->pageNav(); ?>
-            </ol>
-            <?php endif; ?>
             
 			<ol id="comment_list">
             <?php while($comments->next()): ?>
@@ -49,13 +42,6 @@ function threadedComments($comments)
 				</li>
 			<?php endwhile; ?>
 			</ol>
-            
-            <?php if ($this->commentsNum > 50): ?>
-            <ol class="pages clearfix">
-                 <li><?php _e('评论分页'); ?></li>
-                <?php $comments->pageNav(); ?>
-            </ol>
-            <?php endif; ?>
             
             <?php endif; ?>
 
