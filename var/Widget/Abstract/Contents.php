@@ -358,19 +358,19 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['slug'] = urlencode($value['slug']);
         
         /** 生成静态路径 */
-        $linkPath = $routeExists ? Typecho_Router::url($type, $value) : '#';
+        $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
         
         /** 生成反馈地址 */
         /** 评论 */
         $value['commentUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'comment', 'permalink' => $linkPath), $this->options->index);
+        array('type' => 'comment', 'permalink' => $value['pathinfo']), $this->options->index);
         
         /** trackback */
         $value['trackbackUrl'] = Typecho_Router::url('feedback', 
-        array('type' => 'trackback', 'permalink' => $linkPath), $this->options->index);
+        array('type' => 'trackback', 'permalink' => $value['pathinfo']), $this->options->index);
         
         /** 生成静态链接 */
-        $value['permalink'] = Typecho_Common::url($linkPath, $this->options->index);
+        $value['permalink'] = Typecho_Common::url($value['pathinfo'], $this->options->index);
         
         /** 处理附件 */
         if ('attachment' == $type) {

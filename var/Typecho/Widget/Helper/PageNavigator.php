@@ -86,6 +86,19 @@ abstract class Typecho_Widget_Helper_PageNavigator
     }
     
     /**
+     * 设置页面占位符
+     * 
+     * @access protected
+     * @param string $holder 页面占位符
+     * @return void
+     */
+    public function setPageHolder($holder)
+    {
+        $this->_pageHolder = array('{' . $holder . '}',
+        str_replace(array('{', '}'), array('%7B', '%7D'), $holder));
+    }
+    
+    /**
      * 输出方法
      * 
      * @access public
