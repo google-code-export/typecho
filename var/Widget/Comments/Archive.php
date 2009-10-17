@@ -151,7 +151,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function execute()
     {
-        $this->_commetType = empty($this->parameter->type) ? 'comment' : $this->parameter->type;
+        $this->_commentType = empty($this->parameter->type) ? 'comment' : $this->parameter->type;
         $this->getCommentsByType($this->parameter->type);
     }
     
