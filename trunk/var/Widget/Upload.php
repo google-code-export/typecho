@@ -267,8 +267,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     $result['modifyHandle'] = $modifyHandle;
                     $result['attachmentHandle'] = $attachmentHandle;
                     $result['attachmentDataHandle'] = $attachmentDataHandle;
-                
-                    $insertId = $this->insert(array(
+                    
+                    $struct = array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
                         'type'      =>  'attachment',
@@ -277,7 +277,18 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'allowComment'      =>  1,
                         'allowPing'         =>  0,
                         'allowFeed'         =>  1
-                    ));
+                    );
+                    
+                    if (isset($this->request->cid)) {
+                        $cid = $this->request->filter('int')->cid;
+                    
+                        if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
+                            $struct['parent'] = $cid;
+                            $struct['status'] = 'attached';
+                        }
+                    }
+                
+                    $insertId = $this->insert($struct);
                     
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));

@@ -38,7 +38,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      * @access public
      * @return Typecho_Widget_Helper_Form
      */
-    public function form()
+    public function profileForm()
     {
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
@@ -239,7 +239,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function updateProfile()
     {
-        if ($this->form()->validate()) {
+        if ($this->profileForm()->validate()) {
             $this->response->goBack();
         }
     

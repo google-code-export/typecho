@@ -702,4 +702,86 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('value' => serialize($routingTable)))
                 ->where('name = ?', 'routingTable'));
     }
+    
+    /**
+     * 升级至9.10.16
+     * 增加评论分页
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_10_20($db, $options)
+    {
+        /** 修改数据库字段 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+        
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query('ALTER TABLE  `' . $prefix . 'contents` ADD  `parent` INT(10) UNSIGNED NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('ALTER TABLE  "' . $prefix . 'contents" ADD COLUMN  "parent" INT NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'contents_tmp ( "cid" INTEGER NOT NULL PRIMARY KEY, 
+"title" varchar(200) default NULL , 
+"slug" varchar(200) default NULL , 
+"created" int(10) default \'0\' , 
+"modified" int(10) default \'0\' , 
+"text" text , 
+"order" int(10) default \'0\' , 
+"authorId" int(10) default \'0\' , 
+"template" varchar(32) default NULL , 
+"type" varchar(16) default \'post\' , 
+"status" varchar(16) default \'publish\' , 
+"password" varchar(32) default NULL , 
+"commentsNum" int(10) default \'0\' , 
+"allowComment" char(1) default \'0\' , 
+"allowPing" char(1) default \'0\' , 
+"allowFeed" char(1) default \'0\' ,
+"parent" int(10) default \'0\' )', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'contents_tmp ("cid", "title", "slug", "created", "modified"
+                , "text", "order", "authorId", "template", "type", "status", "password", "commentsNum", "allowComment",
+                "allowPing", "allowFeed", "parent") SELECT "cid", "title", "slug", "created", "modified"
+                , "text", "order", "authorId", "template", "type", "status", "password", "commentsNum", "allowComment",
+                "allowPing", "allowFeed", "parent" FROM ' . $prefix . 'contents', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'contents', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE ' . $prefix . 'contents ( "cid" INTEGER NOT NULL PRIMARY KEY, 
+"title" varchar(200) default NULL , 
+"slug" varchar(200) default NULL , 
+"created" int(10) default \'0\' , 
+"modified" int(10) default \'0\' , 
+"text" text , 
+"order" int(10) default \'0\' , 
+"authorId" int(10) default \'0\' , 
+"template" varchar(32) default NULL , 
+"type" varchar(16) default \'post\' , 
+"status" varchar(16) default \'publish\' , 
+"password" varchar(32) default NULL , 
+"commentsNum" int(10) default \'0\' , 
+"allowComment" char(1) default \'0\' , 
+"allowPing" char(1) default \'0\' , 
+"allowFeed" char(1) default \'0\' ,
+"parent" int(10) default \'0\' )', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'contents SELECT * FROM ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
+
+                break;
+
+            default:
+                break;
+        }
+        
+        $db->query($db->update('table.contents')->expression('parent', 'order')
+        ->where('type = ?', 'attachment'));
+        
+        $db->query($db->update('table.contents')->rows(array('order' => 0))
+        ->where('type = ?', 'attachment'));
+    }
 }

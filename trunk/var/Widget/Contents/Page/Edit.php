@@ -69,7 +69,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
             
             /** 同步附件 */
-            $this->attach($insertId);
+            if ('publish' == $contents['status']) {
+                $this->publishAttach($insertId);
+            } else {
+                $this->attach($insertId);
+            }
         }
         
         /** 发送ping */
@@ -136,7 +140,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->db->fetchRow($this->select()->where('cid = ?', $this->cid)->limit(1), array($this, 'push'));
             
             /** 同步附件 */
-            $this->attach($this->cid);
+            if ('publish' == $contents['status']) {
+                $this->publishAttach($this->cid);
+            } else {
+                $this->attach($this->cid);
+            }
         }
         
         /** 发送pingback */

@@ -46,6 +46,7 @@ CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_c
   "allowComment" CHAR(1) NULL DEFAULT '0',
   "allowPing" CHAR(1) NULL DEFAULT '0',
   "allowFeed" CHAR(1) NULL DEFAULT '0',
+  "parent" INT NULL DEFAULT '0',
   PRIMARY KEY ("cid"),
   UNIQUE ("slug")
 );

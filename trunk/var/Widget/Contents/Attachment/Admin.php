@@ -60,7 +60,7 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
     protected function ___parentPost()
     {
         return new Typecho_Config($this->db->fetchRow(
-        $this->select()->where('table.contents.cid = ?', $this->order)
+        $this->select()->where('table.contents.cid = ?', $this->parentId)
         ->limit(1)));
     }
 
@@ -98,6 +98,9 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
                 $select->where('table.contents.status = ?', 'unattached');
                 break;
             case 'all':
+                break;
+            case 'attached':
+                $select->where('table.contents.status = ?', 'attached');
                 break;
             case 'publish':
             default:

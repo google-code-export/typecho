@@ -71,7 +71,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('desc=0&pageSize=0&focusLast=0&type&commentPage=0');
+        $this->parameter->setDefault('parentId=0&desc=0&pageSize=0&focusLast=0&type&commentPage=0');
     }
     
     /**
@@ -94,8 +94,12 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     protected function getCommentsByType($type = NULL)
     {
+        if (!$this->parameter->parentId) {
+            return;
+        }
+    
         $select = $this->select()->where('table.comments.status = ?', 'approved')
-        ->where('table.comments.cid = ?', $this->parameter->cid);
+        ->where('table.comments.cid = ?', $this->parameter->parentId);
         
         if (!empty($type)) {
             $select->where('table.comments.type = ?', $type);

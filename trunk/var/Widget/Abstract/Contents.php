@@ -53,6 +53,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
     
     /**
+     * 获取父id
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___parentId()
+    {
+        return $this->row['parent'];
+    }
+    
+    /**
      * 对文章的简短纯文本描述
      * 
      * @access protected
@@ -149,8 +160,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.authorId',
         'table.contents.modified', 'table.contents.type', 'table.contents.status', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.order',
-        'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed')
-        ->from('table.contents');
+        'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
+        'table.contents.parent')->from('table.contents');
     }
     
     /**
@@ -178,6 +189,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
+            'parent'        =>  empty($content['parent']) ? 0 : intval($content['parent'])
         );
         
         if (!empty($content['cid'])) {
@@ -222,6 +234,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
+            'parent'        =>  empty($content['parent']) ? 0 : intval($content['parent'])
         );
         
         $updateStruct = array();
