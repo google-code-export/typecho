@@ -1197,6 +1197,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
+     * 获取附件对象
+     * 
+     * @access public
+     * @param integer $limit 最大个数
+     * @return Widget_Contents_Attachment_Related
+     */
+    public function attachments($limit = 0)
+    {
+        return $this->widget('Widget_Contents_Attachment_Related', array('cid' => $this->cid, 'limit' => $limit));
+    }
+    
+    /**
      * 显示下一个内容的标题链接
      * 
      * @access public
