@@ -32,7 +32,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
             </div>
             <div class="column-08 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
-                <?php Typecho_Widget::widget('Widget_Users_Profile')->form()->render(); ?>
+                <?php Typecho_Widget::widget('Widget_Users_Profile')->profileForm()->render(); ?>
             </div>
         </div>
     </div>

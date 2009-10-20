@@ -31,7 +31,8 @@ CREATE TABLE typecho_contents ( "cid" INTEGER NOT NULL PRIMARY KEY,
 "commentsNum" int(10) default '0' , 
 "allowComment" char(1) default '0' , 
 "allowPing" char(1) default '0' , 
-"allowFeed" char(1) default '0' );
+"allowFeed" char(1) default '0' ,
+"parent" int(10) default '0' );
 
 CREATE UNIQUE INDEX typecho_contents_slug ON typecho_contents ("slug");
 CREATE INDEX typecho_contents_created ON typecho_contents ("created");

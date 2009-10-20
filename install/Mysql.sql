@@ -60,6 +60,7 @@ CREATE TABLE `typecho_contents` (
   `allowComment` char(1) default '0' COMMENT '是否允许评论',
   `allowPing` char(1) default '0' COMMENT '是否允许ping',
   `allowFeed` char(1) default '0' COMMENT '允许出现在聚合中',
+  `parent` int(10) unsigned default '0' COMMENT '父id',
   PRIMARY KEY  (`cid`),
   UNIQUE KEY `slug` (`slug`),
   KEY `created` (`created`)

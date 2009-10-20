@@ -27,10 +27,10 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
      */
     public function execute()
     {
-        $this->parameter->setDefault('cid=0&limit=0');
+        $this->parameter->setDefault('parentId=0&limit=0');
         
         //如果没有cid值
-        if (!$this->parameter->cid) {
+        if (!$this->parameter->parentId) {
             return;
         }
 
@@ -38,7 +38,7 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
         $select = $this->select()->where('table.contents.type = ?', 'attachment');
         
         //order字段在附件里代表所属文章
-        $select->where('table.contents.order = ?', $this->parameter->cid);
+        $select->where('table.contents.parent = ?', $this->parameter->parentId);
         
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC);

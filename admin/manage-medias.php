@@ -14,8 +14,15 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="column-24 start-01">
                 <?php if($user->pass('editor', true)): ?>
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('已归档'); ?></a></li>
-                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未归档'); ?>
+                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('已发布'); ?></a></li>
+                    <li<?php if('attached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=attached'); ?>"><?php _e('草稿'); ?>
+                    <?php if('on' != $request->get('__typecho_all_attachments') && $stat->myAttachedAttachmentsNum > 0): ?> 
+                        <span class="balloon"><?php $stat->myAttachedAttachmentsNum(); ?></span>
+                    <?php elseif('on' == $request->get('__typecho_all_attachments') && $stat->attachedAttachmentsNum > 0): ?>
+                        <span class="balloon"><?php $stat->attachedAttachmentsNum(); ?></span>
+                    <?php endif; ?>
+                    </a></li>
+                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未关联'); ?>
                     <?php if('on' != $request->get('__typecho_all_attachments') && $stat->myUnattachedAttachmentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myUnattachedAttachmentsNum(); ?></span>
                     <?php elseif('on' == $request->get('__typecho_all_attachments') && $stat->unattachedAttachmentsNum > 0): ?>
