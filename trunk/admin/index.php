@@ -137,15 +137,11 @@ include 'common-js.php';
             var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=checkVersion");
             _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
                 if (responseJSON && responseJSON.available) {
-                    var _div = document.createElement('div');
-                    $(_div).addClass('update-check');
-                    $(_div).addClass('typecho-radius-topleft');
-                    $(_div).addClass('typecho-radius-topright');
-                    $(_div).addClass('typecho-radius-bottomleft');
-                    $(_div).addClass('typecho-radius-bottomright');
-                    var _html = '<p class="current"><?php _e('您当前使用的版本是'); ?> <em>' + responseJSON.current + '</em></p>';
-                    _html += '<p class="latest"><a target="_blank" href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>';
-                    $(_div).set('html', _html);
+                    var _div = document.createElement('div', {
+                        'class' : 'update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright',
+                        'html'  : '<p class="current"><?php _e('您当前使用的版本是'); ?> <em>' + responseJSON.current + '</em></p>' +
+                        '<p class="latest"><a target="_blank" href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>'
+                    });
                     
                     $(_div).fade('hide');
                     $(document).getElement('.start-19').insertBefore(_div, $(document).getElement('.start-19 h3'));

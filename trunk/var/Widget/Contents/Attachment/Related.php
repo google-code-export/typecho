@@ -27,7 +27,7 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
      */
     public function execute()
     {
-        $this->parameter->setDefault('cid=0');
+        $this->parameter->setDefault('cid=0&limit=0');
         
         //如果没有cid值
         if (!$this->parameter->cid) {
@@ -42,6 +42,10 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
         
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC);
+        
+        if ($this->parameter->limit > 0) {
+            $select->limit($this->parameter->limit);
+        }
         
         $this->db->fetchAll($select, array($this, 'push'));
     }
