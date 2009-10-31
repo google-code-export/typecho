@@ -618,26 +618,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->db->fetchRow($select, array($this, 'push'));
         
         if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
-            if ('page' == $this->parameter->type && isset($this->request->slug)) {
-                /** 设置归档类型 */
-                $this->_archiveType = 'custom';
-                
-                /** 设置归档缩略名 */
-                $this->_archiveSlug = str_replace(array('.', '/', '\\'), '', $this->request->slug);
-                
-                /** 设置单一归档类型 */
-                $this->_archiveSingle = true;
-                
-                /** 设置模板 */
-                $this->_themeFile = $this->_archiveType . '/' . $this->_archiveSlug . '.php';
-                
-                $hasPushed = true;
-                
-                return;
-            } else {
-                /** 对没有索引情况下的判断 */
-                throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
-            }
+            /** 对没有索引情况下的判断 */
+            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
         }
 
         /** 设置关键词 */
@@ -1060,16 +1042,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_keywords = $this->options->keywords;
         $this->_description = $this->options->description;
         
-        /** 支持自定义首页 */
-        if (!$this->_invokeFromOutside && 'index' == $this->parameter->type &&
-        empty($this->_feed) && $this->checkCustomIndex()) {
-            //自定义首页标志
-            $this->_archiveCustom = true;
-            
-            /** 直接返回 */
-            return;
-        }
-        
         $handles = array(
             'index'                     =>  'indexHandle',
             'index_page'                =>  'indexHandle',
@@ -1444,25 +1416,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function need($fileName)
     {
         require __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
-    }
-    
-    /**
-     * 输出自定义主页
-     * 
-     * @access public
-     * @return void
-     */
-    public function checkCustomIndex()
-    {
-        $themeFile = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ .
-        '/' . $this->options->theme . '/custom/index.php';
-        
-        if (file_exists($themeFile)) {
-            $this->_themeFile = '/custom/index.php';
-            return true;
-        }
-        
-        return false;
     }
     
     /**

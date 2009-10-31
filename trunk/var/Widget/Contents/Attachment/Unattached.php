@@ -28,8 +28,8 @@ class Widget_Contents_Attachment_Unattached extends Widget_Abstract_Contents
     public function execute()
     {
         /** 构建基础查询 */
-        $select = $this->select()->where('table.contents.type = ? AND (table.contents.status = ? OR
-        table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment', 'unattached');
+        $select = $this->select()->where('table.contents.type = ? AND 
+        (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment');
         
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC);

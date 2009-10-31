@@ -272,7 +272,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
                         'type'      =>  'attachment',
-                        'status'    =>  'unattached',
+                        'status'    =>  'publish',
                         'text'      =>  serialize($result),
                         'allowComment'      =>  1,
                         'allowPing'         =>  0,
@@ -284,7 +284,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     
                         if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
                             $struct['parent'] = $cid;
-                            $struct['status'] = 'attached';
                         }
                     }
                 
