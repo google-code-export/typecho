@@ -784,4 +784,19 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->update('table.contents')->rows(array('order' => 0))
         ->where('type = ?', 'attachment'));
     }
+    
+    /**
+     * 升级至9.10.31
+     * 修正附件
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_7r9_10_31($db, $options)
+    {
+        $db->query($db->update('table.contents')->rows(array('status' => 'publish'))
+        ->where('type = ?', 'attachment'));
+    }
 }

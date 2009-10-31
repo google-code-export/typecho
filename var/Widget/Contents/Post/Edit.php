@@ -117,25 +117,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $attachments = $this->request->filter('int')->attachment;
             
             foreach ($attachments as $attachment) {
-                $this->db->query($this->db->update('table.contents')->rows(array('parent' => $cid, 'status' => 'attached',
-                'order' => $key + 1))->where('cid = ? AND type = ?', $attachment, 'attachment'));
-            }
-        }
-    }
-    
-    /**
-     * 发布附件
-     * 
-     * @access protected
-     * @param integer $cid 内容id
-     * @return void
-     */
-    protected function publishAttach($cid)
-    {
-        if ($this->request->attachment && is_array($this->request->attachment)) {
-            $attachments = $this->request->filter('int')->attachment;
-            
-            foreach ($attachments as $key => $attachment) {
                 $this->db->query($this->db->update('table.contents')->rows(array('parent' => $cid, 'status' => 'publish',
                 'order' => $key + 1))->where('cid = ? AND type = ?', $attachment, 'attachment'));
             }
@@ -151,8 +132,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     protected function unAttach($cid)
     {
-        $this->db->query($this->db->update('table.contents')->rows(array('parent' => 0, 'status' => 'unattached'))
-                ->where('order = ? AND type = ?', $cid, 'attachment'));
+        $this->db->query($this->db->update('table.contents')->rows(array('parent' => 0, 'status' => 'publish'))
+                ->where('parent = ? AND type = ?', $cid, 'attachment'));
     }
     
     /**
@@ -401,11 +382,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             false, 'publish' == $contents['status']);
             
             /** 同步附件 */
-            if ('publish' == $contents['status']) {
-                $this->publishAttach($insertId);
-            } else {
-                $this->attach($insertId);
-            }
+            $this->attach($insertId);
         }
         
         $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)->limit(1), array($this, 'push'));
@@ -494,11 +471,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)->limit(1), array($this, 'push'));
             
             /** 同步附件 */
-            if ('publish' == $contents['status']) {
-                $this->publishAttach($this->cid);
-            } else {
-                $this->attach($this->cid);
-            }
+            $this->attach($this->cid);
         }
         
         /** 发送ping */

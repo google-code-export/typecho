@@ -12,28 +12,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01">
-                <?php if($user->pass('editor', true)): ?>
+
                 <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('attached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=attached'); ?>"><?php _e('草稿'); ?>
-                    <?php if('on' != $request->get('__typecho_all_attachments') && $stat->myAttachedAttachmentsNum > 0): ?> 
-                        <span class="balloon"><?php $stat->myAttachedAttachmentsNum(); ?></span>
-                    <?php elseif('on' == $request->get('__typecho_all_attachments') && $stat->attachedAttachmentsNum > 0): ?>
-                        <span class="balloon"><?php $stat->attachedAttachmentsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未关联'); ?>
-                    <?php if('on' != $request->get('__typecho_all_attachments') && $stat->myUnattachedAttachmentsNum > 0): ?> 
+                    <li<?php if(!isset($request->status) || 'unattached' != $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('所有'); ?></a></li>
+                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未归档'); ?>
+                    <?php if(!$user->pass('editor', true) && $stat->myUnattachedAttachmentsNum > 0): ?> 
                         <span class="balloon"><?php $stat->myUnattachedAttachmentsNum(); ?></span>
-                    <?php elseif('on' == $request->get('__typecho_all_attachments') && $stat->unattachedAttachmentsNum > 0): ?>
+                    <?php elseif($user->pass('editor', true) && $stat->unattachedAttachmentsNum > 0): ?>
                         <span class="balloon"><?php $stat->unattachedAttachmentsNum(); ?></span>
                     <?php endif; ?>
                     </a></li>
-                
-                    <li class="right<?php if('on' == $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_attachments=on'); ?>"><?php _e('所有'); ?></a></li>
-                    <li class="right<?php if('on' != $request->get('__typecho_all_attachments')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_attachments=off'); ?>"><?php _e('我的'); ?></a></li>
                 </ul>
-                <?php endif; ?>
+
                 
                 <div class="typecho-list-operate">
                 <form method="get">
@@ -84,9 +74,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
                             <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                             <td>
-                            <?php if ('publish' == $attachments->status): ?>
                             <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
-                            <?php endif; ?>
                             </td>
                             <td><?php $attachments->author(); ?></td>
                             <td>

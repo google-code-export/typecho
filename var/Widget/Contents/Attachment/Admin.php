@@ -81,30 +81,14 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
-        } else {
-            if ('on' == $this->request->__typecho_all_attachments) {
-                Typecho_Cookie::set('__typecho_all_attachments', 'on');
-            } else {
-                if ('off' == $this->request->__typecho_all_attachments) {
-                    Typecho_Cookie::set('__typecho_all_attachments', 'off');
-                }
-                $select->where('table.contents.authorId = ?', $this->user->uid);
-            }
         }
         
         /** 过滤状态 */
         switch ($this->request->status) {
             case 'unattached':
-                $select->where('table.contents.status = ?', 'unattached');
+                $select->where('table.contents.parent = 0');
                 break;
-            case 'all':
-                break;
-            case 'attached':
-                $select->where('table.contents.status = ?', 'attached');
-                break;
-            case 'publish':
             default:
-                $select->where('table.contents.status = ?', 'publish');
                 break;
         }
         

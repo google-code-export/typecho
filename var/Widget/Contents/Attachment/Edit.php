@@ -202,7 +202,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         }
         
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-medias.php?status=' . $this->status . '&' .
+        $this->response->redirect(Typecho_Common::url('manage-medias.php?' . 
         $this->getPageOffsetQuery($cid, $this->status), $this->options->adminUrl));
     }
 
@@ -255,8 +255,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             $deleteCount > 0 ? 'success' : 'notice');
             
             /** 返回原网页 */
-            $this->response->redirect(Typecho_Common::url('manage-medias.php' .
-             ('publish' == $status ? '' : '?status=' . $status), $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-medias.php', $this->options->adminUrl));
         }
     }
     
