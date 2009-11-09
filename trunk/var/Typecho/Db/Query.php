@@ -27,7 +27,7 @@ require_once 'Typecho/Config.php';
 class Typecho_Db_Query
 {
     /** 数据库关键字 */
-    const KEYWORDS = 'PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
+    const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
 
     /**
      * 数据库适配器
@@ -108,7 +108,7 @@ class Typecho_Db_Query
         for ($i = 0; $i < $length; $i ++) {
             $cha = $str[$i];
 
-            if (ctype_alnum($cha) || '_' == $cha) {
+            if (ctype_alnum($cha) || false !== strpos('_*', $cha)) {
                 if (!$lastIsAlnum) {
                     if ($quotes > 0 && !ctype_digit($word) && '.' != $split
                     && false === strpos(self::KEYWORDS, strtoupper($word))) {
