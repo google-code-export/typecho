@@ -1319,6 +1319,11 @@ a.operate-reply {
     color: #aaa;
 }
 
+.typecho-list-table .warning, ul.typecho-list-notable .warning {
+    color: #ff0000;
+	font-weight: bold;
+}
+
 .typecho-list-table img.inline {
     margin-bottom: -3px;
 }

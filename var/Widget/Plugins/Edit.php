@@ -110,43 +110,56 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function deactivate($pluginName)
     {
-        /** 获取插件入口 */
-        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
-        
         /** 获取已激活插件 */
         $plugins = Typecho_Plugin::export();
         $activatedPlugins = $plugins['activated'];
+        $pluginFileExist = true;
+    
+        try {
+            /** 获取插件入口 */
+            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        } catch (Typecho_Plugin_Exception $e) {
+            $pluginFileExist = false;
+        
+            if (!isset($activatedPlugins[$pluginName])) {
+                throw $e;
+            }
+        }
         
         /** 判断实例化是否成功 */
         if (!isset($activatedPlugins[$pluginName])) {
             throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
         }
         
-        /** 载入插件 */
-        require_once $pluginFileName;
+        if ($pluginFileExist) {
         
-        /** 判断实例化是否成功 */
-        if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
-        || !method_exists($className, 'deactivate')) {
-            throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
+            /** 载入插件 */
+            require_once $pluginFileName;
+            
+            /** 判断实例化是否成功 */
+            if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
+            || !method_exists($className, 'deactivate')) {
+                throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
+            }
+            
+            try {
+                $result = call_user_func(array($className, 'deactivate'));
+            } catch (Typecho_Plugin_Exception $e) {
+                /** 截获异常 */
+                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->response->goBack();
+            }
+        
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
         }
         
-        try {
-            $result = call_user_func(array($className, 'deactivate'));
-            Typecho_Plugin::deactivate($pluginName);
-            $this->update(array('value' => serialize(Typecho_Plugin::export())),
-            $this->db->sql()->where('name = ?', 'plugins'));
-        } catch (Typecho_Plugin_Exception $e) {
-            /** 截获异常 */
-            $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
-            $this->response->goBack();
-        }
+        Typecho_Plugin::deactivate($pluginName);
+        $this->update(array('value' => serialize(Typecho_Plugin::export())),
+        $this->db->sql()->where('name = ?', 'plugins'));
         
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
-        
-        /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
         
         if ($result && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
