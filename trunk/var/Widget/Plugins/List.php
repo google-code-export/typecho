@@ -19,6 +19,14 @@
 class Widget_Plugins_List extends Typecho_Widget
 {
     /**
+     * 已激活插件
+     * 
+     * @access public
+     * @var array
+     */
+    public $activatedPlugins = array();
+
+    /**
      * 执行函数
      * 
      * @access public
@@ -32,7 +40,7 @@ class Widget_Plugins_List extends Typecho_Widget
 
         /** 获取已激活插件 */
         $plugins = Typecho_Plugin::export();
-        $activatedPlugins = $plugins['activated'];
+        $this->activatedPlugins = $plugins['activated'];
         
         foreach ($pluginDirs as $pluginDir) {
             if (is_dir($pluginDir)) {
@@ -64,7 +72,11 @@ class Widget_Plugins_List extends Typecho_Widget
                 $info['activated'] = true;
                 
                 if ($info['activate'] || $info['deactivate'] || $info['config'] || $info['personalConfig']) {
-                    $info['activated'] = isset($activatedPlugins[$pluginName]);
+                    $info['activated'] = isset($this->activatedPlugins[$pluginName]);
+                    
+                    if (isset($this->activatedPlugins[$pluginName])) {
+                        unset($this->activatedPlugins[$pluginName]);
+                    }
                 }
                 
                 if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
