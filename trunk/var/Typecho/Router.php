@@ -95,7 +95,7 @@ class Typecho_Router
     public static function getPathInfo()
     {
         if (NULL === self::$_pathInfo) {
-            $this->setPathInfo();
+            self::setPathInfo();
         }
         
         return self::$_pathInfo;
