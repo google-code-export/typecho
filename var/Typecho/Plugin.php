@@ -159,7 +159,9 @@ class Typecho_Plugin
         /** 去掉所有相关回调函数 */
         if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
             foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
-                self::$_plugins['handles'][$handle] = self::pluginHandlesDiff(self::$_plugins['handles'][$handle], $handles);
+                self::$_plugins['handles'][$handle] = self::pluginHandlesDiff(
+                empty(self::$_plugins['handles'][$handle]) ? array() : self::$_plugins['handles'][$handle], 
+                empty($handles) ? array() : $handles);
                 if (empty(self::$_plugins['handles'][$handle])) {
                     unset(self::$_plugins['handles'][$handle]);
                 }
