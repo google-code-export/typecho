@@ -63,7 +63,7 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
     protected function _value($value)
     {
         foreach ($this->_options as $option) {
-            $option->removeAttribute('checked');
+            $option->removeAttribute('selected');
         }
     
         if (isset($this->_options[$value])) {
