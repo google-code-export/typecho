@@ -136,8 +136,8 @@
                     flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
                     upload_url: "<?php $options->index('/action/upload'); ?>",
                     post_params: {"__typecho_uid" : "<?php echo Typecho_Cookie::get('__typecho_uid'); ?>", 
-                    "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>" <?php if ($post->have()): ?>,
-                    "cid" : <?php $post->cid(); endif; ?>},
+                    "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>" <?php if ((isset($post) && $post->have()) || (isset($page) && $page->have())): ?>,
+                    "cid" : <?php (isset($post) && $post->have()) ? $post->cid() : $page->cid(); endif; ?>},
                     file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
