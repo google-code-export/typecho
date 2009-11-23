@@ -114,7 +114,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         }
         
         /** 生成过滤器 */
-        $comment = $this->pluginHandle()->comment($comment, $this->_content);
+        try {
+            $comment = $this->pluginHandle()->comment($comment, $this->_content);
+        } catch (Typecho_Exception $e) {
+            Typecho_Cookie::set('__typecho_remember_text', $comment['text']);
+            throw $e;
+        }
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
