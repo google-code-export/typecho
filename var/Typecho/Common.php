@@ -840,7 +840,7 @@ EOF;
     public static function randString($length, $specialChars = false)
     {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        if ($special_chars) {
+        if ($specialChars) {
 			$chars .= '!@#$%^&*()';
         }
     
