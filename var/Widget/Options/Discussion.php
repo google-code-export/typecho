@@ -44,27 +44,45 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsListSize->input->setAttribute('class', 'mini');
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
         
-        /** 是否在列表中的评论者处显示其个人主页链接 */
-        $commentsShowUrl = new Typecho_Widget_Helper_Form_Element_Radio('commentsShowUrl', array('0' => _t('不显示'), '1' => _t('显示')),
-        $this->options->commentsShowUrl, _t('是否在列表中的评论者名称处显示其个人主页链接'),
-        _t('如果你打开此选项, 当评论作者在提交评论时留下的个人主页地址, 将以链接的形式呈现出来.<br />
-        在某些主题中此选项可能不会生效, 因为它可以在模板中被强行设置.'));
-        $form->addInput($commentsShowUrl);
+        $commentsShowOptions = array(
+            'commentsShowUrl'       =>  _t('在列表中的评论者名称处显示其个人主页链接.'),
+            'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用<a href="http://en.wikipedia.org/wiki/Nofollow">nofollow属性</a>.'),
+            'commentsPageBreak'     =>  _t('启用评论分页, 并且每页显示 %s 篇评论, 默认显示 %s',
+            '<input type="text" class="text num" name="commentsPageSize" />',
+            '<select name="commentsPageDisplay"><option value="first">' . _t('第一页') . '</option></select>')
+        );
         
-        /** 是否对评论者个人主页链接使用nofollow属性 */
-        $commentsUrlNofollow = new Typecho_Widget_Helper_Form_Element_Radio('commentsUrlNofollow', array('0' => _t('不启用'), '1' => _t('启用')),
-        $this->options->commentsUrlNofollow, _t('是否对评论者个人主页链接使用nofollow属性'),
-        _t('当评论作者的个人主页地址在你的网站上呈现时, 其在搜索引擎中可能被识别为外链地址.<br />
-        过多的外链地址将导致你的网站在搜索引擎中被降权, 打开此选项能帮助你解决此问题.<br />
-        更多关于nofollow的信息请参考<a href="http://en.wikipedia.org/wiki/Nofollow">wikipedia上的解释</a>.'));
-        $form->addInput($commentsUrlNofollow);
+        $commentsShowOptionsValue = array();
+        if ($this->options->commentsShowUrl) {
+            $commentsShowOptionsValue[] = 'commentsShowUrl';
+        }
+        
+        if ($this->options->commentsUrlNofollow) {
+            $commentsShowOptionsValue[] = 'commentsUrlNofollow';
+        }
+        
+        $commentsShow = new Typecho_Widget_Helper_Form_Element_Checkbox('commentsShow', $commentsShowOptions, 
+        $commentsShowOptionsValue, _t('文章相关评论显示')); 
+        $form->addInput($commentsShow->multiMode());
         
         /** 评论嵌套层数限制 */
-        $commentsListSize = new Typecho_Widget_Helper_Form_Element_Text('commentsMaxNestingLevels', NULL, $this->options->commentsMaxNestingLevels,
+        $commentsMaxNestingLevels = new Typecho_Widget_Helper_Form_Element_Text('commentsMaxNestingLevels', NULL, $this->options->commentsMaxNestingLevels,
         _t('评论嵌套层数限制'), _t('当模板中嵌套出现相关评论回复时, 此数值将用于限制嵌套评论最大的层数.<br />
         我们建议将层数限制在10以下.'));
-        $commentsListSize->input->setAttribute('class', 'mini');
-        $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
+        $commentsMaxNestingLevels->input->setAttribute('class', 'mini');
+        $form->addInput($commentsMaxNestingLevels->addRule('isInteger', _t('请填入一个数字')));
+        
+        /** 评论分页数目 */
+        $commentsPageSize = new Typecho_Widget_Helper_Form_Element_Text('commentsPageSize', NULL, $this->options->commentsPageSize,
+        _t('分页评论数'), _t('此数字限制文章的相关评论每页显示的数目, 如果设置为0则表示不启用评论分页.'));
+        $commentsPageSize->input->setAttribute('class', 'mini');
+        $form->addInput($commentsPageSize->addRule('isInteger', _t('请填入一个数字')));
+        
+        /** 评论分页 */
+        $commentsPageDisplay = new Typecho_Widget_Helper_Form_Element_Radio('commentsPageDisplay', array('first' => _t('第一页'), 'last' => _t('最后一页')),
+        $this->options->commentsPageDisplay, _t('分页评论默认显示'),
+        _t('此选项控制文章的相关评论默认显示的状态.'));
+        $form->addInput($commentsPageDisplay);
         
         /** 评论审核 */
         $commentsRequireModeration = new Typecho_Widget_Helper_Form_Element_Radio('commentsRequireModeration', array('0' => _t('不启用'), '1' => _t('启用')),
@@ -72,6 +90,12 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         _t('打开此选项后,所有提交的评论,引用通告和广播将不会立即呈现, 而是被标记为待审核, 你可以在后台标记它们是否呈现.<br />
         被评论文章的作者和编辑及以上权限的用户不受此选项的约束.'));
         $form->addInput($commentsRequireModeration);
+        
+        /** 评论时间间隔 */
+        $commentsPageSize = new Typecho_Widget_Helper_Form_Element_Text('commentsPageSize', NULL, $this->options->commentsPageSize,
+        _t('分页评论数'), _t('此数字限制文章的相关评论每页显示的数目, 如果设置为0则表示不启用评论分页.'));
+        $commentsPageSize->input->setAttribute('class', 'mini');
+        $form->addInput($commentsPageSize->addRule('isInteger', _t('请填入一个数字')));
         
         /** 在文章发布一段时间后自动关闭评论和广播功能 */
         $commentsPostTimeout = new Typecho_Widget_Helper_Form_Element_Select('commentsPostTimeout', array('0' => _t('永不关闭'), '86400' => _t('一天后关闭'),
@@ -119,9 +143,18 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->response->goBack();
         }
     
-        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShowUrl', 'commentsUrlNofollow',
+        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow',
                 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail',
                 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
+        
+        $settings['commentsShowUrl'] = isset($settings['commentsShow']) && is_array($settings['commentsShow']) 
+        && in_array('commentsShowUrl', $settings['commentsShow']) ? '1' : '0';
+        
+        $settings['commentsUrlNofollow'] = isset($settings['commentsShow']) && is_array($settings['commentsShow']) 
+        && in_array('commentsUrlNofollow', $settings['commentsShow']) ? '1' : '0';
+        
+        unset($settings['commentsShow']);
+        
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
