@@ -47,7 +47,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     
         /** 判断父节点 */
         if ($parentId = $this->request->filter('int')->get('parent')) {
-            if ($this->commentsThreaded && ($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
+            if ($this->options->commentsThreaded && ($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
             ->where('coid = ?', $parentId))) && $this->content->cid == $parent['cid']) {
                 $comment['parent'] = $parentId;
             } else {
