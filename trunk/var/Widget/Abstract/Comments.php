@@ -459,7 +459,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function threadedComments($before = '', $after = '', $func = 'threadedComments')
     {
         //楼层限制
-        if (!$this->commentsThreaded || $this->isTopLevel) {
+        if (!$this->options->commentsThreaded || $this->isTopLevel) {
             return;
         }
         
