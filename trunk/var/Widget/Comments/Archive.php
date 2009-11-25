@@ -153,7 +153,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        if ($this->options->commentsPageBreak) {
+        if ($this->options->commentsPageBreak && $this->_total > $this->options->commentsPageSize) {
             $pageRow = $this->parentContent;
             $pageRow['permalink'] = $pageRow['pathinfo'];
             
