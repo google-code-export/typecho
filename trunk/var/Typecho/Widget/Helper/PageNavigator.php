@@ -55,6 +55,14 @@ abstract class Typecho_Widget_Helper_PageNavigator
     protected $_pageTemplate;
     
     /**
+     * 链接锚点
+     * 
+     * @access protected
+     * @var string
+     */
+    protected $_anchor;
+    
+    /**
      * 页面占位符
      * 
      * @access protected
@@ -96,6 +104,18 @@ abstract class Typecho_Widget_Helper_PageNavigator
     {
         $this->_pageHolder = array('{' . $holder . '}',
         str_replace(array('{', '}'), array('%7B', '%7D'), $holder));
+    }
+    
+    /**
+     * 设置锚点
+     * 
+     * @access public
+     * @param string $anchor 锚点
+     * @return void
+     */
+    public function setAnchor($anchor)
+    {
+        $this->_anchor = '#' . $anchor;
     }
     
     /**

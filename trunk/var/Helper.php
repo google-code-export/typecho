@@ -312,8 +312,10 @@ class Helper
      */
     public static function replyLink($theId, $coid, $word = 'Reply', $formId = 'respond', $style = 2)
     {
-        echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoAddCommentReply(\'' . 
-        $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
+        if (self::options()->commentsThreaded) {
+            echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoAddCommentReply(\'' . 
+            $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
+        }
     }
     
     /**
@@ -326,8 +328,10 @@ class Helper
      */
     public static function cancleCommentReplyLink($word = 'Cancle', $formId = 'respond')
     {
-        echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancleCommentReply(\'' .
-        $formId . '\');">' . $word . '</a>';
+        if (self::options()->commentsThreaded) {
+            echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancleCommentReply(\'' .
+            $formId . '\');">' . $word . '</a>';
+        }
     }
     
     /**
@@ -338,7 +342,8 @@ class Helper
      */
     public static function threadedCommentsScript()
     {
-        echo
+        if (self::options()->commentsThreaded) {
+            echo
 <<<EOF
 <script type="text/javascript">
 var typechoAddCommentReply = function (cid, coid, cfid, style) {
@@ -388,5 +393,6 @@ var typechoCancleCommentReply = function (cfid) {
 };
 </script>
 EOF;
+        }
     }
 }

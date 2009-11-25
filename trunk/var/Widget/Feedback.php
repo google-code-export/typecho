@@ -47,7 +47,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     
         /** 判断父节点 */
         if ($parentId = $this->request->filter('int')->get('parent')) {
-            if (($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
+            if ($this->commentsThreaded && ($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
             ->where('coid = ?', $parentId))) && $this->content->cid == $parent['cid']) {
                 $comment['parent'] = $parentId;
             } else {
@@ -123,7 +123,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         
         /** 添加评论 */
         $commentId = $this->insert($comment);
-        Typecho_Cookie::delete('text');
+        Typecho_Cookie::delete('__typecho_remember_text');
         $this->db->fetchRow($this->select()->where('coid = ?', $commentId)
         ->limit(1), array($this, 'push'));
 
@@ -142,7 +142,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     private function trackback()
     {
         /** 如果不是POST方法 */
-        if (!$this->request->isPost()) {
+        if (!$this->request->isPost() || $this->request->getReferer()) {
             $this->response->redirect($this->_content->permalink);
         }
     
@@ -263,8 +263,42 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         in_array($callback, array('comment', 'trackback'))) {
         
             /** 如果文章不允许反馈 */
-            if ('comment' == $callback && !$this->_content->allow('comment')) {
-                throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
+            if ('comment' == $callback) {
+                /** 评论关闭 */
+                if (!$this->_content->allow('comment')) {
+                    throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
+                }
+                
+                /** 检查来源 */
+                if ($this->options->commentsCheckReferer) {
+                    $referer = $this->request->getReferer();
+                    
+                    if (empty($referer)) {
+                        throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
+                    }
+                    
+                    $refererPart = parse_url($referer);
+                    $currentPart = parse_url($this->_content->permalink);
+                    
+                    if ($refererPart['host'] != $currentPart['host'] ||
+                    0 !== strpos($refererPart['path'], $currentPart['path'])) {
+                        throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
+                    }
+                }
+                
+                /** 检查ip评论间隔 */
+                if (!$this->user->pass('editor') && $this->_content->authorId != $this->user->uid &&
+                $this->options->commentsPostIntervalEnable) {
+                    $latestComment = $this->db->fetchRow($this->db->select('created')->from('table.comments')
+                    ->where('cid = ?', $this->_content->cid)
+                    ->order('created', Typecho_Db::SORT_DESC)
+                    ->limit(1));
+                    
+                    if ($latestComment && ($this->options->gmtTime - $latestComment['created'] > 0 &&
+                    $this->options->gmtTime - $latestComment['created'] < $this->options->commentsPostInterval)) {
+                        throw new Typecho_Widget_Exception(_t('对不起, 您的发言过于频繁, 请稍侯再次发布.'), 403);
+                    }
+                }
             }
             
             /** 如果文章不允许引用 */

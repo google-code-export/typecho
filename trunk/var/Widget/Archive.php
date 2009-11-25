@@ -1152,20 +1152,14 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 获取评论归档对象
      * 
      * @access public
-     * @param string $type 评论类型
-     * @param boolean $desc 是否倒序输出
-     * @param boolean $pageSize 评论分页数目,如果为0则代表不分页
-     * @param boolean $focusLast 是否自动聚焦到最后一页
      * @return Widget_Abstract_Comments
      */
-    public function comments($type = NULL, $desc = 0, $pageSize = 0, $focusLast = 0)
+    public function comments()
     {
-        $type = strtolower($type);
-        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'type' => $type, 'desc' => $desc,
-        'pageSize' => $pageSize, 'focusLast' => $focusLast, 'parentContent' => $this->row,
+        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row,
         'commentPage' => $this->request->filter('int')->commentPage);
 
-        return $this->widget('Widget_Comments_Archive' . (empty($type) ? '' : '@' . $type), $parameter);
+        return $this->widget('Widget_Comments_Archive', $parameter);
     }
     
     /**

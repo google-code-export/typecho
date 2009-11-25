@@ -799,4 +799,75 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->update('table.contents')->rows(array('status' => 'publish'))
         ->where('type = ?', 'attachment'));
     }
+    
+    /**
+     * 升级至9.11.25
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_8r9_11_25($db, $options)
+    {        
+        /** 增加若干选项 */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsPageBreak', 'user' => 0, 'value' => 0)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsThreaded', 'user' => 0, 'value' => 1)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsPageSize', 'user' => 0, 'value' => 20)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsPageDisplay', 'user' => 0, 'value' => 'last')));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsOrder', 'user' => 0, 'value' => 'ASC')));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsCheckReferer', 'user' => 0, 'value' => 1)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsAutoClose', 'user' => 0, 'value' => 0)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsPostIntervalEnable', 'user' => 0, 'value' => 1)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsPostInterval', 'user' => 0, 'value' => 60)));
+
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsShowCommentOnly', 'user' => 0, 'value' => 0)));
+        
+        /** 修改路由 */
+        $routingTable = $options->routingTable;
+        if (isset($routingTable[0])) {
+            unset($routingTable[0]);
+        }
+        
+        if (isset($routingTable['comment_page'])) {
+            $routingTable['comment_page'] = array (
+                'url' => '[permalink:string]/comment-page-[commentPage:digital]',
+                'widget' => 'Widget_Archive',
+                'action' => 'render',
+            );
+        } else {
+            $pre = array_slice($routingTable, 0, 20);
+            $next = array_slice($routingTable, 20);
+            
+            $commentPage = array (
+                'url' => '[permalink:string]/comment-page-[commentPage:digital]',
+                'widget' => 'Widget_Archive',
+                'action' => 'render',
+            );
+
+            $routingTable = array_merge($pre, array('comment_page' => $commentPage), $next);
+        }
+
+        $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($routingTable)))
+                ->where('name = ?', 'routingTable'));
+    }
 }

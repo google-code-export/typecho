@@ -18,7 +18,20 @@
  * @license GNU General Public License 2.0
  */
 class Widget_Abstract_Options extends Widget_Abstract
-{    
+{
+    /**
+     * 以checkbox选项判断是否某个值被启用
+     * 
+     * @access protected
+     * @param mixed $settings 选项集合
+     * @param string $name 选项名称
+     * @return integer
+     */
+    protected function isEnableByCheckbox($settings, $name)
+    {
+        return is_array($settings) && in_array($name, $settings) ? '1' : '0';
+    }
+
     /**
      * 获取原始查询对象
      * 

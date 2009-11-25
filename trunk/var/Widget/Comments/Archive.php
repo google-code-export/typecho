@@ -42,22 +42,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @var integer
      */
     private $_total = false;
-    
-    /**
-     * 评论类型
-     * 
-     * @access private
-     * @var integer
-     */
-    private $_commentType = 'comment';
-    
-    /**
-     * 分页数目
-     * 
-     * @access private
-     * @var integer
-     */
-    private $_pageSize = 0;
 
     /**
      * 构造函数,初始化组件
@@ -71,7 +55,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('parentId=0&desc=0&pageSize=0&focusLast=0&type&commentPage=0');
+        $this->parameter->setDefault('parentId=0&commentPage=0');
     }
     
     /**
@@ -89,10 +73,9 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * 通过类型获取评论
      * 
      * @access protected
-     * @param string $type 评论类型
      * @return void
      */
-    protected function getCommentsByType($type = NULL)
+    protected function getComments()
     {
         if (!$this->parameter->parentId) {
             return;
@@ -101,25 +84,25 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $select = $this->select()->where('table.comments.status = ?', 'approved')
         ->where('table.comments.cid = ?', $this->parameter->parentId);
         
-        if (!empty($type)) {
-            $select->where('table.comments.type = ?', $type);
+        if ($this->options->commentsShowCommentOnly) {
+            $select->where('table.comments.type = ?', 'comment');
         }
         
         $this->_countSql = clone $select;
         
-        if ($this->parameter->pageSize > 0) {
+        if ($this->options->commentsPageBreak) {
             $this->_total = empty($type) ? $this->parentContent['commentsNum'] : $this->size($this->_countSql);
             
-            if ($this->parameter->focusLast && !$this->parameter->commentPage) {
-                $this->_currentPage = ceil($this->_total / $this->parameter->pageSize);
+            if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
+                $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
             } else {
                 $this->_currentPage = $this->parameter->commentPage ? $this->parameter->commentPage : 1;
             }
             
-            $select->page($this->_currentPage, $this->parameter->pageSize);
+            $select->page($this->_currentPage, $this->options->commentsPageSize);
         }
 
-        $select->order('table.comments.created', $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
+        $select->order('table.comments.created', $this->options->commentsOrder);
         $this->db->fetchAll($select, array($this, 'push'));
     }
     
@@ -133,7 +116,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function num()
     {
         if (false === $this->_total) {
-            $this->_total = empty($this->parameter->type)
+            $this->_total = !$this->options->commentsShowCommentOnly
             ? $this->parentContent['commentsNum'] : $this->size($this->_countSql);
         }
         
@@ -155,8 +138,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function execute()
     {
-        $this->_commentType = empty($this->parameter->type) ? 'comment' : $this->parameter->type;
-        $this->getCommentsByType($this->parameter->type);
+        $this->getComments();
     }
     
     /**
@@ -171,17 +153,16 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        if ($this->parameter->pageSize > 0) {
+        if ($this->options->commentsPageBreak) {
             $pageRow = $this->parentContent;
-            $pageRow['commentType'] = $this->_commentType;
             $pageRow['permalink'] = $pageRow['pathinfo'];
             
-            $query = Typecho_Router::url($this->_commentType . '_page',
-                $pageRow, $this->options->index);
+            $query = Typecho_Router::url('comment_page', $pageRow, $this->options->index);
 
             /** 使用盒状分页 */
-            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, $this->_currentPage, $this->parameter->pageSize, $query);
-            $nav->setPageHolder($this->_commentType . 'Page');
+            $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, $this->_currentPage, $this->options->commentsPageSize, $query);
+            $nav->setPageHolder('commentPage');
+            $nav->setAnchor('comments');
             $nav->render($prev, $next, $splitPage, $splitWord);
         }
     }
