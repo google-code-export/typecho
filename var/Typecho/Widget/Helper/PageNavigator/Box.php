@@ -42,13 +42,13 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
 
         //输出上一页
         if ($this->_currentPage > 1) {
-            echo '<li><a class="prev" href="' . str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . '">'
+            echo '<li><a class="prev" href="' . str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . $this->_anchor . '">'
             . $prevWord . '</a></li>';
         }
 
         //输出第一页
         if ($from > 1) {
-            echo '<li><a href="' . str_replace($this->_pageHolder, 1, $this->_pageTemplate) . '">1</a></li>';
+            echo '<li><a href="' . str_replace($this->_pageHolder, 1, $this->_pageTemplate) . $this->_anchor . '">1</a></li>';
             
             if ($from > 2) {
                 //输出省略号
@@ -59,7 +59,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出中间页
         for ($i = $from; $i <= $to; $i ++) {
                 echo '<li' . ($i != $this->_currentPage ? '' : ' class="current"') . '><a href="' .
-                str_replace($this->_pageHolder, $i, $this->_pageTemplate) . '">'
+                str_replace($this->_pageHolder, $i, $this->_pageTemplate) . $this->_anchor . '">'
                 . $i . '</a></li>';
         }
 
@@ -69,14 +69,14 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
                 echo '<li>' . $splitWord . '</li>';
             }
             
-            echo '<li><a href="' . str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) , '">'
+            echo '<li><a href="' . str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) . $this->_anchor . '">'
             . $this->_totalPage . '</a></li>';
         }
 
         //输出下一页
         if ($this->_currentPage < $this->_totalPage) {
-            echo '<li><a class="next" href="' . str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . '">'
-            . $nextWord . '</a></li>';
+            echo '<li><a class="next" href="' . str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate)
+            . $this->_anchor . '">' . $nextWord . '</a></li>';
         }
     }
 }

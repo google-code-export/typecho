@@ -40,8 +40,14 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
      */
     public function execute()
     {
-        $this->db->fetchAll($this->select()->limit($this->parameter->pageSize)
+        $select  = $this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.status = ?', 'approved')
-        ->order('table.comments.created', Typecho_Db::SORT_DESC), array($this, 'push'));
+        ->order('table.comments.created', Typecho_Db::SORT_DESC);
+        
+        if ($this->options->commentsShowCommentOnly) {
+            $select->where('type = ?', 'comment');
+        }
+        
+        $this->db->fetchAll($select, array($this, 'push'));
     }
 }

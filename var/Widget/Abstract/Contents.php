@@ -548,7 +548,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
             } else {
                 /** 对自动关闭反馈功能的支持 */
-                if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0) {
+                if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0 &&
+                $this->options->commentsAutoClose) {
                     if ($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout) {
                         return false;
                     }

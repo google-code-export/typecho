@@ -1640,6 +1640,10 @@ ul.typecho-list-notable li #typecho-respond {
     width: 115px;
 }
 
+.typecho-page-main .typecho-option input.num {
+	width: 30px;
+}
+
 .typecho-page-main .typecho-option textarea {
     width: 475px;
     height: 150px;
@@ -1648,7 +1652,7 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-page-main .typecho-option span.multiline {
     *float: left;
     display: block;
-    line-height: 24px;
+    line-height: 26px;
     *width: 100%;
 }
 

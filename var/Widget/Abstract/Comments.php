@@ -65,7 +65,25 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___permalink()
     {
-        return $this->parentContent['permalink'] . '#' . $this->theId;
+    
+        if ($this->options->commentsPageBreak) {
+        
+            $select  =$this->db->select(array('COUNT(coid)' => 'num'))
+            ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
+            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $this->coid);
+            
+            if ($this->options->commentsShowCommentOnly) {
+                $select->where('type = ?', 'comment');
+            }
+            
+            $currentPage = ceil($this->db->fetchObject($select)->num / $this->options->commentsPageSize);
+            $pageRow = array('permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage);
+        
+            return Typecho_Router::url('comment_page',
+                        $pageRow, $this->options->index) . '#' . $this->theId;
+        } else {
+            return $this->parentContent['permalink'] . '#' . $this->theId;
+        }
     }
     
     /**
@@ -105,7 +123,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     protected function ___theId()
     {
-        return 'comment-' . $this->coid;
+        return $this->type . '-' . $this->coid;
     }
     
     /**
@@ -441,7 +459,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function threadedComments($before = '', $after = '', $func = 'threadedComments')
     {
         //楼层限制
-        if ($this->isTopLevel) {
+        if (!$this->commentsThreaded || $this->isTopLevel) {
             return;
         }
         
