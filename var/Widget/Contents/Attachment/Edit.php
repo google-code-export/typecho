@@ -58,8 +58,6 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
-        } else if (!isset($this->request->cid)) {
-            throw new Typecho_Widget_Exception(_t('附件不存在'), 404);
         }
     }
     
