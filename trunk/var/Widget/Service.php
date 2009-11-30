@@ -37,9 +37,25 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         
         if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
             $links = array_unique($matches[1]);
+            $permalinkPart = parse_url($post->permalink);
         
             /** 发送pingback */
             foreach ($links as $url) {
+                $urlPart = parse_url($url);
+                
+                if (isset($urlPart['scheme'])) {
+                    if ('http' != $urlPart['scheme'] || 'https' != $urlPart['scheme']) {
+                        continue;
+                    }
+                } else {
+                    $urlPart['scheme'] = 'http';
+                    $url = Typecho_Common::buildUrl($urlPart);
+                }
+            
+                if ($permalinkPart['host'] == $urlPart['host'] && $permalinkPart['path'] == $urlPart['path']) {
+                    continue;
+                }
+            
                 $spider = Typecho_Http_Client::get();
                 
                 if ($spider) {
