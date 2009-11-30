@@ -12,18 +12,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01">
-
-                <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'unattached' != $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('所有'); ?></a></li>
-                    <li<?php if('unattached' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-medias.php?status=unattached'); ?>"><?php _e('未归档'); ?>
-                    <?php if(!$user->pass('editor', true) && $stat->myUnattachedAttachmentsNum > 0): ?> 
-                        <span class="balloon"><?php $stat->myUnattachedAttachmentsNum(); ?></span>
-                    <?php elseif($user->pass('editor', true) && $stat->unattachedAttachmentsNum > 0): ?>
-                        <span class="balloon"><?php $stat->unattachedAttachmentsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                </ul>
-
                 
                 <div class="typecho-list-operate">
                 <form method="get">

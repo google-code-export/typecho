@@ -78,18 +78,9 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'attachment');
         
-        /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
+        /** 如果具有编辑以上权限,可以查看所有附件,反之只能查看自己的附件 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
-        }
-        
-        /** 过滤状态 */
-        switch ($this->request->status) {
-            case 'unattached':
-                $select->where('table.contents.parent = 0');
-                break;
-            default:
-                break;
         }
         
         /** 过滤标题 */
