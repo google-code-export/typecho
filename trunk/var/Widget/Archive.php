@@ -825,7 +825,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             throw new Typecho_Widget_Exception(_t('作者不存在'), 404);
         }
         
-        $select->where('table.contents.authorId = ?', $uid);
+        $select->where('table.contents.authorId = ?', $uid)
+        ->where('table.contents.type = ?', 'post');
         
         /** 设置分页 */
         $this->_pageRow = $author;

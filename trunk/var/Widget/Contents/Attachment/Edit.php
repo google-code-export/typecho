@@ -31,7 +31,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     protected function getPageOffsetQuery($cid, $status)
     {
         return 'page=' . $this->getPageOffset('cid', $cid, 'attachment', $status,
-        'on' == $this->request->__typecho_all_attachments ? 0 : $this->user->uid);
+        $this->user->pass('editor', true) ? 0 : $this->user->uid);
     }
 
     /**
