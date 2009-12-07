@@ -55,7 +55,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('parentId=0&commentPage=0');
+        $this->parameter->setDefault('parentId=0&commentPage=0&commentsNum=0');
     }
     
     /**
@@ -67,43 +67,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     protected function ___parentContent()
     {
         return $this->parameter->parentContent;
-    }
-    
-    /**
-     * 通过类型获取评论
-     * 
-     * @access protected
-     * @return void
-     */
-    protected function getComments()
-    {
-        if (!$this->parameter->parentId) {
-            return;
-        }
-    
-        $select = $this->select()->where('table.comments.status = ?', 'approved')
-        ->where('table.comments.cid = ?', $this->parameter->parentId);
-        
-        if ($this->options->commentsShowCommentOnly) {
-            $select->where('table.comments.type = ?', 'comment');
-        }
-        
-        $this->_countSql = clone $select;
-        
-        if ($this->options->commentsPageBreak) {
-            $this->_total = empty($type) ? $this->parentContent['commentsNum'] : $this->size($this->_countSql);
-            
-            if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
-                $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
-            } else {
-                $this->_currentPage = $this->parameter->commentPage ? $this->parameter->commentPage : 1;
-            }
-            
-            $select->page($this->_currentPage, $this->options->commentsPageSize);
-        }
-
-        $select->order('table.comments.created', $this->options->commentsOrder);
-        $this->db->fetchAll($select, array($this, 'push'));
     }
     
     /**
@@ -138,7 +101,33 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function execute()
     {
-        $this->getComments();
+        if (!$this->parameter->parentId) {
+            return;
+        }
+    
+        $select = $this->select()->where('table.comments.status = ?', 'approved')
+        ->where('table.comments.cid = ?', $this->parameter->parentId);
+        
+        if ($this->options->commentsShowCommentOnly) {
+            $select->where('table.comments.type = ?', 'comment');
+        }
+        
+        $this->_countSql = clone $select;
+        
+        if ($this->options->commentsPageBreak) {
+            $this->_total = empty($type) ? $this->parameter->commentsNum : $this->size($this->_countSql);
+            
+            if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
+                $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
+            } else {
+                $this->_currentPage = $this->parameter->commentPage ? $this->parameter->commentPage : 1;
+            }
+            
+            $select->page($this->_currentPage, $this->options->commentsPageSize);
+        }
+
+        $select->order('table.comments.created', $this->options->commentsOrder);
+        $this->db->fetchAll($select, array($this, 'push'));
     }
     
     /**
