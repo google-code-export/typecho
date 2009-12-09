@@ -1,4 +1,4 @@
-<?php include('header.php'); ?>
+<?php $this->need('header.php'); ?>
 
     <div class="grid_10" id="content">
         <div class="post">
@@ -12,7 +12,7 @@
 			<p class="tags"><?php _e('标签'); ?>: <?php $this->tags(', ', true, 'none'); ?></p>
 		</div>
 
-		<?php include('comments.php'); ?>
+		<?php $this->need('comments.php'); ?>
     </div><!-- end #content-->
-	<?php include('sidebar.php'); ?>
-	<?php include('footer.php'); ?>
+	<?php $this->need('sidebar.php'); ?>
+	<?php $this->need('footer.php'); ?>

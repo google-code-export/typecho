@@ -8,7 +8,7 @@
  * @link http://typecho.org
  */
  
- include('header.php');
+ $this->need('header.php');
  ?>
 
     <div class="grid_10" id="content">
@@ -29,5 +29,5 @@
             <?php $this->pageNav(); ?>
         </ol>
     </div><!-- end #content-->
-	<?php include('sidebar.php'); ?>
-	<?php include('footer.php'); ?>
+	<?php $this->need('sidebar.php'); ?>
+	<?php $this->need('footer.php'); ?>
