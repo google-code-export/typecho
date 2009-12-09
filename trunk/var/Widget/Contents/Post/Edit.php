@@ -542,12 +542,16 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 
-                if ($this->isWriteable($condition) && $this->delete($condition)) {
+                if ($this->isWriteable($condition) &&
+                ($status = $this->db->fetchObject($this->db->select('status')
+                    ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'))) &&
+                $this->delete($condition)) {
+                
                     /** 删除分类 */
-                    $this->setCategories($post, array(), 'post');
+                    $this->setCategories($post, array(), 'publish' == $status);
                     
                     /** 删除标签 */
-                    $this->setTags($post, NULL, 'post');
+                    $this->setTags($post, NULL, 'publish' == $status);
                     
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')
