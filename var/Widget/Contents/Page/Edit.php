@@ -202,14 +202,6 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                     
                     /** 解除附件关联 */
                     $this->unAttach($page);
-                    
-                    /** 解除自定义首页 */
-                    if ($page == $this->options->customHomePage) {
-                        $this->db->query($this->db->update('table.options')
-                        ->rows(array('value' => 0))
-                        ->where('name = ?', 'customHomePage'));
-                    }
-                    
                     $deleteCount ++;
                 }
             }
