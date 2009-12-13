@@ -468,7 +468,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo $this->date->format($format);
+        echo $this->date->format(empty($format) ? $this->options->postDateFormat : $format);
     }
 
     /**
