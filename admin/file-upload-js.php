@@ -1,5 +1,11 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-
+<?php
+if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
+    $fileParentContent = $post;
+} else if (isset($page) && $page instanceof Typecho_Widget && $page->have()) {
+    $fileParentContent = $page;
+}
+?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.queue.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
@@ -136,8 +142,8 @@
                     flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
                     upload_url: "<?php $options->index('/action/upload'); ?>",
                     post_params: {"__typecho_uid" : "<?php echo Typecho_Cookie::get('__typecho_uid'); ?>", 
-                    "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>" <?php if ((isset($post) && $post->have()) || (isset($page) && $page->have())): ?>,
-                    "cid" : <?php (isset($post) && $post->have()) ? $post->cid() : $page->cid(); endif; ?>},
+                    "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>" <?php if (isset($fileParentContent)): ?>,
+                    "cid" : <?php $fileParentContent->cid(); endif; ?>},
                     file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
