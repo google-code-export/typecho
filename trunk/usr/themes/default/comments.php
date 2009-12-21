@@ -71,7 +71,7 @@ function threadedComments($comments)
 				</p>
                 <?php endif; ?>
 				<p><textarea rows="5" cols="50" name="text" class="textarea"><?php $this->remember('text'); ?></textarea></p>
-				<p><input type="submit" value="<?php _e('提交评论'); ?>" class="submit" onclick="this.disabled=true;" /></p>
+				<p><input type="submit" value="<?php _e('提交评论'); ?>" class="submit" /></p>
 			</form>
             </div>
             <?php else: ?>
