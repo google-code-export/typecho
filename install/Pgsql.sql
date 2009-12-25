@@ -72,6 +72,23 @@ CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_meta
 
 CREATE INDEX "typecho_metas_slug" ON "typecho_metas" ("slug");
 
+--
+-- Table structure for table `typecho_items`
+--
+
+CREATE SEQUENCE "typecho_items_seq";
+
+CREATE TABLE "typecho_items" (  "iid" INT NOT NULL DEFAULT nextval('typecho_items_seq'),
+  "type" VARCHAR(16) NOT NULL DEFAULT '',
+  "parent" INT NULL DEFAULT '0',
+  "name" VARCHAR(200) NULL DEFAULT NULL,
+  "value" TEXT NULL DEFAULT NULL,
+  PRIMARY KEY ("iid")
+);
+
+CREATE INDEX "typecho_items_type" ON "typecho_items" ("type");
+CREATE INDEX "typecho_items_parent" ON "typecho_items" ("parent");
+
 
 --
 -- Table structure for table `typecho_options`

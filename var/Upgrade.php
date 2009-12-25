@@ -870,4 +870,66 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('value' => serialize($routingTable)))
                 ->where('name = ?', 'routingTable'));
     }
+    
+    /**
+     * 升级至9.12.11
+     * 
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_8r9_12_11($db, $options)
+    {
+        /** 删除无用选项 */
+        $db->query($db->delete('table.options')
+        ->where('name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ?', 'customHomePage', 'uploadHandle',
+        'deleteHandle', 'modifyHandle', 'attachmentHandle', 'attachmentDataHandle'));
+        
+        /** 新建表 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+        
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query('CREATE TABLE `' . $prefix . 'items` (
+  `iid` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(32) NOT NULL,
+  `parent` int(10) unsigned default \'0\',
+  `name` varchar(200) default NULL,
+  `value` text,
+  PRIMARY KEY  (`iid`),
+  KEY `type` (`type`),
+  KEY `parent` (`parent`)
+) ENGINE=MyISAM  DEFAULT CHARSET=' . _t('utf8'), Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('CREATE SEQUENCE "' . $prefix . 'items_seq"', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE "' . $prefix . 'items" (  "iid" INT NOT NULL DEFAULT nextval(\'' . $prefix . 'items_seq\'),
+  "type" VARCHAR(16) NOT NULL DEFAULT \'\',
+  "parent" INT NULL DEFAULT \'0\',
+  "name" VARCHAR(200) NULL DEFAULT NULL,
+  "value" TEXT NULL DEFAULT NULL,
+  PRIMARY KEY ("iid")
+)', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX "' . $prefix . 'items_type" ON "' . $prefix . 'items" ("type")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX "' . $prefix . 'items_parent" ON "' . $prefix . 'items" ("parent")', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'items ( "iid" INTEGER NOT NULL PRIMARY KEY, 
+"type" varchar(32) NOT NULL , 
+"parent" int(10) default \'0\' ,
+"name" varchar(200) default NULL , 
+"value" text )', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'items_type ON ' . $prefix . 'items ("type")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'items_parent ON ' . $prefix . 'items ("parent")', Typecho_Db::WRITE);
+                break;
+
+            default:
+                break;
+        }
+    }
 }
