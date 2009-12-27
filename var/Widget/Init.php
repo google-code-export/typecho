@@ -29,7 +29,10 @@ class Widget_Init extends Typecho_Widget
         @session_start();
         
         /** 初始化charset */
-        Typecho_Common::$config['charset'] = $options->charset;
+        Typecho_Common::$charset = $options->charset;
+        
+        /** 初始化exception */
+        Typecho_Common::$exceptionHandle = 'Widget_ExceptionHandle';
         
         /** 设置路径 */
         Typecho_Router::setPathInfo($this->request->getPathInfo());

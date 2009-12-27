@@ -49,11 +49,7 @@ require_once 'Typecho/Db.php';
 require_once 'Typecho/Router.php';
 
 /** 程序初始化 */
-Typecho_Common::init(array(
-    'autoLoad'          =>  true,
-    'exception'         =>  'Widget_ExceptionHandle',
-    'gpc'               =>  true
-));
+Typecho_Common::init();
 
 ob_start();
 
@@ -271,7 +267,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                 if($success)
                                 {
                                     /** 初始化配置文件 */
-                                    $lines = array_slice(file(__FILE__), 0, 56);
+                                    $lines = array_slice(file(__FILE__), 0, 52);
                                     $lines[] = "
 /** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . _r('dbPrefix') . "');
