@@ -54,18 +54,20 @@ class Typecho_Common
     private static $_lockedBlocks = array('<p></p>' => '');
     
     /**
-     * 默认的初始化配置
+     * 默认编码
      * 
      * @access public
-     * @var array
+     * @var string
      */
-    public static $config = array(
-        'autoLoad'          =>  true,
-        'exception'         =>  false,
-        'exception_file'    =>  false,      //除了404页面以外的异常处理页
-        'charset'           =>  'UTF-8',
-        'gpc'               =>  true
-    );
+    public static $charset = 'UTF-8';
+    
+    /**
+     * 异常处理类
+     * 
+     * @access public
+     * @var string
+     */
+    public static $exceptionHandle;
 
     /**
      * 锁定标签回调函数
@@ -114,49 +116,40 @@ class Typecho_Common
      * 程序初始化方法
      * 
      * @access public
-     * @param array $config 配置信息
      * @return void
      */
-    public static function init(array $config = NULL)
+    public static function init()
     {
-        self::$config = empty($config) ? self::$config : array_merge(self::$config, $config);
-        
         /** 输出logo */
         if (isset($_GET['464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021'])) {
             header('content-Type: image/gif', true);
             die(base64_decode('R0lGODlhXQAVANUAAP////Pz8+bm5tnZ2c3NzcDAwLOzs5mZmY2NjeR+ANp6A9l5A4CAgM51BsNwCsNwCbhrDXNzc61nEKxmEKFiE6JiE2ZmZpddFpZdFoxZGYtYGoFUHYBUHVlZWXZPIHVPIGtLI2pKI01NTV9GJlRBKVRBKkBAQEk8LT44MD03MDMzMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAABdABUAAAb/QJVwSCwaj8ikUgjxLJ9Gj+JELBSg2OwyodFCSYkKkUDwms3cs5E0GlYSVCFZTX+m60IpSnhKXIZzeEonI21HKIVxQlyIhkaEjkVOQg2TKhIKKggHAgIHCEMmByZEERFCHaAmEQcHp0ckDgmzCxlEKG+zCRAkiw4LtCBEIw26CbZFEIYXD0MeCSQBANMAAUMWABZjZSoHAAzS1AGvQyAJDRwjIRQJDnsoshSFGAsLVLPKIbKGz+jq7A6KjBCjAsweFSgSbJDD7Vq2bUK8ARjwKsIAAORQLHBHREKaCQlKEDmhIYWKdkNSLKCg4sTGg3nuDGm2yJGCPyoCOdQGiJu3/wGkQg0IEJQDtCEjIJwr0QdDEpkqIEBQgQGOkQkLilSIAwFZ1Kk5GwrBxpNhxIdFsDFg0oDPmwUchIxIEKkIVKlRAxrZQJdIBkNdh+ANmxat2W4AkAA4wOQBigyzMJgUEqIvkrtTB0uyLOQvE6+DdY41TBhxUCImFgupqmCXIhInSkC120Xw1Kow3SSYLGTr55kSDu+EiJhxEW8d+CRYEAmMUwgLehERdrI2k6mygxMBw5IIzZOOjgkpIECIieQmAlxBBcDntLVDGABYL8QoBGEoNtSjUqKeBxQneFCMSJgJocEuwpyQgQIN8KbCQEIYJFcC1EXQHiflqSDfAAcYIJ+NexdxeECIpwnxATC6QKBICbLo0kAIi1j31RAcoIiPg1Et890FCcAUgQAACACfChZVY8AA7nVz0URDFpFCCBp8oAgRJWigAYxDSDlMJCl8oAEHIkUxRCVDKABWFoF4I8iaUOgRkyVIdFCWCgKspyabeCLBxphtLVEAAKoYgNadeRZ6BF9wImHCku8NQaihkAqRXxasICACEalEqqkRQQAAOw=='));
         }
-        
-        if (isset(self::$config['autoLoad']) && self::$config['autoLoad']) {
-            /** 设置自动载入函数 */
-            function __autoLoad($className)
-            {
-                /**
-                 * 自动载入函数并不判断此类的文件是否存在, 我们认为当你显式的调用它时, 你已经确认它存在了
-                 * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
-                 * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
-                 */
-                @include_once str_replace('_', '/', $className) . '.php';
-            }
-        }
-        
-        if (isset(self::$config['gpc']) && self::$config['gpc']) {
-            /** 兼容php6 */
-            if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-                $_GET = self::stripslashesDeep($_GET);
-                $_POST = self::stripslashesDeep($_POST);
-                $_COOKIE = self::stripslashesDeep($_COOKIE);
 
-                reset($_GET);
-                reset($_POST);
-                reset($_COOKIE);
-            }
+        /** 设置自动载入函数 */
+        function __autoLoad($className)
+        {
+            /**
+             * 自动载入函数并不判断此类的文件是否存在, 我们认为当你显式的调用它时, 你已经确认它存在了
+             * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
+             * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
+             */
+            @include_once str_replace('_', '/', $className) . '.php';
         }
-        
-        if (isset(self::$config['exception'])) {
-            /** 设置异常截获函数 */
-            set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
+
+        /** 兼容php6 */
+        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+            $_GET = self::stripslashesDeep($_GET);
+            $_POST = self::stripslashesDeep($_POST);
+            $_COOKIE = self::stripslashesDeep($_COOKIE);
+
+            reset($_GET);
+            reset($_POST);
+            reset($_COOKIE);
         }
+
+        /** 设置异常截获函数 */
+        set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
     }
     
     /**
@@ -180,12 +173,12 @@ class Typecho_Common
         }
         */
     
-        if (!self::$config['exception']) {
+        if (defined('__TYPECHO_DEBUG__')) {
             //@ob_clean();
             echo nl2br($exception->__toString());
         } else {
-            if (404 == $exception->getCode()) {
-                $handleClass = self::$config['exception'];
+            if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
+                $handleClass = self::$exceptionHandle;
                 new $handleClass($exception);
             } else {
                 self::error($exception);
@@ -214,7 +207,7 @@ class Typecho_Common
         }
         
         require_once 'Typecho/Response.php';
-        $charset = self::$config['charset'];
+        $charset = self::$charset;
         
         if ($isException && $exception instanceof Typecho_Db_Exception) {
             $code = 500;
@@ -255,8 +248,8 @@ class Typecho_Common
         
         $message = nl2br($message);
         
-        if (!empty(self::$config['exception_file'])) {
-            require_once self::$config['exception_file'];
+        if (defined('__TYPECHO_EXCEPTION_FILE__')) {
+            require_once __TYPECHO_EXCEPTION_FILE__;
         } else {
             echo 
 <<<EOF
@@ -688,8 +681,8 @@ EOF;
     public static function subStr($str, $start, $length, $trim = "...")
     {
         if (function_exists('mb_get_info')) {
-            $iLength = mb_strlen($str, self::$config['charset']);
-            $str = mb_substr($str, $start, $length, self::$config['charset']);
+            $iLength = mb_strlen($str, self::$charset);
+            $str = mb_substr($str, $start, $length, self::$charset);
             return ($length < $iLength - $start) ? $str . $trim : $str;
         } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
@@ -708,7 +701,7 @@ EOF;
     public static function strLen($str)
     {
         if (function_exists('mb_get_info')) {
-            return mb_strlen($str, self::$config['charset']);
+            return mb_strlen($str, self::$charset);
         } else {
             preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
             return sizeof($info[0]);
@@ -731,7 +724,7 @@ EOF;
         $str = trim($str, '-');
         $str = empty($str) ? $default : $str;
         
-        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$config['charset']) : substr($str, 0, $maxLength);
+        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$charset) : substr($str, 0, $maxLength);
     }
     
     /**
