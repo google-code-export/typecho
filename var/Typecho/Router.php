@@ -53,21 +53,36 @@ class Typecho_Router
      * 
      * @access public
      * @param string $pathInfo 全路径
-     * @param array $params 参数列表
+     * @param mixed $parameter 输入参数
      * @return mixed
      */
-    public static function match($pathInfo, &$params)
+    public static function match($pathInfo, $parameter = NULL)
     {
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
                 
-                if (!empty($route['params'])) {
-                    unset($matches[0]);
-                    $params = array_combine($route['params'], $matches);
+                try {
+                    /** 载入参数 */
+                    $params = NULL;
+                    
+                    if (!empty($route['params'])) {
+                        unset($matches[0]);
+                        $params = array_combine($route['params'], $matches);
+                    }
+                    
+                    $widget = Typecho_Widget::widget($route['widget'], $parameter, $params);
+                    
+                    return $widget;
+                    
+                } catch (Exception $e) {
+                    if (404 == $e->getCode()) {
+                        Typecho_Widget::destory($route['widget']);
+                        continue;
+                    }
+                    
+                    throw $e;
                 }
-                
-                return $route;
             }
         }
         

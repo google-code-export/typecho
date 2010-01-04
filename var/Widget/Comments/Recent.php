@@ -29,7 +29,7 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize));
+        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize, 'parentId' => 0));
     }
 
     /**
@@ -43,6 +43,10 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
         $select  = $this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.status = ?', 'approved')
         ->order('table.comments.created', Typecho_Db::SORT_DESC);
+        
+        if ($this->parameter->parentId) {
+            $select->where('cid = ?', $this->parameter->parentId);
+        }
         
         if ($this->options->commentsShowCommentOnly) {
             $select->where('type = ?', 'comment');
