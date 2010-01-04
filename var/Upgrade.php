@@ -883,8 +883,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 删除无用选项 */
         $db->query($db->delete('table.options')
-        ->where('name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ?', 'customHomePage', 'uploadHandle',
-        'deleteHandle', 'modifyHandle', 'attachmentHandle', 'attachmentDataHandle'));
+        ->where('name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ?', 'customHomePage', 'uploadHandle',
+        'deleteHandle', 'modifyHandle', 'attachmentHandle', 'attachmentDataHandle', 'gzip'));
         
         /** 新建表 */
         $adapterName = $db->getAdapterName();
