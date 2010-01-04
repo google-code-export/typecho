@@ -37,20 +37,20 @@ abstract class Typecho_Widget
     private $_helpers = array();
 
     /**
-     * 内部数据堆栈
-     *
-     * @access protected
-     * @var array
-     */
-    protected $stack = array();
-
-    /**
      * 数据堆栈每一行
      *
      * @access protected
      * @var array
      */
     protected $row = array();
+    
+    /**
+     * 数据堆栈
+     *
+     * @access public
+     * @var array
+     */
+    public $stack = array();
     
     /**
      * 当前队列指针顺序值,从1开始
@@ -209,6 +209,35 @@ abstract class Typecho_Widget
     {
         if (isset(self::$_widgetPool[$alias])) {
             unset(self::$_widgetPool[$alias]);
+        }
+    }
+    
+    /**
+     * 导入对象
+     * 
+     * @access public
+     * @param Typecho_Widget $widget 需要导入的对象
+     * @param array $properties 需要导入的私有属性
+     * @return void
+     */
+    public function import(Typecho_Widget $widget, array $properties)
+    {
+        $currentProperties = get_object_vars($widget);
+        
+        foreach ($properties as $name) {
+            if (isset($currentProperties[$name])) {
+                $this->{$name} = $currentProperties[$name];
+            } else {
+                $method = ucfirst($name);
+                $setMethod = 'set' . $method;
+                $getMethod = 'get' . $method;
+                
+                if (method_exists($this, $setMethod) 
+                    && method_exists($widget, $getMethod)) {
+                    
+                    $this->{$setMethod}($widget->{$getMethod}());
+                }
+            }
         }
     }
 

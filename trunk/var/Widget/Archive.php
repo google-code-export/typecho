@@ -230,17 +230,22 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
             
             $feedQuery = $this->request->feed;
-            $matched = Typecho_Router::match($this->request->feed, $params);
-            $this->parameter->type = Typecho_Router::$current;
-            $this->request->setParams($params);
+            //$this->parameter->type = Typecho_Router::$current;
+            //$this->request->setParams($params);
         
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
-            } else if (!$matched || 'feed' == $this->parameter->type) {
-                throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
+            } else {
+                $matched = Typecho_Router::match($this->request->feed, 'pageSize=10');
+                if ($matched && $matched instanceof Widget_Archive) {
+                    $this->import($matched, array('length', 'stack', 'row', 'countSql', 'total', 'currentPage', 'keywords', 'description',
+                        'archiveTitle', 'archiveType', 'archiveSingle', 'archiveSlug', 'archiveCustom'));
+                } else {
+                    throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
+                }
             }
-            
+
             /** 初始化聚合器 */
             $this->setFeed(new Typecho_Feed(Typecho_Common::VERSION, $this->_feedType, $this->options->charset, _t('zh-CN')));
             
@@ -251,10 +256,10 @@ class Widget_Archive extends Widget_Abstract_Contents
     
     /**
      * 设置分页对象
-     * @param $pageRow
+     * @param array $pageRow
      * @return void
      */
-    public function setPageRow(array $pageRow)
+    public function setPageRow($pageRow)
     {
         $this->_pageRow = $pageRow;
     }
@@ -294,7 +299,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 	/**
 	 * @param $_archiveTitle the $_archiveTitle to set
 	 */
-	public function setArchiveTitle(array $archiveTitle)
+	public function setArchiveTitle($archiveTitle)
 	{
 		$this->_archiveTitle = $archiveTitle;
 	}
@@ -370,7 +375,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 	/**
 	 * @param $_countSql the $_countSql to set
 	 */
-	public function setCountSql(Typecho_Db_Query $countSql)
+	public function setCountSql($countSql)
 	{
 		$this->_countSql = $countSql;
 	}
@@ -564,9 +569,16 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ('comment_page' == $this->parameter->type) {
             $params = array();
-            $matched = Typecho_Router::match($this->request->permalink, $params);
-            $this->parameter->type = Typecho_Router::$current;
-            $this->request->setParams($params);
+            $matched = Typecho_Router::match($this->request->permalink);
+            
+            if ($matched && $matched instanceof Widget_Archive && $matched->is('single')) {
+                $this->import($matched, array('length', 'stack', 'row', 'countSql', 'total', 'currentPage', 'keywords', 'description',
+                            'archiveTitle', 'archiveType', 'archiveSingle', 'archiveSlug', 'archiveCustom', 'themeFile',
+                            'feed', 'feedUrl', 'feedRssUrl', 'feedAtomUrl'));
+                            
+                $hasPushed = true;
+                return;
+            }
         }
     
         /** 匹配类型 */
@@ -1017,6 +1029,11 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function execute()
     {
+        /** 避免重复取数据 */
+        if ($this->have()) {
+            return;
+        }
+    
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
             $filterKeywords = $this->request->filter('search')->s;
@@ -1520,7 +1537,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             if ('comments' == $this->parameter->type) {
                 $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10');
             } else {
-                $comments = $this->comments(NULL, true);
+                $comments = $this->widget('Widget_Comments_Recent', 'pageSize=10&parentId=' . $this->cid);
             }
             
             while ($comments->next()) {

@@ -1043,11 +1043,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 检查目标地址是否正确*/
         $pathInfo = Typecho_Common::url(substr($target, strlen($this->options->index)), '/');
-        Typecho_Router::match($pathInfo, $params);
-        $post = $this->widget('Widget_Archive', NULL, $params);
+        $post = Typecho_Router::match($pathInfo);
         
         /** 这样可以得到cid或者slug*/
-        if (!$post->have() || !$post->is('single')) {
+        if (!($post instanceof Widget_Archive) || !$post->have() || !$post->is('single')) {
             return new IXR_Error(33, _t('这个目标地址不存在'));
         }
         
