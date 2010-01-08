@@ -635,34 +635,33 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!$this->checkAccess($userName, $password)) {
             return $this->error;
         }
-    
-        $uploadHandle = unserialize($this->options->uploadHandle);
-        $deleteHandle = unserialize($this->options->deleteHandle);
-        $attachmentHandle = unserialize($this->options->attachmentHandle);
 
-        $result = call_user_func($uploadHandle, $data);
+        $result = Widget_Upload::uploadHandle($data);
         
         if (false === $result) {
             return IXR_Error(500, _t('上传失败'));
         } else {
         
-            $result['uploadHandle'] = $uploadHandle;
-            $result['deleteHandle'] = $deleteHandle;
-            $result['attachmentHandle'] = $attachmentHandle;
-        
-            $this->insert(array(
+            $insertId = $this->insert(array(
                 'title'     =>  $result['name'],
                 'slug'      =>  $result['name'],
                 'type'      =>  'attachment',
+                'status'    =>  'publish',
                 'text'      =>  serialize($result),
                 'allowComment'      =>  1,
                 'allowPing'         =>  0,
                 'allowFeed'         =>  1
             ));
+            
+            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
+                    ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
+                    
+            /** 增加插件接口 */
+            $this->pluginHandle()->upload($this);
 
             return array(
-                'file' => $result['name'],
-                'url'  => call_user_func($attachmentHandle, $result['path'])
+                'file' => $this->attachment->name,
+                'url'  => $this->attachment->url
             );
         }
     }

@@ -239,8 +239,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             } else {
                 $matched = Typecho_Router::match($this->request->feed, 'pageSize=10');
                 if ($matched && $matched instanceof Widget_Archive) {
-                    $this->import($matched, array('length', 'stack', 'row', 'countSql', 'total', 'currentPage', 'keywords', 'description',
-                        'archiveTitle', 'archiveType', 'archiveSingle', 'archiveSlug', 'archiveCustom'));
+                    $this->import($matched);
                 } else {
                     throw new Typecho_Widget_Exception(_t('聚合页不存在'), 404);
                 }
@@ -508,7 +507,37 @@ class Widget_Archive extends Widget_Abstract_Contents
 	{
 		return $this->_themeFile;
 	}
-
+    
+    /**
+     * 导入对象
+     * 
+     * @access private
+     * @param Widget_Archive $widget 需要导入的对象
+     * @return void
+     */
+    private function import(Widget_Archive $widget)
+    {
+        $currentProperties = get_object_vars($this);
+        
+        foreach ($currentProperties as $name => $value) {
+            if (false !== strpos('|request|response|parameter|_feed|_feedType|_currentFeedUrl|', '|' . $name . '|')) {
+                continue;
+            }
+        
+            if (isset($widget->{$name})) {
+                $this->{$name} = $widget->{$name};
+            } else {
+                $method = ucfirst(trim($name, '_'));
+                $setMethod = 'set' . $method;
+                $getMethod = 'get' . $method;
+                
+                if (method_exists($this, $setMethod) 
+                    && method_exists($widget, $getMethod)) {
+                    $this->{$setMethod}($widget->{$getMethod}());
+                }
+            }
+        }
+    }
     
     /**
      * 处理index
@@ -572,10 +601,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $matched = Typecho_Router::match($this->request->permalink);
             
             if ($matched && $matched instanceof Widget_Archive && $matched->is('single')) {
-                $this->import($matched, array('length', 'stack', 'row', 'countSql', 'total', 'currentPage', 'keywords', 'description',
-                            'archiveTitle', 'archiveType', 'archiveSingle', 'archiveSlug', 'archiveCustom', 'themeFile',
-                            'feed', 'feedUrl', 'feedRssUrl', 'feedAtomUrl'));
-                            
+                $this->import($matched);
                 $hasPushed = true;
                 return;
             }

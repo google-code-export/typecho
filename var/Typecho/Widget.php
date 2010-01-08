@@ -211,35 +211,6 @@ abstract class Typecho_Widget
             unset(self::$_widgetPool[$alias]);
         }
     }
-    
-    /**
-     * 导入对象
-     * 
-     * @access public
-     * @param Typecho_Widget $widget 需要导入的对象
-     * @param array $properties 需要导入的私有属性
-     * @return void
-     */
-    public function import(Typecho_Widget $widget, array $properties)
-    {
-        $currentProperties = get_object_vars($widget);
-        
-        foreach ($properties as $name) {
-            if (isset($currentProperties[$name])) {
-                $this->{$name} = $currentProperties[$name];
-            } else {
-                $method = ucfirst($name);
-                $setMethod = 'set' . $method;
-                $getMethod = 'get' . $method;
-                
-                if (method_exists($this, $setMethod) 
-                    && method_exists($widget, $getMethod)) {
-                    
-                    $this->{$setMethod}($widget->{$getMethod}());
-                }
-            }
-        }
-    }
 
     /**
      * 将类本身赋值

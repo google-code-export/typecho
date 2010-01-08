@@ -71,7 +71,7 @@ if (isset($post) || isset($page)) {
 
 <div class="typecho-list-operate">
 <p class="operate">
-    <a class="button"><?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
+    <a class="button"><?php _e('正在加载上传组件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small></a>
     <span id="swfu"><span id="swfu-placeholder"></span></span>
 </p>
 </div>

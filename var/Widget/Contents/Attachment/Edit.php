@@ -229,7 +229,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
                 
                 if ($this->isWriteable($condition) && $this->delete($condition)) {
                     /** 删除文件 */
-                    call_user_func($this->attachment->deleteHandle, $row);
+                    Widget_Upload::deleteHandle($row);
                 
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')
