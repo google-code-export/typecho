@@ -87,23 +87,6 @@ CREATE TABLE `typecho_metas` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `typecho_items`
---
-
-CREATE TABLE `typecho_items` (
-  `iid` int(10) unsigned NOT NULL auto_increment,
-  `type` varchar(32) NOT NULL,
-  `parent` int(10) unsigned default '0',
-  `name` varchar(200) default NULL,
-  `value` text,
-  PRIMARY KEY  (`iid`),
-  KEY `type` (`type`),
-  KEY `parent` (`parent`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `typecho_options`
 --
 

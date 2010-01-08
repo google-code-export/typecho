@@ -250,24 +250,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
-                $uploadHandle = unserialize($this->options->uploadHandle);
-                $deleteHandle = unserialize($this->options->deleteHandle);
-                $modifyHandle = unserialize($this->options->modifyHandle);
-                $attachmentHandle = unserialize($this->options->attachmentHandle);
-                $attachmentDataHandle = unserialize($this->options->attachmentDataHandle);
-                $result = call_user_func($uploadHandle, $file);
+                $result = self::uploadHandle($file);
                 
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
                 
-                    $result['uploadHandle'] = $uploadHandle;
-                    $result['deleteHandle'] = $deleteHandle;
-                    $result['modifyHandle'] = $modifyHandle;
-                    $result['attachmentHandle'] = $attachmentHandle;
-                    $result['attachmentDataHandle'] = $attachmentDataHandle;
-                    
                     $struct = array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
@@ -334,24 +323,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     $this->response->setStatus(403);
                     exit;
                 }
-            
-                $uploadHandle = $this->attachment->uploadHandle;
-                $deleteHandle = $this->attachment->deleteHandle;
-                $modifyHandle = $this->attachment->modifyHandle;
-                $attachmentHandle = $this->attachment->attachmentHandle;
-                $attachmentDataHandle = $this->attachment->attachmentDataHandle;
-                $result = call_user_func($modifyHandle, $this->row, $file);
+
+                $result = self::modifyHandle($this->row, $file);
                 
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
-                
-                    $result['uploadHandle'] = $uploadHandle;
-                    $result['deleteHandle'] = $deleteHandle;
-                    $result['modifyHandle'] = $modifyHandle;
-                    $result['attachmentHandle'] = $attachmentHandle;
-                    $result['attachmentDataHandle'] = $attachmentDataHandle;
                 
                     $this->update(array(
                         'text'      =>  serialize($result)

@@ -47,15 +47,6 @@ CREATE TABLE typecho_metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
 
 CREATE INDEX typecho_metas_slug ON typecho_metas ("slug");
 
-CREATE TABLE typecho_items ( "iid" INTEGER NOT NULL PRIMARY KEY, 
-"type" varchar(32) NOT NULL , 
-"parent" int(10) default '0' ,
-"name" varchar(200) default NULL , 
-"value" text );
-
-CREATE INDEX typecho_items_type ON typecho_items ("type");
-CREATE INDEX typecho_items_parent ON typecho_items ("parent");
-
 CREATE TABLE typecho_options ( "name" varchar(32) NOT NULL , 
 "user" int(10) NOT NULL default '0' , 
 "value" text );

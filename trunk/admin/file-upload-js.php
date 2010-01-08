@@ -38,13 +38,6 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
         window.addEvent('domready', function() {
             var _inited = false;
             
-            //加强未加载暗示
-            var uploadButton = $(document).getElement('#upload-panel .button')
-            .setStyle('cursor', 'pointer')
-            .addEvent('click', function () {
-                alert('<?php _e('正在加载上传组件, 请稍候再试'); ?>');
-            });
-            
             //begin parent tabshow
             $(document).getElement('#upload-panel').addEvent('tabShow', function () {
             
@@ -54,7 +47,8 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
                 _inited = true;
                 
                 var swfuploadLoaded = function () {
-                    uploadButton.removeEvent('click');
+                    $(document).getElement('#upload-panel .button')
+                    .set('text', '<?php _e('上传文件'); ?>');
                 };
             
                 var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
