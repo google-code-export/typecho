@@ -28,7 +28,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      * @param string $status 状态
      * @return string
      */
-    protected function getPageOffsetQuery($cid, $status)
+    protected function getPageOffsetQuery($cid, $status = NULL)
     {
         return 'page=' . $this->getPageOffset('cid', $cid, 'attachment', $status,
         $this->user->pass('editor', true) ? 0 : $this->user->uid);

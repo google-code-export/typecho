@@ -37,8 +37,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___author()
     {
-        return new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
-        ->where('uid = ?', $this->authorId), array($this->widget('Widget_Abstract_Users'), 'filter')));
+        return $this->widget('Widget_Users_Author@' . $this->cid, array('uid' => $this->authorId));
     }
     
     /**
@@ -135,12 +134,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @param integer $pageSize 分页值
      * @return integer
      */
-    protected function getPageOffset($column, $offset, $type, $status = 'publish', $authorId = 0, $pageSize = 20)
+    protected function getPageOffset($column, $offset, $type, $status = NULL, $authorId = 0, $pageSize = 20)
     {
         $select = $this->db->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents')
         ->where("table.contents.{$column} > {$offset}")
-        ->where("table.contents.type = ?", $type)
-        ->where("table.contents.status = ?", $status);
+        ->where("table.contents.type = ?", $type);
+        
+        if (!empty($status)) {
+            $select->where("table.contents.status = ?", $status);
+        }
         
         if ($authorId > 0) {
             $select->where('table.contents.authorId = ?', $authorId);
@@ -293,6 +295,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 生成一个非空的缩略名 */
         $slug = Typecho_Common::slugName($slug, $cid);
         $result = $slug;
+        
+        /** 对草稿的slug做特殊处理 */
+        $draft = $this->db->fetchObject($this->db->select('status', 'parent')
+            ->from('table.contents')->where('cid = ?', $cid));
+        
+        if ('draft' == $draft->status && $draft->parent) {
+            $result = '@' . $result;
+        }
+        
         
         /** 判断是否在数据库中已经存在 */
         $count = 1;

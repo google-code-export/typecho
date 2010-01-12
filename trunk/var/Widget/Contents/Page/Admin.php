@@ -17,7 +17,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
+class Widget_Contents_Page_Admin extends Widget_Contents_Post_Admin
 {
     /**
      * 执行函数
@@ -31,18 +31,8 @@ class Widget_Contents_Page_Admin extends Widget_Abstract_Contents
         $select = $this->select()->where('table.contents.type = ?', 'page');
         
         /** 过滤状态 */
-        $status = $this->request->status;
-        switch ($status) {
-            case 'draft':
-                $select->where('table.contents.status = ?', 'draft');
-                break;
-            case 'all':
-                break;
-            case 'publish':
-            default:
-                $select->where('table.contents.status = ?', 'publish');
-                break;
-        }
+        $select->where('table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
+            'publish', 'draft');
         
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {

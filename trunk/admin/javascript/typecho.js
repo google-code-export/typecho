@@ -444,6 +444,7 @@ Typecho.autoSave = new Class({
             this.duration = 0;
             this.saveText = o.text;
             this.saveRev = this.rev;
+            $(this.options.form).getElement('input[name=do]').set('value', 'save');
         
             new Request.JSON({
                 url: this.url,
@@ -451,7 +452,6 @@ Typecho.autoSave = new Class({
                 onSuccess: (function (responseJSON) {
                     if (responseJSON.success) {
                         $(this.options.form).getElement('input[name=cid]').set('value', responseJSON.cid);
-                        $(this.options.form).getElement('input[name=do]').set('value', 'update');
                     }
                     
                     if (null != this.options.messageElement) {
@@ -460,7 +460,7 @@ Typecho.autoSave = new Class({
                     }
                     
                 }).bind(this)
-            }).send($(this.options.form).toQueryString() + '&draft=1&' + Hash.toQueryString(o));
+            }).send($(this.options.form).toQueryString() + Hash.toQueryString(o));
         }
     }
 });

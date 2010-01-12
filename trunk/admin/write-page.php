@@ -23,10 +23,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
-                                <input type="hidden" name="draft" value="0" />
-                                <input type="hidden" name="do" value="<?php echo $page->have() ? 'update' : 'insert'; ?>" />
-                                <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" id="btn-submit"><?php if(!$page->have() || 'draft' == $page->status): ?><?php _e('发布页面 &raquo;'); ?><?php else: ?><?php _e('更新页面 &raquo;'); ?><?php endif; ?></button>
+                                <input type="hidden" name="do" value="publish" />
+                                <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
+                                <button type="submit" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
                             </span>
                         </p>
                     </div>
@@ -106,9 +105,10 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </li>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
                         <?php if($page->have()): ?>
+                        <?php $modified = new Typecho_Date($page->modified); ?>
                         <li>
-                            <label class="typecho-label"><?php _e('相关'); ?></label>
-                            <p><?php _e('此页面的创建者是 <strong>%s</strong>', $page->author->screenName); ?></p>
+                            <label class="typecho-label"><?php _e('本页面由 %s 创建', $page->author->screenName); ?></label>
+                            <p class="description"><?php _e('最后修改于 %s', $modified->word()); ?></p>
                         </li>
                         <?php endif; ?>
                     </ul>
@@ -144,14 +144,14 @@ include 'copyright.php';
             $('btn-save').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
-                $(document).getElement('input[name=draft]').set('value', 1);
+                $(document).getElement('input[name=do]').set('value', 'save');
                 $(document).getElement('form[name=write_page]').submit();
             });
             
             $('btn-submit').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
-                $(document).getElement('input[name=draft]').set('value', 0);
+                $(document).getElement('input[name=do]').set('value', 'publish');
             });
         });
     })();

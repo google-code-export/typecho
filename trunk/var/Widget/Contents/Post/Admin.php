@@ -52,16 +52,26 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     private $_currentPage;
     
     /**
-     * 文章作者
+     * 当前文章的草稿
      * 
      * @access protected
-     * @return Typecho_Config
+     * @return array
      */
-    protected function ___author()
+    protected function ___hasDraft()
     {
-        return isset($this->request->uid) ? new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
-        ->where('uid = ?', $this->request->filter('int')->uid))) : new Typecho_Config($this->db->fetchRow($this->db->select()->from('table.users')
-        ->where('uid = ?', $this->authorId)));
+        if ('draft' == $this->status) {
+            return true;
+        }
+        
+        if ($this->db->fetchRow($this->db->select('cid')
+        ->from('table.contents')
+        ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
+            $this->cid, $this->type, 'draft')
+        ->limit(1))) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**
@@ -72,10 +82,9 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      */
     public function getMenuTitle()
     {
-        $author = $this->author;
-        
-        if (isset($author->uid)) {
-            return _t('%s的文章', $author->screenName);
+        if (isset($this->request->uid)) {
+            return _t('%s的文章', $this->db->fetchObject($this->db->select('screenName')->from('table.users')
+                ->where('uid = ?', $this->request->filter('int')->uid))->screenName);
         }
         
         throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
@@ -104,36 +113,13 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
-        } else {
-            if (isset($this->request->uid)) {
-                $select->where('table.contents.authorId = ?', $this->request->filter('int')->uid);
-            } else {
-                if ('on' == $this->request->__typecho_all_posts) {
-                    Typecho_Cookie::set('__typecho_all_posts', 'on');
-                } else {
-                    if ('off' == $this->request->__typecho_all_posts) {
-                        Typecho_Cookie::set('__typecho_all_posts', 'off');
-                    }
-                    $select->where('table.contents.authorId = ?', $this->user->uid);
-                }
-            }
+        } else if (isset($this->request->uid)) {
+            $select->where('table.contents.authorId = ?', $this->request->filter('int')->uid);
         }
         
         /** 过滤状态 */
-        switch ($this->request->status) {
-            case 'draft':
-                $select->where('table.contents.status = ?', 'draft');
-                break;
-            case 'waiting':
-                $select->where('table.contents.status = ?', 'waiting');
-                break;
-            case 'all':
-                break;
-            case 'publish':
-            default:
-                $select->where('table.contents.status = ?', 'publish');
-                break;
-        }
+        $select->where('table.contents.status = ? OR table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
+            'publish', 'waiting', 'draft');
         
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->filter('search')->keywords)) {

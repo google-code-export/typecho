@@ -208,4 +208,20 @@ class Widget_Abstract_Users extends Widget_Abstract
     {
         return $this->db->query($condition->delete('table.users'));
     }
+    
+    /**
+     * 调用gravatar输出用户头像
+     * 
+     * @access public
+     * @param integer $size 头像尺寸
+     * @param string $rating 头像评级
+     * @param string $default 默认输出头像
+     * @return void
+     */
+    public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
+    {
+        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
+        md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+        $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+    }
 }

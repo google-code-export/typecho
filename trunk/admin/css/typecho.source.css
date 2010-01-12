@@ -1919,6 +1919,14 @@ ul.typecho-list-notable li #typecho-respond {
     resize: none;
 }
 
+.typecho-post-area button#btn-submit {
+	font-weight: bold;
+}
+
+.typecho-post-area button#btn-save {
+	font-style: italic;
+}
+
 .typecho-post-area span.size-btn {
     height: 20px;
     width: 708px;
@@ -1964,8 +1972,6 @@ ul.typecho-post-option li {
 ul.typecho-post-option li ul {
     border: none;
     margin: 0;
-    max-height: 140px;
-    _height: 140px;
     overflow: auto;
 }
 

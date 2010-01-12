@@ -25,10 +25,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
-                                <input type="hidden" name="draft" value="0" />
-                                <input type="hidden" name="do" value="<?php echo $post->have() ? 'update' : 'insert'; ?>" />
-                                <button type="button" id="btn-save"><?php _e('保存并继续编辑'); ?></button>
-                                <button type="submit" id="btn-submit"><?php if(!$post->have() || 'draft' == $post->status): ?><?php _e('发布这篇文章 &raquo;'); ?><?php else: ?><?php _e('更新这篇文章 &raquo;'); ?><?php endif; ?></button>
+                                <input type="hidden" name="do" value="publish" />
+                                <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
+                                <button type="submit" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
                             </span>
                         </p>
                     </div>
@@ -95,8 +94,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </li>
                         <li>
                             <label class="typecho-label"><?php _e('分类'); ?></label>
-                            <ul>
-                                <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            <ul<?php if ($category->length > 8): ?> style="height: 264px"<?php endif; ?>>
                                 <?php
                                 if ($post->have()) {
                                     $categories = Typecho_Common::arrayFlatten($post->categories, 'mid');
@@ -117,18 +116,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </li>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
                         <?php if($post->have()): ?>
+                        <?php $modified = new Typecho_Date($post->modified); ?>
                         <li>
-                            <label class="typecho-label"><?php _e('相关'); ?></label>
-                            <p><?php _e('此文的作者是 <strong>%s</strong>', $post->author->screenName); ?></p>
-                            <?php Typecho_Widget::widget('Widget_Contents_Related_Author', 
-                            "limit=3&cid={$post->cid}&author={$post->author->uid}&type={$post->type}")->to($related); ?>
-                            <?php if($related->have()): ?>
-                            <ul class="related">
-                                <?php while($related->next()): ?>
-                                <li><a href="<?php $options->adminUrl('write-post.php?cid=' . $related->cid); ?>"><?php $related->title(); ?></a></li>
-                                <?php endwhile; ?>
-                            </ul>
-                            <?php endif; ?>
+                            <label class="typecho-label"><?php _e('本文由 <a href="%s">%s</a> 撰写',
+                                Typecho_Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?></label>
+                            <p class="description"><?php _e('最后修改于 %s', $modified->word()); ?></p>
                         </li>
                         <?php endif; ?>
                     </ul>
@@ -165,14 +157,14 @@ include 'common-js.php';
             $('btn-save').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
-                $(document).getElement('input[name=draft]').set('value', 1);
+                $(document).getElement('input[name=do]').set('value', 'save');
                 $(document).getElement('form[name=write_post]').submit();
             });
             
             $('btn-submit').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
-                $(document).getElement('input[name=draft]').set('value', 0);
+                $(document).getElement('input[name=do]').set('value', 'publish');
             });
             
             /** 标签自动完成 */

@@ -10,14 +10,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
-                <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-pages.php?status=draft'); ?>"><?php _e('草稿'); ?>
-                    <?php if($stat->draftPagesNum > 0): ?> 
-                        <span class="balloon"><?php $stat->draftPagesNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                </ul>
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
@@ -42,7 +34,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="355"/>
+                        <col width="295"/>
+                        <col width="60"/>
                         <col width="30"/>
                         <col width="180"/>
                         <col width="120"/>
@@ -53,6 +46,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th class="typecho-radius-topleft"> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
+                            <th> </th>
                             <th> </th>
                             <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
@@ -66,7 +60,13 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
-                            <td><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a></td>
+                            <td<?php if (!$pages->hasDraft): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
+                            <?php if ($pages->hasDraft): ?>
+                            </td>
+                            <td>
+                            <span class="balloon right"><?php _e('草稿'); ?></span>
+                            <?php endif; ?></td>
+                            </td>
                             <td>
                             <?php if ('publish' == $pages->status): ?>
                             <a class="right hidden-by-mouse" href="<?php $pages->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $pages->title); ?>" width="16" height="16" alt="view" /></a>
