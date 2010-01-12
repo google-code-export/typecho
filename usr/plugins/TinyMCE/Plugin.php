@@ -23,10 +23,8 @@ class TinyMCE_Plugin implements Typecho_Plugin_Interface
         Typecho_Plugin::factory('admin/write-page.php')->richEditor = array('TinyMCE_Plugin', 'render');
         
         //去除段落
-        Typecho_Plugin::factory('Widget_Contents_Post_Edit')->insert = array('TinyMCE_Plugin', 'filter');
-        Typecho_Plugin::factory('Widget_Contents_Page_Edit')->insert = array('TinyMCE_Plugin', 'filter');
-        Typecho_Plugin::factory('Widget_Contents_Post_Edit')->update = array('TinyMCE_Plugin', 'filter');
-        Typecho_Plugin::factory('Widget_Contents_Page_Edit')->update = array('TinyMCE_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Contents_Post_Edit')->write = array('TinyMCE_Plugin', 'filter');
+        Typecho_Plugin::factory('Widget_Contents_Page_Edit')->write = array('TinyMCE_Plugin', 'filter');
         
         Helper::addPanel(0, 'TinyMCE/tiny_mce/langs.php','', '', 'contributor');
     }

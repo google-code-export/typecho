@@ -10,34 +10,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="container typecho-page-main">
             <div class="column-24 start-01 typecho-list">
-                <ul class="typecho-option-tabs">
-                    <li<?php if(!isset($request->status) || 'publish' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'
-                    . (isset($request->uid) ? '?uid=' . $request->uid : '')); ?>"><?php _e('已发布'); ?></a></li>
-                    <li<?php if('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'
-                    . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('草稿'); ?>
-                    <?php if('on' != $request->get('__typecho_all_posts') && $stat->myDraftPostsNum > 0 && !isset($request->uid)): ?> 
-                        <span class="balloon"><?php $stat->myDraftPostsNum(); ?></span>
-                    <?php elseif('on' == $request->get('__typecho_all_posts') && $stat->draftPostsNum > 0 && !isset($request->uid)): ?>
-                        <span class="balloon"><?php $stat->draftPostsNum(); ?></span>
-                    <?php elseif(isset($request->uid) && $stat->currentDraftPostsNum > 0): ?>
-                        <span class="balloon"><?php $stat->currentDraftPostsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'
-                    . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('待审核'); ?>
-                    <?php if('on' != $request->get('__typecho_all_posts') && $stat->myWaitingPostsNum > 0 && !isset($request->uid)): ?> 
-                        <span class="balloon"><?php $stat->myWaitingPostsNum(); ?></span>
-                    <?php elseif('on' == $request->get('__typecho_all_posts') && $stat->waitingPostsNum > 0 && !isset($request->uid)): ?>
-                        <span class="balloon"><?php $stat->waitingPostsNum(); ?></span>
-                    <?php elseif(isset($request->uid) && $stat->currentWaitingPostsNum > 0): ?>
-                        <span class="balloon"><?php $stat->currentWaitingPostsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                    <?php if($user->pass('editor', true) && !isset($request->uid)): ?>
-                        <li class="right<?php if('on' == $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if('on' != $request->get('__typecho_all_posts')): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
-                    <?php endif; ?>
-                </ul>
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate"><?php _e('操作'); ?>: 
@@ -71,7 +43,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="320"/>
+                        <col width="260"/>
+                        <col width="60"/>
                         <col width="30"/>
                         <col width="110"/>
                         <col width="205"/>
@@ -82,6 +55,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th class="typecho-radius-topleft"> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
+                            <th> </th>
                             <th> </th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('分类'); ?></th>
@@ -95,7 +69,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
-                            <td><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a></td>
+                            <td<?php if (!$posts->hasDraft && 'waiting' != $posts->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                            <?php if ($posts->hasDraft || 'waiting' == $posts->status): ?>
+                            </td>
+                            <td>
+                            <span class="balloon right"><?php $posts->hasDraft ? _e('草稿') : _e('待审核'); ?></span>
+                            <?php endif; ?></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>
                             <a class="right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $posts->title); ?>" width="16" height="16" alt="view" /></a>
