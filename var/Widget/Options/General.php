@@ -44,7 +44,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, $this->options->keywords, _t('关键词'), _t('请以半角逗号","分割多个关键字.'));
         $form->addInput($keywords);
         
-        /** gzip */
+        /** 注册 */
         $allowRegister = new Typecho_Widget_Helper_Form_Element_Radio('allowRegister', array('0' => _t('不允许'), '1' => _t('允许')), $this->options->allowRegister, _t('是否允许注册'),
         _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
         $form->addInput($allowRegister);

@@ -338,9 +338,11 @@ class Typecho_Request
      * 获取当前pathinfo
      *
      * @access public
+     * @param string $inputEncoding 输入编码
+     * @param string $outputEncoding 输出编码
      * @return string
      */
-    public function getPathInfo()
+    public function getPathInfo($inputEncoding = NULL, $outputEncoding = NULL)
     {
         /** 缓存信息 */
         if (NULL !== $this->_pathInfo) {
@@ -355,6 +357,14 @@ class Typecho_Request
         
         if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // check this first so IIS will catch
             $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
+        } elseif (
+            // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
+            isset($_SERVER['IIS_WasUrlRewritten'])
+            && $_SERVER['IIS_WasUrlRewritten'] == '1'
+            && isset($_SERVER['UNENCODED_URL'])
+            && $_SERVER['UNENCODED_URL'] != ''
+            ) {
+            $requestUri = $_SERVER['UNENCODED_URL'];
         } elseif (isset($_SERVER['REQUEST_URI'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
             if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
@@ -436,8 +446,24 @@ class Typecho_Request
         } elseif (NULL === $finalBaseUrl) {
             $pathInfo = $requestUri;
         }
+        
+        if (!empty($pathInfo)) {
+            //针对iis的utf8编码做强制转换
+            //参考http://docs.moodle.org/ja/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9C%EF%BC%9A%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E8%A8%AD%E5%AE%9A
+            if (!empty($inputEncoding) && !empty($outputEncoding) &&
+            (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false 
+            || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)) {
+                if (function_exists('mb_convert_encoding')) {
+                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $pathInfoEncoding);
+                } else if (function_exists('iconv')) {
+                    $pathInfo = iconv($pathInfoEncoding, $outputEncoding, $pathInfo);
+                }
+            }
+        } else {
+            $pathInfo = '/';
+        }
 
-        return ($this->_pathInfo = urldecode(empty($pathInfo) ? '/' : $pathInfo));
+        return ($this->_pathInfo = urldecode($pathInfo));
     }
         
     /**

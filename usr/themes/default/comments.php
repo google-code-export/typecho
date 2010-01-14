@@ -13,7 +13,7 @@ function threadedComments($comments)
                     <?php $comments->threadedComments('<ol>', '</ol>'); ?>
                     <?php if (!$comments->isTopLevel): ?>
                     <div class="comment_reply">
-                        <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
+                        <?php Helper::replyLink($comments->theId, $comments->coid, _t('回复'), 'respond'); ?>
                     </div>
                     <?php endif; ?>
     </li>
@@ -41,7 +41,7 @@ function threadedComments($comments)
 					<?php $comments->content(); ?>
                     <?php $comments->threadedComments('<ol>', '</ol>'); ?>
                     <div class="comment_reply">
-                        <?php Helper::replyLink($comments->theId, $comments->coid, 'Reply', 'respond'); ?>
+                        <?php Helper::replyLink($comments->theId, $comments->coid, _t('回复'), 'respond'); ?>
                     </div>
 				</li>
 			<?php endwhile; ?>
@@ -51,18 +51,18 @@ function threadedComments($comments)
 
             <?php if($this->allow('comment')): ?>
             <div id="respond">
-            <div class="cancle_comment_reply"><?php Helper::cancleCommentReplyLink('Click here to cancel reply', 'respond'); ?></div>
+            <div class="cancle_comment_reply"><?php Helper::cancleCommentReplyLink(_t('取消回复'), 'respond'); ?></div>
 			<h4 id="response"><?php _e('添加新评论'); ?> &raquo;</h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
-				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('登出'); ?> &raquo;</a></p>
+				<p>Logged in as <a href="<?php $this->options->adminUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a></p>
                 <?php else: ?>
 				<p>
                     <label for="author"><?php _e('称呼'); ?><span class="required">*</span></label>
 					<input type="text" name="author" id="author" class="text" size="15" value="<?php $this->remember('author'); ?>" />
 				</p>
 				<p>
-                    <label for="mail"><?php _e('E-mail'); ?><?php if ($this->options->commentsRequireMail): ?><span class="required">*</span><?php endif; ?></label>
+                    <label for="mail"><?php _e('电子邮件'); ?><?php if ($this->options->commentsRequireMail): ?><span class="required">*</span><?php endif; ?></label>
 					<input type="text" name="mail" id="mail" class="text" size="15" value="<?php $this->remember('mail'); ?>" />
 				</p>
 				<p>

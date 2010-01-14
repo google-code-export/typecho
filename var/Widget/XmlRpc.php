@@ -443,24 +443,17 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
-        
+        $input['do'] = 'publish';
         
         /** 调用已有组件 */
         try {
-            if (isset($input['cid'])) {
-                /** 编辑 */
-                $input['do'] = 'update';
-                if (empty($input['slug'])) {
-                    unset($input['slug']);
-                }
-                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->updatePost();
-                return $this->widget('Widget_Notice')->getHighlightId();
-            } else {
-                /** 插入 */
-                $input['do'] = 'insert';
-                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->insertPost();
-                return $this->widget('Widget_Notice')->getHighlightId();
-            }
+            if (empty($input['slug'])) {
+                unset($input['slug']);
+            } 
+            
+            /** 插入 */
+            $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->publishPost();
+            return $this->widget('Widget_Notice')->getHighlightId();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
