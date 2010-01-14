@@ -454,7 +454,7 @@ class Typecho_Request
             (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false 
             || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)) {
                 if (function_exists('mb_convert_encoding')) {
-                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $pathInfoEncoding);
+                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
                 } else if (function_exists('iconv')) {
                     $pathInfo = iconv($pathInfoEncoding, $outputEncoding, $pathInfo);
                 }
