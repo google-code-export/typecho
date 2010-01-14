@@ -99,10 +99,7 @@
                             return;
                         }
             
-                        item.addEvent('click', function () {            
-                            window.open(this.href);
-                            return false;
-                        });
+                        item.set('target', '_blank');
                     }
                 });
             })();
