@@ -203,6 +203,7 @@ Typecho.Table = {
             && ('input' != _t.get('tag') || ('text' != _t.get('type') && 'button' != _t.get('type') && 'submit' != _t.get('type')))
             && 'textarea' != _t.get('tag')
             && 'label' != _t.get('tag')
+            && 'img'   != _t.get('tag')
             && 'button' != _t.get('tag'))) {
                 _el.fireEvent('click');
             }
