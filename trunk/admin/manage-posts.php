@@ -106,7 +106,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <?php if($posts->have()): ?>
             <div class="typecho-pager">
                 <div class="typecho-pager-content">
-                    <h5><?php _e('页面'); ?>:&nbsp;</h5>
                     <ul>
                         <?php $posts->pageNav(); ?>
                     </ul>

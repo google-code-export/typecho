@@ -145,7 +145,6 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
             <?php if($comments->have()): ?>
             <div class="typecho-pager">
                 <div class="typecho-pager-content">
-                    <h5><?php _e('页面'); ?>:&nbsp;</h5>
                     <ul>
                         <?php $comments->pageNav(); ?>
                     </ul>
