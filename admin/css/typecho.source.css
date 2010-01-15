@@ -562,8 +562,8 @@ margin-top: 25px;
 }
 
 .typecho-pager ul {
-    line-height: 16px;
-    height: 16px;
+    line-height: 20px;
+    height: 20px;
     overflow: hidden;
     float: left;
     zoom: 1;
@@ -572,26 +572,26 @@ margin-top: 25px;
 .typecho-pager li {
     font-family: arial,sans-serif;
     margin-right: 3px;
-    font-size: 12px;
+    font-size: 13px;
     float: left;
-    height: 16px;
-    line-height: 16px;
+    height: 20px;
+    line-height: 20px;
 }
 
 .typecho-pager a {
     color: #333;
     display: block;
-    height: 16px;
+    height: 20px;
     outline: none;
-    padding: 0 4px;
+    padding: 0 8px;
     float: left;
-    background: none;
+    background: #dee4c5;
 }
 
 .typecho-pager a:hover {
     color: #333;
     text-decoration: none;
-    background: #dee4c5;
+    background: #C4CD9C;
 }
 
 .typecho-pager li.current a {

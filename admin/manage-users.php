@@ -88,7 +88,6 @@ include 'menu.php';
             <?php if($users->have()): ?>
             <div class="typecho-pager">
                 <div class="typecho-pager-content">
-                    <h5><?php _e('页面'); ?>:&nbsp;</h5>
                     <ul>
                         <?php $users->pageNav(); ?>
                     </ul>
