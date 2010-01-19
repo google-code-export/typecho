@@ -84,10 +84,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     protected function ___draft()
     {
-        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-        ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-            $this->cid, $this->type, 'draft')
-        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
+        if ($this->have()) {
+            if ('draft' == $this->status) {
+                return $this->row;
+            } else {
+                return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+                ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
+                    $this->cid, $this->type, 'draft')
+                ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
+            }
+        }
+        
+        return NULL;
     }
     
     /**
