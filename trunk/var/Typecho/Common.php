@@ -805,13 +805,22 @@ EOF;
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
         
         /** fix issue 197 */
-        $string = preg_replace("/\s*<p ([^>]*)>(.*?)<\/p>\s*/is", "\n\n<p \\1>\\2</p>\n\n", $string);
+        $string = preg_replace("/\s*<p\s+([^>]*)>(.*?)<\/p>\s*/is", "\n\n<p \\1>\\2</p>\n\n", $string);
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
         
         if ($paragraph || false !== strpos($string, "\n\n")) {
-            $string = '<p>' . preg_replace("/\n{2,}/", "</p><p>", $string) . '</p>';
+            $string = preg_replace("/\n{2,}/", "</p><p>", $string);
+            
+            // fix issue 385
+            if (!preg_match("/^<p\s*([^>]*)>/is", $string)) {
+                $string = '<p>' . $string;
+            }
+            
+            if (!preg_match("/<\/p>$/is", $string)) {
+                $string = $string . '</p>';
+            }
         }
         
         $string = str_replace("\n", '<br />', $string);
