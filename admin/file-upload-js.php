@@ -48,7 +48,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
                 
                 var swfuploadLoaded = function () {
                     $(document).getElement('#upload-panel .button')
-                    .set('text', '<?php _e('上传文件'); ?>');
+                    .set('html', '<?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small>');
                 };
             
                 var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
