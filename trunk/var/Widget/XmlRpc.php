@@ -330,16 +330,21 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 开始接受数据 */
-        $option['name'] = $category['name'];
-        $option['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
-        $option['type'] = 'category';
-        $option['description'] = isset($category['description']) ? $category['description'] : $category['name'];
-
-        /** 初始化meta widget，然后插入*/
-        $meta = $this->widget('Widget_Abstract_Metas');
-        if (!$meta->insert($option)) {
-            return new IXR_Error(500, _t('对不起,提交文章时发生错误.'));
+        $input['name'] = $category['name'];
+        $input['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $input['type'] = 'category';
+        $input['description'] = isset($category['description']) ? $category['description'] : $category['name'];
+        $input['do'] = 'insert';
+        
+        /** 调用已有组件 */
+        try {            
+            /** 插入 */
+            $this->widget('Widget_Metas_Category_Edit', NULL, $input, false)->action();
+            return $this->widget('Widget_Notice')->getHighlightId() ? true : false;
+        } catch (Typecho_Widget_Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
+        
         return true;
     }
 
@@ -404,7 +409,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 取得content内容 */
         $input = array();
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
-        $input['slug'] = isset($content['slug']) ? $content['slug'] : NULL;
+        
+        if (isset($content['slug'])) {
+            $input['slug'] = $content['slug'];
+        } else if (isset($content['wp_slug'])) {
+            //fix issue 338, wlw只发送这个
+            $input['slug'] = $content['wp_slug'];
+        }
         
         $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
         $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
@@ -414,7 +425,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
         $input['type'] = isset($content['post_type']) ? $content['post_type'] : 'post';
-        $input['draft'] = !$publish;
         $input['category'] = array();
         
         if (isset($content['postId'])) {
@@ -428,6 +438,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         if (!empty($content['categories']) && is_array($content['categories'])) {
             foreach ($content['categories'] as $category) {
+                if (!$this->db->fetchRow($this->db->select('mid')
+                ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))) {
+                    $result = $this->wpNewCategory($blogId, $userName, $password, array('name' => $category));
+                    if (true !== $result) {
+                        return $result;
+                    }
+                }
+            
                 $input['category'][] = $this->db->fetchObject($this->db->select('mid')
                 ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
                 ->limit(1))->mid;
@@ -443,16 +461,28 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
-        $input['do'] = 'publish';
+        $input['do'] = $publish ? 'publish' : 'save';
+        
+        /** 对未归档附件进行归档 */
+        $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND 
+        (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment'), array($this, 'filter'));
+        
+        if (!empty($unattached)) {
+            foreach ($unattached as $attach) {
+                if (false !== strpos($input['text'], $attach['attachment']->url)) {
+                    if (!isset($input['attachment'])) {
+                        $input['attachment'] = array();
+                    }
+                    
+                    $input['attachment'][] = $attach['cid'];
+                }
+            }
+        }
         
         /** 调用已有组件 */
-        try {
-            if (empty($input['slug'])) {
-                unset($input['slug']);
-            } 
-            
+        try {            
             /** 插入 */
-            $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->publishPost();
+            $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
             return $this->widget('Widget_Notice')->getHighlightId();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
@@ -516,7 +546,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'mt_text_more'  => $more,
                 'mt_allow_comments' => $post->allowComment,
                 'mt_allow_pings' => $post->allowPing,
-                'mt_keywords'	=> $tags,
+                'mt_keywords'	=> implode(', ', $tags),
                 'wp_slug'       => $post->slug,
                 'wp_password'   => $post->password,
                 'wp_author'     => $post->author->name,
@@ -568,7 +598,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'mt_text_more'  => $more,
                     'mt_allow_comments' => $posts->allowComment,
                     'mt_allow_pings' => $posts->allowPing,
-                    'mt_keywords'	=> $tags,
+                    'mt_keywords'	=> implode(', ', $tags),
                     'wp_slug'       => $posts->slug,
                     'wp_password'   => $posts->password,
                     'wp_author'     => $posts->author->name,

@@ -138,7 +138,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($this->request->attachment && is_array($this->request->attachment)) {
             $attachments = $this->request->filter('int')->attachment;
             
-            foreach ($attachments as $attachment) {
+            foreach ($attachments as $key => $attachment) {
                 $this->db->query($this->db->update('table.contents')->rows(array('parent' => $cid, 'status' => 'publish',
                 'order' => $key + 1))->where('cid = ? AND type = ?', $attachment, 'attachment'));
             }
