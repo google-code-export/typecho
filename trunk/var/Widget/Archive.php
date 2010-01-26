@@ -1075,9 +1075,17 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
         $hasPushed = false;
 
+        /** select初始化 */
+        $select = $this->pluginHandle()->trigger($selectPlugged)->select($this);
+
         /** 定时发布功能 */
-        $select = $this->select()->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->gmtTime);
+        if (!$selectPlugged) {
+            $select = $this->select()->where('table.contents.status = ?', 'publish')
+                ->where('table.contents.created < ?', $this->options->gmtTime);
+        }
+        
+        /** 对select的hack */
+        $this->pluginHandle()->beforeSelect($select, $this);
         
         /** 初始化其它变量 */
         $this->_feedUrl = $this->options->feedUrl;
@@ -1116,6 +1124,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         } else {
             $hasPushed = $this->pluginHandle()->handle($this->parameter->type, $this, $select);
         }
+        
+        /** 对select的hack */
+        $this->pluginHandle()->afterSelect($select, $this);
         
         /** 如果已经提前压入则直接返回 */
         if ($hasPushed) {
