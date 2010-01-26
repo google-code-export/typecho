@@ -378,6 +378,14 @@ class Widget_Archive extends Widget_Abstract_Contents
 	{
 		$this->_countSql = $countSql;
 	}
+    
+	/**
+	 * @param $_total the $_total to set
+	 */
+	public function setTotal($total)
+	{
+		$this->_total = $total;
+	}
 
 	/**
 	 * @param $_themeFile the $_themeFile to set
@@ -499,6 +507,14 @@ class Widget_Archive extends Widget_Abstract_Contents
 	{
 		return $this->_countSql;
 	}
+    
+	/**
+	 * @return the $_total
+	 */
+	public function getTotal()
+	{
+		return $this->_total;
+	}
 
 	/**
 	 * @return the $_themeFile
@@ -606,7 +622,13 @@ class Widget_Archive extends Widget_Abstract_Contents
                 return;
             }
         }
-    
+        
+        /** 设置单一归档类型 */
+        $this->_archiveSingle = true;
+        
+        /** 默认归档类型 */
+        $this->_archiveType = 'single';
+
         /** 匹配类型 */
         $select->where('table.contents.type = ?', $this->parameter->type);
         
@@ -653,7 +675,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 匹配类型 */
         $select->limit(1);
-        $this->db->fetchRow($select, array($this, 'push'));
+        $this->query($select);
         
         if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
             /** 对没有索引情况下的判断 */
@@ -694,9 +716,6 @@ class Widget_Archive extends Widget_Abstract_Contents
         
         /** 设置归档缩略名 */
         $this->_archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
-        
-        /** 设置单一归档类型 */
-        $this->_archiveSingle = true;
         
         /** 设置403头 */
         if ($this->hidden) {
@@ -1046,6 +1065,21 @@ class Widget_Archive extends Widget_Abstract_Contents
             return parent::select();
         }
     }
+    
+    /**
+     * 提交查询
+     * 
+     * @access public
+     * @param mixed $select 查询对象
+     * @return void
+     */
+    public function query($select)
+    {
+        $this->pluginHandle()->trigger($queryPlugged)->query($this, $select);
+        if (!$queryPlugged) {
+            $this->db->fetchAll($select, array($this, 'push'));
+        }
+    }
 
     /**
      * 执行函数
@@ -1085,7 +1119,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 对select的hack */
-        $this->pluginHandle()->beforeSelect($select, $this);
+        $this->pluginHandle()->beforeHandle($this, $select);
         
         /** 初始化其它变量 */
         $this->_feedUrl = $this->options->feedUrl;
@@ -1125,9 +1159,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             $hasPushed = $this->pluginHandle()->handle($this->parameter->type, $this, $select);
         }
         
-        /** 对select的hack */
-        $this->pluginHandle()->afterSelect($select, $this);
-        
         /** 如果已经提前压入则直接返回 */
         if ($hasPushed) {
             return;
@@ -1138,7 +1169,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->query($select);
     }
     
     /**
