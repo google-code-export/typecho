@@ -99,9 +99,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
 
-        /** 取得文章作者的名字*/
-        $page['author_name'] = $this->author->name;
-        $page['author_screen_name'] = $this->author->screenName;
         /** 对文章内容做截取处理，以获得description和text_more*/
         list($excerpt, $more) = $this->getPostExtended($page->content);
 
@@ -422,9 +419,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($input['text']));
         $input['text'] = $this->pluginHandle()->fromOfflineEditor($input['text']);
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
+        $input['order'] = isset($content["wp_page_order"]) ? $content["wp_page_order"] : NULL;
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
-        $input['type'] = isset($content['post_type']) ? $content['post_type'] : 'post';
         $input['category'] = array();
         
         if (isset($content['postId'])) {
@@ -482,7 +479,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 调用已有组件 */
         try {            
             /** 插入 */
-            $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
+            if (isset($content['post_type']) && 'page' == $content['post_type']) {
+                $this->widget('Widget_Contents_Page_Edit', NULL, $input, false)->action();
+            } else {
+                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
+            }
+
             return $this->widget('Widget_Notice')->getHighlightId();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
@@ -829,7 +831,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
 
         /** 提交查询 */
-        $post = $this->$db->fetchRow($select, array($this, 'filter'));
+        $post = $this->$db->fetchRow($select, array($this, 'push'));
         if ($this->authorId != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator')) {
             return new IXR_Error(403, '权限不足.');
         }
