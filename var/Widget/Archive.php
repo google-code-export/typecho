@@ -566,6 +566,9 @@ class Widget_Archive extends Widget_Abstract_Contents
     private function indexHandle(Typecho_Db_Query $select, &$hasPushed)
     {
         $select->where('table.contents.type = ?', 'post');
+        
+        /** 插件接口 */
+        $this->pluginHandle()->indexHandle($this, $select);
     }
     
     /**
@@ -599,7 +602,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $hasPushed = true;
         
         /** 插件接口 */
-        $this->pluginHandle()->error404Handle($select, $this);
+        $this->pluginHandle()->error404Handle($this, $select);
     }
     
     /**
@@ -623,7 +626,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
         
-        /** 设置单一归档类型 */
+        /** 将这两个设置提前是为了保证在调用query的plugin时可以在插件中使用is判断初步归档类型 */
+        /** 如果需要更细判断，则可以使用singleHandle来实现 */
         $this->_archiveSingle = true;
         
         /** 默认归档类型 */
@@ -725,7 +729,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $hasPushed = true;
         
         /** 插件接口 */
-        $this->pluginHandle()->singleHandle($select, $this);
+        $this->pluginHandle()->singleHandle($this, $select);
     }
     
     /**
@@ -793,7 +797,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $category['slug'];
         
         /** 插件接口 */
-        $this->pluginHandle()->categoryHandle($select, $this);
+        $this->pluginHandle()->categoryHandle($this, $select);
     }
     
     /**
@@ -859,7 +863,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $tag['slug'];
         
         /** 插件接口 */
-        $this->pluginHandle()->tagHandle($select, $this);
+        $this->pluginHandle()->tagHandle($this, $select);
     }
     
     /**
@@ -914,7 +918,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveSlug = $author['uid'];
         
         /** 插件接口 */
-        $this->pluginHandle()->authorHandle($select, $this);
+        $this->pluginHandle()->authorHandle($this, $select);
     }
     
     /**
@@ -996,7 +1000,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedAtomUrl = Typecho_Router::url($currentRoute, $value, $this->options->feedAtomUrl);
         
         /** 插件接口 */
-        $this->pluginHandle()->dateHandle($select, $this);
+        $this->pluginHandle()->dateHandle($this, $select);
     }
     
     /**
@@ -1046,7 +1050,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveType = 'search';
         
         /** 插件接口 */
-        $this->pluginHandle()->searchHandle($select, $this);
+        $this->pluginHandle()->searchHandle($this, $select);
     }
 
     /**
@@ -1118,8 +1122,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 ->where('table.contents.created < ?', $this->options->gmtTime);
         }
         
-        /** 对select的hack */
-        $this->pluginHandle()->beforeHandle($this, $select);
+        /** handle初始化 */
+        $this->pluginHandle()->handleInit($this, $select);
         
         /** 初始化其它变量 */
         $this->_feedUrl = $this->options->feedUrl;
