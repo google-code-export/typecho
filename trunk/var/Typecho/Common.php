@@ -823,6 +823,9 @@ EOF;
             }
         }
         
+        $string = preg_replace(array("/<([a-z]+)([^>]*)>\s*/is", "/\s*<\/([a-z]+)([^>]*)>/is"),
+            array("<\\1\\2>", "</\\1\\2>"), $string);
+        
         $string = str_replace("\n", '<br />', $string);
         
         /** 去掉不需要的 */
