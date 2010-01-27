@@ -32,6 +32,7 @@ package:
 	rm -Rf build/usr/plugins/FlashMp3Player/
 	rm -Rf build/usr/plugins/ConnectToTwitter/
 	rm -Rf build/usr/plugins/ShareCode/
+	rm -Rf build/usr/plugins/ZenCoding/
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -62,6 +63,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
 	rm -Rf ${DIR}/usr/plugins/ShareCode/
+	rm -Rf ${DIR}/usr/plugins/ZenCoding/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -75,6 +77,7 @@ upgrade:
 	cp -Rf build/usr/plugins/FlashMp3Player/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/ConnectToTwitter/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/ShareCode/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/ZenCoding/ ${DIR}/usr/plugins/
 	make clear
 
 
@@ -107,6 +110,7 @@ install:
 	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
 	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
 	rm -Rf ${DIR}/usr/plugins/ShareCode/
+	rm -Rf ${DIR}/usr/plugins/ZenCoding/
 	cp -Rf build/* ${DIR}
 	make clear
 
