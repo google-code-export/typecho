@@ -18,8 +18,9 @@ class ZenCoding_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        Typecho_Plugin::factory('admin/write-post.php')->bottom = array('ZenCoding_Plugin', 'bottom');
-        Typecho_Plugin::factory('admin/write-page.php')->bottom = array('ZenCoding_Plugin', 'bottom');
+        Typecho_Plugin::factory('admin/write-post.php')->bottom = array('ZenCoding_Plugin', 'writeBottom');
+        Typecho_Plugin::factory('admin/write-page.php')->bottom = array('ZenCoding_Plugin', 'writeBottom');
+        Typecho_Plugin::factory('admin/theme-editor.php')->bottom = array('ZenCoding_Plugin', 'themeBottom');
     }
     
     /**
@@ -57,7 +58,24 @@ class ZenCoding_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function bottom($post)
+    public static function themeBottom($files)
+    {
+        $options = Helper::options();
+        $js = Typecho_Common::url('ZenCoding/zen_textarea.js', $options->pluginUrl);
+        echo "<script type=\"text/javascript\" src=\"{$js}\"></script>
+<script type=\"text/javascript\">
+    $(document).getElement('#content').addClass('zc-use_tab-true zc-syntax-xsl zc-profile-xml');
+    zen_textarea.setup({pretty_break: true});
+</script>";
+    }
+    
+    /**
+     * 插件实现方法
+     * 
+     * @access public
+     * @return void
+     */
+    public static function writeBottom($post)
     {
         $options = Helper::options();
         $js = Typecho_Common::url('ZenCoding/zen_textarea.js', $options->pluginUrl);

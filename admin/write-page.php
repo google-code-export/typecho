@@ -119,8 +119,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 </div>
 
 <?php
-include 'common-js.php';
 include 'copyright.php';
+include 'common-js.php';
 ?>
 
 <script type="text/javascript">
