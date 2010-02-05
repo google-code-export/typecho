@@ -23,16 +23,16 @@ class Typecho_Common
     const LOCKED_HTML_TAG = 'code|pre|script';
     
     /** 需要去除内部换行的标签 */
-    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|fieldset|tr|th|td|li|ol|ul|h[1-6]';
+    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|fieldset|tr|th|td|li|ol|ul|dd|dl|dt|h[1-6]';
     
     /** 元素标签 */
-    const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li';
+    const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li|dd|dt';
     
     /** 布局标签 */
-    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul';
+    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul|dl';
     
     /** 独立段落标签 */
-    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|fieldset|ol|ul|h[1-6]';
+    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6]';
     
     /** 程序版本 */
     const VERSION = '0.8/9.11.25';
