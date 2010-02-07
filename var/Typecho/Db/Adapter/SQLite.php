@@ -19,15 +19,15 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
 {
     /**
      * 数据库标示
-     * 
+     *
      * @access private
      * @var resource
      */
     private $_dbHandle;
-    
+
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -35,10 +35,10 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     {
         return function_exists('sqlite_open');
     }
-    
+
     /**
      * 过滤字段名
-     * 
+     *
      * @access private
      * @param mixed $result
      * @return array
@@ -49,16 +49,16 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         if (!$result) {
             return $result;
         }
-    
+
         $tResult = array();
-        
+
         /** 遍历数组 */
         foreach ($result as $key => $val) {
             /** 按点分隔 */
             if (false !== ($pos = strpos($key, '.'))) {
                 $key = substr($key, $pos + 1);
             }
-        
+
             /** 按引号分割 */
             if (false === ($pos = strpos($key, '"'))) {
                 $tResult[$key] = $val;
@@ -69,7 +69,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
 
         return $tResult;
     }
-    
+
     /**
      * 数据库连接函数
      *
@@ -102,7 +102,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         if ($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle)) {
             return $resource;
         }
-        
+
         /** 数据库异常 */
         require_once 'Typecho/Db/Query/Exception.php';
         $errorCode = sqlite_last_error($this->_dbHandle);
@@ -119,7 +119,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     {
         return $this->filterColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
     }
-    
+
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *

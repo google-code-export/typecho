@@ -1,7 +1,7 @@
 <?php
 /**
  * 多行文字域帮手
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -14,7 +14,7 @@ require_once 'Typecho/Widget/Helper/Form/Element.php';
 
 /**
  * 多行文字域帮手类
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -24,7 +24,7 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
 {
     /**
      * 初始化当前输入项
-     * 
+     *
      * @access public
      * @param string $name 表单元素名称
      * @param array $options 选择项
@@ -37,10 +37,10 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
         $this->container($input->setClose(false));
         return $input;
     }
-    
+
     /**
      * 设置表单项默认值
-     * 
+     *
      * @access protected
      * @param string $value 表单项默认值
      * @return void

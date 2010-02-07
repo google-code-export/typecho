@@ -1,7 +1,7 @@
 <?php
 /**
  * 全局选项
- * 
+ *
  * @link typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 全局选项组件
- * 
+ *
  * @link typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -21,7 +21,7 @@ class Widget_Abstract_Options extends Widget_Abstract
 {
     /**
      * 以checkbox选项判断是否某个值被启用
-     * 
+     *
      * @access protected
      * @param mixed $settings 选项集合
      * @param string $name 选项名称
@@ -34,7 +34,7 @@ class Widget_Abstract_Options extends Widget_Abstract
 
     /**
      * 获取原始查询对象
-     * 
+     *
      * @access public
      * @return Typecho_Db_Query
      */
@@ -42,10 +42,10 @@ class Widget_Abstract_Options extends Widget_Abstract
     {
         return $this->db->select()->from('table.options');
     }
-    
+
     /**
      * 插入一条记录
-     * 
+     *
      * @access public
      * @param array $options 记录插入值
      * @return integer
@@ -54,10 +54,10 @@ class Widget_Abstract_Options extends Widget_Abstract
     {
         return $this->db->query($this->db->insert('table.options')->rows($options));
     }
-    
+
     /**
      * 更新记录
-     * 
+     *
      * @access public
      * @param array $options 记录更新值
      * @param Typecho_Db_Query $condition 更新条件
@@ -67,10 +67,10 @@ class Widget_Abstract_Options extends Widget_Abstract
     {
         return $this->db->query($condition->update('table.options')->rows($options));
     }
-    
+
     /**
      * 删除记录
-     * 
+     *
      * @access public
      * @param Typecho_Db_Query $condition 删除条件
      * @return integer
@@ -79,10 +79,10 @@ class Widget_Abstract_Options extends Widget_Abstract
     {
         return $this->db->query($condition->delete('table.options'));
     }
-    
+
     /**
      * 获取记录总数
-     * 
+     *
      * @access public
      * @param Typecho_Db_Query $condition 计算条件
      * @return integer

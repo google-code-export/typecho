@@ -16,47 +16,47 @@ class Widget_Menu extends Typecho_Widget
 {
     /**
      * 父菜单列表
-     * 
+     *
      * @access private
      * @var array
      */
     private $_parentMenu = array();
-    
+
     /**
      * 子菜单列表
-     * 
+     *
      * @access private
      * @var array
      */
     private $_childMenu = array();
-    
+
     /**
      * 当前父菜单
-     * 
+     *
      * @access private
      * @var integer
      */
     private $_currentParent = 1;
-    
+
     /**
      * 当前子菜单
-     * 
+     *
      * @access private
      * @var integer
      */
     private $_currentChild = 0;
-    
+
     /**
      * 当前页面
-     * 
+     *
      * @access private
      * @var string
      */
     private $_currentUrl;
-    
+
     /**
      * 全局选项
-     * 
+     *
      * @access protected
      * @var Widget_Options
      */
@@ -64,21 +64,21 @@ class Widget_Menu extends Typecho_Widget
 
     /**
      * 用户对象
-     * 
+     *
      * @access protected
      * @var Widget_User
      */
     protected $user;
-    
+
     /**
      * 当前菜单标题
      * @var string
      */
     public $title;
-    
+
     /**
      * 构造函数,初始化组件
-     * 
+     *
      * @access public
      * @param mixed $request request对象
      * @param mixed $response response对象
@@ -88,22 +88,22 @@ class Widget_Menu extends Typecho_Widget
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        
+
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
     }
-    
+
     /**
      * 执行函数,初始化菜单
-     * 
+     *
      * @access public
      * @return void
      */
     public function execute()
     {
         $this->_parentMenu = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
-        
+
         $this->_childMenu =  array(
         array(
             array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor'),
@@ -151,7 +151,7 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
             array(_t('永久链接'), _t('永久链接设置'), 'option-permalink.php', 'administrator'),
         ));
-        
+
         /** 获取扩展菜单 */
         $panelTable = unserialize($this->options->panelTable);
         $extendingParentMenu = empty($panelTable['parent']) ? array() : $panelTable['parent'];
@@ -160,36 +160,36 @@ class Widget_Menu extends Typecho_Widget
         foreach ($extendingParentMenu as $key => $val) {
             $this->_parentMenu[10 + $key] = $val;
         }
-        
+
         foreach ($extendingChildMenu as $key => $val) {
             $this->_childMenu[$key] = isset($this->_childMenu[$key]) ? $this->_childMenu[$key] : array();
             if (isset($this->_parentMenu[$key])) {
                 $this->_childMenu[$key] = array_merge($this->_childMenu[$key], $val);
             }
         }
-        
+
         $this->_currentUrl = $this->request->makeUriByRequest();
         $childMenu = $this->_childMenu;
         $adminUrl = $this->options->adminUrl;
-        
+
         foreach ($childMenu as $parentKey => $parentVal) {
             foreach ($parentVal as $childKey => $childVal) {
                 $link = Typecho_Common::url($childVal[2], $adminUrl);
-                
+
                 $currentParts = parse_url($this->_currentUrl);
                 $parts = parse_url($link);
-                
+
                 /** 精准比对 */
                 if ($currentParts['path'] == $parts['path']) {
                     $validate = true;
-                    
+
                     if (!empty($parts['query'])) {
                         parse_str($parts['query'], $out);
                         if (empty($currentParts['query'])) {
                             $validate = false;
                         } else {
                             parse_str($currentParts['query'], $currentOut);
-                            
+
                             if (!empty($out)) {
                                 if (!empty($currentOut)) {
                                     foreach ($out as $outKey => $outVal) {
@@ -204,44 +204,44 @@ class Widget_Menu extends Typecho_Widget
                             }
                         }
                     }
-                    
+
                     if ($validate) {
                         $this->_currentParent =  $parentKey;
                         $this->_currentChild =  $childKey;
                     }
                 }
-                
+
                 if ('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true)) {
                     unset($this->_childMenu[$parentKey][$childKey]);
                 }
             }
-            
+
             if (0 == count($this->_childMenu[$parentKey])) {
                 unset($this->_parentMenu[$parentKey]);
             }
         }
 
-        $level = isset($this->_childMenu[$this->_currentParent][$this->_currentChild][3]) ? 
+        $level = isset($this->_childMenu[$this->_currentParent][$this->_currentChild][3]) ?
         $this->_childMenu[$this->_currentParent][$this->_currentChild][3] : 'administrator';
         if ('visitor' != $level) {
             $this->user->pass($level);
         }
-        
+
         if (is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1])) {
             list($widget, $method) = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
             $this->title = Typecho_Widget::widget($widget)->$method();
         } else {
             $this->title = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
         }
-        
+
         array_shift($this->_parentMenu);
         array_shift($this->_childMenu);
         $this->_currentParent --;
     }
-    
+
     /**
      * 获取当前菜单
-     * 
+     *
      * @access public
      * @return array
      */
@@ -252,33 +252,33 @@ class Widget_Menu extends Typecho_Widget
 
     /**
      * 输出父级菜单
-     * 
+     *
      * @access public
      * @return string
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
         $adminUrl = $this->options->adminUrl;
-        
+
         foreach ($this->_parentMenu as $key => $title) {
             $current = reset($this->_childMenu[$key]);
             $link = Typecho_Common::url($current[2], $adminUrl);
 
             echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\n";
-            
+
             echo "<dd><ul>\n";
             foreach ($this->_childMenu[$key] as $inkey => $menu) {
                 if (!isset($menu[4]) || !$menu[4] || ($key == $this->_currentParent && $inkey == $this->_currentChild)) {
                     $link = Typecho_Common::url($menu[2], $adminUrl);
-                    
+
                     if (is_array($menu[0])) {
                         list($widget, $method) = $menu[0];
                         $title = $this->widget($widget)->$method();
                     } else {
                         $title = $menu[0];
                     }
-                    
-                    echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) . 
+
+                    echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) .
                     "><a href=\"" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? $this->_currentUrl : $link) .
                     "\" title=\"{$title}\">{$title}</a></li>\n";
                 }

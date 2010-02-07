@@ -38,7 +38,7 @@ function _e()
 
 /**
  * 针对复数形式的翻译函数
- * 
+ *
  * @param string $single 单数形式的翻译
  * @param string $plural 复数形式的翻译
  * @param integer $number 数字
@@ -58,12 +58,12 @@ class Typecho_I18n
 {
     /**
      * 是否已经载入的标志位
-     * 
+     *
      * @access private
      * @var boolean
      */
     private static $_loaded = false;
-    
+
     /**
      * 语言文件
      *
@@ -71,10 +71,10 @@ class Typecho_I18n
      * @var string
      */
     private static $_lang = NULL;
-    
+
     /**
      * 初始化语言文件
-     * 
+     *
      * @access private
      * @return boolean
      */
@@ -88,7 +88,7 @@ class Typecho_I18n
 
     /**
      * 翻译文字
-     * 
+     *
      * @access public
      * @param string $string 待翻译的文字
      * @return string
@@ -98,10 +98,10 @@ class Typecho_I18n
         self::$_lang && empty(self::$_loaded) && self::init();
         return self::$_lang ? self::$_loaded->translate($string) : $string;
     }
-    
+
     /**
      * 针对复数形式的翻译函数
-     * 
+     *
      * @param string $single 单数形式的翻译
      * @param string $plural 复数形式的翻译
      * @param integer $number 数字
@@ -112,10 +112,10 @@ class Typecho_I18n
         self::$_lang && empty(self::$_loaded) && self::init();
         return self::$_lang ? self::$_loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
     }
-    
+
     /**
      * 词义化时间
-     * 
+     *
      * @access public
      * @param string $from 起始时间
      * @param string $now 终止时间
@@ -124,7 +124,7 @@ class Typecho_I18n
     public static function dateWord($from, $now)
     {
         $between = $now - $from;
-        
+
         /** 如果是一天 */
         if ($between < 86400 && idate('d', $from) == idate('d', $now)) {
             /** 如果是一小时 */
@@ -134,37 +134,37 @@ class Typecho_I18n
                     $second = idate('s', $now) - idate('s', $from);
                     return sprintf(_n('%d秒前', '%d秒前', $second), $second);
                 }
-                
+
                 $min = idate('i', $now) - idate('i', $from);
                 return sprintf(_n('%d分钟前', '%d分钟前', $min), $min);
             }
-            
+
             $hour = idate('H', $now) - idate('H', $from);
             return sprintf(_n('%d小时前', '%d小时前', $hour), $hour);
         }
-        
+
         /** 如果是昨天 */
         if ($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
             return _t('昨天 %s', date('H:i', $from));
         }
-        
+
         /** 如果是一个星期 */
         if ($between < 604800 && idate('W', $from) == idate('W', $now)) {
             $day = intval($between / (3600 * 24));
             return sprintf(_n('%d天前', '%d天前', $day), $day);
         }
-        
+
         /** 如果是 */
         if ($between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
             return date(_t('n月j日'), $from);
         }
-        
+
         return date(_t('Y年m月d日'), $from);
     }
-    
+
     /**
      * 设置语言项
-     * 
+     *
      * @access public
      * @param string $lang 配置信息
      * @return void
@@ -173,10 +173,10 @@ class Typecho_I18n
     {
         self::$_lang = $lang;
     }
-    
+
     /**
      * 增加语言项
-     * 
+     *
      * @access public
      * @param string $lang 语言名称
      * @return void
@@ -185,10 +185,10 @@ class Typecho_I18n
     {
         self::$_loaded->addFile($lang);
     }
-    
+
     /**
      * 获取语言项
-     * 
+     *
      * @access public
      * @return void
      */

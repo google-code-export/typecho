@@ -20,7 +20,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 {
     /**
      * 当前错误
-     * 
+     *
      * @access private
      * @var IXR_Error
      */
@@ -28,7 +28,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
     /**
      * 如果这里没有重载, 每次都会被默认执行
-     * 
+     *
      * @access public
      * @param boolen $run 是否执行
      * @return void
@@ -115,7 +115,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'excerpt'       => NULL,
                 'text_more'     => $more,
                 'mt_allow_comments' => $page->allowComment,
-                'mt_allow_pings' => $page->allowPing,                          
+                'mt_allow_pings' => $page->allowPing,
                 'wp_slug'        => $page->slug,
                 'wp_password'   => $page->password,
                 'wp_author'     => $page->author->name,
@@ -125,7 +125,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author_id'  => $page->authorId,
                 'wp_author_display_name' => $page->author->screenName,
             );
-        
+
         return $pageStruct;
     }
 
@@ -168,7 +168,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'excerpt'       => NULL,
                 'text_more'     => $more,
                 'mt_allow_comments' => $pages->allowComment,
-                'mt_allow_pings' => $pages->allowPing,                          
+                'mt_allow_pings' => $pages->allowPing,
                 'wp_slug'        => $pages->slug,
                 'wp_password'   => $pages->password,
                 'wp_author'     => $pages->author->name,
@@ -179,7 +179,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author_display_name' => $pages->author->screenName,
             );
         }
-        
+
         return $pageStructs;
     }
 
@@ -218,7 +218,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
-        
+
         /** 删除页面 */
         try {
             /** 此组件会进行复杂的权限检测 */
@@ -227,7 +227,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        
+
         return true;
     }
 
@@ -266,7 +266,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
         /**初始化*/
         $pageStructs = array();
-        
+
         while ($pages->next()) {
             $pageStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
@@ -275,7 +275,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'page_parent_id'=> 0,
                     );
         }
-        
+
         return $pageStructs;
     }
 
@@ -306,7 +306,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'display_name'  => $author['screenName']
             );
         }
-        
+
         return $authorStructs;
     }
 
@@ -332,16 +332,16 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $input['type'] = 'category';
         $input['description'] = isset($category['description']) ? $category['description'] : $category['name'];
         $input['do'] = 'insert';
-        
+
         /** 调用已有组件 */
-        try {            
+        try {
             /** 插入 */
             $this->widget('Widget_Metas_Category_Edit', NULL, $input, false)->action();
             return $this->widget('Widget_Notice')->getHighlightId() ? true : false;
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        
+
         return true;
     }
 
@@ -368,10 +368,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $key = Typecho_Common::filterSearchQuery($category);
         $key = '%' . $key . '%';
         $select = $meta->select()->where('table.metas.type = ? AND (table.metas.name LIKE ? OR slug LIKE ?)', 'category', $key, $key);
-        
+
         /** 不要category push到contents的容器中 */
         $categories = $this->db->fetchAll($select);
-        
+
         /** 初始化categorise数组*/
         $categoryStructs = array();
         foreach ($categories as $category) {
@@ -380,7 +380,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'category_name' => $category['name'],
                     );
         }
-        
+
         return $categoryStructs;
     }
 
@@ -406,15 +406,15 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 取得content内容 */
         $input = array();
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
-        
+
         if (isset($content['slug'])) {
             $input['slug'] = $content['slug'];
         } else if (isset($content['wp_slug'])) {
             //fix issue 338, wlw只发送这个
             $input['slug'] = $content['wp_slug'];
         }
-        
-        $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ? 
+
+        $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ?
         $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
         $input['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($input['text']));
         $input['text'] = $this->pluginHandle()->fromOfflineEditor($input['text']);
@@ -423,16 +423,16 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $input['tags'] = isset($content['mt_keywords']) ? $content['mt_keywords'] : NULL;
         $input['category'] = array();
-        
+
         if (isset($content['postId'])) {
             $input['cid'] = $content['postId'];
         }
-        
+
         if (isset($content['dateCreated'])) {
             /** 解决客户端与服务器端时间偏移 */
             $input['created'] = $content['dateCreated']->getTimestamp() - $this->options->timezone + $this->options->serverTimezone;
         }
-        
+
         if (!empty($content['categories']) && is_array($content['categories'])) {
             foreach ($content['categories'] as $category) {
                 if (!$this->db->fetchRow($this->db->select('mid')
@@ -442,42 +442,42 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         return $result;
                     }
                 }
-            
+
                 $input['category'][] = $this->db->fetchObject($this->db->select('mid')
                 ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
                 ->limit(1))->mid;
             }
         }
-        
+
         $input['allowComment'] = (isset($content['mt_allow_comments']) && (1 == $content['mt_allow_comments']
         || 'open' == $content['mt_allow_comments'])) ? 1 : ((isset($content['mt_allow_comments']) && (0 == $content['mt_allow_comments']
         || 'closed' == $content['mt_allow_comments'])) ? 0 : $this->options->defaultAllowComment);
-        
+
         $input['allowPing'] = (isset($content['mt_allow_pings']) && (1 == $content['mt_allow_pings']
         || 'open' == $content['mt_allow_pings'])) ? 1 : ((isset($content['mt_allow_pings']) && (0 == $content['mt_allow_pings']
         || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
         $input['do'] = $publish ? 'publish' : 'save';
-        
+
         /** 对未归档附件进行归档 */
-        $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND 
+        $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND
         (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment'), array($this, 'filter'));
-        
+
         if (!empty($unattached)) {
             foreach ($unattached as $attach) {
                 if (false !== strpos($input['text'], $attach['attachment']->url)) {
                     if (!isset($input['attachment'])) {
                         $input['attachment'] = array();
                     }
-                    
+
                     $input['attachment'][] = $attach['cid'];
                 }
             }
         }
-        
+
         /** 调用已有组件 */
-        try {            
+        try {
             /** 插入 */
             if (isset($content['post_type']) && 'page' == $content['post_type']) {
                 $this->widget('Widget_Contents_Page_Edit', NULL, $input, false)->action();
@@ -509,11 +509,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     }
 
     /**
-     * 获取指定id的post 
-     * 
-     * @param int $postId 
-     * @param string $userName 
-     * @param string $password 
+     * 获取指定id的post
+     *
+     * @param int $postId
+     * @param string $userName
+     * @param string $password
      * @access public
      * @return void
      */
@@ -581,12 +581,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         while ($posts->next()) {
             /** 对文章内容做截取处理，以获得description和text_more*/
             list($excerpt, $more) = $this->getPostExtended($posts->content);
-            
+
             /** 只需要分类的name*/
             /** 可以用flatten函数处理 */
             $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
             $tags = Typecho_Common::arrayFlatten($posts->tags, 'name');
-             
+
             $postStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
                     'userid'        => $posts->authorId,
@@ -641,7 +641,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'rssUrl'        => $categories->feedRssUrl,
                     );
         }
-        
+
         return $categoryStructs;
     }
 
@@ -662,11 +662,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $result = Widget_Upload::uploadHandle($data);
-        
+
         if (false === $result) {
             return IXR_Error(500, _t('上传失败'));
         } else {
-        
+
             $insertId = $this->insert(array(
                 'title'     =>  $result['name'],
                 'slug'      =>  $result['name'],
@@ -677,10 +677,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'allowPing'         =>  0,
                 'allowFeed'         =>  1
             ));
-            
+
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
-                    
+
             /** 增加插件接口 */
             $this->pluginHandle()->upload($this);
 
@@ -709,7 +709,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 读取数据*/
         $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
-        
+
         /**初始化*/
         $postTitleStructs = array();
         while ($posts->next()) {
@@ -720,7 +720,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'title'         => $posts->title,
                     );
         }
-        
+
         return $postTitleStructs;
     }
 
@@ -738,7 +738,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
         }
-        
+
         $categories = $this->widget('Widget_Metas_Category_List');
 
         /** 初始化categorise数组*/
@@ -772,7 +772,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        
+
         /** 格式化categories*/
         $categories = array();
         foreach ($post->categories as $category) {
@@ -800,13 +800,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
         }
-        
+
         try {
             $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        
+
         $post->setCategories($postId, Typecho_Common::arrayFlatten($categories, 'categoryId'),
         'publish' == $post->status);
         return true;
@@ -915,7 +915,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
-        
+
         $content = '<title>' . $post->title . '</title>';
         $content .= '<category>' . $post->categaries['0']['name'];
         $content .= stripslashes($post->text);
@@ -930,12 +930,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     }
 
     /**
-     * bloggerDeletePost 
+     * bloggerDeletePost
      * 删除文章
-     * @param mixed $blogId 
-     * @param mixed $userName 
-     * @param mixed $password 
-     * @param mixed $publish 
+     * @param mixed $blogId
+     * @param mixed $userName
+     * @param mixed $password
+     * @param mixed $publish
      * @access public
      * @return bool
      */
@@ -968,7 +968,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         //todo:限制数量
         $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
-        
+
         $postStructs = array();
         while ($posts->next()) {
             $content = '<title>' . $posts->title . '</title>';
@@ -1029,10 +1029,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     }
 
     /**
-     * pingbackPing 
-     * 
-     * @param string $source 
-     * @param string $target 
+     * pingbackPing
+     *
+     * @param string $source
+     * @param string $target
      * @access public
      * @return void
      */
@@ -1042,25 +1042,25 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!($http = Typecho_Http_Client::get())) {
             return new IXR_Error(16, _t('源地址服务器错误'));
         }
-        
+
         try {
-        
+
             $http->setTimeout(5)->send($source);
             $response = $http->getResponseBody();
-            
+
             if (200 == $http->getResponseStatus()) {
-            
+
                 if (!$http->getResponseHeader('x-pingback')) {
                     preg_match_all("/<link[^>]*rel=[\"']([^\"']*)[\"'][^>]*href=[\"']([^\"']*)[\"'][^>]*>/i", $response, $out);
                     if (!isset($out[1]['pingback'])) {
                         return new IXR_Error(50, _t('源地址不支持PingBack'));
                     }
                 }
-                
+
             } else {
                 return new IXR_Error(16, _t('源地址服务器错误'));
             }
-            
+
         } catch (Exception $e) {
             return new IXR_Error(16, _t('源地址服务器错误'));
         }
@@ -1068,37 +1068,37 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 检查目标地址是否正确*/
         $pathInfo = Typecho_Common::url(substr($target, strlen($this->options->index)), '/');
         $post = Typecho_Router::match($pathInfo);
-        
+
         /** 这样可以得到cid或者slug*/
         if (!($post instanceof Widget_Archive) || !$post->have() || !$post->is('single')) {
             return new IXR_Error(33, _t('这个目标地址不存在'));
         }
-        
+
         if ($post) {
             /** 检查是否可以ping*/
             if ($post->allowPing) {
-            
+
                 /** 现在可以ping了，但是还得检查下这个pingback是否已经存在了*/
                 $pingNum = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
                 ->from('table.comments')->where('table.comments.cid = ? AND table.comments.url = ? AND table.comments.type <> ?',
                 $post->cid, $source, 'comment'))->num;
-                
+
                 if ($pingNum <= 0) {
-                
+
                     /** 现在开始插入以及邮件提示了 $response就是第一行请求时返回的数组*/
                     preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response, $matchTitle);
                     $finalTitle = Typecho_Common::removeXSS(trim(strip_tags($matchTitle[1])));
-                    
+
                     /** 干掉html tag，只留下<a>*/
                     $text = Typecho_Common::stripTags($response, '<a href="">');
-                    
+
                     /** 此处将$target quote,留着后面用*/
                     $pregLink = preg_quote($target);
-                    
+
                     /** 找出含有target链接的最长的一行作为$finalText*/
                     $finalText = '';
                     $lines = explode("\n", $text);
-                    
+
                     foreach ($lines as $line) {
                         $line = trim($line);
                         if (NULL != $line) {
@@ -1110,14 +1110,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                             }
                         }
                     }
-                    
+
                     /** 截取一段字*/
                     if (NULL == trim($finalText)) {
                         return new IXR_Error('17', _t('源地址中不包括目标地址'));
                     }
-                    
+
                     $finalText = '[...]' . Typecho_Common::subStr($finalText, 0, 200, '') . '[...]';
-                    
+
                     $pingback = array(
                         'cid'       =>  $post->cid,
                         'created'   =>  $this->options->gmtTime,
@@ -1130,7 +1130,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         'type'      =>  'pingback',
                         'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
                     );
-                    
+
                     /** 加入plugin */
                     $pingback = $this->pluginHandle()->pingback($pingback, $post);
 

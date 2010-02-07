@@ -24,31 +24,31 @@ class Widget_Init extends Typecho_Widget
     {
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
-        
+
         /** 开始会话 */
         @session_start();
-        
+
         /** 初始化charset */
         Typecho_Common::$charset = $options->charset;
-        
+
         /** 初始化exception */
         Typecho_Common::$exceptionHandle = 'Widget_ExceptionHandle';
-        
+
         /** 设置路径 */
         if (defined('__TYPECHO_PATHINFO_ENCODING__')) {
             $pathInfo = $this->request->getPathInfo(__TYPECHO_PATHINFO_ENCODING__, $options->charset);
         } else {
             $pathInfo = $this->request->getPathInfo();
         }
-        
+
         Typecho_Router::setPathInfo($pathInfo);
-        
+
         /** 初始化路由器 */
         Typecho_Router::setRoutes($options->routingTable);
-        
+
         /** 初始化插件 */
         Typecho_Plugin::init($options->plugins);
-        
+
         /** 初始化回执 */
         $this->response->setCharset($options->charset);
         $this->response->setContentType($options->contentType);
@@ -57,10 +57,10 @@ class Widget_Init extends Typecho_Widget
         if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
             @date_default_timezone_set('UTC');
         }
-        
+
         /** 初始化时区 */
         Typecho_Date::setTimezoneOffset($options->timezone);
-        
+
         /** 监听缓冲区 */
         ob_start();
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * 上传动作
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 上传组件
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -20,10 +20,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 {
     //上传文件目录
     const UPLOAD_PATH = '/usr/uploads';
-    
+
     /**
      * 创建上传路径
-     * 
+     *
      * @access private
      * @param string $path 路径
      * @return boolean
@@ -33,17 +33,17 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (!@mkdir($path)) {
             return false;
         }
-        
+
         $stat = @stat($path);
         $perms = $stat['mode'] & 0007777;
         @chmod($path, $perms);
-        
+
         return true;
     }
 
     /**
      * 上传文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把uploadHandle改成自己的函数
-     * 
+     *
      * @access public
      * @param array $file 上传的文件
      * @return mixed
@@ -53,58 +53,58 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (empty($file['name'])) {
             return false;
         }
-        
+
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
-        
+
         if (!self::checkFileType($file['name'])) {
             return false;
         }
-    
+
         $options = Typecho_Widget::widget('Widget_Options');
         $date = new Typecho_Date($options->gmtTime);
         $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
-        
+
         //创建上传目录
         if (!is_dir($path)) {
             if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
-        
+
         //获取扩展名
         $ext = '';
         $part = explode('.', $file['name']);
         if (($length = count($part)) > 1) {
             $ext = strtolower($part[$length - 1]);
         }
-        
+
         //创建年份目录
         if (!is_dir($path = $path . '/' . $date->year)) {
             if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
-        
+
         //创建月份目录
         if (!is_dir($path = $path . '/' . $date->month)) {
             if (!self::makeUploadDir($path)) {
                 return false;
             }
         }
-        
+
         //获取文件名
         $fileName = sprintf('%u', crc32(uniqid())) . '.' . $ext;
         $path = $path . '/' . $fileName;
 
         if (isset($file['tmp_name'])) {
-        
+
             //移动上传文件
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } else if (isset($file['bits'])) {
-        
+
             //直接写入文件
             if (!file_put_contents($path, $file['bits'])) {
                 return false;
@@ -112,11 +112,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         } else {
             return false;
         }
-        
+
         if (!isset($file['size'])) {
             $file['size'] = filesize($path);
         }
-        
+
         //返回相对存储路径
         return array(
             'name' => $file['name'],
@@ -126,10 +126,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             'mime' => Typecho_Common::mimeContentType($path)
         );
     }
-    
+
     /**
      * 修改文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把modifyHandle改成自己的函数
-     * 
+     *
      * @access public
      * @param array $content 老文件
      * @param array $file 新上传的文件
@@ -140,24 +140,24 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (empty($file['name'])) {
             return false;
         }
-        
+
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
-        
+
         if (!self::checkFileType($file['name'])) {
             return false;
         }
-        
+
         $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
 
         if (isset($file['tmp_name'])) {
-        
+
             //移动上传文件
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } else if (isset($file['bits'])) {
-        
+
             //直接写入文件
             if (!file_put_contents($path, $file['bits'])) {
                 return false;
@@ -165,11 +165,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         } else {
             return false;
         }
-        
+
         if (!isset($file['size'])) {
             $file['size'] = filesize($path);
         }
-        
+
         //返回相对存储路径
         return array(
             'name' => $content['attachment']->name,
@@ -179,10 +179,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             'mime' => $content['attachment']->mime
         );
     }
-    
+
     /**
      * 删除文件
-     * 
+     *
      * @access public
      * @param array $content 文件相关信息
      * @return string
@@ -191,10 +191,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     {
         return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
     }
-    
+
     /**
      * 获取实际文件绝对访问路径
-     * 
+     *
      * @access public
      * @param array $content 文件相关信息
      * @return string
@@ -204,10 +204,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $options = Typecho_Widget::widget('Widget_Options');
         return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
     }
-    
+
     /**
      * 获取实际文件数据
-     * 
+     *
      * @access public
      * @param array $content
      * @return string
@@ -216,10 +216,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     {
         return file_get_contents(Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__));
     }
-    
+
     /**
      * 检查文件名
-     * 
+     *
      * @access private
      * @param string $fileName 文件名
      * @return boolean
@@ -228,20 +228,20 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     {
         $options = Typecho_Widget::widget('Widget_Options');
         $exts = array_filter(explode(';', $options->attachmentTypes));
-        
+
         foreach ($exts as $ext) {
             $ext = str_replace(array('.', '*'), array('\.', '.*'), $ext);
             if (preg_match("|^{$ext}$|is", $fileName)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
     /**
      * 执行升级程序
-     * 
+     *
      * @access public
      * @return void
      */
@@ -251,12 +251,12 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $result = self::uploadHandle($file);
-                
+
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
-                
+
                     $struct = array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
@@ -267,23 +267,23 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'allowPing'         =>  0,
                         'allowFeed'         =>  1
                     );
-                    
+
                     if (isset($this->request->cid)) {
                         $cid = $this->request->filter('int')->cid;
-                    
+
                         if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
                             $struct['parent'] = $cid;
                         }
                     }
-                
+
                     $insertId = $this->insert($struct);
-                    
+
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $insertId)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
-                    
+
                     /** 增加插件接口 */
                     $this->pluginHandle()->upload($this);
-                    
+
                     $this->response->throwJson(array(
                         'cid'       =>  $insertId,
                         'title'     =>  $this->attachment->name,
@@ -296,13 +296,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 }
             }
         }
-        
+
         $this->response->setStatus(500);
     }
-    
+
     /**
      * 执行升级程序
-     * 
+     *
      * @access public
      * @return void
      */
@@ -313,34 +313,34 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->request->filter('int')->cid)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
-                
+
                 if (!$this->have()) {
                     $this->response->setStatus(404);
                     exit;
                 }
-                
+
                 if (!$this->allow('edit')) {
                     $this->response->setStatus(403);
                     exit;
                 }
 
                 $result = self::modifyHandle($this->row, $file);
-                
+
                 if (false === $result) {
                     $this->response->setStatus(502);
                     exit;
                 } else {
-                
+
                     $this->update(array(
                         'text'      =>  serialize($result)
                     ), $this->db->sql()->where('cid = ?', $this->cid));
-                    
+
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)
                     ->where('table.contents.type = ?', 'attachment'), array($this, 'push'));
-                    
+
                     /** 增加插件接口 */
                     $this->pluginHandle()->modify($this);
-                    
+
                     $this->response->throwJson(array(
                         'cid'       =>  $this->cid,
                         'title'     =>  $this->attachment->name,
@@ -353,13 +353,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 }
             }
         }
-        
+
         $this->response->setStatus(500);
     }
 
     /**
      * 初始化函数
-     * 
+     *
      * @access public
      * @return void
      */

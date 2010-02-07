@@ -1,7 +1,7 @@
 <?php
 /**
  * 登出动作
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 登出组件
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -21,7 +21,7 @@ class Widget_Logout extends Widget_Abstract_Users implements Widget_Interface_Do
 {
     /**
      * 初始化函数
-     * 
+     *
      * @access public
      * @return void
      */

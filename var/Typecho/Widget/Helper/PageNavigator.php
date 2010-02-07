@@ -53,18 +53,18 @@ abstract class Typecho_Widget_Helper_PageNavigator
      * @var string
      */
     protected $_pageTemplate;
-    
+
     /**
      * 链接锚点
-     * 
+     *
      * @access protected
      * @var string
      */
     protected $_anchor;
-    
+
     /**
      * 页面占位符
-     * 
+     *
      * @access protected
      * @var mixed
      */
@@ -92,10 +92,10 @@ abstract class Typecho_Widget_Helper_PageNavigator
             throw new Typecho_Widget_Exception('Page Not Exists', 404);
         }
     }
-    
+
     /**
      * 设置页面占位符
-     * 
+     *
      * @access protected
      * @param string $holder 页面占位符
      * @return void
@@ -105,10 +105,10 @@ abstract class Typecho_Widget_Helper_PageNavigator
         $this->_pageHolder = array('{' . $holder . '}',
         str_replace(array('{', '}'), array('%7B', '%7D'), $holder));
     }
-    
+
     /**
      * 设置锚点
-     * 
+     *
      * @access public
      * @param string $anchor 锚点
      * @return void
@@ -117,10 +117,10 @@ abstract class Typecho_Widget_Helper_PageNavigator
     {
         $this->_anchor = '#' . $anchor;
     }
-    
+
     /**
      * 输出方法
-     * 
+     *
      * @access public
      * @return void
      */

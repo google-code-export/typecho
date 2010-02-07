@@ -9,11 +9,11 @@
 
 /** Typecho_I18n_GetText */
 require_once 'Typecho/I18n/GetText.php';
- 
+
 /**
  * 用于解决一个多个mo文件带来的读写问题
  * 我们重写了一个文件读取类
- * 
+ *
  * @author qining
  * @category typecho
  * @package I18n
@@ -22,7 +22,7 @@ class Typecho_I18n_GetTextMulti
 {
     /**
      * 所有的文件读写句柄
-     * 
+     *
      * @access private
      * @var array
      */
@@ -30,7 +30,7 @@ class Typecho_I18n_GetTextMulti
 
     /**
      * 构造函数
-     * 
+     *
      * @access public
      * @param string $fileName 语言文件名
      * @return void
@@ -39,10 +39,10 @@ class Typecho_I18n_GetTextMulti
     {
         $this->addFile($fileName);
     }
-    
+
     /**
      * 增加一个语言文件
-     * 
+     *
      * @access public
      * @param string $fileName 语言文件名
      * @return void
@@ -51,10 +51,10 @@ class Typecho_I18n_GetTextMulti
     {
         $this->_handles[] = new Typecho_I18n_GetText($fileName, true);
     }
-    
+
     /**
      * Translates a string
-     * 
+     *
      * @access public
      * @param string string to be translated
      * @return string translated string (or original, if not found)
@@ -67,13 +67,13 @@ class Typecho_I18n_GetTextMulti
                 break;
             }
         }
-        
+
         return $string;
     }
-    
+
     /**
      * Plural version of gettext
-     * 
+     *
      * @access public
      * @param string single
      * @param string plural
@@ -88,13 +88,13 @@ class Typecho_I18n_GetTextMulti
                 break;
             }
         }
-        
+
         return $string;
     }
-    
+
     /**
      * 关闭所有句柄
-     * 
+     *
      * @access public
      * @return void
      */

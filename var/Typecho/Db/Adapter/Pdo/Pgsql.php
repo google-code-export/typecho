@@ -19,7 +19,7 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
 {
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -27,10 +27,10 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
     {
         return parent::isAvailable() && in_array('pgsql', PDO::getAvailableDrivers());
     }
-    
+
     /**
-     * 初始化数据库 
-     * 
+     * 初始化数据库
+     *
      * @param Typecho_Config $config 数据库配置
      * @access public
      * @return PDO
@@ -41,7 +41,7 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
         $pdo->exec("SET NAMES '{$config->charset}'");
         return $pdo;
     }
-    
+
     /**
      * 对象引号过滤
      *
@@ -69,14 +69,14 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
-    
+
         $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
         $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
-    
+
     /**
      * 取出最后一次插入返回的主键值
      *
@@ -90,7 +90,7 @@ class Typecho_Db_Adapter_Pdo_Pgsql extends Typecho_Db_Adapter_Pdo
         if ($handle->query('SELECT oid FROM pg_class WHERE relname = ' . $this->quoteValue($this->_lastTable . '_seq'))->fetchAll()) {
             return $handle->lastInsertId($this->_lastTable . '_seq');
         }
-        
+
         return 0;
     }
 }

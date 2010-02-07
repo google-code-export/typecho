@@ -1,7 +1,7 @@
 <?php
 /**
  * 反馈提交
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 反馈提交组件
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -21,7 +21,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 {
     /**
      * 内容对象
-     * 
+     *
      * @access private
      * @var Widget_Archive
      */
@@ -29,7 +29,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
     /**
      * 评论处理函数
-     * 
+     *
      * @access private
      * @return void
      */
@@ -44,7 +44,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'type'      =>  'comment',
             'status'    =>  !$this->_content->allow('edit') && $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
-    
+
         /** 判断父节点 */
         if ($parentId = $this->request->filter('int')->get('parent')) {
             if ($this->options->commentsThreaded && ($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
@@ -54,7 +54,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                 throw new Typecho_Widget_Exception(_t('父级评论不存在'));
             }
         }
-        
+
         //检验格式
         $validator = new Typecho_Validate();
         $validator->addRule('author', 'required', _t('必须填写用户名'));
@@ -76,7 +76,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $validator->addRule('url', 'maxLength', _t('个人主页地址最多包含200个字符'), 200);
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
-        
+
         $comment['text'] = $this->request->filter(array($this, 'filterText'))->text;
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
@@ -85,7 +85,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $comment['author'] = $this->request->filter('trim')->author;
             $comment['mail'] = $this->request->filter('trim')->mail;
             $comment['url'] = $this->request->filter('trim')->url;
-            
+
             /** 修正用户提交的url */
             if (!empty($comment['url'])) {
                 $urlParams = parse_url($comment['url']);
@@ -93,7 +93,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                     $comment['url'] = 'http://' . $comment['url'];
                 }
             }
-        
+
             $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
             Typecho_Cookie::set('__typecho_remember_author', $comment['author'], $expire);
             Typecho_Cookie::set('__typecho_remember_mail', $comment['mail'], $expire);
@@ -102,17 +102,17 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             $comment['author'] = $this->user->screenName;
             $comment['mail'] = $this->user->mail;
             $comment['url'] = $this->user->url;
-        
+
             /** 记录登录用户的id */
             $comment['authorId'] = $this->user->uid;
         }
-        
+
         if ($error = $validator->run($comment)) {
             /** 记录文字 */
             Typecho_Cookie::set('__typecho_remember_text', $comment['text']);
             throw new Typecho_Widget_Exception(implode("\n", $error));
         }
-        
+
         /** 生成过滤器 */
         try {
             $comment = $this->pluginHandle()->comment($comment, $this->_content);
@@ -120,7 +120,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             Typecho_Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
         }
-        
+
         /** 添加评论 */
         $commentId = $this->insert($comment);
         Typecho_Cookie::delete('__typecho_remember_text');
@@ -129,13 +129,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         /** 评论完成接口 */
         $this->pluginHandle()->finishComment($this);
-        
+
         $this->response->goBack('#' . $this->theId);
     }
-    
+
     /**
      * 引用处理函数
-     * 
+     *
      * @access private
      * @return void
      */
@@ -145,14 +145,14 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         if (!$this->request->isPost() || $this->request->getReferer()) {
             $this->response->redirect($this->_content->permalink);
         }
-    
+
         /** 如果库中已经存在当前ip为spam的trackback则直接拒绝 */
         if ($this->size($this->select()
         ->where('status = ? AND ip = ?', 'spam', $this->request->getIp())) > 0) {
             /** 使用404告诉机器人 */
             throw new Typecho_Widget_Exception(_t('找不到内容'), 404);
         }
-    
+
         $trackback = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,
@@ -162,11 +162,11 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             'type'      =>  'trackback',
             'status'    =>  $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         );
-        
+
         $trackback['author'] = $this->request->filter('trim')->blog_name;
         $trackback['url'] = $this->request->filter('trim')->url;
         $trackback['text'] = $this->request->filter(array($this, 'filterText'))->excerpt;
-        
+
         //检验格式
         $validator = new Typecho_Validate();
         $validator->addRule('url', 'required', 'We require all Trackbacks to provide an url.')
@@ -176,39 +176,39 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.')
         ->addRule('author', 'xssCheck', 'Your blog name is not valid.')
         ->addRule('author', 'maxLength', 'Your blog name is not valid.', 200);
-        
+
         $validator->setBreak();
         if ($error = $validator->run($trackback)) {
             $message = array('success' => 1, 'message' => current($error));
             $this->response->throwXml($message);
         }
-        
+
         /** 截取长度 */
         $trackback['text'] = Typecho_Common::subStr($trackback['text'], 0, 100, '[...]');
-        
+
         /** 如果库中已经存在重复url则直接拒绝 */
         if ($this->size($this->select()
         ->where('cid = ? AND url = ? AND type <> ?', $this->_content->cid, $trackback['url'], 'comment')) > 0) {
             /** 使用403告诉机器人 */
             throw new Typecho_Widget_Exception(_t('禁止重复提交'), 403);
         }
-        
+
         /** 生成过滤器 */
         $trackback = $this->pluginHandle()->trackback($trackback, $this->_content);
-        
+
         /** 添加引用 */
         $trackbackId = $this->insert($trackback);
-        
+
         /** 评论完成接口 */
         $this->pluginHandle()->finishTrackback($this);
-        
+
         /** 返回正确 */
         $this->response->throwXml(array('success' => 0, 'message' => 'Trackback has registered.'));
     }
-    
+
     /**
      * 过滤评论内容
-     * 
+     *
      * @access public
      * @param string $text 评论内容
      * @return string
@@ -217,14 +217,14 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         $text = str_replace("\r", '', trim($text));
         $text = preg_replace("/\n{2,}/", "\n\n", $text);
-    
+
         return Typecho_Common::removeXSS(Typecho_Common::stripTags(
         $text, $this->options->commentsHTMLTagAllowed));
     }
-    
+
     /**
      * 对已注册用户的保护性检测
-     * 
+     *
      * @access public
      * @param string $userName 用户名
      * @return void
@@ -239,13 +239,13 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** 此用户名已经被注册 */
             return false;
         }
-        
+
         return true;
     }
 
     /**
      * 初始化函数
-     * 
+     *
      * @access public
      * @return void
      */
@@ -254,36 +254,36 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 回调方法 */
         $callback = $this->request->type;
         $this->_content = Typecho_Router::match($this->request->permalink);
-    
+
         /** 判断内容是否存在 */
         if (false !== $this->_content && $this->_content instanceof Widget_Archive &&
-        $this->_content->have() && $this->_content->is('single') && 
+        $this->_content->have() && $this->_content->is('single') &&
         in_array($callback, array('comment', 'trackback'))) {
-        
+
             /** 如果文章不允许反馈 */
             if ('comment' == $callback) {
                 /** 评论关闭 */
                 if (!$this->_content->allow('comment')) {
                     throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
                 }
-                
+
                 /** 检查来源 */
                 if ($this->options->commentsCheckReferer) {
                     $referer = $this->request->getReferer();
-                    
+
                     if (empty($referer)) {
                         throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
                     }
-                    
+
                     $refererPart = parse_url($referer);
                     $currentPart = parse_url($this->_content->permalink);
-                    
+
                     if ($refererPart['host'] != $currentPart['host'] ||
                     0 !== strpos($refererPart['path'], $currentPart['path'])) {
                         throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
                     }
                 }
-                
+
                 /** 检查ip评论间隔 */
                 if (!$this->user->pass('editor', true) && $this->_content->authorId != $this->user->uid &&
                 $this->options->commentsPostIntervalEnable) {
@@ -291,19 +291,19 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                     ->where('cid = ?', $this->_content->cid)
                     ->order('created', Typecho_Db::SORT_DESC)
                     ->limit(1));
-                    
+
                     if ($latestComment && ($this->options->gmtTime - $latestComment['created'] > 0 &&
                     $this->options->gmtTime - $latestComment['created'] < $this->options->commentsPostInterval)) {
                         throw new Typecho_Widget_Exception(_t('对不起, 您的发言过于频繁, 请稍侯再次发布.'), 403);
                     }
                 }
             }
-            
+
             /** 如果文章不允许引用 */
             if ('trackback' == $callback && !$this->_content->allow('ping')) {
                 throw new Typecho_Widget_Exception(_t('对不起,此内容的引用被禁止.'), 403);
             }
-            
+
             /** 调用函数 */
             $this->$callback();
         } else {

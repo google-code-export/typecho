@@ -19,63 +19,63 @@ class Typecho_Plugin
 {
     /**
      * 所有激活的插件
-     * 
+     *
      * @access private
      * @var array
      */
     private static $_plugins = array();
-    
+
     /**
      * 已经加载的文件
-     * 
+     *
      * @access private
      * @var array
      */
     private static $_required = array();
-    
+
     /**
      * 实例化的插件对象
-     * 
+     *
      * @access private
      * @var array
      */
     private static $_instances;
-    
+
     /**
      * 临时存储变量
-     * 
+     *
      * @access private
      * @var array
      */
     private static $_tmp = array();
-    
+
     /**
      * 唯一句柄
-     * 
+     *
      * @access private
      * @var string
      */
     private $_handle;
-    
+
     /**
      * 组件
-     * 
+     *
      * @access private
      * @var string
      */
     private $_component;
-    
+
     /**
      * 是否触发插件的信号
-     * 
+     *
      * @access private
      * @var boolean
      */
     private $_signal;
-    
+
     /**
      * 插件初始化
-     * 
+     *
      * @access public
      * @param string $handle 插件
      * @return void
@@ -85,10 +85,10 @@ class Typecho_Plugin
         /** 初始化变量 */
         $this->_handle = $handle;
     }
-    
+
     /**
      * 插件handle比对
-     * 
+     *
      * @access private
      * @param array $pluginHandles
      * @param array $otherPluginHandles
@@ -101,13 +101,13 @@ class Typecho_Plugin
                 unset($pluginHandles[$index]);
             }
         }
-        
+
         return $pluginHandles;
     }
 
     /**
      * 插件初始化
-     * 
+     *
      * @access public
      * @param array $plugins 插件列表
      * @param mixed $callback 获取插件系统变量的代理函数
@@ -117,14 +117,14 @@ class Typecho_Plugin
     {
         $plugins['activated'] = array_key_exists('activated', $plugins) ? $plugins['activated'] : array();
         $plugins['handles'] = array_key_exists('handles', $plugins) ? $plugins['handles'] : array();
-        
+
         /** 初始化变量 */
         self::$_plugins = $plugins;
     }
-    
+
     /**
      * 获取实例化插件对象
-     * 
+     *
      * @access public
      * @return Typecho_Plugin
      */
@@ -133,10 +133,10 @@ class Typecho_Plugin
         return isset(self::$_instances[$handle]) ? self::$_instances[$handle] :
         (self::$_instances[$handle] = new Typecho_Plugin($handle));
     }
-    
+
     /**
      * 激活插件
-     * 
+     *
      * @access public
      * @param string $pluginName 插件名称
      * @return void
@@ -146,10 +146,10 @@ class Typecho_Plugin
         self::$_plugins['activated'][$pluginName] = self::$_tmp;
         self::$_tmp = array();
     }
-    
+
     /**
      * 禁用插件
-     * 
+     *
      * @access public
      * @param string $pluginName 插件名称
      * @return void
@@ -160,21 +160,21 @@ class Typecho_Plugin
         if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
             foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
                 self::$_plugins['handles'][$handle] = self::pluginHandlesDiff(
-                empty(self::$_plugins['handles'][$handle]) ? array() : self::$_plugins['handles'][$handle], 
+                empty(self::$_plugins['handles'][$handle]) ? array() : self::$_plugins['handles'][$handle],
                 empty($handles) ? array() : $handles);
                 if (empty(self::$_plugins['handles'][$handle])) {
                     unset(self::$_plugins['handles'][$handle]);
                 }
             }
         }
-        
+
         /** 禁用当前插件 */
         unset(self::$_plugins['activated'][$pluginName]);
     }
-    
+
     /**
      * 导出当前插件设置
-     * 
+     *
      * @access public
      * @return array
      */
@@ -182,10 +182,10 @@ class Typecho_Plugin
     {
         return self::$_plugins;
     }
-    
+
     /**
      * 获取插件文件的头信息
-     * 
+     *
      * @access public
      * @param string $pluginFile 插件文件路径
      * @return void
@@ -200,7 +200,7 @@ class Typecho_Plugin
         $isInFunction = false;
         $isDefined = false;
         $current = NULL;
-        
+
         /** 初始信息 */
         $info = array(
             'description'       => '',
@@ -214,7 +214,7 @@ class Typecho_Plugin
             'config'            => false,
             'personalConfig'    => false
         );
-        
+
         $map = array(
             'package'   =>  'title',
             'author'    =>  'author',
@@ -226,7 +226,7 @@ class Typecho_Plugin
         foreach ($tokens as $token) {
             /** 获取doc comment */
             if (!$isDoc && is_array($token) && T_DOC_COMMENT == $token[0]) {
-            
+
                 /** 分行读取 */
                 $described = false;
                 $lines = preg_split("(\r|\n)", $token[1]);
@@ -237,7 +237,7 @@ class Typecho_Plugin
                         if (!$described && !empty($line) && '@' == $line[0]) {
                             $described = true;
                         }
-                        
+
                         if (!$described && !empty($line)) {
                             $info['description'] .= $line . "\n";
                         } else if ($described && !empty($line) && '@' == $line[0]) {
@@ -245,17 +245,17 @@ class Typecho_Plugin
                             $line = trim(substr($line, 1));
                             $args = explode(' ', $line);
                             $key = array_shift($args);
-                            
+
                             if (isset($map[$key])) {
                                 $info[$map[$key]] = trim(implode(' ', $args));
                             }
                         }
                     }
                 }
-                
+
                 $isDoc = true;
             }
-            
+
             if (is_array($token)) {
                 switch ($token[0]) {
                     case T_FUNCTION:
@@ -323,15 +323,15 @@ class Typecho_Plugin
                 }
             }
         }
-        
+
         return $info;
     }
-    
+
     /**
      * 获取插件路径和类名
      * 返回值为一个数组
      * 第一项为插件路径,第二项为类名
-     * 
+     *
      * @access public
      * @param string $pluginName 插件名
      * @param string $path 插件目录
@@ -349,13 +349,13 @@ class Typecho_Plugin
             default:
                 throw new Typecho_Plugin_Exception('Missing Plugin ' . $pluginName, 404);
         }
-        
+
         return array($pluginFileName, $className);
     }
-    
+
     /**
      * 版本依赖性检测
-     * 
+     *
      * @access public
      * @param string $version 程序版本
      * @param string $versionRange 依赖的版本规则
@@ -367,28 +367,28 @@ class Typecho_Plugin
         if (empty($versionRange)) {
             return true;
         }
-    
+
         $items = array_map('trim', explode('-', $versionRange));
         if (count($items) < 2) {
             $items[1] = $items[0];
         }
-        
+
         list ($minVersion, $maxVersion) = $items;
-        
+
         //对*和?的支持,4个9是最大版本
         $minVersion = str_replace(array('*', '?'), array('9999', '9'), $minVersion);
         $maxVersion = str_replace(array('*', '?'), array('9999', '9'), $maxVersion);
-        
+
         if (version_compare($version, $minVersion, '>=') && version_compare($version, $maxVersion, '<=')) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * 插件调用后的触发器
-     * 
+     *
      * @access public
      * @param boolean $signal 触发器
      * @return Typecho_Plugin
@@ -399,10 +399,10 @@ class Typecho_Plugin
         $this->_signal = &$signal;
         return $this;
     }
-    
+
     /**
      * 判断插件是否存在
-     * 
+     *
      * @access public
      * @param string $pluginName 插件名称
      * @return void
@@ -410,10 +410,10 @@ class Typecho_Plugin
     public function exists($pluginName) {
         return array_search($pluginName, self::$_plugins['activated']);
     }
-    
+
     /**
      * 设置回调函数
-     * 
+     *
      * @access public
      * @param string $component 当前组件
      * @param mixed $value 回调函数
@@ -425,10 +425,10 @@ class Typecho_Plugin
         self::$_plugins['handles'][$component][] = $value;
         self::$_tmp['handles'][$component][] = $value;
     }
-    
+
     /**
      * 通过魔术函数设置当前组件位置
-     * 
+     *
      * @access public
      * @param string $component 当前组件
      * @return Typecho_Plugin
@@ -438,10 +438,10 @@ class Typecho_Plugin
         $this->_component = $component;
         return $this;
     }
-    
+
     /**
      * 回调处理函数
-     * 
+     *
      * @access public
      * @param string $component 当前组件
      * @param string $args 参数
@@ -452,7 +452,7 @@ class Typecho_Plugin
         $component = $this->_handle . ':' . $component;
         $last = count($args);
         $args[$last] = $last > 0 ? $args[0] : false;
-    
+
         if (isset(self::$_plugins['handles'][$component])) {
             $args[$last] = NULL;
             $this->_signal = true;
@@ -460,7 +460,7 @@ class Typecho_Plugin
                 $args[$last] = call_user_func_array($callback, $args);
             }
         }
-        
+
         return $args[$last];
     }
 }

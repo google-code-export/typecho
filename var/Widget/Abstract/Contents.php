@@ -16,7 +16,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 {
     /**
      * 将tags取出
-     * 
+     *
      * @access protected
      * @return array
      */
@@ -28,10 +28,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ->where('table.relationships.cid = ?', $this->cid)
         ->where('table.metas.type = ?', 'tag'), array($this->widget('Widget_Abstract_Metas'), 'filter'));
     }
-    
+
     /**
      * 文章作者
-     * 
+     *
      * @access protected
      * @return Typecho_Config
      */
@@ -39,10 +39,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->widget('Widget_Users_Author@' . $this->cid, array('uid' => $this->authorId));
     }
-    
+
     /**
      * 获取词义化日期
-     * 
+     *
      * @access protected
      * @return void
      */
@@ -50,10 +50,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->date->word();
     }
-    
+
     /**
      * 获取父id
-     * 
+     *
      * @access protected
      * @return void
      */
@@ -61,10 +61,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->row['parent'];
     }
-    
+
     /**
      * 对文章的简短纯文本描述
-     * 
+     *
      * @access protected
      * @return string
      */
@@ -74,10 +74,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $plainTxt = $plainTxt ? $plainTxt : $this->title;
         return Typecho_Common::subStr($plainTxt, 0, 100, '...');
     }
-    
+
     /**
      * 获取文章内容摘要
-     * 
+     *
      * @access protected
      * @return string
      */
@@ -90,30 +90,30 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if (!$plugged) {
             $excerpt = Typecho_Common::cutParagraph($excerpt);
         }
-        
+
         return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
     }
-    
+
     /**
      * 获取文章内容
-     * 
+     *
      * @access protected
      * @return string
      */
     protected function ___content()
     {
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
-        
+
         if (!$plugged) {
             $content = Typecho_Common::cutParagraph($content);
         }
-        
+
         return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
     }
-    
+
     /**
      * 锚点id
-     * 
+     *
      * @access protected
      * @return void
      */
@@ -121,10 +121,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->type . '-' . $this->cid;
     }
-    
+
     /**
      * 获取页面偏移
-     * 
+     *
      * @access protected
      * @param string $column 字段名
      * @param integer $offset 偏移值
@@ -139,22 +139,22 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $select = $this->db->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents')
         ->where("table.contents.{$column} > {$offset}")
         ->where("table.contents.type = ?", $type);
-        
+
         if (!empty($status)) {
             $select->where("table.contents.status = ?", $status);
         }
-        
+
         if ($authorId > 0) {
             $select->where('table.contents.authorId = ?', $authorId);
         }
-        
+
         $count = $this->db->fetchObject($select)->num + 1;
         return ceil($count / $pageSize);
     }
 
     /**
      * 获取查询对象
-     * 
+     *
      * @access public
      * @return Typecho_Db_Query
      */
@@ -165,10 +165,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
         'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
         'table.contents.parent')->from('table.contents');
     }
-    
+
     /**
      * 插入内容
-     * 
+     *
      * @access public
      * @param array $content 内容数组
      * @return integer
@@ -193,14 +193,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
             'parent'        =>  empty($content['parent']) ? 0 : intval($content['parent'])
         );
-        
+
         if (!empty($content['cid'])) {
             $insertStruct['cid'] = $content['cid'];
         }
-        
+
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.contents')->rows($insertStruct));
-        
+
         /** 更新缩略名 */
         if ($insertId > 0) {
             $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $insertId);
@@ -208,10 +208,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         return $insertId;
     }
-    
+
     /**
      * 更新内容
-     * 
+     *
      * @access public
      * @param array $content 内容数组
      * @param Typecho_Db_Query $condition 更新条件
@@ -238,25 +238,25 @@ class Widget_Abstract_Contents extends Widget_Abstract
             'allowFeed'     =>  !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
             'parent'        =>  empty($content['parent']) ? 0 : intval($content['parent'])
         );
-        
+
         $updateStruct = array();
         foreach ($content as $key => $val) {
             if (array_key_exists($key, $preUpdateStruct)) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
-        
+
         /** 更新创建时间 */
         if (!empty($content['created'])) {
             $updateStruct['created'] = $content['created'];
         }
-        
+
         $updateStruct['modified'] = $this->options->gmtTime;
-        
+
         /** 首先插入部分数据 */
         $updateCondition = clone $condition;
         $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
-        
+
         /** 更新缩略名 */
         if ($updateRows > 0 && isset($content['slug'])) {
             $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $condition);
@@ -264,10 +264,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         return $updateRows;
     }
-    
+
     /**
      * 删除内容
-     * 
+     *
      * @access public
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
@@ -276,10 +276,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->query($condition->delete('table.contents'));
     }
-    
+
     /**
      * 为内容应用缩略名
-     * 
+     *
      * @access public
      * @param string $slug 缩略名
      * @param mixed $cid 内容id
@@ -291,20 +291,20 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $cid = $this->db->fetchObject($cid->select('cid')
             ->from('table.contents')->limit(1))->cid;
         }
-    
+
         /** 生成一个非空的缩略名 */
         $slug = Typecho_Common::slugName($slug, $cid);
         $result = $slug;
-        
+
         /** 对草稿的slug做特殊处理 */
         $draft = $this->db->fetchObject($this->db->select('status', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
-        
+
         if ('draft' == $draft->status && $draft->parent) {
             $result = '@' . $result;
         }
-        
-        
+
+
         /** 判断是否在数据库中已经存在 */
         $count = 1;
         while ($this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
@@ -312,16 +312,16 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $result = $slug . '-' . $count;
             $count ++;
         }
-        
+
         $this->db->query($this->db->update('table.contents')->rows(array('slug' => $result))
         ->where('cid = ?', $cid));
-        
+
         return $result;
     }
 
     /**
      * 内容是否可以被修改
-     * 
+     *
      * @access public
      * @param Typecho_Db_Query $condition 条件
      * @return mixed
@@ -331,10 +331,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
         return $post && ($this->user->pass('editor', true) || $post['authorId'] == $this->user->uid);
     }
-    
+
     /**
      * 按照条件计算内容数量
-     * 
+     *
      * @access public
      * @param Typecho_Db_Query $condition 查询对象
      * @return integer
@@ -343,10 +343,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->fetchObject($condition->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents'))->num;
     }
-    
+
     /**
      * 通用过滤器
-     * 
+     *
      * @access public
      * @param array $value 需要过滤的行数据
      * @return array
@@ -360,70 +360,70 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ->where('table.relationships.cid = ?', $value['cid'])
         ->where('table.metas.type = ?', 'category')
         ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Abstract_Metas'), 'filter'));
-        
+
         /** 取出第一个分类作为slug条件 */
         $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
-        
+
         $value['date'] = new Typecho_Date($value['created']);
 
         /** 生成日期 */
         $value['year'] = $value['date']->year;
         $value['month'] = $value['date']->month;
         $value['day'] = $value['date']->day;
-        
+
         /** 生成访问权限 */
         $value['hidden'] = false;
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
         $routeExists = (NULL != Typecho_Router::get($type));
-        
+
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
-        
+
         /** 生成静态路径 */
         $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
-        
+
         /** 生成反馈地址 */
         /** 评论 */
-        $value['commentUrl'] = Typecho_Router::url('feedback', 
+        $value['commentUrl'] = Typecho_Router::url('feedback',
         array('type' => 'comment', 'permalink' => $value['pathinfo']), $this->options->index);
-        
+
         /** trackback */
-        $value['trackbackUrl'] = Typecho_Router::url('feedback', 
+        $value['trackbackUrl'] = Typecho_Router::url('feedback',
         array('type' => 'trackback', 'permalink' => $value['pathinfo']), $this->options->index);
-        
+
         /** 生成静态链接 */
         $value['permalink'] = Typecho_Common::url($value['pathinfo'], $this->options->index);
-        
+
         /** 处理附件 */
         if ('attachment' == $type) {
             $content = unserialize($value['text']);
-            
+
             //增加数据信息
             $value['attachment'] = new Typecho_Config($content);
             $value['attachment']->isImage = in_array($content['type'], array('jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'));
             $value['attachment']->url = Widget_Upload::attachmentHandle($value);
 
             if ($value['attachment']->isImage) {
-                $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' . 
+                $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' .
                 $value['title'] . '" />';
             } else {
                 $value['text'] = '<a href="' . $value['attachment']->url . '" title="' .
                 $value['title'] . '">' . $value['title'] . '</a>';
             }
         }
-        
+
         /** 生成聚合链接 */
         /** RSS 2.0 */
         $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
-        
+
         /** RSS 1.0 */
         $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
-        
+
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
-        
+
         $value['slug'] = $tmpSlug;
 
         /** 处理密码保护流程 */
@@ -432,13 +432,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ($value['authorId'] != $this->user->uid
         || !$this->user->pass('editor', true))) {
             $value['hidden'] = true;
-        
+
             /** 抛出错误 */
             if ($this->request->isPost() && isset($this->request->protectPassword)) {
                 throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), 403);
             }
         }
-        
+
         $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
 
         /** 如果访问权限被禁止 */
@@ -448,12 +448,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
             '<p><input type="password" class="text" name="protectPassword" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
             '</form>';
-            
+
             $value['title'] = _t('此内容被密码保护');
             $value['tags'] = array();
             $value['commentsNum'] = 0;
         }
-        
+
         return $value;
     }
 
@@ -491,7 +491,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function content($more = false)
     {
-        echo false !== $more && false !== strpos($this->text, '<!--more-->') ? 
+        echo false !== $more && false !== strpos($this->text, '<!--more-->') ?
         $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">{$more}</a></p>" : $this->content;
     }
 
@@ -510,7 +510,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
     /**
      * 输出标题
-     * 
+     *
      * @access public
      * @param integer $length 标题截取长度
      * @param string $trim 截取后缀
@@ -534,9 +534,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if (!$args) {
             $args[] = '%d';
         }
-        
+
         $num = intval($this->commentsNum);
-        
+
         echo sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num);
     }
 
@@ -565,7 +565,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                         return false;
                     }
                 }
-                
+
                 $allow &= ($this->row['allow' . ucfirst($permission)] == 1) and !$this->hidden;
             }
         }
@@ -587,7 +587,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $categories = $this->categories;
         if ($categories) {
             $result = array();
-            
+
             foreach ($categories as $category) {
                 $result[] = $link ? '<a href="' . $category['permalink'] . '">'
                 . $category['name'] . '</a>' : $category['name'];
@@ -623,10 +623,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
             echo $default;
         }
     }
-    
+
     /**
      * 输出当前作者
-     * 
+     *
      * @access public
      * @param string $item 需要输出的项目
      * @return void

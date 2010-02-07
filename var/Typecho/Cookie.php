@@ -14,7 +14,7 @@ require_once 'Typecho/Common.php';
 
 /**
  * cookie支持
- * 
+ *
  * @author qining
  * @category typecho
  * @package Cookie
@@ -49,11 +49,11 @@ class Typecho_Cookie
         $path = '/';
         if (!empty($url)) {
             $parsed = parse_url($url);
-            
+
             /** 在路径后面强制加上斜杠 */
             $path = empty($parsed['path']) ? '/' : Typecho_Common::url(NULL, $parsed['path']);
         }
-        
+
         /** 对数组型COOKIE的写入支持 */
         if (is_array($value)) {
             foreach ($value as $name => $val) {
@@ -63,7 +63,7 @@ class Typecho_Cookie
             setcookie($key, $value, $expire, $path);
         }
     }
-    
+
     /**
      * 删除指定的COOKIE值
      *
@@ -80,7 +80,7 @@ class Typecho_Cookie
         $path = '/';
         if (!empty($url)) {
             $parsed = parse_url($url);
-            
+
             /** 在路径后面强制加上斜杠 */
             $path = empty($parsed['path']) ? '/' : Typecho_Common::url(NULL, $parsed['path']);
         }

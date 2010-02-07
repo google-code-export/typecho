@@ -34,23 +34,23 @@ class Typecho_Router
 
     /**
      * 已经解析完毕的路由表配置
-     * 
+     *
      * @access private
      * @var mixed
      */
     private static $_routingTable = array();
-    
+
     /**
      * 全路径
-     * 
+     *
      * @access private
      * @var string
      */
     private static $_pathInfo = NULL;
-    
+
     /**
      * 解析路径
-     * 
+     *
      * @access public
      * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
@@ -61,37 +61,37 @@ class Typecho_Router
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
-                
+
                 try {
                     /** 载入参数 */
                     $params = NULL;
-                    
+
                     if (!empty($route['params'])) {
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
                     }
-                    
+
                     $widget = Typecho_Widget::widget($route['widget'], $parameter, $params);
-                    
+
                     return $widget;
-                    
+
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
                         Typecho_Widget::destory($route['widget']);
                         continue;
                     }
-                    
+
                     throw $e;
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * 设置全路径
-     * 
+     *
      * @access public
      * @param string $pathInfo
      * @return void
@@ -100,10 +100,10 @@ class Typecho_Router
     {
         self::$_pathInfo = $pathInfo;
     }
-    
+
     /**
      * 获取全路径
-     * 
+     *
      * @access public
      * @return string
      */
@@ -112,7 +112,7 @@ class Typecho_Router
         if (NULL === self::$_pathInfo) {
             self::setPathInfo();
         }
-        
+
         return self::$_pathInfo;
     }
 
@@ -127,34 +127,34 @@ class Typecho_Router
     {
         /** 获取PATHINFO */
         $pathInfo = self::getPathInfo();
-        
+
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
-                
+
                 try {
                     /** 载入参数 */
                     $params = NULL;
-                    
+
                     if (!empty($route['params'])) {
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
                     }
-                    
+
                     $widget = Typecho_Widget::widget($route['widget'], NULL, $params);
-                    
+
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
                     }
-                    
+
                     return;
-                    
+
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
                         Typecho_Widget::destory($route['widget']);
                         continue;
                     }
-                    
+
                     throw $e;
                 }
             }
@@ -176,7 +176,7 @@ class Typecho_Router
     public static function url($name, array $value = NULL, $prefix = NULL)
     {
         $route = self::$_routingTable[$name];
-       
+
         //交换数组键值
         $pattern = array();
         foreach ($route['params'] as $row) {
@@ -185,10 +185,10 @@ class Typecho_Router
 
         return Typecho_Common::url(vsprintf($route['format'], $pattern), $prefix);
     }
-    
+
     /**
      * 设置路由器默认配置
-     * 
+     *
      * @access public
      * @param mixed $routes 配置信息
      * @return void
@@ -208,9 +208,9 @@ class Typecho_Router
     }
 
     /**
-     * 获取路由信息 
-     * 
-     * @param string $routeName 路由名称 
+     * 获取路由信息
+     *
+     * @param string $routeName 路由名称
      * @static
      * @access public
      * @return void

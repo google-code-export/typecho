@@ -1,7 +1,7 @@
 <?php
 /**
  * 异步调用组件
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 异步调用组件
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -20,7 +20,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
      * 针对rewrite验证的请求返回
-     * 
+     *
      * @access public
      * @return void
      */
@@ -30,10 +30,10 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             echo 'OK';
         }
     }
-    
+
     /**
      * 获取最新版本
-     * 
+     *
      * @access public
      * @return void
      */
@@ -44,15 +44,15 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
             ->send('http://code.google.com/feeds/p/typecho/downloads/basic');
-            
+
             /** 匹配内容体 */
             $response = $client->getResponseBody();
             preg_match_all("/<link[^>]*href=\"([^>]*)\"\s*\/>\s*<title>([^>]*)<\/title>/is", $response, $matches);
             $result = array('available' => 0);
-            
+
             list($soft, $version) = explode(' ', $this->options->generator);
             $current = explode('/', $version);
-            
+
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
                     $title = trim($matches[2][$key]);
@@ -66,18 +66,18 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                     }
                 }
             }
-            
+
             Typecho_Cookie::set('__typecho_check_version', $result);
             $this->response->throwJson($result);
             return;
         }
-        
+
         throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
     }
-    
+
     /**
      * 远程请求代理
-     * 
+     *
      * @access public
      * @return void
      */
@@ -88,13 +88,13 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
             ->send('http://typecho.org/feed/');
-            
+
             /** 匹配内容体 */
             $response = $client->getResponseBody();
             preg_match_all("/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is", $response, $matches);
-            
+
             $data = array();
-            
+
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
                     $data[] = array(
@@ -103,23 +103,23 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                         'date'   =>  Typecho_I18n::dateWord(strtotime($matches[3][$key]),
                         $this->options->gmtTime + $this->options->timezone),
                     );
-                    
+
                     if ($key > 3) {
                         break;
                     }
                 }
             }
-            
+
             $this->response->throwJson($data);
             return;
         }
-        
+
         throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
     }
-    
+
     /**
      * 自定义编辑器大小
-     * 
+     *
      * @access public
      * @return void
      */
@@ -138,10 +138,10 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             ));
         }
     }
-    
+
     /**
      * 异步请求入口
-     * 
+     *
      * @access public
      * @return void
      */
@@ -150,7 +150,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if (!$this->request->isAjax()) {
             $this->response->goBack();
         }
-    
+
         $this->on($this->request->is('do=remoteCallback'))->remoteCallback();
         $this->on($this->request->is('do=feed'))->feed();
         $this->on($this->request->is('do=checkVersion'))->checkVersion();

@@ -9,7 +9,7 @@
 
 /**
  * 插件列表组件
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -20,7 +20,7 @@ class Widget_Plugins_List extends Typecho_Widget
 {
     /**
      * 已激活插件
-     * 
+     *
      * @access public
      * @var array
      */
@@ -28,7 +28,7 @@ class Widget_Plugins_List extends Typecho_Widget
 
     /**
      * 执行函数
-     * 
+     *
      * @access public
      * @return void
      */
@@ -41,12 +41,12 @@ class Widget_Plugins_List extends Typecho_Widget
         /** 获取已激活插件 */
         $plugins = Typecho_Plugin::export();
         $this->activatedPlugins = $plugins['activated'];
-        
+
         foreach ($pluginDirs as $pluginDir) {
             if (is_dir($pluginDir)) {
                 /** 获取插件名称 */
                 $pluginName = basename($pluginDir);
-            
+
                 /** 获取插件主文件 */
                 $pluginFileName = $pluginDir . '/Plugin.php';
             } else if (file_exists($pluginDir)) {
@@ -60,25 +60,25 @@ class Widget_Plugins_List extends Typecho_Widget
             } else {
                 continue;
             }
-            
+
             if (file_exists($pluginFileName)) {
                 $info = Typecho_Plugin::parseInfo($pluginFileName);
                 $info['name'] = $pluginName;
-                
+
                 list ($version, $build) = explode('/', Typecho_Common::VERSION);
                 $info['dependence'] = Typecho_Plugin::checkDependence($build, $info['dependence']);
-                
+
                 /** 默认即插即用 */
                 $info['activated'] = true;
-                
+
                 if ($info['activate'] || $info['deactivate'] || $info['config'] || $info['personalConfig']) {
                     $info['activated'] = isset($this->activatedPlugins[$pluginName]);
-                    
+
                     if (isset($this->activatedPlugins[$pluginName])) {
                         unset($this->activatedPlugins[$pluginName]);
                     }
                 }
-                
+
                 if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
                     $this->push($info);
                 }
