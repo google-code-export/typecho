@@ -24,10 +24,10 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * @var PDO
      */
     protected $_object;
-    
+
     /**
      * 最后一次操作的数据表
-     * 
+     *
      * @access protected
      * @var string
      */
@@ -35,7 +35,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
 
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -65,8 +65,8 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     }
 
     /**
-     * 初始化数据库 
-     * 
+     * 初始化数据库
+     *
      * @param Typecho_Config $config 数据库配置
      * @abstract
      * @access public
@@ -110,7 +110,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     {
         return $resource->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *

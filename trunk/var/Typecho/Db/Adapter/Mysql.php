@@ -19,15 +19,15 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
 {
     /**
      * 数据库连接字符串标示
-     * 
+     *
      * @access private
      * @var resource
      */
     private $_dbLink;
-    
+
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -35,7 +35,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     {
         return function_exists('mysql_connect');
     }
-    
+
     /**
      * 数据库连接函数
      *
@@ -91,7 +91,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     {
         return mysql_fetch_assoc($resource);
     }
-    
+
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *

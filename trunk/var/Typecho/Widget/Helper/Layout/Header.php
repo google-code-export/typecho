@@ -12,7 +12,7 @@ require_once 'Typecho/Widget/Helper/Layout.php';
 
 /**
  * HTML文档头帮手
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -22,7 +22,7 @@ class Typecho_Widget_Helper_Layout_Header extends Typecho_Widget_Helper_Layout
 {
     /**
      * 重载构造函数
-     * 
+     *
      * @access public
      * @return void
      */
@@ -30,10 +30,10 @@ class Typecho_Widget_Helper_Layout_Header extends Typecho_Widget_Helper_Layout
     {
         parent::__construct(NULL, NULL);
     }
-    
+
     /**
      * 重载输出函数
-     * 
+     *
      * @access public
      * @return void
      */

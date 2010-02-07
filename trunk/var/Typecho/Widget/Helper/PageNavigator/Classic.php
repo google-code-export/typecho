@@ -12,7 +12,7 @@ require_once 'Typecho/Widget/Helper/PageNavigator.php';
 
 /**
  * 经典分页样式
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -34,10 +34,10 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
         $this->prev($prevWord);
         $this->next($nextWord);
     }
-    
+
     /**
      * 输出上一页
-     * 
+     *
      * @access public
      * @param string $prevWord 上一页文字
      * @return void
@@ -50,10 +50,10 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
             . $prevWord . '</a>';
         }
     }
-    
+
     /**
      * 输出下一页
-     * 
+     *
      * @access public
      * @param string $prevWord 下一页文字
      * @return void

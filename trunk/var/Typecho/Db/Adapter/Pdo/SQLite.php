@@ -19,7 +19,7 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
 {
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -27,10 +27,10 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
     {
         return parent::isAvailable() && in_array('sqlite', PDO::getAvailableDrivers());
     }
-    
+
     /**
-     * 初始化数据库 
-     * 
+     * 初始化数据库
+     *
      * @param Typecho_Config $config 数据库配置
      * @access public
      * @return PDO
@@ -40,7 +40,7 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
         $pdo = new PDO("sqlite:{$config->file}");
         return $pdo;
     }
-    
+
     /**
      * 对象引号过滤
      *
@@ -68,7 +68,7 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
-    
+
         $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 

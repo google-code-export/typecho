@@ -8,31 +8,31 @@
 
 /**
  * Json转换类,第三方包提供
- * 
+ *
  * @author qining
  * @category typecho
  * @package Json
  */
 class Typecho_Json
 {
-	const SERVICES_JSON_SLICE = 1;
-	const SERVICES_JSON_IN_STR = 2;
-	const SERVICES_JSON_IN_ARR = 3;
-	const SERVICES_JSON_IN_OBJ = 4;
-	const SERVICES_JSON_IN_CMT = 5;
-	const SERVICES_JSON_LOOSE_TYPE = 16;
-	const SERVICES_JSON_SUPPRESS_ERRORS = 32;
-	const E_JSONTYPE = 'json decode error';
-	
+    const SERVICES_JSON_SLICE = 1;
+    const SERVICES_JSON_IN_STR = 2;
+    const SERVICES_JSON_IN_ARR = 3;
+    const SERVICES_JSON_IN_OBJ = 4;
+    const SERVICES_JSON_IN_CMT = 5;
+    const SERVICES_JSON_LOOSE_TYPE = 16;
+    const SERVICES_JSON_SUPPRESS_ERRORS = 32;
+    const E_JSONTYPE = 'json decode error';
+
     /**
      * 将utf16转换为utf8
-     * 
+     *
      * @access private
      * @param string $utf16 utf16字符串
      * @return string
      */
-	private static function utf162utf8($utf16)
-	{
+    private static function utf162utf8($utf16)
+    {
         if (function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($utf16, 'UTF-8', 'UTF-16');
         }
@@ -52,11 +52,11 @@ class Typecho_Json
                      . chr(0x80 | ($bytes & 0x3F));
         }
         return '';
-	}
+    }
 
     /**
      * 将utf8转换为utf16
-     * 
+     *
      * @access private
      * @param string $utf8 utf8字符串
      * @return string
@@ -83,10 +83,10 @@ class Typecho_Json
         }
         return '';
     }
-    
+
     /**
      * 判断错误
-     * 
+     *
      * @access private
      * @param mixed $data 错误对象
      * @param string $code 错误代码
@@ -94,7 +94,7 @@ class Typecho_Json
      */
     private static function _is_error($data, $code = null)
     {
-		if (is_object($data) && (get_class($data) == 'services_json_error' ||
+        if (is_object($data) && (get_class($data) == 'services_json_error' ||
                                  is_subclass_of($data, 'services_json_error'))) {
             return true;
         }
@@ -104,7 +104,7 @@ class Typecho_Json
 
     /**
      * 清除特殊格式
-     * 
+     *
      * @access private
      * @param string $str 待处理字符串
      * @return string
@@ -121,13 +121,13 @@ class Typecho_Json
 
     /**
      * 将对象转换为json串
-     * 
+     *
      * @access public
      * @param mixed $var 需要转换的对象
      * @return string
      */
-	public static function _encode($var)
-	{
+    public static function _encode($var)
+    {
         switch (gettype($var)) {
             case 'boolean':
                 return $var ? 'true' : 'false';
@@ -274,11 +274,11 @@ class Typecho_Json
             default:
                 return false;
         }
-	}
+    }
 
     /**
      * 解码json字符串
-     * 
+     *
      * @access public
      * @param string $str 解码字符串
      * @return mixed
@@ -431,7 +431,7 @@ class Typecho_Json
 
                             } elseif (reset($stk) == self::SERVICES_JSON_IN_OBJ) {
                                 $parts = array();
-                                
+
                                 if (preg_match('/^\s*(["\'].*[^\\\]["\'])\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {
                                     $key = self::_decode($parts[1]);
                                     $val = self::_decode($parts[2]);
@@ -486,10 +486,10 @@ class Typecho_Json
                 }
         }
     }
-    
+
     /**
      * 对配对值编码
-     * 
+     *
      * @access public
      * @param string $name 名称
      * @param mixed $value 值
@@ -508,44 +508,44 @@ class Typecho_Json
 
     /**
      * 对变量进行json编码
-     * 
+     *
      * @access public
      * @param mixed $var 需要处理的对象
      * @return string
      */
-	public static function encode($var)
-	{
+    public static function encode($var)
+    {
         if (function_exists('json_encode')) {
             /** from php 5.1 */
             return json_encode($var);
         } else {
             return self::_encode($var);
         }
-	}
-	
+    }
+
     /**
      * 对字符串进行json解码
-     * 
+     *
      * @access public
      * @param string $var 需要解码的字符串
      * @param boolean $assoc 是否强制解释为数组
      * @return mixed
      */
-	public static function decode($var, $assoc = false)
-	{
+    public static function decode($var, $assoc = false)
+    {
         if (function_exists('json_decode')) {
             /** from php 5.1 */
             $result = json_decode($var);
         } else {
             $result = self::_decode($var);
         }
-        
+
         if ($assoc && is_object($result)) {
             return (array) $result;
         } else if (!$assoc && is_array($result)) {
             return (object) $result;
         }
-        
+
         return $result;
-	}
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * 相关内容
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 相关内容组件(根据作者关联)
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -22,14 +22,14 @@ class Widget_Contents_Related_Author extends Widget_Abstract_Contents
 {
     /**
      * 执行函数,初始化数据
-     * 
+     *
      * @access public
      * @return void
      */
     public function execute()
     {
         $this->parameter->setDefault('limit=5');
-    
+
         if ($this->parameter->author) {
             $this->db->fetchAll($this->select()
             ->where('table.contents.authorId = ?', $this->parameter->author)

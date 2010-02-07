@@ -42,10 +42,10 @@ class Typecho_Db_Query
      * @var array
      */
     private $_sqlPreBuild;
-    
+
     /**
      * 前缀
-     * 
+     *
      * @access private
      * @var string
      */
@@ -62,7 +62,7 @@ class Typecho_Db_Query
     {
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
-        
+
         $this->_sqlPreBuild = array(
             'action' => NULL,
             'table'  => NULL,
@@ -117,18 +117,18 @@ class Typecho_Db_Query
                         $word = $this->_prefix;
                         $split = '';
                     }
-                
+
                     $result .= $word . $split;
                     $word = '';
                     $quotes = 0;
                 }
-            
+
                 $word .= $cha;
                 $lastIsAlnum = true;
             } else {
-                
+
                 if ($lastIsAlnum) {
-                    
+
                     if (0 == $quotes) {
                         if (false !== strpos(' ,)=<>.+-*/', $cha)) {
                             $quotes = 1;
@@ -136,22 +136,22 @@ class Typecho_Db_Query
                             $quotes = -1;
                         }
                     }
-                    
+
                     $split = '';
                 }
-                
+
                 $split .= $cha;
                 $lastIsAlnum = false;
             }
-            
+
         }
-        
+
         return $result;
     }
-    
+
     /**
      * 从参数中合成查询字段
-     * 
+     *
      * @access private
      * @param array $parameters
      * @return string
@@ -159,17 +159,17 @@ class Typecho_Db_Query
     private function getColumnFromParameters(array $parameters)
     {
         $fields = array();
-        
+
         foreach ($parameters as $value) {
             if (is_array($value)) {
                 foreach ($value as $key => $val) {
-                    $fields[] = $key . ' AS ' . $val; 
+                    $fields[] = $key . ' AS ' . $val;
                 }
             } else {
                  $fields[] = $value;
             }
         }
-        
+
         return $this->filterColumn(implode(' , ', $fields));
     }
 
@@ -338,10 +338,10 @@ class Typecho_Db_Query
         $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($key);
         return $this;
     }
-     
+
     /**
      * 选择查询字段
-     * 
+     *
      * @access public
      * @param mixed $field 查询字段
      * @return Typecho_Db_Query
@@ -350,11 +350,11 @@ class Typecho_Db_Query
     {
         $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
         $args = func_get_args();
-        
+
         $this->_sqlPreBuild['fields'] = $this->getColumnFromParameters($args);
         return $this;
     }
-    
+
     /**
      * 查询记录操作(SELECT)
      *

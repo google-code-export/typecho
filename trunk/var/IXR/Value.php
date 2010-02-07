@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
    IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
    Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
    Site:   http://scripts.incutio.com/xmlrpc/
@@ -52,7 +52,7 @@ class IXR_Value {
         }
         // If it is a normal PHP object convert it in to a struct
         if (is_object($this->data)) {
-            
+
             $this->data = get_object_vars($this->data);
             return 'struct';
         }

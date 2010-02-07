@@ -17,7 +17,7 @@ interface Typecho_Db_Adapter
 {
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -49,7 +49,7 @@ interface Typecho_Db_Adapter
      * @return array
      */
     public function fetch($resource);
-    
+
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *

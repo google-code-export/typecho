@@ -33,10 +33,10 @@ class Typecho_Validate
      * @var array
      */
     private $_data;
-    
+
     /**
      * 当前验证指针
-     * 
+     *
      * @access private
      * @var string
      */
@@ -49,10 +49,10 @@ class Typecho_Validate
      * @var array
      */
     private $_rules = array();
-    
+
     /**
      * 中断模式,一旦出现验证错误即抛出而不再继续执行
-     * 
+     *
      * @access private
      * @var boolean
      */
@@ -60,7 +60,7 @@ class Typecho_Validate
 
     /**
      * 增加验证规则
-     * 
+     *
      * @access public
      * @param string $key 数值键值
      * @param string $rule 规则名称
@@ -76,13 +76,13 @@ class Typecho_Validate
             $params = array_splice($params, 3);
             $this->_rules[$key][] = array_merge(array($rule, $message), $params);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * 设置为中断模式
-     * 
+     *
      * @access public
      * @return void
      */
@@ -114,11 +114,11 @@ class Typecho_Validate
 
             foreach ($rules as $params) {
                 $method = $params[0];
-                
+
                 if ('required' != $method && 'confirm' != $method && 0 == strlen($data[$key])) {
                     continue;
                 }
-                
+
                 $message = $params[1];
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
@@ -128,7 +128,7 @@ class Typecho_Validate
                     break;
                 }
             }
-            
+
             /** 开启中断 */
             if ($this->_break && $result) {
                 break;
@@ -140,7 +140,7 @@ class Typecho_Validate
 
     /**
      * 最小长度
-     * 
+     *
      * @access public
      * @param string $str 待处理的字符串
      * @param integer $length 最小长度
@@ -175,10 +175,10 @@ class Typecho_Validate
     {
         return !empty($this->_data[$this->_key]);
     }
-    
+
     /**
      * 枚举类型判断
-     * 
+     *
      * @access public
      * @param string $str 待处理的字符串
      * @param array $params 枚举值
@@ -226,8 +226,8 @@ class Typecho_Validate
         if (!$parts) {
             return false;
         }
-        
-        return isset($parts['scheme']) && 
+
+        return isset($parts['scheme']) &&
         in_array($parts['scheme'], array('http', 'https', 'ftp')) &&
         !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
@@ -267,10 +267,10 @@ class Typecho_Validate
     {
         return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
     }
-    
+
     /**
      * 对xss字符串的检测
-     * 
+     *
      * @access public
      * @param string $str
      * @return boolean
@@ -283,15 +283,15 @@ class Typecho_Validate
         $search .= '~`";:?+/={}[]-_|\'\\';
 
         for ($i = 0; $i < strlen($search); $i++) {
-            // ;? matches the ;, which is optional 
-            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars 
+            // ;? matches the ;, which is optional
+            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
 
-            // &#x0040 @ search for the hex values 
-            $str = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $str); // with a ; 
-            // &#00064 @ 0{0,7} matches '0' zero to seven times 
-            $str = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $str); // with a ; 
+            // &#x0040 @ search for the hex values
+            $str = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $str); // with a ;
+            // &#00064 @ 0{0,7} matches '0' zero to seven times
+            $str = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $str); // with a ;
         }
-        
+
         return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 

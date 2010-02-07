@@ -9,7 +9,7 @@
 
 /**
  * 激活插件列表组件
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -20,7 +20,7 @@ class Widget_Plugins_List_Activated extends Widget_Plugins_List
 {
     /**
      * 执行函数
-     * 
+     *
      * @access public
      * @return void
      */

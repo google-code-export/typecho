@@ -21,25 +21,25 @@ class Typecho_Common
 {
     /** 默认不解析的标签列表 */
     const LOCKED_HTML_TAG = 'code|pre|script';
-    
+
     /** 需要去除内部换行的标签 */
     const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|fieldset|tr|th|td|li|ol|ul|dd|dl|dt|h[1-6]';
-    
+
     /** 元素标签 */
     const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li|dd|dt';
-    
+
     /** 布局标签 */
     const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul|dl';
-    
+
     /** 独立段落标签 */
     const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6]';
-    
+
     /** 程序版本 */
     const VERSION = '0.8/9.11.25';
-    
+
     /**
      * 缓存的包含路径
-     * 
+     *
      * @access private
      * @var array
      */
@@ -52,18 +52,18 @@ class Typecho_Common
      * @var array
      */
     private static $_lockedBlocks = array('<p></p>' => '');
-    
+
     /**
      * 默认编码
-     * 
+     *
      * @access public
      * @var string
      */
     public static $charset = 'UTF-8';
-    
+
     /**
      * 异常处理类
-     * 
+     *
      * @access public
      * @var string
      */
@@ -71,7 +71,7 @@ class Typecho_Common
 
     /**
      * 锁定标签回调函数
-     * 
+     *
      * @access private
      * @param array $matches 匹配的值
      * @return string
@@ -82,10 +82,10 @@ class Typecho_Common
         self::$_lockedBlocks[$guid] = $matches[0];
         return $guid;
     }
-    
+
     /**
      * 将url中的非法xss去掉时的数组回调过滤函数
-     * 
+     *
      * @access private
      * @param string $string 需要过滤的字符串
      * @return string
@@ -98,10 +98,10 @@ class Typecho_Common
             "/(\"|')\s*\)/i",           //函数结尾
         ), '', $string);
     }
-    
+
     /**
      * 检查是否为安全路径
-     * 
+     *
      * @access public
      * @param string $path 检查是否为安全路径
      * @return boolean
@@ -111,10 +111,10 @@ class Typecho_Common
         $safePath = rtrim(__TYPECHO_ROOT_DIR__, '/');
         return 0 === strpos($path, $safePath);
     }
-    
+
     /**
      * 程序初始化方法
-     * 
+     *
      * @access public
      * @return void
      */
@@ -151,10 +151,10 @@ class Typecho_Common
         /** 设置异常截获函数 */
         set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
     }
-    
+
     /**
      * 异常截获函数
-     * 
+     *
      * @access public
      * @param Exception $exception 截获的异常
      * @return void
@@ -162,9 +162,9 @@ class Typecho_Common
     public static function exceptionHandle(Exception $exception)
     {
         //$obHandles = ob_list_handlers();
-        
+
         @ob_end_clean();
-        
+
         /*
         if (in_array('ob_gzhandler', $obHandles)) {
             ob_start('ob_gzhandler');
@@ -172,7 +172,7 @@ class Typecho_Common
             ob_start();
         }
         */
-    
+
         if (defined('__TYPECHO_DEBUG__')) {
             //@ob_clean();
             echo nl2br($exception->__toString());
@@ -184,13 +184,13 @@ class Typecho_Common
                 self::error($exception);
             }
         }
-        
+
         exit;
     }
-    
+
     /**
      * 输出错误页面
-     * 
+     *
      * @access public
      * @param mixed $exception 错误信息
      * @return void
@@ -198,24 +198,24 @@ class Typecho_Common
     public static function error($exception)
     {
         $isException = is_object($exception);
-        
+
         if ($isException) {
             $code = $exception->getCode();
             $message = $exception->getMessage();
         } else {
             $code = $exception;
         }
-        
+
         require_once 'Typecho/Response.php';
         $charset = self::$charset;
-        
+
         if ($isException && $exception instanceof Typecho_Db_Exception) {
             $code = 500;
             @error_log($message);
-            
+
             //覆盖原始错误信息
             $message = 'Database Server Error';
-            
+
             if ($exception instanceof Typecho_Db_Adapter_Exception) {
                 $code = 503;
                 $message = 'Error establishing a database connection';
@@ -228,32 +228,32 @@ class Typecho_Common
                     @error_log($message);
                     $message = 'Server Error';
                     break;
-                    
+
                 case 404:
                     $message = 'Page Not Found';
                     break;
-                    
+
                 default:
                     $code = 'Error';
                     break;
             }
         }
-        
-        
+
+
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
             require_once 'Typecho/Response.php';
             Typecho_Response::setStatus($code);
         }
-        
+
         $message = nl2br($message);
-        
+
         if (defined('__TYPECHO_EXCEPTION_FILE__')) {
             require_once __TYPECHO_EXCEPTION_FILE__;
         } else {
-            echo 
+            echo
 <<<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -265,7 +265,7 @@ class Typecho_Common
             background: #f7fbe9;
             font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
         }
-        
+
         #error {
             background: #333;
             width: 360px;
@@ -273,7 +273,7 @@ class Typecho_Common
             margin-top: 100px;
             color: #fff;
             padding: 10px;
-            
+
             -moz-border-radius-topleft: 4px;
             -moz-border-radius-topright: 4px;
             -moz-border-radius-bottomleft: 4px;
@@ -288,19 +288,19 @@ class Typecho_Common
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 4px;
         }
-        
+
         h1 {
             padding: 10px;
             margin: 0;
             font-size: 36px;
         }
-        
+
         p {
             padding: 0 20px 20px 20px;
             margin: 0;
             font-size: 12px;
         }
-        
+
         img {
             padding: 0 0 5px 260px;
         }
@@ -316,10 +316,10 @@ class Typecho_Common
 </html>
 EOF;
         }
-        
+
         exit;
     }
-    
+
     /**
      * 判断类是否能被加载
      * 此函数会遍历所有的include目录, 所以会有一定的性能消耗, 但是不会很大
@@ -327,7 +327,7 @@ EOF;
      * 1. 当需要被加载的类不存在时, 系统不会停止运行 (如果你不判断, 系统会因抛出严重错误而停止)
      * 2. 你需要知道哪些类无法被加载, 以提示使用者
      * 除了以上情况, 你无需关注那些类无法被加载, 因为当它们不存在时系统会自动停止并报错
-     * 
+     *
      * @access public
      * @param string $className 类名
      * @param string $path 指定的路径名称
@@ -339,9 +339,9 @@ EOF;
         //增加安全目录检测 fix issue 106
         $dirs = array_map('realpath', array_filter(explode(PATH_SEPARATOR, get_include_path()),
         array('Typecho_Common', '__safePath')));
-        
+
         $file = str_replace('_', '/', $className) . '.php';
-        
+
         if (!empty($path)) {
             $path = realpath($path);
             if (in_array($path, $dirs)) {
@@ -358,7 +358,7 @@ EOF;
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -407,10 +407,10 @@ EOF;
 
         return $result;
     }
-    
+
     /**
      * 根据parse_url的结果重新组合url
-     * 
+     *
      * @access public
      * @param array $params 解析后的参数
      * @return string
@@ -425,13 +425,13 @@ EOF;
         . (isset($params['query']) ? '?' . $params['query'] : NULL)
         . (isset($params['fragment']) ? '#' . $params['fragment'] : NULL);
     }
-    
+
     /**
      * 根据count数目来输出字符
      * <code>
      * echo splitByCount(20, 10, 20, 30, 40, 50);
      * </code>
-     * 
+     *
      * @access public
      * @return string
      */
@@ -439,13 +439,13 @@ EOF;
     {
         $sizes = func_get_args();
         array_shift($sizes);
-        
+
         foreach ($sizes as $size) {
             if ($count < $size) {
                 return $size;
             }
         }
-        
+
         return 0;
     }
 
@@ -466,11 +466,11 @@ EOF;
     {
         //关闭自闭合标签
         $startPos = strrpos($string, "<");
-        
+
         if (false == $startPos) {
             return $string;
         }
-        
+
         $trimString = substr($string, $startPos);
 
         if (false === strpos($trimString, ">")) {
@@ -520,15 +520,15 @@ EOF;
     public static function stripTags($string, $allowableTags = NULL)
     {
         if (!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags)) {
-            
+
             if (in_array('code', $tags[1])) {
                 $string = preg_replace_callback("/<(code)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
             }
-        
+
             $normalizeTags = '<' . implode('><', $tags[1]) . '>';
             $string = strip_tags($string, $normalizeTags);
             $attributes = array_map('trim', $tags[2]);
-            
+
             $allowableAttributes = array();
             foreach ($attributes as $key => $val) {
                 $allowableAttributes[$tags[1][$key]] = array();
@@ -538,10 +538,10 @@ EOF;
                     }
                 }
             }
-            
+
             foreach ($tags[1] as $key => $val) {
                 $match = "/\<{$val}(\s*[a-z]+\s*\=\s*[\"'][^\"']*[\"'])*\s*\>/is";
-                
+
                 if (preg_match_all($match, $string, $out)) {
                     foreach ($out[0] as $startTag) {
                         if (preg_match_all("/([a-z]+)\s*\=\s*[\"'][^\"']*[\"']/is", $startTag, $attributesMatch)) {
@@ -551,13 +551,13 @@ EOF;
                                     $startTag = preg_replace("/\s*{$attribute}\s*=\s*[\"'][^\"']*[\"']/is", '', $startTag);
                                 }
                             }
-                            
+
                             $string = str_replace($replace, $startTag, $string);
                         }
                     }
                 }
             }
-            
+
             return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
         } else {
             return strip_tags($string);
@@ -566,7 +566,7 @@ EOF;
 
     /**
      * 过滤用于搜索的字符串
-     * 
+     *
      * @access public
      * @param string $query 搜索字符串
      * @return string
@@ -575,10 +575,10 @@ EOF;
     {
         return str_replace(array('%', '?', '*', '/', '{', '}'), '', $query);
     }
-    
+
     /**
      * 将url中的非法字符串
-     * 
+     *
      * @access private
      * @param string $string 需要过滤的url
      * @return string
@@ -588,22 +588,22 @@ EOF;
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
         $params = parse_url(str_replace(array("\r", "\n"), '', $url));
-        
+
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {
             if (!in_array($params['scheme'], array('http', 'https'))) {
                 return;
             }
         }
-        
+
         /** 过滤解析串 */
         $params = array_map(array('Typecho_Common', '__removeUrlXss'), $params);
         return self::buildUrl($params);
     }
-    
+
     /**
      * 处理XSS跨站攻击的过滤函数
-     * 
+     *
      * @author kallahar@kallahar.com
      * @link http://kallahar.com/smallprojects/php_xss_filter_function.php
      * @access public
@@ -612,60 +612,60 @@ EOF;
      */
     public static function removeXSS($val)
     {
-       // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed 
-       // this prevents some character re-spacing such as <java\0script> 
-       // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs 
-       $val = preg_replace('/([\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', '', $val); 
+       // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
+       // this prevents some character re-spacing such as <java\0script>
+       // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
+       $val = preg_replace('/([\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', '', $val);
 
-       // straight replacements, the user should never need these since they're normal characters 
-       // this prevents like <IMG SRC=&#X40&#X61&#X76&#X61&#X73&#X63&#X72&#X69&#X70&#X74&#X3A&#X61&#X6C&#X65&#X72&#X74&#X28&#X27&#X58&#X53&#X53&#X27&#X29> 
+       // straight replacements, the user should never need these since they're normal characters
+       // this prevents like <IMG SRC=&#X40&#X61&#X76&#X61&#X73&#X63&#X72&#X69&#X70&#X74&#X3A&#X61&#X6C&#X65&#X72&#X74&#X28&#X27&#X58&#X53&#X53&#X27&#X29>
        $search = 'abcdefghijklmnopqrstuvwxyz';
        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
        $search .= '1234567890!@#$%^&*()';
        $search .= '~`";:?+/={}[]-_|\'\\';
-       
+
        for ($i = 0; $i < strlen($search); $i++) {
-          // ;? matches the ;, which is optional 
-          // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars 
-        
-          // &#x0040 @ search for the hex values 
-          $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ; 
-          // &#00064 @ 0{0,7} matches '0' zero to seven times 
-          $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ; 
-       } 
-        
-       // now the only remaining whitespace attacks are \t, \n, and \r 
-       $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base'); 
-       $ra2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload'); 
-       $ra = array_merge($ra1, $ra2); 
-        
-       $found = true; // keep replacing as long as the previous round replaced something 
+          // ;? matches the ;, which is optional
+          // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
+
+          // &#x0040 @ search for the hex values
+          $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ;
+          // &#00064 @ 0{0,7} matches '0' zero to seven times
+          $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ;
+       }
+
+       // now the only remaining whitespace attacks are \t, \n, and \r
+       $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
+       $ra2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+       $ra = array_merge($ra1, $ra2);
+
+       $found = true; // keep replacing as long as the previous round replaced something
        while ($found == true) {
-          $val_before = $val; 
+          $val_before = $val;
           for ($i = 0; $i < sizeof($ra); $i++) {
-             $pattern = '/'; 
+             $pattern = '/';
              for ($j = 0; $j < strlen($ra[$i]); $j++) {
                 if ($j > 0) {
-                   $pattern .= '('; 
-                   $pattern .= '(&#[xX]0{0,8}([9ab]);)'; 
-                   $pattern .= '|'; 
-                   $pattern .= '|(&#0{0,8}([9|10|13]);)'; 
-                   $pattern .= ')*'; 
+                   $pattern .= '(';
+                   $pattern .= '(&#[xX]0{0,8}([9ab]);)';
+                   $pattern .= '|';
+                   $pattern .= '|(&#0{0,8}([9|10|13]);)';
+                   $pattern .= ')*';
                 }
-                $pattern .= $ra[$i][$j]; 
+                $pattern .= $ra[$i][$j];
              }
-             $pattern .= '/i'; 
-             $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag 
-             $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags 
-             
+             $pattern .= '/i';
+             $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag
+             $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
+
              if ($val_before == $val) {
-                // no replacements were made, so exit the loop 
-                $found = false; 
-             } 
-          } 
+                // no replacements were made, so exit the loop
+                $found = false;
+             }
+          }
        }
-       
-       return $val; 
+
+       return $val;
     }
 
     /**
@@ -723,13 +723,13 @@ EOF;
         $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
         $str = trim($str, '-');
         $str = empty($str) ? $default : $str;
-        
+
         return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$charset) : substr($str, 0, $maxLength);
     }
-    
+
     /**
      * 去掉html中的分段
-     * 
+     *
      * @access public
      * @param string $html 输入串
      * @return string
@@ -739,13 +739,13 @@ EOF;
         return trim(preg_replace(
         array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
         "/\s*<(" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>/is", "/<\/(" . self::PARAGRAPH_HTML_TAG . ")>\s*/is", "/\s*<\!--more-->\s*/is"),
-        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"), 
+        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"),
         $html));
     }
-    
+
     /**
      * 美化格式
-     * 
+     *
      * @access public
      * @param string $html 输入串
      * @return string
@@ -754,12 +754,12 @@ EOF;
     {
         /** 锁定标签 */
         $html = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
-    
+
         $html = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
         "str_replace('\\\"', '\"', '
 <\\1\\2>' . trim('\\3') . '</\\1>')", $html);
-        
-        $html = preg_replace("/<(p|" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise", 
+
+        $html = preg_replace("/<(p|" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '
 
 <\\1\\2>' . trim('\\3') . '</\\1>
@@ -767,17 +767,17 @@ EOF;
 ')", $html);
 
         $tags = implode('|', array_diff(explode('|', self::GRID_HTML_TAG), explode('|', self::LOCKED_HTML_TAG)));
-        $html = preg_replace("/<(" . $tags . ")([^>]*)>(.*?)<\/\\1>/ise", 
+        $html = preg_replace("/<(" . $tags . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>
 ' . trim('\\3') . '
 </\\1>')", $html);
 
         $html = preg_replace("/\r*\n\r*/", "\n", $html);
         $html = preg_replace("/\n{2,}/", "\n\n", $html);
-        
+
         return trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
     }
-    
+
     /**
      * 文本分段函数
      *
@@ -789,12 +789,12 @@ EOF;
     {
         /** 锁定自闭合标签 */
         $string = trim($string);
-        
+
         /** 返回空字符串 */
         if (empty($string)) {
             return '';
         }
-        
+
         /** 锁定标签 */
         $string = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
 
@@ -803,40 +803,40 @@ EOF;
         $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
         "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
         $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
-        
+
         /** fix issue 197 */
         $string = preg_replace("/\s*<p\s+([^>]*)>(.*?)<\/p>\s*/is", "\n\n<p \\1>\\2</p>\n\n", $string);
 
         /** 区分段落 */
         $string = preg_replace("/\r*\n\r*/", "\n", $string);
-        
+
         if ($paragraph || false !== strpos($string, "\n\n")) {
             $string = preg_replace("/\n{2,}/", "</p><p>", $string);
-            
+
             // fix issue 385
             if (!preg_match("/^<p\s*([^>]*)>/is", $string)) {
                 $string = '<p>' . $string;
             }
-            
+
             if (!preg_match("/<\/p>$/is", $string)) {
                 $string = $string . '</p>';
             }
         }
-        
+
         $string = preg_replace(array("/<([a-z]+)([^>]*)>\s*/is", "/\s*<\/([a-z]+)([^>]*)>/is"),
             array("<\\1\\2>", "</\\1\\2>"), $string);
-        
+
         $string = str_replace("\n", '<br />', $string);
-        
+
         /** 去掉不需要的 */
         $string = preg_replace("/<p><(" . self::ESCAPE_HTML_TAG . '|p|' . self::LOCKED_HTML_TAG
         . ")([^>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
         return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
     }
-    
+
     /**
      * 生成随机字符串
-     * 
+     *
      * @access public
      * @param integer $length 字符串长度
      * @param string $specialChars 是否有特殊字符
@@ -846,9 +846,9 @@ EOF;
     {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         if ($specialChars) {
-			$chars .= '!@#$%^&*()';
+            $chars .= '!@#$%^&*()';
         }
-    
+
         $result = '';
         $max = strlen($chars) - 1;
         for ($i = 0; $i < $length; $i++) {
@@ -856,10 +856,10 @@ EOF;
         }
         return $result;
     }
-    
+
     /**
      * 对字符串进行hash加密
-     * 
+     *
      * @access public
      * @param string $string 需要hash的字符串
      * @param string $salt 扰码
@@ -873,13 +873,13 @@ EOF;
         $hash = '';
         $last = ord($string[$length - 1]);
         $pos = 0;
-        
+
         /** 判断扰码长度 */
         if (strlen($salt) != 9) {
             /** 如果不是9直接返回 */
             return;
         }
-        
+
         while ($pos < $length) {
             $asc = ord($string[$pos]);
             $last = ($last * ord($salt[($last % $asc) % 9]) + $asc) % 95 + 32;
@@ -889,10 +889,10 @@ EOF;
 
         return '$T$' . $salt . md5($hash);
     }
-    
+
     /**
      * 判断hash值是否相等
-     * 
+     *
      * @access public
      * @param string $from 源字符串
      * @param string $to 目标字符串
@@ -907,10 +907,10 @@ EOF;
             return md5($from) == $to;
         }
     }
-    
+
     /**
      * 将路径转化为链接
-     * 
+     *
      * @access public
      * @param string $path 路径
      * @param string $prefix 前缀
@@ -921,10 +921,10 @@ EOF;
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
         return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
     }
-    
+
     /**
      * 获取图片
-     * 
+     *
      * @access public
      * @param string $fileName 文件名
      * @return string
@@ -935,17 +935,17 @@ EOF;
         if (function_exists('mime_content_type')) {
             return mime_content_type($fileName);
         }
-        
+
         if (function_exists('finfo_open')) {
             $fInfo = @finfo_open(FILEINFO_MIME);
-            
+
             if (false !== $fInfo) {
                 $mimeType = finfo_file($fInfo, $fileName);
                 finfo_close($fInfo);
                 return $mimetype;
             }
         }
-        
+
         $mimeTypes = array(
           'ez' => 'application/andrew-inset',
           'csm' => 'application/cu-seeme',
@@ -1258,23 +1258,23 @@ EOF;
           'rar' => 'application/x-rar-compressed',
           'cab' => 'application/vnd.ms-cab-compressed'
         );
-        
+
         $part = explode('.', $fileName);
         $size = count($part);
-        
+
         if ($size > 1) {
             $ext = $part[$size - 1];
             if (isset($mimeTypes[$ext])) {
                 return $mimeTypes[$ext];
             }
         }
-        
+
         return 'application/octet-stream';
     }
-    
+
     /**
      * 寻找匹配的mime图标
-     * 
+     *
      * @access public
      * @param string $mime mime类型
      * @return string
@@ -1282,13 +1282,13 @@ EOF;
     public static function mimeIconType($mime)
     {
         $parts = explode('/', $mime);
-        
+
         if (count($parts) < 2) {
             return 'unknown';
         }
-        
+
         list ($type, $stream) = $parts;
-        
+
         if (in_array($type, array('image', 'video', 'audio', 'text', 'application'))) {
             switch (true) {
                 case in_array($stream, array('msword', 'msaccess', 'ms-powerpoint', 'ms-powerpoint')):
@@ -1296,7 +1296,7 @@ EOF;
                     return 'office';
                 case false !== strpos($stream, 'html') || false !== strpos($stream, 'xml') || false !== strpos($stream, 'wml'):
                     return 'html';
-                case false !== strpos($stream, 'compressed') || false !== strpos($stream, 'zip') || 
+                case false !== strpos($stream, 'compressed') || false !== strpos($stream, 'zip') ||
                 in_array($stream, array('application/x-gtar', 'application/x-tar')):
                     return 'archive';
                 case 'text' == $type && 0 === strpos($stream, 'x-'):

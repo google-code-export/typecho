@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
    IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
    Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
    Site:   http://scripts.incutio.com/xmlrpc/
@@ -37,7 +37,7 @@ class IXR_Date {
     }
     function parseIso($iso) {
         $this->year = substr($iso, 0, 4);
-        $this->month = substr($iso, 4, 2); 
+        $this->month = substr($iso, 4, 2);
         $this->day = substr($iso, 6, 2);
         $this->hour = substr($iso, 9, 2);
         $this->minute = substr($iso, 12, 2);

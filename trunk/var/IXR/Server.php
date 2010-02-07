@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
    IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
    Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
    Site:   http://scripts.incutio.com/xmlrpc/
@@ -34,39 +34,39 @@ class IXR_Server
 {
     /**
      * 输入参数
-     * 
+     *
      * @access private
      * @var array
      */
     private $data;
-    
+
     /**
      * 回调函数
-     * 
+     *
      * @access private
      * @var array
      */
     private $callbacks = array();
-    
+
     /**
      * 消息体
-     * 
+     *
      * @access private
      * @var IXR_Message
      */
     private $message;
-    
+
     /**
      * 默认参数
-     * 
+     *
      * @access private
      * @var array
      */
     private $capabilities;
-    
+
     /**
      * 构造函数
-     * 
+     *
      * @access public
      * @param mixed $callbacks 回调函数
      * @param mixed $data 输入参数
@@ -81,10 +81,10 @@ class IXR_Server
         $this->setCallbacks();
         $this->serve($data);
     }
-    
+
     /**
      * 呼叫内部方法
-     * 
+     *
      * @access private
      * @param string $methodname 方法名
      * @param mixed $args 参数
@@ -110,7 +110,7 @@ class IXR_Server
             }
             // Call the method
             $result = $this->$method($args);
-        } else { 
+        } else {
             if (is_array($method)) {
                 list($object, $func) = $method;
                 if (!is_callable($method)) {
@@ -130,7 +130,7 @@ class IXR_Server
 
     /**
      * 抛出错误
-     * 
+     *
      * @access private
      * @param integer $error 错误代码
      * @param string $message 错误消息
@@ -144,10 +144,10 @@ class IXR_Server
         }
         $this->output($error->getXml());
     }
-    
+
     /**
      * 输出xml
-     * 
+     *
      * @access private
      * @param string $xml 输出xml
      * @return 输出xml
@@ -163,10 +163,10 @@ class IXR_Server
         echo $xml;
         exit;
     }
-    
+
     /**
      * 是否存在方法
-     * 
+     *
      * @access private
      * @param string $method 方法名
      * @return mixed
@@ -175,10 +175,10 @@ class IXR_Server
     {
         return in_array($method, array_keys($this->callbacks));
     }
-    
+
     /**
      * 设置默认参数
-     * 
+     *
      * @access public
      * @return void
      */
@@ -198,12 +198,12 @@ class IXR_Server
                 'specUrl' => 'http://www.xmlrpc.com/discuss/msgReader$1208',
                 'specVersion' => 1
             ),
-        );   
+        );
     }
-    
+
     /**
      * 设置默认方法
-     * 
+     *
      * @access private
      * @return void
      */
@@ -213,10 +213,10 @@ class IXR_Server
         $this->callbacks['system.listMethods'] = 'this:listMethods';
         $this->callbacks['system.multicall'] = 'this:multiCall';
     }
-    
+
     /**
      * 服务入口
-     * 
+     *
      * @access private
      * @param mixed $data 输入参数
      * @return void
@@ -229,7 +229,7 @@ class IXR_Server
         if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             $GLOBALS['HTTP_RAW_POST_DATA'] = trim($GLOBALS['HTTP_RAW_POST_DATA']);
         }
-    
+
         if (!$data) {
             global $HTTP_RAW_POST_DATA;
             if (!$HTTP_RAW_POST_DATA) {
@@ -268,10 +268,10 @@ EOD;
         // Send it
         $this->output($xml);
     }
-    
+
     /**
      * 获取默认参数
-     * 
+     *
      * @access public
      * @param mixed $args 输入参数
      * @return array
@@ -280,10 +280,10 @@ EOD;
     {
         return $this->capabilities;
     }
-    
+
     /**
      * 列出所有方法
-     * 
+     *
      * @access public
      * @param mixed $args 输入参数
      * @return mixed
@@ -294,10 +294,10 @@ EOD;
         // methods are listed before server defined methods
         return array_reverse(array_keys($this->callbacks));
     }
-    
+
     /**
      * 一次处理多个请求
-     * 
+     *
      * @access public
      * @param void $methodcalls
      * @return array

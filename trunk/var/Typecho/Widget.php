@@ -22,15 +22,15 @@ abstract class Typecho_Widget
 {
     /**
      * widget对象池
-     * 
+     *
      * @access private
      * @var array
      */
     private static $_widgetPool = array();
-    
+
     /**
      * 帮手列表
-     * 
+     *
      * @access private
      * @var array
      */
@@ -43,7 +43,7 @@ abstract class Typecho_Widget
      * @var array
      */
     protected $row = array();
-    
+
     /**
      * 数据堆栈
      *
@@ -51,50 +51,50 @@ abstract class Typecho_Widget
      * @var array
      */
     public $stack = array();
-    
+
     /**
      * 当前队列指针顺序值,从1开始
-     * 
+     *
      * @access public
      * @var integer
      */
     public $sequence = 0;
-    
+
     /**
      * 队列长度
-     * 
+     *
      * @access public
      * @var integer
      */
     public $length = 0;
-    
+
     /**
      * request对象
-     * 
+     *
      * @var Typecho_Request
      * @access public
      */
     public $request;
-    
+
     /**
      * response对象
-     * 
+     *
      * @var Typecho_Response
      * @access public
      */
     public $response;
-    
+
     /**
      * config对象
-     * 
+     *
      * @access public
      * @var public
      */
     public $parameter;
-    
+
     /**
      * 构造函数,初始化组件
-     * 
+     *
      * @access public
      * @param mixed $request request对象
      * @param mixed $response response对象
@@ -107,23 +107,23 @@ abstract class Typecho_Widget
         $this->request = $request;
         $this->response = $response;
         $this->parameter = new Typecho_Config();
-        
+
         if (!empty($params)) {
             $this->parameter->setDefault($params);
         }
     }
-    
+
     /**
      * execute function.
-     * 
+     *
      * @access public
      * @return void
      */
     public function execute(){}
-    
+
     /**
      * post事件触发
-     * 
+     *
      * @param boolean $condition 触发条件
      * @return mixed
      */
@@ -137,10 +137,10 @@ abstract class Typecho_Widget
             return new Typecho_Widget_Helper_Empty();
         }
     }
-    
+
     /**
      * 获取对象插件句柄
-     * 
+     *
      * @access public
      * @param string $handle 句柄
      * @return Typecho_Plugin
@@ -152,7 +152,7 @@ abstract class Typecho_Widget
 
     /**
      * 工厂方法,将类静态化放置到列表中
-     * 
+     *
      * @access public
      * @param string $alias 组件别名
      * @param mixed $params 传递的参数
@@ -166,16 +166,16 @@ abstract class Typecho_Widget
         list($className) = explode('@', $alias);
 
         if (!isset(self::$_widgetPool[$alias])) {
-            $fileName = str_replace('_', '/', $className) . '.php';            
+            $fileName = str_replace('_', '/', $className) . '.php';
             require_once $fileName;
-            
+
             /** 如果类不存在 */
             if (!class_exists($className)) {
                 /** Typecho_Exception */
                 require_once 'Typecho/Widget/Exception.php';
                 throw new Typecho_Widget_Exception($className);
             }
-            
+
             /** 初始化request */
             if (!empty($request)) {
                 $requestObject = new Typecho_Request();
@@ -183,24 +183,24 @@ abstract class Typecho_Widget
             } else {
                 $requestObject = Typecho_Request::getInstance();
             }
-            
+
             /** 初始化response */
-            $responseObject = $enableResponse ? Typecho_Response::getInstance() 
+            $responseObject = $enableResponse ? Typecho_Response::getInstance()
             : Typecho_Widget_Helper_Empty::getInstance();
-            
+
             /** 初始化组件 */
             $widget = new $className($requestObject, $responseObject, $params);
 
             $widget->execute();
             self::$_widgetPool[$alias] = $widget;
         }
-        
+
         return self::$_widgetPool[$alias];
     }
-    
+
     /**
      * 释放组件
-     * 
+     *
      * @access public
      * @param string $alias 组件名称
      * @return void
@@ -254,7 +254,7 @@ abstract class Typecho_Widget
             }
             echo str_replace($rowsKey, $val, $format) . "\n";
         }
-        
+
         /** 重置指针 */
         reset($this->row);
         reset($this->stack);
@@ -275,10 +275,10 @@ abstract class Typecho_Widget
         $this->stack[] = $value;
         return $value;
     }
-    
+
     /**
      * 根据余数输出
-     * 
+     *
      * @access public
      * @param string $param 需要输出的值
      * @return void
@@ -290,10 +290,10 @@ abstract class Typecho_Widget
         $split = $this->sequence % $num;
         echo $args[(0 == $split ? $num : $split) -1];
     }
-    
+
     /**
      * 输出顺序值
-     * 
+     *
      * @access public
      * @return void
      */
@@ -301,10 +301,10 @@ abstract class Typecho_Widget
     {
         echo $this->sequence;
     }
-    
+
     /**
      * 输出数据长度
-     * 
+     *
      * @access public
      * @return void
      */
@@ -335,13 +335,13 @@ abstract class Typecho_Widget
             next($this->stack);
             $this->sequence ++;
         }
-        
+
         if (!$this->row) {
             reset($this->stack);
             $this->sequence = 0;
             return false;
         }
-        
+
         return $this->row;
     }
 
@@ -368,12 +368,12 @@ abstract class Typecho_Widget
     public function __get($name)
     {
         $method = '___' . $name;
-        
+
         if (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {
             $method = '___' . $name;
-            
+
             if (method_exists($this, $method)) {
                 return $this->$method();
             } else {
@@ -383,10 +383,10 @@ abstract class Typecho_Widget
                 }
             }
         }
-        
+
         return NULL;
     }
-    
+
     /**
      * 设定堆栈每一行的值
      *
@@ -398,10 +398,10 @@ abstract class Typecho_Widget
     {
         $this->row[$name] = $value;
     }
-    
+
     /**
      * 验证堆栈值是否存在
-     * 
+     *
      * @access public
      * @param string $name
      * @return boolean

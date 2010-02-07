@@ -11,8 +11,9 @@ svnup:
 	rm -Rf build/
 	svn up ../
 	svn export ../ build
-	for i in `find -name *.source.css`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find build/admin/javascript/ -name *.js`; do java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find -name *.source.css`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find build/admin/javascript/ -name *.js`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find build/ -name *.php`; do php -l $$i; done;
 
 
 package:

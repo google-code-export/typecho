@@ -1,7 +1,7 @@
 <?php
 /**
  * 文字输入表单项帮手
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -14,7 +14,7 @@ require_once 'Typecho/Widget/Helper/Form/Element.php';
 
 /**
  * 文字输入表单项帮手类
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -24,7 +24,7 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
 {
     /**
      * 初始化当前输入项
-     * 
+     *
      * @access public
      * @param string $name 表单元素名称
      * @param array $options 选择项
@@ -36,13 +36,13 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
         'name' => $name, 'type' => 'text', 'class' => 'text'));
         $this->container($input);
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
-        
+
         return $input;
     }
-    
+
     /**
      * 设置表单项默认值
-     * 
+     *
      * @access protected
      * @param mixed $value 表单项默认值
      * @return void

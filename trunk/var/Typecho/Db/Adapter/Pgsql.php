@@ -19,23 +19,23 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 {
     /**
      * 数据库连接字符串标示
-     * 
+     *
      * @access private
      * @var resource
      */
     private $_dbLink;
-    
+
     /**
      * 最后一次操作的数据表
-     * 
+     *
      * @access protected
      * @var string
      */
     protected $_lastTable;
-    
+
     /**
      * 判断适配器是否可用
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -43,7 +43,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     {
         return function_exists('pg_connect');
     }
-    
+
     /**
      * 数据库连接函数
      *
@@ -85,7 +85,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         require_once 'Typecho/Db/Query/Exception.php';
-        throw new Typecho_Db_Query_Exception(@pg_last_error($this->_dbLink), 
+        throw new Typecho_Db_Query_Exception(@pg_last_error($this->_dbLink),
         pg_result_error_field(pg_get_result($this->_dbLink), PGSQL_DIAG_SQLSTATE));
     }
 
@@ -99,7 +99,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     {
         return pg_fetch_assoc($resource);
     }
-    
+
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *
@@ -182,7 +182,7 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
         if (pg_fetch_assoc(pg_query($handle, 'SELECT oid FROM pg_class WHERE relname = ' . $this->quoteValue($this->_lastTable . '_seq')))) {
             return pg_fetch_result(pg_query($handle, 'SELECT CURRVAL(' . $this->quoteValue($this->_lastTable . '_seq') . ')'), 0, 0);
         }
-        
+
         return 0;
     }
 }

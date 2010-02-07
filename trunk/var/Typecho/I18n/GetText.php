@@ -26,7 +26,7 @@
  * the system's gettext abilities.
  * It can read MO files and use them for translating strings.
  * The files are passed to gettext_reader as a Stream (see streams.php)
- * 
+ *
  * This version has the ability to cache all strings and translations to
  * speed up the string lookup.
  * While the cache is enabled by default, it can be switched off with the
@@ -37,7 +37,7 @@
 //reload by 70 (typecho group)
 /**
  * This file is part of PHP-gettext
- * 
+ *
  * @author Danilo Segan <danilo@kvota.net>, Nico Kaiser <nico@siriux.net>
  * @category typecho
  * @package I18n
@@ -64,7 +64,7 @@ class Typecho_I18n_GetText
     /* Methods */
     /**
      * Constructor
-     * 
+     *
      * @param string $file file name
      * @param boolean enable_cache Enable or disable caching of strings (default on)
      */
@@ -105,7 +105,7 @@ class Typecho_I18n_GetText
 
     /**
      * Reads a 32bit Integer from the Stream
-     * 
+     *
      * @access private
      * @return Integer from the Stream
      */
@@ -117,7 +117,7 @@ class Typecho_I18n_GetText
 
     /**
      * Reads an array of Integers from the Stream
-     * 
+     *
      * @param int count How many elements should be read
      * @return Array of Integers
      */
@@ -130,7 +130,7 @@ class Typecho_I18n_GetText
      * Loads the translation tables from the MO file into the cache
      * If caching is enabled, also loads all strings into a cache
      * to speed up translation lookups
-     * 
+     *
      * @access private
      */
     private function load_tables()
@@ -163,7 +163,7 @@ class Typecho_I18n_GetText
 
     /**
      * Returns a string from the "originals" table
-     * 
+     *
      * @access private
      * @param int num Offset number of original string
      * @return string Requested string if found, otherwise ''
@@ -181,7 +181,7 @@ class Typecho_I18n_GetText
 
     /**
      * Returns a string from the "translations" table
-     * 
+     *
      * @access private
      * @param int num Offset number of original string
      * @return string Requested string if found, otherwise ''
@@ -199,7 +199,7 @@ class Typecho_I18n_GetText
 
     /**
      * Binary search for string
-     * 
+     *
      * @access private
      * @param string string
      * @param int start (internally used in recursive function)
@@ -241,7 +241,7 @@ class Typecho_I18n_GetText
 
     /**
      * Translates a string
-     * 
+     *
      * @access public
      * @param string string to be translated
      * @param integer $num found string number
@@ -251,7 +251,7 @@ class Typecho_I18n_GetText
     {
         if ($this->short_circuit)
             return $string;
-        $this->load_tables();     
+        $this->load_tables();
 
         if ($this->enable_cache) {
             // Caching enabled, get translated string from cache
@@ -271,13 +271,13 @@ class Typecho_I18n_GetText
 
     /**
      * Get possible plural forms from MO header
-     * 
+     *
      * @access private
      * @return string plural form header
      */
     private function get_plural_forms()
     {
-        // lets assume message number 0 is header  
+        // lets assume message number 0 is header
         // this is true, right?
         $this->load_tables();
 
@@ -299,7 +299,7 @@ class Typecho_I18n_GetText
 
     /**
      * Detects which plural form to take
-     * 
+     *
      * @access private
      * @param n count
      * @return int array index of the right plural form
@@ -321,7 +321,7 @@ class Typecho_I18n_GetText
 
     /**
      * Plural version of gettext
-     * 
+     *
      * @access public
      * @param string single
      * @param string plural
@@ -339,7 +339,7 @@ class Typecho_I18n_GetText
         }
 
         // find out the appropriate form
-        $select = $this->select_string($number); 
+        $select = $this->select_string($number);
 
         // this should contains all strings separated by NULLs
         $key = $single.chr(0).$plural;
@@ -367,7 +367,7 @@ class Typecho_I18n_GetText
 
     /**
      * 关闭文件句柄
-     * 
+     *
      * @access public
      * @return void
      */

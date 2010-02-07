@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
    IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
    Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
    Site:   http://scripts.incutio.com/xmlrpc/
@@ -16,23 +16,23 @@ class IXR_Error
 {
     /**
      * 错误代码
-     * 
+     *
      * @access public
      * @var integer
      */
     public $code;
-    
+
     /**
      * 错误消息
-     * 
+     *
      * @access public
      * @var string
      */
     public $message;
-    
+
     /**
      * 构造函数
-     * 
+     *
      * @access public
      * @param integer $code 错误代码
      * @param string $message 错误消息
@@ -43,10 +43,10 @@ class IXR_Error
         $this->code = $code;
         $this->message = $message;
     }
-    
+
     /**
      * 获取xml
-     * 
+     *
      * @access public
      * @return string
      */
@@ -68,7 +68,7 @@ class IXR_Error
       </struct>
     </value>
   </fault>
-</methodResponse> 
+</methodResponse>
 
 EOD;
         return $xml;

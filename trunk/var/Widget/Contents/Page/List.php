@@ -1,7 +1,7 @@
 <?php
 /**
  * 独立页面列表
- * 
+ *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
@@ -11,7 +11,7 @@
 
 /**
  * 独立页面列表组件
- * 
+ *
  * @author qining
  * @category typecho
  * @package Widget
@@ -22,7 +22,7 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
 {
     /**
      * 执行函数
-     * 
+     *
      * @access public
      * @return void
      */
@@ -30,6 +30,7 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
     {
         $this->db->fetchAll($this->select()->where('table.contents.type = ?', 'page')
         ->where('table.contents.status = ?', 'publish')
+        ->where('table.contents.created < ?', $this->options->gmtTime)
         ->order('table.contents.order', Typecho_Db::SORT_ASC), array($this, 'push'));
     }
 }

@@ -16,7 +16,7 @@ class Widget_Do extends Typecho_Widget
 {
     /**
      * 路由映射
-     * 
+     *
      * @access private
      * @var array
      */
@@ -56,24 +56,24 @@ class Widget_Do extends Typecho_Widget
     {
         /** 验证路由地址 **/
         $action = $this->request->action;
-        
+
         //兼容老版本
         if (empty($action)) {
             $widget = trim($this->request->widget, '/');
             $objectName = 'Widget_' . str_replace('/', '_', $widget);
-            
+
             if (Typecho_Common::isAvailableClass($objectName)) {
                 $widgetName = $objectName;
             }
         } else {
             /** 判断是否为plugin */
             $actionTable = array_merge($this->_map, unserialize($this->widget('Widget_Options')->actionTable));
-            
+
             if (isset($actionTable[$action])) {
                 $widgetName = $actionTable[$action];
             }
         }
-        
+
         if (isset($widgetName) && class_exists($widgetName)) {
             $reflectionWidget =  new ReflectionClass($widgetName);
             if ($reflectionWidget->implementsInterface('Widget_Interface_Do')) {

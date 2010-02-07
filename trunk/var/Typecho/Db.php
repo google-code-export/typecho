@@ -24,37 +24,37 @@ class Typecho_Db
 {
     /** 读取数据库 */
     const READ = 1;
-    
+
     /** 写入数据库 */
     const WRITE = 2;
-    
+
     /** 升序方式 */
     const SORT_ASC = 'ASC';
-    
+
     /** 降序方式 */
     const SORT_DESC = 'DESC';
-    
+
     /** 表内连接方式 */
     const INNER_JOIN = 'INNER';
-    
+
     /** 表外连接方式 */
     const OUTER_JOIN = 'OUTER';
-    
+
     /** 表左连接方式 */
     const LEFT_JOIN = 'LEFT';
-    
+
     /** 表外连接方式 */
     const RIGHT_JOIN = 'RIGHT';
-    
+
     /** 数据库查询操作 */
     const SELECT = 'SELECT';
-    
+
     /** 数据库更新操作 */
     const UPDATE = 'UPDATE';
-    
+
     /** 数据库插入操作 */
     const INSERT = 'INSERT';
-    
+
     /** 数据库删除操作 */
     const DELETE = 'DELETE';
 
@@ -63,42 +63,42 @@ class Typecho_Db
      * @var Typecho_Db_Adapter
      */
     private $_adapter;
-    
+
     /**
      * 默认配置
-     *  
+     *
      * @access private
      * @var Typecho_Config
      */
     private $_config;
-    
+
     /**
      * 连接池
-     * 
+     *
      * @access private
      * @var array
      */
     private $_pool;
-    
+
     /**
      * 已经连接
-     * 
+     *
      * @access private
      * @var array
      */
     private $_connectedPool;
-    
+
     /**
      * 前缀
-     * 
+     *
      * @access private
      * @var string
      */
     private $_prefix;
-    
+
     /**
      * 适配器名称
-     * 
+     *
      * @access private
      * @var string
      */
@@ -121,17 +121,17 @@ class Typecho_Db
     {
         /** 获取适配器名称 */
         $this->_adapterName = $adapterName;
-        
+
         /** 数据库适配器 */
         require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $adapterName) . '.php';
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
-        
+
         if (!call_user_func(array($adapterName, 'isAvailable'))) {
             throw new Typecho_Db_Exception("Adapter {$adapterName} is not available");
         }
-        
+
         $this->_prefix = $prefix;
-        
+
         /** 初始化内部变量 */
         $this->_pool = array();
         $this->_connectedPool = array();
@@ -140,10 +140,10 @@ class Typecho_Db
         //实例化适配器对象
         $this->_adapter = new $adapterName();
     }
-    
+
     /**
      * 获取适配器名称
-     * 
+     *
      * @access public
      * @return string
      */
@@ -151,10 +151,10 @@ class Typecho_Db
     {
         return $this->_adapterName;
     }
-    
+
     /**
      * 获取表前缀
-     * 
+     *
      * @access public
      * @return string
      */
@@ -172,10 +172,10 @@ class Typecho_Db
     {
         return new Typecho_Db_Query($this->_adapter, $this->_prefix);
     }
-    
+
     /**
      * 为多数据库提供支持
-     * 
+     *
      * @access public
      * @param Typecho_Db $db 数据库实例
      * @param integer $op 数据库操作
@@ -185,7 +185,7 @@ class Typecho_Db
     {
         $this->_config[] = Typecho_Config::factory($config);
         $key = key($this->_config);
-        
+
         /** 将连接放入池中 */
         switch ($op) {
             case self::READ:
@@ -198,10 +198,10 @@ class Typecho_Db
                 break;
         }
     }
-    
+
     /**
      * 设置默认数据库对象
-     * 
+     *
      * @access public
      * @param Typecho_Db $db 数据库对象
      * @return void
@@ -210,7 +210,7 @@ class Typecho_Db
     {
         self::$_instance = $db;
     }
-    
+
     /**
      * 获取数据库实例化对象
      * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
@@ -228,10 +228,10 @@ class Typecho_Db
 
         return self::$_instance;
     }
-    
+
     /**
      * 选择查询字段
-     * 
+     *
      * @access public
      * @param mixed $field 查询字段
      * @return Typecho_Db_Query
@@ -241,7 +241,7 @@ class Typecho_Db
         $args = func_get_args();
         return call_user_func_array(array($this->sql(), 'select'), $args ? $args : array('*'));
     }
-    
+
     /**
      * 更新记录操作(UPDATE)
      *
@@ -288,13 +288,13 @@ class Typecho_Db
         /** 在适配器中执行查询 */
         if ($query instanceof Typecho_Db_Query) {
             $action = $query->getAttribute('action');
-            $op = (self::UPDATE == $action || self::DELETE == $action 
+            $op = (self::UPDATE == $action || self::DELETE == $action
             || self::INSERT == $action) ? self::WRITE : self::READ;
         } else if (!is_string($query)) {
             /** 如果query不是对象也不是字符串,那么将其判断为查询资源句柄,直接返回 */
             return $query;
         }
-        
+
         /** 选择连接池 */
         if (!isset($this->_connectedPool[$op])) {
             if (empty($this->_pool[$op])) {
@@ -302,12 +302,12 @@ class Typecho_Db
                 require_once 'Typecho/Db/Exception.php';
                 throw new Typecho_Db_Exception('Missing Database Connection');
             }
-            
+
             $selectConnection = rand(0, count($this->_pool[$op]) - 1);
             $selectConnectionConfig = $this->_config[$selectConnection];
             $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
             $other = (self::READ == $op) ? self::WRITE : self::READ;
-            
+
             if (!empty($this->_pool[$other]) && in_array($selectConnection, $this->_pool[$other])) {
                 $this->_connectedPool[$other] = &$selectConnectionHandle;
             }
@@ -348,7 +348,7 @@ class Typecho_Db
         //执行查询
         $resource = $this->query($query, self::READ);
         $result = array();
-        
+
         /** 取出过滤器 */
         if (!empty($filter)) {
             list($object, $method) = $filter;
@@ -373,7 +373,7 @@ class Typecho_Db
     public function fetchRow($query, array $filter = NULL)
     {
         $resource = $this->query($query, self::READ);
-        
+
         /** 取出过滤器 */
         if ($filter) {
             list($object, $method) = $filter;
@@ -383,7 +383,7 @@ class Typecho_Db
         ($filter ? $object->$method($rows) : $rows) :
         array();
     }
-    
+
     /**
      * 一次取出一个对象
      *
@@ -399,7 +399,7 @@ class Typecho_Db
         if ($filter) {
             list($object, $method) = $filter;
         }
-        
+
         return ($rows = $this->_adapter->fetchObject($resource)) ?
         ($filter ? $object->$method($rows) : $rows) :
         new stdClass();

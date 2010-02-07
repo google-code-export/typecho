@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
    IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
    Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
    Site:   http://scripts.incutio.com/xmlrpc/
@@ -14,13 +14,13 @@
  */
 class IXR_Base64
 {
-	/**
-	 * 编码数据
-	 *
-	 * @var string
-	 */
+    /**
+     * 编码数据
+     *
+     * @var string
+     */
     private $data;
-    
+
     /**
      * 初始化数据
      *
@@ -30,7 +30,7 @@ class IXR_Base64
     {
         $this->data = $data;
     }
-    
+
     /**
      * 获取XML数据
      *

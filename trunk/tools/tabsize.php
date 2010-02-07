@@ -11,7 +11,7 @@
  */
 
 /** 定义程序运行的根目录 */
-define('ROOT_DIR', '../widget/');
+define('ROOT_DIR', '../var/');
 
 //获取一个目录下的文件
 function mgGetFile($inpath,$trim = false,$stamp = NULL)
@@ -85,10 +85,10 @@ function tabsize($dir = ROOT_DIR)
                         $line = str_replace("\t", '    ', $out[1]) . $out[2];
                     }
                     
-                    $result[] = rtrim($line) . "\r\n";
+                    $result[] = rtrim($line, "\r\n") . "\n";
                 }
                 
-                file_put_contents($dir . '/' . $file, substr(implode('', $result), 0, -2));
+                file_put_contents($dir . '/' . $file, trim(implode('', $result)) . "\n");
             }
         }
     }
