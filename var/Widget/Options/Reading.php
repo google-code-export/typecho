@@ -49,17 +49,20 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         );
 
         // 页面列表
-        $pages = $this->widget('Widget_Contents_Page_List');
-        if ($pages->have()) {
+        $pages = $this->db->fetchAll($this->db->select('cid', 'title')
+        ->from('table.contents')->where('type = ?', 'page')
+        ->where('status = ?', 'publish')->where('created < ?', $this->options->gmtTime));
+        
+        if (!empty($pages)) {
             $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage">';
-            while ($pages->next()) {
+            foreach ($pages as $page) {
                 $selected = '';
-                if ('page' == $frontPageType && $pages->cid == $frontPageValue) {
+                if ('page' == $frontPageType && $page['cid'] == $frontPageValue) {
                     $selected = ' selected="true"';
                 }
 
-                $pagesSelect .= '<option value="' . $pages->cid . '"' . $selected
-                . '>' . $pages->title . '</option>';
+                $pagesSelect .= '<option value="' . $page['cid'] . '"' . $selected
+                . '>' . $page['title'] . '</option>';
             }
             $pagesSelect .= '</select>';
             $frontPageOptions['page'] = _t('使用 %s 页面作为首页', '</label>' . $pagesSelect . '<label for="frontPage-frontPagePage">');
@@ -136,11 +139,9 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
 
         if ('page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
         $this->db->fetchRow($this->db->select('cid')
-        ->from('table.contents')
-        ->where('table.contents.type = ?', 'page')
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->gmtTime)
-        ->where('table.contents.cid = ?', $pageId = intval($this->request->frontPagePage)))) {
+        ->from('table.contents')->where('type = ?', 'page')
+        ->where('status = ?', 'publish')->where('created < ?', $this->options->gmtTime)
+        ->where('cid = ?', $pageId = intval($this->request->frontPagePage)))) {
 
             $settings['frontPage'] = 'page:' . $pageId;
 
