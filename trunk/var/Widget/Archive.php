@@ -152,6 +152,16 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @var string
      */
     private $_archiveSingle = false;
+    
+    /**
+     * 是否为自定义首页, 主要为了标记自定义首页的情况
+     * 
+     * (default value: false)
+     * 
+     * @var boolean
+     * @access private
+     */
+    private $_makeSinglePageAsFrontPage = false;
 
     /**
      * 归档缩略名
@@ -160,14 +170,6 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @var string
      */
     private $_archiveSlug;
-
-    /**
-     * 自定义归档
-     *
-     * @access private
-     * @var boolean
-     */
-    private $_archiveCustom = false;
 
     /**
      * 设置分页对象
@@ -261,14 +263,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function setPageRow($pageRow)
     {
         $this->_pageRow = $pageRow;
-    }
-
-    /**
-     * @param $_archiveCustom the $_archiveCustom to set
-     */
-    public function setArchiveCustom($archiveCustom)
-    {
-        $this->_archiveCustom = $archiveCustom;
     }
 
     /**
@@ -402,14 +396,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function getPageRow()
     {
         return $this->_pageRow;
-    }
-
-    /**
-     * @return the $_archiveCustom
-     */
-    public function getArchiveCustom()
-    {
-        return $this->_archiveCustom;
     }
 
     /**
@@ -702,7 +688,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** RSS 2.0 */
 
         //对自定义首页使用全局变量
-        if (!$this->_archiveCustom) {
+        if (!$this->_makeSinglePageAsFrontPage) {
             $this->_feedUrl = $this->feedUrl;
 
             /** RSS 1.0 */
@@ -1110,17 +1096,20 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 自定义首页功能 */
-        $frontPage = $this->options->frontPage;
+        if ('index' == $this->parameter->type || 'index_page' == $this->parameter->type) {
+            $frontPage = $this->options->frontPage;
 
-        //显示某个页面
-        if (0 === strpos($frontPage, 'page:')) {
-            // 对某些变量做hack
-            $this->request->setParam('cid', intval(substr($frontPage, 5)));
-            $this->parameter->type = 'page';
-        } else if (0 === strpos($frontPage, 'file:')) {
-            // 显示某个文件
-            $this->setThemeFile(substr($frontPage, 5));
-            return;
+            //显示某个页面
+            if (0 === strpos($frontPage, 'page:')) {
+                // 对某些变量做hack
+                $this->request->setParam('cid', intval(substr($frontPage, 5)));
+                $this->parameter->type = 'page';
+                $this->_makeSinglePageAsFrontPage = true;
+            } else if (0 === strpos($frontPage, 'file:')) {
+                // 显示某个文件
+                $this->setThemeFile(substr($frontPage, 5));
+                return;
+            }
         }
 
         /** 初始化分页变量 */
@@ -1380,7 +1369,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         );
 
         /** 头部是否输出聚合 */
-        $allowFeed = !$this->is('single') || $this->allow('feed') || $this->_archiveCustom;
+        $allowFeed = !$this->is('single') || $this->allow('feed') || $this->_makeSinglePageAsFrontPage;
 
         if (!empty($rule)) {
             parse_str($rule, $rules);
@@ -1500,7 +1489,8 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function is($archiveType, $archiveSlug = NULL)
     {
         return ($archiveType == $this->_archiveType ||
-        (($this->_archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->_archiveType))
+        (($this->_archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->_archiveType) ||
+        ('index' == $archiveType && $this->_makeSinglePageAsFrontPage))
         && (empty($archiveSlug) ? true : $archiveSlug == $this->_archiveSlug);
     }
 
@@ -1531,7 +1521,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         //~ 自定义模板
         if (!empty($this->_themeFile)) {
-            if ($this->_archiveCustom || file_exists($themeDir . $this->_themeFile)) {
+            if (file_exists($themeDir . $this->_themeFile)) {
                 $validated = true;
             }
         } else if (!empty($this->_archiveType)) {

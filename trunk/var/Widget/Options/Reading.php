@@ -40,7 +40,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         $form->addInput($postDateFormat);
 
         //首页显示
-        $frontPageParts = explode($this->options->frontPage, ':');
+        $frontPageParts = explode(':', $this->options->frontPage);
         $frontPageType = $frontPageParts[0];
         $frontPageValue = count($frontPageParts) > 1 ? $frontPageParts[1] : '';
 
@@ -91,7 +91,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         }
 
         $frontPage = new Typecho_Widget_Helper_Form_Element_Radio('frontPage', $frontPageOptions,
-        $frontPageValue, _t('站点首页'));
+        $frontPageType, _t('站点首页'));
         $form->addInput($frontPage->multiMode());
 
         /** 文章列表数目 */
@@ -135,10 +135,12 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
         $settings = $this->request->from('postDateFormat', 'frontPage', 'pageSize', 'postsListSize', 'feedFullText');
 
         if ('page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
-        $this->db->fetchRow($this->db->select()->where('table.contents.type = ?', 'page')
+        $this->db->fetchRow($this->db->select('cid')
+        ->from('table.contents')
+        ->where('table.contents.type = ?', 'page')
         ->where('table.contents.status = ?', 'publish')
         ->where('table.contents.created < ?', $this->options->gmtTime)
-        ->order('table.contents.cid', $pageId = intval($this->request->frontPagePage)))) {
+        ->where('table.contents.cid = ?', $pageId = intval($this->request->frontPagePage)))) {
 
             $settings['frontPage'] = 'page:' . $pageId;
 
