@@ -280,7 +280,18 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
                     if ($refererPart['host'] != $currentPart['host'] ||
                     0 !== strpos($refererPart['path'], $currentPart['path'])) {
-                        throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
+                        
+                        //自定义首页支持
+                        if ('page:' . $this->_content->cid == $this->options->frontPage) {
+                            $currentPart = parse_url(rtrim($this->options->siteUrl, '/') . '/');
+                            
+                            if ($refererPart['host'] != $currentPart['host'] ||
+                            0 !== strpos($refererPart['path'], $currentPart['path'])) {
+                                throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
+                            }
+                        } else {
+                            throw new Typecho_Widget_Exception(_t('评论来源页错误.'), 403);
+                        }
                     }
                 }
 
