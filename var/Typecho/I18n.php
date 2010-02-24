@@ -132,7 +132,11 @@ class Typecho_I18n
                 /** 如果是一分钟 */
                 if ($between < 60 && idate('i', $from) == idate('i', $now)) {
                     $second = idate('s', $now) - idate('s', $from);
-                    return sprintf(_n('%d秒前', '%d秒前', $second), $second);
+                    if (0 == $second) {
+                        return _t('刚刚');
+                    } else {
+                        return sprintf(_n('%d秒前', '%d秒前', $second), $second);
+                    }
                 }
 
                 $min = idate('i', $now) - idate('i', $from);

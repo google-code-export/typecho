@@ -1338,7 +1338,7 @@ a.operate-reply {
     display: inline;
 }
 
-.deactivate tbody {
+.deactivate tbody, tr.deactivate td {
     color: #999;
 }
 
@@ -1844,6 +1844,7 @@ ul.typecho-list-notable li #typecho-respond {
 	font-weight: normal;
 	color: #777;
 	margin-left: 10px;
+	background: #ffffdd;
 }
 
 .typecho-post-area .submit {
@@ -1951,6 +1952,10 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
     margin: 0;
     display: none;
+}
+
+.typecho-post-area .is-draft {
+	background: #FFF1A8;
 }
 
 ul.typecho-post-option {

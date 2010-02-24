@@ -351,9 +351,9 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param string $default 默认输出头像
      * @return void
      */
-    public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
+    public function gravatar($size = 40, $rating = 'X', $default = NULL)
     {
-        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
+        echo '<img class="avatar" src="http://www.gravatar.com/avatar/' .
         md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
         $this->author . '" width="' . $size . '" height="' . $size . '" />';
     }

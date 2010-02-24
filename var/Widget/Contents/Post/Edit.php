@@ -655,6 +655,44 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 返回原网页 */
         $this->response->goBack();
     }
+    
+    /**
+     * 删除文章所属草稿
+     * 
+     * @access public
+     * @return void
+     */
+    public function deletePostDraft()
+    {
+        $cid = $this->request->filter('int')->cid;
+        $deleteCount = 0;
+        
+        if ($cid) {
+            /** 格式化文章主键 */
+            $posts = is_array($cid) ? $cid : array($cid);
+            
+            foreach ($posts as $post) {
+                /** 删除草稿 */
+                $draft = $this->db->fetchRow($this->db->select('cid')
+                ->from('table.contents')
+                ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
+                    $post, 'post', 'draft')
+                ->limit(1));
+
+                if ($draft) {
+                    $this->deleteDraft($draft['cid']);
+                    $deleteCount ++;
+                }
+            }
+        }
+        
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'), NULL,
+        $deleteCount > 0 ? 'success' : 'notice');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
 
     /**
      * 绑定动作
@@ -666,6 +704,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
+        $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
 
         $this->response->redirect($this->options->adminUrl);
     }

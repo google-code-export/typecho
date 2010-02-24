@@ -58,6 +58,14 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @var integer
      */
     private $_levels = 0;
+    
+    /**
+     * 多级评论回调函数
+     * 
+     * @access private
+     * @var mixed
+     */
+    private $_customThreadedCommentsCallback = false;
 
     /**
      * 构造函数,初始化组件
@@ -72,6 +80,28 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     {
         parent::__construct($request, $response, $params);
         $this->parameter->setDefault('parentId=0&commentPage=0&commentsNum=0');
+        
+        /** 初始化回调函数 */
+        if (function_exists('threadedComments')) {
+            $this->_customThreadedCommentsCallback = true;
+        }
+    }
+    
+    /**
+     * 多级评论回调
+     * 
+     * @access private
+     * @param Widget_Comments_Archive $comments 评论组件
+     * @return void
+     */
+    private function threadedCommentsCallback($comments)
+    {
+        /** 直接返回 */
+        if ($this->_customThreadedCommentsCallback) {
+            return threadedComments($comments);
+        }
+        
+        
     }
 
     /**
@@ -281,7 +311,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @param string $func 回调函数
      * @return void
      */
-    public function threadedComments($before = '', $after = '', $func = 'threadedComments')
+    public function threadedComments($before = '', $after = '')
     {
         //楼层限制
         if (!$this->options->commentsThreaded || $this->isTopLevel) {
@@ -300,7 +330,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 
             foreach ($children as $child) {
                 $this->row = $child;
-                $func($this);
+                $this->threadedCommentsCallback($this);
                 $this->row = $tmp;
             }
 

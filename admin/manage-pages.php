@@ -50,7 +50,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th> </th>
                             <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,8 +60,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
-                            <td<?php if (!$pages->hasDraft): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
-                            <?php if ($pages->hasDraft): ?>
+                            <td<?php if ('draft' != $pages->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
+                            <?php if ('draft' == $pages->status): ?>
                             </td>
                             <td>
                             <span class="balloon right"><?php _e('草稿'); ?></span>
