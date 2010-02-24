@@ -11,7 +11,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
                 <div class="column-18 suffix" id="test">
                     <div class="column-18">
-                        <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
+                        <label for="title" class="typecho-label"><?php _e('标题'); ?>
+                        <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
+                        <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
+                        <cite><?php _e('当前正在编辑的是保存于%s的草稿, 你可以<a href="%s">删除它</a>', $postModifyDate->word(), 
+                        Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
+                        <?php endif; ?>
+                        </label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $post->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
@@ -27,7 +33,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                                 <input type="hidden" name="do" value="publish" />
                                 <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                                <button type="submit" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
+                                <button type="button" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
                             </span>
                         </p>
                     </div>
@@ -165,6 +171,7 @@ include 'common-js.php';
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=do]').set('value', 'publish');
+                $(document).getElement('form[name=write_post]').submit();
             });
             
             /** 标签自动完成 */

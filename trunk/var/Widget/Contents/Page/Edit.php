@@ -156,6 +156,44 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         /** 返回原网页 */
         $this->response->goBack();
     }
+    
+    /**
+     * 删除页面所属草稿
+     * 
+     * @access public
+     * @return void
+     */
+    public function deletePageDraft()
+    {
+        $cid = $this->request->filter('int')->cid;
+        $deleteCount = 0;
+        
+        if ($cid) {
+            /** 格式化文章主键 */
+            $pages = is_array($cid) ? $cid : array($cid);
+            
+            foreach ($pages as $page) {
+                /** 删除草稿 */
+                $draft = $this->db->fetchRow($this->db->select('cid')
+                ->from('table.contents')
+                ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
+                    $page, 'page', 'draft')
+                ->limit(1));
+
+                if ($draft) {
+                    $this->deleteDraft($draft['cid']);
+                    $deleteCount ++;
+                }
+            }
+        }
+        
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'), NULL,
+        $deleteCount > 0 ? 'success' : 'notice');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
 
     /**
      * 页面排序
@@ -192,6 +230,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     {
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
+        $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);
     }

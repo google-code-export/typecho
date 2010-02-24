@@ -59,7 +59,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <th> </th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('分类'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
+                            <th class="typecho-radius-topright"><?php _e('日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,11 +69,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
-                            <td<?php if (!$posts->hasDraft && 'waiting' != $posts->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
-                            <?php if ($posts->hasDraft || 'waiting' == $posts->status): ?>
+                            <td<?php if ('draft' != $posts->status && 'waiting' != $posts->status): ?> colspan="2"<?php endif; ?>>
+                            <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                            <?php if ('draft' == $posts->status || 'waiting' == $posts->status): ?>
                             </td>
                             <td>
-                            <span class="balloon right"><?php $posts->hasDraft ? _e('草稿') : _e('待审核'); ?></span>
+                            <span class="balloon right"><?php 'draft' == $posts->status ? _e('草稿') : _e('待审核'); ?></span>
                             <?php endif; ?></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>

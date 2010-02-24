@@ -7,7 +7,7 @@ function threadedComments($comments)
 					<div class="comment_data">
 						<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
 						<span class="author"><?php $comments->author(); ?></span>
-						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <!-- <span class="count">#<?php echo $comments->sequence(); ?></span> -->
+						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?>
 					</div>
 					<?php $comments->content(); ?>
                     <?php $comments->threadedComments('<ol>', '</ol>'); ?>

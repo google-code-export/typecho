@@ -11,7 +11,13 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
                 <div class="column-18 suffix">
                     <div class="column-18">
-                        <label for="title" class="typecho-label"><?php _e('标题'); ?></label>
+                        <label for="title" class="typecho-label"><?php _e('标题'); ?>
+                        <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
+                        <?php $pageModifyDate = new Typecho_Date($page->draft['modified']); ?>
+                        <cite><?php _e('当前正在编辑的是保存于%s的草稿, 你可以<a href="%s">删除它</a>', $pageModifyDate->word(), 
+                        Typecho_Common::url('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid, $options->index)); ?></cite>
+                        <?php endif; ?>
+                        </label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->text); ?></textarea></p>
@@ -25,7 +31,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                                 <input type="hidden" name="do" value="publish" />
                                 <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                                <button type="submit" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
+                                <button type="button" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
                             </span>
                         </p>
                     </div>
@@ -152,6 +158,7 @@ include 'common-js.php';
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=do]').set('value', 'publish');
+                $(document).getElement('form[name=write_page]').submit();
             });
         });
     })();
