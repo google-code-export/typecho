@@ -304,6 +304,18 @@ class Widget_Options extends Typecho_Widget
     {
         $this->db->fetchAll($this->db->select()->from('table.options')
         ->where('user = 0'), array($this, 'push'));
+        
+        /** 支持皮肤变量重载 */
+        if (!empty($this->row['theme:' . $this->row['theme']])) {
+            $themeOptions = NULL;
+        
+            /** 解析变量 */
+            if ($themeOptions = unserialize($this->row['theme:' . $this->row['theme']])) {
+                /** 覆盖变量 */
+                $this->row = array_merge($this->row, $themeOptions);
+            }
+        }
+        
         $this->stack[] = &$this->row;
 
         /** 初始化站点信息 */

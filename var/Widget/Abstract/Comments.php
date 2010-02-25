@@ -319,7 +319,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function date($format = NULL)
     {
-        echo $this->date->format($format);
+        echo $this->date->format(empty($format) ? $this->options->commentDateFormat : $format);
     }
 
     /**
