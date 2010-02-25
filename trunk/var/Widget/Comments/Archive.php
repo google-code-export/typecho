@@ -86,23 +86,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $this->_customThreadedCommentsCallback = true;
         }
     }
-    
-    /**
-     * 多级评论回调
-     * 
-     * @access private
-     * @param Widget_Comments_Archive $comments 评论组件
-     * @return void
-     */
-    private function threadedCommentsCallback($comments)
-    {
-        /** 直接返回 */
-        if ($this->_customThreadedCommentsCallback) {
-            return threadedComments($comments);
-        }
-        
-        
-    }
 
     /**
      * 子评论
@@ -314,7 +297,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function threadedComments($before = '', $after = '')
     {
         //楼层限制
-        if (!$this->options->commentsThreaded || $this->isTopLevel) {
+        if (!$this->options->commentsThreaded || $this->isTopLevel || !$this->_customThreadedCommentsCallback) {
             return;
         }
 
@@ -330,7 +313,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 
             foreach ($children as $child) {
                 $this->row = $child;
-                $this->threadedCommentsCallback($this);
+                threadedComments($this);
                 $this->row = $tmp;
             }
 

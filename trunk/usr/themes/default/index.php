@@ -4,7 +4,7 @@
  * 
  * @package Typecho Default Theme 
  * @author fen
- * @version 1.0.6
+ * @version 1.0.7
  * @link http://typecho.org
  */
  
