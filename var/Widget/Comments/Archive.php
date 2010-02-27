@@ -86,6 +86,59 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $this->_customThreadedCommentsCallback = true;
         }
     }
+    
+    /**
+     * 评论回调函数
+     * 
+     * @access private
+     * @param string $before 在评论之前输出
+     * @param string $after 在评论之后输出
+     * @return void
+     */
+    private function threadedCommentsCallback($before, $after)
+    {
+        if ($this->_customThreadedCommentsCallback) {
+            return threadedComments($this, $before, $after);
+        }
+        
+        $commentClass = '';
+        if ($this->authorId) {
+            if ($this->authorId == $this->ownerId) {
+                $commentClass .= ' comment-by-author';
+            } else {
+                $commentClass .= ' comment-by-user';
+            }
+        } 
+        
+        $commentLevelClass = $this->_levels > 0 ? ' comment-child' : ' comment-parent';
+?>
+<li id="<?php $this->theId(); ?>" class="comment-body<?php
+    if ($this->_levels > 0) {
+        echo ' comment-child';
+        $this->levelsAlt(' comment-level-odd', ' comment-level-even');
+    } else {
+        echo ' comment-parent';
+    }
+    $this->alt(' comment-odd', ' comment-even');
+    echo $commentClass;
+?>">
+    <div class="comment-author">
+        <?php $this->gravatar(); ?>
+        <cite class="fn"><?php $this->author(); ?></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="<?php $this->permalink(); ?>"><?php $this->date(); ?></a>
+    </div>
+    <?php $this->content(); ?>
+    <div class="comment-children">
+        <?php $this->threadedComments($before, $after); ?>
+    </div>
+    <div class="comment-reply">
+        <?php $this->reply(); ?>
+    </div>
+</li>
+<?php
+    }
 
     /**
      * 子评论
@@ -296,11 +349,10 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function threadedComments($before = '', $after = '')
     {
-        //楼层限制
-        if (!$this->options->commentsThreaded || $this->isTopLevel || !$this->_customThreadedCommentsCallback) {
+        if (!$this->options->commentsThreaded || $this->isTopLevel) {
             return;
         }
-
+    
         $children = $this->children;
         if ($children) {
             //缓存变量便于还原
@@ -313,7 +365,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 
             foreach ($children as $child) {
                 $this->row = $child;
-                threadedComments($this);
+                $this->threadedCommentsCallback($before, $after);
                 $this->row = $tmp;
             }
 
@@ -323,6 +375,45 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $this->sequence --;
             $this->_levels --;
         }
+    }
+    
+    /**
+     * 列出评论
+     * 
+     * @access private
+     * @param string $before 在评论之前输出
+     * @param string $after 在评论之后输出
+     * @return void
+     */
+    public function listComments($before = '<ol class="comment-list">', $after = '</ol>')
+    {
+        if ($this->have()) {
+            echo $before;
+            
+            while ($this->next()) {
+                $this->threadedCommentsCallback($before, $after);
+            }
+            
+            echo $after;
+        }
+    }
+    
+    /**
+     * 重载alt函数,以适应多级评论
+     * 
+     * @access public
+     * @return void
+     */
+    public function alt()
+    {
+        $args = func_get_args();
+        $num = func_num_args();
+        
+        $sequence = $this->_levels <= 0 ? $this->sequence :
+        array_search($this->coid, $this->_threadedComments[$this->parent]) + 1;
+        
+        $split = $sequence % $num;
+        echo $args[(0 == $split ? $num : $split) -1];
     }
 
     /**
@@ -338,5 +429,47 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $num = func_num_args();
         $split = $this->_levels % $num;
         echo $args[(0 == $split ? $num : $split) -1];
+    }
+    
+    /**
+     * 评论回复链接
+     * 
+     * @access public
+     * @param string $word 回复链接文字
+     * @return void
+     */
+    public function reply($word = '')
+    {
+        if ($this->options->commentsThreaded && !$this->isTopLevel) {
+            $word = empty($word) ? _t('回复') : $word;
+            $this->pluginHandle()->trigger($plugged)->reply($word, $this);
+            
+            if (!$plugged) {
+                echo '<a href="' . substr($this->permalink, 0, - strlen($this->theId) - 1) . '?replyTo=' . $this->coid .
+                    '#' . $this->parameter->respondId . '" rel="nofollow" onclick="return TypechoComment.reply(\'' .
+                    $this->theId . '\', ' . $this->coid . ');">' . $word . '</a>';
+            }
+        }
+    }
+    
+    /**
+     * 取消评论回复链接
+     * 
+     * @access public
+     * @param string $word 取消回复链接文字
+     * @return void
+     */
+    public function cancelReply($word = '')
+    {
+        if ($this->options->commentsThreaded) {
+            $word = empty($word) ? _t('取消回复') : $word;
+            $this->pluginHandle()->trigger($plugged)->cancelReply($word, $this);
+            
+            if (!$plugged) {
+                $replyId = $this->request->filter('int')->replyTo;
+                echo '<a id="cancel-comment-reply-link" href="' . $this->parameter->parentContent['permalink'] . '#' . $this->parameter->respondId .
+                '" rel="nofollow"' . ($replyId ? '' : ' style="display:none"') . ' onclick="return TypechoComment.cancelReply();">' . $word . '</a>';
+            }
+        }
     }
 }

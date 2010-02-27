@@ -59,7 +59,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             "18000"     => _t('新德里时间 巴基斯坦,马尔代夫 (GMT +5)'),
             "21600"     => _t('科伦坡时间 孟加拉 (GMT +6)'),
             "25200"     => _t('曼谷雅加达 柬埔寨,苏门答腊,老挝 (GMT +7)'),
-            "28800"     => _t('北京标准时间 香港,新加坡,越南 (GMT +8)'),
+            "28800"     => _t('北京时间 香港,新加坡,越南 (GMT +8)'),
             "32400"     => _t('东京平壤时间 西伊里安,摩鹿加群岛 (GMT +9)'),
             "36000"     => _t('悉尼关岛时间 塔斯马尼亚岛,新几内亚 (GMT +10)'),
             "39600"     => _t('所罗门群岛 库页岛 (GMT +11)'),
@@ -81,17 +81,40 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $timezone = new Typecho_Widget_Helper_Form_Element_Select('timezone', $timezoneList, $this->options->timezone, _t('时区'));
         $form->addInput($timezone);
 
-        /** gzip */
-        /*
-        $gzip = new Typecho_Widget_Helper_Form_Element_Radio('gzip', array('0' => _t('不启用'), '1' => _t('启用')), $this->options->gzip, _t('是否启用gzip'),
-        _t('启用gzip压缩可以减小网页尺寸大小, 从而降低下载时间, 但是它会消耗一部分服务器附载.'));
-        $form->addInput($gzip);
-        */
-
         /** 扩展名 */
-        $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Text('attachmentTypes', NULL, $this->options->attachmentTypes, _t('允许上传的文件类型'),
-        _t('用分号 ; 隔开, 例如: *.zip;*.jpg'));
-        $form->addInput($attachmentTypes);
+        $attachmentTypesOptionsResult = (NULL != trim($this->options->attachmentTypes)) ? 
+        array_map('trim', explode(',', $this->options->attachmentTypes)) : array();
+        $attachmentTypesOptionsValue = array();
+        
+        if (in_array('@image@', $attachmentTypesOptionsResult)) {
+            $attachmentTypesOptionsValue[] = '@image@';
+        }
+        
+        if (in_array('@media@', $attachmentTypesOptionsResult)) {
+            $attachmentTypesOptionsValue[] = '@media@';
+        }
+        
+        if (in_array('@doc@', $attachmentTypesOptionsResult)) {
+            $attachmentTypesOptionsValue[] = '@doc@';
+        }
+        
+        $attachmentTypesOther = array_diff($attachmentTypesOptionsResult, $attachmentTypesOptionsValue);
+        $attachmentTypesOtherValue = '';
+        if (!empty($attachmentTypesOther)) {
+            $attachmentTypesOptionsValue[] = '@other@';
+            $attachmentTypesOtherValue = implode(',', $attachmentTypesOther);
+        }
+        
+        $attachmentTypesOptions = array(
+            '@image@'    =>  _t('图片文件') . ' <strong><small>gif jpg png tiff bmp</small></strong>',
+            '@media@'    =>  _t('多媒体文件') . ' <strong><small>mp3 wmv wma rmvb rm avi flv</small></strong>',
+            '@doc@'      =>  _t('常用档案文件') . ' <strong><small>txt doc docx xls xlsx ppt pptx zip rar pdf</small></strong>',
+            '@other@'    =>  _t('其他格式 %s', '<input type="text" style="width: 250px;" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
+        );
+        
+        $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
+        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: cpp,h,mak'));
+        $form->addInput($attachmentTypes->multiMode());
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
@@ -114,6 +137,26 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
 
         $settings = $this->request->from('title', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
+        
+        $attachmentTypes = array();
+        if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@image@')) {
+            $attachmentTypes[] = '@image@';
+        }
+        
+        if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@media@')) {
+            $attachmentTypes[] = '@media@';
+        }
+        
+        if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@doc@')) {
+            $attachmentTypes[] = '@doc@';
+        }
+        
+        $attachmentTypesOther = $this->request->filter('trim')->attachmentTypesOther;
+        if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@other@') && !empty($attachmentTypesOther)) {
+            $attachmentTypes[] = implode(',', array_map('trim', explode(',', $attachmentTypesOther)));
+        }
+        
+        $settings['attachmentTypes'] = implode(',', $attachmentTypes);
         foreach ($settings as $name => $value) {
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }

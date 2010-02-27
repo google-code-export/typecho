@@ -45,9 +45,17 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
 
         $commentsShowOptions = array(
-            'commentsShowCommentOnly'   =>  _t('仅在列表中显示直接通过网站发布的评论, 不显示通过Ping接口发布的回响'),
+            'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示Pingback和Trackback'),
             'commentsShowUrl'       =>  _t('在列表中的评论者名称处显示其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用<a href="http://en.wikipedia.org/wiki/Nofollow">nofollow属性</a>'),
+            'commentsAvatar'        =>  _t('启用<a href="http://gravatar.com">Gravatar</a>头像服务, 最高显示评级为 %s, 头像尺寸为 %s 像素',
+            '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
+            <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>G - 普通</option>
+            <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>PG - 13岁以上</option>
+            <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>R - 17岁以上成人</option>
+            <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>X - 限制级</option></select>
+            <label for="commentsShow-commentsAvatarRating">', '</label><input type="text" value="' . $this->options->commentsAvatarSize
+            . '" class="text num" id="commentsShow-commentsAvatarSize" name="commentsAvatarSize" /><label for="commentsShow-commentsAvatarSize">'),
             'commentsPageBreak'     =>  _t('启用评论分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
             . '" class="text num" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
@@ -75,6 +83,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         if ($this->options->commentsUrlNofollow) {
             $commentsShowOptionsValue[] = 'commentsUrlNofollow';
         }
+        
+        if ($this->options->commentsAvatar) {
+            $commentsShowOptionsValue[] = 'commentsAvatar';
+        }
 
         if ($this->options->commentsPageBreak) {
             $commentsShowOptionsValue[] = 'commentsPageBreak';
@@ -85,7 +97,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         }
 
         $commentsShow = new Typecho_Widget_Helper_Form_Element_Checkbox('commentsShow', $commentsShowOptions,
-        $commentsShowOptionsValue, _t('文章相关评论显示'));
+        $commentsShowOptionsValue, _t('评论显示'));
         $form->addInput($commentsShow->multiMode());
 
         /** 评论提交 */
@@ -128,7 +140,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         }
 
         $commentsPost = new Typecho_Widget_Helper_Form_Element_Checkbox('commentsPost', $commentsPostOptions,
-        $commentsPostOptionsValue, _t('提交评论时'));
+        $commentsPostOptionsValue, _t('评论提交'));
         $form->addInput($commentsPost->multiMode());
 
         /** 允许使用的HTML标签和属性 */
@@ -158,20 +170,24 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay',
-                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail',
+        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar', 'commentsAvatarRating',
+                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail', 'commentsAvatarSize',
                 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
 
         $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
         $settings['commentsShowUrl'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowUrl');
         $settings['commentsUrlNofollow'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsUrlNofollow');
+        $settings['commentsAvatar'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsAvatar');
         $settings['commentsPageBreak'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsPageBreak');
         $settings['commentsThreaded'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsThreaded');
 
         $settings['commentsPageSize'] = intval($settings['commentsPageSize']);
         $settings['commentsMaxNestingLevels'] = intval($settings['commentsMaxNestingLevels']);
+        $settings['commentsAvatarSize'] = intval($settings['commentsAvatarSize']);
         $settings['commentsPageDisplay'] = ('first' == $settings['commentsPageDisplay']) ? 'first' : 'last';
         $settings['commentsOrder'] = ('DESC' == $settings['commentsOrder']) ? 'DESC' : 'ASC';
+        $settings['commentsAvatarRating'] = in_array($settings['commentsAvatarRating'], array('G', 'PG', 'R', 'X'))
+            ? $settings['commentsAvatarRating'] : 'G';
 
         $settings['commentsRequireModeration'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireModeration');
         $settings['commentsRequireMail'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireMail');

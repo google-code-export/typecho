@@ -152,7 +152,16 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
 
         echo $val;
                     ?> byte",
-                    file_types : "<?php echo $options->attachmentTypes(); ?>",
+                    file_types : "<?php
+    $attachmentTypes = $options->allowedAttachmentTypes;
+    $attachmentTypesCount = count($attachmentTypes);
+    for ($i = 0; $i < $attachmentTypesCount; $i ++) {
+        echo '*.' . $attachmentTypes[$i];
+        if ($i < $attachmentTypesCount - 1) {
+            echo ';';
+        }
+    }
+?>",
                     file_types_description : "<?php _e('所有文件'); ?>",
                     file_upload_limit : 0,
                     file_queue_limit : 0,

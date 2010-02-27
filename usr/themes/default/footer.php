@@ -5,10 +5,5 @@
 	</div><!-- end #footer -->
 </div>
 <?php $this->footer(); ?>
-<?php
-if ($this->is('single')) {
-    Helper::threadedCommentsScript();
-}
-?>
 </body>
 </html>

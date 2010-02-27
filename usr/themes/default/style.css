@@ -258,21 +258,21 @@ font-size: 14px;
 font-weight: bold;
 }
 
-ol#comment_list, ol#comment_list ol {
+ol.comment-list, ol.comment-list ol {
 margin: 0;
 list-style: none;
 }
 
-ol#comment_list ol {
+ol.comment-list ol {
 padding-top: 10px;
 }
 
-ol#comment_list li {
+ol.comment-list li {
 margin: 0;
 padding-bottom: 10px;
 }
 
-ol#comment_list li {
+ol.comment-list li {
 	padding: 10px 15px;
 	margin-top: 10px;
 	border: 1px solid #eee;
@@ -280,46 +280,49 @@ ol#comment_list li {
 	overflow: hidden;
 }
 
-ol#comment_list ol li {
+ol.comment-list li.comment-level-odd {
 	background: #fff;
 }
 
-ol#comment_list li.odd {
+ol.comment-list li.comment-level-even {
 	background: #FAFAFA;
 }
 
-ol#comment_list li .comment_reply {
+ol.comment-list li.comment-by-author {
+	border: 1px dashed #AAA;
+}
+
+ol.comment-list li .comment-reply {
 	text-align: right;
 }
 
-ol#comment_list li .comment_reply a {
+ol.comment-list li .comment-reply a {
 	font-size: 11px;
 	border: none;
 	color: #aaa;
 }
 
-ol#comment_list li .comment_reply a:hover {
+ol.comment-list li .comment-reply a:hover {
 	color: #444;
 }
 
-.comment_data {
+.comment-meta {
 padding-bottom: 8px;
 /*border-bottom: 1px dashed #eee;*/
 color: #999;
 font-size: 11px;
 }
-.comment_data .author {
+.comment-author {
 display: block;
 font-size: 15px;
 color: #444;
 }
-.comment_data .count {
-margin-left: 5px;
-font-weight: bold;
+
+.comment-author cite.fn {
+font-style: normal;
 }
-.comment_data .author a {
-}
-.comment_body {
+
+.comment-body {
 overflow: hidden;
 }
 
@@ -329,11 +332,11 @@ float: left;
 margin: 6px 10px 0 0;
 }
 
-#respond {
+.respond {
 margin-top: 20px;
 }
 
-ol#comment_list li #respond {
+ol.comment-list li .respond {
 border-top: 1px solid #ddd;
 padding-top: 10px;
 }
@@ -342,23 +345,18 @@ padding-top: 10px;
 	padding-right: 8px;
 }
 
-#respond .cancle_comment_reply {
+.respond .cancel-comment-reply {
 	float: right;
 	font-size: 11px;
-	display: none
 }
 
-#respond .cancle_comment_reply a {
+.respond .cancel-comment-reply a {
 	border: none;
 	color: #aaa;
 }
 
-#respond .cancle_comment_reply a:hover {
+.respond .cancel-comment-reply a:hover {
 	color: #444;
-}
-
-ol#comment_list li #respond .cancle_comment_reply {
-	display: inline;
 }
 
 #comment_form label {
@@ -382,11 +380,11 @@ width: 100%;
 height: 180px;
 }
 
-ol#comment_list li #respond .text {
+ol#comment_list li .respond .text {
 	_width: 400px;
 }
 
-ol#comment_list li #respond textarea {
+ol#comment_list li .respond textarea {
 	_width: 400px;
 }
 

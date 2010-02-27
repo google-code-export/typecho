@@ -1,26 +1,3 @@
-<?php
-
-function threadedComments($comments)
-{
-?>
-    <li id="<?php $comments->theId(); ?>"<?php $comments->levelsAlt('', ' class="odd"'); ?>>
-					<div class="comment_data">
-						<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
-						<span class="author"><?php $comments->author(); ?></span>
-						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?>
-					</div>
-					<?php $comments->content(); ?>
-                    <?php $comments->threadedComments('<ol>', '</ol>'); ?>
-                    <?php if (!$comments->isTopLevel): ?>
-                    <div class="comment_reply">
-                        <?php Helper::replyLink($comments->theId, $comments->coid, _t('回复'), 'respond'); ?>
-                    </div>
-                    <?php endif; ?>
-    </li>
-<?php
-}
-?>
-
 <div id="comments">
             <?php $this->comments()->to($comments); ?>
             <?php if ($comments->have()): ?>
@@ -30,28 +7,17 @@ function threadedComments($comments)
                 <?php $comments->pageNav(); ?>
             </ol>
             
-			<ol id="comment_list">
-            <?php while($comments->next()): ?>
-				<li id="<?php $comments->theId(); ?>">
-					<div class="comment_data">
-						<?php $comments->gravatar(32, 'X', '', 'avatar'); ?>
-						<span class="author"><?php $comments->author(); ?></span>
-						<?php $comments->date('F jS, Y'); ?> at <?php $comments->date('h:i a'); ?> <!-- <span class="count">#<?php echo $comments->sequence(); ?></span> -->
-					</div>
-					<?php $comments->content(); ?>
-                    <?php $comments->threadedComments('<ol>', '</ol>'); ?>
-                    <div class="comment_reply">
-                        <?php Helper::replyLink($comments->theId, $comments->coid, _t('回复'), 'respond'); ?>
-                    </div>
-				</li>
-			<?php endwhile; ?>
-			</ol>
+            <?php $comments->listComments(); ?>
             
             <?php endif; ?>
 
             <?php if($this->allow('comment')): ?>
-            <div id="respond">
-            <div class="cancle_comment_reply"><?php Helper::cancleCommentReplyLink(_t('取消回复'), 'respond'); ?></div>
+            <div id="<?php $this->respondId(); ?>" class="respond">
+            
+            <div class="cancel-comment-reply">
+            <?php $comments->cancelReply(); ?>
+            </div>
+            
 			<h4 id="response"><?php _e('添加新评论'); ?> &raquo;</h4>
 			<form method="post" action="<?php $this->commentUrl() ?>" id="comment_form">
                 <?php if($this->user->hasLogin()): ?>
