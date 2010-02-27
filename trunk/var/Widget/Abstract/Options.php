@@ -29,7 +29,7 @@ class Widget_Abstract_Options extends Widget_Abstract
      */
     protected function isEnableByCheckbox($settings, $name)
     {
-        return is_array($settings) && in_array($name, $settings) ? '1' : '0';
+        return is_array($settings) && in_array($name, $settings) ? 1 : 0;
     }
 
     /**

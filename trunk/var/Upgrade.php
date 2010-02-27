@@ -890,4 +890,44 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
         ->rows(array('name' => 'frontPage', 'user' => 0, 'value' => 'recent')));
     }
+    
+    /**
+     * 升级至10.2.27
+     *
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_8r10_2_27($db, $options)
+    {
+        /** 增加若干选项 */
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsAvatar', 'user' => 0, 'value' => 1)));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsAvatarRating', 'user' => 0, 'value' => 'G')));
+        
+        $db->query($db->insert('table.options')
+        ->rows(array('name' => 'commentsAvatarSize', 'user' => 0, 'value' => 32)));
+        
+        //更新扩展
+        if (NULL != $options->attachmentTypes) {
+            $attachmentTypes = array_map('trim', explode(';', $options->attachmentTypes));
+            $attachmentTypesResult = array();
+            
+            foreach ($attachmentTypes as $type) {
+                $type = trim($type, '*.');
+                if (!empty($type)) {
+                    $attachmentTypesResult[] = $type;
+                }
+            }
+            
+            if (!empty($attachmentTypesResult)) {
+                $db->query($db->update('table.options')
+                ->rows(array('value' => implode(',', $attachmentTypesResult)))
+                ->where('name = ?', 'attachmentTypes'));
+            }
+        }
+    }
 }

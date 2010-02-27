@@ -121,6 +121,43 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->type . '-' . $this->cid;
     }
+    
+    /**
+     * 回复框id
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___respondId()
+    {
+        return 'respond-' . $this->theId;
+    }
+    
+    /**
+     * 评论地址
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___commentUrl()
+    {
+        /** 生成反馈地址 */
+        /** 评论 */
+        return Typecho_Router::url('feedback',
+            array('type' => 'comment', 'permalink' => $this->pathinfo), $this->options->index);
+    }
+    
+    /**
+     * trackback地址
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___trackbackUrl()
+    {
+        return Typecho_Router::url('feedback',
+            array('type' => 'trackback', 'permalink' => $this->pathinfo), $this->options->index);
+    }
 
     /**
      * 获取页面偏移
@@ -383,15 +420,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 生成静态路径 */
         $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
-
-        /** 生成反馈地址 */
-        /** 评论 */
-        $value['commentUrl'] = Typecho_Router::url('feedback',
-        array('type' => 'comment', 'permalink' => $value['pathinfo']), $this->options->index);
-
-        /** trackback */
-        $value['trackbackUrl'] = Typecho_Router::url('feedback',
-        array('type' => 'trackback', 'permalink' => $value['pathinfo']), $this->options->index);
 
         /** 生成静态链接 */
         $value['permalink'] = Typecho_Common::url($value['pathinfo'], $this->options->index);

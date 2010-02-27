@@ -254,6 +254,27 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->parameter->pageSize = 10;
         }
     }
+    
+    /**
+     * 评论地址
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___commentUrl()
+    {
+        /** 生成反馈地址 */
+        /** 评论 */
+        $commentUrl = parent::___commentUrl();
+        
+        //不依赖js的父级评论
+        $reply = $this->request->filter('int')->replyTo;
+        if ($reply && $this->is('single')) {
+            $commentUrl .= '?parent=' . $reply;
+        }
+        
+        return $commentUrl;
+    }
 
     /**
      * 设置分页对象
@@ -1249,7 +1270,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments()
     {
-        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row,
+        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row, 'respondId' => $this->respondId,
         'commentPage' => $this->request->filter('int')->commentPage, 'commentsNum' => $this->commentsNum);
 
         return $this->widget('Widget_Comments_Archive', $parameter);
@@ -1365,6 +1386,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             'wlw'           =>  $this->options->xmlRpcUrl . '?wlw',
             'rss2'          =>  $this->_feedUrl,
             'rss1'          =>  $this->_feedRssUrl,
+            'commentReply'  =>  1,
             'atom'          =>  $this->_feedAtomUrl
         );
 
@@ -1378,43 +1400,99 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         $header = '';
         if (!empty($allows['description'])) {
-            $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\r\n";
+            $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
         }
 
         if (!empty($allows['keywords'])) {
-            $header .= '<meta name="keywords" content="' . $allows['keywords'] . '" />' . "\r\n";
+            $header .= '<meta name="keywords" content="' . $allows['keywords'] . '" />' . "\n";
         }
 
         if (!empty($allows['generator'])) {
-            $header .= '<meta name="generator" content="' . $allows['generator'] . '" />' . "\r\n";
+            $header .= '<meta name="generator" content="' . $allows['generator'] . '" />' . "\n";
         }
 
         if (!empty($allows['template'])) {
-            $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\r\n";
+            $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\n";
         }
 
         if (!empty($allows['pingback'])) {
-            $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\r\n";
+            $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\n";
         }
 
         if (!empty($allows['xmlrpc'])) {
-            $header .= '<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . $allows['xmlrpc'] . '" />' . "\r\n";
+            $header .= '<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . $allows['xmlrpc'] . '" />' . "\n";
         }
 
         if (!empty($allows['wlw'])) {
-            $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\r\n";
+            $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\n";
         }
 
         if (!empty($allows['rss2']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\r\n";
+            $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\n";
         }
 
         if (!empty($allows['rss1']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\r\n";
+            $header .= '<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\n";
         }
 
         if (!empty($allows['atom']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\r\n";
+            $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
+        }
+        
+        if ($this->options->commentsThreaded && $this->is('single')) {
+            if (1 == $allows['commentReply']) {
+                $header .= "<script type=\"text/javascript\">
+var TypechoComment = {
+    reply : function (cid, coid) {
+        var _ce = document.getElementById(cid), _cp = _ce.parentNode;
+        var _cf = document.getElementById('" . $this->respondId . "');
+
+        var _pi = document.getElementById('comment-parent');
+        if (null == _pi) {
+            _pi = document.createElement('input');
+            _pi.setAttribute('type', 'hidden');
+            _pi.setAttribute('name', 'parent');
+            _pi.setAttribute('id', 'comment-parent');
+
+            var _form = 'form' == _cf.tagName ? _cf : _cf.getElementsByTagName('form')[0];
+
+            _form.appendChild(_pi);
+        }
+        _pi.setAttribute('value', coid);
+
+        if (null == document.getElementById('comment-form-place-holder')) {
+            var _cfh = document.createElement('div');
+            _cfh.setAttribute('id', 'comment-form-place-holder');
+            _cf.parentNode.insertBefore(_cfh, _cf);
+        }
+
+        _ce.appendChild(_cf);
+        document.getElementById('cancel-comment-reply-link').style.display = '';
+        return false;
+    },
+
+    cancelReply : function () {
+        var _cf = document.getElementById('" . $this->respondId . "'),
+        _cfh = document.getElementById('comment-form-place-holder');
+
+        var _pi = document.getElementById('comment-parent');
+        if (null != _pi) {
+            _pi.parentNode.removeChild(_pi);
+        }
+
+        if (null == _cfh) {
+            return true;
+        }
+
+        document.getElementById('cancel-comment-reply-link').style.display = 'none';
+        _cfh.parentNode.insertBefore(_cf, _cfh);
+        return false;
+    }
+}
+</script>";
+            } else if (0 != $allows['commentReply']) {
+                $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
+            }
         }
 
         /** 插件支持 */

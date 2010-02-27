@@ -293,6 +293,28 @@ class Widget_Options extends Typecho_Widget
     {
         return isset($this->contentType) ? $this->contentType : 'text/html';
     }
+    
+    /**
+     * 允许上传的文件类型
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___allowedAttachmentTypes()
+    {
+        $attachmentTypesResult = array();
+    
+        if (NULL != $this->attachmentTypes) {
+            $attachmentTypes = str_replace(
+                array('@image@', '@media@', '@doc@'), 
+                array('gif,jpg,png,tiff,bmp', 'mp3,wmv,wma,rmvb,rm,avi,flv',
+                    'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'), $this->attachmentTypes);
+            
+            $attachmentTypesResult = array_map('trim', explode(',', $attachmentTypes));
+        }
+        
+        return $attachmentTypesResult;
+    }
 
     /**
      * 执行函数

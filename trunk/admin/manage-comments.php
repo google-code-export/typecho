@@ -172,7 +172,7 @@ include 'common-js.php';
                 if (form) {
                     
                     if (request) {
-                        request.cancle();
+                        request.cancel();
                     }
                     
                     form.destroy();
