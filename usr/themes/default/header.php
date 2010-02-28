@@ -13,8 +13,8 @@
 
 <body>
 <div id="header" class="container_16 clearfix">
-	<form id="search" method="post" action="">
-		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="Search" /></div>
+	<form id="search" method="post">
+		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="<?php _e('搜索'); ?>" /></div>
     </form>
 	<div id="logo">
 	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>

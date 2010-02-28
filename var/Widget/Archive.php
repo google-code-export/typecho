@@ -592,19 +592,19 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->response->setStatus(404);
 
         /** 设置标题 */
-        $this->_archiveTitle[] = _t('页面不存在');
+        $this->_archiveTitle[] = _t('页面没找到');
 
         /** 设置归档类型 */
-        $this->_archiveType = 404;
+        $this->_archiveType = 'archive';
 
         /** 设置归档缩略名 */
         $this->_archiveSlug = 404;
 
-        /** 设置归档缩略名 */
+        /** 设置归档模板 */
         $this->_themeFile = '404.php';
 
         /** 设置单一归档类型 */
-        $this->_archiveSingle = true;
+        $this->_archiveSingle = false;
 
         $hasPushed = true;
 
@@ -1224,18 +1224,20 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
-        $hasNav = false;
-        $this->pluginHandle()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
+        if ($this->have()) {
+            $hasNav = false;
+            $this->pluginHandle()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
 
-        if (!$hasNav) {
-            $query = Typecho_Router::url($this->parameter->type .
-            (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
-            $this->_pageRow, $this->options->index);
+            if (!$hasNav) {
+                $query = Typecho_Router::url($this->parameter->type .
+                (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
+                $this->_pageRow, $this->options->index);
 
-            /** 使用盒状分页 */
-            $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-            $this->_currentPage, $this->parameter->pageSize, $query);
-            $nav->render($prev, $next, $splitPage, $splitWord);
+                /** 使用盒状分页 */
+                $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
+                $this->_currentPage, $this->parameter->pageSize, $query);
+                $nav->render($prev, $next, $splitPage, $splitWord);
+            }
         }
     }
 
@@ -1249,17 +1251,19 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pageLink($word = '&laquo; Previous Entries', $page = 'prev')
     {
-        if (empty($this->_pageNav)) {
-            $query = Typecho_Router::url($this->parameter->type .
-            (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
-            $this->_pageRow, $this->options->index);
+        if ($this->have()) {
+            if (empty($this->_pageNav)) {
+                $query = Typecho_Router::url($this->parameter->type .
+                (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
+                $this->_pageRow, $this->options->index);
 
-            /** 使用盒状分页 */
-            $this->_pageNav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-            $this->_currentPage, $this->parameter->pageSize, $query);
+                /** 使用盒状分页 */
+                $this->_pageNav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
+                $this->_currentPage, $this->parameter->pageSize, $query);
+            }
+
+            $this->_pageNav->{$page}($word);
         }
-
-        $this->_pageNav->{$page}($word);
     }
 
     /**
@@ -1602,7 +1606,9 @@ var TypechoComment = {
             if (file_exists($themeDir . $this->_themeFile)) {
                 $validated = true;
             }
-        } else if (!empty($this->_archiveType)) {
+        }
+        
+        if (!$validated && !empty($this->_archiveType)) {
 
             //~ 首先找具体路径, 比如 category/default.php
             if (!$validated && !empty($this->_archiveSlug)) {
@@ -1642,20 +1648,18 @@ var TypechoComment = {
                 }
             }
 
-            if (!$validated && '404.php' != $this->_themeFile) {
-                $this->_themeFile = 'index.php';
+            if (!$validated) {
+                $themeFile = 'index.php';
+                if (file_exists($themeDir . $themeFile)) {
+                    $this->_themeFile = $themeFile;
+                    $validated = true;
+                }
             }
         }
 
         /** 文件不存在 */
-        if (!$validated && !file_exists($themeDir . $this->_themeFile)) {
-
-            /** 单独处理404情况 */
-            if (404 == $this->_archiveType) {
-                Typecho_Common::error(404);
-            } else {
-                throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
-            }
+        if (!$validated) {
+            Typecho_Common::error(500);
         }
 
         /** 挂接插件 */

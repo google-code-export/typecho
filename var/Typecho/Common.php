@@ -375,7 +375,6 @@ class Typecho_Common
         } else {
             switch ($code) {
                 case 500:
-                    @error_log($message);
                     $message = 'Server Error';
                     break;
 
