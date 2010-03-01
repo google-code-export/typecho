@@ -310,7 +310,7 @@ class Widget_Options extends Typecho_Widget
                 array('gif,jpg,png,tiff,bmp', 'mp3,wmv,wma,rmvb,rm,avi,flv',
                     'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'), $this->attachmentTypes);
             
-            $attachmentTypesResult = array_map('trim', explode(',', $attachmentTypes));
+            $attachmentTypesResult = array_unique(array_map('trim', explode(',', $attachmentTypes)));
         }
         
         return $attachmentTypesResult;
