@@ -56,8 +56,15 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
+        
+        //获取扩展名
+        $ext = '';
+        $part = explode('.', $file['name']);
+        if (($length = count($part)) > 1) {
+            $ext = strtolower($part[$length - 1]);
+        }
 
-        if (!self::checkFileType($file['name'])) {
+        if (!self::checkFileType($ext)) {
             return false;
         }
 
@@ -70,13 +77,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (!self::makeUploadDir($path)) {
                 return false;
             }
-        }
-
-        //获取扩展名
-        $ext = '';
-        $part = explode('.', $file['name']);
-        if (($length = count($part)) > 1) {
-            $ext = strtolower($part[$length - 1]);
         }
 
         //创建年份目录
@@ -143,8 +143,15 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
+        
+        //获取扩展名
+        $ext = '';
+        $part = explode('.', $file['name']);
+        if (($length = count($part)) > 1) {
+            $ext = strtolower($part[$length - 1]);
+        }
 
-        if (!self::checkFileType($file['name'])) {
+        if ($content['attachment']->type != $ext) {
             return false;
         }
 
@@ -221,22 +228,13 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * 检查文件名
      *
      * @access private
-     * @param string $fileName 文件名
+     * @param string $ext 扩展名
      * @return boolean
      */
-    public static function checkFileType($fileName)
+    public static function checkFileType($ext)
     {
         $options = Typecho_Widget::widget('Widget_Options');
-        $exts = array_filter(explode(';', $options->attachmentTypes));
-
-        foreach ($exts as $ext) {
-            $ext = str_replace(array('.', '*'), array('\.', '.*'), $ext);
-            if (preg_match("|^{$ext}$|is", $fileName)) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($ext, $options->allowedAttachmentTypes);
     }
 
     /**
