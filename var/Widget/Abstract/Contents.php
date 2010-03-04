@@ -158,6 +158,17 @@ class Widget_Abstract_Contents extends Widget_Abstract
         return Typecho_Router::url('feedback',
             array('type' => 'trackback', 'permalink' => $this->pathinfo), $this->options->index);
     }
+    
+    /**
+     * 回复地址
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function ___responseUrl()
+    {
+        return $this->permalink . '#' . $this->respondId;
+    }
 
     /**
      * 获取页面偏移
