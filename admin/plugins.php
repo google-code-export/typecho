@@ -47,7 +47,7 @@ include 'menu.php';
                                 <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config || $activatedPlugins->personalConfig): ?>
                                     <?php if ($activatedPlugins->activated): ?>
                                         <?php if ($activatedPlugins->config): ?>
-                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
+                                            <a href="<?php $options->adminUrl('options-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
                                         <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
@@ -112,7 +112,7 @@ include 'menu.php';
                                 <?php if ($deactivatedPlugins->activate || $deactivatedPlugins->deactivate || $deactivatedPlugins->config || $deactivatedPlugins->personalConfig): ?>
                                     <?php if ($deactivatedPlugins->activated): ?>
                                         <?php if ($deactivatedPlugins->config): ?>
-                                            <a href="<?php $options->adminUrl('option-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
+                                            <a href="<?php $options->adminUrl('options-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
                                             | 
                                         <?php endif; ?>
                                         <a href="<?php $options->index('/action/plugins-edit?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>

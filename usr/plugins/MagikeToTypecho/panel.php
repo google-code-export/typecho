@@ -59,7 +59,7 @@ include 'menu.php';
                 <?php else: ?>
                 <div class="message error">
                     <?php _e('我们在连接到 Magike 的数据库时发生了错误, 请<a href="%s">重新设置</a>你的信息.', 
-                    Typecho_Common::url('option-plugin.php?config=MagikeToTypecho', $options->adminUrl)); ?>
+                    Typecho_Common::url('options-plugin.php?config=MagikeToTypecho', $options->adminUrl)); ?>
                 </div>
                 <?php endif; ?>
             </div>
