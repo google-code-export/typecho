@@ -113,7 +113,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('概要'), _t('网站概要'), 'index.php', 'subscriber'),
             array(_t('个人设置'), _t('个人设置'), 'profile.php', 'subscriber'),
             array(_t('插件'), _t('插件管理'), 'plugins.php', 'administrator'),
-            array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), 'option-plugin.php?config=', 'administrator', true),
+            array(array('Widget_Plugins_Config', 'getMenuTitle'), array('Widget_Plugins_Config', 'getMenuTitle'), 'options-plugin.php?config=', 'administrator', true),
             array(_t('外观'), _t('网站外观'), 'themes.php', 'administrator'),
             array(array('Widget_Themes_Files', 'getMenuTitle'), array('Widget_Themes_Files', 'getMenuTitle'), 'theme-editor.php', 'administrator', true),
             array(_t('升级'), _t('升级程序'), 'upgrade.php', 'administrator', true),
@@ -143,13 +143,13 @@ class Widget_Menu extends Typecho_Widget
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
-            array(_t('基本'), _t('基本设置'), 'option-general.php', 'administrator'),
-            array(_t('评论'), _t('评论设置'), 'option-discussion.php', 'administrator'),
-            array(_t('文章'), _t('阅读设置'), 'option-reading.php', 'administrator'),
+            array(_t('基本'), _t('基本设置'), 'options-general.php', 'administrator'),
+            array(_t('评论'), _t('评论设置'), 'options-discussion.php', 'administrator'),
+            array(_t('文章'), _t('阅读设置'), 'options-reading.php', 'administrator'),
         //    array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
         //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
         //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
-            array(_t('永久链接'), _t('永久链接设置'), 'option-permalink.php', 'administrator'),
+            array(_t('永久链接'), _t('永久链接设置'), 'options-permalink.php', 'administrator'),
         ));
 
         /** 获取扩展菜单 */
