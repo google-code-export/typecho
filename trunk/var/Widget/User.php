@@ -174,6 +174,8 @@ class Widget_User extends Typecho_Widget
 
         Typecho_Cookie::delete('__typecho_uid', $this->options->siteUrl);
         Typecho_Cookie::delete('__typecho_authCode', $this->options->siteUrl);
+        Typecho_Cookie::delete('__typecho_feed');
+        Typecho_Cookie::delete('__typecho_check_version');
     }
 
     /**

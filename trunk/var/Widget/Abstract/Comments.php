@@ -347,15 +347,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
      *
      * @access public
      * @param integer $size 头像尺寸
-     * @param string $rating 头像评级
      * @param string $default 默认输出头像
      * @return void
      */
-    public function gravatar($size = 0, $rating = NULL, $default = NULL)
+    public function gravatar($size = 32, $default = NULL)
     {
-        if ($this->options->commentsAvatar) {
-            $size = $size > 0 ? $size : $this->options->commentsAvatarSize;
-            $rating = empty($rating) ? $this->options->commentsAvatarRating : $rating;
+        if ($this->options->commentsAvatar && 'comment' == $this->type && '' != $this->mail) {
+            $rating = $this->options->commentsAvatarRating;
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {

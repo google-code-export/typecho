@@ -1661,6 +1661,15 @@ var TypechoComment = {
         if (!$validated) {
             Typecho_Common::error(500);
         }
+        
+        /** 初始化皮肤函数 */
+        $functionsFile = $themeDir . 'functions.php';
+        if (file_exists($functionsFile)) {
+            require_once $functionsFile;
+            if (function_exists('themeInit')) {
+                themeInit($this);
+            }
+        }
 
         /** 挂接插件 */
         $this->pluginHandle()->beforeRender($this);

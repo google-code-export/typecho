@@ -12,6 +12,9 @@ include 'menu.php';
                 <ul class="typecho-option-tabs">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
+                    <?php if (Widget_Themes_Config::isExists()): ?>
+                    <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
+                    <?php endif; ?>
                 </ul>
                 
                 <table class="typecho-list-table typecho-theme-list" cellspacing="0" cellpadding="0">
@@ -30,9 +33,9 @@ include 'menu.php';
                             <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
                         </div>
                         <div class="column-08">
-                        <h4><?php $themes->title(); ?></h4>
-                        <cite><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>
-                        &nbsp;&nbsp;&nbsp;<?php _e('版本'); ?>: <?php $themes->version() ?>
+                        <h4><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h4>
+                        <cite><?php if($themes->author): ?><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>&nbsp;&nbsp;&nbsp;<?php endif; ?>
+                        <?php if($themes->version): ?><?php _e('版本'); ?>: <?php $themes->version() ?><?php endif; ?>
                         </cite>
                         <p><?php echo nl2br($themes->description); ?></p>
                         </div>

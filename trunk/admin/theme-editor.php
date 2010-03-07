@@ -20,6 +20,9 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                     <?php _e('编辑%s外观', ' <cite>' . $files->theme . '</cite> '); ?>
                     <?php endif; ?>
                     </a></li>
+                    <?php if (Widget_Themes_Config::isExists()): ?>
+                    <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
+                    <?php endif; ?>
                 </ul>
                 
                 <div class="typecho-edit-theme">

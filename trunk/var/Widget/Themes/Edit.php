@@ -31,11 +31,34 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         $theme = trim($theme, './');
         if (is_dir(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme)) {
+            /** 删除原外观设置信息 */
+            $this->delete($this->db->sql()->where('name = ?', 'theme:' . $this->options->theme));
+
             $this->update(array('value' => $theme), $this->db->sql()->where('name = ?', 'theme'));
 
             /** 解除首页关联 */
             if (0 === strpos($this->options->frontPage, 'file:')) {
                 $this->update(array('value' => 'recent'), $this->db->sql()->where('name = ?', 'frontPage'));
+            }
+            
+            $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme . '/functions.php';
+            
+            if (file_exists($configFile)) {
+                require_once $configFile;
+                
+                if (function_exists('themeConfig')) {
+                    $form = new Typecho_Widget_Helper_Form();
+                    themeConfig($form);
+                    $options = $form->getValues();
+
+                    if ($options && !$this->configHandle($options, true)) {
+                        $this->insert(array(
+                            'name'  =>  'theme:' . $theme,
+                            'value' =>  serialize($options),
+                            'user'  =>  0
+                        ));
+                    }
+                }
             }
 
             $this->widget('Widget_Notice')->highlight('theme-' . $theme);
@@ -71,6 +94,59 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'));
         }
     }
+    
+    /**
+     * 配置外观
+     *
+     * @access public
+     * @param string $theme 外观名
+     * @return void
+     */
+    public function config($theme)
+    {
+        // 已经载入了外观函数
+        $form = $this->widget('Widget_Themes_Config')->config();
+
+        /** 验证表单 */
+        if ($form->validate()) {
+            $this->response->goBack();
+        }
+
+        $settings = $form->getAllRequest();
+
+        if (!$this->configHandle($settings, false)) {
+            $this->update(array('value' => serialize($settings)),
+            $this->db->sql()->where('name = ?', 'theme:' . $theme));
+        }
+
+        /** 设置高亮 */
+        $this->widget('Widget_Notice')->highlight('theme-' . $theme);
+
+        /** 提示信息 */
+        $this->widget('Widget_Notice')->set(_t("外观设置已经保存"), NULL, 'success');
+
+        /** 转向原页 */
+        $this->response->redirect(Typecho_Common::url('themes.php', $this->options->adminUrl));
+    }
+
+    /**
+     * 用自有函数处理配置信息
+     *
+     * @access public
+     * @param string $pluginName 插件名称
+     * @param array $settings 配置值
+     * @param boolean $isInit 是否为初始化
+     * @return boolean
+     */
+    public function configHandle(array $settings, $isInit)
+    {
+        if (function_exists('themeConfigHandle')) {
+            themeConfigHandle($settings, $isInit);
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * 绑定动作
@@ -84,6 +160,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $this->user->pass('administrator');
         $this->on($this->request->is('change'))->changeTheme($this->request->change);
         $this->on($this->request->is('edit&theme'))->editThemeFile($this->request->theme, $this->request->edit);
+        $this->on($this->request->is('config'))->config($this->options->theme);
         $this->response->redirect($this->options->adminUrl);
     }
 }

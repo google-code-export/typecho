@@ -100,9 +100,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
                 <?php endif; ?>
                 <h3><?php _e('官方消息'); ?></h3>
+                <?php $feed = Typecho_Cookie::get('__typecho_feed'); ?>
                 <div id="typecho-message" class="intro-link">
                     <ul>
+                        <?php if (empty($feed)): ?>
                         <li><?php _e('读取中...'); ?></li>
+                        <?php else: ?>
+                        <?php $feed = Typecho_Json::decode($feed);
+                        foreach ($feed as $item): ?>
+                        <?php $item = (array) $item; ?>
+                        <li><a href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a> - <span class="date"><?php echo $item['date']; ?></span></li>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -119,6 +128,7 @@ include 'common-js.php';
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
+            <?php if (!Typecho_Cookie::get('__typecho_feed')): ?>
             var _feedRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=feed");
             _feedRequest.addEvent('onSuccess', function (responseJSON) {
                 $(document).getElement('#typecho-message ul li').destroy();
@@ -132,6 +142,7 @@ include 'common-js.php';
                     });
                 }
             });
+            <?php endif; ?>
             
             <?php if ($user->pass('editor', true) && !Typecho_Cookie::get('__typecho_check_version')): ?>
             var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=checkVersion");

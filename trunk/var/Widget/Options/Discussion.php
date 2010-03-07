@@ -48,14 +48,13 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示Pingback和Trackback'),
             'commentsShowUrl'       =>  _t('在列表中的评论者名称处显示其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用<a href="http://en.wikipedia.org/wiki/Nofollow">nofollow属性</a>'),
-            'commentsAvatar'        =>  _t('启用<a href="http://gravatar.com">Gravatar</a>头像服务, 最高显示评级为 %s, 头像尺寸为 %s 像素',
+            'commentsAvatar'        =>  _t('启用<a href="http://gravatar.com">Gravatar</a>头像服务, 最高显示评级为 %s 的头像',
             '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
             <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>G - 普通</option>
             <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>PG - 13岁以上</option>
             <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>R - 17岁以上成人</option>
             <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>X - 限制级</option></select>
-            <label for="commentsShow-commentsAvatarRating">', '</label><input type="text" value="' . $this->options->commentsAvatarSize
-            . '" class="text num" id="commentsShow-commentsAvatarSize" name="commentsAvatarSize" /><label for="commentsShow-commentsAvatarSize">'),
+            <label for="commentsShow-commentsAvatarRating">'),
             'commentsPageBreak'     =>  _t('启用评论分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
             . '" class="text num" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
@@ -170,8 +169,8 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar', 'commentsAvatarRating',
-                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail', 'commentsAvatarSize',
+        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
+                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail', 'commentsAvatarRating',
                 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
 
         $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
@@ -183,7 +182,6 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $settings['commentsPageSize'] = intval($settings['commentsPageSize']);
         $settings['commentsMaxNestingLevels'] = intval($settings['commentsMaxNestingLevels']);
-        $settings['commentsAvatarSize'] = intval($settings['commentsAvatarSize']);
         $settings['commentsPageDisplay'] = ('first' == $settings['commentsPageDisplay']) ? 'first' : 'last';
         $settings['commentsOrder'] = ('DESC' == $settings['commentsOrder']) ? 'DESC' : 'ASC';
         $settings['commentsAvatarRating'] = in_array($settings['commentsAvatarRating'], array('G', 'PG', 'R', 'X'))

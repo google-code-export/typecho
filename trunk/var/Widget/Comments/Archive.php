@@ -93,12 +93,13 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @access private
      * @param string $before 在评论之前输出
      * @param string $after 在评论之后输出
+     * @param string $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    private function threadedCommentsCallback($before, $after)
+    private function threadedCommentsCallback($before, $after, $singleCommentOptions)
     {
         if ($this->_customThreadedCommentsCallback) {
-            return threadedComments($this, $before, $after);
+            return threadedComments($this, $before, $after, $singleCommentOptions);
         }
         
         $commentClass = '';
@@ -123,7 +124,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     echo $commentClass;
 ?>">
     <div class="comment-author">
-        <?php $this->gravatar(); ?>
+        <?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?>
         <cite class="fn"><?php $this->author(); ?></cite>
     </div>
     <div class="comment-meta">
@@ -131,7 +132,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     </div>
     <?php $this->content(); ?>
     <div class="comment-children">
-        <?php $this->threadedComments($before, $after); ?>
+        <?php $this->threadedComments($before, $after, $singleCommentOptions); ?>
     </div>
     <div class="comment-reply">
         <?php $this->reply(); ?>
@@ -344,10 +345,10 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @access protected
      * @param string $before 在子评论之前输出
      * @param string $after 在子评论之后输出
-     * @param string $func 回调函数
+     * @param Typecho_Config $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    public function threadedComments($before = '', $after = '')
+    public function threadedComments($before = '', $after = '', $singleCommentOptions = NULL)
     {
         if (!$this->options->commentsThreaded || $this->isTopLevel) {
             return;
@@ -365,7 +366,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 
             foreach ($children as $child) {
                 $this->row = $child;
-                $this->threadedCommentsCallback($before, $after);
+                $this->threadedCommentsCallback($before, $after, $singleCommentOptions);
                 $this->row = $tmp;
             }
 
@@ -383,15 +384,23 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @access private
      * @param string $before 在评论之前输出
      * @param string $after 在评论之后输出
+     * @param mixed $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    public function listComments($before = '<ol class="comment-list">', $after = '</ol>')
+    public function listComments($before = '<ol class="comment-list">', $after = '</ol>', $singleCommentOptions = NULL)
     {
         if ($this->have()) {
+            //初始化一些变量
+            $parsedSingleCommentOptions = Typecho_Config::factory($singleCommentOptions);
+            $parsedSingleCommentOptions->setDefault(array(
+                'avatarSize'    =>  32,
+                'defaultAvatar' =>  NULL
+            ));
+        
             echo $before;
             
             while ($this->next()) {
-                $this->threadedCommentsCallback($before, $after);
+                $this->threadedCommentsCallback($before, $after, $parsedSingleCommentOptions);
             }
             
             echo $after;
