@@ -109,7 +109,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                     }
                 }
             }
-
+            
+            Typecho_Cookie::set('__typecho_feed', Typecho_Json::encode($data));
             $this->response->throwJson($data);
             return;
         }

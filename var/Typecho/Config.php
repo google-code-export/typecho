@@ -62,6 +62,10 @@ class Typecho_Config implements Iterator
      */
     public function setDefault($config, $replace = false)
     {
+        if (empty($config)) {
+            return;
+        }
+    
         /** 初始化参数 */
         if (is_string($config)) {
             parse_str($config, $params);
