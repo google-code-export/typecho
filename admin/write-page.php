@@ -127,43 +127,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <?php
 include 'copyright.php';
 include 'common-js.php';
-?>
+include 'write-js.php';
 
-<script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-        
-            /** 绑定按钮 */
-            $(document).getElement('span.advance').addEvent('click', function () {
-                Typecho.toggle('#advance-panel', this,
-                '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
-            });
-            
-            $(document).getElement('span.attach').addEvent('click', function () {
-                Typecho.toggle('#upload-panel', this,
-                '<?php _e('收起附件'); ?>', '<?php _e('展开附件'); ?>');
-            });
-            
-            $('btn-save').removeProperty('disabled');
-            $('btn-submit').removeProperty('disabled');
-            
-            $('btn-save').addEvent('click', function (e) {
-                this.getParent('span').addClass('loading');
-                this.setProperty('disabled', true);
-                $(document).getElement('input[name=do]').set('value', 'save');
-                $(document).getElement('form[name=write_page]').submit();
-            });
-            
-            $('btn-submit').addEvent('click', function (e) {
-                this.getParent('span').addClass('loading');
-                this.setProperty('disabled', true);
-                $(document).getElement('input[name=do]').set('value', 'publish');
-                $(document).getElement('form[name=write_page]').submit();
-            });
-        });
-    })();
-</script>
-<?php
 Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
 if (!$plugged) {
     include 'editor-js.php';

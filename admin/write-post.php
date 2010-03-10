@@ -74,7 +74,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
-                                <select name="month" id="month">
+                                <select class="typecho-date" name="month" id="month">
                                     <option value="1" <?php if (1 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('一月'); ?></option>
                                     <option value="2" <?php if (2 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('二月'); ?></option>
                                     <option value="3" <?php if (3 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('三月'); ?></option>
@@ -88,13 +88,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <option value="11" <?php if (11 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十一月'); ?></option>
                                     <option value="12" <?php if (12 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十二月'); ?></option>
                                 </select>
-                                <input size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
+                                <input class="typecho-date" size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
                                 ,
-                                <input size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
+                                <input class="typecho-date" size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
                                 @
-                                <input size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
+                                <input class="typecho-date" size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
                                 :
-                                <input size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
+                                <input class="typecho-date" size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
@@ -145,35 +145,6 @@ include 'common-js.php';
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
-        
-            /** 绑定按钮 */
-            $(document).getElement('span.advance').addEvent('click', function () {
-                Typecho.toggle('#advance-panel', this,
-                '<?php _e('收起高级选项'); ?>', '<?php _e('展开高级选项'); ?>');
-            });
-            
-            $(document).getElement('span.attach').addEvent('click', function () {
-                Typecho.toggle('#upload-panel', this,
-                '<?php _e('收起附件'); ?>', '<?php _e('展开附件'); ?>');
-            });
-            
-            $('btn-save').removeProperty('disabled');
-            $('btn-submit').removeProperty('disabled');
-            
-            $('btn-save').addEvent('click', function (e) {
-                this.getParent('span').addClass('loading');
-                this.setProperty('disabled', true);
-                $(document).getElement('input[name=do]').set('value', 'save');
-                $(document).getElement('form[name=write_post]').submit();
-            });
-            
-            $('btn-submit').addEvent('click', function (e) {
-                this.getParent('span').addClass('loading');
-                this.setProperty('disabled', true);
-                $(document).getElement('input[name=do]').set('value', 'publish');
-                $(document).getElement('form[name=write_post]').submit();
-            });
-            
             /** 标签自动完成 */
             var _tags = [<?php while ($tags->next()) { echo '"' . str_replace('"', '\"', $tags->name) . '"'
             . ($tags->sequence != $tags->length ? ',' : NULL); } ?>];
@@ -183,7 +154,10 @@ include 'common-js.php';
         });
     })();
 </script>
+
 <?php
+include 'write-js.php';
+
 Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
 if (!$plugged) {
     include 'editor-js.php';
