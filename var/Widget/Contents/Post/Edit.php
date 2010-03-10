@@ -224,8 +224,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
 
         if ($realId > 0) {
-            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), array($this, 'push'));
-
             /** 插入分类 */
             if (array_key_exists('category', $contents)) {
                 $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
@@ -239,6 +237,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             /** 同步附件 */
             $this->attach($realId);
+        
+            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), array($this, 'push'));
         }
     }
 
