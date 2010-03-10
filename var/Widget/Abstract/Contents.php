@@ -427,7 +427,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $routeExists = (NULL != Typecho_Router::get($type));
 
         $tmpSlug = $value['slug'];
+        $tmpCategory = $value['category'];
         $value['slug'] = urlencode($value['slug']);
+        $value['category'] = urlencode($value['category']);
 
         /** 生成静态路径 */
         $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
@@ -464,6 +466,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
 
         $value['slug'] = $tmpSlug;
+        $value['category'] = $tmpCategory;
 
         /** 处理密码保护流程 */
         if (!empty($value['password']) &&
