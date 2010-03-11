@@ -213,7 +213,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             do {
                 $this->row = &$this->stack[key($this->stack)];
                 next($this->stack);
-            } while ($this->row && 0 != $this->row['parent'] && isset($this->stack[$this->row['parent']]));
+            } while ($this->options->commentsThreaded && $this->row 
+                && 0 != $this->row['parent'] && isset($this->stack[$this->row['parent']]));
 
             $this->sequence ++;
         }
