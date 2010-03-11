@@ -34,14 +34,14 @@
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=do]').set('value', 'save');
-                $(document).getElement('form[name=write_post]').submit();
+                $(document).getElement('.typecho-post-area form').submit();
             });
             
             $('btn-submit').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=do]').set('value', 'publish');
-                $(document).getElement('form[name=write_post]').submit();
+                $(document).getElement('.typecho-post-area form').submit();
             });
         });
     })();
