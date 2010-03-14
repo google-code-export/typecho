@@ -39,7 +39,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <li><a href="<?php $options->adminUrl('write-page.php'); ?>"><?php _e('创建一个新页面'); ?></a></li>
                         <?php if($user->pass('administrator', true)): ?>
                         <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('更换我的主题'); ?></a></li>
-                        <li><a href="<?php $options->adminUrl('option-general.php'); ?>"><?php _e('修改系统设置'); ?></a></li>
+                        <li><a href="<?php $options->adminUrl('options-general.php'); ?>"><?php _e('修改系统设置'); ?></a></li>
                         <?php endif; ?>
                         <?php endif; ?>
                         <?php endif; ?>
