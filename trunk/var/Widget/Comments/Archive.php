@@ -327,7 +327,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
     {
         if ($this->options->commentsPageBreak && $this->_total > $this->options->commentsPageSize) {
-            $pageRow = $this->parentContent;
+            $pageRow = $this->parameter->parentContent;
             $pageRow['permalink'] = $pageRow['pathinfo'];
 
             $query = Typecho_Router::url('comment_page', $pageRow, $this->options->index);
