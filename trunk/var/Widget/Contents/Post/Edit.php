@@ -121,6 +121,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $day = intval($this->request->day);
 
             $created = mktime($hour, $min, $second, $month, $day, $year) - $this->options->timezone + $this->options->serverTimezone;
+        } else if ($this->request->is('cid')) {
+            //如果是修改文章
+            $created = $this->created;
         }
 
         return $created;
