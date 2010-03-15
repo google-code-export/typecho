@@ -414,10 +414,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['slug'] = $content['wp_slug'];
         }
 
-        $input['text'] = isset($content['mt_text_more']) && $content['mt_text_more'] ?
-        $content['description'] . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($input['text']));
-        $input['text'] = $this->pluginHandle()->fromOfflineEditor($input['text']);
+        $input['text'] = !empty($content['mt_text_more']) ? $content['description'] 
+            . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];        
         $input['password'] = isset($content["wp_password"]) ? $content["wp_password"] : NULL;
         $input['order'] = isset($content["wp_page_order"]) ? $content["wp_page_order"] : NULL;
 

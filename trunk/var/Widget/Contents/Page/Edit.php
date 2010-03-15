@@ -64,7 +64,13 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
-        $contents = $this->pluginHandle()->write($contents);
+        
+        $contents['text'] = $this->pluginHandle()->trigger($triggered)->textFilter($contents['text'], $this);
+        if (!$triggered) {
+            $contents['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($contents['text']));
+        }
+        
+        $contents = $this->pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
