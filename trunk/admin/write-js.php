@@ -14,6 +14,8 @@
                     });
                     
                 });
+                
+                item.removeProperty('disabled');
             });
         
             /** 绑定按钮 */
