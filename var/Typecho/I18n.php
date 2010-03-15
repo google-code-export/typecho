@@ -126,7 +126,7 @@ class Typecho_I18n
         $between = $now - $from;
 
         /** 如果是一天 */
-        if ($between < 86400 && idate('d', $from) == idate('d', $now)) {
+        if ($between > 0 && $between < 86400 && idate('d', $from) == idate('d', $now)) {
             /** 如果是一小时 */
             if ($between < 3600 && idate('H', $from) == idate('H', $now)) {
                 /** 如果是一分钟 */
@@ -148,18 +148,18 @@ class Typecho_I18n
         }
 
         /** 如果是昨天 */
-        if ($between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
+        if ($between > 0 && $between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
             return _t('昨天 %s', date('H:i', $from));
         }
 
         /** 如果是一个星期 */
-        if ($between < 604800 && idate('W', $from) == idate('W', $now)) {
+        if ($between > 0 && $between < 604800 && idate('W', $from) == idate('W', $now)) {
             $day = intval($between / (3600 * 24));
             return sprintf(_n('%d天前', '%d天前', $day), $day);
         }
 
         /** 如果是 */
-        if ($between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
+        if ($between > 0 && $between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
             return date(_t('n月j日'), $from);
         }
 
