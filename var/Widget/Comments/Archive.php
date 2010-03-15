@@ -125,17 +125,21 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 ?>">
     <div class="comment-author">
         <?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?>
-        <cite class="fn"><?php $this->author(); ?></cite>
+        <cite class="fn"><?php $singleCommentOptions->beforeAuthor();
+        $this->author();
+        $singleCommentOptions->afterAuthor(); ?></cite>
     </div>
     <div class="comment-meta">
-        <a href="<?php $this->permalink(); ?>"><?php $this->date(); ?></a>
+        <a href="<?php $this->permalink(); ?>"><?php $singleCommentOptions->beforeDate();
+        $this->date($singleCommentOptions->dateFormat);
+        $singleCommentOptions->afterDate(); ?></a>
     </div>
     <?php $this->content(); ?>
     <div class="comment-children">
         <?php $this->threadedComments($before, $after, $singleCommentOptions); ?>
     </div>
     <div class="comment-reply">
-        <?php $this->reply(); ?>
+        <?php $this->reply($singleCommentOptions->replyWord); ?>
     </div>
 </li>
 <?php
@@ -394,6 +398,12 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             //初始化一些变量
             $parsedSingleCommentOptions = Typecho_Config::factory($singleCommentOptions);
             $parsedSingleCommentOptions->setDefault(array(
+                'beforeAuthor'  =>  '',
+                'afterAuthor'   =>  '',
+                'beforeDate'    =>  '',
+                'afterDate'     =>  '',
+                'dateFormat'    =>  $this->options->commentDateFormat,
+                'replyWord'     =>  _t('回复'),
                 'avatarSize'    =>  32,
                 'defaultAvatar' =>  NULL
             ));
