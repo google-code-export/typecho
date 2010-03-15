@@ -74,7 +74,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
-                                <select class="typecho-date" name="month" id="month">
+                                <select disabled class="typecho-date" name="month" id="month">
                                     <option value="1" <?php if (1 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('一月'); ?></option>
                                     <option value="2" <?php if (2 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('二月'); ?></option>
                                     <option value="3" <?php if (3 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('三月'); ?></option>
@@ -88,13 +88,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <option value="11" <?php if (11 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十一月'); ?></option>
                                     <option value="12" <?php if (12 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十二月'); ?></option>
                                 </select>
-                                <input class="typecho-date" size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
+                                <input disabled class="typecho-date" size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
                                 ,
-                                <input class="typecho-date" size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
+                                <input disabled class="typecho-date" size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
                                 @
-                                <input class="typecho-date" size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
+                                <input disabled class="typecho-date" size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
                                 :
-                                <input class="typecho-date" size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
+                                <input disabled class="typecho-date" size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
                         </li>
