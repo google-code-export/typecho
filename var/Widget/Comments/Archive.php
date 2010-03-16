@@ -66,6 +66,14 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @var mixed
      */
     private $_customThreadedCommentsCallback = false;
+    
+    /**
+     * 第一条评论的id
+     * 
+     * @access private
+     * @var integer
+     */
+    private $_firstCommentId = 0;
 
     /**
      * 构造函数,初始化组件
@@ -135,14 +143,34 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $singleCommentOptions->afterDate(); ?></a>
     </div>
     <?php $this->content(); ?>
+    <?php if ($this->children) { ?>
     <div class="comment-children">
         <?php $this->threadedComments($before, $after, $singleCommentOptions); ?>
     </div>
+    <?php } ?>
     <div class="comment-reply">
         <?php $this->reply($singleCommentOptions->replyWord); ?>
     </div>
 </li>
 <?php
+    }
+    
+    /**
+     * 获取当前评论链接
+     *
+     * @access protected
+     * @return string
+     */
+    protected function ___permalink()
+    {
+
+        if ($this->options->commentsPageBreak) {            
+            $pageRow = array('permalink' => $this->parentContent['pathinfo'], 'commentPage' => $this->_currentPage);
+            return Typecho_Router::url('comment_page',
+                        $pageRow, $this->options->index) . '#' . $this->theId;
+        }
+        
+        return $this->parentContent['permalink'] . '#' . $this->theId;
     }
 
     /**
@@ -153,22 +181,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     protected function ___children()
     {
-        $result = array();
-
-        if (isset($this->_threadedComments[$this->coid])) {
-            //深度清零
-            if (!$this->parent) {
-                $this->_deep = 0;
-            }
-
-            $threadedComments = $this->_threadedComments[$this->coid];
-            foreach ($threadedComments as $coid) {
-                $result[] = $this->stack[$coid];
-                unset($this->stack[$coid]);
-            }
-        }
-
-        return $result;
+        return $this->options->commentsThreaded && !$this->isTopLevel && isset($this->_threadedComments[$this->coid]) 
+            ? $this->_threadedComments[$this->coid] : array();
     }
 
     /**
@@ -202,34 +216,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     protected function ___parentContent()
     {
         return $this->parameter->parentContent;
-    }
-
-    /**
-     * 返回堆栈每一行的值
-     *
-     * @return array
-     */
-    public function next()
-    {
-        if ($this->stack) {
-
-            // fix issue 379
-            do {
-                $this->row = &$this->stack[key($this->stack)];
-                next($this->stack);
-            } while ($this->options->commentsThreaded && $this->row 
-                && 0 != $this->row['parent'] && isset($this->stack[$this->row['parent']]));
-
-            $this->sequence ++;
-        }
-
-        if (!$this->row) {
-            reset($this->stack);
-            $this->sequence = 0;
-            return false;
-        }
-
-        return $this->row;
     }
 
     /**
@@ -270,9 +256,15 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
 
         $select = $this->select()->where('table.comments.status = ?', 'approved')
         ->where('table.comments.cid = ?', $this->parameter->parentId);
-
+        $threadedSelect = NULL;
+        
         if ($this->options->commentsShowCommentOnly) {
             $select->where('table.comments.type = ?', 'comment');
+        }
+        
+        if ($this->options->commentsPageBreak) {
+            $threadedSelect = clone $select;
+            $select->where('table.comments.parent = ?', 0);
         }
 
         $this->_countSql = clone $select;
@@ -289,8 +281,20 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $select->page($this->_currentPage, $this->options->commentsPageSize);
         }
 
-        $select->order('table.comments.created', $this->options->commentsOrder);
+        $select->order('table.comments.coid', $this->options->commentsOrder);
         $this->db->fetchAll($select, array($this, 'push'));
+        
+        if ($threadedSelect) {
+            $threadedSelect->where('table.comments.parent <> ? AND table.comments.coid ' 
+                . ('DESC' == $this->options->commentsOrder ? '<' : '>') 
+                . ' ?', 0, $this->_firstCommentId)
+            ->order('table.comments.coid', $this->options->commentsOrder);
+            $threadedComments = $this->db->fetchAll($threadedSelect, array($this, 'filter'));
+            
+            foreach ($threadedComments as $comment) {
+                $this->_threadedComments[$comment['parent']][$comment['coid']] = $comment;
+            }
+        }
     }
 
     /**
@@ -305,8 +309,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $value = $this->filter($value);
 
         //存储子父级关系
-        if ($value['parent']) {
-            $this->_threadedComments[$value['parent']][] = $value['coid'];
+        if (0 == $this->_firstCommentId) {
+            $this->_firstCommentId = $value['coid'];
         }
 
         //将行数据按顺序置位
@@ -355,10 +359,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function threadedComments($before = '', $after = '', $singleCommentOptions = NULL)
     {
-        if (!$this->options->commentsThreaded || $this->isTopLevel) {
-            return;
-        }
-    
         $children = $this->children;
         if ($children) {
             //缓存变量便于还原
