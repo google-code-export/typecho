@@ -55,7 +55,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             $coid = $this->coid;
             $parent = $this->parent;
             
-            while ($parent > 0) {
+            while ($parent > 0 && $this->options->commentsThreaded) {
                 $coid = $parent;
                 $parent = $this->db->fetchObject($this->db->select('parent')->from('table.comments')
                 ->where('coid = ? AND status = ?', $parent, 'approved'))->parent;
