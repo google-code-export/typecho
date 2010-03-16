@@ -4,7 +4,7 @@
  * 
  * @package Akismet
  * @author qining
- * @version 1.1.3
+ * @version 1.1.4
  * @link http://typecho.org
  */
 class Akismet_Plugin implements Typecho_Plugin_Interface
@@ -175,7 +175,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
             'user_agent'            =>  $comment['agent'],
             'referrer'              =>  Typecho_Request::getInstance()->getReferer(),
             'permalink'             =>  $post->permalink,
-            'comment_type'          =>  $comment['mode'],
+            'comment_type'          =>  $comment['type'],
             'comment_author'        =>  $comment['author'],
             'comment_author_email'  =>  $comment['mail'],
             'comment_author_url'    =>  $comment['url'],

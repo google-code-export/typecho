@@ -48,7 +48,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         /** 判断父节点 */
         if ($parentId = $this->request->filter('int')->get('parent')) {
             if ($this->options->commentsThreaded && ($parent = $this->db->fetchRow($this->db->select('coid')->from('table.comments')
-            ->where('coid = ?', $parentId))) && $this->content->cid == $parent['cid']) {
+            ->where('coid = ?', $parentId))) && $this->_content->cid == $parent['cid']) {
                 $comment['parent'] = $parentId;
             } else {
                 throw new Typecho_Widget_Exception(_t('父级评论不存在'));
