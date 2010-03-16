@@ -553,12 +553,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
-        
-        $contents['text'] = $this->pluginHandle()->trigger($triggered)->textFilter($contents['text'], $this);
-        if (!$triggered) {
-            $contents['text'] = Typecho_Common::beautifyFormat(Typecho_Common::removeParagraph($contents['text']));
-        }
-        
         $contents = $this->pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) {
