@@ -42,7 +42,7 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
     {
         $select  = $this->select()->limit($this->parameter->pageSize)
         ->where('table.comments.status = ?', 'approved')
-        ->order('table.comments.created', Typecho_Db::SORT_DESC);
+        ->order('table.comments.coid', Typecho_Db::SORT_DESC);
 
         if ($this->parameter->parentId) {
             $select->where('cid = ?', $this->parameter->parentId);

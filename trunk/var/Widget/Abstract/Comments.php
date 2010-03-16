@@ -51,23 +51,34 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
 
         if ($this->options->commentsPageBreak) {
+            
+            $coid = $this->coid;
+            $parent = $this->parent;
+            
+            while ($parent > 0) {
+                $coid = $parent;
+                $parent = $this->db->fetchObject($this->db->select('parent')->from('table.comments')
+                ->where('coid = ? AND status = ?', $parent, 'approved'))->parent;
+            }
+        
 
-            $select  =$this->db->select(array('COUNT(coid)' => 'num'))
-            ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
-            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $this->coid);
+            $select  = $this->db->select(array('COUNT(coid)' => 'num'))
+            ->from('table.comments')->where('cid = ? AND parent = ? AND status = ?',
+                $this->parentContent['cid'], 0, 'approved')
+            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid);
 
             if ($this->options->commentsShowCommentOnly) {
                 $select->where('type = ?', 'comment');
             }
 
             $currentPage = ceil($this->db->fetchObject($select)->num / $this->options->commentsPageSize);
+            
             $pageRow = array('permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage);
-
             return Typecho_Router::url('comment_page',
                         $pageRow, $this->options->index) . '#' . $this->theId;
-        } else {
-            return $this->parentContent['permalink'] . '#' . $this->theId;
         }
+        
+        return $this->parentContent['permalink'] . '#' . $this->theId;
     }
 
     /**
