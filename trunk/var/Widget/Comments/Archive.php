@@ -262,7 +262,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $select->where('table.comments.type = ?', 'comment');
         }
         
-        if ($this->options->commentsPageBreak) {
+        if ($this->options->commentsThreaded) {
             $threadedSelect = clone $select;
             $select->where('table.comments.parent = ?', 0);
         }
