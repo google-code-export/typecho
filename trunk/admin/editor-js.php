@@ -10,12 +10,12 @@
     });
 
     /** 这两个函数在插件中必须实现 */
-    var insertImageToEditor = function (title, url, link) {
+    var insertImageToEditor = function (title, url, link, cid) {
         textEditor.setContent('<a href="' + link + '" title="' + title + '"><img src="' + url + '" alt="' + title + '" /></a>', '');
         new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
     };
     
-    var insertLinkToEditor = function (title, url, link) {
+    var insertLinkToEditor = function (title, url, link, cid) {
         textEditor.setContent('<a href="' + url + '" title="' + title + '">' + title + '</a>', '');
         new Fx.Scroll(window).toElement($(document).getElement('textarea#text'));
     };

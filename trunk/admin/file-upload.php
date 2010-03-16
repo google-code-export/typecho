@@ -85,9 +85,9 @@ if (isset($post) || isset($page)) {
         </strong>
         <small>
             <span class="insert" onclick="<?php if ($attachment->attachment->isImage){
-                        echo "insertImageToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}');";
+                        echo "insertImageToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}', {$attachment->cid});";
                     } else {
-                        echo "insertLinkToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}');";
+                        echo "insertLinkToEditor('{$attachment->title}', '{$attachment->attachment->url}', '{$attachment->permalink}', {$attachment->cid});";
                     } ?>"><?php _e('插入'); ?></span>
             ,
             <span class="delete" onclick="deleteAttachment(<?php $attachment->cid(); ?>, this);"><?php _e('删除'); ?></span>
