@@ -1522,17 +1522,22 @@ var TypechoComment = {
      *
      * @access public
      * @param string $cookieName 已经记忆的cookie名称
-     * @param string $clear 及时清理cookie
+     * @param string $return 是否返回
      * @return string
      */
-    public function remember($cookieName, $clear = false)
+    public function remember($cookieName, $return = false)
     {
-        $value = Typecho_Cookie::get('__typecho_remember_' . $cookieName);
-        if ($clear) {
-            Typecho_Cookie::delete('__typecho_remember_' . $cookieName);
+        $cookieName = strtolower($cookieName);
+        if (!in_array($cookieName, array('author', 'mail', 'url'))) {
+            return;
         }
-
-        echo htmlspecialchars($value);
+    
+        $value = Typecho_Cookie::get('__typecho_remember_' . $cookieName);
+        if ($return) {
+            return $value;
+        } else {
+            echo htmlspecialchars($value);
+        }
     }
 
     /**
