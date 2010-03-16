@@ -68,12 +68,12 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     private $_customThreadedCommentsCallback = false;
     
     /**
-     * 第一条评论的id
+     * 用于分割的评论id
      * 
      * @access private
      * @var integer
      */
-    private $_firstCommentId = 0;
+    private $_splitCommentId = 0;
 
     /**
      * 构造函数,初始化组件
@@ -270,7 +270,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $this->_countSql = clone $select;
 
         if ($this->options->commentsPageBreak) {
-            $this->_total = empty($type) ? $this->parameter->commentsNum : $this->size($this->_countSql);
+            $this->_total = $this->size($this->_countSql);
 
             if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
                 $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
@@ -285,9 +285,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $this->db->fetchAll($select, array($this, 'push'));
         
         if ($threadedSelect) {
-            $threadedSelect->where('table.comments.parent <> ? AND table.comments.coid ' 
-                . ('DESC' == $this->options->commentsOrder ? '<' : '>') 
-                . ' ?', 0, $this->_firstCommentId)
+            $threadedSelect->where('table.comments.parent <> ? AND table.comments.coid > ?', 0, $this->_splitCommentId)
             ->order('table.comments.coid', $this->options->commentsOrder);
             $threadedComments = $this->db->fetchAll($threadedSelect, array($this, 'filter'));
             
@@ -309,8 +307,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $value = $this->filter($value);
 
         //存储子父级关系
-        if (0 == $this->_firstCommentId) {
-            $this->_firstCommentId = $value['coid'];
+        if ('ASC' == $this->options->commentsOrder || 0 == $this->_splitCommentId) {
+            $this->_splitCommentId = $value['coid'];
         }
 
         //将行数据按顺序置位
