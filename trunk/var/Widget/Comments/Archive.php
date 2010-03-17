@@ -228,8 +228,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function num()
     {
         if (false === $this->_total) {
-            $this->_total = !$this->options->commentsShowCommentOnly
-            ? $this->parentContent['commentsNum'] : $this->size($this->_countSql);
+            $this->_total = !$this->options->commentsThreaded && !$this->options->commentsShowCommentOnly
+            ? $this->parameter->commentsNum : $this->size($this->_countSql);
         }
 
         $args = func_get_args();
@@ -270,7 +270,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $this->_countSql = clone $select;
 
         if ($this->options->commentsPageBreak) {
-            $this->_total = $this->size($this->_countSql);
+            $this->_total = !$this->options->commentsThreaded && !$this->options->commentsShowCommentOnly
+            ? $this->parameter->commentsNum : $this->size($this->_countSql);
 
             if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
                 $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
@@ -306,8 +307,8 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     {
         $value = $this->filter($value);
 
-        //存储子父级关系
-        if ('ASC' == $this->options->commentsOrder || 0 == $this->_splitCommentId) {
+        // 取出本页最小值
+        if ('DESC' == $this->options->commentsOrder || 0 == $this->_splitCommentId) {
             $this->_splitCommentId = $value['coid'];
         }
 
