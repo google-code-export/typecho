@@ -22,7 +22,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php if ('' != $request->keywords || '' != $request->category): ?>
                     <a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
-                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' != $request->keywords): ?> onclick="value='';name='keywords';" <?php endif; ?>/>
+                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php endif; ?>/>
                     <select name="category">
                     	<option value=""><?php _e('所有分类'); ?></option>
                     	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
