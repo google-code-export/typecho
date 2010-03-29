@@ -19,7 +19,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <span rel="delete" lang="<?php _e('你确认要删除这些文章吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
-                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                    <?php if ('' != $request->keywords || '' != $request->category): ?>
+                    <a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                    <?php endif; ?>
+                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' != $request->keywords): ?> onclick="value='';name='keywords';" <?php endif; ?>/>
                     <select name="category">
                     	<option value=""><?php _e('所有分类'); ?></option>
                     	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
@@ -96,7 +99,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="7"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
+                        	<td colspan="8"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
