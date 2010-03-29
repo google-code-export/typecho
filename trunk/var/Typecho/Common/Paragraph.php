@@ -96,7 +96,6 @@ class Typecho_Common_Paragraph
     {
         $tagMatch = '|' . $matches[1] . '|';
         $text = $matches[4];
-        $key = '<p' . $matches[2] . '/>';
     
         switch (true) {
             /** 用br处理换行 */
@@ -112,6 +111,13 @@ class Typecho_Common_Paragraph
                 break;
             default:
                 break;
+        }
+        
+        /** 没有段落能力的标签 */
+        if (false !== strpos('|a|span|cite|strong|sup|sub|small|del|u|i|b|', $tagMatch)) {
+            $key = '<b' . $matches[2] . '/>';
+        } else {
+            $key = '<p' . $matches[2] . '/>';
         }
         
         self::$_blocks[$key] = "<{$matches[1]}{$matches[3]}>{$text}</{$matches[1]}>";
