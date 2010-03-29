@@ -156,7 +156,5 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $this->on($this->request->is('do=feed'))->feed();
         $this->on($this->request->is('do=checkVersion'))->checkVersion();
         $this->on($this->request->is('do=editorResize'))->editorResize();
-        $this->on($this->request->is('do=cutParagraph'))->cutParagraph();
-        $this->on($this->request->is('do=removeParagraph'))->removeParagraph();
     }
 }

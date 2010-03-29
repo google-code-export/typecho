@@ -19,21 +19,6 @@
  */
 class Typecho_Common
 {
-    /** 默认不解析的标签列表 */
-    const LOCKED_HTML_TAG = 'code|pre|script';
-
-    /** 需要去除内部换行的标签 */
-    const ESCAPE_HTML_TAG = 'div|blockquote|object|pre|table|fieldset|tr|th|td|li|ol|ul|dd|dl|dt|h[1-6]';
-
-    /** 元素标签 */
-    const ELEMENT_HTML_TAG = 'div|blockquote|pre|td|li|dd|dt';
-
-    /** 布局标签 */
-    const GRID_HTML_TAG = 'div|blockquote|pre|code|script|table|ol|ul|dl';
-
-    /** 独立段落标签 */
-    const PARAGRAPH_HTML_TAG = 'div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6]';
-
     /** 程序版本 */
     const VERSION = '0.8/10.3.8';
 
@@ -672,7 +657,7 @@ EOF;
             self::$_allowableTags = '|' . implode('|', $tags[1]) . '|';
 
             if (in_array('code', $tags[1])) {
-                $html = preg_replace_callback("/<(code)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
+                $html = self::lockHTML($html);
             }
 
             $normalizeTags = '<' . implode('><', $tags[1]) . '>';
@@ -683,8 +668,6 @@ EOF;
             foreach ($attributes as $key => $val) {
                 $allowableAttributes[$tags[1][$key]] = array_keys(self::__parseAtttrs($val));
             }
-            
-            print_r($allowableAttributes);
             
             self::$_allowableAttributes = $allowableAttributes;
 
@@ -729,7 +712,7 @@ EOF;
             }
             
             $html = preg_replace_callback("/<\/([_0-9a-z-]+)>/is", array('Typecho_Common', '__closeTagFilter'), $html);
-            $html = str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html);
+             $html = self::releaseHTML($html);
         } else {
             $html = strip_tags($html);
         }
@@ -911,107 +894,60 @@ EOF;
     public static function removeParagraph($html)
     {
         /** 锁定标签 */
-        $html = preg_replace_callback("/<(" . LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", 'html_lock_filter', $html);
+        $html = self::lockHTML($html);
         $html = str_replace(array("\r", "\n"), '', $html);
     
         $html = trim(preg_replace(
         array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>/is", "/<\/(" . self::PARAGRAPH_HTML_TAG . ")>\s*/is", "/\s*<\!--more-->\s*/is"),
+        "/\s*<(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])([^>]*)>/is",
+        "/<\/(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])>\s*/is", "/\s*<\!--more-->\s*/is"),
         array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"),
         $html));
         
-        return trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
+        return trim(self::releaseHTML($html));
     }
-
+    
     /**
-     * 美化格式
-     *
+     * 锁定标签
+     * 
      * @access public
      * @param string $html 输入串
      * @return string
      */
-    public static function beautifyFormat($html)
+    public static function lockHTML($html)
     {
-        /** 锁定标签 */
-        $html = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
-
-        $html = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
-        "str_replace('\\\"', '\"', '
-<\\1\\2>' . trim('\\3') . '</\\1>')", $html);
-
-        $html = preg_replace("/<(p|" . self::PARAGRAPH_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
-        "str_replace('\\\"', '\"', '
-
-<\\1\\2>' . trim('\\3') . '</\\1>
-
-')", $html);
-
-        $tags = implode('|', array_diff(explode('|', self::GRID_HTML_TAG), explode('|', self::LOCKED_HTML_TAG)));
-        $html = preg_replace("/<(" . $tags . ")([^>]*)>(.*?)<\/\\1>/ise",
-        "str_replace('\\\"', '\"', '<\\1\\2>
-' . trim('\\3') . '
-</\\1>')", $html);
-
-        $html = preg_replace("/\r*\n\r*/", "\n", $html);
-        $html = preg_replace("/\n{2,}/", "\n\n", $html);
-
-        return trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
+        return preg_replace_callback("/<(code|pre|script)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
     }
-
+    
+    /**
+     * 释放标签
+     * 
+     * @access public
+     * @param string $html 输入串
+     * @return string
+     */
+    public static function releaseHTML($html)
+    {
+        $html = trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
+        self::$_lockedBlocks = array('<p></p>' => '');
+        return $html;
+    }
+    
     /**
      * 文本分段函数
      *
      * @param string $string 需要分段的字符串
-     * @param boolean $paragraph 是否分段
      * @return string
      */
-    public static function cutParagraph($string, $paragraph = true)
+    public static function cutParagraph($string)
     {
-        /** 锁定自闭合标签 */
-        $string = trim($string);
-
-        /** 返回空字符串 */
-        if (empty($string)) {
-            return '';
+        static $loaded;
+        if (!$loaded) {
+            require_once 'Typecho/Common/Paragraph.php';
+            $loaded = true;
         }
-
-        /** 锁定标签 */
-        $string = preg_replace_callback("/<(" . self::LOCKED_HTML_TAG . ")[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $string);
-
-        $string = preg_replace("/\s*<(" . self::ELEMENT_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>\s*/ise",
-        "str_replace('\\\"', '\"', '<\\1\\2>' . Typecho_Common::cutParagraph(trim('\\3'), false) . '</\\1>')", $string);
-        $string = preg_replace("/<(" . self::ESCAPE_HTML_TAG . '|' . self::LOCKED_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/ise",
-        "str_replace('\\\"', '\"', '<\\1\\2>' . str_replace(array(\"\r\", \"\n\"), '', '\\3') . '</\\1>')", $string);
-        $string = preg_replace("/<(" . self::GRID_HTML_TAG . ")([^>]*)>(.*?)<\/\\1>/is", "\n\n<\\1\\2>\\3</\\1>\n\n", $string);
-
-        /** fix issue 197 */
-        $string = preg_replace("/\s*<p\s+([^>]*)>(.*?)<\/p>\s*/is", "\n\n<p \\1>\\2</p>\n\n", $string);
-
-        /** 区分段落 */
-        $string = preg_replace("/\r*\n\r*/", "\n", $string);
-
-        if ($paragraph || false !== strpos($string, "\n\n")) {
-            $string = preg_replace("/\n{2,}/", "</p><p>", $string);
-
-            // fix issue 385
-            if (!preg_match("/^<p\s*([^>]*)>/is", $string)) {
-                $string = '<p>' . $string;
-            }
-
-            if (!preg_match("/<\/p>$/is", $string)) {
-                $string = $string . '</p>';
-            }
-        }
-
-        $string = preg_replace(array("/<([a-z]+)([^>]*)>\s*/is", "/\s*<\/([a-z]+)([^>]*)>/is"),
-            array("<\\1\\2>", "</\\1\\2>"), $string);
-
-        $string = str_replace("\n", '<br />', $string);
-
-        /** 去掉不需要的 */
-        $string = preg_replace("/<p><(" . self::ESCAPE_HTML_TAG . '|p|' . self::LOCKED_HTML_TAG
-        . ")([^>]*)>(.*?)<\/\\1><\/p>/is", "<\\1\\2>\\3</\\1>", $string);
-        return str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $string);
+        
+        return Typecho_Common_Paragraph::process($string);
     }
 
     /**
