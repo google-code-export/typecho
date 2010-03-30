@@ -59,9 +59,10 @@ class Typecho_Common_Paragraph
     private static function cutByBlock($text)
     {
         $space = "( |　)";
-        $text = str_replace("\r", "\n", trim($text));
+        $text = str_replace("\r\n", "\n", trim($text));
         $text = preg_replace("/{$space}*\n{$space}*/is", "\n", $text);
         $text = preg_replace("/\n{2,}/", "</p><p>", $text);
+        $text = nl2br($text);
         $text = preg_replace("/(<p>)?\s*<p:([0-9]{4})\/>\s*(<\/p>)?/s", "<p:\\2/>", $text);
         $text = preg_replace("/<p>{$space}*<\/p>/is", '', $text);
         return $text;
