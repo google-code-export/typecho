@@ -20,7 +20,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </p>
                     <p class="search">
                     <?php if ('' != $request->keywords || '' != $request->category): ?>
-                    <a href="<?php $options->adminUrl('manage-posts.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                    <a href="<?php $options->adminUrl('manage-posts.php' . (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
                     <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                     <select name="category">
@@ -31,9 +31,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<?php endwhile; ?>
                     </select>
                     <button type="submit"><?php _e('筛选'); ?></button>
-                    <?php if(isset($request->status)): ?>
-                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
-                    <?php endif; ?>
                     <?php if(isset($request->uid)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
                     <?php endif; ?>
@@ -94,7 +91,16 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 echo '">' . $val['name'] . '</a>' . ($key < $length - 1 ? ', ' : ''); ?>
                             <?php endforeach; ?>
                             </td>
-                            <td><?php $posts->dateWord(); ?></td>
+                            <td>
+                            <?php if ($posts->hasSaved): ?>
+                            <span class="description">
+                            <?php $modifyDate = new Typecho_Date($posts->modified); ?>
+                            <?php _e('保存于 %s', $modifyDate->word()); ?>
+                            </span>
+                            <?php else: ?>
+                            <?php $posts->dateWord(); ?>
+                            <?php endif; ?>
+                            </td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>

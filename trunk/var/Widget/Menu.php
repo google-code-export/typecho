@@ -125,6 +125,8 @@ class Widget_Menu extends Typecho_Widget
             array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), 'write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'),
             array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), 'write-page.php?cid=', 'editor', true),
+            array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator'),
+            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
@@ -138,8 +140,6 @@ class Widget_Menu extends Typecho_Widget
             array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
             array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), 'media.php?cid=', 'contributor', true),
             array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator'),
-            array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true),
-            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
         //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
