@@ -22,11 +22,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php if ('' != $request->keywords): ?>
                     <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
-                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>            
-                    <?php if(isset($request->status)): ?>
-                        <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
-                    <?php endif; ?>
-                    
+                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>
@@ -77,7 +73,16 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             </td>
                             <td><?php $pages->slug(); ?></td>
                             <td><?php $pages->author(); ?></td>
-                            <td><?php $pages->dateWord(); ?></td>
+                            <td>
+                            <?php if ($pages->hasSaved): ?>
+                            <span class="description">
+                            <?php $modifyDate = new Typecho_Date($pages->modified); ?>
+                            <?php _e('保存于 %s', $modifyDate->word()); ?>
+                            </span>
+                            <?php else: ?>
+                            <?php $pages->dateWord(); ?>
+                            <?php endif; ?>
+                            </td>
                         </tr>
                         <?php endwhile; ?>
                         <?php else: ?>

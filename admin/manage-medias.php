@@ -22,7 +22,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <span rel="delete" lang="<?php _e('你确认要删除这些附件吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
-                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                    <?php if ('' != $request->keywords): ?>
+                    <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                    <?php endif; ?>
+                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>

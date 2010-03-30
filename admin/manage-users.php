@@ -11,7 +11,6 @@ include 'menu.php';
                 <div class="typecho-list-operate">
                 <form method="get">
                     <p class="operate">
-                    <a class="button" href="<?php $options->adminUrl('user.php'); ?>"><?php _e('新增用户'); ?></a>
                     <?php _e('操作'); ?>: 
                     <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
                     <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>,&nbsp;&nbsp;&nbsp;
@@ -19,7 +18,10 @@ include 'menu.php';
                     <span rel="delete" lang="<?php _e('你确认要删除这些用户吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
                     </p>
                     <p class="search">
-                    <input type="text" value="<?php _e('请输入关键字'); ?>" onclick="value='';name='keywords';" />
+                    <?php if ('' != $request->keywords): ?>
+                    <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                    <?php endif; ?>
+                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>

@@ -57,17 +57,16 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * @access protected
      * @return array
      */
-    protected function ___hasDraft()
+    protected function ___hasSaved()
     {
-        if ('draft' == $this->status) {
-            return true;
-        }
-
-        if ($this->db->fetchRow($this->db->select('cid')
+        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified')
         ->from('table.contents')
         ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
             $this->cid, $this->type, 'draft')
-        ->limit(1))) {
+        ->limit(1));
+        
+        if ($savedPost) {
+            $this->modified = $savedPost['modified'];
             return true;
         }
 
