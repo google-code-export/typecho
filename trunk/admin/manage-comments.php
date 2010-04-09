@@ -80,10 +80,12 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <div class="column-01 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>
+                        <?php if ($options->commentsAvatar && 'comment' == $comments->type && !empty($comments->mail)): ?>
                         <div class="column-02 center avatar">
                             <?php $comments->gravatar(); ?>
                         </div>
-                        <div class="column-21">
+                        <?php endif; ?>
+                        <div class="<?php if ($options->commentsAvatar && 'comment' == $comments->type && !empty($comments->mail)): ?>column-21<?php else: ?>column-23<?php endif; ?>">
                             <div class="content">
                                 <div class="comment-meta">
                                     <span class="<?php $comments->type(); ?>"></span>

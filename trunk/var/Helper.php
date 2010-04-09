@@ -232,15 +232,16 @@ class Helper
      * @param string $subTitle 面板副标题
      * @param string $level 进入权限
      * @param boolean $hidden 是否隐藏
+     * @param boolean $addLink 新增项目链接, 会显示在页面标题之后
      * @return integer
      */
-    public static function addPanel($index, $fileName, $title, $subTitle, $level, $hidden = false)
+    public static function addPanel($index, $fileName, $title, $subTitle, $level, $hidden = false, $addLink = '')
     {
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
         $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
         $fileName = urlencode(trim($fileName, '/'));
-        $panelTable['child'][$index][] = array($title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden);
+        $panelTable['child'][$index][] = array($title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink);
 
         $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
         $panelTable['file'][] = $fileName;
