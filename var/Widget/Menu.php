@@ -75,6 +75,12 @@ class Widget_Menu extends Typecho_Widget
      * @var string
      */
     public $title;
+    
+    /**
+     * 当前增加项目链接
+     * @var string
+     */
+    public $addLink;
 
     /**
      * 构造函数,初始化组件
@@ -125,21 +131,21 @@ class Widget_Menu extends Typecho_Widget
             array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), 'write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'),
             array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), 'write-page.php?cid=', 'editor', true),
-            array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator'),
-            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
         //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
-            array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor'),
+            array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, Typecho_Common::url('write-post.php', $this->options->adminUrl)),
             array(array('Widget_Contents_Post_Admin', 'getMenuTitle'), array('Widget_Contents_Post_Admin', 'getMenuTitle'), 'manage-posts.php?uid=', 'contributor', true),
-            array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor'),
+            array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, Typecho_Common::url('write-page.php', $this->options->adminUrl)),
             array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
             array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),
         //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('标签和分类'), _t('标签和分类'), 'manage-metas.php', 'editor'),
             array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
             array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), 'media.php?cid=', 'contributor', true),
-            array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator'),
+            array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator', false, Typecho_Common::url('user.php', $this->options->adminUrl)),
+            array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true),
+            array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
         //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
         //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
@@ -226,6 +232,10 @@ class Widget_Menu extends Typecho_Widget
         $this->_childMenu[$this->_currentParent][$this->_currentChild][3] : 'administrator';
         if ('visitor' != $level) {
             $this->user->pass($level);
+        }
+        
+        if (isset($this->_childMenu[$this->_currentParent][$this->_currentChild][5])) {
+            $this->addLink = $this->_childMenu[$this->_currentParent][$this->_currentChild][5];
         }
 
         if (is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1])) {

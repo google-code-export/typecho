@@ -927,7 +927,7 @@ margin-top: 25px;
     padding-left: 10px;
 }
 
-.typecho-page-title a:link, .typecho-page-title a:visited {
+.typecho-page-title a {
     font-size: 13px;
     line-height: 30px;
     font-weight: bold;
@@ -935,6 +935,10 @@ margin-top: 25px;
 
 .typecho-page-title a:hover {
     text-decoration: underline;
+}
+
+.typecho-page-title h2 a {
+    font-size: 16px;
 }
 
 

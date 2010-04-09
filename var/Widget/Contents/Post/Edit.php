@@ -207,6 +207,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 真实的内容id */
         $realId = 0;
+        
+        /** 是否是从草稿状态发布为 */
+        $isDraftToPublish = false;
 
         /** 重新发布现有内容 */
         if ($this->have()) {
@@ -214,6 +217,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 如果它本身不是草稿, 需要删除其草稿 */
             if ('draft' != $this->status && $this->draft) {
                 $this->deleteDraft($this->draft['cid']);
+            } else {
+                $isDraftToPublish = true;
             }
 
             /** 直接将草稿状态更改 */
@@ -230,12 +235,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 插入分类 */
             if (array_key_exists('category', $contents)) {
                 $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
-                $contents['category'] : array($this->options->defaultCategory), true, true);
+                $contents['category'] : array($this->options->defaultCategory), !$isDraftToPublish, true);
             }
 
             /** 插入标签 */
             if (array_key_exists('tags', $contents)) {
-                $this->setTags($realId, $contents['tags'], true, true);
+                $this->setTags($realId, $contents['tags'], !$isDraftToPublish, true);
             }
 
             /** 同步附件 */
