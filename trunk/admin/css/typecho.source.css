@@ -938,7 +938,8 @@ margin-top: 25px;
 }
 
 .typecho-page-title h2 a {
-    font-size: 16px;
+    font-size: 14px;
+	margin-left: 12px;
 }
 
 
