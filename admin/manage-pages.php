@@ -28,7 +28,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <form method="post" name="manage_pages" class="operate-form" action="">
+                <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('/action/contents-page-edit'); ?>">
                 <table class="typecho-list-table draggable">
                     <colgroup>
                         <col width="25"/>
