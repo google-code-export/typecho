@@ -560,7 +560,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function title($length = 0, $trim = '...')
     {
-        echo $length > 0 ? Typecho_Common::subStr($this->title, 0, $length, $trim) : $this->title;
+        $title = $this->pluginHandle()->trigger($plugged)->title($this->title, $this);
+        if (!$plugged) {
+            echo $length > 0 ? Typecho_Common::subStr($this->title, 0, $length, $trim) : $this->title;
+        }
     }
 
     /**
