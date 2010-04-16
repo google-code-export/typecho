@@ -461,7 +461,7 @@ Typecho.autoSave = new Class({
                     }
                     
                 }).bind(this)
-            }).send($(this.options.form).toQueryString() + Hash.toQueryString(o));
+            }).send($(this.options.form).toQueryString() + '&' + Hash.toQueryString(o));
         }
     }
 });
