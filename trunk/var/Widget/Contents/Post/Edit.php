@@ -208,8 +208,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 真实的内容id */
         $realId = 0;
         
-        /** 是否是从草稿状态发布为 */
-        $isDraftToPublish = false;
+        /** 是否是从草稿状态发布 */
+        $isDraftToPublish = ('draft' == $this->status);
 
         /** 重新发布现有内容 */
         if ($this->have()) {
@@ -217,8 +217,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 如果它本身不是草稿, 需要删除其草稿 */
             if ('draft' != $this->status && $this->draft) {
                 $this->deleteDraft($this->draft['cid']);
-            } else {
-                $isDraftToPublish = true;
             }
 
             /** 直接将草稿状态更改 */
