@@ -751,7 +751,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         return array(
             'date_created_gmt'		=> new IXR_Date($this->options->timezone + $comment->created),
-			'user_id'				=> $comment->userId,
+			'user_id'				=> $comment->authorId,
 			'comment_id'			=> $comment->coid,
 			'parent'				=> $comment->parent,
 			'status'				=> $comment->status,
@@ -809,7 +809,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         while ($comments->next()) {
             $struct[] = array(
                 'date_created_gmt'		=> new IXR_Date($this->options->timezone + $comments->created),
-                'user_id'				=> $comments->userId,
+                'user_id'				=> $comments->authorId,
                 'comment_id'			=> $comments->coid,
                 'parent'				=> $comments->parent,
                 'status'				=> $comments->status,
