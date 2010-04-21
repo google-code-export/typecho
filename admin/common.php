@@ -26,8 +26,7 @@ $response = $options->response;
 
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
-list($soft, $currentVersion) = explode(' ', $options->generator);
-list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+list($prefixVersion, $suffixVersion) = explode('/', $options->version);
 $params = parse_url($currentMenu[2]);
 $adminFile = $params['path'];
 
@@ -44,7 +43,7 @@ if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($cur
     /** 检测版本是否升级 */
     if ($user->pass('administrator', true) && !empty($currentMenu)) {
         $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
-        str_replace('/', '.', $currentVersion), '>'));
+        str_replace('/', '.', $options->version), '>'));
 
         if ($mustUpgrade && 'upgrade.php' != $currentMenu[2]) {
             $response->redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));

@@ -212,6 +212,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
+        
+        /** 更新创建时间 */
+        if (!empty($comment['created'])) {
+            $updateStruct['created'] = $comment['created'];
+        }
 
         /** 更新评论数据 */
         $updateRows = $this->db->query($updateCondition->update('table.comments')->rows($updateStruct));

@@ -219,10 +219,6 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     public function getComment()
     {
-        if (!$this->request->isAjax()) {
-            $this->response->goBack();
-        }
-
         $coid = $this->request->filter('int')->coid;
         $comment = $this->db->fetchRow($this->select()
             ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
@@ -252,36 +248,26 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
      */
     public function editComment()
     {
-        if (!$this->request->isAjax()) {
-            $this->response->goBack();
-        }
-
         $coid = $this->request->filter('int')->coid;
         $commentSelect = $this->db->fetchRow($this->select()
             ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
 
         if ($commentSelect && $this->commentIsWriteable()) {
-
-            //检验格式
-            $validator = new Typecho_Validate();
-            $validator->addRule('author', 'required', _t('必须填写用户名'));
-
-            if ($this->options->commentsRequireMail) {
-                $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
-            }
-
-            $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
-
-            if ($this->options->commentsRequireUrl && !$this->user->hasLogin()) {
-                $validator->addRule('url', 'required', _t('必须填写个人主页'));
-            }
-
-            $validator->addRule('text', 'required', _t('必须填写评论内容'));
+        
             $comment['text'] = $this->request->text;
-
             $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
             $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
             $comment['url'] = $this->request->filter('url')->url;
+            
+            $commentCreated = $this->request->filter('int')->created;
+            if ($commentCreated > 0) {
+                $comment['created'] = $commentCreated;
+            }
+            
+            $commentStatus = $this->request->status;
+            if (!empty($commentStatus) && in_array($commentStatus, array('approved', 'waiting', 'spam'))) {
+                $comment['status'] = $commentStatus;
+            }
 
             /** 更新评论 */
             $this->db->query($this->db->update('table.comments')

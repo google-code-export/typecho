@@ -29,7 +29,7 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize, 'parentId' => 0));
+        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize, 'parentId' => 0, 'ignoreAuthor' => false));
     }
 
     /**
@@ -50,6 +50,11 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
 
         if ($this->options->commentsShowCommentOnly) {
             $select->where('type = ?', 'comment');
+        }
+        
+        /** 忽略作者评论 */
+        if ($this->parameter->ignoreAuthor) {
+            $select->where('ownerId <> authorId');
         }
 
         $this->db->fetchAll($select, array($this, 'push'));

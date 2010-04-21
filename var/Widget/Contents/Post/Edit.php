@@ -40,32 +40,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
 
     /**
-     * 获取当前所有自定义模板
-     *
-     * @access protected
-     * @return array
-     */
-    protected function ___templates()
-    {
-        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/*.php');
-        $result = array();
-
-        foreach ($files as $file) {
-            $info = Typecho_Plugin::parseInfo($file);
-            $file = basename($file);
-
-            if ('index.php' != $file && 'custom' == $info['title']) {
-                $result[] = array(
-                    'name'  =>  $info['description'],
-                    'value' =>  $file
-                );
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * 获取当前时间
      *
      * @access protected
