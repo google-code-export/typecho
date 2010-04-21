@@ -295,6 +295,30 @@ class Widget_Options extends Typecho_Widget
     }
     
     /**
+     * 软件名称
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___software()
+    {
+        list($software, $version) = explode(' ', $this->generator);
+        return $software;
+    }
+    
+    /**
+     * 软件版本
+     * 
+     * @access protected
+     * @return string
+     */
+    protected function ___version()
+    {
+        list($software, $version) = explode(' ', $this->generator);
+        return $version;
+    }
+    
+    /**
      * 允许上传的文件类型
      * 
      * @access protected

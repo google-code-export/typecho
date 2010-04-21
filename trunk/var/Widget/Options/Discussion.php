@@ -46,7 +46,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $commentsShowOptions = array(
             'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示Pingback和Trackback'),
-            'commentsShowUrl'       =>  _t('在列表中的评论者名称处显示其个人主页链接'),
+            'commentsShowUrl'       =>  _t('评论者名称显示时自动加上其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用<a href="http://en.wikipedia.org/wiki/Nofollow">nofollow属性</a>'),
             'commentsAvatar'        =>  _t('启用<a href="http://gravatar.com">Gravatar</a>头像服务, 最高显示评级为 %s 的头像',
             '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
@@ -55,7 +55,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>R - 17岁以上成人</option>
             <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>X - 限制级</option></select>
             <label for="commentsShow-commentsAvatarRating">'),
-            'commentsPageBreak'     =>  _t('启用评论分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
+            'commentsPageBreak'     =>  _t('启用分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
             . '" class="text num" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
             '</label><select id="commentsShow-commentsPageDisplay" name="commentsPageDisplay">

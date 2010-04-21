@@ -25,6 +25,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @var IXR_Error
      */
     private $error;
+    
+    /**
+     * wordpress风格的系统选项
+     * 
+     * @access private
+     * @var array
+     */
+    private $_wpOptions;
 
     /**
      * 如果这里没有重载, 每次都会被默认执行
@@ -38,6 +46,57 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if ($run) {
             parent::execute();
         }
+        
+        $this->_wpOptions = array(
+			// Read only options
+			'software_name'		=> array(
+				'desc'			=> _t( '软件名称' ),
+				'readonly'		=> true,
+				'value'			=> $this->options->software
+			),
+			'software_version'	=> array(
+				'desc'			=> _t( '软件版本' ),
+				'readonly'		=> true,
+				'value'			=> $this->options->version
+			),
+			'blog_url'			=> array(
+				'desc'			=> _t( '博客地址' ),
+				'readonly'		=> true,
+				'option'		=> 'siteUrl'
+			),
+
+			// Updatable options
+			'time_zone'			=> array(
+				'desc'			=> _t( '时区' ),
+				'readonly'		=> false,
+				'option'		=> 'timezone'
+			),
+			'blog_title'		=> array(
+				'desc'			=> _t( '博客标题' ),
+				'readonly'		=> false,
+				'option'			=> 'title'
+			),
+			'blog_tagline'		=> array(
+				'desc'			=> _t( '博客关键字' ),
+				'readonly'		=> false,
+				'option'		=> 'description'
+			),
+			'date_format'		=> array(
+				'desc'			=> _t( '日期格式' ),
+				'readonly'		=> false,
+				'option'		=> 'postDateFormat'
+			),
+			'time_format'		=> array(
+				'desc'			=> _t( '时间格式' ),
+				'readonly'		=> false,
+				'option'		=> 'postDateFormat'
+			),
+			'users_can_register'	=> array(
+				'desc'			=> _t( '是否允许注册' ),
+				'readonly'		=> false,
+				'option'		=> 'allowRegister'
+			)
+		);
     }
 
     /**
@@ -124,6 +183,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $page->authorId,
                 'wp_author_display_name' => $page->author->screenName,
+                'date_created_gmt'  => new IXR_Date($page->created),
+                'wp_page_template'  =>  $page->template
             );
 
         return $pageStruct;
@@ -177,6 +238,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_page_order' => $pages->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $pages->authorId,
                 'wp_author_display_name' => $pages->author->screenName,
+                'date_created_gmt'  => new IXR_Date($pages->created),
+                'wp_page_template'  =>  $pages->template
             );
         }
 
@@ -383,6 +446,516 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         return $categoryStructs;
     }
+    
+    /**
+     * 获取用户
+     * 
+     * @access public
+     * @param string $userName 用户名
+     * @param string $password 密码
+     * @return array
+     */
+    public function wpGetUsersBlogs($userName, $password)
+    {
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+
+        $struct = array();
+        $struct[] = array(
+            'isAdmin'   => $this->user->pass('admin', true),
+            'url'	    => $this->options->siteUrl,
+            'blogid'    => 1,
+            'blogName'  => $this->options->title,
+            'xmlrpc'    => $this->options->xmlRpcUrl
+        );
+        
+        return $struct;
+    }
+    
+    /**
+     * 获取标签列表
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @return array
+     */
+    public function wpGetTags($blogId, $userName, $password)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $struct = array();
+        $tags = $this->widget('Widget_Metas_Tag_Cloud');
+        
+        while ($tags->next()) {
+            $struct[] = array(
+                'tag_id'    =>  $tags->mid,
+                'name'      =>  $tags->name,
+                'count'     =>  $tags->count,
+                'slug'      =>  $tags->slug,
+                'html_url'  =>  $tags->permalink,
+                'rss_url'   =>  $tags->feedUrl
+            );
+        }
+        
+        return $struct;
+    }
+    
+    /**
+     * 删除分类
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param integer $categoryId
+     * @return array
+     */
+    public function wpDeleteCategory($blogId, $userName, $password, $categoryId)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password, 'editor')) {
+            return $this->error;
+        }
+        
+        try {
+            $this->widget('Widget_Metas_Category_Edit', NULL, 'do=delete&mid=' . intval($categoryId), false);
+            return true;
+        } catch (Typecho_Exception $e) {
+            return false;
+        }
+    }
+    
+    /**
+     * 获取评论数目
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param integer $postId
+     * @return array
+     */
+    public function wpGetCommentCount($blogId, $userName, $password, $postId)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $stat = $this->widget('Widget_Stat', NULL, 'cid=' . intval($postId), false);
+        
+        return array(
+            "approved" => $stat->currentPublishedCommentsNum,
+            "awaiting_moderation" => $stat->currentWaitingCommentsNum,
+            "spam" => $stat->currentSpamCommentsNum,
+            "total_comments" => $stat->currentCommentsNum
+        );
+    }
+    
+    /**
+     * 获取文章状态列表
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @return array
+     */
+    public function wpGetPostStatusList($blogId, $userName, $password)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        return array(
+            'draft'     =>  _t('草稿'),
+            'waiting'   =>  _t('待审核'),
+            'publish'   =>  _t('已发布')
+        );
+    }
+    
+    /**
+     * 获取页面状态列表
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @return array
+     */
+    public function wpGetPageStatusList($blogId, $userName, $password)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password, 'editor')) {
+            return $this->error;
+        }
+        
+        return array(
+            'draft'     =>  _t('草稿'),
+            'publish'   =>  _t('已发布')
+        );
+    }
+    
+    /**
+     * 获取评论状态列表
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @return array
+     */
+    public function wpGetCommentStatusList($blogId, $userName, $password)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        return array(
+            'approved'  =>  _t('显示'),
+            'waiting'   =>  _t('待审核'),
+            'spam'      =>  _t('垃圾')
+        );
+    }
+    
+    /**
+     * 获取页面模板
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @return array
+     */
+    public function wpGetPageTemplates($blogId, $userName, $password)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password, 'editor')) {
+            return $this->error;
+        }
+        
+        $templates = $this->getTemplates();
+        $templates['Default'] = '';
+        
+        return $templates;
+    }
+    
+    /**
+     * 获取系统选项
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param array $options
+     * @return array
+     */
+    public function wpGetOptions($blogId, $userName, $password, $options)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password, 'administrator')) {
+            return $this->error;
+        }
+        
+        $struct = array();
+        foreach ($options as $option) {
+            if (isset($this->_wpOptions[$option])) {
+                $struct[$option] = isset($this->_wpOptions[$option]['value']) ? 
+                $this->_wpOptions[$option]['value'] : $this->options->{$this->_wpOptions[$option]['option']};
+            }
+        }
+        
+        return $struct;
+    }
+    
+    /**
+     * 设置系统选项
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param array $options
+     * @return array
+     */
+    public function wpSetOptions($blogId, $userName, $password, $options)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password, 'administrator')) {
+            return $this->error;
+        }
+        
+        $struct = array();
+        foreach ($options as $option => $value) {
+            if (isset($this->_wpOptions[$option])) {
+                $struct[$option] = isset($this->_wpOptions[$option]['value']) ? 
+                $this->_wpOptions[$option]['value'] : $this->options->{$this->_wpOptions[$option]['option']};
+            
+                if (!$this->_wpOptions[$option]['readonly'] && isset($this->_wpOptions[$option]['option'])) {
+                    if ($db->query($db->update('table.options')
+                    ->rows(array('value' => $value))
+                    ->where('name = ?', $this->_wpOptions[$option]['option'])) > 0) {
+                        $struct[$option] = $value;
+                    }
+                }
+            }
+        }
+        
+        return $struct;
+    }
+    
+    /**
+     * 获取评论
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param integer $commentId
+     * @return array
+     */
+    public function wpGetComment($blogId, $userName, $password, $commentId)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $comment = $this->widget('Widget_Comments_Edit', NULL, 'do=get&coid=' . intval($commentId), false);
+        
+        if (!$comment->have()) {
+            return new IXR_Error(404, __('评论不存在'));
+        }
+        
+        if (!$comment->commentIsWriteable()) {
+            return new IXR_Error(403, __('没有获取评论的权限'));
+        }
+        
+        return array(
+            'date_created_gmt'		=> new IXR_Date($this->options->timezone + $comment->created),
+			'user_id'				=> $comment->userId,
+			'comment_id'			=> $comment->coid,
+			'parent'				=> $comment->parent,
+			'status'				=> $comment->status,
+			'content'				=> $comment->text,
+			'link'					=> $comment->permalink,
+			'post_id'				=> $comment->cid,
+			'post_title'			=> $comment->title,
+			'author'				=> $comment->author,
+			'author_url'			=> $comment->url,
+			'author_email'			=> $comment->mail,
+			'author_ip'				=> $comment->ip,
+			'type'					=> $comment->type
+        );
+    }
+    
+    /**
+     * 获取评论列表
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param array $struct
+     * @return array
+     */
+    public function wpGetComments($blogId, $userName, $password, $struct)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $input = array();
+        if (!empty($struct['status'])) {
+            $input['status'] = $struct['status'];
+        }
+        
+        if (!empty($struct['post_id'])) {
+            $input['cid'] = $struct['post_id'];
+        }
+        
+        $pageSize = 10;
+        if (!empty($struct['number'])) {
+            $pageSize = abs(intval($struct['number']));
+        }
+        
+        if (!empty($struct['offset'])) {
+            $offset = abs(intval($struct['offset']));
+            $input['page'] = ceil($offset / $pageSize);
+        }
+        
+        $comments = $this->widget('Widget_Comments_Admin', 'pageSize=' . $pageSize, $input, false);
+        $struct = array();
+        
+        while ($comments->next()) {
+            $struct[] = array(
+                'date_created_gmt'		=> new IXR_Date($this->options->timezone + $comments->created),
+                'user_id'				=> $comments->userId,
+                'comment_id'			=> $comments->coid,
+                'parent'				=> $comments->parent,
+                'status'				=> $comments->status,
+                'content'				=> $comments->text,
+                'link'					=> $comments->permalink,
+                'post_id'				=> $comments->cid,
+                'post_title'			=> $comments->title,
+                'author'				=> $comments->author,
+                'author_url'			=> $comments->url,
+                'author_email'			=> $comments->mail,
+                'author_ip'				=> $comments->ip,
+                'type'					=> $comments->type
+            );
+        }
+        
+        return $struct;
+    }
+    
+    /**
+     * 获取评论
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param integer $commentId
+     * @return boolean
+     */
+    public function wpDeleteComment($blogId, $userName, $password, $commentId)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $this->widget('Widget_Comments_Edit', NULL, 'do=delete&coid=' . intval($commentId), false);
+        return 'success' == $this->widget('Widget_Notice')->noticeType;
+    }
+    
+    /**
+     * 编辑评论
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param integer $commentId
+     * @param array $struct
+     * @return boolean
+     */
+    public function wpEditComment($blogId, $userName, $password, $commentId, $struct)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        $input['do'] = 'edit';
+        $input['coid'] = $commentId;
+        
+        if (isset($struct['date_created_gmt'])) {
+            $input['created'] = $struct['date_created_gmt'];
+        }
+        
+        if (isset($struct['content'])) {
+            $input['text'] = $struct['content'];
+        }
+        
+        if (isset($struct['author'])) {
+            $input['author'] = $struct['author'];
+        }
+        
+        if (isset($struct['author_url'])) {
+            $input['url'] = $struct['author_url'];
+        }
+        
+        if (isset($struct['author_email'])) {
+            $input['mail'] = $struct['author_email'];
+        }
+        
+        $comment = $this->widget('Widget_Comments_Edit', NULL, $input, false);
+        
+        if (!$comment->have()) {
+            return new IXR_Error(404, __('评论不存在'));
+        }
+        
+        if (!$comment->commentIsWriteable()) {
+            return new IXR_Error(403, __('没有编辑评论的权限'));
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 更新评论
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param mixed $post
+     * @param array $struct
+     * @return boolean
+     */
+    public function wpNewComment($blogId, $userName, $password, $path, $struct)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        if (is_numeric($path)) {
+            $post = $this->widget('Widget_Archive', 'type=single', 'cid=' . $path, false);
+        } else {
+            /** 检查目标地址是否正确*/
+            $pathInfo = Typecho_Common::url(substr($path, strlen($this->options->index)), '/');
+            $post = Typecho_Router::match($pathInfo);
+        }
+        
+        /** 这样可以得到cid或者slug*/
+        if (!isset($post) || !($post instanceof Widget_Archive) || !$post->have() || !$post->is('single')) {
+            return new IXR_Error(404, _t('这个目标地址不存在'));
+        }
+        
+        $input = array();
+        $input['permalink'] = $post->pathinfo;
+        $input['type']  = 'comment';
+        
+        if (isset($struct['comment_author'])) {
+            $input['author'] = $struct['author'];
+        }
+        
+        if (isset($struct['comment_author_email'])) {
+            $input['mail'] = $struct['author_email'];
+        }
+        
+        if (isset($struct['comment_author_url'])) {
+            $input['url'] = $struct['author_url'];
+        }
+        
+        if (isset($struct['comment_parent'])) {
+            $input['parent'] = $struct['comment_parent'];
+        }
+        
+        if (isset($struct['content'])) {
+            $input['text'] = $struct['content'];
+        }
+        
+        try {
+            $this->widget('Widget_Feedback', NULL, $input, false);
+        } catch (Typecho_Exception $e) {
+            return new IXR_Error(500, $e->getMessage());
+        }
+        
+        return true;
+    }
 
     /**about MetaWeblog API, you can see http://www.xmlrpc.com/metaWeblogApi*/
     /**
@@ -554,7 +1127,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author'     => $post->author->name,
                 'wp_author_id'  => $post->authorId,
                 'wp_author_display_name' => $post->author->screenName,
-                );
+                'date_created_gmt'  =>  new IXR_Date($post->created),
+                'post_status'   => $post->status
+        );
+        
         return $postStruct;
     }
 
@@ -606,7 +1182,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'wp_author'     => $posts->author->name,
                     'wp_author_id'  => $posts->authorId,
                     'wp_author_display_name' => $posts->author->screenName,
-                    );
+                    'date_created_gmt'  =>  new IXR_Date($posts->created),
+                    'post_status'   => $posts->status
+            );
         }
 
         return $postStructs;
@@ -638,7 +1216,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'categoryName'  => $categories->name,
                     'description'   => $categories->name,
                     'htmlUrl'       => $categories->permalink,
-                    'rssUrl'        => $categories->feedRssUrl,
+                    'rssUrl'        => $categories->feedUrl,
                     );
         }
 
@@ -860,7 +1438,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array();
         $struct[] = array(
-            'isAdmin' => true,
+            'isAdmin' => $this->user->pass('admin', true),
             'url'	    => $this->options->siteUrl,
             'blogid'   => 1,
             'blogName' => $this->options->title
@@ -1223,50 +1801,68 @@ EOF;
             /** 直接把初始化放到这里 */
             new IXR_Server(array(
                 /** WordPress API */
-                'wp.getPage'            => array($this,'wpGetPage'),
-                'wp.getPages'            => array($this,'wpGetPages'),
-                'wp.newPage'            => array($this,'wpNewPage'),
-                'wp.deletePage'            => array($this,'wpDeletePage'),
-                'wp.editPage'            => array($this,'wpEditPage'),
-                'wp.getPageList'            => array($this,'wpGetPageList'),
-                'wp.getAuthors'            => array($this,'wpGetAuthors'),
-                'wp.getCategories'        => array($this,'mwGetCategories'),
-                'wp.newCategory'            => array($this,'wpNewCategory'),
-                'wp.suggestCategories'        => array($this,'wpSuggestCategories'),
-                'wp.uploadFile'            => array($this,'mwNewMediaObject'),
+                'wp.getPage'                => array($this, 'wpGetPage'),
+                'wp.getPages'               => array($this, 'wpGetPages'),
+                'wp.newPage'                => array($this, 'wpNewPage'),
+                'wp.deletePage'             => array($this, 'wpDeletePage'),
+                'wp.editPage'               => array($this, 'wpEditPage'),
+                'wp.getPageList'            => array($this, 'wpGetPageList'),
+                'wp.getAuthors'             => array($this, 'wpGetAuthors'),
+                'wp.getCategories'          => array($this, 'mwGetCategories'),
+                'wp.newCategory'            => array($this, 'wpNewCategory'),
+                'wp.suggestCategories'      => array($this, 'wpSuggestCategories'),
+                'wp.uploadFile'             => array($this, 'mwNewMediaObject'),
+                
+                /** New Wordpress API since 2.9.2 */
+                'wp.getUsersBlogs'          => array($this, 'wpGetUsersBlogs'),
+                'wp.getTags'                => array($this, 'wpGetTags'),
+                'wp.deleteCategory'         => array($this, 'wpDeleteCategory'),
+                'wp.getCommentCount'        => array($this, 'wpGetCommentCount'),
+                'wp.getPostStatusList'      => array($this, 'wpGetPostStatusList'),
+                'wp.getPageStatusList'      => array($this, 'wpGetPageStatusList'),
+                'wp.getPageTemplates'       => array($this, 'wpGetPageTemplates'),
+                'wp.getOptions'             => array($this, 'wpGetOptions'),
+                'wp.setOptions'             => array($this, 'wpSetOptions'),
+                'wp.getComment'             => array($this, 'wpGetComment'),
+                'wp.getComments'            => array($this, 'wpGetComments'),
+                'wp.deleteComment'          => array($this, 'wpDeleteComment'),
+                'wp.editComment'            => array($this, 'wpEditComment'),
+                'wp.newComment'             => array($this, 'wpNewComment'),
+                'wp.getCommentStatusList'   => array($this, 'wpGetCommentStatusList'),
+                
 
                 /** Blogger API */
-                'blogger.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
-                'blogger.getUserInfo'    => array($this,'bloggerGetUserInfo'),
-                'blogger.getPost'            => array($this,'bloggerGetPost'),
-                'blogger.getRecentPosts' => array($this,'bloggerGetRecentPosts'),
-                'blogger.getTemplate' => array($this,'bloggerGetTemplate'),
-                'blogger.setTemplate' => array($this,'bloggerSetTemplate'),
-                'blogger.deletePost' => array($this,'bloggerDeletePost'),
+                'blogger.getUsersBlogs'     => array($this, 'bloggerGetUsersBlogs'),
+                'blogger.getUserInfo'       => array($this, 'bloggerGetUserInfo'),
+                'blogger.getPost'           => array($this, 'bloggerGetPost'),
+                'blogger.getRecentPosts'    => array($this, 'bloggerGetRecentPosts'),
+                'blogger.getTemplate'       => array($this, 'bloggerGetTemplate'),
+                'blogger.setTemplate'       => array($this, 'bloggerSetTemplate'),
+                'blogger.deletePost'        => array($this, 'bloggerDeletePost'),
 
                 /** MetaWeblog API (with MT extensions to structs) */
-                'metaWeblog.newPost' => array($this,'mwNewPost'),
-                'metaWeblog.editPost' => array($this,'mwEditPost'),
-                'metaWeblog.getPost' => array($this,'mwGetPost'),
-                'metaWeblog.getRecentPosts' => array($this,'mwGetRecentPosts'),
-                'metaWeblog.getCategories' => array($this,'mwGetCategories'),
-                'metaWeblog.newMediaObject' => array($this,'mwNewMediaObject'),
+                'metaWeblog.newPost'        => array($this, 'mwNewPost'),
+                'metaWeblog.editPost'       => array($this, 'mwEditPost'),
+                'metaWeblog.getPost'        => array($this, 'mwGetPost'),
+                'metaWeblog.getRecentPosts' => array($this, 'mwGetRecentPosts'),
+                'metaWeblog.getCategories'  => array($this, 'mwGetCategories'),
+                'metaWeblog.newMediaObject' => array($this, 'mwNewMediaObject'),
 
                 /** MetaWeblog API aliases for Blogger API */
-                'metaWeblog.deletePost' => array($this,'bloggerDeletePost'),
-                'metaWeblog.getTemplate' => array($this,'bloggerGetTemplate'),
-                'metaWeblog.setTemplate' => array($this,'bloggerSetTemplate'),
-                'metaWeblog.getUsersBlogs' => array($this,'bloggerGetUsersBlogs'),
+                'metaWeblog.deletePost'     => array($this, 'bloggerDeletePost'),
+                'metaWeblog.getTemplate'    => array($this, 'bloggerGetTemplate'),
+                'metaWeblog.setTemplate'    => array($this, 'bloggerSetTemplate'),
+                'metaWeblog.getUsersBlogs'  => array($this, 'bloggerGetUsersBlogs'),
 
                 /** MovableType API */
-                'mt.getCategoryList' => array($this,'mtGetCategoryList'),
-                'mt.getRecentPostTitles' => array($this,'mtGetRecentPostTitles'),
-                'mt.getPostCategories' => array($this,'mtGetPostCategories'),
-                'mt.setPostCategories' => array($this,'mtSetPostCategories'),
-                'mt.publishPost' => array($this,'mtPublishPost'),
+                'mt.getCategoryList'        => array($this, 'mtGetCategoryList'),
+                'mt.getRecentPostTitles'    => array($this, 'mtGetRecentPostTitles'),
+                'mt.getPostCategories'      => array($this, 'mtGetPostCategories'),
+                'mt.setPostCategories'      => array($this, 'mtSetPostCategories'),
+                'mt.publishPost'            => array($this, 'mtPublishPost'),
 
                 /** PingBack */
-                'pingback.ping' => array($this,'pingbackPing'),
+                'pingback.ping'             => array($this,'pingbackPing'),
                 'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
             ));
         }

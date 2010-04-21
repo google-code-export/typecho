@@ -391,6 +391,29 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         return $this->db->fetchObject($condition->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents'))->num;
     }
+    
+    /**
+     * 获取当前所有自定义模板
+     *
+     * @access public
+     * @return array
+     */
+    public function getTemplates()
+    {
+        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/*.php');
+        $result = array();
+
+        foreach ($files as $file) {
+            $info = Typecho_Plugin::parseInfo($file);
+            $file = basename($file);
+
+            if ('index.php' != $file && 'custom' == $info['title']) {
+                $result[$info['description']] = $file;
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * 通用过滤器

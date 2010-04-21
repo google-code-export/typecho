@@ -32,14 +32,12 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
         $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
 
         /** 忽略零数量 */
-        if($this->parameter->ignoreZeroCount)
-        {
+        if ($this->parameter->ignoreZeroCount) {
             $select->where('count > 0');
         }
 
         /** 总数限制 */
-        if ($this->parameter->limit)
-        {
+        if ($this->parameter->limit) {
             $select->limit($this->parameter->limit);
         }
 

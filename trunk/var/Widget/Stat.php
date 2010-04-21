@@ -295,6 +295,19 @@ class Widget_Stat extends Typecho_Widget
                     ->where('table.comments.status = ?', 'spam')
                     ->where('table.comments.ownerId = ?', $this->user->uid))->num;
     }
+    
+    /**
+     * 获取当前文章的评论数目
+     *
+     * @access protected
+     * @return integer
+     */
+    protected function ___currentCommentsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
+                    ->from('table.comments')
+                    ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+    }
 
     /**
      * 获取当前文章显示的评论数目

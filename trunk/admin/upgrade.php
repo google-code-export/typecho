@@ -16,7 +16,7 @@ include 'menu.php';
                     <blockquote>
                     <ul>
                         <li><?php _e('您已经更新了系统程序, 我们还需要执行一些后续步骤来完成升级'); ?></li>
-                        <li><?php _e('此程序将把您的系统从 <strong>%s</strong> 升级到 <strong>%s</strong>', $currentVersion, Typecho_Common::VERSION); ?></li>
+                        <li><?php _e('此程序将把您的系统从 <strong>%s</strong> 升级到 <strong>%s</strong>', $options->version, Typecho_Common::VERSION); ?></li>
                         <li><strong><?php _e('在升级之前强烈建议先备份您的数据'); ?></strong></li>
                     </ul>
                     </blockquote>
