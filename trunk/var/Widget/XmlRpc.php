@@ -658,7 +658,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @param array $options
      * @return array
      */
-    public function wpGetOptions($blogId, $userName, $password, $options)
+    public function wpGetOptions($blogId, $userName, $password, $options = array())
     {
         /** 检查权限*/
         if (!$this->checkAccess($userName, $password, 'administrator')) {
@@ -666,10 +666,17 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         $struct = array();
+        if (empty($options)) {
+            $options = array_keys($this->_wpOptions);
+        }
+        
         foreach ($options as $option) {
             if (isset($this->_wpOptions[$option])) {
-                $struct[$option] = isset($this->_wpOptions[$option]['value']) ? 
-                $this->_wpOptions[$option]['value'] : $this->options->{$this->_wpOptions[$option]['option']};
+                $struct[$option] = $this->_wpOptions[$option];
+                if (isset($struct[$option]['option'])) {
+                    $struct['value'] = $this->options->{$struct[$option]['option']};
+                    unset($struct[$option]['option']);
+                }
             }
         }
         
@@ -686,7 +693,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @param array $options
      * @return array
      */
-    public function wpSetOptions($blogId, $userName, $password, $options)
+    public function wpSetOptions($blogId, $userName, $password, $options = array())
     {
         /** 检查权限*/
         if (!$this->checkAccess($userName, $password, 'administrator')) {
@@ -696,14 +703,17 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $struct = array();
         foreach ($options as $option => $value) {
             if (isset($this->_wpOptions[$option])) {
-                $struct[$option] = isset($this->_wpOptions[$option]['value']) ? 
-                $this->_wpOptions[$option]['value'] : $this->options->{$this->_wpOptions[$option]['option']};
+                $struct[$option] = $this->_wpOptions[$option];
+                if (isset($struct[$option]['option'])) {
+                    $struct['value'] = $this->options->{$struct[$option]['option']};
+                    unset($struct[$option]['option']);
+                }
             
                 if (!$this->_wpOptions[$option]['readonly'] && isset($this->_wpOptions[$option]['option'])) {
                     if ($db->query($db->update('table.options')
                     ->rows(array('value' => $value))
                     ->where('name = ?', $this->_wpOptions[$option]['option'])) > 0) {
-                        $struct[$option] = $value;
+                        $struct['value'] = $value;
                     }
                 }
             }
@@ -1462,12 +1472,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $struct = array(
-                'nickname'  => $this->user->name,
+                'nickname'  => $this->user->screenName,
                 'usrid'     => $this->user->authorId,
                 'url'       => $this->user->url,
                 'email'     => $this->user->mail,
                 'lastname'  => $this->user->screenName,
-                'firstname' => $this->user->screenName,
+                'firstname' => ''
                 );
         return $struct;
     }
