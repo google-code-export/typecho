@@ -289,6 +289,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author_id'  => $page->authorId,
                 'wp_author_display_name' => $page->author->screenName,
                 'date_created_gmt'  => new IXR_Date($page->created),
+                'custom_fields'     => array(),
                 'wp_page_template'  =>  $page->template
             );
 
@@ -344,6 +345,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author_id'  => $pages->authorId,
                 'wp_author_display_name' => $pages->author->screenName,
                 'date_created_gmt'  => new IXR_Date($pages->created),
+                'custom_fields'     => array(),
                 'wp_page_template'  =>  $pages->template
             );
         }
@@ -779,7 +781,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             if (isset($this->_wpOptions[$option])) {
                 $struct[$option] = $this->_wpOptions[$option];
                 if (isset($struct[$option]['option'])) {
-                    $struct['value'] = $this->options->{$struct[$option]['option']};
+                    $struct[$option]['value'] = $this->options->{$struct[$option]['option']};
                     unset($struct[$option]['option']);
                 }
             }
@@ -810,7 +812,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             if (isset($this->_wpOptions[$option])) {
                 $struct[$option] = $this->_wpOptions[$option];
                 if (isset($struct[$option]['option'])) {
-                    $struct['value'] = $this->options->{$struct[$option]['option']};
+                    $struct[$option]['value'] = $this->options->{$struct[$option]['option']};
                     unset($struct[$option]['option']);
                 }
             
@@ -818,7 +820,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     if ($db->query($db->update('table.options')
                     ->rows(array('value' => $value))
                     ->where('name = ?', $this->_wpOptions[$option]['option'])) > 0) {
-                        $struct['value'] = $value;
+                        $struct[$option]['value'] = $value;
                     }
                 }
             }
@@ -847,11 +849,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $comment = $this->widget('Widget_Comments_Edit', NULL, 'do=get&coid=' . intval($commentId), false);
         
         if (!$comment->have()) {
-            return new IXR_Error(404, __('评论不存在'));
+            return new IXR_Error(404, _t('评论不存在'));
         }
         
         if (!$comment->commentIsWriteable()) {
-            return new IXR_Error(403, __('没有获取评论的权限'));
+            return new IXR_Error(403, _t('没有获取评论的权限'));
         }
         
         return array(
@@ -891,7 +893,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         $input = array();
         if (!empty($struct['status'])) {
-            $input['status'] = $struct['status'];
+            $input['status'] = 'hold' == $input['status'] ? $input['status'] : 
+                $this->wordpressToTypechoStatus($struct['status']);
+        } else {
+            $input['status'] = 'available';
+            $input['__typecho_all_comments'] = 'on';
         }
         
         if (!empty($struct['post_id'])) {
@@ -909,10 +915,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         $comments = $this->widget('Widget_Comments_Admin', 'pageSize=' . $pageSize, $input, false);
-        $struct = array();
+        $commentsStruct = array();
         
         while ($comments->next()) {
-            $struct[] = array(
+            $commentsStruct[] = array(
                 'date_created_gmt'		=> new IXR_Date($this->options->timezone + $comments->created),
                 'user_id'				=> $comments->authorId,
                 'comment_id'			=> $comments->coid,
@@ -930,7 +936,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             );
         }
         
-        return $struct;
+        return $commentsStruct;
     }
     
     /**
@@ -950,8 +956,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         
-        $this->widget('Widget_Comments_Edit', NULL, 'do=delete&coid=' . intval($commentId), false);
-        return 'success' == $this->widget('Widget_Notice')->noticeType;
+        $commentId = abs(intval($commentId));
+        return intval($this->widget('Widget_Abstract_Comments')->delete(
+            $this->db->sql()->where('coid = ?', $commentId))) > 0;
     }
     
     /**
@@ -972,11 +979,18 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         
-        $input['do'] = 'edit';
-        $input['coid'] = $commentId;
+        $commentId = abs(intval($commentId));
+        $commentWidget = $this->widget('Widget_Abstract_Comments');
+        $where = $this->db->sql()->where('coid = ?', $commentId);
+        
+        if (!$commentWidget->commentIsWriteable($where)) {
+            return new IXR_Error(403, _t('无法编辑此评论'));
+        }
+        
+        $input = array();
         
         if (isset($struct['date_created_gmt'])) {
-            $input['created'] = $struct['date_created_gmt'];
+            $input['created'] = $struct['date_created_gmt']->getTimestamp() - $this->options->timezone + $this->options->serverTimezone;
         }
         
         if (isset($struct['status'])) {
@@ -999,14 +1013,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['mail'] = $struct['author_email'];
         }
         
-        $comment = $this->widget('Widget_Comments_Edit', NULL, $input, false);
+        $result = $commentWidget->update((array) $input, $where);
         
-        if (!$comment->have()) {
-            return new IXR_Error(404, __('评论不存在'));
-        }
-        
-        if (!$comment->commentIsWriteable()) {
-            return new IXR_Error(403, __('没有编辑评论的权限'));
+        if (!$result) {
+            return new IXR_Error(404, _t('评论不存在'));
         }
         
         return true;
@@ -1215,7 +1225,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @access public
      * @return int
      */
-    public function mwEditPost($postId, $userName, $password, $content, $publish)
+    public function mwEditPost($postId, $userName, $password, $content, $publish = true)
     {
         $content['postId'] = $postId;
         return $this->mwNewPost(1, $userName, $password, $content, $publish);
@@ -1257,7 +1267,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $post->permalink,
                 'permalink'     => $post->permalink,
                 'categories'    => $categories,
-                'mt_excerpt'    => NULL,
+                'mt_excerpt'    => $post->text,     //这个是用于客户端的
                 'mt_text_more'  => $more,
                 'mt_allow_comments' => $post->allowComment,
                 'mt_allow_pings' => $post->allowPing,
@@ -1268,7 +1278,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_author_id'  => $post->authorId,
                 'wp_author_display_name' => $post->author->screenName,
                 'date_created_gmt'  =>  new IXR_Date($post->created),
-                'post_status'   => $post->status
+                'post_status'   => $this->typechoToWordpressStatus($post->status, 'post'),
+                'custom_fields' => array(),
+                'sticky'        => 0
         );
         
         return $postStruct;
@@ -1312,7 +1324,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'link'          => $posts->permalink,
                     'permalink'     => $posts->permalink,
                     'categories'    => $categories,
-                    'mt_excerpt'    => NULL,
+                    'mt_excerpt'    => $posts->text,
                     'mt_text_more'  => $more,
                     'mt_allow_comments' => $posts->allowComment,
                     'mt_allow_pings' => $posts->allowPing,
@@ -1323,7 +1335,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'wp_author_id'  => $posts->authorId,
                     'wp_author_display_name' => $posts->author->screenName,
                     'date_created_gmt'  =>  new IXR_Date($posts->created),
-                    'post_status'   => $posts->status
+                    'post_status'   => $this->typechoToWordpressStatus($posts->status, 'post'),
+                    'custom_fields' => array(),
+                    'sticky'        => 0
             );
         }
 

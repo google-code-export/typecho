@@ -225,7 +225,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
         ->where('status = ? AND cid = ?', 'approved', $cid))->num;
 
-        $this->db->query($this->update('table.contents')->rows(array('commentsNum' => $num))
+        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
         ->where('cid = ?', $cid));
 
         return $updateRows;
