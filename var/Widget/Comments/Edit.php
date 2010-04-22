@@ -258,20 +258,9 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
             $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
             $comment['url'] = $this->request->filter('url')->url;
-            
-            $commentCreated = $this->request->filter('int')->created;
-            if ($commentCreated > 0) {
-                $comment['created'] = $commentCreated;
-            }
-            
-            $commentStatus = $this->request->status;
-            if (!empty($commentStatus) && in_array($commentStatus, array('approved', 'waiting', 'spam'))) {
-                $comment['status'] = $commentStatus;
-            }
 
             /** 更新评论 */
-            $this->db->query($this->db->update('table.comments')
-            ->rows($comment)->where('coid = ?', $coid));
+            $this->update($comment, $this->db->sql()->where('coid = ?', $coid));
 
             $updatedComment = $this->db->fetchRow($this->select()
                 ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
