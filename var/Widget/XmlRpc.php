@@ -51,8 +51,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             case false !== strpos($agent, 'wp-iphone'):   // wordpress iphone客户端
             case false !== strpos($agent, 'plain-text'):  // 这是预留给第三方开发者的接口, 用于强行调用非所见即所得数据
                 $text = $content->text;
+                break;
             default:
                 $text = $content->content;
+                break;
         }
     
         $post = explode('<!--more-->', $text, 2);
