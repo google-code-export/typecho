@@ -38,12 +38,24 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * 获取扩展字段
      * 
      * @access private
-     * @param string $content
+     * @param Widget_Abstract_Contents $content
      * @return array
      */
-    private function getPostExtended($content)
+    private function getPostExtended(Widget_Abstract_Contents $content)
     {
-        $post = explode('<!--more-->', $content, 2);
+        //根据客户端显示来判断是否显示html代码
+        $agent = $this->request->getAgent();
+        $text = '';
+        
+        switch (true) {
+            case false !== strpos($agent, 'wp-iphone'):   // wordpress iphone客户端
+            case false !== strpos($agent, 'plain-text'):  // 这是预留给第三方开发者的接口, 用于强行调用非所见即所得数据
+                $text = $content->text;
+            default:
+                $text = $content->content;
+        }
+    
+        $post = explode('<!--more-->', $text, 2);
         return array(Typecho_Common::fixHtml($post[0]), isset($post[1]) ? Typecho_Common::fixHtml($post[1]) : NULL);
     }
     
@@ -264,34 +276,34 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 对文章内容做截取处理，以获得description和text_more*/
-        list($excerpt, $more) = $this->getPostExtended($page->content);
+        list($excerpt, $more) = $this->getPostExtended($page);
 
         $pageStruct = array(
-                'dateCreated'   => new IXR_Date($this->options->timezone + $page->created),
-                'userid'        => $page->authorId,
-                'page_id'       => $page->cid,
-                'page_status'   => $this->typechoToWordpressStatus($page->status, 'page'),
-                'description'   => $excerpt,
-                'title'         => $page->title,
-                'link'          => $page->permalink,
-                'permalink'     => $page->permalink,
-                'categories'    => $page->categories,
-                'excerpt'       => NULL,
-                'text_more'     => $more,
-                'mt_allow_comments' => $page->allowComment,
-                'mt_allow_pings' => $page->allowPing,
-                'wp_slug'        => $page->slug,
-                'wp_password'   => $page->password,
-                'wp_author'     => $page->author->name,
-                'wp_page_parent_id' => 0,
-                'wp_page_parent_title' => NULL,
-                'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
-                'wp_author_id'  => $page->authorId,
-                'wp_author_display_name' => $page->author->screenName,
-                'date_created_gmt'  => new IXR_Date($page->created),
-                'custom_fields'     => array(),
-                'wp_page_template'  =>  $page->template
-            );
+            'dateCreated'   => new IXR_Date($this->options->timezone + $page->created),
+            'userid'        => $page->authorId,
+            'page_id'       => $page->cid,
+            'page_status'   => $this->typechoToWordpressStatus($page->status, 'page'),
+            'description'   => $excerpt,
+            'title'         => $page->title,
+            'link'          => $page->permalink,
+            'permalink'     => $page->permalink,
+            'categories'    => $page->categories,
+            'excerpt'       => $page->description,
+            'text_more'     => $more,
+            'mt_allow_comments' => $page->allowComment,
+            'mt_allow_pings' => $page->allowPing,
+            'wp_slug'        => $page->slug,
+            'wp_password'   => $page->password,
+            'wp_author'     => $page->author->name,
+            'wp_page_parent_id' => 0,
+            'wp_page_parent_title' => NULL,
+            'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
+            'wp_author_id'  => $page->authorId,
+            'wp_author_display_name' => $page->author->screenName,
+            'date_created_gmt'  => new IXR_Date($page->created),
+            'custom_fields'     => array(),
+            'wp_page_template'  =>  $page->template
+        );
 
         return $pageStruct;
     }
@@ -320,7 +332,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         while ($pages->next()) {
             /** 对文章内容做截取处理，以获得description和text_more*/
-            list($excerpt, $more) = $this->getPostExtended($pages->content);
+            list($excerpt, $more) = $this->getPostExtended($pages);
             $pageStructs[] = array(
                 'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
                 'userid'        => $pages->authorId,
@@ -332,7 +344,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $pages->permalink,
                 'permalink'     => $pages->permalink,
                 'categories'    => $pages->categories,
-                'excerpt'       => NULL,
+                'excerpt'       => $pages->description,
                 'text_more'     => $more,
                 'mt_allow_comments' => $pages->allowComment,
                 'mt_allow_pings' => $pages->allowPing,
@@ -1253,7 +1265,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 对文章内容做截取处理，以获得description和text_more*/
-        list($excerpt, $more) = $this->getPostExtended($post->content);
+        list($excerpt, $more) = $this->getPostExtended($post);
         /** 只需要分类的name*/
         $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
         $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
@@ -1267,7 +1279,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'link'          => $post->permalink,
                 'permalink'     => $post->permalink,
                 'categories'    => $categories,
-                'mt_excerpt'    => $post->text,     //这个是用于客户端的
+                'mt_excerpt'    => $post->description,
                 'mt_text_more'  => $more,
                 'mt_allow_comments' => $post->allowComment,
                 'mt_allow_pings' => $post->allowPing,
@@ -1308,7 +1320,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 如果这个post存在则输出，否则输出错误 */
         while ($posts->next()) {
             /** 对文章内容做截取处理，以获得description和text_more*/
-            list($excerpt, $more) = $this->getPostExtended($posts->content);
+            list($excerpt, $more) = $this->getPostExtended($posts);
 
             /** 只需要分类的name*/
             /** 可以用flatten函数处理 */
@@ -1318,13 +1330,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $postStructs[] = array(
                     'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
                     'userid'        => $posts->authorId,
-                    'postid'       => $posts->cid,
+                    'postid'        => $posts->cid,
                     'description'   => $excerpt,
                     'title'         => $posts->title,
                     'link'          => $posts->permalink,
                     'permalink'     => $posts->permalink,
                     'categories'    => $categories,
-                    'mt_excerpt'    => $posts->text,
+                    'mt_excerpt'    => $posts->description,
                     'mt_text_more'  => $more,
                     'mt_allow_comments' => $posts->allowComment,
                     'mt_allow_pings' => $posts->allowPing,
