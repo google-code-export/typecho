@@ -463,9 +463,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array();
         $struct[] = array(
-            'isAdmin'   => $this->user->pass('admin', true),
+            'isAdmin'   => $this->user->pass('administrator', true),
             'url'	    => $this->options->siteUrl,
-            'blogid'    => 1,
+            'blogid'    => '1',
             'blogName'  => $this->options->title,
             'xmlrpc'    => $this->options->xmlRpcUrl
         );
@@ -1448,10 +1448,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array();
         $struct[] = array(
-            'isAdmin' => $this->user->pass('admin', true),
-            'url'	    => $this->options->siteUrl,
-            'blogid'   => 1,
-            'blogName' => $this->options->title
+            'isAdmin'  => $this->user->pass('administrator', true),
+            'url'	  => $this->options->siteUrl,
+            'blogid'   => '1',
+            'blogName' => $this->options->title,
+            'xmlrpc'   => $this->options->xmlRpcUrl
         );
         return $struct;
     }
@@ -1473,10 +1474,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array(
                 'nickname'  => $this->user->screenName,
-                'usrid'     => $this->user->authorId,
+                'userid'     => $this->user->uid,
                 'url'       => $this->user->url,
                 'email'     => $this->user->mail,
-                'lastname'  => $this->user->screenName,
+                'lastname'  => '',
                 'firstname' => ''
                 );
         return $struct;
