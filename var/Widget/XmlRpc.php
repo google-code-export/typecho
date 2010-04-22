@@ -33,6 +33,118 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @var array
      */
     private $_wpOptions;
+    
+    /**
+     * 获取扩展字段
+     * 
+     * @access private
+     * @param string $content
+     * @return array
+     */
+    private function getPostExtended($content)
+    {
+        $post = explode('<!--more-->', $content, 2);
+        return array(Typecho_Common::fixHtml($post[0]), isset($post[1]) ? Typecho_Common::fixHtml($post[1]) : NULL);
+    }
+    
+    /**
+     * 将typecho的状态类型转换为wordperss的风格
+     * 
+     * @access private
+     * @param string $status typecho的状态
+     * @param string $type 内容类型
+     * @return string
+     */
+    private function typechoToWordpressStatus($status, $type = 'post')
+    {
+        if ('post' == $type) {
+            /** 文章状态 */
+            switch ($status) {
+                case 'waiting':
+                    return 'pending';
+                case 'publish':
+                case 'draft':
+                case 'private':
+                    return $status;
+                default:
+                    return 'publish';
+            }
+        } else if ('page' == $type) {
+            switch ($status) {
+                case 'publish':
+                case 'draft':
+                case 'private':
+                    return $status;
+                default:
+                    return 'publish';
+            }
+        } else if ('comment' == $type) {
+            switch ($status) {
+                case 'publish':
+                case 'approved':
+                    return 'approve';
+                case 'waiting':
+                    return 'hold';
+                case 'spam':
+                    return $status;
+                default:
+                    return 'approve';
+            }
+        }
+        
+        return '';
+    }
+    
+    /**
+     * 将wordpress的状态类型转换为typecho的风格
+     * 
+     * @access private
+     * @param string $status wordpress的状态
+     * @param string $type 内容类型
+     * @return string
+     */
+    private function wordpressToTypechoStatus($status, $type = 'post')
+    {
+        if ('post' == $type) {
+            /** 文章状态 */
+            switch ($status) {
+                case 'pending':
+                    return 'waiting';
+                case 'publish':
+                case 'draft':
+                case 'private':
+                case 'waiting':
+                    return $status;
+                default:
+                    return 'publish';
+            }
+        } else if ('page' == $type) {
+            switch ($status) {
+                case 'publish':
+                case 'draft':
+                case 'private':
+                    return $status;
+                default:
+                    return 'publish';
+            }
+        } else if ('comment' == $type) {
+            switch ($status) {
+                case 'approve':
+                case 'publish':
+                case 'approved':
+                    return 'approved';
+                case 'hold':
+                case 'waiting':
+                    return 'waiting';
+                case 'spam':
+                    return $status;
+                default:
+                    return 'approved';
+            }
+        }
+        
+        return '';
+    }
 
     /**
      * 如果这里没有重载, 每次都会被默认执行
@@ -121,13 +233,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
     }
 
-    private function getPostExtended($content)
-    {
-        $post = Typecho_Common::fixHtml($content);
-        $post = explode('<!--more-->', $content, 2);
-        return array($post[0], isset($post[1]) ? $post[1] : NULL);
-    }
-
     /** about wp xmlrpc api, you can see http://codex.wordpress.org/XML-RPC*/
 
     /**
@@ -165,7 +270,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'dateCreated'   => new IXR_Date($this->options->timezone + $page->created),
                 'userid'        => $page->authorId,
                 'page_id'       => $page->cid,
-                'page_status'   => $page->status,
+                'page_status'   => $this->typechoToWordpressStatus($page->status, 'page'),
                 'description'   => $excerpt,
                 'title'         => $page->title,
                 'link'          => $page->permalink,
@@ -220,7 +325,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'userid'        => $pages->authorId,
                 'page_id'       => $pages->cid,
                 /** todo:此处有疑问 */
-                'page_status'   => $pages->status,
+                'page_status'   => $this->typechoToWordpressStatus($pages->status, 'page'),
                 'description'   => $excerpt,
                 'title'         => $pages->title,
                 'link'          => $pages->permalink,
@@ -551,10 +656,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $stat = $this->widget('Widget_Stat', NULL, 'cid=' . intval($postId), false);
         
         return array(
-            "approved" => $stat->currentPublishedCommentsNum,
-            "awaiting_moderation" => $stat->currentWaitingCommentsNum,
-            "spam" => $stat->currentSpamCommentsNum,
-            "total_comments" => $stat->currentCommentsNum
+            'approved' => $stat->currentPublishedCommentsNum,
+            'awaiting_moderation' => $stat->currentWaitingCommentsNum,
+            'spam' => $stat->currentSpamCommentsNum,
+            'total_comments' => $stat->currentCommentsNum
         );
     }
     
@@ -576,7 +681,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         return array(
             'draft'     =>  _t('草稿'),
-            'waiting'   =>  _t('待审核'),
+            'pending'   =>  _t('待审核'),
             'publish'   =>  _t('已发布')
         );
     }
@@ -620,8 +725,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         return array(
-            'approved'  =>  _t('显示'),
-            'waiting'   =>  _t('待审核'),
+            'hold'      =>  _t('显示'),
+            'approve'   =>  _t('待审核'),
             'spam'      =>  _t('垃圾')
         );
     }
@@ -754,7 +859,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 			'user_id'				=> $comment->authorId,
 			'comment_id'			=> $comment->coid,
 			'parent'				=> $comment->parent,
-			'status'				=> $comment->status,
+			'status'				=> $this->typechoToWordpressStatus($comment->status, 'comment'),
 			'content'				=> $comment->text,
 			'link'					=> $comment->permalink,
 			'post_id'				=> $comment->cid,
@@ -812,7 +917,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'user_id'				=> $comments->authorId,
                 'comment_id'			=> $comments->coid,
                 'parent'				=> $comments->parent,
-                'status'				=> $comments->status,
+                'status'				=> $this->typechoToWordpressStatus($comments->status, 'comment'),
                 'content'				=> $comments->text,
                 'link'					=> $comments->permalink,
                 'post_id'				=> $comments->cid,
@@ -872,6 +977,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         if (isset($struct['date_created_gmt'])) {
             $input['created'] = $struct['date_created_gmt'];
+        }
+        
+        if (isset($struct['status'])) {
+            $input['status'] = $this->wordpressToTypechoStatus($struct['status'], 'comment');
         }
         
         if (isset($struct['content'])) {
@@ -988,6 +1097,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 取得content内容 */
         $input = array();
+        $type = isset($content['post_type']) && 'page' == $content['post_type'] ? 'page' : 'post';
+        
         $input['title'] = trim($content['title']) == NULL ? _t('未命名文档') : $content['title'];
 
         if (isset($content['slug'])) {
@@ -1009,6 +1120,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         if (isset($content['postId'])) {
             $input['cid'] = $content['postId'];
+        }
+        
+        if ('page' == $type && isset($content['wp_page_template'])) {
+            $input['template'] = $content['wp_page_template'];
         }
 
         if (isset($content['dateCreated'])) {
@@ -1042,6 +1157,21 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
         $input['do'] = $publish ? 'publish' : 'save';
+        
+        /** 调整状态 */
+        if (isset($content["{$type}_status"])) {
+            $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
+            
+            if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
+                $input['do'] = 'publish';
+                
+                if ('private' == $status) {
+                    $input['private'] = 1;
+                }
+            } else {
+                $input['do'] = 'save';
+            }
+        }
 
         /** 对未归档附件进行归档 */
         $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND
@@ -1062,7 +1192,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 调用已有组件 */
         try {
             /** 插入 */
-            if (isset($content['post_type']) && 'page' == $content['post_type']) {
+            if ('page' == $type) {
                 $this->widget('Widget_Contents_Page_Edit', NULL, $input, false)->action();
             } else {
                 $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
