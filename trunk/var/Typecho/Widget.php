@@ -338,6 +338,7 @@ abstract class Typecho_Widget
 
         if (!$this->row) {
             reset($this->stack);
+            $this->row = $this->stack[key($this->stack)];
             $this->sequence = 0;
             return false;
         }
