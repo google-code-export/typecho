@@ -102,7 +102,7 @@ class GoogleCodePrettify_Plugin implements Typecho_Plugin_Interface
             $language = $map[$language];
         }
         
-        $source = '<table class="prettyprint-table"><tr>';
+        $source = '<div class="prettyprint-box"><table class="prettyprint-table"><tr>';
         $numberItem = '<td width="2%" class="number"><table>';
         $sourceItem = '<td width="98%" class="code"><pre' . (empty($language) ? '' : ' id="' . $language . '"') . ' class="prettyprint"><table>';
         
@@ -115,7 +115,7 @@ class GoogleCodePrettify_Plugin implements Typecho_Plugin_Interface
         $numberItem .= '</table></td>';
         $sourceItem .= '</table></pre></td>';
         
-        return $source . $numberItem . $sourceItem . '</tr></table></pre>';
+        return $source . $numberItem . $sourceItem . '</tr></table></div>';
     }
     
     /**
