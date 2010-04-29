@@ -11,9 +11,9 @@ svnup:
 	rm -Rf build/
 	svn up ../
 	svn export ../ build
-	for i in `find -name *.source.css`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find build/admin/javascript/ -name *.js`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
-	for i in `find build/ -name *.php`; do php -l $$i; done;
+	for i in `find -name '*.source.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find build/admin/javascript/ -name '*.js'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i -o $$i; done;
+	for i in `find build/ -name '*.php'`; do php -l $$i; done;
 
 
 package:
@@ -123,8 +123,8 @@ install:
 tinymce:
 	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
 	unzip tinymce_${TINYMCE}.zip
-	for i in `find tinymce/jscripts/ -name *.js`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
-	for i in `find tinymce/jscripts/ -name *.htm`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
+	for i in `find tinymce/jscripts/ -name '*.js'`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
+	for i in `find tinymce/jscripts/ -name '*.htm'`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
 	rm -Rf tinymce/
 	rm -Rf tinymce_${TINYMCE}.zip
 	svn ci ../usr/plugins/TinyMCE/tiny_mce/ -m "upgrade tiny_mce to ${TINYMCE}"
