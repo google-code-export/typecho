@@ -12,7 +12,7 @@
 .atv { color: #B1D631; }
 .dec { color: #FAF4C6; }
 table.prettyprint-table { padding: 2px; border: 1px solid #000; background: #222; color: #eee; font-size: 1.1em; margin: 0 }
-table.prettyprint-table pre, table.prettyprint-table table {margin: 0}
+table.prettyprint-table pre, table.prettyprint-table table {margin: 0; background: #222; border: none}
 pre.prettyprint tr:hover td {background: #333}
 table.prettyprint-table td.number {color: #666; font-family: "Courier New",Courier,monospace }
 .prettyprint-box {width: 100%; display: block; overflow-x: auto}
