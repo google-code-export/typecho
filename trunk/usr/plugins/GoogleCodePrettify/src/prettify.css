@@ -11,7 +11,7 @@
 .atn { color: #FAF4C6; }
 .atv { color: #B1D631; }
 .dec { color: #FAF4C6; }
-table.prettyprint-table { padding: 2px; border: 1px solid #000; background: #222; color: #eee; font-size: 13px; margin: 0 }
+table.prettyprint-table { padding: 2px; border: 1px solid #000; background: #222; color: #eee; font-size: 13px; margin: 0; font: 12px/1.5 'andale mono','lucida console',monospace; }
 table.prettyprint-table pre, table.prettyprint-table table {margin: 0; background: #222; border: none; font-size: 13px;}
 pre.prettyprint tr:hover td {background: #333}
 table.prettyprint-table td.number {color: #666; font-family: "Courier New",Courier,monospace }
