@@ -35,6 +35,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     private $_wpOptions;
     
     /**
+     * 已经使用过的组件列表
+     * 
+     * @access private
+     * @var array
+     */
+    private static $_usedWidgetNameList = array();
+    
+    /**
      * 获取扩展字段
      * 
      * @access private
@@ -159,6 +167,23 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         return '';
+    }
+    
+    /**
+     * 代理工厂方法,将类静态化放置到列表中
+     *
+     * @access public
+     * @param string $alias 组件别名
+     * @param mixed $params 传递的参数
+     * @param mixed $request 前端参数
+     * @param boolean $enableResponse 是否允许http回执
+     * @return object
+     * @throws Typecho_Exception
+     */
+    public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
+    {
+        self::$_usedWidgetNameList[] = $alias;
+        parent::widget($alias, $params, $request, $enableResponse);
     }
 
     /**
@@ -454,11 +479,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         while ($pages->next()) {
             $pageStructs[] = array(
-                    'dateCreated'   => new IXR_Date($this->options->timezone + $pages->created),
-                    'page_id'       => $pages->cid,
-                    'page_title'    => $pages->title,
-                    'page_parent_id'=> 0,
-                    );
+                'dateCreated'       => new IXR_Date($this->options->timezone + $pages->created),
+                'date_created_gmt'  => new IXR_Date($this->options->timezone + $pages->created),
+                'page_id'           => $pages->cid,
+                'page_title'        => $pages->title,
+                'page_parent_id'    => 0,
+            );
         }
 
         return $pageStructs;
@@ -1902,7 +1928,23 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return new IXR_Error(33, _t('这个目标地址不存在'));
         }
     }
-
+    
+    /**
+     * 回收变量
+     * 
+     * @access public
+     * @param string $methodName 方法
+     * @return void
+     */
+    public function hookAfterCall($methodName)
+    {
+        if (!empty(self::$_usedWidgetNameList)) {
+            foreach (self::$_usedWidgetNameList as $key => $widgetName) {
+                $this->destory($widgetName);
+                unset(self::$_usedWidgetNameList[$key]);
+            }
+        }
+    }
 
 
     /**
@@ -2035,6 +2077,9 @@ EOF;
                 /** PingBack */
                 'pingback.ping'             => array($this,'pingbackPing'),
                 'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
+                
+                /** hook after */
+                'hook.afterCall'       => array($this, 'hookAfterCall'),
             ));
         }
     }
