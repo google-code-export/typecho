@@ -93,7 +93,7 @@ class IXR_Server
     private function call($methodname, $args)
     {
         // hook
-        if ($this->hasMethod('hook.beforeCall')) {
+        if (0 !== strpos($methodname, 'hook.') && $this->hasMethod('hook.beforeCall')) {
             $this->call('hook.beforeCall', array($methodname));
         }
         
@@ -132,7 +132,7 @@ class IXR_Server
         }
         
         // hook
-        if ($this->hasMethod('hook.afterCall')) {
+        if (0 !== strpos($methodname, 'hook.') && $this->hasMethod('hook.afterCall')) {
             $this->call('hook.afterCall', array($methodname));
         }
         

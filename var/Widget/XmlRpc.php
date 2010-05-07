@@ -40,7 +40,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @access private
      * @var array
      */
-    private static $_usedWidgetNameList = array();
+    private $_usedWidgetNameList = array();
     
     /**
      * 获取扩展字段
@@ -180,10 +180,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @return object
      * @throws Typecho_Exception
      */
-    public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
+    private function singletonWidget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
-        self::$_usedWidgetNameList[] = $alias;
-        parent::widget($alias, $params, $request, $enableResponse);
+        $this->_usedWidgetNameList[] = $alias;
+        return Typecho_Widget::widget($alias, $params, $request, $enableResponse);
     }
 
     /**
@@ -297,7 +297,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             /** 由于Widget_Contents_Page_Edit是从request中获取参数, 因此我们需要强行设置flush一下request */
             /** widget方法的第三个参数可以指定强行转换传入此widget的request参数 */
             /** 此组件会进行复杂的权限检测 */
-            $page = $this->widget('Widget_Contents_Page_Edit', NULL, "cid={$pageId}");
+            $page = $this->singletonWidget('Widget_Contents_Page_Edit', NULL, "cid={$pageId}");
         } catch (Typecho_Widget_Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new IXR_Error($e->getCode(), $e->getMessage());
@@ -353,7 +353,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         /** 过滤type为page的contents */
         /** 同样需要flush一下, 需要取出所有status的页面 */
-        $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
+        $pages = $this->singletonWidget('Widget_Contents_Page_Admin', NULL, 'status=all');
 
         /** 初始化要返回的数据结构 */
         $pageStructs = array();
@@ -432,7 +432,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 删除页面 */
         try {
             /** 此组件会进行复杂的权限检测 */
-            $page = $this->widget('Widget_Contents_Page_Edit', NULL, "do=delete&cid={$pageId}", false);
+            $page = $this->singletonWidget('Widget_Contents_Page_Edit', NULL, "do=delete&cid={$pageId}", false);
         } catch (Typecho_Widget_Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new IXR_Error($e->getCode(), $e->getMessage());
@@ -473,7 +473,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (!$this->checkAccess($userName, $password, 'editor')) {
             return ($this->error);
         }
-        $pages = $this->widget('Widget_Contents_Page_Admin', NULL, 'status=all');
+        $pages = $this->singletonWidget('Widget_Contents_Page_Admin', NULL, 'status=all');
         /**初始化*/
         $pageStructs = array();
 
@@ -547,8 +547,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 调用已有组件 */
         try {
             /** 插入 */
-            $this->widget('Widget_Metas_Category_Edit', NULL, $input, false)->action();
-            return $this->widget('Widget_Notice')->getHighlightId() ? true : false;
+            $this->singletonWidget('Widget_Metas_Category_Edit', NULL, $input, false)->action();
+            return $this->singletonWidget('Widget_Notice')->getHighlightId() ? true : false;
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -573,7 +573,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return ($this->error);
         }
 
-        $meta = $this->widget('Widget_Abstract_Metas');
+        $meta = $this->singletonWidget('Widget_Abstract_Metas');
 
         /** 构造出查询语句并且查询*/
         $key = Typecho_Common::filterSearchQuery($category);
@@ -638,7 +638,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         $struct = array();
-        $tags = $this->widget('Widget_Metas_Tag_Cloud');
+        $tags = $this->singletonWidget('Widget_Metas_Tag_Cloud');
         
         while ($tags->next()) {
             $struct[] = array(
@@ -672,7 +672,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         try {
-            $this->widget('Widget_Metas_Category_Edit', NULL, 'do=delete&mid=' . intval($categoryId), false);
+            $this->singletonWidget('Widget_Metas_Category_Edit', NULL, 'do=delete&mid=' . intval($categoryId), false);
             return true;
         } catch (Typecho_Exception $e) {
             return false;
@@ -696,7 +696,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         
-        $stat = $this->widget('Widget_Stat', NULL, 'cid=' . intval($postId), false);
+        $stat = $this->singletonWidget('Widget_Stat', NULL, 'cid=' . intval($postId), false);
         
         return array(
             'approved' => $stat->currentPublishedCommentsNum,
@@ -887,7 +887,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         
-        $comment = $this->widget('Widget_Comments_Edit', NULL, 'do=get&coid=' . intval($commentId), false);
+        $comment = $this->singletonWidget('Widget_Comments_Edit', NULL, 'do=get&coid=' . intval($commentId), false);
         
         if (!$comment->have()) {
             return new IXR_Error(404, _t('评论不存在'));
@@ -955,7 +955,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['page'] = ceil($offset / $pageSize);
         }
         
-        $comments = $this->widget('Widget_Comments_Admin', 'pageSize=' . $pageSize, $input, false);
+        $comments = $this->singletonWidget('Widget_Comments_Admin', 'pageSize=' . $pageSize, $input, false);
         $commentsStruct = array();
         
         while ($comments->next()) {
@@ -998,7 +998,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         $commentId = abs(intval($commentId));
-        return intval($this->widget('Widget_Abstract_Comments')->delete(
+        return intval($this->singletonWidget('Widget_Abstract_Comments')->delete(
             $this->db->sql()->where('coid = ?', $commentId))) > 0;
     }
     
@@ -1021,7 +1021,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         $commentId = abs(intval($commentId));
-        $commentWidget = $this->widget('Widget_Abstract_Comments');
+        $commentWidget = $this->singletonWidget('Widget_Abstract_Comments');
         $where = $this->db->sql()->where('coid = ?', $commentId);
         
         if (!$commentWidget->commentIsWriteable($where)) {
@@ -1082,7 +1082,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         if (is_numeric($path)) {
-            $post = $this->widget('Widget_Archive', 'type=single', 'cid=' . $path, false);
+            $post = $this->singletonWidget('Widget_Archive', 'type=single', 'cid=' . $path, false);
         } else {
             /** 检查目标地址是否正确*/
             $pathInfo = Typecho_Common::url(substr($path, strlen($this->options->index)), '/');
@@ -1119,7 +1119,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         try {
-            $this->widget('Widget_Feedback', NULL, $input, false);
+            $this->singletonWidget('Widget_Feedback', NULL, $input, false);
         } catch (Typecho_Exception $e) {
             return new IXR_Error(500, $e->getMessage());
         }
@@ -1244,12 +1244,12 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         try {
             /** 插入 */
             if ('page' == $type) {
-                $this->widget('Widget_Contents_Page_Edit', NULL, $input, false)->action();
+                $this->singletonWidget('Widget_Contents_Page_Edit', NULL, $input, false)->action();
             } else {
-                $this->widget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
+                $this->singletonWidget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
             }
 
-            return $this->widget('Widget_Notice')->getHighlightId();
+            return $this->singletonWidget('Widget_Notice')->getHighlightId();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1288,7 +1288,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         try {
-            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+            $post = $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1343,7 +1343,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
 
-        $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize={$postsNum}", 'status=all');
+        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize={$postsNum}", 'status=all');
 
         $postStructs = array();
         /** 如果这个post存在则输出，否则输出错误 */
@@ -1400,7 +1400,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return ($this->error);
         }
 
-        $categories = $this->widget('Widget_Metas_Category_List');
+        $categories = $this->singletonWidget('Widget_Metas_Category_List');
 
         /** 初始化category数组*/
         $categoryStructs = array();
@@ -1482,7 +1482,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         /** 读取数据*/
-        $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
 
         /**初始化*/
         $postTitleStructs = array();
@@ -1513,7 +1513,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return ($this->error);
         }
 
-        $categories = $this->widget('Widget_Metas_Category_List');
+        $categories = $this->singletonWidget('Widget_Metas_Category_List');
 
         /** 初始化categorise数组*/
         $categoryStructs = array();
@@ -1542,7 +1542,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         try {
-            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+            $post = $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1576,7 +1576,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         try {
-            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+            $post = $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1686,7 +1686,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         try {
-            $post = $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
+            $post = $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}");
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1720,7 +1720,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         try {
-            $this->widget('Widget_Contents_Post_Edit', NULL, "cid={$postId}")->deletePost();
+            $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}")->deletePost();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
@@ -1742,7 +1742,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         //todo:限制数量
-        $posts = $this->widget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
 
         $postStructs = array();
         while ($posts->next()) {
@@ -1910,7 +1910,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     $pingback = $this->pluginHandle()->pingback($pingback, $post);
 
                     /** 执行插入*/
-                    $insertId = $this->widget('Widget_Abstract_Comments')->insert($pingback);
+                    $insertId = $this->singletonWidget('Widget_Abstract_Comments')->insert($pingback);
 
                     /** 评论完成接口 */
                     $this->pluginHandle()->finishPingback($this);
@@ -1938,10 +1938,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function hookAfterCall($methodName)
     {
-        if (!empty(self::$_usedWidgetNameList)) {
-            foreach (self::$_usedWidgetNameList as $key => $widgetName) {
+        if (!empty($this->_usedWidgetNameList)) {
+            foreach ($this->_usedWidgetNameList as $key => $widgetName) {
                 $this->destory($widgetName);
-                unset(self::$_usedWidgetNameList[$key]);
+                unset($this->_usedWidgetNameList[$key]);
             }
         }
     }
