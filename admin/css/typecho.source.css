@@ -239,6 +239,15 @@ button {
     margin-bottom:-1px;
 }
 
+img.avatar {
+	padding: 2px;
+	background: #FFF;
+	float: right;
+	
+	-moz-box-shadow: 1px 1px 2px #999;
+	-webkit-box-shadow: 1px 1px 2px #999;
+}
+
 /**
  * clearfix
  */
@@ -1448,11 +1457,12 @@ ul.typecho-list-notable li span.trackback {
     background-position: bottom;
 }
 
+ul.typecho-list-notable li .comment-body {
+	overflow: visible;
+}
+
 ul.typecho-list-notable li .comment-avatar img {
-	float: right;
 	margin-top: 5px;
-	padding: 2px;
-	background: #FFF;
 }
 
 ul.typecho-list-notable li code, ul.typecho-list-notable li pre {
@@ -1754,8 +1764,8 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-page-main .typecho-content-panel h4 img {
-    margin-bottom: -2px;
-    margin-right: -3px;
+    margin-right: 10px;
+	margin-top: 10px;
 }
 
 /**

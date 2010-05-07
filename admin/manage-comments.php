@@ -80,7 +80,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <div class="column-01 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>
-                        <div class="column-23">
+                        <div class="column-23 comment-body">
                             <div class="content">
                                 <div class="comment-avatar">
                                     <?php $comments->gravatar(); ?>

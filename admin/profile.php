@@ -12,8 +12,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="container typecho-page-main">
             <div class="column-16 suffix typecho-content-panel">
                 <h4>
-                <?php echo '<img src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=20&r=X' .
-                '&d=" alt="' . $user->screenName . '" width="20" height="20" />'; ?>
+                <?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=50&r=X' .
+                '&d=" alt="' . $user->screenName . '" width="50" height="50" />'; ?>
                 <?php $user->name(); ?><cite>(<?php $user->screenName(); ?>)</cite>
                 </h4>
                 <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
