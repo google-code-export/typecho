@@ -1488,11 +1488,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $postTitleStructs = array();
         while ($posts->next()) {
             $postTitleStructs[] = array(
-                    'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
-                    'userid'        => $posts->authorId,
-                    'postid'        => $posts->cid,
-                    'title'         => $posts->title,
-                    );
+                'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
+                'userid'        => $posts->authorId,
+                'postid'        => $posts->cid,
+                'title'         => $posts->title
+            );
         }
 
         return $postTitleStructs;
@@ -1551,10 +1551,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $categories = array();
         foreach ($post->categories as $category) {
             $categories[] = array(
-                    'categoryName'      => $category['name'],
-                    'categoryId'        => $category['mid'],
-                    'isPrimary'         => true,
-                    );
+                'categoryName'      => $category['name'],
+                'categoryId'        => $category['mid'],
+                'isPrimary'         => true
+            );
         }
         return $categories;
     }
@@ -1640,6 +1640,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             'blogName' => $this->options->title,
             'xmlrpc'   => $this->options->xmlRpcUrl
         );
+        
         return $struct;
     }
 
@@ -1659,13 +1660,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $struct = array(
-                'nickname'  => $this->user->screenName,
-                'userid'     => $this->user->uid,
-                'url'       => $this->user->url,
-                'email'     => $this->user->mail,
-                'lastname'  => '',
-                'firstname' => ''
-                );
+            'nickname'  => $this->user->screenName,
+            'userid'     => $this->user->uid,
+            'url'       => $this->user->url,
+            'email'     => $this->user->mail,
+            'lastname'  => '',
+            'firstname' => ''
+        );
+        
         return $struct;
     }
 
@@ -1690,17 +1692,19 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
+        
+        $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
 
         $content = '<title>' . $post->title . '</title>';
-        $content .= '<category>' . $post->categaries['0']['name'];
+        $content .= '<category>' . implode(',', $categories) . '</category>';
         $content .= stripslashes($post->text);
 
         $struct = array(
-                'userid'        => $post->authorId,
-                'dateCreated'   => new IXR_Date($this->options->timezone + $post->created),
-                'content'       => $content,
-                'postid'        => $post->cid,
-                );
+            'userid'        => $post->authorId,
+            'dateCreated'   => new IXR_Date($this->options->timezone + $post->created),
+            'content'       => $content,
+            'postid'        => $post->cid
+        );
         return $struct;
     }
 
@@ -1746,8 +1750,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $postStructs = array();
         while ($posts->next()) {
+            $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
+            
             $content = '<title>' . $posts->title . '</title>';
-            $content .= '<category>' . $posts->categaries['0']['name'];
+            $content .= '<category>' . implode(',', $categories) . '</category>';
             $content .= stripslashes($posts->text);
 
             $struct = array(
