@@ -94,7 +94,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
-        if ($result && is_string($result)) {
+        if (isset($result) && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
         } else {
             $this->widget('Widget_Notice')->set(_t('插件已经被激活'), NULL, 'success');
@@ -161,7 +161,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
 
-        if ($result && is_string($result)) {
+        if (isset($result) && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
         } else {
             $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), NULL, 'success');
