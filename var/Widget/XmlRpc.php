@@ -323,7 +323,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             'wp_slug'        => $page->slug,
             'wp_password'   => $page->password,
             'wp_author'     => $page->author->name,
-            'wp_page_parent_id' => 0,
+            'wp_page_parent_id' => '0',
             'wp_page_parent_title' => NULL,
             'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
             'wp_author_id'  => $page->authorId,
@@ -379,7 +379,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'wp_slug'        => $pages->slug,
                 'wp_password'   => $pages->password,
                 'wp_author'     => $pages->author->name,
-                'wp_page_parent_id' => 0,
+                'wp_page_parent_id' => '0',
                 'wp_page_parent_title' => NULL,
                 'wp_page_order' => $pages->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $pages->authorId,
@@ -483,7 +483,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'date_created_gmt'  => new IXR_Date($this->options->timezone + $pages->created),
                 'page_id'           => $pages->cid,
                 'page_title'        => $pages->title,
-                'page_parent_id'    => 0,
+                'page_parent_id'    => '0',
             );
         }
 
@@ -1407,7 +1407,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         while ($categories->next()) {
             $categoryStructs[] = array(
                 'categoryId'            => $categories->mid,
-                'parentId'              => 0,
+                'parentId'              => '0',
                 'categoryName'          => $categories->name,
                 'categoryDescription'   => $categories->description,
                 'description'           => $categories->name,
