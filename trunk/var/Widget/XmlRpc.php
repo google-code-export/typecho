@@ -318,13 +318,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             'categories'    => $page->categories,
             'excerpt'       => $page->description,
             'text_more'     => $more,
-            'mt_allow_comments' => $page->allowComment,
-            'mt_allow_pings' => $page->allowPing,
-            'wp_slug'        => $page->slug,
+            'mt_allow_comments' => intval($page->allowComment),
+            'mt_allow_pings'    => intval($page->allowPing),
+            'wp_slug'       => $page->slug,
             'wp_password'   => $page->password,
             'wp_author'     => $page->author->name,
             'wp_page_parent_id' => '0',
-            'wp_page_parent_title' => NULL,
+            'wp_page_parent_title' => '',
             'wp_page_order' => $page->order,     //meta是描述字段, 在page时表示顺序
             'wp_author_id'  => $page->authorId,
             'wp_author_display_name' => $page->author->screenName,
@@ -374,13 +374,13 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'categories'    => $pages->categories,
                 'excerpt'       => $pages->description,
                 'text_more'     => $more,
-                'mt_allow_comments' => $pages->allowComment,
-                'mt_allow_pings' => $pages->allowPing,
-                'wp_slug'        => $pages->slug,
+                'mt_allow_comments' => intval($pages->allowComment),
+                'mt_allow_pings'    => intval($pages->allowPing),
+                'wp_slug'       => $pages->slug,
                 'wp_password'   => $pages->password,
                 'wp_author'     => $pages->author->name,
                 'wp_page_parent_id' => '0',
-                'wp_page_parent_title' => NULL,
+                'wp_page_parent_title' => '',
                 'wp_page_order' => $pages->order,     //meta是描述字段, 在page时表示顺序
                 'wp_author_id'  => $pages->authorId,
                 'wp_author_display_name' => $pages->author->screenName,
@@ -587,9 +587,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $categoryStructs = array();
         foreach ($categories as $category) {
             $categoryStructs[] = array(
-                    'category_id'   => $category['mid'],
-                    'category_name' => $category['name'],
-                    );
+                'category_id'   => $category['mid'],
+                'category_name' => $category['name'],
+            );
         }
 
         return $categoryStructs;
@@ -1310,8 +1310,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'categories'    => $categories,
                 'mt_excerpt'    => $post->description,
                 'mt_text_more'  => $more,
-                'mt_allow_comments' => $post->allowComment,
-                'mt_allow_pings' => $post->allowPing,
+                'mt_allow_comments' => intval($post->allowComment),
+                'mt_allow_pings'    => intval($post->allowPing),
                 'mt_keywords'	=> implode(', ', $tags),
                 'wp_slug'       => $post->slug,
                 'wp_password'   => $post->password,
@@ -1367,8 +1367,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'categories'    => $categories,
                     'mt_excerpt'    => $posts->description,
                     'mt_text_more'  => $more,
-                    'mt_allow_comments' => $posts->allowComment,
-                    'mt_allow_pings' => $posts->allowPing,
+                    'mt_allow_comments' => intval($posts->allowComment),
+                    'mt_allow_pings'    => intval($posts->allowPing),
                     'mt_keywords'	=> implode(', ', $tags),
                     'wp_slug'       => $posts->slug,
                     'wp_password'   => $posts->password,
@@ -1488,10 +1488,11 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $postTitleStructs = array();
         while ($posts->next()) {
             $postTitleStructs[] = array(
-                'dateCreated'   => new IXR_Date($this->options->timezone + $posts->created),
-                'userid'        => $posts->authorId,
-                'postid'        => $posts->cid,
-                'title'         => $posts->title
+                'dateCreated'       => new IXR_Date($this->options->timezone + $posts->created),
+                'userid'            => $posts->authorId,
+                'postid'            => $posts->cid,
+                'title'             => $posts->title,
+                'date_created_gmt'  => new IXR_Date($this->options->timezone + $posts->created)
             );
         }
 
