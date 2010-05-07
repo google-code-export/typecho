@@ -49,6 +49,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         switch (true) {
             case false !== strpos($agent, 'wp-iphone'):   // wordpress iphone客户端
+            case false !== strpos($agent, 'blackberry'):  // 黑莓
             case false !== strpos($agent, 'plain-text'):  // 这是预留给第三方开发者的接口, 用于强行调用非所见即所得数据
                 $text = $content->text;
                 break;
@@ -1379,13 +1380,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $categoryStructs = array();
         while ($categories->next()) {
             $categoryStructs[] = array(
-                    'categoryId'    => $categories->mid,
-                    'parentId'      => 0,
-                    'categoryName'  => $categories->name,
-                    'description'   => $categories->name,
-                    'htmlUrl'       => $categories->permalink,
-                    'rssUrl'        => $categories->feedUrl,
-                    );
+                'categoryId'            => $categories->mid,
+                'parentId'              => 0,
+                'categoryName'          => $categories->name,
+                'categoryDescription'   => $categories->description,
+                'description'           => $categories->name,
+                'htmlUrl'               => $categories->permalink,
+                'rssUrl'                => $categories->feedUrl,
+            );
         }
 
         return $categoryStructs;
