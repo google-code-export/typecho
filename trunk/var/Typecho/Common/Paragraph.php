@@ -37,6 +37,17 @@ class Typecho_Common_Paragraph
      * @var array
      */
     private static $_blocks = array();
+    
+    /**
+     * 作为段落看待的标签
+     * 
+     * (default value: 'p|code|pre|div|blockquote|form|ul|ol|dd|table|h1|h2|h3|h4|h5|h6')
+     * 
+     * @var string
+     * @access private
+     * @static
+     */
+    private static $_blockTag = 'p|code|pre|div|blockquote|form|ul|ol|dd|table|h1|h2|h3|h4|h5|h6';
 
     /**
      * 生成唯一的id, 为了速度考虑最多支持1万个tag的处理
@@ -78,11 +89,11 @@ class Typecho_Common_Paragraph
     private static function fixPragraph($text)
     {
         $text = trim($text);
-        if (!preg_match("/^<p(\s|>)/i", $text)) {
+        if (!preg_match("/^<(" . self::$_blockTag . ")(\s|>)/i", $text)) {
             $text = '<p>' . $text;
         }
         
-        if (!preg_match("/<\/p>$/i", $text)) {
+        if (!preg_match("/<\/(" . self::$_blockTag . ")>$/i", $text)) {
             $text = $text . '</p>';
         }
         
