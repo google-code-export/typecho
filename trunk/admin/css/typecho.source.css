@@ -1390,6 +1390,11 @@ ul.typecho-list-notable p {
 ul.typecho-list-notable .line {
     height: 20px;
     line-height: 20px;
+	padding-left: 5px;
+}
+
+ul.typecho-list-notable .content {
+	padding-left: 5px;
 }
 
 ul.typecho-list-notable .big-line {
@@ -1441,6 +1446,13 @@ ul.typecho-list-notable li span.pingback {
 
 ul.typecho-list-notable li span.trackback {
     background-position: bottom;
+}
+
+ul.typecho-list-notable li .comment-avatar img {
+	float: right;
+	margin-top: 5px;
+	padding: 2px;
+	background: #FFF;
 }
 
 ul.typecho-list-notable li code, ul.typecho-list-notable li pre {
