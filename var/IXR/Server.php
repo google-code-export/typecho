@@ -92,6 +92,11 @@ class IXR_Server
      */
     private function call($methodname, $args)
     {
+        // hook
+        if ($this->hasMethod('hook.beforeCall')) {
+            $this->call('hook.beforeCall', array($methodname));
+        }
+        
         if (!$this->hasMethod($methodname)) {
             return new IXR_Error(-32601, 'server error. requested method '.$methodname.' does not exist.');
         }
@@ -125,6 +130,12 @@ class IXR_Server
                 $result = $method($args);
             }
         }
+        
+        // hook
+        if ($this->hasMethod('hook.afterCall')) {
+            $this->call('hook.afterCall', array($methodname));
+        }
+        
         return $result;
     }
 
@@ -244,6 +255,11 @@ class IXR_Server
         if ($this->message->messageType != 'methodCall') {
             $this->error(-32600, 'server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall');
         }
+        
+        if (0 === strpos($this->message->methodName, 'hook.')) {
+            die('THIS METHOD MUST BE CALLED INSIDE.');
+        }
+        
         $result = $this->call($this->message->methodName, $this->message->params);
         // Is the result an error?
         if (is_a($result, 'IXR_Error')) {
@@ -265,6 +281,11 @@ class IXR_Server
 </methodResponse>
 
 EOD;
+        // hook
+        if ($this->hasMethod('hook.beforeOutput')) {
+            $this->call('hook.beforeOutput', array());
+        }
+        
         // Send it
         $this->output($xml);
     }
