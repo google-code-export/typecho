@@ -80,13 +80,12 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <div class="column-01 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>
-                        <?php if ($options->commentsAvatar && 'comment' == $comments->type && !empty($comments->mail)): ?>
-                        <div class="column-02 center avatar">
-                            <?php $comments->gravatar(); ?>
-                        </div>
-                        <?php endif; ?>
-                        <div class="<?php if ($options->commentsAvatar && 'comment' == $comments->type && !empty($comments->mail)): ?>column-21<?php else: ?>column-23<?php endif; ?>">
+                        <div class="column-23">
                             <div class="content">
+                                <div class="comment-avatar">
+                                    <?php $comments->gravatar(); ?>
+                                </div>
+                            
                                 <div class="comment-meta">
                                     <span class="<?php $comments->type(); ?>"></span>
                                     <?php $comments->author(true); ?>
@@ -184,7 +183,7 @@ include 'common-js.php';
                     }
                     
                     form.destroy();
-                    this.getParent('li').getElement('.content').setStyle('display', 'inline');
+                    this.getParent('li').getElement('.content').setStyle('display', '');
                     this.clicked = false;
                     
                 } else {
@@ -239,7 +238,7 @@ include 'common-js.php';
                                             onComplete: (function () {
                                                 var li = this.getParent('li');
                                             
-                                                li.getElement('.content').setStyle('display', 'inline');
+                                                li.getElement('.content').setStyle('display', '');
                                                 li.getElement('.comment-form').destroy();
                                                 var myFx = new Fx.Tween(li);
                                                 
