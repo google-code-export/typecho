@@ -368,13 +368,37 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function gravatar($size = 32, $default = NULL)
     {
-        if ($this->options->commentsAvatar && 'comment' == $this->type && '' != $this->mail) {
+        if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
-                echo '<img class="avatar" src="http://www.gravatar.com/avatar/' .
-                md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+            
+                if (!empty($this->mail)) {
+                    $mailHash = md5(strtolower($this->mail));
+                }
+                
+                if ($this->request->isSecure()) {
+                    $host = 'https://secure.gravatar.com';
+                } else {
+                    if (empty($this->mail)) {
+                        $host = 'http://0.gravatar.com';
+                    } else {
+                        $host = sprintf( "http://%d.gravatar.com", (hexdec($mailHash{0}) % 2));
+                    }
+                }
+                
+                $url = $host . '/avatar/';
+                
+                if (!empty($this->mail)) {
+                    $url .= $mailHash;
+                }
+                
+                $url .= '?s=' . $size;
+                $url .= '&amp;r=' . $rating;
+                $url .= '&amp;d=' . $default;
+            
+                echo '<img class="avatar" src="' . $url . '" alt="' .
                 $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
         }

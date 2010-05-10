@@ -367,6 +367,11 @@ class Widget_Options extends Typecho_Widget
         /** 初始化站点信息 */
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
+        
+        /** 增加对SSL连接的支持 */
+        if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
+            $this->siteUrl = substr_replace($this->siteUrl, 'https', 0, 4);
+        }
 
         /** 自动初始化路由表 */
         $this->routingTable = unserialize($this->routingTable);
