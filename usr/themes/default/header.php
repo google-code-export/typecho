@@ -17,7 +17,12 @@
 		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="<?php _e('搜索'); ?>" /></div>
     </form>
 	<div id="logo">
-	    <h1><a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title() ?></a></h1>
+	    <h1><a href="<?php $this->options->siteUrl(); ?>">
+        <?php if ($this->options->logoUrl): ?>
+        <img height="60" src="<?php $this->options->logoUrl() ?>" alt="<?php $this->options->title() ?>" />
+        <?php endif; ?>
+        <?php $this->options->title() ?>
+        </a></h1>
 	    <p class="description"><?php $this->options->description() ?></p>
     </div>
 </div><!-- end #header -->
