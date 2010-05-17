@@ -942,4 +942,17 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->delete('table.options')
         ->where('name = ?', 'commentsAvatarSize'));
     }
+    
+    /**
+     * 升级至10.5.17
+     *
+     * @access public
+     * @param Typecho_Db $db 数据库对象
+     * @param Typecho_Widget $options 全局信息组件
+     * @return void
+     */
+    public static function v0_8r10_5_17($db, $options)
+    {
+        Typecho_Widget::widget('Widget_Themes_Edit', NULL, 'change=' . $options->theme, false)->action();
+    }
 }

@@ -115,8 +115,16 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $settings = $form->getAllRequest();
 
         if (!$this->configHandle($settings, false)) {
-            $this->update(array('value' => serialize($settings)),
-            $this->db->sql()->where('name = ?', 'theme:' . $theme));
+            if ($this->options->__get('theme:' . $theme)) {
+                $this->update(array('value' => serialize($settings)),
+                $this->db->sql()->where('name = ?', 'theme:' . $theme));
+            } else {
+                $this->insert(array(
+                    'name'  =>  'theme:' . $theme,
+                    'value' =>  serialize($settings),
+                    'user'  =>  0
+                ));
+            }
         }
 
         /** 设置高亮 */
