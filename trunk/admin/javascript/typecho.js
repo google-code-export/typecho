@@ -39,7 +39,9 @@ Typecho.guid = function (el, config) {
                     _d.setStyle('display', 'block');
                     _d.getElement('ul li:first-child').setStyle('border-top', 'none');
                     _d.getElement('ul li:last-child').setStyle('border-bottom', 'none');
-                    _d.getElements('ul li').setStyle('width', _d.getCoordinates().width - 22);
+                    if (Browser.Engine.trident) {   // IE的安慰
+                        _d.getElements('ul li').setStyle('width', _d.getCoordinates().width - 22);
+                    }
                 }
             }
         }
