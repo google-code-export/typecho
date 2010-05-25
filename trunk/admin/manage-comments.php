@@ -126,6 +126,8 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                      | 
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
                                      | 
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
+                                     | 
                                     <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
                                 <div class="right">
@@ -286,6 +288,106 @@ include 'common-js.php';
                                 
                             }).bind(this)
                         }).send();
+                    }
+                    
+                }
+                
+                return false;
+            });
+            
+            $(document).getElements('.typecho-list-notable li .operate-reply').addEvent('click', function () {
+            
+                var form = this.getParent('li').getElement('.reply-form');
+                var request;
+                
+                if (form) {
+                    
+                    if (request) {
+                        request.cancel();
+                    }
+                    
+                    form.destroy();
+                    this.clicked = false;
+                    
+                } else {
+                    if (('undefined' == typeof(this.clicked) || !this.clicked)
+                        && ('undefined' == typeof(this.replied) || !this.replied)) {
+                        this.clicked = true;
+                        
+                        var coid = this.getParent('li').getElement('input[type=checkbox]').get('value');
+
+                        var form = new Element('div', {
+                            'class': 'reply-form',
+                        
+                            'html': '<textarea name="text"></textarea>' +
+                            '<p><button id="reply-' + coid + '"><?php _e('回复评论'); ?></button></p>'
+                        
+                        });
+                        
+                        form.inject(this.getParent('li').getElement('.line'), 'after');
+                        form.getElement('#reply-' + coid).addEvent('click', (function () {
+                            if ('' == this.getParent('li').getElement('.reply-form textarea[name=text]').get('value')) {
+                                alert('<?php _e('必须填写内容'); ?>');
+                                return false;
+                            }
+                        
+                            var query = this.getParent('li').getElement('.reply-form').toQueryString();
+                            
+                            var sRequest = new Request.JSON({
+                                url: this.getProperty('rel'),
+                                
+                                onComplete: (function () {
+                                    var li = this.getParent('li');
+                                    li.getElement('.reply-form').destroy();
+                                    li.removeClass('hover');
+                                    li.getElement('.operate-reply').clicked = false;
+                                }).bind(this),
+                                
+                                onSuccess: (function (json) {
+                                    if (json.success) {
+                                        var li = this.getParent('li');
+                                        
+                                        var msg = new Element('div', {
+                                            'class': 'reply-message',
+                                        
+                                            'html': json.comment.content
+                                        
+                                        });
+                                        
+                                        li.getElement('.operate-reply').set('html', '<?php _e('取消回复'); ?>');
+                                        li.getElement('.operate-reply').replied = true;
+                                        li.getElement('.operate-reply').child = json.comment.coid;
+                                        msg.inject(li.getElement('.line'), 'after');
+                                    }
+                                }).bind(this)
+                            }).send(query);
+                            
+                            return false;
+                            
+                        }).bind(this));
+                    } else if (this.replied) {
+                        this.getParent('.line').addClass('loading');
+                    
+                        var sRequest = new Request.JSON({
+                            url: '<?php $options->index('/action/comments-edit?do=delete'); ?>',
+                            
+                            onComplete: (function () {
+                                var li = this.getParent('li');
+                                li.getElement('.operate-reply').clicked = false;
+                                this.getParent('.line').removeClass('loading');
+                            }).bind(this),
+                            
+                            onSuccess: (function (json) {
+                                if (json.success) {
+                                    var li = this.getParent('li');
+                                    
+                                    li.getElement('.operate-reply').set('html', '<?php _e('回复'); ?>');
+                                    li.getElement('.operate-reply').replied = false;
+                                    li.getElement('.operate-reply').set('child', 0);
+                                    li.getElement('.reply-message').destroy();
+                                }
+                            }).bind(this)
+                        }).send('coid=' + this.child);
                     }
                     
                 }
