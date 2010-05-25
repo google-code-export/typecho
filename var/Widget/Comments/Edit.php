@@ -174,13 +174,29 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
                 $deleteRows ++;
             }
         }
+        
+        if ($this->request->isAjax()) {
+            
+            if ($deleteRows > 0) {
+                $this->response->throwJson(array(
+                    'success'   => 1,
+                    'message'   => _t('删除评论成功')
+                ));
+            } else {
+                $this->response->throwJson(array(
+                    'success'   => 0,
+                    'message'   => _t('删除评论失败')
+                ));
+            }
+            
+        } else {
+            /** 设置提示信息 */
+            $this->widget('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'), NULL,
+            $deleteRows > 0 ? 'success' : 'notice');
 
-        /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'), NULL,
-        $deleteRows > 0 ? 'success' : 'notice');
-
-        /** 返回原网页 */
-        $this->response->goBack();
+            /** 返回原网页 */
+            $this->response->goBack();
+        }
     }
 
     /**
@@ -274,7 +290,61 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         $this->response->throwJson(array(
             'success'   => 0,
-            'message'   => _t('修改评论失败')
+            'message'   => _t('修评论失败')
+        ));
+    }
+    
+    /**
+     * 回复评论
+     *
+     * @access public
+     * @return void
+     */
+    public function replyComment()
+    {
+        $coid = $this->request->filter('int')->coid;
+        $commentSelect = $this->db->fetchRow($this->select()
+            ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
+
+        if ($commentSelect && $this->commentIsWriteable()) {
+        
+            $comment = array(
+                'cid'       =>  $commentSelect['cid'],
+                'created'   =>  $this->options->gmtTime,
+                'agent'     =>  $this->request->getAgent(),
+                'ip'        =>  $this->request->getIp(),
+                'ownerId'   =>  $commentSelect['ownerId'],
+                'type'      =>  'comment',
+                'author'    =>  $this->user->screenName,
+                'mail'      =>  $this->user->mail,
+                'url'       =>  $this->user->url,
+                'parent'    =>  $coid,
+                'text'      =>  $this->request->filter(array($this->widget('Widget_Feedback'), 'filterText'))->text,
+                'status'    =>  'approved'
+            );
+            
+            /** 评论插件接口 */
+            $this->pluginHandle()->comment($comment, $this);
+
+            /** 回复评论 */
+            $commentId = $this->insert($comment);
+
+            $insertComment = $this->db->fetchRow($this->select()
+                ->where('coid = ?', $commentId)->limit(1), array($this, 'push'));
+            $insertComment['content'] = $this->content;
+            
+            /** 评论完成接口 */
+            $this->pluginHandle()->finishComment($this);
+
+            $this->response->throwJson(array(
+                'success'   => 1,
+                'comment'   => $insertComment
+            ));
+        }
+
+        $this->response->throwJson(array(
+            'success'   => 0,
+            'message'   => _t('回复评论失败')
         ));
     }
 
@@ -294,6 +364,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $this->on($this->request->is('do=delete-spam'))->deleteSpamComment();
         $this->on($this->request->is('do=get&coid'))->getComment();
         $this->on($this->request->is('do=edit&coid'))->editComment();
+        $this->on($this->request->is('do=reply&coid'))->replyComment();
 
         $this->response->redirect($this->options->adminUrl);
     }
