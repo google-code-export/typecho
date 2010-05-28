@@ -42,45 +42,47 @@ class Widget_Plugins_List extends Typecho_Widget
         $plugins = Typecho_Plugin::export();
         $this->activatedPlugins = $plugins['activated'];
 
-        foreach ($pluginDirs as $pluginDir) {
-            if (is_dir($pluginDir)) {
-                /** 获取插件名称 */
-                $pluginName = basename($pluginDir);
+        if (!empty($pluginDirs)) {
+            foreach ($pluginDirs as $pluginDir) {
+                if (is_dir($pluginDir)) {
+                    /** 获取插件名称 */
+                    $pluginName = basename($pluginDir);
 
-                /** 获取插件主文件 */
-                $pluginFileName = $pluginDir . '/Plugin.php';
-            } else if (file_exists($pluginDir)) {
-                $pluginFileName = $pluginDir;
-                $part = explode('.', basename($pluginDir));
-                if (2 == count($part) && 'php' == $part[1]) {
-                    $pluginName = $part[0];
+                    /** 获取插件主文件 */
+                    $pluginFileName = $pluginDir . '/Plugin.php';
+                } else if (file_exists($pluginDir)) {
+                    $pluginFileName = $pluginDir;
+                    $part = explode('.', basename($pluginDir));
+                    if (2 == count($part) && 'php' == $part[1]) {
+                        $pluginName = $part[0];
+                    } else {
+                        continue;
+                    }
                 } else {
                     continue;
                 }
-            } else {
-                continue;
-            }
 
-            if (file_exists($pluginFileName)) {
-                $info = Typecho_Plugin::parseInfo($pluginFileName);
-                $info['name'] = $pluginName;
+                if (file_exists($pluginFileName)) {
+                    $info = Typecho_Plugin::parseInfo($pluginFileName);
+                    $info['name'] = $pluginName;
 
-                list ($version, $build) = explode('/', Typecho_Common::VERSION);
-                $info['dependence'] = Typecho_Plugin::checkDependence($build, $info['dependence']);
+                    list ($version, $build) = explode('/', Typecho_Common::VERSION);
+                    $info['dependence'] = Typecho_Plugin::checkDependence($build, $info['dependence']);
 
-                /** 默认即插即用 */
-                $info['activated'] = true;
+                    /** 默认即插即用 */
+                    $info['activated'] = true;
 
-                if ($info['activate'] || $info['deactivate'] || $info['config'] || $info['personalConfig']) {
-                    $info['activated'] = isset($this->activatedPlugins[$pluginName]);
+                    if ($info['activate'] || $info['deactivate'] || $info['config'] || $info['personalConfig']) {
+                        $info['activated'] = isset($this->activatedPlugins[$pluginName]);
 
-                    if (isset($this->activatedPlugins[$pluginName])) {
-                        unset($this->activatedPlugins[$pluginName]);
+                        if (isset($this->activatedPlugins[$pluginName])) {
+                            unset($this->activatedPlugins[$pluginName]);
+                        }
                     }
-                }
 
-                if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
-                    $this->push($info);
+                    if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
+                        $this->push($info);
+                    }
                 }
             }
         }
