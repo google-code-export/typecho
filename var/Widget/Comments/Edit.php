@@ -324,7 +324,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             );
             
             /** 评论插件接口 */
-            $this->pluginHandle()->comment($comment, $this);
+            $this->pluginHandle('Widget_Feedback')->comment($comment, $this);
 
             /** 回复评论 */
             $commentId = $this->insert($comment);
@@ -334,7 +334,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $insertComment['content'] = $this->content;
             
             /** 评论完成接口 */
-            $this->pluginHandle()->finishComment($this);
+            $this->pluginHandle('Widget_Feedback')->finishComment($this);
 
             $this->response->throwJson(array(
                 'success'   => 1,
