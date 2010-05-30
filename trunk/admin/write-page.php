@@ -47,8 +47,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <p>
                                     <select name="template" id="template">
                                         <option value=""><?php _e('不选择'); ?></option>
-                                        <?php $templates = $page->getTemplates(); foreach ($templates as $name => $template): ?>
-                                        <option value="<?php echo $template['value']; ?>"<?php if($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $name; ?></option>
+                                        <?php $templates = $page->getTemplates(); foreach ($templates as $template => $name): ?>
+                                        <option value="<?php echo $template; ?>"<?php if($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </p>

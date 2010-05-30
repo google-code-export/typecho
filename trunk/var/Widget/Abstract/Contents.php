@@ -408,7 +408,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $file = basename($file);
 
             if ('index.php' != $file && 'custom' == $info['title']) {
-                $result[$info['description']] = $file;
+                $result[$file] = $info['description'];
             }
         }
 
