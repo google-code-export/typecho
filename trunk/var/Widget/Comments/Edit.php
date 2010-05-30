@@ -314,6 +314,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
                 'agent'     =>  $this->request->getAgent(),
                 'ip'        =>  $this->request->getIp(),
                 'ownerId'   =>  $commentSelect['ownerId'],
+                'authorId'  =>  $this->user->uid,
                 'type'      =>  'comment',
                 'author'    =>  $this->user->screenName,
                 'mail'      =>  $this->user->mail,
