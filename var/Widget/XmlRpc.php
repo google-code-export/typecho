@@ -791,7 +791,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         
-        $templates = array_flip($this->getTemplates();
+        $templates = array_flip($this->getTemplates());
         $templates['Default'] = '';
         
         return $templates;
