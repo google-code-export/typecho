@@ -463,7 +463,8 @@ class Typecho_Request
             $pathInfo = '/';
         }
 
-        return ($this->_pathInfo = urldecode($pathInfo));
+        // fix issue 456
+        return ($this->_pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
     }
 
     /**
