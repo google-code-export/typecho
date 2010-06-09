@@ -320,7 +320,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
                 'mail'      =>  $this->user->mail,
                 'url'       =>  $this->user->url,
                 'parent'    =>  $coid,
-                'text'      =>  $this->request->filter(array($this->widget('Widget_Feedback'), 'filterText'))->text,
+                'text'      =>  $this->request->text,
                 'status'    =>  'approved'
             );
             

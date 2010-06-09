@@ -99,15 +99,13 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * 评论回调函数
      * 
      * @access private
-     * @param string $before 在评论之前输出
-     * @param string $after 在评论之后输出
      * @param string $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    private function threadedCommentsCallback($before, $after, $singleCommentOptions)
+    private function threadedCommentsCallback($singleCommentOptions)
     {
         if ($this->_customThreadedCommentsCallback) {
-            return threadedComments($this, $before, $after, $singleCommentOptions);
+            return threadedComments($this, $singleCommentOptions);
         }
         
         $commentClass = '';
@@ -117,7 +115,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             } else {
                 $commentClass .= ' comment-by-user';
             }
-        } 
+        }
         
         $commentLevelClass = $this->_levels > 0 ? ' comment-child' : ' comment-parent';
 ?>
@@ -145,7 +143,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     <?php $this->content(); ?>
     <?php if ($this->children) { ?>
     <div class="comment-children">
-        <?php $this->threadedComments($before, $after, $singleCommentOptions); ?>
+        <?php $this->threadedComments($singleCommentOptions); ?>
     </div>
     <?php } ?>
     <div class="comment-reply">
@@ -285,13 +283,41 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $select->order('table.comments.coid', $this->options->commentsOrder);
         $this->db->fetchAll($select, array($this, 'push'));
         
+        $commentsLevel = array();
+        $commentFilpMap = array();  // 反向查询表
+        
         if ($threadedSelect) {
             $threadedSelect->where('table.comments.parent <> ? AND table.comments.coid > ?', 0, $this->_splitCommentId)
             ->order('table.comments.coid', $this->options->commentsOrder);
             $threadedComments = $this->db->fetchAll($threadedSelect, array($this, 'filter'));
             
             foreach ($threadedComments as $comment) {
-                $this->_threadedComments[$comment['parent']][$comment['coid']] = $comment;
+                /** fix issue 459 */
+                $commentFilpMap[$comment['coid']] = $comment['parent'];
+            
+                $commentsLevel[$comment['coid']] = isset($commentsLevel[$comment['parent']]) ? $commentsLevel[$comment['parent']] + 1 : 1;
+                if ($commentsLevel[$comment['coid']] < $this->options->commentsMaxNestingLevels) {
+                    /** 计算顺序 */
+                    $comment['order'] = isset($this->_threadedComments[$comment['parent']]) 
+                        ? count($this->_threadedComments[$comment['parent']]) + 1 : 1;
+                
+                    $this->_threadedComments[$comment['parent']][$comment['coid']] = $comment;
+                } else {
+                    $grandParent = isset($commentFilpMap[$comment['parent']]) ? $commentFilpMap[$comment['parent']] : 0;     // 上上层节点
+                    
+                    /** 更新父节点 */
+                    $comment['parent'] = $grandParent;
+                    
+                    /** 计算顺序 */
+                    $comment['order'] = isset($this->_threadedComments[$grandParent]) 
+                        ? count($this->_threadedComments[$grandParent]) + 1 : 1;
+                    
+                    /** 直接挂接到上一层节点 */
+                    $this->_threadedComments[$grandParent][$comment['coid']] = $comment;
+                    
+                    /** 更新反向查询表 */
+                    $commentFilpMap[$comment['coid']] = $grandParent;
+                }
             }
         }
     }
@@ -356,7 +382,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @param Typecho_Config $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    public function threadedComments($before = '', $after = '', $singleCommentOptions = NULL)
+    public function threadedComments($singleCommentOptions = NULL)
     {
         $children = $this->children;
         if ($children) {
@@ -366,16 +392,16 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $this->sequence ++;
 
             //在子评论之前输出
-            echo $before;
+            $singleCommentOptions->before;
 
             foreach ($children as $child) {
                 $this->row = $child;
-                $this->threadedCommentsCallback($before, $after, $singleCommentOptions);
+                $this->threadedCommentsCallback($singleCommentOptions);
                 $this->row = $tmp;
             }
 
             //在子评论之后输出
-            echo $after;
+            $singleCommentOptions->after;
 
             $this->sequence --;
             $this->_levels --;
@@ -386,17 +412,17 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * 列出评论
      * 
      * @access private
-     * @param string $before 在评论之前输出
-     * @param string $after 在评论之后输出
      * @param mixed $singleCommentOptions 单个评论自定义选项
      * @return void
      */
-    public function listComments($before = '<ol class="comment-list">', $after = '</ol>', $singleCommentOptions = NULL)
+    public function listComments($singleCommentOptions = NULL)
     {
         if ($this->have()) {
             //初始化一些变量
             $parsedSingleCommentOptions = Typecho_Config::factory($singleCommentOptions);
             $parsedSingleCommentOptions->setDefault(array(
+                'before'        =>  '<ol class="comment-list">',
+                'after'         =>  '</ol>',
                 'beforeAuthor'  =>  '',
                 'afterAuthor'   =>  '',
                 'beforeDate'    =>  '',
@@ -407,13 +433,13 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
                 'defaultAvatar' =>  NULL
             ));
         
-            echo $before;
+            echo $parsedSingleCommentOptions->before;
             
             while ($this->next()) {
-                $this->threadedCommentsCallback($before, $after, $parsedSingleCommentOptions);
+                $this->threadedCommentsCallback($parsedSingleCommentOptions);
             }
             
-            echo $after;
+            echo $parsedSingleCommentOptions->after;
         }
     }
     
@@ -428,8 +454,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $args = func_get_args();
         $num = func_num_args();
         
-        $sequence = $this->_levels <= 0 ? $this->sequence :
-        array_search($this->coid, $this->_threadedComments[$this->parent]) + 1;
+        $sequence = $this->_levels <= 0 ? $this->sequence : $this->order;
         
         $split = $sequence % $num;
         echo $args[(0 == $split ? $num : $split) -1];
