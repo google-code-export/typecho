@@ -88,7 +88,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             
                                 <div class="comment-meta">
                                     <span class="<?php $comments->type(); ?>"></span>
-                                    <?php $comments->author(true); ?>
+                                    <span class="comment-author"><?php $comments->author(true); ?></span>
                                     <?php if($comments->mail): ?>
                                      | 
                                     <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>
@@ -125,8 +125,10 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                     <?php endif; ?>
                                      | 
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
+                                    <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
                                      | 
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
+                                    <?php endif; ?>
                                      | 
                                     <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
@@ -325,6 +327,12 @@ include 'common-js.php';
                         });
                         
                         form.inject(this.getParent('li').getElement('.line'), 'after');
+                        
+                        var ta = form.getElement('textarea');
+                        ta.set('value', '<a href="#' + this.getParent('li').get('id') + '">@' 
+                            + this.getParent('li').getElement('.comment-author a').get('html') + "</a>\n");
+                        ta.focus();
+                        
                         form.getElement('#reply-' + coid).addEvent('click', (function () {
                             if ('' == this.getParent('li').getElement('.reply-form textarea[name=text]').get('value')) {
                                 alert('<?php _e('必须填写内容'); ?>');

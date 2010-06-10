@@ -1502,8 +1502,17 @@ ul.typecho-list-notable li .comment-form p, ul.typecho-list-notable li .reply-fo
 
 ul.typecho-list-notable li .reply-message {
 	margin: 10px;
-	border-left: 5px solid #D3DBB3;
+	background: #FBFDF2;
 	padding: 0 10px;
+	
+	border: 1px solid #DEE4C5;
+	
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 4px;
 }
 
 ul.typecho-list-notable li .loading {

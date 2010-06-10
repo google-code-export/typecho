@@ -1274,8 +1274,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments()
     {
-        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row, 'respondId' => $this->respondId,
-        'commentPage' => $this->request->filter('int')->commentPage, 'commentsNum' => $this->commentsNum);
+        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row,
+        'respondId' => $this->respondId, 'commentPage' => max(1, $this->request->filter('int')->commentPage));
 
         return $this->widget('Widget_Comments_Archive', $parameter);
     }
