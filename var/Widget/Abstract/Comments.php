@@ -50,28 +50,45 @@ class Widget_Abstract_Comments extends Widget_Abstract
     protected function ___permalink()
     {
 
-        if ($this->options->commentsPageBreak) {
+        if ($this->options->commentsPageBreak && 'approved' == $this->status) {
             
             $coid = $this->coid;
             $parent = $this->parent;
             
             while ($parent > 0 && $this->options->commentsThreaded) {
                 $coid = $parent;
-                $parent = $this->db->fetchObject($this->db->select('parent')->from('table.comments')
-                ->where('coid = ? AND status = ?', $parent, 'approved'))->parent;
+                $parentRows = $this->db->fetchRow($this->db->select('parent')->from('table.comments')
+                ->where('coid = ? AND status = ?', $parent, 'approved'));
+                
+                if (!empty($parentRows)) {
+                    $parent = $parentRows['parent'];
+                } else {
+                    break;
+                }
             }
-        
 
-            $select  = $this->db->select(array('COUNT(coid)' => 'num'))
-            ->from('table.comments')->where('cid = ? AND parent = ? AND status = ?',
-                $this->parentContent['cid'], 0, 'approved')
+            $select  = $this->db->select('coid', 'parent')
+            ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
             ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid);
 
             if ($this->options->commentsShowCommentOnly) {
                 $select->where('type = ?', 'comment');
             }
+            
+            $comments = $this->db->fetchAll($select);
+            
+            $commentsMap = array();
+            $total = 0;
+            
+            foreach ($comments as $comment) {
+                $commentsMap[$comment['coid']] = $comment['parent'];
+                
+                if (0 == $comment['parent'] || !isset($commentsMap[$comment['parent']])) {
+                    $total ++;
+                }
+            }
 
-            $currentPage = ceil($this->db->fetchObject($select)->num / $this->options->commentsPageSize);
+            $currentPage = ceil($total / $this->options->commentsPageSize);
             
             $pageRow = array('permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage);
             return Typecho_Router::url('comment_page',

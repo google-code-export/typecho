@@ -20,14 +20,6 @@
 class Widget_Comments_Archive extends Widget_Abstract_Comments
 {
     /**
-     * 分页计算对象
-     *
-     * @access private
-     * @var Typecho_Db_Query
-     */
-    private $_countSql;
-
-    /**
      * 当前页
      *
      * @access private
@@ -49,15 +41,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @access private
      * @var array
      */
-    private $_threadedComments;
-
-    /**
-     * 递归深度
-     *
-     * @access private
-     * @var integer
-     */
-    private $_levels = 0;
+    private $_threadedComments = array();
     
     /**
      * 多级评论回调函数
@@ -66,14 +50,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      * @var mixed
      */
     private $_customThreadedCommentsCallback = false;
-    
-    /**
-     * 用于分割的评论id
-     * 
-     * @access private
-     * @var integer
-     */
-    private $_splitCommentId = 0;
 
     /**
      * 构造函数,初始化组件
@@ -117,10 +93,10 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             }
         }
         
-        $commentLevelClass = $this->_levels > 0 ? ' comment-child' : ' comment-parent';
+        $commentLevelClass = $this->levels > 0 ? ' comment-child' : ' comment-parent';
 ?>
 <li id="<?php $this->theId(); ?>" class="comment-body<?php
-    if ($this->_levels > 0) {
+    if ($this->levels > 0) {
         echo ' comment-child';
         $this->levelsAlt(' comment-level-odd', ' comment-level-even');
     } else {
@@ -184,17 +160,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     }
 
     /**
-     * 楼层数
-     *
-     * @access protected
-     * @return integer
-     */
-    protected function ___levels()
-    {
-        return $this->_levels + 1;
-    }
-
-    /**
      * 是否到达顶层
      *
      * @access protected
@@ -202,7 +167,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     protected function ___isTopLevel()
     {
-        return $this->_levels > $this->options->commentsMaxNestingLevels - 2;
+        return $this->levels > $this->options->commentsMaxNestingLevels - 2;
     }
 
     /**
@@ -225,11 +190,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function num()
     {
-        if (false === $this->_total) {
-            $this->_total = !$this->options->commentsThreaded && !$this->options->commentsShowCommentOnly
-            ? $this->parameter->commentsNum : $this->size($this->_countSql);
-        }
-
         $args = func_get_args();
         if (!$args) {
             $args[] = '%d';
@@ -260,65 +220,69 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $select->where('table.comments.type = ?', 'comment');
         }
         
+        $select->order('table.comments.coid', 'ASC');
+        $this->db->fetchAll($select, array($this, 'push'));
+        
+        /** 需要输出的评论列表 */
+        $outputComments = array();
+        
+        /** 如果开启评论回复 */
         if ($this->options->commentsThreaded) {
-            $threadedSelect = clone $select;
-            $select->where('table.comments.parent = ?', 0);
+        
+            foreach ($this->stack as $coid => &$comment) {
+                
+                /** 取出父节点 */
+                $parent = $comment['parent'];
+            
+                /** 如果存在父节点 */
+                if (0 != $parent && isset($this->stack[$parent])) {
+                
+                    /** 如果当前节点深度大于最大深度, 则将其挂接在父节点上 */
+                    if ($comment['levels'] >= $this->options->commentsMaxNestingLevels) {
+                        $comment['levels'] = $this->stack[$parent]['levels'];
+                        $parent = $this->stack[$parent]['parent'];     // 上上层节点
+                        $comment['parent'] = $parent;
+                    }
+                
+                    /** 计算子节点顺序 */
+                    $comment['order'] = isset($this->_threadedComments[$parent]) 
+                        ? count($this->_threadedComments[$parent]) + 1 : 1;
+                
+                    /** 如果是子节点 */
+                    $this->_threadedComments[$parent][$coid] = $comment;
+                } else {
+                    $outputComments[$coid] = $comment;
+                }
+                
+            }
+        
+            $this->stack = $outputComments;
         }
-
-        $this->_countSql = clone $select;
-
+        
+        /** 评论排序 */
+        if ('DESC' == $this->options->commentsOrder) {
+            $this->stack = array_reverse($this->stack, true);
+            $this->_threadedComments = array_map('array_reverse', $this->_threadedComments);
+        }
+        
+        /** 评论总数 */
+        $this->_total = count($this->stack);
+        
+        /** 对评论进行分页 */
         if ($this->options->commentsPageBreak) {
-            $this->_total = !$this->options->commentsThreaded && !$this->options->commentsShowCommentOnly
-            ? $this->parameter->commentsNum : $this->size($this->_countSql);
-
             if ('last' == $this->options->commentsPageDisplay && !$this->parameter->commentPage) {
                 $this->_currentPage = ceil($this->_total / $this->options->commentsPageSize);
             } else {
                 $this->_currentPage = $this->parameter->commentPage ? $this->parameter->commentPage : 1;
             }
-
-            $select->page($this->_currentPage, $this->options->commentsPageSize);
-        }
-
-        $select->order('table.comments.coid', $this->options->commentsOrder);
-        $this->db->fetchAll($select, array($this, 'push'));
-        
-        $commentsLevel = array();
-        $commentFilpMap = array();  // 反向查询表
-        
-        if ($threadedSelect) {
-            $threadedSelect->where('table.comments.parent <> ? AND table.comments.coid > ?', 0, $this->_splitCommentId)
-            ->order('table.comments.coid', $this->options->commentsOrder);
-            $threadedComments = $this->db->fetchAll($threadedSelect, array($this, 'filter'));
             
-            foreach ($threadedComments as $comment) {
-                /** fix issue 459 */
-                $commentFilpMap[$comment['coid']] = $comment['parent'];
+            /** 截取评论 */
+            $this->stack = array_slice($this->stack,
+                ($this->_currentPage - 1) * $this->options->commentsPageSize, $this->options->commentsPageSize);
             
-                $commentsLevel[$comment['coid']] = isset($commentsLevel[$comment['parent']]) ? $commentsLevel[$comment['parent']] + 1 : 1;
-                if ($commentsLevel[$comment['coid']] < $this->options->commentsMaxNestingLevels) {
-                    /** 计算顺序 */
-                    $comment['order'] = isset($this->_threadedComments[$comment['parent']]) 
-                        ? count($this->_threadedComments[$comment['parent']]) + 1 : 1;
-                
-                    $this->_threadedComments[$comment['parent']][$comment['coid']] = $comment;
-                } else {
-                    $grandParent = isset($commentFilpMap[$comment['parent']]) ? $commentFilpMap[$comment['parent']] : 0;     // 上上层节点
-                    
-                    /** 更新父节点 */
-                    $comment['parent'] = $grandParent;
-                    
-                    /** 计算顺序 */
-                    $comment['order'] = isset($this->_threadedComments[$grandParent]) 
-                        ? count($this->_threadedComments[$grandParent]) + 1 : 1;
-                    
-                    /** 直接挂接到上一层节点 */
-                    $this->_threadedComments[$grandParent][$comment['coid']] = $comment;
-                    
-                    /** 更新反向查询表 */
-                    $commentFilpMap[$comment['coid']] = $grandParent;
-                }
-            }
+            /** 评论置位 */
+            $this->row = current($this->stack);
+            $this->length = count($this->stack);
         }
     }
 
@@ -332,18 +296,17 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     public function push(array $value)
     {
         $value = $this->filter($value);
-
-        // 取出本页最小值
-        if ('DESC' == $this->options->commentsOrder || 0 == $this->_splitCommentId) {
-            $this->_splitCommentId = $value['coid'];
+        
+        /** 计算深度 */
+        if (0 != $value['parent'] && isset($this->stack[$value['parent']]['levels'])) {
+            $value['levels'] = $this->stack[$value['parent']]['levels'] + 1;
+        } else {
+            $value['levels'] = 0;
         }
 
-        //将行数据按顺序置位
-        $this->row = $value;
-        $this->length ++;
-
-        //重载push函数,使用coid作为数组键值,便于索引
+        /** 重载push函数,使用coid作为数组键值,便于索引 */
         $this->stack[$value['coid']] = $value;
+        
         return $value;
     }
 
@@ -388,7 +351,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         if ($children) {
             //缓存变量便于还原
             $tmp = $this->row;
-            $this->_levels ++;
             $this->sequence ++;
 
             //在子评论之前输出
@@ -404,7 +366,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $singleCommentOptions->after;
 
             $this->sequence --;
-            $this->_levels --;
         }
     }
     
@@ -454,7 +415,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         $args = func_get_args();
         $num = func_num_args();
         
-        $sequence = $this->_levels <= 0 ? $this->sequence : $this->order;
+        $sequence = $this->levels <= 0 ? $this->sequence : $this->order;
         
         $split = $sequence % $num;
         echo $args[(0 == $split ? $num : $split) -1];
@@ -471,7 +432,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     {
         $args = func_get_args();
         $num = func_num_args();
-        $split = $this->_levels % $num;
+        $split = $this->levels % $num;
         echo $args[(0 == $split ? $num : $split) -1];
     }
     
