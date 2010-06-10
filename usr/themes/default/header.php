@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="content-type" content="text/html; charset=<?php $this->options->charset(); ?>" />
-<title><?php $this->options->title(); ?><?php $this->archiveTitle(); ?></title>
+<title><?php $this->archiveTitle(' &raquo; ', '', ' - '); ?><?php $this->options->title(); ?></title>
 
 <!-- 使用url函数转换相关路径 -->
 <link rel="stylesheet" type="text/css" media="all" href="<?php $this->options->themeUrl('style.css'); ?>" />
