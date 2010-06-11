@@ -328,10 +328,13 @@ include 'common-js.php';
                         
                         form.inject(this.getParent('li').getElement('.line'), 'after');
                         
-                        var ta = form.getElement('textarea');
-                        ta.set('value', '<a href="#' + this.getParent('li').get('id') + '">@' 
-                            + this.getParent('li').getElement('.comment-author a').get('html') + "</a>\n");
+                        var ta = form.getElement('textarea'), rg = ta.getSelectedRange(),
+                        instStr = '<a href="#' + this.getParent('li').get('id') + '">@' 
+                            + this.getParent('li').getElement('.comment-author').get('text') + "</a>\n";
+                        
+                        ta.set('value', instStr);
                         ta.focus();
+                        ta.selectRange(instStr.length + 1, instStr.length + 1);
                         
                         form.getElement('#reply-' + coid).addEvent('click', (function () {
                             if ('' == this.getParent('li').getElement('.reply-form textarea[name=text]').get('value')) {
