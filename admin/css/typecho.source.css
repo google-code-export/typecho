@@ -192,6 +192,7 @@ input, textarea {
 textarea {
     overflow: auto;
 	line-height: 150%;
+	resize: none;
 }
 
 em {
@@ -1959,7 +1960,6 @@ ul.typecho-list-notable li #typecho-respond {
     margin: 0;
     *margin: -1px 0 -1px 0;
     display: block;
-    resize: none;
 }
 
 .typecho-post-area button#btn-submit {
