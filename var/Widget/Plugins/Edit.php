@@ -21,6 +21,46 @@
 class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
+     * 手动配置插件变量
+     * 
+     * @access public
+     * @static
+     * @param mixed $pluginName 插件名称
+     * @param mixed array $settings 变量键值对
+     * @param bool $isPersonal. (default: false) 是否为私人变量
+     * @return void
+     */
+    public static function configPlugin($pluginName, array $settings, $isPersonal = false)
+    {
+        $db = Typecho_Db::get();
+        $pluginName = ($isPersonal ? '_' : '') . 'plugin:' . $pluginName;
+        
+        $select = $db->select()->from('table.options')
+            ->where('name = ?', $pluginName);
+            
+        $options = $db->fetchAll($select);
+        
+        if (empty($options)) {
+            $db->query($db->insert('table.options')
+            ->rows(array(
+                'name'  =>  $pluginName,
+                'value' =>  serialize($settings),
+                'user'  =>  0
+            )));
+        } else {
+            foreach ($options as $option) {
+                $value = unserialize($option['value']);
+                $value = array_merge($value, $settings);
+                
+                $db->query($db->update('table.options')
+                ->rows(array('value' => serialize($value)))
+                ->where('name = ?', $pluginName)
+                ->where('user = ?', $option['user']));
+            }
+        }
+    }
+
+    /**
      * 激活插件
      *
      * @access public
@@ -70,19 +110,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             $personalOptions = $personalForm->getValues();
 
             if ($options && !$this->configHandle($pluginName, $options, true)) {
-                $this->insert(array(
-                    'name'  =>  'plugin:' . $pluginName,
-                    'value' =>  serialize($options),
-                    'user'  =>  0
-                ));
+                self::configPlugin($pluginName, $options);
             }
 
             if ($personalOptions && !$this->personalConfigHandle($className, $personalOptions)) {
-                $this->insert(array(
-                    'name'  =>  '_plugin:' . $pluginName,
-                    'value' =>  serialize($personalOptions),
-                    'user'  =>  0
-                ));
+                self::configPlugin($pluginName, $personalOptions, true);
             }
 
         } else {
@@ -187,8 +219,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $settings = $form->getAllRequest();
 
         if (!$this->configHandle($pluginName, $settings, false)) {
-            $this->update(array('value' => serialize($settings)),
-            $this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
+            self::configPlugin($pluginName, $settings);
         }
 
         /** 设置高亮 */

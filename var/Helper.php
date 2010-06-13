@@ -299,6 +299,25 @@ class Helper
     {
         return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
+    
+    /**
+     * 手动配置插件变量
+     * 
+     * @access public
+     * @static
+     * @param mixed $pluginName 插件名称
+     * @param mixed array $settings 变量键值对
+     * @param bool $isPersonal. (default: false) 是否为私人变量
+     * @return void
+     */
+    public static function configPlugin($pluginName, array $settings, $isPersonal = false)
+    {
+        if (empty($settings)) {
+            return;
+        }
+        
+        Widget_Plugins_Edit::configPlugin($pluginName, $settings, $isPersonal);
+    }
 
     /**
      * 评论回复按钮
