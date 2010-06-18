@@ -18,7 +18,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         Typecho_Common::url('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid, $options->index)); ?></cite>
                         <?php endif; ?>
                         </label>
-                        <p class="title"><input type="text" id="title" name="title" value="<?php $page->title(); ?>" class="text title" /></p>
+                        <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($page->title); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->text); ?></textarea></p>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
