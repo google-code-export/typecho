@@ -13,7 +13,7 @@
 
 <body>
 <div id="header" class="container_16 clearfix">
-	<form id="search" method="post">
+	<form id="search" method="post" action="/">
 		<div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="<?php _e('搜索'); ?>" /></div>
     </form>
 	<div id="logo">
