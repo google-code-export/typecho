@@ -153,6 +153,7 @@ class Typecho_Common_Paragraph
         
         /** 重置计数器 */
         self::$_uniqueId = 0;
+        self::$_blocks = array();
     
         /** 将已有的段落后面的换行处理掉 */
         $text = preg_replace(array("/<\/p>\s+<p(\s*)/is", "/\s*<br\s*\/?>\s*/is"), array("</p><p\\1", "<br />"), trim($text));
