@@ -332,7 +332,10 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, $this->_currentPage, $this->options->commentsPageSize, $query);
             $nav->setPageHolder('commentPage');
             $nav->setAnchor('comments');
+            
+            echo '<ol class="page-navigator">';
             $nav->render($prev, $next, $splitPage, $splitWord);
+            echo '</ol>';
         }
     }
 

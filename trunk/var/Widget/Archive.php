@@ -1236,7 +1236,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 使用盒状分页 */
                 $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
                 $this->_currentPage, $this->parameter->pageSize, $query);
+                
+                echo '<ol class="page-navigator">';
                 $nav->render($prev, $next, $splitPage, $splitWord);
+                echo '</ol>';
             }
         }
     }
