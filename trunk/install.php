@@ -143,6 +143,10 @@ function _u()
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
 list($soft, $currentVersion) = explode(' ', $options->generator);
+
+$options->software = $soft;
+$options->version = $currentVersion;
+
 list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
