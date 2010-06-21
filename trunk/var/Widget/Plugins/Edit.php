@@ -40,22 +40,28 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             
         $options = $db->fetchAll($select);
         
-        if (empty($options)) {
-            $db->query($db->insert('table.options')
-            ->rows(array(
-                'name'  =>  $pluginName,
-                'value' =>  serialize($settings),
-                'user'  =>  0
-            )));
+        if (empty($settings)) {
+            if (!empty($options)) {
+                $db->query($db->delete('table.options')->where('name = ?', $pluginName));
+            }
         } else {
-            foreach ($options as $option) {
-                $value = unserialize($option['value']);
-                $value = array_merge($value, $settings);
-                
-                $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($value)))
-                ->where('name = ?', $pluginName)
-                ->where('user = ?', $option['user']));
+            if (empty($options)) {
+                $db->query($db->insert('table.options')
+                ->rows(array(
+                    'name'  =>  $pluginName,
+                    'value' =>  serialize($settings),
+                    'user'  =>  0
+                )));
+            } else {
+                foreach ($options as $option) {
+                    $value = unserialize($option['value']);
+                    $value = array_merge($value, $settings);
+                    
+                    $db->query($db->update('table.options')
+                    ->rows(array('value' => serialize($value)))
+                    ->where('name = ?', $pluginName)
+                    ->where('user = ?', $option['user']));
+                }
             }
         }
     }
