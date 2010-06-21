@@ -354,7 +354,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             $this->sequence ++;
 
             //在子评论之前输出
-            $singleCommentOptions->before;
+            echo $singleCommentOptions->before;
 
             foreach ($children as $child) {
                 $this->row = $child;
@@ -363,7 +363,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             }
 
             //在子评论之后输出
-            $singleCommentOptions->after;
+            echo $singleCommentOptions->after;
 
             $this->sequence --;
         }
