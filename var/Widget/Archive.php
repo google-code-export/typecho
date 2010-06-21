@@ -1447,49 +1447,70 @@ class Widget_Archive extends Widget_Abstract_Contents
             if (1 == $allows['commentReply']) {
                 $header .= "<script type=\"text/javascript\">
 var TypechoComment = {
+    dom : function (id) {
+        return document.getElementById(id);
+    },
+    
+    create : function (tag, attr) {
+        var el = document.createElement(tag);
+        
+        for (var key in attr) {
+            el.setAttribute(key, attr[key]);
+        }
+        
+        return el;
+    },
+
     reply : function (cid, coid) {
-        var _ce = document.getElementById(cid), _cp = _ce.parentNode;
-        var _cf = document.getElementById('" . $this->respondId . "');
+        var comment = this.dom(cid), parent = comment.parentNode,
+            response = this.dom('" . $this->respondId . "'), input = this.dom('comment-parent'),
+            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+            textarea = response.getElementsByTagName('textarea')[0];
 
-        var _pi = document.getElementById('comment-parent');
-        if (null == _pi) {
-            _pi = document.createElement('input');
-            _pi.setAttribute('type', 'hidden');
-            _pi.setAttribute('name', 'parent');
-            _pi.setAttribute('id', 'comment-parent');
+        if (null == input) {
+            input = this.create('input', {
+                'type' : 'hidden',
+                'name' : 'parent',
+                'id'   : 'comment-parent'
+            });
 
-            var _form = 'form' == _cf.tagName ? _cf : _cf.getElementsByTagName('form')[0];
-
-            _form.appendChild(_pi);
+            form.appendChild(input);
         }
-        _pi.setAttribute('value', coid);
+        
+        input.setAttribute('value', coid);
 
-        if (null == document.getElementById('comment-form-place-holder')) {
-            var _cfh = document.createElement('div');
-            _cfh.setAttribute('id', 'comment-form-place-holder');
-            _cf.parentNode.insertBefore(_cfh, _cf);
+        if (null == this.dom('comment-form-place-holder')) {
+            var holder = this.create('div', {
+                'id' : 'comment-form-place-holder'
+            });
+            
+            response.parentNode.insertBefore(holder, response);
         }
 
-        _ce.appendChild(_cf);
-        document.getElementById('cancel-comment-reply-link').style.display = '';
+        comment.appendChild(response);
+        this.dom('cancel-comment-reply-link').style.display = '';
+        
+        if (null != textarea && 'text' == textarea.name) {
+            textarea.focus();
+        }
+        
         return false;
     },
 
     cancelReply : function () {
-        var _cf = document.getElementById('" . $this->respondId . "'),
-        _cfh = document.getElementById('comment-form-place-holder');
+        var response = this.dom('" . $this->respondId . "'),
+        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
 
-        var _pi = document.getElementById('comment-parent');
-        if (null != _pi) {
-            _pi.parentNode.removeChild(_pi);
+        if (null != input) {
+            input.parentNode.removeChild(input);
         }
 
-        if (null == _cfh) {
+        if (null == holder) {
             return true;
         }
 
-        document.getElementById('cancel-comment-reply-link').style.display = 'none';
-        _cfh.parentNode.insertBefore(_cf, _cfh);
+        this.dom('cancel-comment-reply-link').style.display = 'none';
+        holder.parentNode.insertBefore(response, holder);
         return false;
     }
 }
