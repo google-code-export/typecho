@@ -3,13 +3,14 @@
         window.addEvent('domready', function() {
         
             $(document).getElements('.typecho-date').each(function (item) {
-                item.set('name', '_' + item.get('name'));
+                item.setProperty('name', '_' + item.getProperty('name'));
                 item.addEvent('change', function () {
 
                     $(document).getElements('.typecho-date').each(function (_item) {
-                        var name = _item.get('name');
+                        var name = _item.name;
+
                         if (0 == name.indexOf('_')) {
-                            _item.set('name', name.slice(1));
+                            _item.setProperty('name', name.slice(1));
                         }
                     });
                     
