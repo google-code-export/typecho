@@ -25,9 +25,7 @@
         </div>
 	<?php endwhile; ?>
 
-        <ol class="pages clearfix">
-            <?php $this->pageNav(); ?>
-        </ol>
+    <?php $this->pageNav(); ?>
     </div><!-- end #content-->
 	<?php $this->need('sidebar.php'); ?>
 	<?php $this->need('footer.php'); ?>

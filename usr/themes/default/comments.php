@@ -3,9 +3,7 @@
             <?php if ($comments->have()): ?>
 			<h4><?php $this->commentsNum(_t('当前暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?> &raquo;</h4>
             
-            <ol class="pages clearfix">
-                <?php $comments->pageNav(); ?>
-            </ol>
+            <?php $comments->pageNav(); ?>
             
             <?php $comments->listComments(); ?>
             

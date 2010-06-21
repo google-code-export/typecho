@@ -220,7 +220,7 @@ border-right: 1px solid #eee;
 
 
 /* = pages nav */
-ol.pages {
+ol.page-navigator {
 margin: 20px 0 0 0;
 color: #666;
 list-style: none;
@@ -229,18 +229,18 @@ line-height: 30px;
 font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 }
 
-ol.pages li {
+ol.page-navigator li {
 margin: 0 5px 0 0;
 display: inline;
 }
 
-ol.pages li a {
+ol.page-navigator li a {
 padding: 2px 6px;
 border: 1px solid #eee;
 text-decoration: none;
 }
 
-ol.pages li.current a {
+ol.page-navigator li.current a {
 background: #3354AA;
 border-color: #3354AA;
 color: #fff;
