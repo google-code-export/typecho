@@ -56,11 +56,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
             $parent = $this->parent;
             
             while ($parent > 0 && $this->options->commentsThreaded) {
-                $coid = $parent;
                 $parentRows = $this->db->fetchRow($this->db->select('parent')->from('table.comments')
-                ->where('coid = ? AND status = ?', $parent, 'approved'));
+                ->where('coid = ? AND status = ?', $parent, 'approved')->limit(1));
                 
                 if (!empty($parentRows)) {
+                    $coid = $parent;
                     $parent = $parentRows['parent'];
                 } else {
                     break;
@@ -69,7 +69,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
             $select  = $this->db->select('coid', 'parent')
             ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
-            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid);
+            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
+            ->order('coid', Typecho_Db::SORT_ASC);
 
             if ($this->options->commentsShowCommentOnly) {
                 $select->where('type = ?', 'comment');
