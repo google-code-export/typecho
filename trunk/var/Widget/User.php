@@ -158,6 +158,30 @@ class Widget_User extends Typecho_Widget
         $this->pluginHandle()->loginFail($this, $name, $password, $temporarily, $expire);
         return false;
     }
+    
+    /**
+     * 只需要提供uid即可登录的方法, 多用于插件等特殊场合
+     * 
+     * @access public
+     * @param integer $uid 用户id
+     * @return boolean
+     */
+    public function simpleLogin($uid)
+    {
+        $user = $this->db->fetchRow($this->db->select()
+        ->from('table.users')
+        ->where('uid = ?', $uid)
+        ->limit(1));
+        
+        if (empty($user)) {
+            return false;
+        }
+        
+        $this->push($user);
+        $this->_hasLogin = true;
+        
+        return true;
+    }
 
     /**
      * 用户登出函数
