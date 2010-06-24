@@ -433,7 +433,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 删除页面 */
         try {
             /** 此组件会进行复杂的权限检测 */
-            $page = $this->singletonWidget('Widget_Contents_Page_Edit', NULL, "do=delete&cid={$pageId}", false);
+            $this->singletonWidget('Widget_Contents_Page_Edit', NULL, "cid={$pageId}", false)->deletePage();
         } catch (Typecho_Widget_Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new IXR_Error($e->getCode(), $e->getMessage());
@@ -1726,7 +1726,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return $this->error;
         }
         try {
-            $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}")->deletePost();
+            $this->singletonWidget('Widget_Contents_Post_Edit', NULL, "cid={$postId}", false)->deletePost();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
