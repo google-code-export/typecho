@@ -35,6 +35,7 @@ package:
 	rm -Rf build/usr/plugins/ShareCode/
 	rm -Rf build/usr/plugins/ZenCoding/
 	rm -Rf build/usr/plugins/GoogleCodePrettify/
+	rm -Rf build/usr/plugins/GoogleCodeSVN/
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -67,6 +68,7 @@ upgrade:
 	rm -Rf ${DIR}/usr/plugins/ShareCode/
 	rm -Rf ${DIR}/usr/plugins/ZenCoding/
 	rm -Rf ${DIR}/usr/plugins/GoogleCodePrettify/
+	rm -Rf ${DIR}/usr/plugins/GoogleCodeSVN/
 	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
@@ -82,6 +84,7 @@ upgrade:
 	cp -Rf build/usr/plugins/ShareCode/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/ZenCoding/ ${DIR}/usr/plugins/
 	cp -Rf build/usr/plugins/GoogleCodePrettify/ ${DIR}/usr/plugins/
+	cp -Rf build/usr/plugins/GoogleCodeSVN/ ${DIR}/usr/plugins/
 	make clear
 
 
@@ -116,6 +119,7 @@ install:
 	rm -Rf ${DIR}/usr/plugins/ShareCode/
 	rm -Rf ${DIR}/usr/plugins/ZenCoding/
 	rm -Rf ${DIR}/usr/plugins/GoogleCodePrettify/
+	rm -Rf ${DIR}/usr/plugins/GoogleCodeSVN/
 	cp -Rf build/* ${DIR}
 	make clear
 
