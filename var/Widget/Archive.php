@@ -24,6 +24,14 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @var string
      */
     private $_themeFile;
+    
+    /**
+     * 风格目录
+     * 
+     * @access private
+     * @var string
+     */
+    private $_themeDir;
 
     /**
      * 分页计算对象
@@ -202,6 +210,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         } else {
             $this->_invokeFromOutside = true;
         }
+        
+        /** 初始化皮肤路径 */
+        $this->_themeDir =  __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
@@ -409,6 +420,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         $this->_themeFile = $themeFile;
     }
+    
+    /**
+     * @param $_themeDir the $_themeDir to set
+     */
+    public function setThemeDir($themeDir)
+    {
+        $this->_themeDir = $themeDir;
+    }
 
     /**
      * 获取分页对象
@@ -529,6 +548,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function getThemeFile()
     {
         return $this->_themeFile;
+    }
+    
+    /**
+     * @return the $_themeDir
+     */
+    public function getThemeDir()
+    {
+        return $this->_themeDir;
     }
 
     /**
@@ -689,8 +716,13 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->query($select);
 
         if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
-            /** 对没有索引情况下的判断 */
-            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+            if (!$this->_invokeFromOutside) {
+                /** 对没有索引情况下的判断 */
+                throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+            } else {
+                $hasPushed = true;
+                return;
+            }
         }
 
         /** 设置关键词 */
@@ -1113,6 +1145,15 @@ class Widget_Archive extends Widget_Abstract_Contents
             if (NULL != $filterKeywords) {
                 $this->response->redirect(Typecho_Router::url('search',
                 array('keywords' => urlencode($filterKeywords)), $this->options->index));
+            }
+        }
+        
+        /** 初始化皮肤函数 */
+        $functionsFile = $this->_themeDir . 'functions.php';
+        if (!$this->_invokeFromOutside && file_exists($functionsFile)) {
+            require_once $functionsFile;
+            if (function_exists('themeInit')) {
+                themeInit($this);
             }
         }
 
@@ -1629,12 +1670,11 @@ var TypechoComment = {
     {
         /** 添加Pingback */
         $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
-        $themeDir = __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
         $validated = false;
 
         //~ 自定义模板
         if (!empty($this->_themeFile)) {
-            if (file_exists($themeDir . $this->_themeFile)) {
+            if (file_exists($this->_themeDir . $this->_themeFile)) {
                 $validated = true;
             }
         }
@@ -1644,7 +1684,7 @@ var TypechoComment = {
             //~ 首先找具体路径, 比如 category/default.php
             if (!$validated && !empty($this->_archiveSlug)) {
                 $themeFile = $this->_archiveType . '/' . $this->_archiveSlug . '.php';
-                if (file_exists($themeDir . $themeFile)) {
+                if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1653,7 +1693,7 @@ var TypechoComment = {
             //~ 然后找归档类型路径, 比如 category.php
             if (!$validated) {
                 $themeFile = $this->_archiveType . '.php';
-                if (file_exists($themeDir . $themeFile)) {
+                if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1661,10 +1701,10 @@ var TypechoComment = {
 
             //针对attachment的hook
             if (!$validated && 'attachment' == $this->_archiveType) {
-                if (file_exists($themeDir . 'page.php')) {
+                if (file_exists($this->_themeDir . 'page.php')) {
                     $this->_themeFile = 'page.php';
                     $validated = true;
-                } else if (file_exists($themeDir . 'post.php')) {
+                } else if (file_exists($this->_themeDir . 'post.php')) {
                     $this->_themeFile = 'post.php';
                     $validated = true;
                 }
@@ -1673,7 +1713,7 @@ var TypechoComment = {
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
             if (!$validated && 'index' != $this->_archiveType) {
                 $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
-                if (file_exists($themeDir . $themeFile)) {
+                if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1681,7 +1721,7 @@ var TypechoComment = {
 
             if (!$validated) {
                 $themeFile = 'index.php';
-                if (file_exists($themeDir . $themeFile)) {
+                if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;
                     $validated = true;
                 }
@@ -1692,21 +1732,12 @@ var TypechoComment = {
         if (!$validated) {
             Typecho_Common::error(500);
         }
-        
-        /** 初始化皮肤函数 */
-        $functionsFile = $themeDir . 'functions.php';
-        if (file_exists($functionsFile)) {
-            require_once $functionsFile;
-            if (function_exists('themeInit')) {
-                themeInit($this);
-            }
-        }
 
         /** 挂接插件 */
         $this->pluginHandle()->beforeRender($this);
 
         /** 输出模板 */
-        require_once $themeDir . $this->_themeFile;
+        require_once $this->_themeDir . $this->_themeFile;
 
         /** 挂接插件 */
         $this->pluginHandle()->afterRender($this);
