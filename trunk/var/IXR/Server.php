@@ -101,11 +101,7 @@ class IXR_Server
             return new IXR_Error(-32601, 'server error. requested method '.$methodname.' does not exist.');
         }
         $method = $this->callbacks[$methodname];
-        // Perform the callback and send the response
-        if (count($args) == 1) {
-            // If only one paramater just send that instead of the whole array
-            $args = $args[0];
-        }
+
         // Are we dealing with a function or a method?
         if (is_string($method) && substr($method, 0, 5) == 'this:') {
             // It's a class method - check it exists
@@ -121,6 +117,7 @@ class IXR_Server
                 if (!is_callable($method)) {
                     return new IXR_Error(-32601, 'server error. requested class method "'.$object . '.' . $func.'" does not exist.');
                 }
+                
                 $result = call_user_func_array(array($object, $func), $args);
             } elseif (!function_exists($method)) {
                 // It's a function - does it exist?
