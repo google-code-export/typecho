@@ -514,14 +514,14 @@ class Typecho_Request
     public function setIp($ip = NULL)
     {
         switch (true) {
-            case NULL !== $this->getServer('REMOTE_ADDR'):
-                $this->_ip = $this->getServer('REMOTE_ADDR');
+            case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
+                $this->_ip = $this->getServer('HTTP_X_FORWARDED_FOR');
                 return;
             case NULL !== $this->getServer('HTTP_CLIENT_IP'):
                 $this->_ip = $this->getServer('HTTP_CLIENT_IP');
                 return;
-            case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
-                $this->_ip = $this->getServer('HTTP_X_FORWARDED_FOR');
+            case NULL !== $this->getServer('REMOTE_ADDR'):
+                $this->_ip = $this->getServer('REMOTE_ADDR');
                 return;
             default:
                 break;
