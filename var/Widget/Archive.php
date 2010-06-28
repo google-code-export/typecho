@@ -1147,15 +1147,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 array('keywords' => urlencode($filterKeywords)), $this->options->index));
             }
         }
-        
-        /** 初始化皮肤函数 */
-        $functionsFile = $this->_themeDir . 'functions.php';
-        if (!$this->_invokeFromOutside && file_exists($functionsFile)) {
-            require_once $functionsFile;
-            if (function_exists('themeInit')) {
-                themeInit($this);
-            }
-        }
 
         /** 自定义首页功能 */
         if ('index' == $this->parameter->type || 'index_page' == $this->parameter->type) {
@@ -1226,6 +1217,15 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->{$handle}($select, $hasPushed);
         } else {
             $hasPushed = $this->pluginHandle()->handle($this->parameter->type, $this, $select);
+        }
+        
+        /** 初始化皮肤函数 */
+        $functionsFile = $this->_themeDir . 'functions.php';
+        if (!$this->_invokeFromOutside && file_exists($functionsFile)) {
+            require_once $functionsFile;
+            if (function_exists('themeInit')) {
+                themeInit($this);
+            }
         }
 
         /** 如果已经提前压入则直接返回 */
