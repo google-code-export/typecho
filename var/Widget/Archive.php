@@ -58,6 +58,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     private $_invokeFromOutside = false;
 
     /**
+     * 是否由聚合调用
+     *
+     * @access private
+     * @var boolean
+     */
+    private $_invokeByFeed = false;
+
+    /**
      * 当前页
      *
      * @access private
@@ -210,6 +218,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         } else {
             $this->_invokeFromOutside = true;
         }
+
+        /** 用于判断是否为feed调用 */
+        if ($this->parameter->isFeed) {
+            $this->_invokeByFeed = true;
+        }
         
         /** 初始化皮肤路径 */
         $this->_themeDir =  __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
@@ -250,7 +263,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
             } else {
-                $matched = Typecho_Router::match($this->request->feed, 'pageSize=10');
+                $matched = Typecho_Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched && $matched instanceof Widget_Archive) {
                     $this->import($matched);
                 } else {
@@ -1149,7 +1162,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 自定义首页功能 */
-        if ('index' == $this->parameter->type || 'index_page' == $this->parameter->type) {
+        if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
             $frontPage = $this->options->frontPage;
 
             //显示某个页面
