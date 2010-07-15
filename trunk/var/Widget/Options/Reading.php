@@ -146,7 +146,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             $settings['frontPage'] = 'page:' . $pageId;
 
         } else if ('file' == $settings['frontPage'] && isset($this->request->frontPageFile) &&
-        file_exists(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme .
+        file_exists(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' .
         ($file = trim($this->request->frontPageFile, " ./\\")))) {
 
             $settings['frontPage'] = 'file:' . $file;
