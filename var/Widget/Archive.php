@@ -1346,6 +1346,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
+     * 获取回响归档对象 
+     * 
+     * @access public
+     * @return void
+     */
+    public function pings()
+    {
+        return $this->widget('Widget_Comments_Ping', array('parentId' => $this->hidden ? 0 : $this->cid,
+                    'parentContent' => $this->row));
+    }
+
+    /**
      * 获取附件对象
      *
      * @access public
