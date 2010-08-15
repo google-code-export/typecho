@@ -1058,7 +1058,7 @@ EOF;
             if (false !== $fInfo) {
                 $mimeType = finfo_file($fInfo, $fileName);
                 finfo_close($fInfo);
-                return $mimetype;
+                return $mimeType;
             }
         }
 
