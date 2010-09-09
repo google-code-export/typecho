@@ -213,16 +213,15 @@ class Widget_User extends Typecho_Widget
         if (NULL !== $this->_hasLogin) {
             return $this->_hasLogin;
         } else {
-            if (NULL !== $this->request->__typecho_uid) {
+            $cookieUid = Typecho_Cookie::get('__typecho_uid');
+            if (NULL !== $cookieUid) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
-                ->where('uid = ?', intval($this->request->__typecho_uid))
+                ->where('uid = ?', intval($cookieUid))
                 ->limit(1));
 
-                //var_dump(Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode));
-                //die;
-
-                if ($user && Typecho_Common::hashValidate($user['authCode'], $this->request->__typecho_authCode)) {
+                $cookieAuthCode = Typecho_Cookie::get('__typecho_authCode');
+                if ($user && Typecho_Common::hashValidate($user['authCode'], $cookieAuthCode)) {
                     $this->_user = $user;
                     return ($this->_hasLogin = true);
                 }

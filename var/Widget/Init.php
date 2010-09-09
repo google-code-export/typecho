@@ -28,6 +28,9 @@ class Widget_Init extends Typecho_Widget
         /** 开始会话 */
         @session_start();
 
+        /** cookie初始化 */
+        Typecho_Cookie::setPrefix($options->siteUrl);
+
         /** 初始化charset */
         Typecho_Common::$charset = $options->charset;
 
