@@ -22,6 +22,37 @@ require_once 'Typecho/Common.php';
 class Typecho_Cookie
 {
     /**
+     * 前缀
+     * 
+     * @var string
+     * @access private
+     */
+    private static $_prefix = '';
+
+    /**
+     * 设置前缀 
+     * 
+     * @param string $prefix 
+     * @access public
+     * @return void
+     */
+    public static function setPrefix($prefix)
+    {
+        self::$_prefix = md5($prefix);
+    }
+
+    /**
+     * 获取前缀 
+     * 
+     * @access public
+     * @return void
+     */
+    public static function getPrefix()
+    {
+        return self::$_prefix;
+    }
+
+    /**
      * 获取指定的COOKIE值
      *
      * @access public
@@ -31,6 +62,7 @@ class Typecho_Cookie
      */
     public static function get($key, $default = NULL)
     {
+        $key = self::$_prefix . $key;
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
@@ -47,6 +79,7 @@ class Typecho_Cookie
     public static function set($key, $value, $expire = 0, $url = NULL)
     {
         $path = '/';
+        $key = self::$_prefix . $key;
         if (!empty($url)) {
             $parsed = parse_url($url);
 
@@ -73,6 +106,7 @@ class Typecho_Cookie
      */
     public static function delete($key, $url = NULL)
     {
+        $key = self::$_prefix . $key;
         if (!isset($_COOKIE[$key])) {
             return;
         }
