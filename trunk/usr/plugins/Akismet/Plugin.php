@@ -49,7 +49,7 @@ class Akismet_Plugin implements Typecho_Plugin_Interface
      */
     public static function config(Typecho_Widget_Helper_Form $form)
     {
-        $key = new Typecho_Widget_Helper_Form_Element_Text('key', NULL, NULL, _t('服务密钥'), _t('此密钥需要向服务提供商注册<br />
+        $key = new Typecho_Widget_Helper_Form_Element_Textarea('key', NULL, NULL, _t('服务密钥'), _t('此密钥需要向服务提供商注册<br />
         它是一个用于表明您合法用户身份的字符串'));
         $form->addInput($key->addRule('required', _t('您必须填写一个服务密钥'))
         ->addRule(array('Akismet_Plugin', 'validate'), _t('您使用的服务密钥错误')));
