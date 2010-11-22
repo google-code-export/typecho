@@ -274,6 +274,9 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
             $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
             $comment['url'] = $this->request->filter('url')->url;
+            
+            /** 评论插件接口 */
+            $this->pluginHandle()->edit($comment, $this);
 
             /** 更新评论 */
             $this->update($comment, $this->db->sql()->where('coid = ?', $coid));
@@ -281,6 +284,9 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $updatedComment = $this->db->fetchRow($this->select()
                 ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
             $updatedComment['content'] = $this->content;
+            
+            /** 评论插件接口 */
+            $this->pluginHandle()->finishEdit($this);
 
             $this->response->throwJson(array(
                 'success'   => 1,
@@ -325,7 +331,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             );
             
             /** 评论插件接口 */
-            $this->pluginHandle('Widget_Feedback')->comment($comment, $this);
+            $this->pluginHandle()->comment($comment, $this);
 
             /** 回复评论 */
             $commentId = $this->insert($comment);
@@ -335,7 +341,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             $insertComment['content'] = $this->content;
             
             /** 评论完成接口 */
-            $this->pluginHandle('Widget_Feedback')->finishComment($this);
+            $this->pluginHandle()->finishComment($this);
 
             $this->response->throwJson(array(
                 'success'   => 1,
