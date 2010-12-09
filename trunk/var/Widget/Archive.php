@@ -708,6 +708,9 @@ class Widget_Archive extends Widget_Abstract_Contents
             $fromMonth = 1;
             $toMonth = 12;
 
+            $fromDay = 1;
+            $toDay = 31;
+
             if (isset($this->request->month)) {
                 $fromMonth = $this->request->filter('int')->month;
                 $toMonth = $fromMonth;
