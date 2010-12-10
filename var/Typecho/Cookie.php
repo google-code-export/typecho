@@ -63,7 +63,8 @@ class Typecho_Cookie
     public static function get($key, $default = NULL)
     {
         $key = self::$_prefix . $key;
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
+        $value = isset($_COOKIE[$key]) ? $_COOKIE[$key] : (isset($_POST[$key]) ? $_POST[$key] : $default);
+        return $value;
     }
 
     /**
