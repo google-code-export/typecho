@@ -57,7 +57,7 @@ class Widget_Init extends Typecho_Widget
         $this->response->setContentType($options->contentType);
 
         /** 默认时区 */
-        if (!ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
+        if (function_exists("ini_get") && !ini_get("date.timezone") && function_exists("date_default_timezone_set")) {
             @date_default_timezone_set('UTC');
         }
 
