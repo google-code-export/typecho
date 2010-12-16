@@ -171,17 +171,25 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
         <div class="container">
             <div class="column-14 start-06 typecho-install">
             <?php if (isset($_GET['finish'])) : ?>
+                <?php if (!@file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) : ?>
+                <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
+                <div class="typecho-install-body">
+                    <form method="post" action="?config" name="config">
+                    <p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    </form>
+                </div>
+                <?php else : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
                     <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <?php if(isset($_GET['use_old']) ) : ?>
                     <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
                     <?php else : ?>
-                    <ul>
-                    <?php if (isset($_REQUEST['user']) && isset($_REQUEST['password'])): ?>
-                        <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(_r('user')); ?></strong></li>
-                        <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(_r('password')); ?></strong></li>
-                    <?php endif;?>
+                        <ul>
+                        <?php if (isset($_REQUEST['user']) && isset($_REQUEST['password'])): ?>
+                            <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(_r('user')); ?></strong></li>
+                            <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(_r('password')); ?></strong></li>
+                        <?php endif;?>
                     </ul>
                     <?php endif;?>
                     </div>
@@ -208,6 +216,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
                     <p><?php _e('希望你能尽情享用 Typecho 带来的乐趣!'); ?></p>
                 </div>
+                <?php endif;?>
             <?php  elseif (isset($_GET['config'])) : ?>
             <?php
                     $adapter = _r('dbAdapter', 'Mysql');
@@ -278,7 +287,10 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 \$db->addServer(" . var_export($dbConfig, true) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
-file_put_contents('./config.inc.php', implode('', $lines));
+
+if (false === ($handle = @file_put_contents('./config.inc.php', implode('', $lines)))) {
+    $creatConfigFile = false;
+}
                                     try {
                                         /** 初始化数据库结构 */
                                         $scripts = file_get_contents ('./install/' . $type . '.sql');
@@ -373,7 +385,13 @@ file_put_contents('./config.inc.php', implode('', $lines));
                                         
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => _r('userName'), 'password' => Typecho_Common::hash($password), 'mail' => _r('userMail'),
                                         'url' => 'http://www.typecho.org', 'screenName' => _r('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-                                        header('Location: install.php?finish&user=' . _r('userName') . '&password=' . $password);
+                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">抱歉，无法写入 config.inc.php 文件。<br />您可手动创建 config.inc.php，并复制如下代码至其中。</p>';
+                                        echo '<textarea cols="66" rows="15" class="code">';
+                                        foreach( $lines as $line ) {
+                                            echo htmlentities($line, ENT_COMPAT, 'UTF-8');
+                                        }
+                                        echo '</textarea>';
+                                        echo '<p class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">上传完成之后，请点击<button type="submit" onclick="window.location.href=\''.'install.php?finish&user=' . _r('userName') . '&password=' . $password.'\';return false;" >上传完毕 &raquo;</button></p>';
                                         exit;
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
@@ -472,8 +490,7 @@ file_put_contents('./config.inc.php', implode('', $lines));
                 <?php
                 $success = true;
                 if (false === ($handle = @fopen('./config.inc.php', 'ab'))) {
-                    echo '<p class="message error">' . _t('安装目录不可写, 无法进入下一步创建配置文件, 请设置你的目录权限为可写') . '</p>';
-                    $success = false;
+                    echo '<p class="message error">' . _t('安装目录不可写, 请设置你的目录权限为可写。<br /><br />或者在安装过程中手动上传config.inc.php文件.') . '</p>';
                 } else {
                     fclose($handle);
                     unlink('./config.inc.php');
