@@ -30,7 +30,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
      */
     public static function isAvailable()
     {
-        return ini_get('allow_url_fopen');
+        return function_exists("ini_get") && ini_get('allow_url_fopen');
     }
 
     /**

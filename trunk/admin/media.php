@@ -134,7 +134,7 @@ include 'common-js.php';
                 upload_url: "<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>",
                 post_params: {"__typecho_uid" : "<?php echo Typecho_Cookie::get('__typecho_uid'); ?>", 
                 "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>"},
-                file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
+                file_size_limit : "<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
     $last = strtolower($val[strlen($val)-1]);
     switch($last) {
         // The 'G' modifier is available since PHP 5.1.0
