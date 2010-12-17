@@ -49,7 +49,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
                 
                 var swfuploadLoaded = function () {
                     $(document).getElement('#upload-panel .button')
-                    .set('html', '<?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo ini_get('upload_max_filesize'); ?>)</small>');
+                    .set('html', '<?php _e('上传文件'); ?> <small style="font-weight:normal">(<?php echo function_exists('ini_get') ? ini_get('upload_max_filesize') : 0 ; ?>)</small>');
                 };
             
                 var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
@@ -141,7 +141,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
                     <?php if (isset($fileParentContent)): ?>
                     post_params: {"cid" : <?php $fileParentContent->cid(); ?>}
                     <?php endif; ?>
-                    file_size_limit : "<?php $val = trim(ini_get('upload_max_filesize'));
+                    file_size_limit : "<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
             // The 'G' modifier is available since PHP 5.1.0
