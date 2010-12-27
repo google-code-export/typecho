@@ -307,7 +307,7 @@ class Typecho_Request
     public function makeUriByRequest($parameter = NULL)
     {
         /** 初始化地址 */
-        list($scheme) = explode('/', $_SERVER["SERVER_PROTOCOL"]);
+        $scheme = $this->isSecure() ? 'https' : 'http';
         $requestUri = strtolower($scheme) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $parts = parse_url($requestUri);
 
@@ -640,7 +640,7 @@ class Typecho_Request
      */
     public function isSecure()
     {
-        return 'on' == $this->getServer('HTTPS');
+        return 'on' == $this->getServer('HTTPS') || 443 == $this->getServer('SERVER_PORT');
     }
 
     /**
