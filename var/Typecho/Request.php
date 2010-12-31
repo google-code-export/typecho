@@ -515,7 +515,7 @@ class Typecho_Request
     {
         switch (true) {
             case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
-                $this->_ip = $this->getServer('HTTP_X_FORWARDED_FOR');
+                list($this->_ip) = array_map('trim', explode(',', $this->getServer('HTTP_X_FORWARDED_FOR')));
                 return;
             case NULL !== $this->getServer('HTTP_CLIENT_IP'):
                 $this->_ip = $this->getServer('HTTP_CLIENT_IP');
