@@ -139,7 +139,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
                     flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
                     upload_url: "<?php $options->index('/action/upload'); ?>",
                     <?php if (isset($fileParentContent)): ?>
-                    post_params: {"cid" : <?php $fileParentContent->cid(); ?>}
+                    post_params: {"cid" : <?php $fileParentContent->cid(); ?>},
                     <?php endif; ?>
                     file_size_limit : "<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
         $last = strtolower($val[strlen($val)-1]);
