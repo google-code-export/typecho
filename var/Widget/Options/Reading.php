@@ -99,7 +99,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
 
         /** 文章列表数目 */
         $postsListSize = new Typecho_Widget_Helper_Form_Element_Text('postsListSize', NULL, $this->options->postsListSize,
-        _t('文章列表数目'), _t('此数目用于指定显示在侧边拦中的文章列表数目.'));
+        _t('文章列表数目'), _t('此数目用于指定显示在侧边栏中的文章列表数目.'));
         $postsListSize->input->setAttribute('class', 'mini');
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
 
