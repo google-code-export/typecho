@@ -191,7 +191,7 @@ class Typecho_Response
     public static function setStatus($code)
     {
         if (isset(self::$_httpCode[$code])) {
-            header('HTTP/1.1 ' . $code . ' ' . self::$_httpCode[$code], true, $code);
+            header(isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1' . ' ' . $code . '        ' . self::$_httpCode[$code], true, $code);
         }
     }
 
