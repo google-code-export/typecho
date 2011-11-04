@@ -53,6 +53,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (empty($file['name'])) {
             return false;
         }
+        
+        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasUploaded)->uploadHandle($file);
+        if ($hasUploaded) {
+            return $result;
+        }
 
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
@@ -140,6 +145,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (empty($file['name'])) {
             return false;
         }
+        
+        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasModified)->modifyHandle($content, $file);
+        if ($hasModified) {
+            return $result;
+        }
 
         $fileName = preg_split("(\/|\\|:)", $file['name']);
         $file['name'] = array_pop($fileName);
@@ -196,6 +206,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     public static function deleteHandle(array $content)
     {
+        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasDeleted)->deleteHandle($content);
+        if ($hasDeleted) {
+            return $result;
+        }
+
         return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
     }
 
@@ -208,6 +223,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     public static function attachmentHandle(array $content)
     {
+        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasPlugged)->attachmentHandle($content);
+        if ($hasPlugged) {
+            return $result;
+        }
+
         $options = Typecho_Widget::widget('Widget_Options');
         return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
     }
@@ -221,6 +241,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     public static function attachmentDataHandle(array $content)
     {
+        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasPlugged)->attachmentDataHandle($content);
+        if ($hasPlugged) {
+            return $result;
+        }
+
         return file_get_contents(Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__));
     }
 
