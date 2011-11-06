@@ -5,7 +5,7 @@
  * @package SaeUpload
  * @author Kimi
  * @version 1.0.0 Beta
- * @link http://www.ccvita.com/487.html
+ * @link http://www.ccvita.com/491.html
  */
 class SaeUpload_Plugin implements Typecho_Plugin_Interface
 {
