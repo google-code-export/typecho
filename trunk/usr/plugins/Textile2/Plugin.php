@@ -51,7 +51,7 @@ class Textile2_Plugin implements Typecho_Plugin_Interface
         'Textile' => 'Textile for the Textile purist.'), 'MTTextile',
         'Textile Flavor');
         $form->addInput($version->multiMode());
-        
+
         $filters = new Typecho_Widget_Helper_Form_Element_Checkbox('filters', 
         array('SmartyPants' => 'Apply SmartyPants (provides em and en dashes, and other typographic niceities)',
         'EducateQuotes' => 'Apply Texturize (applies curly quotes)'),
