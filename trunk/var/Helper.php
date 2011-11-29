@@ -152,7 +152,7 @@ class Helper
         $actionTable[$actionName] = $widgetName;
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($actionTable))
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->actionTable = serialize($actionTable)))
         , $db->sql()->where('name = ?', 'actionTable'));
     }
 
@@ -174,7 +174,7 @@ class Helper
         }
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($actionTable))
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->actionTable = serialize($actionTable)))
         , $db->sql()->where('name = ?', 'actionTable'));
     }
 
