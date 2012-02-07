@@ -331,7 +331,7 @@ abstract class Typecho_Widget
     public function next()
     {
         if ($this->stack) {
-            $this->row = $this->stack[key($this->stack)];
+            $this->row = @$this->stack[key($this->stack)];
             next($this->stack);
             $this->sequence ++;
         }
