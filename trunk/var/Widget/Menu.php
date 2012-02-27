@@ -203,7 +203,9 @@ class Widget_Menu extends Typecho_Widget
                                         if (!isset($currentOut[$outKey])) {
                                             $validate = false;
                                             break;
-                                        }
+										} else {
+											$validate = $out[$outKey] == $currentOut[$outKey];
+										}
                                     }
                                 } else {
                                     $validate = false;
