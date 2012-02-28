@@ -260,7 +260,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function getCurrentMenu()
     {
-        return $this->_currentParent < 0 ? NULL : $this->_childMenu[$this->_currentParent][$this->_currentChild];
+        return $this->_currentParent < 0 ? NULL : @$this->_childMenu[$this->_currentParent][$this->_currentChild];
     }
 
     /**
