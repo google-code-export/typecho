@@ -31,12 +31,20 @@
             });
             
             $('btn-save').removeProperty('disabled');
+            $('btn-waiting').removeProperty('disabled');
             $('btn-submit').removeProperty('disabled');
             
             $('btn-save').addEvent('click', function (e) {
                 this.getParent('span').addClass('loading');
                 this.setProperty('disabled', true);
                 $(document).getElement('input[name=do]').set('value', 'save');
+                $(document).getElement('.typecho-post-area form').submit();
+            });
+
+            $('btn-waiting').addEvent('click', function (e) {
+                this.getParent('span').addClass('loading');
+                this.setProperty('disabled', true);
+                $(document).getElement('input[name=do]').set('value', 'waiting');
                 $(document).getElement('.typecho-post-area form').submit();
             });
             
