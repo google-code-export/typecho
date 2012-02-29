@@ -1911,7 +1911,7 @@ ul.typecho-list-notable li #typecho-respond {
     display: block;
 }
 
-.typecho-post-area .typecho-preview-label {
+/*.typecho-post-area .typecho-preview-label {
     position: relative;
     display: none;
 }
@@ -1922,6 +1922,12 @@ ul.typecho-list-notable li #typecho-respond {
     top: -25px;
     font-weight: bold;
     font-size: 13px;
+}*/
+
+.typecho-post-area .typecho-preview-label {
+    margin-right: 10px;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 #typecho-preview-box {
@@ -1932,6 +1938,45 @@ ul.typecho-list-notable li #typecho-respond {
     float: left;
     width: 686px;
     margin-top: 10px;
+}
+
+#typecho-preview-box h1 { font-size: 23px; }
+#typecho-preview-box h2 { font-size: 21px; }
+#typecho-preview-box h3 { font-size: 19px; }
+#typecho-preview-box h4 { font-size: 17px; }
+#typecho-preview-box h5 { font-size: 15px; }
+#typecho-preview-box h6,
+#typecho-preview-box p,
+#typecho-preview-box ol,
+#typecho-preview-box ul,
+#typecho-preview-box dl,
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    font-size: 13px;
+}
+
+#typecho-preview-box p,
+#typecho-preview-box ol,
+#typecho-preview-box ul,
+#typecho-preview-box dl,
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    margin-bottom: 20px;
+}
+
+#typecho-preview-box ul, 
+#typecho-preview-box ol {
+    list-style-type: disc;
+    margin-left: 30px;
+}
+#typecho-preview-box ol {
+    list-style-type: decimal;
+}
+
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    padding: 20px;
+    background: #eee;
 }
 
 .typecho-post-area label.typecho-label cite {

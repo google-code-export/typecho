@@ -20,13 +20,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
-                        <div class="typecho-preview-label"><span><input type="checkbox" name="preview" id="btn-preview" /> <label for="btn-preview"><?php _e('预览内容'); ?></label></span></div>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                         <p class="submit">
                             <span class="left">
+                                <span class="typecho-preview-label"><input type="checkbox" name="preview" id="btn-preview" /> <label for="btn-preview"><?php _e('预览内容'); ?></label></span>
                                 <span class="advance close"><?php _e('展开高级选项'); ?></span>
                                 <span class="attach"><?php _e('展开附件'); ?></span>
                             </span>
@@ -61,6 +61,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                                     <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionRight($post); ?>
+                                    <li><input id="" name="" type="checkbox" value="1" />
+                                    <label for=""><?php _e('允许游客访问'); ?></label></li>
                                 </ul>
                             </div>
                         </li>

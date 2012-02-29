@@ -74,7 +74,7 @@
             });
 
             if ('undefined' != typeof(editorPreview)) {
-                $(document).getElement('.typecho-preview-label').setStyle('display', 'block');
+                //$(document).getElement('.typecho-preview-label').setStyle('display', 'block');
 
                 function togglePreview(el) {
                     if (el.getProperty('checked')) {
