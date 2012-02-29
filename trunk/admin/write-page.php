@@ -35,7 +35,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <button type="button" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
                             </span>
                         </p>
-                        <div id="typecho-preview-box"></div>
                     </div>
                         
                     <ul id="advance-panel" class="typecho-post-option column-18">
@@ -76,6 +75,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>
+                    <div id="typecho-preview-box"></div>
                 </div>
                 <div class="column-06">
                     <ul class="typecho-post-option">

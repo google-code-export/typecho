@@ -50,7 +50,7 @@ class Widget_Plugins_List extends Typecho_Widget
 
                     /** 获取插件主文件 */
                     $pluginFileName = $pluginDir . '/Plugin.php';
-                } else if (file_exists($pluginDir)) {
+                } else if (file_exists($pluginDir) && 'index.php' != basename($pluginDir)) {
                     $pluginFileName = $pluginDir;
                     $part = explode('.', basename($pluginDir));
                     if (2 == count($part) && 'php' == $part[1]) {
