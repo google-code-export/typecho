@@ -1,3 +1,21 @@
+<?php Typecho_Plugin::factory('admin/write-js.php')->trigger($plugged)->editorPreview(); ?>
+<?php if (!$plugged): ?>
+<script type="text/javascript">
+    var editorPreview = function () {
+        var textarea = $('text'), old = '', preview = $('typecho-preview-box');
+
+        var t = setInterval(function () {
+            var current = textarea.get('value');
+            
+            if (old != current) {
+                preview.set('html', Typecho.preview.autop(current));
+                old = current;
+            }
+        }, 100);
+    }
+</script>
+<?php endif; ?>
+
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {
@@ -54,6 +72,26 @@
                 $(document).getElement('input[name=do]').set('value', 'publish');
                 $(document).getElement('.typecho-post-area form').submit();
             });
+
+            if ('undefined' != typeof(editorPreview)) {
+                $(document).getElement('.typecho-preview-label').setStyle('display', 'block');
+
+                function togglePreview(el) {
+                    if (el.getProperty('checked')) {
+                        $('typecho-preview-box').setStyle('display', 'block');
+                    } else {
+                        $('typecho-preview-box').setStyle('display', 'none');
+                    }
+
+                    return el;
+                }
+
+                togglePreview($('btn-preview')).addEvent('click', function (e) {
+                    togglePreview(this);
+                });
+
+                editorPreview();
+            }
         });
     })();
 </script>

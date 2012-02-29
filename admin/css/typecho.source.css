@@ -209,6 +209,20 @@ input, select, textarea {
     font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
 }
 
+input[type=text], input[type=password],
+input.text, input.title,
+textarea {
+    background: #fff;
+    padding: 3px;
+    border: 1px solid #a0a0a0;
+    border-bottom-color: #c4c4c4;
+    border-right-color: #c4c4c4;
+    box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+	-o-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+	-moz-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+    -webkit-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4;
+}
+
 /** hack webkit border by 70 */
 input:focus, textarea:focus, select:focus {
     outline: 0 !important;
@@ -225,20 +239,28 @@ select {
 }
 
 button {
-    overflow:visible;
-    line-height: 16px;
-    *height:24px;
-    *padding:0 8px;
-    *line-height: 20px;
-    *margin-bottom: -1px; 
+    line-height: 22px; height: 26px; vertical-align: middle;
+    background-color: #f4f4f4;
+    font-size: 13px;
+    padding: 0 10px;
+    *padding: 0 5px;
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;
+    -khtml-border-radius: 13px;
+    border-radius: 13px;
+    cursor: pointer;
+    margin: 0;
+    border: 1px solid #AAA;
+    color: #333;
+    text-shadow: 0 1px #fff;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#DDDDDD));
+    background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+    background: -o-linear-gradient(top, #FFFFFF, #DDDDDD);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd'); /* IE6,IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd')";
 }
 
-/** just for ie6 */
-*html button {
-    line-height:17px;
-    height:17px;
-    margin-bottom:-1px;
-}
+button:hover { border-color: #666 }
 
 img.avatar {
 	padding: 2px;
@@ -1881,6 +1903,26 @@ ul.typecho-list-notable li #typecho-respond {
     font-weight: bold;
     margin: 5px 0px;
     display: block;
+}
+
+.typecho-post-area .typecho-preview-label {
+    position: relative;
+    display: none;
+}
+
+.typecho-post-area .typecho-preview-label span {
+    position: absolute;
+    right: 0;
+    top: -25px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#typecho-preview-box {
+    padding: 10px;
+    border: 2px dashed #DEE4C5;
+    background: #FFF;
+    display: none;
 }
 
 .typecho-post-area label.typecho-label cite {
