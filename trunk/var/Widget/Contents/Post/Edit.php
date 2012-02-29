@@ -178,7 +178,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
         $contents['status'] = $this->user->pass('editor', true) ? 'publish' : 'waiting';
-		$contents['status'] = $contents['do'] == 'waiting' ? 'waiting' : 'publish';
+        $contents['status'] = $contents['do'] == 'waiting' ? 'waiting' : 'publish';
 
         /** 真实的内容id */
         $realId = 0;
