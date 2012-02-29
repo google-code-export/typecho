@@ -207,6 +207,7 @@ input:hover {
 
 input, select, textarea {
     font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+    vertical-align: middle;
 }
 
 input[type=text], input[type=password],
@@ -1193,7 +1194,12 @@ margin-top: 25px;
 }
 
 .typecho-list-operate input {
-    font-size: 12px;
+    font-size: 13px;
+}
+
+.typecho-list-operate button {
+    height: 24px;
+    line-height: 24px;
 }
 
 .typecho-list-operate p.operate {
