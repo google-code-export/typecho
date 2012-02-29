@@ -117,8 +117,8 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
 
         /** 过滤状态 */
-        $select->where('table.contents.status = ? OR table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
-            'publish', 'waiting', 'draft');
+        $select->where('table.contents.status = ? OR table.contents.status = ? OR table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
+            'publish', 'waiting', 'private', 'draft');
 
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->filter('search')->keywords)) {
