@@ -1828,19 +1828,19 @@ var TypechoComment = {
         } else {
             $this->_feed->setTitle($this->options->title . ($this->_archiveTitle ? ' - ' . implode(' - ', $this->_archiveTitle) : NULL));
 
-            $feedUrl = '';
-            if (Typecho_Feed::RSS2 == $this->_feedType) {
-                $feedUrl = $this->feedUrl;
-            } else if (Typecho_Feed::RSS1 == $this->_feedType) {
-                $feedUrl = $this->feedRssUrl;
-            } else if (Typecho_Feed::ATOM1 == $this->_feedType) {
-                $feedUrl = $this->feedAtomUrl;
-            }
-
             while ($this->next()) {
                 $suffix = $this->pluginHandle()->trigger($plugged)->feedItem($this->_feedType, $this);
                 if (!$plugged) {
                     $suffix = NULL;
+                }
+
+                $feedUrl = '';
+                if (Typecho_Feed::RSS2 == $this->_feedType) {
+                    $feedUrl = $this->feedUrl;
+                } else if (Typecho_Feed::RSS1 == $this->_feedType) {
+                    $feedUrl = $this->feedRssUrl;
+                } else if (Typecho_Feed::ATOM1 == $this->_feedType) {
+                    $feedUrl = $this->feedAtomUrl;
                 }
 
                 $this->_feed->addItem(array(
