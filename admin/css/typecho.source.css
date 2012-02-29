@@ -1929,6 +1929,9 @@ ul.typecho-list-notable li #typecho-respond {
     border: 2px dashed #DEE4C5;
     background: #FFF;
     display: none;
+    float: left;
+    width: 686px;
+    margin-top: 10px;
 }
 
 .typecho-post-area label.typecho-label cite {
