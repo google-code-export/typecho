@@ -905,3 +905,342 @@ Typecho.autoComplete = function (match, token) {
         
     });
 };
+
+Typecho.preview = {
+    
+    block: 'p|pre|div|blockquote|form|ul|ol|dd|table|h1|h2|h3|h4|h5|h6',
+
+    uniqueId: 0,
+
+    blockKeys: [],
+
+    blockValues: [],
+
+    values: [],
+
+    boundary: '',
+
+    keys: [],
+
+    pos: 0,
+
+    prefix: 'http://segmentfault.com/img/',
+
+    makeUniqueId: function () {
+        var id = (this.uniqueId ++) + '';
+
+        for (var i = 0; i < 6 - id.length; i ++) {
+            id = '0' + id;
+        }
+
+        return ':' + id;
+    },
+
+    cutByBlock: function (text) {
+        var space = "( |　)";
+        return text.replace(new RegExp(space + '*\n' + space + '*', 'ig'), '\n')
+        .replace(/\n{2,}/g, '</p><p>')
+        .replace(/\n/g, '<br />')
+        .replace(/(<p>)?\s*<p:([0-9]{4})\/>\s*(<\/p>)?/ig, '<p:$2/>')
+        .replace(new RegExp('<p>' + space + '*</p>', 'ig'), '');
+    },
+
+    trim: function (str, charlist) {
+
+        var whitespace, l = 0,
+            i = 0;
+        str += '';
+ 
+        if (!charlist) {
+            // default list
+            whitespace = " \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000";
+        } else {
+            // preg_quote custom list
+            charlist += '';
+            whitespace = charlist.replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '$1');
+        }
+ 
+        l = str.length;
+        for (i = 0; i < l; i++) {
+            if (whitespace.indexOf(str.charAt(i)) === -1) {
+                str = str.substring(i);
+                break;
+            }
+        }
+ 
+        l = str.length;
+        for (i = l - 1; i >= 0; i--) {
+            if (whitespace.indexOf(str.charAt(i)) === -1) {
+                str = str.substring(0, i + 1);
+                break;
+            }
+        }
+ 
+        return whitespace.indexOf(str.charAt(0)) === -1 ? str : '';
+    },
+
+    ltrim: function (str, charlist) {
+        charlist = !charlist ? ' \\s\u00A0' : (charlist + '').replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '$1');
+        var re = new RegExp('^[' + charlist + ']+', 'g');
+        return (str + '').replace(re, '');
+    },    
+
+    arrayReverse: function (array, preserve_keys) {
+        var arr_len = array.length,
+            newkey = 0,
+            tmp_arr = {},
+            key = '';
+        preserve_keys = !! preserve_keys;
+ 
+        for (key in array) {
+            newkey = arr_len - key - 1;
+            tmp_arr[preserve_keys ? key : newkey] = array[key];
+        }
+ 
+        return tmp_arr;
+    },    
+
+    pregReplaceCallback: function (reg, callback, subject, limit){
+	    limit = !limit?-1:limit;
+
+	    var rs = null,
+		    res = [],
+		    x = 0,
+		    ret = subject;
+
+	    if (limit === -1) {
+		    var tmp = [];
+
+		    do{
+			    tmp = reg.exec(subject);
+			    if(tmp !== null){
+				    res.push(tmp);
+			    }
+		    } while (tmp !== null);
+	    } else {
+		    res.push(reg.exec(subject));
+	    }
+
+	    for (x = res.length-1; x > -1; x--) {//explore match
+		    ret = ret.replace(res[x][0],callback(res[x]));
+	    }
+
+	    return ret;
+    },
+
+    pregMatchAll: function (pattern, text) {
+        var result, list = [];
+        while (null != (result = pattern.exec(text))) {
+            list.push(result);
+        }
+
+        return list;
+    },
+
+    strrpos: function (haystack, needle, offset) {
+        var i = -1;
+        if (offset) {
+            i = offset > 0 ? (haystack + '').slice(offset) : (haystack + '').slice(0, offset);
+            i = i.lastIndexOf(needle); // strrpos' offset indicates starting point of range till end,
+            
+            if (i !== -1) {
+                i += offset > 0 ? offset : 0;
+            }
+        } else {
+            i = (haystack + '').lastIndexOf(needle);
+        }
+
+        return i >= 0 ? i : false;
+    },
+
+    substrReplace: function (str, replace, start, length) {
+        if (start < 0) { // start position in str
+            start = start + str.length;
+        }
+        length = length !== undefined ? length : str.length;
+        if (length < 0) {
+            length = length + str.length - start;
+        }
+        return str.slice(0, start) + replace.substr(0, length) + replace.slice(length) + str.slice(start + length);
+    },
+
+    htmlspecialchars: function (string, quote_style, charset, double_encode) {
+
+        var optTemp = 0,
+            i = 0,
+            noquotes = false;
+        if (typeof quote_style === 'undefined' || quote_style === null) {
+            quote_style = 2;
+        }
+        string = string.toString();
+        if (double_encode !== false) { // Put this first to avoid double-encoding
+            string = string.replace(/&/g, '&amp;');
+        }
+        string = string.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+ 
+        var OPTS = {
+            'ENT_NOQUOTES': 0,
+            'ENT_HTML_QUOTE_SINGLE': 1,
+            'ENT_HTML_QUOTE_DOUBLE': 2,
+            'ENT_COMPAT': 2,
+            'ENT_QUOTES': 3,
+            'ENT_IGNORE': 4
+        };
+
+        if (quote_style === 0) {
+            noquotes = true;
+        }
+
+        if (typeof quote_style !== 'number') { // Allow for a single string or an array of string flags
+            quote_style = [].concat(quote_style);
+            for (i = 0; i < quote_style.length; i++) {
+                // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
+                if (OPTS[quote_style[i]] === 0) {
+                    noquotes = true;
+                } else if (OPTS[quote_style[i]]) {
+                    optTemp = optTemp | OPTS[quote_style[i]];
+                }
+            }
+            quote_style = optTemp;
+        }
+
+        if (quote_style & OPTS.ENT_HTML_QUOTE_SINGLE) {
+            string = string.replace(/'/g, '&#039;');
+        }
+
+        if (!noquotes) {
+            string = string.replace(/"/g, '&quot;');
+        }
+ 
+        return string;
+    },
+
+    parseUrl: function (str) {
+
+        var key = ['source', 'scheme', 'authority', 'userInfo', 'user', 'pass', 'host', 'port', 
+                            'relative', 'path', 'directory', 'file', 'query', 'fragment'],
+            parser = /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
+ 
+        var m = parser.exec(str),
+            uri = {},
+            i = 14;
+
+        while (i--) {
+            if (m[i]) {
+                uri[key[i]] = m[i];  
+            }
+        }
+
+        delete uri.source;
+        return uri;
+    },
+
+    buildUrl: function (params) {
+        return (params.scheme ? params.scheme + '://' : '')
+            + (params.user ? params.user + (params.pass ? ':' + params.pass : '') + '@' : '')
+            + (params.host ? params.host : '')
+            + (params.port ? ':' + params.port : '')
+            + (params.path ? params.path : '')
+            + (params.query ? '?' + params.query : '')
+            + (params.fragment ? '#' + params.fragment : '');
+    },
+
+    fixPragraph: function (text) {
+        text = this.trim(text);
+
+        if (null == text.match(new RegExp('^<(' + this.block + ')(\\s|>)', 'i'))) {
+            text = '<p>' + text;
+        }
+
+        if (null == text.match(new RegExp('</(' + this.block + ')>$', 'i'))) {
+            text = text + '</p>';
+        }
+
+        return text;
+    },
+
+    replaceBlockCallback: function (matches) {
+        var tagMatch = '|' + matches[1] + '|',
+            text = matches[4], key = '';
+
+        if ('|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|h1|h2|h3|h4|h5|h6|'
+            .indexOf(tagMatch) >= 0) {
+            text = Typecho.preview.trim(text).replace(/\n/g, '<br />');
+        } else if ('|div|blockquote|form|'.indexOf(tagMatch) >= 0) {
+            text = Typecho.preview.cutByBlock(text);
+            if (text.indexOf('</p><p>') >= 0) {
+                text = Typecho.preview.fixPragraph(text);
+            }
+        }
+
+        if ('|a|span|cite|strong|sup|sub|small|del|u|i|b|'.indexOf(tagMatch)) {
+            key = '<b' + matches[2] + '/>';
+        } else {
+            key = '<p' + matches[2] + '/>';
+        }
+
+        Typecho.preview.blockKeys.push(key);
+        Typecho.preview.blockValues.push('<' + matches[1] + matches[3] + '>' + text + '</' + matches[1] + '>');
+
+        return key;
+    },
+
+    autop: function (text) {
+        this.uniqueId = 0;
+        this.blockKeys = [];
+        this.blockValues = [];
+
+        text = this.trim(text).replace(/<\/p>\s+<p(\s*)/ig, '</p><p$1')
+        .replace(/\s*<br\s*\/?>\s*/ig, '<br />');
+
+        var foundTagCount = 0, textLength = text.length, 
+            uniqueIdKeys = [], uniqueIdValues = [];
+
+        list = this.pregMatchAll(new RegExp('</\\s*([a-z0-9]+)>', 'ig'), text);
+
+        for (var i = 0; i < list.length; i++) {
+            var matches = list[i], tag = matches[1],
+                leftOffset = matches.index - textLength,
+                posSingle = this.strrpos(text, '<' + tag + '>', leftOffset),
+                posFix = this.strrpos(text, '<' + tag + ' ', leftOffset)
+                pos = false;
+
+            if (false === posSingle && false !== posFix) {
+                pos = Math.max(posSingle, posFix);
+            } else if (false === posSingle && false !== posFix) {
+                pos = posFix;
+            } else if (false !== posSingle && false === posFix) {
+                pos = posSingle;
+            }
+
+            if (false !== pos) {
+                var uniqueId = this.makeUniqueId();
+                uniqueIdKeys.push(uniqueId);
+                uniqueIdValues.push(tag);
+                tagLength = tag.length;
+
+                text = this.substrReplace(text, uniqueId, pos + 1 + tagLength, 0);
+                text = this.substrReplace(text, uniqueId, matches.index + 7 + foundTagCount * 10 
+                    + tagLength, 0);
+
+                foundTagCount ++;
+            }
+        }
+
+        for (var i = 0; i < uniqueIdKeys.length; i ++) {
+            text = this.pregReplaceCallback(new RegExp('<(' + uniqueIdValues[i] + ')(' + uniqueIdKeys[i]
+                + ')([^>]*)>([\\s\\S]*)</' + uniqueIdValues[i] + uniqueIdKeys[i] + '>', 'ig'), this.replaceBlockCallback, text , 1);
+        }
+
+        text = this.cutByBlock(text);
+        var blockKeys = this.arrayReverse(this.blockKeys), 
+            blockValues = this.arrayReverse(this.blockValues);
+
+        for (var i = 0; i < this.blockKeys.length; i ++) {
+            text = text.replace(blockKeys[i], blockValues[i]);
+        }
+
+        return this.fixPragraph(text);
+    }
+};
+

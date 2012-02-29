@@ -20,6 +20,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
+                        <div class="typecho-preview-label"><span><input type="checkbox" name="preview" id="btn-preview" /> <label for="btn-preview"><?php _e('预览内容'); ?></label></span></div>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
@@ -37,6 +38,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <button type="button" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
                             </span>
                         </p>
+                        <div id="typecho-preview-box"></div>
                     </div>
                     <ul id="advance-panel" class="typecho-post-option column-18">
                         <li class="column-18">

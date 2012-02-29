@@ -20,6 +20,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </label>
                         <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($page->title); ?>" class="text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
+                        <div class="typecho-preview-label"><span><input type="checkbox" name="preview" id="btn-preview" /> <label for="btn-preview"><?php _e('预览内容'); ?></label></span></div>
                         <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($page->text); ?></textarea></p>
                         <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                         <p class="submit">
@@ -34,6 +35,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <button type="button" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
                             </span>
                         </p>
+                        <div id="typecho-preview-box"></div>
                     </div>
                         
                     <ul id="advance-panel" class="typecho-post-option column-18">
