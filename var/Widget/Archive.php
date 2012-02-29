@@ -1597,7 +1597,7 @@ var TypechoComment = {
 }
 //]]>
 </script>";
-            } else if (0 != $allows['commentReply']) {
+            } else {
                 $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
             }
         }
