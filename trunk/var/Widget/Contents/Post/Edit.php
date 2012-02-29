@@ -178,6 +178,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
         $contents['status'] = $this->user->pass('editor', true) ? 'publish' : 'waiting';
+		$contents['status'] = $contents['do'] == 'waiting' ? 'waiting' : 'publish';
 
         /** 真实的内容id */
         $realId = 0;
@@ -525,14 +526,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function writePost()
     {
         $contents = $this->request->from('password', 'allowComment',
-        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text');
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'do');
         $contents['type'] = 'post';
 
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
         $contents = $this->pluginHandle()->write($contents, $this);
 
-        if ($this->request->is('do=publish')) {
+        if ($this->request->is('do=publish') || $this->request->is('do=waiting')) {
             /** 重新发布已经存在的文章 */
             $this->publish($contents);
 
@@ -682,7 +683,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function action()
     {
-        $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
+        $this->on($this->request->is('do=publish') || $this->request->is('do=waiting') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
 
