@@ -215,9 +215,9 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             return;
         }
 
-		$commentsAuthor = Typecho_Cookie::get('__typecho_remember_author');
-		$commentsMail = Typecho_Cookie::get('__typecho_remember_mail');
-		$select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
+        $commentsAuthor = Typecho_Cookie::get('__typecho_remember_author');
+        $commentsMail = Typecho_Cookie::get('__typecho_remember_mail');
+        $select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
         ->where('table.comments.status = ? OR (table.comments.author = ? AND table.comments.mail = ? AND table.comments.status = ?)', 'approved', $commentsAuthor, $commentsMail, 'waiting');
         $threadedSelect = NULL;
         
@@ -226,7 +226,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         }
         
         $select->order('table.comments.coid', 'ASC');
-		//var_dump($select);exit('ff');
         $this->db->fetchAll($select, array($this, 'push'));
         
         /** 需要输出的评论列表 */
