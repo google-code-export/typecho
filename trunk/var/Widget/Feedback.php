@@ -106,6 +106,15 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
             /** 记录登录用户的id */
             $comment['authorId'] = $this->user->uid;
         }
+        
+        /** 评论者之前须有评论通过了审核 */
+        if (!$this->options->commentsRequireModeration && $this->options->commentsWhitelist) {
+            if ($commentApprovedNum = $this->size($this->select()->where('author = ? AND mail = ? AND status = ?', $comment['author'], $comment['mail'], 'approved'))) {
+                $comment['status'] = 'approved';
+            } else {
+                $comment['status'] = 'waiting';
+            }
+        }
 
         if ($error = $validator->run($comment)) {
             /** 记录文字 */
