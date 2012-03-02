@@ -102,6 +102,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 评论提交 */
         $commentsPostOptions = array(
             'commentsRequireModeration'     =>  _t('所有评论必须经过审核'),
+            'commentsWhitelist'     =>  _t('评论者之前须有评论通过了审核'),
             'commentsRequireMail'           =>  _t('必须填写邮箱'),
             'commentsRequireURL'            =>  _t('必须填写网址'),
             'commentsCheckReferer'          =>  _t('检查评论来源页URL是否与文章链接一致'),
@@ -116,6 +117,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsPostOptionsValue = array();
         if ($this->options->commentsRequireModeration) {
             $commentsPostOptionsValue[] = 'commentsRequireModeration';
+        }
+
+        if ($this->options->commentsWhitelist) {
+            $commentsPostOptionsValue[] = 'commentsWhitelist';
         }
 
         if ($this->options->commentsRequireMail) {
@@ -170,7 +175,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         }
 
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
-                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsRequireMail', 'commentsAvatarRating',
+                'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsWhitelist', 'commentsRequireMail', 'commentsAvatarRating',
                 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
 
         $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
@@ -188,6 +193,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             ? $settings['commentsAvatarRating'] : 'G';
 
         $settings['commentsRequireModeration'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireModeration');
+        $settings['commentsWhitelist'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsWhitelist');
         $settings['commentsRequireMail'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireMail');
         $settings['commentsRequireURL'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireURL');
         $settings['commentsCheckReferer'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsCheckReferer');

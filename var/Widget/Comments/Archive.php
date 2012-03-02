@@ -115,6 +115,9 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         <a href="<?php $this->permalink(); ?>"><?php $singleCommentOptions->beforeDate();
         $this->date($singleCommentOptions->dateFormat);
         $singleCommentOptions->afterDate(); ?></a>
+        <?php if ('waiting' == $this->status) { ?>
+        <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>
+        <?php } ?>
     </div>
     <?php $this->content(); ?>
     <?php if ($this->children) { ?>
@@ -212,8 +215,10 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             return;
         }
 
-        $select = $this->select()->where('table.comments.status = ?', 'approved')
-        ->where('table.comments.cid = ?', $this->parameter->parentId);
+		$commentsAuthor = Typecho_Cookie::get('__typecho_remember_author');
+		$commentsMail = Typecho_Cookie::get('__typecho_remember_mail');
+		$select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
+        ->where('table.comments.status = ? OR (table.comments.author = ? AND table.comments.mail = ? AND table.comments.status = ?)', 'approved', $commentsAuthor, $commentsMail, 'waiting');
         $threadedSelect = NULL;
         
         if ($this->options->commentsShowCommentOnly) {
@@ -221,6 +226,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         }
         
         $select->order('table.comments.coid', 'ASC');
+		//var_dump($select);exit('ff');
         $this->db->fetchAll($select, array($this, 'push'));
         
         /** 需要输出的评论列表 */
@@ -393,6 +399,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
                 'afterDate'     =>  '',
                 'dateFormat'    =>  $this->options->commentDateFormat,
                 'replyWord'     =>  _t('回复'),
+                'commentStatus'     =>  _t('您的评论正等待审核！'),
                 'avatarSize'    =>  32,
                 'defaultAvatar' =>  NULL
             ));
