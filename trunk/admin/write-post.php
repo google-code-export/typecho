@@ -41,10 +41,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </div>
                     <ul id="advance-panel" class="typecho-post-option column-18">
                         <li class="column-18">
-                            <div class="column-12">
-                                    <label for="password" class="typecho-label"><?php _e('密码'); ?></label>
-                                    <p><input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></p>
-                                    <p class="description"><?php _e('为这篇日志分配一个密码, 访问者需要输入密码才能阅读到日志的内容'); ?></p>
+                            <div class="column-12 suffix">
+                                    <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                    <ul>
+                                        <li><input id="public" name="visibility" type="radio" value="1" checked="true" /> <label for="public"><?php _e('公开'); ?></label></li>
+                                        <li><input id="password-required" name="visibility" type="radio" /> <label for="password-required">密码保护 <input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></label></li>
+                                        <li><input id="private" name="visibility" type="radio" /> <label for="private">私密</label></li>
+                                    </ul>
                                     <br />
                                     <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
                                     <textarea id="trackback" name="trackback"></textarea>
@@ -61,8 +64,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                                     <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionRight($post); ?>
-                                    <li><input id="" name="" type="checkbox" value="1" />
-                                    <label for=""><?php _e('允许游客访问'); ?></label></li>
+                                    
                                 </ul>
                             </div>
                         </li>

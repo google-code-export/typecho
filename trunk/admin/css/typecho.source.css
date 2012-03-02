@@ -2123,8 +2123,8 @@ ul.typecho-post-option li ul.related {
 }
 
 ul.typecho-post-option li ul li {
-    height: 20px;
-    line-height: 20px;
+    /*height: 20px;
+    line-height: 20px;*/
     border: none;
     font-size: 12px;
     padding: 4px;
