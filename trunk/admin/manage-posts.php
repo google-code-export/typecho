@@ -78,7 +78,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php endif; ?></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>
-                            <a class="right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
+                            <a class="right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
                             <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>

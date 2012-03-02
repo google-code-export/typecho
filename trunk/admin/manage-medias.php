@@ -65,7 +65,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
                             <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                             <td>
-                            <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
+                            <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
                             </td>
                             <td><?php $attachments->author(); ?></td>
                             <td>

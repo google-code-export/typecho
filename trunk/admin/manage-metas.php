@@ -57,7 +57,7 @@ include 'menu.php';
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                 <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
-                                <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/view.gif'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
+                                <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
                                 </td>
                                 <td><?php $categories->slug(); ?></td>
                                 <td>
