@@ -32,7 +32,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                                 <input type="hidden" name="do" value="publish" />
                                 <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                                <button type="button" id="btn-waiting"><?php _e('设为待审核'); ?></button>
                                 <button type="button" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
                             </span>
                         </p>
