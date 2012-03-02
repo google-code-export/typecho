@@ -43,8 +43,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <div class="column-12 suffix">
                                     <label class="typecho-label"><?php _e('公开度'); ?></label>
                                     <ul>
-                                        <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="public"><?php _e('公开'); ?></label></li>
-                                        <li><input id="password" value="password"name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password-required">密码保护 <input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></label></li>
+                                        <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
+                                        <li><input id="password" value="password"name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password">密码保护 <input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></label></li>
                                         <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private">私密</label></li>
                                         <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if ($post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting">待审核</label></li>
                                     </ul>

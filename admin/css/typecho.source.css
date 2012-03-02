@@ -108,6 +108,11 @@ a.button, span.balloon, a.balloon-button, .typecho-pager a {
     /* hope IE support border radius, God save me! */
     border-radius: 2px;
 }
+span.balloon {
+    font-size: 12px;
+    padding: 0 6px;
+    border-radius: 10px;
+}
 
 a.size-1 {
     background: #C4CD9C;
@@ -134,7 +139,7 @@ a.size-0 {
 }
 
 span.balloon, a.balloon-button {
-    padding: 0 4px;
+    /*padding: 0 4px;*/
 }
 
 a.button:hover, a.balloon-button:hover {
