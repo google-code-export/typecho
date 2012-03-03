@@ -177,7 +177,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     protected function publish(array $contents)
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
-        $contents['status'] = $contents['visibility'] == 'password' ? 'publish' : ($contents['visibility'] == 'private' ? 'private' : ($contents['visibility'] == 'publish' && $this->user->pass('editor', true) ? 'publish' : 'waiting'));
+        $contents['status'] = $contents['visibility'] == 'password' ? 'publish' : ($contents['visibility'] == 'private' ? 'private' : ($contents['visibility'] == 'waiting' || !$this->user->pass('editor', true) ? 'waiting' : 'publish'));
         $contents['password'] = $contents['visibility'] == 'password' ? $contents['password'] : '';
 
         /** 真实的内容id */
@@ -233,14 +233,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     protected function save(array $contents)
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
-        $contents['status'] = $contents['visibility'] == 'password' ? 'draft' : ($contents['visibility'] == 'private' ? 'private' : ($contents['visibility'] == 'publish' ? 'draft' : 'waiting'));
+        $contents['status'] = $contents['visibility'] == 'password' ? 'draft' : ($contents['visibility'] == 'private' ? 'private' : ($contents['visibility'] == 'waiting' ? 'waiting' : 'draft'));
         $contents['password'] = $contents['visibility'] == 'password' ? $contents['password'] : '';
 
         /** 真实的内容id */
         $realId = 0;
 
         /** 如果草稿已经存在 */
-        if ($this->draft) {
+        if ($this->draft || $contents['status'] == 'private' || $contents['status'] == 'waiting') {
 
             /** 直接将草稿状态更改 */
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
