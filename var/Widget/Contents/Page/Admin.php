@@ -31,8 +31,8 @@ class Widget_Contents_Page_Admin extends Widget_Contents_Post_Admin
         $select = $this->select()->where('table.contents.type = ?', 'page');
 
         /** 过滤状态 */
-        $select->where('table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
-            'publish', 'draft');
+        $select->where('table.contents.status = ? OR table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
+            'publish', 'waiting', 'draft');
 
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {
