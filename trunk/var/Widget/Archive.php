@@ -1082,7 +1082,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->pluginHandle()->trigger($hasPushed)->search($keywords, $this);
 
         if (!$hasPushed) {
-            $searchQuery = '%' . $keywords . '%';
+            $searchQuery = '%' . str_replace(' ', '%', $keywords) . '%';
 
             /** 搜索无法进入隐私项保护归档 */
             $select->where('table.contents.password IS NULL')
