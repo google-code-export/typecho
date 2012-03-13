@@ -43,12 +43,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
-                        <col width="260"/>
-                        <col width="60"/>
+                        <col width="280"/>
+                        <col width="80"/>
                         <col width="30"/>
                         <col width="110"/>
-                        <col width="205"/>
-                        <col width="150"/>
+                        <col width="185"/>
+                        <col width="130"/>
                     </colgroup>
                     <thead>
                         <tr>

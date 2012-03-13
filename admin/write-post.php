@@ -27,8 +27,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p class="submit">
                             <span class="left">
                                 <span class="typecho-preview-label"><input type="checkbox" name="preview" id="btn-preview" /> <label for="btn-preview"><?php _e('预览内容'); ?></label></span>
-                                <span class="advance close"><?php _e('展开高级选项'); ?></span>
-                                <span class="attach"><?php _e('展开附件'); ?></span>
+                                <span class="advance close" tabindex="0"><?php _e('展开高级选项'); ?></span>
+                                <span class="attach" tabindex="0"><?php _e('展开附件'); ?></span>
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />

@@ -91,7 +91,7 @@ a:hover {
     text-decoration: underline;
 }
 
-a.button, span.balloon, a.balloon-button, .typecho-pager a {
+a.button, /*span.balloon,*/ a.balloon-button, .typecho-pager a {
     background: #BD6800;
     color: #FFF;
     padding: 2px 4px;
@@ -110,8 +110,8 @@ a.button, span.balloon, a.balloon-button, .typecho-pager a {
 }
 span.balloon {
     font-size: 12px;
-    padding: 0 6px;
-    border-radius: 10px;
+    font-weight: normal;
+    color: #666;
 }
 
 a.size-1 {
