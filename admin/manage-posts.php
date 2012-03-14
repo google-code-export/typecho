@@ -74,7 +74,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php if ('draft' == $posts->status || 'waiting' == $posts->status || 'private' == $posts->status || $posts->password): ?>
                             </td>
                             <td>
-                            <span class="balloon right"><?php 'draft' == $posts->status ? _e('草稿') : ('waiting' == $posts->status ? _e('待审核') : ($posts->password ? _e('密码') : _e('私密'))); ?></span>
+                            <span class="balloon right"><?php 'draft' == $posts->status ? _e('草稿') : ('waiting' == $posts->status ? _e('待审核') : ('private' == $posts->status ? _e('私密') : _e(''))); ?> <?php $posts->password ? _e('密码') : _e(''); ?></span>
                             <?php endif; ?></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>
