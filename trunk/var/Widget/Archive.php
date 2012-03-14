@@ -1603,7 +1603,7 @@ var TypechoComment = {
         }
 
         /** 插件支持 */
-        $this->pluginHandle()->header($header, $this);
+        $header = $this->pluginHandle()->header($header, $this);
 
         /** 输出header */
         echo $header;
