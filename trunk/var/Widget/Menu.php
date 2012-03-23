@@ -20,15 +20,7 @@ class Widget_Menu extends Typecho_Widget
      * @access private
      * @var array
      */
-    private $_parentMenu = array();
-
-    /**
-     * 子菜单列表
-     *
-     * @access private
-     * @var array
-     */
-    private $_childMenu = array();
+    private $_menu = array();
 
     /**
      * 当前父菜单
@@ -108,9 +100,9 @@ class Widget_Menu extends Typecho_Widget
      */
     public function execute()
     {
-        $this->_parentMenu = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
+        $parentNodes = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
 
-        $this->_childMenu =  array(
+        $childNodes =  array(
         array(
             array(_t('登录'), _t('登录到%s', $this->options->title), 'login.php', 'visitor'),
             array(_t('注册'), _t('注册到%s', $this->options->title), 'register.php', 'visitor')
@@ -131,31 +123,24 @@ class Widget_Menu extends Typecho_Widget
             array(array('Widget_Contents_Post_Edit', 'getMenuTitle'), array('Widget_Contents_Post_Edit', 'getMenuTitle'), 'write-post.php?cid=', 'contributor', true),
             array(_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'),
             array(array('Widget_Contents_Page_Edit', 'getMenuTitle'), array('Widget_Contents_Page_Edit', 'getMenuTitle'), 'write-page.php?cid=', 'editor', true),
-        //    array(_t('上传相片'), _t('上传新相片'), '/admin/edit-photo.php', 'contributor')
         ),
         array(
-            array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, Typecho_Common::url('write-post.php', $this->options->adminUrl)),
+            array(_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, 'write-post.php'),
             array(array('Widget_Contents_Post_Admin', 'getMenuTitle'), array('Widget_Contents_Post_Admin', 'getMenuTitle'), 'manage-posts.php?uid=', 'contributor', true),
-            array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, Typecho_Common::url('write-page.php', $this->options->adminUrl)),
+            array(_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, 'write-page.php'),
             array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
             array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),
-        //    array(_t('文件'), _t('管理文件'), '/admin/files.php', 'editor'),
             array(_t('标签和分类'), _t('标签和分类'), 'manage-metas.php', 'editor'),
             array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
             array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), 'media.php?cid=', 'contributor', true),
-            array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator', false, Typecho_Common::url('user.php', $this->options->adminUrl)),
+            array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator', false, 'user.php'),
             array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true),
             array(array('Widget_Users_Edit', 'getMenuTitle'), array('Widget_Users_Edit', 'getMenuTitle'), 'user.php?uid=', 'administrator', true),
-        //    array(_t('链接'), _t('管理链接'), '/admin/manage-links.php', 'administrator'),
-        //    array(_t('链接分类'), _t('管理链接分类'), '/admin/manage-link-cat.php', 'administrator'),
         ),
         array(
             array(_t('基本'), _t('基本设置'), 'options-general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), 'options-discussion.php', 'administrator'),
             array(_t('文章'), _t('阅读设置'), 'options-reading.php', 'administrator'),
-        //    array(_t('撰写'), _t('撰写习惯设置'), '/admin/option-writing.php', 'contributor'),
-        //    array(_t('权限'), _t('权限设置'), '/admin/access.php', 'administrator'),
-        //    array(_t('邮件'), _t('邮件设置'), '/admin/mail.php', 'administrator'),
             array(_t('永久链接'), _t('永久链接设置'), 'options-permalink.php', 'administrator'),
         ));
 
@@ -163,93 +148,104 @@ class Widget_Menu extends Typecho_Widget
         $panelTable = unserialize($this->options->panelTable);
         $extendingParentMenu = empty($panelTable['parent']) ? array() : $panelTable['parent'];
         $extendingChildMenu = empty($panelTable['child']) ? array() : $panelTable['child'];
+        $currentUrl = $this->request->makeUriByRequest();
+        $adminUrl = $this->options->adminUrl;
+        $menu = array();
+        $defaultChildeNode = array(NULL, NULL, NULL, 'administrator', false, NULL);
+
+        $currentUrlParts = parse_url($currentUrl);
+        $currentUrlParams = array();
+        if (!empty($currentUrlParts['query'])) {
+            parse_str($currentUrlParts['query'], $currentUrlParams);
+        }
 
         foreach ($extendingParentMenu as $key => $val) {
-            $this->_parentMenu[10 + $key] = $val;
+            $parentNodes[10 + $key] = $val;
         }
 
         foreach ($extendingChildMenu as $key => $val) {
-            $this->_childMenu[$key] = isset($this->_childMenu[$key]) ? $this->_childMenu[$key] : array();
-            if (isset($this->_parentMenu[$key])) {
-                $this->_childMenu[$key] = array_merge($this->_childMenu[$key], $val);
-            }
+            $childNodes[$key] = array_merge(isset($childNodes[$key]) ? $childNodes[$key] : array(), $val);
         }
 
-        $this->_currentUrl = $this->request->makeUriByRequest();
-        $childMenu = $this->_childMenu;
-        $adminUrl = $this->options->adminUrl;
+        foreach ($parentNodes as $key => $parentNode) {
+            // this is a simple struct than before
+            $children = array();
+            $showedChildrenCount = 0;
+            $firstUrl = NULL;
+            
+            foreach ($childNodes[$key] as $inKey => $childNode) {
+                // magic merge
+                $childNode += $defaultChildeNode;
+                list ($name, $title, $url, $access, $hidden, $addLink) = $childNode;
 
-        foreach ($childMenu as $parentKey => $parentVal) {
-            foreach ($parentVal as $childKey => $childVal) {
-                $link = Typecho_Common::url($childVal[2], $adminUrl);
+                // parse url
+                $url = Typecho_Common::url($url, $adminUrl);
 
-                $currentParts = parse_url($this->_currentUrl);
-                $parts = parse_url($link);
+                // compare url
+                $urlParts = parse_url($url);
+                $urlParams = array();
+                if (!empty($urlParts['query'])) {
+                    parse_str($urlParts['query'], $urlParams);
+                }
 
-                /** 精准比对 */
-                if ($currentParts['path'] == $parts['path']) {
-                    $validate = true;
-
-                    if (!empty($parts['query'])) {
-                        parse_str($parts['query'], $out);
-                        if (empty($currentParts['query'])) {
+                $validate = true;
+                if ($urlParts['path'] != $currentUrlParts['path']) {
+                    $validate = false;
+                } else {
+                    foreach ($urlParams as $paramName => $paramValue) {
+                        if (!isset($currentUrlParams[$paramName])) {
                             $validate = false;
-                        } else {
-                            parse_str($currentParts['query'], $currentOut);
-
-                            if (!empty($out)) {
-                                if (!empty($currentOut)) {
-                                    foreach ($out as $outKey => $outVal) {
-                                        if (!isset($currentOut[$outKey])) {
-                                            $validate = false;
-                                            break;
-                                        } else {
-                                            $validate = $out[$outKey] == $currentOut[$outKey];
-                                        }
-                                    }
-                                } else {
-                                    $validate = false;
-                                }
-                            }
+                            break;
                         }
                     }
+                }
 
-                    if ($validate) {
-                        $this->_currentParent =  $parentKey;
-                        $this->_currentChild =  $childKey;
+                if ($hidden && $validate) {
+                    $hidden = false;
+                }
+
+                if (!$hidden) {
+                    $showedChildrenCount ++;
+
+                    if (!empty($firstUrl)) {
+                        $firstUrl = $url;
+                    }
+
+                    if (is_array($name)) {
+                        list($widget, $method) = $name;
+                        $name = Typecho_Widget::widget($widget)->$method();
+                    }
+                    
+                    if (is_array($title)) {
+                        list($widget, $method) = $title;
+                        $title = Typecho_Widget::widget($widget)->$method();
                     }
                 }
 
-                if ('visitor' != $childVal[3] && !$this->user->pass($childVal[3], true)) {
-                    unset($this->_childMenu[$parentKey][$childKey]);
-                }
+                if ($validate) {
+                    $this->user->pass($access); 
+                    
+                    $this->_currentParent = $key;
+                    $this->_currentChild = $inKey;
+                    $this->title = $title;
+                    $this->addLink = $addLink;
+                } 
+
+                $children[$inKey] = array(
+                    $name,
+                    $title,
+                    $url,
+                    $access,
+                    $hidden,
+                    $addLink
+                );
             }
 
-            if (0 == count($this->_childMenu[$parentKey])) {
-                unset($this->_parentMenu[$parentKey]);
-            }
+            $menu[$key] = array($parentNode, $showedChildrenCount > 0, $firstUrl,$children);
         }
 
-        $level = isset($this->_childMenu[$this->_currentParent][$this->_currentChild][3]) ?
-        $this->_childMenu[$this->_currentParent][$this->_currentChild][3] : 'administrator';
-        if ('visitor' != $level) {
-            $this->user->pass($level);
-        }
-        
-        if (isset($this->_childMenu[$this->_currentParent][$this->_currentChild][5])) {
-            $this->addLink = $this->_childMenu[$this->_currentParent][$this->_currentChild][5];
-        }
-
-        if (is_array($this->_childMenu[$this->_currentParent][$this->_currentChild][1])) {
-            list($widget, $method) = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
-            $this->title = Typecho_Widget::widget($widget)->$method();
-        } else {
-            $this->title = $this->_childMenu[$this->_currentParent][$this->_currentChild][1];
-        }
-
-        array_shift($this->_parentMenu);
-        array_shift($this->_childMenu);
-        $this->_currentParent --;
+        $this->_menu = $menu;
+        $this->_currentUrl = $currentUrl;
     }
 
     /**
@@ -260,7 +256,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function getCurrentMenu()
     {
-        return $this->_currentParent < 0 ? NULL : @$this->_childMenu[$this->_currentParent][$this->_currentChild];
+        return $this->_currentParent > 0 ? $this->_menu[$this->_currentParent][3][$this->_currentChild] : NULL;
     }
 
     /**
@@ -271,32 +267,26 @@ class Widget_Menu extends Typecho_Widget
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
-        $adminUrl = $this->options->adminUrl;
-
-        foreach ($this->_parentMenu as $key => $title) {
-            $current = reset($this->_childMenu[$key]);
-            $link = Typecho_Common::url($current[2], $adminUrl);
-
-            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) . "><a href=\"{$link}\" title=\"{$title}\">{$title}</a></dt>\n";
-
-            echo "<dd><ul>\n";
-            foreach ($this->_childMenu[$key] as $inkey => $menu) {
-                if (!isset($menu[4]) || !$menu[4] || ($key == $this->_currentParent && $inkey == $this->_currentChild)) {
-                    $link = Typecho_Common::url($menu[2], $adminUrl);
-
-                    if (is_array($menu[0])) {
-                        list($widget, $method) = $menu[0];
-                        $title = $this->widget($widget)->$method();
-                    } else {
-                        $title = $menu[0];
-                    }
-
-                    echo "<li" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) .
-                    "><a href=\"" . ($key == $this->_currentParent && $inkey == $this->_currentChild ? $this->_currentUrl : $link) .
-                    "\" title=\"{$title}\">{$title}</a></li>\n";
-                }
+        foreach ($this->_menu as $key => $node) {
+            if (!$node[1] || !$key) {
+                continue;
             }
-            echo "</ul></dd>\n";
+
+            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) 
+                . "><a href=\"{$node[2]}\" title=\"{$node[0]}\">{$node[0]}</a></dt>"
+                . "<dd><ul>";
+            
+            foreach ($node[3] as $inKey => $inNode) {
+                if ($inNode[4]) {
+                    continue;
+                }
+
+                echo "<li" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) .
+                    "><a href=\"" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? $this->_currentUrl : $inNode[2]) . "\" title=\"{$inNode[0]}\">{$inNode[0]}</a></li>";
+            }
+
+            echo "</ul></dd>";
         }
     }
 }
+
