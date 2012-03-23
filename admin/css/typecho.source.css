@@ -1024,6 +1024,17 @@ margin-top: 25px;
     margin: 2px 0px;
 }
 
+.typecho-dashboard-nav .balloon {
+    margin-left: 5px;
+    padding: 1px 5px;
+    background: #BD6800;
+    color: #FFF;
+    font-size: 12px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
 .typecho-dashboard-nav .dashboard-status {
     font-size: 12px;
 }
