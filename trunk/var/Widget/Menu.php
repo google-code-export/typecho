@@ -204,6 +204,10 @@ class Widget_Menu extends Typecho_Widget
                     $hidden = false;
                 }
 
+                if (!$hidden && !$this->user->pass($access, true)) {
+                    $hidden = true;
+                }
+
                 if (!$hidden) {
                     $showedChildrenCount ++;
 
@@ -223,7 +227,9 @@ class Widget_Menu extends Typecho_Widget
                 }
 
                 if ($validate) {
-                    $this->user->pass($access); 
+                    if ('visitor' != $access) {
+                        $this->user->pass($access);
+                    }
                     
                     $this->_currentParent = $key;
                     $this->_currentChild = $inKey;
