@@ -211,7 +211,7 @@ class Widget_Menu extends Typecho_Widget
                 if (!$hidden) {
                     $showedChildrenCount ++;
 
-                    if (!empty($firstUrl)) {
+                    if (empty($firstUrl)) {
                         $firstUrl = $url;
                     }
 
