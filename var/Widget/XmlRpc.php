@@ -769,8 +769,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
         
         return array(
-            'hold'      =>  _t('显示'),
-            'approve'   =>  _t('待审核'),
+            'hold'      =>  _t('待审核'),
+            'approve'   =>  _t('显示'),
             'spam'      =>  _t('垃圾')
         );
     }
@@ -938,7 +938,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['status'] = 'hold' == $input['status'] ? $input['status'] : 
                 $this->wordpressToTypechoStatus($struct['status']);
         } else {
-            $input['status'] = 'available';
             $input['__typecho_all_comments'] = 'on';
         }
         
