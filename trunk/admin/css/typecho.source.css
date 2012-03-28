@@ -1024,9 +1024,10 @@ margin-top: 25px;
     margin: 2px 0px;
 }
 
-.typecho-dashboard-nav .balloon {
+.typecho-dashboard-nav .balloon,
+.typecho-option-tabs .balloon {
     margin-left: 5px;
-    padding: 1px 5px;
+    padding: 1px 3px;
     background: #BD6800;
     color: #FFF;
     font-size: 12px;
@@ -1177,7 +1178,7 @@ margin-top: 25px;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
-    background: #f7fbe9 url(../images/btn.png) top repeat-x;
+    background: #f7fbe9;
 }
 
 .typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
