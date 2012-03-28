@@ -108,9 +108,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             $select->where('table.comments.status = ?', $this->request->status);
         } else if ('hold' == $this->request->status) {
             $select->where('table.comments.status <> ?', 'approved');
-        } else if ('all' != $this->request->status) {
-            $select->where('table.comments.status = ? OR table.comments.status = ?', 'approved', 'waiting');
-        } else if ('available' != $this->request->status) {
+        } else {
             $select->where('table.comments.status = ?', 'approved');
         }
 
