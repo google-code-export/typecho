@@ -271,16 +271,16 @@ class Widget_Menu extends Typecho_Widget
      * @access public
      * @return string
      */
-    public function output($class = 'focus', $childClass = 'focus')
+    public function output($class = 'active', $childClass = 'active')
     {
         foreach ($this->_menu as $key => $node) {
             if (!$node[1] || !$key) {
                 continue;
             }
 
-            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) 
-                . "><a href=\"{$node[2]}\" title=\"{$node[0]}\">{$node[0]}</a></dt>"
-                . "<dd><ul>";
+            echo "<li class=\"dropdown" . ($key == $this->_currentParent ? ' ' . $class : '') 
+                . "\"><a href=\"{$node[2]}\" title=\"{$node[0]}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">{$node[0]}<b class=\"caret\"></b></a>"
+                . "<ul class=\"dropdown-menu\">";
             
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
@@ -291,7 +291,7 @@ class Widget_Menu extends Typecho_Widget
                     "><a href=\"" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? $this->_currentUrl : $inNode[2]) . "\" title=\"{$inNode[0]}\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></dd>";
+            echo "</ul></li>";
         }
     }
 }

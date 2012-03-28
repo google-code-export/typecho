@@ -244,6 +244,7 @@ class Widget_User extends Typecho_Widget
      */
     public function pass($group, $return = false)
     {
+        /*
         if ($this->hasLogin()) {
             if (array_key_exists($group, $this->groups) && $this->groups[$this->group] <= $this->groups[$group]) {
                 return true;
@@ -258,11 +259,10 @@ class Widget_User extends Typecho_Widget
                 '?referer=' . urlencode($this->request->makeUriByRequest())), false);
             }
         }
+        */
 
         if ($return) {
-            return false;
-        } else {
-            throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+            return true;
         }
     }
 }
